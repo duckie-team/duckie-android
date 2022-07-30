@@ -2,6 +2,7 @@
   <img src="https://github.com/sungbinland/duckie/blob/main/assets/duckie.png?raw=true" width="50%" />
 </p>
 
+
 <br/>
 
 <p align="center">
@@ -16,44 +17,22 @@
   <a href="https://github.com/sungbinland/duckie"><img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/sungbinland/duckie"></a>
 </p>
 
+
 ---
 
 > 작업중
 
-### 빌드 환경
+## 빌드 환경
 
 - Android Studio Canary
 - JDK 11
 
-### 사용된 오픈소스
+## 사용된 오픈소스
 
 #### UI
 
 - [Ducky](https://github.com/sungbinland/duckie-ducky): 덕키의 디자인 시스템
 
-### [라이선스](https://github.com/sungbinland/duckie/blob/readme/LICENSE)
+## 라이선스
 
-```
-MIT License
-
-Copyright (c) 2022 Duckie
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
+duckie 는 MIT 라이선스를 따릅니다. 자세한 내용은 [LICENSE 파일](https://github.com/sungbinland/duckie/blob/readme/LICENSE)을 참고해 주세요.
