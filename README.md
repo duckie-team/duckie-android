@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/duckie-logo.svg" width="10%" alt="duckie" />
+  <img src="./assets/duckie-logo.svg" width="20%" alt="duckie" />
 </p>
 <h1 align="center">Duckie</h1>
 <h5 align="center">There is no end to fans. a fan community to meet according to taste.</h5>
