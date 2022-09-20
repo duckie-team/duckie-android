@@ -19,7 +19,7 @@ Duckie is a service that combines the characteristics of [Karrot-market](https:/
 
 Duckie can be downloaded at the [Google PlayStore](https://play.google.com/store/apps/details?team.duckie.android). But now, it is currently under development and cannot be downloaded.
 
-###  Build
+### Build
 
 Duckie is developed using the latest version of Android Studio Canary. And also requires a build configuration file. Therefore, to build, you need to unzip the `duckieuser-secrets.tar` file. You can do it easily with the following command:
 
@@ -41,3 +41,5 @@ We love your contribution! The easiest way for you to start contributing is to t
 2. [test.duckie.team](https://test.duckie.team/): Full test coverage HTML report from Duckie. It is updated whenever a PR with `test` and `deploy` labels is opened. Test coverage measurements use [Kover](https://github.com/Kotlin/kotlinx-kover).
 3. [docs.duckie.team](https://docs.duckie.team/): Full KDoc content from Duckie. It is updated whenever a PR with `dokka` and `deploy` labels is opened. HTML generation for deploy in KDoc uses [dokka](https://github.com/Kotlin/dokka). (ko)
 4. [documents](/documents): Documents for internal reference of Duckie. Code rules and important notes are noted. (ko)
+
+Please check the [documentation folder](/documents) for a detailed explain of the project development stack and branding.
