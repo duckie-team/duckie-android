@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("io.gitlab.arturbosch.detekt") version Versions.BuildUtil.Detekt
-    id("org.jlleitschuh.gradle.ktlint") version Versions.BuildUtil.KtlintPlugin
+    id("org.jlleitschuh.gradle.ktlint") version 11.0.0
 }
 
 buildscript {
