@@ -2,7 +2,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("io.gitlab.arturbosch.detekt") version Versions.BuildUtil.Detekt
+    id("io.gitlab.arturbosch.detekt") version 1.21.0
     id("org.jlleitschuh.gradle.ktlint") version Versions.BuildUtil.KtlintPlugin
 }
 
