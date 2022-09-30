@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("name.remal.check-dependency-updates") version Versions.BuildUtil.CheckDependencyUpdates
+    id("name.remal.check-dependency-updates") version 1.5.0
 }
 
 android {

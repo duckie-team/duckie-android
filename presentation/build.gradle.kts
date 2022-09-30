@@ -13,7 +13,7 @@ plugins {
     // id("com.google.firebase.firebase-perf")
     id("com.google.android.gms.oss-licenses-plugin")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("name.remal.check-dependency-updates") version Versions.BuildUtil.CheckDependencyUpdates
+    id("name.remal.check-dependency-updates") version 1.5.0
 }
 
 /*ruler {
