@@ -13,8 +13,8 @@ package land.sungbin.androidprojecttemplate.data
  * @param notificationTags 태그 알림 목록
  * @param tradePreferenceTags 거래 선호 태그 목록
  * @param collections 컬렉션
- * @param createdTime 계정 만든 시간 (yyyy-MM-dd-hh-mm-ss)
- * @param deletedTime 계정 삭제한 시간 (yyyy-MM-dd-hh-mm-ss)
+ * @param createdAt 계정 만든 시간 (yyyy-MM-dd-hh-mm-ss)
+ * @param deletedAt 계정 삭제한 시간 (yyyy-MM-dd-hh-mm-ss)
  */
 data class User(
     val accountEnabled: Boolean,
@@ -29,9 +29,9 @@ data class User(
     val tradePreferenceTags: List<String>,
     val collections: List<String>,
     // TODO (riflockle7) serializer 로 시간 관련 변수와 대응하도록 처리 필요
-    val createdTime: String,
+    val createdAt: String,
     // TODO (riflockle7) serializer 로 시간 관련 변수와 대응하도록 처리 필요
-    val deletedTime: String,
+    val deletedAt: String,
 )
 
 /** 좋아하는 분야 */
