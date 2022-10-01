@@ -5,10 +5,10 @@ package land.sungbin.androidprojecttemplate.data
  *
  * @param seller 판매자
  * @param buyer 구매자
- * @param duckContentField 판매 요청한 글 필드 값
+ * @param field 판매 요청한 글 필드 값
  */
 data class SaleRequest(
     val seller: String,
     val buyer: String,
-    val duckContentField: String,
+    val field: String,
 )

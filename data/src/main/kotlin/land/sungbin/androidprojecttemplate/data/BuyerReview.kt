@@ -1,15 +1,19 @@
 package land.sungbin.androidprojecttemplate.data
 
 /**
- * 구매자 거래후기[SaleReview] data class
+ * 구매자 거래후기[BuyerReview] data class
  *
+ * @param buyerId 구매자 id
+ * @param sellerId 판매자 id
  * @param isDirect 거래방식 (= 직거래인지, 아니라면 택배거래)
  * @param saleState [SaleState] 거래 간단 상태
  * @param likeReason [LikeReason] 좋은 점
  * @param dislikeReason [DislikeReason] 아쉬운 점
  * @param etc 기타 (string)
  */
-data class SaleReview(
+data class BuyerReview(
+    val buyerId: String,
+    val sellerId: String,
     val isDirect: Boolean,
     // TODO (riflockle7) serializer 로 int 와 대응하도록 처리 필요
     val saleState: SaleState,
@@ -41,10 +45,10 @@ enum class LikeReason {
 
 /** 아쉬운 점 (사유) */
 enum class DislikeReason {
-    BreakTime,      // 시간약속을 안지켜요
-    NoManner,       // 불친절하고 매너가 없어요
-    ReplySlow,      // 답장이 느려요
-    LateTimeCall,   // 너무 늦은 시간에 연락해요
-    TooCutPrice,    // 무리하게 가격을 깎아요
-    NoShow,         // 약속장소에 나오지 않았어요
+    BreakTime,                  // 시간약속을 안지켜요
+    NoManner,                   // 불친절하고 매너가 없어요
+    ReplySlow,                  // 답장이 느려요
+    LateTimeCall,               // 너무 늦은 시간에 연락해요
+    StateNotEqualDescription,   // 상품상태가 설명과 달라요
+    NoShow,                     // 약속장소에 나오지 않았어요
 }
