@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("com.google.devtools.ksp") version Versions.Ksp
+    id("com.google.devtools.ksp") version 1.7.20-1.0.6
 }
 
 kotlin {
