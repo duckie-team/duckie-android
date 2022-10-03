@@ -1,11 +1,11 @@
 package land.sungbin.androidprojecttemplate.data
 
 /**
- * 사용자[User] data class
+ * [사용자][User] data class
  *
  * @param accountEnabled 계정 사용가능 여부
  * @param nickname 닉네임
- * @param profileURL 프로필 사진
+ * @param profileUrl 프로필 사진
  * @param badges 유저 뱃지 번호 목록
  * @param likeCategory [LikeCategory] 좋아하는 분야
  * @param interestedTags 관심태그 목록
@@ -19,7 +19,7 @@ package land.sungbin.androidprojecttemplate.data
 data class User(
     val accountEnabled: Boolean,
     val nickname: String,
-    val profileURL: String,
+    val profileUrl: String,
     val badges: List<Int>,
     // TODO (riflockle7) serializer 로 int 와 대응하도록 처리 필요
     val likeCategory: LikeCategory,
