@@ -1,7 +1,7 @@
 package land.sungbin.androidprojecttemplate.data
 
 /**
- * 판매요청[SaleRequest] data class
+ * [판매요청][SaleRequest] data class
  *
  * @param seller 판매자
  * @param buyer 구매자

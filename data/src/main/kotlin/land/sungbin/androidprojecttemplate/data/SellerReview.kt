@@ -1,7 +1,7 @@
 package land.sungbin.androidprojecttemplate.data
 
 /**
- * 판매자 거래후기[SellerReview] data class
+ * [판매자 거래후기][SellerReview] data class
  *
  * @param buyerId 구매자 id
  * @param sellerId 판매자 id

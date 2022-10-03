@@ -1,7 +1,7 @@
 package land.sungbin.androidprojecttemplate.data
 
 /**
- * 채팅[Chat] data class
+ * [채팅][Chat] data class
  *
  * @param isDeleted 삭제 여부
  * @param roomNumber 방 번호

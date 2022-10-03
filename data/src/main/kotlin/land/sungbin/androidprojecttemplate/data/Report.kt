@@ -1,7 +1,7 @@
 package land.sungbin.androidprojecttemplate.data
 
 /**
- * 신고[Report] data class
+ * [신고][Report] data class
  *
  * @param reporter 신고한 사람
  * @param reported 신고 당한 사람

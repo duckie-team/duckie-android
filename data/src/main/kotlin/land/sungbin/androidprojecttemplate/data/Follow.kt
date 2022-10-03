@@ -1,7 +1,7 @@
 package land.sungbin.androidprojecttemplate.data
 
 /**
- * 팔로우[Follow] data class
+ * [팔로우][Follow] data class
  *
  * @param type [FollowType] 구분
  * @param me 본인

@@ -1,7 +1,7 @@
 package land.sungbin.androidprojecttemplate.data
 
 /**
- * 덕딜[DuckDeal] data class
+ * [덕딜][DuckDeal] data class
  *
  * @param field 필드 값
  * @param writer 글쓴이

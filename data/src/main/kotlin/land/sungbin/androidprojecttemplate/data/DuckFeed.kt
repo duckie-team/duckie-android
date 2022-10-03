@@ -1,7 +1,7 @@
 package land.sungbin.androidprojecttemplate.data
 
 /**
- * 덕피드[DuckFeed] data class
+ * [덕피드][DuckFeed] data class
  *
  * @param field 필드 값
  * @param writer 글쓴이
