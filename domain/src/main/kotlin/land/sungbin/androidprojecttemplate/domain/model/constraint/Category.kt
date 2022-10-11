@@ -5,11 +5,32 @@ enum class Category(
     val index: Int,
     val message: String,
 ) {
-    Celebrity(0, "연애인"),
-    Movie(1, "영화"),
-    Animation(2, "만화/애니"),
-    WebToon(3, "웹툰"),
-    Game(4, "게임"),
-    Military(5, "밀리터리"),
-    IT(6, "IT"),
+    Celebrity(
+        index = 0,
+        message = "연애인",
+    ),
+    Movie(
+        index = 1,
+        message = "영화",
+    ),
+    Animation(
+        index = 2,
+        message = "만화/애니",
+    ),
+    WebToon(
+        index = 3,
+        message = "웹툰",
+    ),
+    Game(
+        index = 4,
+        message = "게임",
+    ),
+    Military(
+        index = 5,
+        message = "밀리터리",
+    ),
+    IT(
+        index = 6,
+        message = "IT",
+    ),
 }

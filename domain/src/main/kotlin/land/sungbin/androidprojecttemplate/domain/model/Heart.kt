@@ -1,5 +1,7 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+
 /**
  * 좋아요 모델
  *
@@ -9,15 +11,33 @@ package land.sungbin.androidprojecttemplate.domain.model
  * @param userId 해당 이벤트를 발생시킨 [유저 아이디][User.nickname]
  */
 data class Heart(
-    val type: HeartType,
+    val type: HeartTarget,
     val feedId: String,
     val userId: String,
-)
+) {
+    init {
+        requireInput(
+            field = "feedId",
+            value = feedId,
+        )
+        requireInput(
+            field = "userId",
+            value = userId,
+        )
+    }
+}
 
-enum class HeartType(
+/** 좋아요 대상 */
+enum class HeartTarget(
     val index: Int,
     val description: String,
 ) {
-    Feed(0, "피드"),
-    Comment(1, "댓글"),
+    Feed(
+        index = 0,
+        description = "피드",
+    ),
+    Comment(
+        index = 1,
+        description = "댓글",
+    ),
 }

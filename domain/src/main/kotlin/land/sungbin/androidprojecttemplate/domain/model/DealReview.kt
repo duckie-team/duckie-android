@@ -1,5 +1,12 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
+import androidx.annotation.Size
+import land.sungbin.androidprojecttemplate.domain.model.ReasonToken.All
+import land.sungbin.androidprojecttemplate.domain.model.ReasonToken.Buyer
+import land.sungbin.androidprojecttemplate.domain.model.ReasonToken.Seller
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
+
 /**
  * 거래 후기 모델
  *
@@ -11,7 +18,8 @@ package land.sungbin.androidprojecttemplate.domain.model
  * @param review 거래에 대한 종합적인 리뷰
  * @param likeReason 좋았던 점 목록
  * @param dislikeReason 아쉬웠던 점 목록
- * @param etc 기타 소견
+ * @param etc 기타 소견.
+ * 기타 소견은 공백일 수 있습니다.
  */
 data class DealReview(
     val id: String,
@@ -20,19 +28,61 @@ data class DealReview(
     val feedId: String,
     val isDirect: Boolean,
     val review: Review,
-    val likeReason: List<LikeReason>,
-    val dislikeReason: List<DislikeReason>,
+    @Size(min = 1) val likeReason: List<LikeReason>,
+    @Size(min = 1) val dislikeReason: List<DislikeReason>,
     val etc: String,
-)
+) {
+    init {
+        requireInput(
+            field = "id",
+            value = id,
+        )
+        requireInput(
+            field = "buyerId",
+            value = buyerId,
+        )
+        requireInput(
+            field = "sellerId",
+            value = sellerId,
+        )
+        requireInput(
+            field = "feedId",
+            value = feedId,
+        )
+        requireInput(
+            field = "etc",
+            value = etc,
+        )
+        requireSize(
+            min = 1,
+            field = "likeReason",
+            value = likeReason,
+        )
+        requireSize(
+            min = 1,
+            field = "dislikeReason",
+            value = dislikeReason,
+        )
+    }
+}
 
 /** 거래 상태 */
 enum class Review(
     val index: Int,
     val description: String,
 ) {
-    Bad(0, "아쉬워요"),
-    Like(1, "좋아요"),
-    Awesome(2, "최고예요"),
+    Bad(
+        index = 0,
+        description = "아쉬워요",
+    ),
+    Like(
+        index = 1,
+        description = "좋아요",
+    ),
+    Awesome(
+        index = 2,
+        description = "최고예요",
+    ),
 }
 
 /**
@@ -49,16 +99,25 @@ enum class ReasonToken(
     val index: Int,
     val description: String,
 ) {
-    All(0, "모두"),
-    Buyer(1, "구매자"),
-    Seller(2, "판매자"),
+    All(
+        index = 0,
+        description = "모두",
+    ),
+    Buyer(
+        index = 1,
+        description = "구매자",
+    ),
+    Seller(
+        index = 2,
+        description = "판매자",
+    ),
 }
 
 /** 좋은 점 (사유) */
 enum class LikeReason(
     val index: Int,
     val description: String,
-    val token: ReasonToken = ReasonToken.All,
+    val token: ReasonToken = All,
 ) {
     KeepTime(
         index = 0,
@@ -98,7 +157,7 @@ enum class LikeReason(
 enum class DislikeReason(
     val index: Int,
     val description: String,
-    val token: ReasonToken = ReasonToken.All,
+    val token: ReasonToken = All,
 ) {
     BreakTime(
         index = 0,

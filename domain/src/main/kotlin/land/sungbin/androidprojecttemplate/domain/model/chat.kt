@@ -1,8 +1,12 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
+import androidx.annotation.IntRange
 import androidx.annotation.Size
 import java.util.Date
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+import land.sungbin.androidprojecttemplate.domain.model.util.requireSetting
+import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
 /**
  * 채팅 모델
@@ -29,24 +33,57 @@ data class Chat(
     val content: Content,
     val sentAt: Date,
     val duckFeedData: DuckFeedCoreInformation?,
-)
+) {
+    init {
+        requireInput(
+            field = "id",
+            value = id,
+        )
+        requireInput(
+            field = "chatRoomId",
+            value = chatRoomId,
+        )
+        requireInput(
+            field = "sender",
+            value = sender,
+        )
+        requireSetting(
+            condition = type == ChatType.DuckDeal,
+            trueConditionDescription = "type == ChatType.DuckDeal",
+            field = "duckFeedData",
+            value = duckFeedData,
+        )
+    }
+}
 
 /** 채팅 종류 */
 enum class ChatType(
     val index: Int,
     val description: String,
 ) {
-    Normal(0, "일반"),
-    Place(1, "장소"),
-    Promise(2, "약속"),
-    DuckDeal(3, "덕딜"),
+    Normal(
+        index = 0,
+        description = "일반",
+    ),
+    Place(
+        index = 1,
+        description = "장소",
+    ),
+    Promise(
+        index = 2,
+        description = "약속",
+    ),
+    DuckDeal(
+        index = 3,
+        description = "덕딜",
+    ),
 }
 
 /**
  * 채팅에 포함되는 덕딜 피드의 정보들 모델
  *
  * @param images 상품 이미지 주소 목록.
- * 최소 1장은 있어야 하며, 한 이미지당 최대 5 MB 을 넘을 수 없습니다.
+ * **최소 1장은 있어야 하며,** 한 이미지당 최대 5 MB 을 넘을 수 없습니다.
  * (한 이미지당 최대 용량은 조정 필요)
  * @param title 상품 이름
  * @param price 상품 가격
@@ -54,6 +91,24 @@ enum class ChatType(
 data class DuckFeedCoreInformation(
     @Size(min = 1, max = 5) val images: List<String>,
     val title: String,
-    val price: Int,
-)
+    @IntRange(from = 0) val price: Int,
+) {
+    init {
+        requireSize(
+            min = 1,
+            max = 5,
+            field = "images",
+            value = images,
+        )
+        requireSize(
+            min = 0,
+            field = "price",
+            value = price,
+        )
+        requireInput(
+            field = "title",
+            value = title,
+        )
+    }
+}
 

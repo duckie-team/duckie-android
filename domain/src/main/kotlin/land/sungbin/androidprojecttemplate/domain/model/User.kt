@@ -1,10 +1,13 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
+import androidx.annotation.Size
 import java.util.Date
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badges
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Categories
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Collections
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Tags
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
 /**
  * 유저 모델
@@ -15,7 +18,8 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.Tags
  * @param accountAvailable 계정 사용 가능 여부
  * @param profileUrl 프로필 사진 주소
  * @param badges 활성화된 배지 목록
- * @param likeCategories 좋아하는 분야 목록
+ * @param likeCategories 좋아하는 분야 목록.
+ * **최소 1개는 있어야 합니다.**
  * @param interestedTags 관심태그 목록
  * @param nonInterestedTags 관심없음 태그 목록
  * @param notificationTags 태그 알림 목록
@@ -30,7 +34,7 @@ data class User(
     val accountAvailable: Boolean,
     val profileUrl: String,
     val badges: Badges,
-    val likeCategories: Categories,
+    @Size(min = 1) val likeCategories: Categories,
     val interestedTags: Tags,
     val nonInterestedTags: Tags,
     val notificationTags: Tags,
@@ -39,4 +43,20 @@ data class User(
     val createdAt: Date,
     val deletedAt: Date?,
     val bannedAt: Date?,
-)
+) {
+    init {
+        requireInput(
+            field = "nickname",
+            value = nickname,
+        )
+        requireInput(
+            field = "profileUrl",
+            value = profileUrl,
+        )
+        requireSize(
+            min = 1,
+            field = "likeCategories",
+            value = likeCategories,
+        )
+    }
+}

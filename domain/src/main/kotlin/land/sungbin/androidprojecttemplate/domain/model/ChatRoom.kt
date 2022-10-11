@@ -2,6 +2,8 @@ package land.sungbin.androidprojecttemplate.domain.model
 
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Categories
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Tags
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+import land.sungbin.androidprojecttemplate.domain.model.util.requireSetting
 
 /**
  * 채팅방 모델
@@ -25,7 +27,30 @@ data class ChatRoom(
     val name: String,
     val categories: Categories?,
     val tags: Tags?,
-)
+) {
+    init {
+        requireInput(
+            field = "id",
+            value = id,
+        )
+        requireInput(
+            field = "name",
+            value = name,
+        )
+        requireSetting(
+            condition = type == ChatRoomType.Open,
+            trueConditionDescription = "type == ChatRoomType.Open",
+            field = "categories",
+            value = categories,
+        )
+        requireSetting(
+            condition = type == ChatRoomType.Open,
+            trueConditionDescription = "type == ChatRoomType.Open",
+            field = "tags",
+            value = tags,
+        )
+    }
+}
 
 /**
  * 채팅방 타입
@@ -34,7 +59,16 @@ enum class ChatRoomType(
     val index: Int,
     val description: String,
 ) {
-    Chat(0, "일반채팅"),
-    DuckDeal(1, "덕딜채팅"),
-    Open(2, "오픈채팅"),
+    Normal(
+        index = 0,
+        description = "일반채팅",
+    ),
+    DuckDeal(
+        index = 1,
+        description = "덕딜채팅",
+    ),
+    Open(
+        index = 2,
+        description = "오픈채팅",
+    ),
 }

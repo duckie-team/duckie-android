@@ -1,5 +1,7 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+
 /**
  * 채팅 확인 모델
  *
@@ -11,4 +13,19 @@ data class ChatRead(
     val chatRoomId: String,
     val userId: String,
     val lastestReadChatId: String,
-)
+) {
+    init {
+        requireInput(
+            field = "chatRoomId",
+            value = chatRoomId,
+        )
+        requireInput(
+            field = "userId",
+            value = userId,
+        )
+        requireInput(
+            field = "lastestReadChatId",
+            value = lastestReadChatId,
+        )
+    }
+}
