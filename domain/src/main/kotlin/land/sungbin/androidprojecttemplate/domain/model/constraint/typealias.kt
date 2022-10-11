@@ -1,7 +1,7 @@
 package land.sungbin.androidprojecttemplate.domain.model.constraint
 
-typealias Categories = List<Category>
-typealias Users = List<String>
-typealias Tags = List<String>
-typealias Badges = List<Badge>
-typealias Collections = List<Int>
+internal typealias Categories = List<Category>
+internal typealias Users = List<String>
+internal typealias Tags = List<String>
+internal typealias Badges = List<Badge>
+internal typealias Collections = List<Int>
