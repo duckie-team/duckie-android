@@ -15,7 +15,7 @@ internal data class UserData(
     val nonInterestedTags: TagsData? = null,
     val notificationTags: TagsData? = null,
     val tradePreferenceTags: TagsData? = null,
-    val colletions: CollectionsData? = null,
+    val collections: CollectionsData? = null,
     val createdAt: String? = null,
     val deletedAt: String? = null,
     val bannedAt: String? = null,
