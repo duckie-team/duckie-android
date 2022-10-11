@@ -1,8 +1,12 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
+import androidx.annotation.Size
 import java.util.Date
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Categories
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+import land.sungbin.androidprojecttemplate.domain.model.util.requireSetting
+import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
 /**
  * 피드 모델
@@ -41,7 +45,7 @@ data class Feed(
     val isDeleted: Boolean,
     val isHidden: Boolean,
     val content: Content,
-    val categories: Categories,
+    @Size(min = 1) val categories: Categories,
     val createdAt: Date,
     val title: String?,
     val price: Int?,
@@ -49,15 +53,73 @@ data class Feed(
     val isDirectDealing: Boolean?,
     val parcelable: Boolean?,
     val dealState: DealState?,
-)
+) {
+    init {
+        requireInput(
+            field = "id",
+            value = id,
+        )
+        requireInput(
+            field = "writerId",
+            value = writerId,
+        )
+        requireSize(
+            min = 1,
+            field = "categories",
+            value = categories,
+        )
+        requireSetting(
+            condition = type == FeedType.DuckDeal,
+            trueConditionDescription = "type == FeedType.DuckDeal",
+            field = "title",
+            value = title,
+        )
+        requireSetting(
+            condition = type == FeedType.DuckDeal,
+            trueConditionDescription = "type == FeedType.DuckDeal",
+            field = "price",
+            value = price,
+        )
+        requireSetting(
+            condition = type == FeedType.DuckDeal,
+            trueConditionDescription = "type == FeedType.DuckDeal",
+            field = "location",
+            value = location,
+        )
+        requireSetting(
+            condition = type == FeedType.DuckDeal,
+            trueConditionDescription = "type == FeedType.DuckDeal",
+            field = "isDirectDealing",
+            value = isDirectDealing,
+        )
+        requireSetting(
+            condition = type == FeedType.DuckDeal,
+            trueConditionDescription = "type == FeedType.DuckDeal",
+            field = "parcelable",
+            value = parcelable,
+        )
+        requireSetting(
+            condition = type == FeedType.DuckDeal,
+            trueConditionDescription = "type == FeedType.DuckDeal",
+            field = "dealState",
+            value = dealState,
+        )
+    }
+}
 
 /** 피드 타입 */
 enum class FeedType(
     val index: Int,
     val description: String,
 ) {
-    DuckDeal(0, "덕딜"),
-    Normal(1, "덕피드"),
+    DuckDeal(
+        index = 0,
+        description = "덕딜",
+    ),
+    Normal(
+        index = 1,
+        description = "덕피드",
+    ),
 }
 
 /** 거래 상태 */
@@ -65,7 +127,16 @@ enum class DealState(
     val index: Int,
     val description: String,
 ) {
-    InProgress(0, "거래중"),
-    Booking(1, "예약중"),
-    Done(2, "거래완료"),
+    InProgress(
+        index = 0,
+        description = "거래중",
+    ),
+    Booking(
+        index = 1,
+        description = "예약중",
+    ),
+    Done(
+        index = 2,
+        description = "거래완료",
+    ),
 }

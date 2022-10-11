@@ -1,6 +1,7 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Users
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 
 /**
  * 팔로우 모델
@@ -15,4 +16,11 @@ data class Follow(
     val followings: Users,
     val followers: Users,
     val blocks: Users,
-)
+) {
+    init {
+        requireInput(
+            field = "accountId",
+            value = accountId,
+        )
+    }
+}

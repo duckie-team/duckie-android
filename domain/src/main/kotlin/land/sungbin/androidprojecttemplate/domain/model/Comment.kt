@@ -2,6 +2,7 @@ package land.sungbin.androidprojecttemplate.domain.model
 
 import java.util.Date
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 
 /**
  * 댓글 모델
@@ -19,4 +20,15 @@ data class Comment(
     val userId: String,
     val content: Content,
     val createdAt: Date,
-)
+) {
+    init {
+        requireInput(
+            field = "id",
+            value = id,
+        )
+        requireInput(
+            field = "userId",
+            value = userId,
+        )
+    }
+}

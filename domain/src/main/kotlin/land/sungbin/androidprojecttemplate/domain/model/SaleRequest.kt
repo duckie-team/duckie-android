@@ -1,5 +1,7 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
+import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+
 /**
  * 판매 요청 모델
  *
@@ -15,4 +17,23 @@ data class SaleRequest(
     val ownerId: String,
     val requesterId: String,
     val result: Boolean,
-)
+) {
+    init {
+        requireInput(
+            field = "id",
+            value = id,
+        )
+        requireInput(
+            field = "feedId",
+            value = feedId,
+        )
+        requireInput(
+            field = "ownerId",
+            value = ownerId,
+        )
+        requireInput(
+            field = "requesterId",
+            value = requesterId,
+        )
+    }
+}
