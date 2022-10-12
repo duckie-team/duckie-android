@@ -84,4 +84,8 @@ object Versions {
         const val Coroutine = "1.6.2"
         const val JUnitGradle = "1.8.2.0"
     }
+
+    object Quack {
+        const val quack = "1.2.0"
+    }
 }
