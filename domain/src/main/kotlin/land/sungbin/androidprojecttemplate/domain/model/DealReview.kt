@@ -1,9 +1,6 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
 import androidx.annotation.Size
-import land.sungbin.androidprojecttemplate.domain.model.ReasonToken.All
-import land.sungbin.androidprojecttemplate.domain.model.ReasonToken.Buyer
-import land.sungbin.androidprojecttemplate.domain.model.ReasonToken.Seller
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
@@ -63,6 +60,12 @@ data class DealReview(
             field = "dislikeReason",
             value = dislikeReason,
         )
+        if (likeReason.any { it.token == ReasonToken.Buyer } && likeReason.any { it.token == ReasonToken.Seller }) {
+            throw IllegalArgumentException("Buyer and Seller cannot be selected at the same time.")
+        }
+        if (dislikeReason.any { it.token == ReasonToken.Buyer } && dislikeReason.any { it.token == ReasonToken.Seller }) {
+            throw IllegalArgumentException("Buyer and Seller cannot be selected at the same time.")
+        }
     }
 }
 
@@ -117,7 +120,7 @@ enum class ReasonToken(
 enum class LikeReason(
     val index: Int,
     val description: String,
-    val token: ReasonToken = All,
+    val token: ReasonToken = ReasonToken.All,
 ) {
     KeepTime(
         index = 0,
@@ -157,7 +160,7 @@ enum class LikeReason(
 enum class DislikeReason(
     val index: Int,
     val description: String,
-    val token: ReasonToken = All,
+    val token: ReasonToken = ReasonToken.All,
 ) {
     BreakTime(
         index = 0,
