@@ -1,8 +1,8 @@
 package land.sungbin.androidprojecttemplate.ui.splash
 
 import android.os.Bundle
-import androidx.core.app.ComponentActivity
-
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 class SplashActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
