@@ -16,7 +16,8 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * 유저의 고유 키로 사용합니다.** 즉, 유저 아이디는
  * 이 값을 나타냅니다.
  * @param accountAvailable 계정 사용 가능 여부
- * @param profileUrl 프로필 사진 주소
+ * @param profileUrl 프로필 사진 주소.
+ * 만약 프로필 사진이 설정되지 않았다면 null 을 받습니다.
  * @param badges 활성화된 배지 목록
  * @param likeCategories 좋아하는 분야 목록.
  * **최소 1개는 있어야 합니다.**
@@ -32,7 +33,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 data class User(
     val nickname: String,
     val accountAvailable: Boolean,
-    val profileUrl: String,
+    val profileUrl: String?,
     val badges: Badges,
     @Size(min = 1) val likeCategories: Categories,
     val interestedTags: Tags,
@@ -48,10 +49,6 @@ data class User(
         requireInput(
             field = "nickname",
             value = nickname,
-        )
-        requireInput(
-            field = "profileUrl",
-            value = profileUrl,
         )
         requireSize(
             min = 1,
