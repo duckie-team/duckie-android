@@ -73,6 +73,7 @@ dependencies {
         Dependencies.Login,
         Dependencies.Analytics,
         Dependencies.Util.Erratum,
+        Dependencies.Quack.components,
     ).dependenciesFlatten()
     dependencies.forEach(::implementation)
 
