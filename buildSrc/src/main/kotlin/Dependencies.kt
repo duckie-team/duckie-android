@@ -105,4 +105,11 @@ object Dependencies {
             "androidx.compose.ui:ui-tooling-preview:${Versions.Compose.Main}"
         )
     }
+
+    object Quack {
+        const val components = "team.duckie.quack:quack-ui-components:${Versions.Quack.quack}"
+        const val lintCore = "team.duckie.quack:quack-lint-core:${Versions.Quack.quack}"
+        const val lintQuack = "team.duckie.quack:quack-lint-quack:${Versions.Quack.quack}"
+        const val lineCompose = "team.duckie.quack:quack-lint-compose:${Versions.Quack.quack}"
+    }
 }
