@@ -46,10 +46,6 @@ data class DealReview(
             field = "feedId",
             value = feedId,
         )
-        requireInput(
-            field = "etc",
-            value = etc,
-        )
         requireSize(
             min = 1,
             field = "likeReason",
