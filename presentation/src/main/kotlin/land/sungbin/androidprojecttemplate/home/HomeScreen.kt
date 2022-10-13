@@ -25,6 +25,8 @@ import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.common.DuckieFab
 import land.sungbin.androidprojecttemplate.home.component.FeedHeader
+import land.sungbin.androidprojecttemplate.home.component.FeedHolder
+import land.sungbin.androidprojecttemplate.home.component.HomeFeed
 import land.sungbin.androidprojecttemplate.home.component.dummyTags
 import team.duckie.quackquack.ui.component.QuackBottomNavigation
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
@@ -100,17 +102,18 @@ internal fun HomeScreen() {
             headline = stringResource(id = R.string.feed_filtering_title),
             items = persistentListOf(
                 QuackBottomSheetItem(
-                    title = "${selectedUser}님 팔로우",
+                    title = stringResource(id = R.string.feed_filtering_both_feed_duck_deal),
                     isImportant = false,
                 ),
                 QuackBottomSheetItem(
-                    title = "${selectedUser}님 피드 차단",
-                    isImportant = false,
-                ),
-                QuackBottomSheetItem(
-                    title = "피드 신고",
+                    title = stringResource(id = R.string.feed_filtering_feed),
                     isImportant = true,
+                ),
+                QuackBottomSheetItem(
+                    title = stringResource(id = R.string.feed_filtering_duck_deal),
+                    isImportant = false,
                 )
+
             ),
             onClick = { quackBottomSheetItem ->
 
@@ -120,16 +123,16 @@ internal fun HomeScreen() {
                 bottomSheetState = moreBottomSheetState,
                 items = persistentListOf(
                     QuackBottomSheetItem(
-                        title = stringResource(id = R.string.feed_filtering_both_feed_duck_deal),
+                        title = "${selectedUser}님 팔로우",
                         isImportant = false,
                     ),
                     QuackBottomSheetItem(
-                        title = stringResource(id = R.string.feed_filtering_feed),
+                        title = "${selectedUser}님 피드 차단",
+                        isImportant = false,
+                    ),
+                    QuackBottomSheetItem(
+                        title = "피드 신고",
                         isImportant = true,
-                    ),
-                    QuackBottomSheetItem(
-                        title = stringResource(id = R.string.feed_filtering_duck_deal),
-                        isImportant = false,
                     )
                 ),
                 onClick = {
@@ -182,6 +185,43 @@ internal fun HomeScreen() {
                                     selectedTags[index] = !selectedTags[index]
                                 }
                             )
+                        }
+                        repeat(5){ i ->
+                            item {
+                                HomeFeed(
+                                    FeedHolder(
+                                        profile = R.drawable.duckie_profile,
+                                        nickname = "우주사령관",
+                                        time = "3일 전",
+                                        content = "버즈 라이트이어 개봉 앞둔 기념!\n" +
+                                                "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
+                                                "오픈런 할거임 굿즈 많이 나왔음 좋겠당",
+                                        onMoreClick = {
+                                            selectedUser = i.toString()
+                                            coroutineScope.launch {
+                                                moreBottomSheetState.show()
+                                            }
+                                        },
+                                        commentCount = {
+                                            commentCount.toString()
+                                        },
+                                        onClickComment = {
+
+                                        },
+                                        likeCount = {
+                                            likeCount.toString()
+                                        },
+                                        isLike = { isLike },
+                                        onClickLike = {
+                                            when (isLike) {
+                                                true -> likeCount--
+                                                false -> likeCount++
+                                            }
+                                            isLike = !isLike
+                                        },
+                                    )
+                                )
+                            }
                         }
                     }
                     QuackBottomNavigation(
