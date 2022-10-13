@@ -28,7 +28,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * @param location 직거래 위치.
  * [type] 이 [FeedType.DuckDeal] 일 때만 유효합니다.
  * [type] 이 [FeedType.DuckDeal] 이 아니라면 null 을 받습니다.
- * @param isDirectDealing 직거래 여부.
+ * @param tradingState 거래 방식 상태.
  * [type] 이 [FeedType.DuckDeal] 일 때만 유효합니다.
  * [type] 이 [FeedType.DuckDeal] 이 아니라면 null 을 받습니다.
  * @param parcelable 택배 거래 여부.
@@ -50,7 +50,7 @@ data class Feed(
     val title: String?,
     val price: Int?,
     val location: String?,
-    val isDirectDealing: Boolean?,
+    val tradingMethod: TradingMethod?,
     val parcelable: Boolean?,
     val dealState: DealState?,
 ) {
@@ -89,8 +89,8 @@ data class Feed(
         requireSetting(
             condition = type == FeedType.DuckDeal,
             trueConditionDescription = "type == FeedType.DuckDeal",
-            field = "isDirectDealing",
-            value = isDirectDealing,
+            field = "tradingMethod",
+            value = tradingMethod,
         )
         requireSetting(
             condition = type == FeedType.DuckDeal,
@@ -138,5 +138,24 @@ enum class DealState(
     Done(
         index = 2,
         description = "거래완료",
+    ),
+}
+
+/** 거래 상태 */
+enum class TradingMethod(
+    val index: Int,
+    val description: String,
+) {
+    Delivery(
+        index = 0,
+        description = "택배",
+    ),
+    Direct(
+        index = 1,
+        description = "직거래",
+    ),
+    Both(
+        index = 2,
+        description = "택배, 직거래",
     ),
 }
