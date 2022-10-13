@@ -20,7 +20,7 @@ val dummyTags = persistentListOf(
 )
 
 @Composable
-internal fun Header(
+internal fun FeedHeader(
     @DrawableRes profile: Int,
     title: String,
     content: String,
