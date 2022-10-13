@@ -15,7 +15,7 @@ internal data class FeedData(
     val title: String? = null,
     val price: Int? = null,
     val location: String? = null,
-    val isDirectDealing: Boolean? = null,
+    val dealingMethod: List<Int>? = null,
     val parcelable: Boolean? = null,
     val dealState: Int? = null,
 )

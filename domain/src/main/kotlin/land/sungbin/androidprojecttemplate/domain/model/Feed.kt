@@ -28,7 +28,9 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * @param location 직거래 위치.
  * [type] 이 [FeedType.DuckDeal] 일 때만 유효합니다.
  * [type] 이 [FeedType.DuckDeal] 이 아니라면 null 을 받습니다.
- * @param tradingState 거래 방식 상태.
+ * @param dealingMethod 거래 방식.
+ * 거래 방식은 [택배거래][DealingMethod.Delivery] 와 [직거래][DealingMethod.Delivery] 모두 선택이 가능하므로
+ * List 로 받습니다.
  * [type] 이 [FeedType.DuckDeal] 일 때만 유효합니다.
  * [type] 이 [FeedType.DuckDeal] 이 아니라면 null 을 받습니다.
  * @param parcelable 택배 거래 여부.
@@ -50,7 +52,7 @@ data class Feed(
     val title: String?,
     val price: Int?,
     val location: String?,
-    val tradingMethod: TradingMethod?,
+    @Size(min = 1) val dealingMethod: List<DealingMethod>?,
     val parcelable: Boolean?,
     val dealState: DealState?,
 ) {
@@ -89,8 +91,8 @@ data class Feed(
         requireSetting(
             condition = type == FeedType.DuckDeal,
             trueConditionDescription = "type == FeedType.DuckDeal",
-            field = "tradingMethod",
-            value = tradingMethod,
+            field = "dealingMethod",
+            value = dealingMethod,
         )
         requireSetting(
             condition = type == FeedType.DuckDeal,
@@ -104,6 +106,13 @@ data class Feed(
             field = "dealState",
             value = dealState,
         )
+        if (dealingMethod != null) {
+            requireSize(
+                min = 1,
+                field = "dealingMethod",
+                value = dealingMethod,
+            )
+        }
     }
 }
 
@@ -141,8 +150,8 @@ enum class DealState(
     ),
 }
 
-/** 거래 상태 */
-enum class TradingMethod(
+/** 거래 방식 */
+enum class DealingMethod(
     val index: Int,
     val description: String,
 ) {
@@ -153,9 +162,5 @@ enum class TradingMethod(
     Direct(
         index = 1,
         description = "직거래",
-    ),
-    Both(
-        index = 2,
-        description = "택배, 직거래",
     ),
 }

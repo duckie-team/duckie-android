@@ -1,5 +1,6 @@
 package land.sungbin.androidprojecttemplate.data.mapper
 
+import com.google.common.collect.Multimaps.index
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -24,6 +25,7 @@ import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
 import land.sungbin.androidprojecttemplate.domain.model.Comment
 import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
 import land.sungbin.androidprojecttemplate.domain.model.DealReview
+import land.sungbin.androidprojecttemplate.domain.model.DealingMethod
 import land.sungbin.androidprojecttemplate.domain.model.DislikeReason
 import land.sungbin.androidprojecttemplate.domain.model.DuckFeedCoreInformation
 import land.sungbin.androidprojecttemplate.domain.model.Feed
@@ -120,7 +122,7 @@ internal fun Feed.toData() = FeedData(
     title = title,
     price = price,
     location = location,
-    isDirectDealing = isDirectDealing,
+    dealingMethod = dealingMethod?.map(DealingMethod::index),
     parcelable = parcelable,
     dealState = dealState?.index,
 )
