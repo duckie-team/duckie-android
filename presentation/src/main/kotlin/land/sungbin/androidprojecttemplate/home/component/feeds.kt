@@ -84,6 +84,7 @@ data class FeedHolder(
     val nickname: String,
     val time: String,
     val content: String,
+    val onMoreClick: () -> Unit,
     val commentCount: () -> String,
     val onClickComment: () -> Unit,
     val isLike: () -> Boolean,
@@ -141,6 +142,7 @@ internal fun HomeFeed(
                         height = 16.dp,
                     ),
                     tint = QuackColor.Gray1,
+                    onClick = feedHolder.onMoreClick,
                 )
             }
             Column(
