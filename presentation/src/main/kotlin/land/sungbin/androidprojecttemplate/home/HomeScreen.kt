@@ -1,16 +1,21 @@
 package land.sungbin.androidprojecttemplate.home
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -18,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
@@ -41,12 +47,20 @@ import land.sungbin.androidprojecttemplate.home.component.HomeNormalFeed
 import land.sungbin.androidprojecttemplate.home.component.dummyTags
 import land.sungbin.androidprojecttemplate.home.component.getTradingMethod
 import land.sungbin.androidprojecttemplate.home.component.priceToString
+import land.sungbin.androidprojecttemplate.shared.compose.extension.noRippleClickable
+import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
+import team.duckie.quackquack.ui.component.QuackDivider
+import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackHeadlineBottomSheet
+import team.duckie.quackquack.ui.component.QuackIconTextToggle
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMenuFabItem
 import team.duckie.quackquack.ui.component.QuackModalDrawer
+import team.duckie.quackquack.ui.component.QuackRoundImage
 import team.duckie.quackquack.ui.component.QuackSimpleBottomSheet
+import team.duckie.quackquack.ui.component.QuackTitle1
+import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.component.rememberQuackDrawerState
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -89,16 +103,13 @@ internal fun HomeScreen(
     val moreBottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden
     )
-    var fabExpanded by remember {
-        mutableStateOf(false)
-    }
     var selectedUser by remember {
         mutableStateOf("")
     }
     QuackModalDrawer(
         drawerState = drawerState,
         drawerContent = {
-            //ModalDrawerContent()
+            DrawerContent()
         }
     ) {
         QuackHeadlineBottomSheet(
@@ -164,6 +175,7 @@ internal fun HomeScreen(
                             }
                         )
                     }
+
                     UiStatus.Loading -> {
                         Crossfade(targetState = homeState.status) {
                             DuckieLoadingIndicator()
@@ -173,17 +185,6 @@ internal fun HomeScreen(
             }
         }
     }
-    DuckieFab(
-        items = homeFabMenuItems,
-        expanded = fabExpanded,
-        onFabClick = {
-            fabExpanded = !fabExpanded
-        },
-        onItemClick = { index, item ->
-
-        },
-        paddingValues = homeFabPadding,
-    )
 }
 
 @Composable
@@ -198,7 +199,7 @@ fun HomeComponent(
             elements = Array(dummyTags.size) { false }
         )
     }
-    var commentCount by remember {
+    val commentCount by remember {
         mutableStateOf(0)
     }
     var isLike by remember {
@@ -206,6 +207,9 @@ fun HomeComponent(
     }
     var likeCount by remember {
         mutableStateOf(0)
+    }
+    var fabExpanded by remember {
+        mutableStateOf(false)
     }
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -246,7 +250,12 @@ fun HomeComponent(
                     }
                 )
             }
-            items(feeds) { feed: Feed -> // //DuckDeal 이므로 null이 아님을 보장
+            items(
+                items = feeds,
+                key = { feed: Feed ->
+                    feed.id
+                }
+            ) { feed: Feed -> // //DuckDeal 이므로 null이 아님을 보장
                 when (feed.type) {
                     FeedType.Normal -> {
                         HomeNormalFeed(
@@ -311,5 +320,204 @@ fun HomeComponent(
                 }
             }
         }
+    }
+    DuckieFab(
+        items = homeFabMenuItems,
+        expanded = fabExpanded,
+        onFabClick = {
+            fabExpanded = !fabExpanded
+        },
+        onItemClick = { index, item ->
+
+        },
+        paddingValues = homeFabPadding,
+    )
+}
+
+@Composable
+fun DrawerContent() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(
+            space = 20.dp,
+        )
+    ) {
+        DrawerHeader()
+        QuackDivider()
+        Column(
+            modifier = Modifier.padding(
+                start = 16.dp,
+            ),
+            verticalArrangement = Arrangement.spacedBy(
+                16.dp,
+            )
+        ) {
+            QuackTitle2(
+                text = "거래 활동"
+            )
+            DrawerIconText(
+                icon = QuackIcon.Heart,
+                text = "관심 목록",
+                onClick = {
+
+                }
+            )
+            DrawerIconText(
+                icon = QuackIcon.Sell,
+                text = "판매 내역",
+                onClick = {
+
+                }
+            )
+            DrawerIconText(
+                icon = QuackIcon.Buy,
+                text = "구매 내역",
+                onClick = {
+
+                }
+            )
+        }
+        QuackDivider()
+        Column(
+            modifier = Modifier.padding(
+                start = 16.dp,
+            ),
+            verticalArrangement = Arrangement.spacedBy(
+                16.dp,
+            )
+        ) {
+            QuackTitle2(
+                text = "나의 활동"
+            )
+            DrawerIconText(
+                icon = QuackIcon.Area,
+                text = "관심 분야 설정",
+                onClick = {
+
+                }
+            )
+            DrawerIconText(
+                icon = QuackIcon.Tag,
+                text = "관심 태그 편집",
+                onClick = {
+
+                }
+            )
+        }
+        QuackDivider()
+        DrawerIconText(
+            modifier = Modifier.padding(
+                start = 16.dp,
+            ),
+            icon = QuackIcon.Setting,
+            text = "앱 설정",
+            onClick = {
+
+            }
+        )
+    }
+}
+
+@Composable
+private fun DrawerHeader() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                vertical = 20.dp,
+                horizontal = 16.dp,
+            ),
+        verticalArrangement = Arrangement.spacedBy(
+            space = 12.dp,
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .noRippleClickable {
+
+                }
+                .padding(
+                    vertical = 4.dp,
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 16.dp,
+                )
+            ) {
+                QuackRoundImage(
+                    src = R.drawable.duckie_profile,
+                    size = DpSize(
+                        width = 48.dp,
+                        height = 48.dp,
+                    )
+                )
+                QuackHeadLine2(
+                    text = "닉네임"
+                )
+            }
+            QuackImage(
+                src = QuackIcon.ArrowRight,
+            )
+        }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(
+                space = 42.dp,
+            )
+        ) {
+            DrawerNumberText(number = "2.6만", text = "팔로워")
+            DrawerNumberText(number = "167", text = "팔로잉")
+            DrawerNumberText(number = "88", text = "피드")
+        }
+    }
+
+}
+
+@Composable
+private fun DrawerNumberText(
+    number: String,
+    text: String,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(
+            2.dp,
+        )
+    ) {
+        QuackTitle2(
+            text = number
+        )
+        QuackBody2(
+            text = text,
+        )
+    }
+}
+
+@NonRestartableComposable
+@Composable
+private fun DrawerIconText(
+    modifier: Modifier = Modifier,
+    icon: QuackIcon,
+    text: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .noRippleClickable(
+                onClick = onClick,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(
+            space = 8.dp,
+        )
+    ) {
+        QuackImage(
+            src = icon,
+        )
+        QuackTitle1(
+            text = text
+        )
     }
 }
