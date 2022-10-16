@@ -31,8 +31,8 @@ val dummyFeeds = listOf(
         dealState = null
     ),
     Feed(
-        id = "a",
-        writerId = "b",
+        id = "c",
+        writerId = "d",
         type = FeedType.Normal,
         isDeleted = false,
         isHidden = false,
