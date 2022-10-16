@@ -16,7 +16,6 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.domain.model.DealState
-import land.sungbin.androidprojecttemplate.shared.domain.extension.runIf
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -30,6 +29,37 @@ import team.duckie.quackquack.ui.component.QuackSimpleLabel
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
+import java.text.NumberFormat
+import java.util.Locale
+
+
+data class FeedHolder(
+    val profile: Any?,
+    val nickname: String,
+    val time: String,
+    val content: String,
+    val onMoreClick: () -> Unit,
+    val commentCount: () -> String,
+    val onClickComment: () -> Unit,
+    val isLike: () -> Boolean,
+    val likeCount: () -> String,
+    val onClickLike: () -> Unit,
+    val images: PersistentList<Any>? = null,
+)
+
+data class DuckDealHolder(
+    val tradingMethod: String,
+    val price: String,
+    val dealState: DealState,
+    val location: String,
+)
+
+@Stable
+private val ProfileSize = DpSize(
+    width = 36.dp,
+    height = 36.dp,
+)
+
 
 val dummyTags = persistentListOf(
     "디즈니", "픽사", "마블", "DC", "애니메이션", "지브리", "ost", "피규어"
@@ -86,42 +116,62 @@ internal fun FeedHeader(
     }
 }
 
-data class FeedHolder(
-    val profile: Any?,
-    val nickname: String,
-    val time: String,
-    val content: String,
-    val onMoreClick: () -> Unit,
-    val commentCount: () -> String,
-    val onClickComment: () -> Unit,
-    val isLike: () -> Boolean,
-    val likeCount: () -> String,
-    val onClickLike: () -> Unit,
-    val images: PersistentList<Any>? = null,
-)
-
-@Stable
-private val ProfileSize = DpSize(
-    width = 36.dp,
-    height = 36.dp,
-)
-
-enum class TradingMethod(
-    val index: Int,
-    val description: String,
+@Composable
+internal fun HomeNormalFeed(
+    feedHolder: FeedHolder, //TODO 태그 생기면 태그 추가
 ) {
-    Delivery(
-        index = 0,
-        description = "택배",
-    ),
-    Direct(
-        index = 1,
-        description = "직거래",
-    ),
-    Both(
-        index = 2,
-        description = "택배, 직거래",
-    ),
+    BaseHomeFeed(
+        feedHolder = feedHolder
+    )
+}
+
+@Composable
+internal fun HomeDuckDealFeed(
+    feedHolder: FeedHolder, //TODO 태그 생기면 태그 추가
+    duckDealHolder: DuckDealHolder,
+) {
+    BaseHomeFeed(
+        feedHolder = feedHolder
+    ) {
+        Column(
+            modifier = Modifier.padding(
+                top = 2.dp,
+            ),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 8.dp
+            )
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 4.dp
+                )
+            ) {
+                when (duckDealHolder.dealState) {
+                    DealState.Booking -> {
+                        QuackSimpleLabel(
+                            text = duckDealHolder.dealState.description,
+                            active = true
+                        )
+                    }
+
+                    DealState.Done -> {
+                        QuackSimpleLabel(
+                            text = duckDealHolder.dealState.description,
+                            active = false
+                        )
+                    }
+
+                    else -> {}
+                }
+                QuackTitle2(
+                    text = duckDealHolder.price
+                )
+            }
+            QuackBody2(
+                text = "${duckDealHolder.tradingMethod} · ${duckDealHolder.location}"
+            )
+        }
+    }
 }
 
 @Composable
@@ -215,67 +265,14 @@ private fun BaseHomeFeed(
     }
 }
 
-
-@Composable
-internal fun HomeNormalFeed(
-    feedHolder: FeedHolder, //TODO 태그 생기면 태그 추가
-) {
-    BaseHomeFeed(
-        feedHolder = feedHolder
-    )
-}
-
-data class DuckDealHolder(
-    val tradingMethod: TradingMethod,
-    val price: String,
-    val dealState: DealState,
-    val location: String,
-)
-@Composable
-internal fun HomeDuckDealFeed(
-    feedHolder: FeedHolder, //TODO 태그 생기면 태그 추가
-    duckDealHolder: DuckDealHolder,
-) {
-    BaseHomeFeed(
-        feedHolder = feedHolder
-    ) {
-        Column(
-            modifier = Modifier.padding(
-                top = 2.dp,
-            ),
-            verticalArrangement = Arrangement.spacedBy(
-                space = 8.dp
-            )
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(
-                    space = 4.dp
-                )
-            ) {
-                when (duckDealHolder.dealState) {
-                    DealState.Booking -> {
-                        QuackSimpleLabel(
-                            text =  duckDealHolder.dealState.description,
-                            active = true
-                        )
-                    }
-
-                    DealState.Done -> {
-                        QuackSimpleLabel(
-                            text =  duckDealHolder.dealState.description,
-                            active = false
-                        )
-                    }
-
-                    else -> {}
-                }
-                QuackTitle2(
-                    text =  duckDealHolder.price
-                )
-            }
-            QuackBody2(
-                text = "${duckDealHolder.tradingMethod.description} · ${duckDealHolder.location}"
-            )
-        }
+fun getTradingMethod(isDirectDealing: Boolean, parcelable: Boolean): String {
+    return if (isDirectDealing && parcelable) {
+        "택배, 직거래"
+    } else if (isDirectDealing) {
+        "택배"
+    } else {
+        "직거래"
     }
 }
+
+fun Int.priceToString(): String = NumberFormat.getInstance(Locale.getDefault()).format(this)
