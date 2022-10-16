@@ -74,6 +74,7 @@ dependencies {
         Dependencies.Analytics,
         Dependencies.Util.Erratum,
         Dependencies.Quack.components,
+        Dependencies.Orbit.Main,
     ).dependenciesFlatten()
     dependencies.forEach(::implementation)
 
