@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -20,19 +21,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.common.DuckieFab
-import land.sungbin.androidprojecttemplate.domain.model.DealState
+import land.sungbin.androidprojecttemplate.domain.model.Feed
+import land.sungbin.androidprojecttemplate.domain.model.FeedType
 import land.sungbin.androidprojecttemplate.home.component.DuckDealHolder
 import land.sungbin.androidprojecttemplate.home.component.FeedHeader
 import land.sungbin.androidprojecttemplate.home.component.FeedHolder
 import land.sungbin.androidprojecttemplate.home.component.HomeDuckDealFeed
 import land.sungbin.androidprojecttemplate.home.component.HomeNormalFeed
-import land.sungbin.androidprojecttemplate.home.component.TradingMethod
 import land.sungbin.androidprojecttemplate.home.component.dummyTags
-import team.duckie.quackquack.ui.component.QuackBottomNavigation
+import land.sungbin.androidprojecttemplate.home.component.getTradingMethod
+import land.sungbin.androidprojecttemplate.home.component.priceToString
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 import team.duckie.quackquack.ui.component.QuackHeadlineBottomSheet
 import team.duckie.quackquack.ui.component.QuackImage
@@ -67,9 +72,12 @@ internal val homeFabMenuItems = persistentListOf(
 )
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
-internal fun HomeScreen() {
+internal fun HomeScreen(
+    viewModel: HomeViewModel,
+) {
+    val homeState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberQuackDrawerState()
     val homeBottomSheetState = rememberModalBottomSheetState(
@@ -78,28 +86,11 @@ internal fun HomeScreen() {
     val moreBottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden
     )
-    val selectedTags = remember {
-        mutableStateListOf(
-            elements = Array(dummyTags.size) { false }
-        )
-    }
     var fabExpanded by remember {
         mutableStateOf(false)
     }
-    var commentCount by remember {
-        mutableStateOf(0)
-    }
-    var isLike by remember {
-        mutableStateOf(false)
-    }
-    var likeCount by remember {
-        mutableStateOf(0)
-    }
     var selectedUser by remember {
         mutableStateOf("")
-    }
-    var selectedNavigationIndex by remember {
-        mutableStateOf(0)
     }
     QuackModalDrawer(
         drawerState = drawerState,
@@ -149,256 +140,28 @@ internal fun HomeScreen() {
 
                 }
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    QuackTopAppBar(
-                        leadingIcon = QuackIcon.Profile,
-                        onClickLeadingIcon = {
-                            coroutineScope.launch {
-                                drawerState.open()
-                            }
-                        },
-                        centerContent = {
-                            QuackImage(
-                                src = R.drawable.top_bar_logo,
-                                overrideSize = DuckieLogoSize,
-                            )
-                        },
-                        trailingIcon = QuackIcon.Filter,
-                        onClickTrailingIcon = {
-                            coroutineScope.launch {
-                                homeBottomSheetState.show()
-                            }
-                        }
-                    )
-                    LazyColumn(
-                        modifier = Modifier.weight(
-                            weight = 1f,
-                        ),
-                        contentPadding = PaddingValues(
-                            horizontal = 16.dp,
-                            vertical = 8.dp,
-                        ),
-                        verticalArrangement = Arrangement.spacedBy(
-                            space = 24.dp,
-                        )
-                    ) {
-                        item {
-                            FeedHeader(
-                                profile = R.drawable.duckie_profile,
-                                title = "더키",
-                                content = "덕키즈 무지개양말, 만나서 반갑덕!\n관심 태그를 추가하면 피드를 추천해주겠덕",
-                                tagItems = dummyTags,
-                                tagItemsSelection = selectedTags,
-                                onTagClick = { index ->
-                                    selectedTags[index] = !selectedTags[index]
+                when (homeState) {
+                    is HomeState.Loaded -> {
+                        val state = homeState as HomeState.Loaded
+                        HomeComponent(
+                            feeds = state.feeds,
+                            onClickLeadingIcon = {
+                                coroutineScope.launch {
+                                    drawerState.open()
                                 }
-                            )
-                        }
-                        item {
-                            HomeNormalFeed(
-                                FeedHolder(
-                                    profile = R.drawable.duckie_profile,
-                                    nickname = "우주사령관",
-                                    time = "3일 전",
-                                    content = "버즈 라이트이어 개봉 앞둔 기념!\n" +
-                                            "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
-                                            "오픈런 할거임 굿즈 많이 나왔음 좋겠당",
-                                    onMoreClick = {
-                                        coroutineScope.launch {
-                                            moreBottomSheetState.show()
-                                        }
-                                    },
-                                    commentCount = {
-                                        commentCount.toString()
-                                    },
-                                    onClickComment = {
-
-                                    },
-                                    likeCount = {
-                                        likeCount.toString()
-                                    },
-                                    isLike = { isLike },
-                                    onClickLike = {
-                                        when (isLike) {
-                                            true -> likeCount--
-                                            false -> likeCount++
-                                        }
-                                        isLike = !isLike
-                                    },
-                                )
-                            )
-                        }
-                        item {
-                            HomeNormalFeed(
-                                FeedHolder(
-                                    profile = R.drawable.duckie_profile,
-                                    nickname = "우주사령관",
-                                    time = "3일 전",
-                                    content = "버즈 라이트이어 개봉 앞둔 기념!\n" +
-                                            "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
-                                            "오픈런 할거임 굿즈 많이 나왔음 좋겠당",
-                                    onMoreClick = {
-                                        coroutineScope.launch {
-                                            moreBottomSheetState.show()
-                                        }
-                                    },
-                                    commentCount = {
-                                        commentCount.toString()
-                                    },
-                                    onClickComment = {
-
-                                    },
-                                    likeCount = {
-                                        likeCount.toString()
-                                    },
-                                    isLike = { isLike },
-                                    onClickLike = {
-                                        when (isLike) {
-                                            true -> likeCount--
-                                            false -> likeCount++
-                                        }
-                                        isLike = !isLike
-                                    },
-                                    images = persistentListOf(
-                                        R.drawable.duckie_profile
-                                    )
-                                )
-                            )
-                        }
-                        item {
-                            HomeNormalFeed(
-                                FeedHolder(
-                                    profile = R.drawable.duckie_profile,
-                                    nickname = "우주사령관",
-                                    time = "3일 전",
-                                    content = "버즈 라이트이어 개봉 앞둔 기념!\n" +
-                                            "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
-                                            "오픈런 할거임 굿즈 많이 나왔음 좋겠당",
-                                    onMoreClick = {
-                                        coroutineScope.launch {
-                                            moreBottomSheetState.show()
-                                        }
-                                    },
-                                    commentCount = {
-                                        commentCount.toString()
-                                    },
-                                    onClickComment = {
-
-                                    },
-                                    likeCount = {
-                                        likeCount.toString()
-                                    },
-                                    isLike = { isLike },
-                                    onClickLike = {
-                                        when (isLike) {
-                                            true -> likeCount--
-                                            false -> likeCount++
-                                        }
-                                        isLike = !isLike
-                                    },
-                                    images = persistentListOf(
-                                        R.drawable.duckie_profile,
-                                        R.drawable.duckie_profile
-                                    )
-                                )
-                            )
-                        }
-                        item {
-                            HomeDuckDealFeed(
-                                FeedHolder(
-                                    profile = R.drawable.duckie_profile,
-                                    nickname = "우주사령관",
-                                    time = "3일 전",
-                                    content = "버즈 라이트이어 개봉 앞둔 기념!\n" +
-                                            "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
-                                            "오픈런 할거임 굿즈 많이 나왔음 좋겠당",
-                                    onMoreClick = {
-                                        coroutineScope.launch {
-                                            moreBottomSheetState.show()
-                                        }
-                                    },
-                                    commentCount = {
-                                        commentCount.toString()
-                                    },
-                                    onClickComment = {
-
-                                    },
-                                    likeCount = {
-                                        likeCount.toString()
-                                    },
-                                    isLike = { isLike },
-                                    onClickLike = {
-                                        when (isLike) {
-                                            true -> likeCount--
-                                            false -> likeCount++
-                                        }
-                                        isLike = !isLike
-                                    },
-                                    images = persistentListOf(
-                                        R.drawable.duckie_profile,
-                                        R.drawable.duckie_profile
-                                    )
-                                ),
-                                DuckDealHolder(
-                                    tradingMethod = TradingMethod.Direct,
-                                    price = "30,000 원",
-                                    dealState = DealState.Booking,
-                                    location = "마포구 도화동",
-                                ),
-                            )
-                        }
-                        item {
-                            HomeDuckDealFeed(
-                                FeedHolder(
-                                    profile = R.drawable.duckie_profile,
-                                    nickname = "우주사령관",
-                                    time = "3일 전",
-                                    content = "버즈 라이트이어 개봉 앞둔 기념!\n" +
-                                            "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
-                                            "오픈런 할거임 굿즈 많이 나왔음 좋겠당",
-                                    onMoreClick = {
-                                        coroutineScope.launch {
-                                            moreBottomSheetState.show()
-                                        }
-                                    },
-                                    commentCount = {
-                                        commentCount.toString()
-                                    },
-                                    onClickComment = {
-
-                                    },
-                                    likeCount = {
-                                        likeCount.toString()
-                                    },
-                                    isLike = { isLike },
-                                    onClickLike = {
-                                        when (isLike) {
-                                            true -> likeCount--
-                                            false -> likeCount++
-                                        }
-                                        isLike = !isLike
-                                    },
-                                    images = persistentListOf(
-                                        R.drawable.duckie_profile,
-                                    )
-                                ),
-                                DuckDealHolder(
-                                    tradingMethod = TradingMethod.Both,
-                                    price = "30,000 원",
-                                    dealState = DealState.Done,
-                                    location = "마포구 도화동",
-                                ),
-                            )
-                        }
+                            },
+                            onClickTrailingIcon = {
+                                coroutineScope.launch {
+                                    homeBottomSheetState.show()
+                                }
+                            },
+                            onClickMoreIcon = {
+                                coroutineScope.launch {
+                                    moreBottomSheetState.show()
+                                }
+                            }
+                        )
                     }
-                    QuackBottomNavigation(
-                        selectedIndex = selectedNavigationIndex,
-                        onClick = { index ->
-                            selectedNavigationIndex = index
-                        },
-                    )
                 }
             }
         }
@@ -414,4 +177,132 @@ internal fun HomeScreen() {
         },
         paddingValues = homeFabPadding,
     )
+}
+
+@Composable
+fun HomeComponent(
+    feeds: List<Feed>,
+    onClickLeadingIcon: () -> Unit,
+    onClickTrailingIcon: () -> Unit,
+    onClickMoreIcon: () -> Unit,
+) {
+    val selectedTags = remember {
+        mutableStateListOf(
+            elements = Array(dummyTags.size) { false }
+        )
+    }
+    var commentCount by remember {
+        mutableStateOf(0)
+    }
+    var isLike by remember {
+        mutableStateOf(false)
+    }
+    var likeCount by remember {
+        mutableStateOf(0)
+    }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        QuackTopAppBar(
+            leadingIcon = QuackIcon.Profile,
+            onClickLeadingIcon = onClickLeadingIcon,
+            centerContent = {
+                QuackImage(
+                    src = R.drawable.top_bar_logo,
+                    overrideSize = DuckieLogoSize,
+                )
+            },
+            trailingIcon = QuackIcon.Filter,
+            onClickTrailingIcon = onClickTrailingIcon,
+        )
+        LazyColumn(
+            modifier = Modifier.weight(
+                weight = 1f,
+            ),
+            contentPadding = PaddingValues(
+                horizontal = 16.dp,
+                vertical = 8.dp,
+            ),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 24.dp,
+            )
+        ) {
+            item {
+                FeedHeader(
+                    profile = R.drawable.duckie_profile,
+                    title = "더키",
+                    content = "덕키즈 무지개양말, 만나서 반갑덕!\n관심 태그를 추가하면 피드를 추천해주겠덕",
+                    tagItems = dummyTags,
+                    tagItemsSelection = selectedTags,
+                    onTagClick = { index ->
+                        selectedTags[index] = !selectedTags[index]
+                    }
+                )
+            }
+            items(feeds) { feed: Feed -> // //DuckDeal 이므로 null이 아님을 보장
+                when (feed.type) {
+                    FeedType.Normal -> {
+                        HomeNormalFeed(
+                            FeedHolder(
+                                profile = feed.writerId,
+                                nickname = feed.writerId,
+                                time = "3일 전", //Date 로직 작성 필요
+                                content = feed.content.text,
+                                onMoreClick = onClickMoreIcon,
+                                commentCount = { commentCount.toString() },
+                                onClickComment = {
+                                    //navigate
+                                },
+                                likeCount = { likeCount.toString() },
+                                isLike = { isLike },
+                                onClickLike = {
+                                    when (isLike) {
+                                        true -> likeCount--
+                                        false -> likeCount++
+                                    }
+                                    isLike = !isLike
+                                },
+                                images = feed.content.images.toPersistentList()
+                            ),
+                        )
+                    }
+
+                    FeedType.DuckDeal -> {
+                        HomeDuckDealFeed(
+                            FeedHolder(
+                                profile = feed.writerId,
+                                nickname = feed.writerId,
+                                time = "3일 전", //Date 로직 작성 필요
+                                content = feed.content.text,
+                                onMoreClick = onClickMoreIcon,
+                                commentCount = { commentCount.toString() },
+                                onClickComment = {
+                                    //navigate
+                                },
+                                likeCount = { likeCount.toString() },
+                                isLike = { isLike },
+                                onClickLike = {
+                                    when (isLike) {
+                                        true -> likeCount--
+                                        false -> likeCount++
+                                    }
+                                    isLike = !isLike
+                                },
+                                images = feed.content.images.toPersistentList()
+                            ),
+                            DuckDealHolder(
+                                tradingMethod = getTradingMethod(
+                                    feed.isDirectDealing!!,
+                                    feed.parcelable!!
+                                ),
+                                price = feed.price!!.priceToString(),
+                                dealState = feed.dealState!!,
+                                location = feed.location!!,
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
