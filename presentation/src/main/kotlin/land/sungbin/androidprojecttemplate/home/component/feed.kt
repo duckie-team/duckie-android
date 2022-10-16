@@ -82,7 +82,7 @@ internal fun FeedHeader(
         )
     ) {
         QuackImage(
-            src = R.drawable.duckie_profile,
+            src = profile,
             overrideSize = DpSize(
                 width = 36.dp,
                 height = 36.dp
