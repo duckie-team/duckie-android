@@ -1,5 +1,6 @@
 package land.sungbin.androidprojecttemplate.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,7 +28,9 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
-import land.sungbin.androidprojecttemplate.common.DuckieFab
+import land.sungbin.androidprojecttemplate.common.component.DuckieFab
+import land.sungbin.androidprojecttemplate.common.UiStatus
+import land.sungbin.androidprojecttemplate.common.component.DuckieLoadingIndicator
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.FeedType
 import land.sungbin.androidprojecttemplate.home.component.DuckDealHolder
@@ -56,7 +59,7 @@ internal val DuckieLogoSize = DpSize(
 
 @Stable
 internal val homeFabPadding = PaddingValues(
-    bottom = 64.dp,
+    bottom = 12.dp,
     end = 16.dp
 )
 
@@ -140,11 +143,10 @@ internal fun HomeScreen(
 
                 }
             ) {
-                when (homeState) {
-                    is HomeState.Loaded -> {
-                        val state = homeState as HomeState.Loaded
+                when (homeState.status) {
+                    is UiStatus.Success -> {
                         HomeComponent(
-                            feeds = state.feeds,
+                            feeds = homeState.feeds,
                             onClickLeadingIcon = {
                                 coroutineScope.launch {
                                     drawerState.open()
@@ -161,6 +163,11 @@ internal fun HomeScreen(
                                 }
                             }
                         )
+                    }
+                    UiStatus.Loading -> {
+                        Crossfade(targetState = homeState.status) {
+                            DuckieLoadingIndicator()
+                        }
                     }
                 }
             }
