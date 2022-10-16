@@ -19,13 +19,13 @@ internal fun DuckieFab(
     expanded: Boolean,
     onFabClick: () -> Unit,
     onItemClick: (index: Int, item: QuackMenuFabItem) -> Unit,
-    paddingProvider: () -> PaddingValues,
+    paddingValues: PaddingValues,
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                paddingProvider()
+                paddingValues = paddingValues,
             ),
         contentAlignment = Alignment.BottomEnd,
     ) {
