@@ -1,5 +1,4 @@
-package land.sungbin.androidprojecttemplate.common
-
+package land.sungbin.androidprojecttemplate.common.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +10,6 @@ import androidx.compose.ui.Modifier
 import kotlinx.collections.immutable.PersistentList
 import team.duckie.quackquack.ui.component.QuackMenuFab
 import team.duckie.quackquack.ui.component.QuackMenuFabItem
-
 
 @Composable
 internal fun DuckieFab(
