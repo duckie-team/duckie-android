@@ -49,6 +49,12 @@ internal val DuckieLogoSize = DpSize(
     height = 24.dp,
 )
 
+@Stable
+internal val homeFabPadding = PaddingValues(
+    bottom = 64.dp,
+    end = 16.dp
+)
+
 internal val homeFabMenuItems = persistentListOf(
     QuackMenuFabItem(
         icon = QuackIcon.Feed,
@@ -406,11 +412,6 @@ internal fun HomeScreen() {
         onItemClick = { index, item ->
 
         },
-        paddingProvider = {
-            PaddingValues(
-                bottom = 64.dp,
-                end = 16.dp
-            )
-        }
+        paddingValues = homeFabPadding,
     )
 }
