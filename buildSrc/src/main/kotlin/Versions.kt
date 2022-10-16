@@ -31,7 +31,7 @@ object Versions {
         const val Activity = "1.6.0-alpha05"
         const val Landscapist = "1.5.2"
         const val ConstraintLayout = "1.0.1"
-        const val LifecycleViewModel = "2.4.1"
+        const val LifecycleCompose = "2.6.0-alpha01"
         const val Accompanist = "0.24.4-alpha"
     }
 
