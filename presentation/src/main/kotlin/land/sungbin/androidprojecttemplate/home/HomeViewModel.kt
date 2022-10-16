@@ -6,5 +6,5 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
 class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
-    override val container: Container<HomeState, HomeSideEffect> = container(HomeState())
+    override val container: Container<HomeState, HomeSideEffect> = container(HomeState.Loading)
 }
