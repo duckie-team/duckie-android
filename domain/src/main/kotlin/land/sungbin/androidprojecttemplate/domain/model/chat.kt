@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package land.sungbin.androidprojecttemplate.domain.model
 
 import androidx.annotation.IntRange
@@ -8,6 +10,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSetting
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
+import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
 
 /**
  * 채팅 모델
@@ -101,7 +104,7 @@ data class DuckFeedCoreInformation(
             field = "images",
             value = images,
         )
-        requireSize(
+        requireRange(
             min = 0,
             field = "price",
             value = price,
