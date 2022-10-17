@@ -4,6 +4,7 @@ import androidx.annotation.IntRange
 import androidx.annotation.Size
 import java.util.Date
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
+import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSetting
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
@@ -24,7 +25,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * [type] 이 [ChatType.DuckDeal] 이 아니라면 null 을 받습니다.
  */
 data class Chat(
-    val id: String,
+    @PK val id: String,
     val chatRoomId: String,
     val sender: String,
     val type: ChatType,
