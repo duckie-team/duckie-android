@@ -7,7 +7,7 @@ package land.sungbin.androidprojecttemplate.domain.model.util
  * Also see: [FK]
  */
 @Target(
-    AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.PROPERTY,
 )
 internal annotation class PK
 
@@ -18,7 +18,7 @@ internal annotation class PK
  * Also see: [PK]
  */
 @Target(
-    AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.PROPERTY,
 )
 internal annotation class FK
 
@@ -31,7 +31,7 @@ internal annotation class FK
  * 설정된 경우도 이 어노테이션으로 표가됩니다.
  */
 @Target(
-    AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.PROPERTY,
 )
 internal annotation class New
 
@@ -46,7 +46,7 @@ internal annotation class New
  * 않습니다.
  */
 @Target(
-    AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.PROPERTY,
     AnnotationTarget.CONSTRUCTOR,
 )
 internal annotation class Unsupported
