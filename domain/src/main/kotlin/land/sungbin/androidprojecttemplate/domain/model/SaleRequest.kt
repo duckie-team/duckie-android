@@ -1,5 +1,7 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
+import land.sungbin.androidprojecttemplate.domain.model.util.FK
+import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 
 /**
@@ -12,10 +14,10 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
  * @param result 판매 요청 수락 여부
  */
 data class SaleRequest(
-    val id: String,
-    val feedId: String,
-    val ownerId: String,
-    val requesterId: String,
+    @PK val id: String,
+    @FK val feedId: String,
+    @FK val ownerId: String,
+    @FK val requesterId: String,
     val result: Boolean,
 ) {
     init {
