@@ -86,6 +86,6 @@ object Versions {
     }
 
     object Quack {
-        const val quack = "1.2.0"
+        const val quack = "1.2.4"
     }
 }

@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.ui
+package land.sungbin.androidprojecttemplate.constants
 
 object DuckieConst {
     const val MAX_USER_NAME_LENGTH = 10
