@@ -3,19 +3,19 @@ package land.sungbin.androidprojecttemplate.util
 import android.content.Context
 import android.content.SharedPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
-import land.sungbin.androidprojecttemplate.application.DuckieApplication
+import javax.inject.Inject
 
-object PrefUtil {
+class PrefUtil @Inject constructor(
+    @ApplicationContext val context: Context
+) {
 
     private fun getSharedPreferences(
-        @ApplicationContext
         fileName: String?,
         mode: Int = Context.MODE_PRIVATE
     ): SharedPreferences {
-        return DuckieApplication.ApplicationContext().getSharedPreferences(fileName, mode)
+        return context.getSharedPreferences(fileName, mode)
     }
 
-    @JvmStatic
     fun setString(fileName: String?, key: String?, value: String?): Boolean {
         val pref = getSharedPreferences(fileName)
         val editor = pref.edit()
@@ -23,7 +23,6 @@ object PrefUtil {
         return editor.commit()
     }
 
-    @JvmStatic
     fun getString(fileName: String?, key: String?): String? {
         val pref = getSharedPreferences(fileName)
         return pref.getString(key, null)
