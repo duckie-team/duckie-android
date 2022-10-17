@@ -61,10 +61,6 @@ class ImageGalleryViewModel @Inject constructor(
         }
     }
 
-    fun isSelected(image: Uri): Boolean {
-        return _selectedImages.value?.find { it == image } != null
-    }
-
     private fun singleTypePick(checked: Boolean, image: Uri) {
         when (checked) {
             true -> _selectedImages.value = listOf(image)
