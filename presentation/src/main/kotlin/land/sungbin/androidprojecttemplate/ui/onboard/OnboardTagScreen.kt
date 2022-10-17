@@ -19,6 +19,7 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
+import land.sungbin.androidprojecttemplate.constants.UiConstant.WHITE_GRADIENT_HEIGHT
 import land.sungbin.androidprojecttemplate.data.domain.Category
 import land.sungbin.androidprojecttemplate.data.domain.Tag
 import land.sungbin.androidprojecttemplate.ui.component.DuckieSimpleLayout
@@ -131,6 +132,11 @@ internal fun OnboardTagScreen(
                             categoryIndex * 10,
                             categoryIndex * 10 + 10
                         ),
+                    )
+                    if (categoryIndex == categories.size - 1) Spacer(
+                        modifier = Modifier.height(
+                            WHITE_GRADIENT_HEIGHT
+                        )
                     )
                 }
             },
