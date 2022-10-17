@@ -5,6 +5,7 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.Categories
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
+import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
 
 /**
  * 유저가 특정 컨텐츠를 보고 있는 시간 모델
@@ -38,17 +39,17 @@ data class ContentStayTime(
             field = "categories",
             value = categories,
         )
-        requireSize(
+        requireRange(
             min = 0,
             field = "search",
             value = search,
         )
-        requireSize(
+        requireRange(
             min = 0,
             field = "dm",
             value = dm,
         )
-        requireSize(
+        requireRange(
             min = 0,
             field = "notification",
             value = notification,

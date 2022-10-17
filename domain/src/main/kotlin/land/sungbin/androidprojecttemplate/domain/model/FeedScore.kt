@@ -2,7 +2,7 @@ package land.sungbin.androidprojecttemplate.domain.model
 
 import androidx.annotation.IntRange
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
-import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
+import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
 
 /**
  * 덕키 추천 시스템에 사용될 피드 점수 모델
@@ -39,7 +39,7 @@ data class FeedScore(
             field = "feedId",
             value = feedId,
         )
-        requireSize(
+        requireRange(
             min = 0,
             field = "stayTime",
             value = stayTime,
