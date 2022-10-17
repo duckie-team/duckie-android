@@ -3,9 +3,10 @@ package land.sungbin.androidprojecttemplate.domain.model
 import androidx.annotation.IntRange
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Categories
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
-import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
+import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
 /**
  * 유저가 특정 컨텐츠를 보고 있는 시간 모델
@@ -21,7 +22,8 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
  * @param dm DM 화면에 머문 시간
  * @param notification 알림 화면에 머문 시간
  */
-data class ContentStayTime(
+@Suppress("DataClassPrivateConstructor")
+data class ContentStayTime @Unsupported private constructor(
     val userId: String,
     val categories: List<Int>,
     @IntRange(from = 0) val search: Int,

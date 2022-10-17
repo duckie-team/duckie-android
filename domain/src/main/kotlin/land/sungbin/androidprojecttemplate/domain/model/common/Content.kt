@@ -1,6 +1,7 @@
 package land.sungbin.androidprojecttemplate.domain.model.common
 
 import androidx.annotation.Size
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
 /**
@@ -18,7 +19,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 data class Content(
     val text: String,
     @Size(min = 0, max = 5) val images: List<String>,
-    val video: String?,
+    @Unsupported val video: String? = null,
 ) {
     init {
         requireSize(

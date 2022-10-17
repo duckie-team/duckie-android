@@ -1,16 +1,18 @@
-@file:Suppress("unused")
-
 package land.sungbin.androidprojecttemplate.domain.model
 
 import androidx.annotation.IntRange
 import androidx.annotation.Size
 import java.util.Date
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
+import land.sungbin.androidprojecttemplate.domain.model.constraint.ChatType
+import land.sungbin.androidprojecttemplate.domain.model.util.FK
+import land.sungbin.androidprojecttemplate.domain.model.util.New
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSetting
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
-import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
 
 /**
  * 채팅 모델
@@ -29,14 +31,14 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
  */
 data class Chat(
     @PK val id: String,
-    val chatRoomId: String,
-    val sender: String,
-    val type: ChatType,
-    val isDeleted: Boolean,
-    val isEdited: Boolean,
+    @FK val chatRoomId: String,
+    @FK val sender: String,
+    @Unsupported val type: ChatType = ChatType.DuckDeal,
+    @Unsupported val isDeleted: Boolean? = null,
+    @Unsupported val isEdited: Boolean? = null,
     val content: Content,
     val sentAt: Date,
-    val duckFeedData: DuckFeedCoreInformation?,
+    @New val duckFeedData: DuckFeedCoreInformation?,
 ) {
     init {
         requireInput(
@@ -58,29 +60,6 @@ data class Chat(
             value = duckFeedData,
         )
     }
-}
-
-/** 채팅 종류 */
-enum class ChatType(
-    val index: Int,
-    val description: String,
-) {
-    Normal(
-        index = 0,
-        description = "일반",
-    ),
-    Place(
-        index = 1,
-        description = "장소",
-    ),
-    Promise(
-        index = 2,
-        description = "약속",
-    ),
-    DuckDeal(
-        index = 3,
-        description = "덕딜",
-    ),
 }
 
 /**
@@ -115,4 +94,3 @@ data class DuckFeedCoreInformation(
         )
     }
 }
-
