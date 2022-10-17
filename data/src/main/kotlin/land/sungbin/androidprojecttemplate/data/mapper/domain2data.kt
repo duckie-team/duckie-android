@@ -24,19 +24,19 @@ import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
 import land.sungbin.androidprojecttemplate.domain.model.Comment
 import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
 import land.sungbin.androidprojecttemplate.domain.model.DealReview
-import land.sungbin.androidprojecttemplate.domain.model.DislikeReason
 import land.sungbin.androidprojecttemplate.domain.model.DuckFeedCoreInformation
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
-import land.sungbin.androidprojecttemplate.domain.model.LikeReason
 import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badge
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.DislikeReason
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
 
 private fun Content.toData() = ContentData(
     text = text,
@@ -83,7 +83,7 @@ internal fun ChatRoom.toData() = ChatRoomData(
 internal fun Comment.toDat() = CommentData(
     id = id,
     parentId = parentId,
-    userId = userId,
+    userId = ownerId,
     content = content.toData(),
     createdAt = createdAt.toDataString(),
 )
@@ -166,7 +166,7 @@ internal fun User.toData() = UserData(
     nickname = nickname,
     accountAvailable = accountAvailable,
     profileUrl = profileUrl,
-    badges = badges.map(Badge::index),
+    badges = badges?.map(Badge::index),
     likeCategories = likeCategories.map(Category::index),
     interestedTags = interestedTags,
     nonInterestedTags = nonInterestedTags,
