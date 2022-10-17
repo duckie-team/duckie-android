@@ -37,6 +37,7 @@ internal fun ImageGalleryScreen(
     images: List<Uri>,
     viewModel: ImageGalleryViewModel,
 ) {
+    val selectedImages = viewModel.selectedImages.observeAsState().value ?: listOf()
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -62,7 +63,7 @@ internal fun ImageGalleryScreen(
                     onClick = { checked, image ->
                         viewModel.pick(checked, image)
                     },
-                    isSelected = viewModel.isSelected(item),
+                    isSelected = selectedImages.find { it == item } != null,
                 )
             },
             header = {
