@@ -13,6 +13,9 @@ class SplashActivity : ComponentActivity() {
 
     @Inject
     lateinit var navigator: DuckieNavigator
+
+    @Inject
+    lateinit var userHolder: UserHolder
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -23,7 +26,7 @@ class SplashActivity : ComponentActivity() {
         setContent {
             SplashScreen(
                 onCheckSession = {
-                    when (UserHolder.hasSession()) {
+                    when (userHolder.hasSession()) {
                         true -> navigator.navigateMainScreen(this, withFinish = true)
                         else -> navigator.navigateLoginScreen(this, withFinish = true)
                     }

@@ -13,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userHolder: UserHolder,
 ) : ViewModel() {
 
     private val _kakaoLoginFailed: MutableLiveData<Throwable> = MutableLiveData()
@@ -45,7 +46,7 @@ class LoginViewModel @Inject constructor(
             runCatching {
                 authRepository.login()
             }.onSuccess { response ->
-                UserHolder.setUser(response.user)
+                userHolder.setUser(response.user)
                 _loginSuccess.value = Event(Unit)
             }.onFailure {
 
