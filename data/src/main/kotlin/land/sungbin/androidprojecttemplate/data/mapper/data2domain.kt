@@ -228,6 +228,8 @@ internal fun FeedData.toDomain() = Feed(
     ).toDate(),
     title = title,
     price = price,
+    pushCount = pushCount,
+    latestPushAt = latestPushAt,
     location = location,
     isDirectDealing = isDirectDealing,
     parcelable = parcelable,
@@ -325,6 +327,7 @@ internal fun UserData.toDomain() = User(
         field = "accountAvailable",
     ),
     profileUrl = profileUrl,
+    tier = tier,
     badges = badges.unwrap(
         field = "badges",
     ).map { badgeIndex ->
