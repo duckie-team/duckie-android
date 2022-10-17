@@ -2,8 +2,8 @@
 
 package land.sungbin.androidprojecttemplate.domain.model.constraint
 
-/** 유저 배지 */
-enum class Badge(
+/** 덕티어 */
+enum class DuckTier(
     val index: Int,
     val message: String,
 ) {
