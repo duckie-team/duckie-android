@@ -8,6 +8,7 @@ internal data class ChatRoomData(
     val type: Int? = null,
     val coverImageUrl: String? = null,
     val name: String? = null,
+    val ownerId: String? = null,
     val categories: CategoriesData? = null,
     val tags: TagsData? = null,
 )
