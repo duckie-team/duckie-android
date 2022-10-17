@@ -1,6 +1,7 @@
 package land.sungbin.androidprojecttemplate.data.model
 
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
+import land.sungbin.androidprojecttemplate.data.model.util.NewField
 
 internal data class ChatData(
     val id: String? = null,
@@ -11,7 +12,7 @@ internal data class ChatData(
     val isEdited: Boolean? = null,
     val content: ContentData? = null,
     val sentAt: String? = null,
-    val duckFeedData: DuckFeedCoreInformationData? = null,
+    @NewField val duckFeedData: DuckFeedCoreInformationData? = null,
 )
 
 internal data class DuckFeedCoreInformationData(
