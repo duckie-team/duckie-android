@@ -7,7 +7,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 @Composable
 fun BackArrowTopAppBar(
     onClick: () -> Unit
-){
+) {
     QuackTopAppBar(
         leadingIcon = QuackIcon.ArrowBack,
         onClickLeadingIcon = onClick,

@@ -5,7 +5,7 @@ plugins {
         isDFM = false,
         scabbard = false,
         test = false,
-        hilt = false,
+        hilt = true,
     )
     id("com.android.application")
     // id("com.google.gms.google-services")
@@ -14,7 +14,7 @@ plugins {
     id("com.google.android.gms.oss-licenses-plugin")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("name.remal.check-dependency-updates") version Versions.BuildUtil.CheckDependencyUpdates
-    id("com.google.dagger.hilt.android")
+    id("kotlin-parcelize")
 }
 
 /*ruler {
