@@ -11,6 +11,8 @@
 
 ---
 
+# WIP WIP
+
 ### Introduce
 
 Duckie is a service that combines the characteristics of [Karrot-market](https://us.karrotmarket.com/)'s used transaction in a free anonymous space like [Twitter](https://twitter.com/). Check out the [Duckie Tech blog](https://blog.duckie.team/duckie-%EB%A5%BC-%EC%86%8C%EA%B0%9C%ED%95%A9%EB%8B%88%EB%8B%A4-70b6a06ec806) for more details. (ko)
