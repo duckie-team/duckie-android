@@ -14,8 +14,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
-import land.sungbin.androidprojecttemplate.R
-import land.sungbin.androidprojecttemplate.domain.model.DealState
+import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
