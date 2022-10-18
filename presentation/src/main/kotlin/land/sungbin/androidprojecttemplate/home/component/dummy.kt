@@ -1,9 +1,9 @@
 package land.sungbin.androidprojecttemplate.home.component
 
 import land.sungbin.androidprojecttemplate.domain.model.Feed
-import land.sungbin.androidprojecttemplate.domain.model.FeedType
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
 import java.util.Date
 
 // 테스트를 위한 더미 데이터
