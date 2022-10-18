@@ -5,7 +5,7 @@ plugins {
         isDFM = false,
         scabbard = false,
         test = false,
-        hilt = false,
+        hilt = true,
     )
     id("com.android.application")
     // id("com.google.gms.google-services")
