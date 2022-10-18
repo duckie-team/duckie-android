@@ -1,7 +1,6 @@
 package land.sungbin.androidprojecttemplate.home
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
@@ -38,7 +38,7 @@ import land.sungbin.androidprojecttemplate.common.component.DuckieFab
 import land.sungbin.androidprojecttemplate.common.UiStatus
 import land.sungbin.androidprojecttemplate.common.component.DuckieLoadingIndicator
 import land.sungbin.androidprojecttemplate.domain.model.Feed
-import land.sungbin.androidprojecttemplate.domain.model.FeedType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
 import land.sungbin.androidprojecttemplate.home.component.DuckDealHolder
 import land.sungbin.androidprojecttemplate.home.component.FeedHeader
 import land.sungbin.androidprojecttemplate.home.component.FeedHolder
@@ -53,7 +53,6 @@ import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackHeadlineBottomSheet
-import team.duckie.quackquack.ui.component.QuackIconTextToggle
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMenuFabItem
 import team.duckie.quackquack.ui.component.QuackModalDrawer
@@ -92,7 +91,7 @@ internal val homeFabMenuItems = persistentListOf(
 @OptIn(ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun HomeScreen(
-    viewModel: HomeViewModel,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val homeState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()

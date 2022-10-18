@@ -9,7 +9,7 @@ sealed class MainScreens(
     object DuckChat : MainScreens("DUCK_CHAT")
 }
 
-val homeBottomNavItems = listOf(
+internal val homeBottomNavItems = listOf(
     MainScreens.Home.route,
     MainScreens.Search.route,
     MainScreens.Notification.route,

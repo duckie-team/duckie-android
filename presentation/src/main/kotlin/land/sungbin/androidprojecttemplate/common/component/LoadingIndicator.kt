@@ -9,11 +9,11 @@ import androidx.compose.ui.Modifier
 import team.duckie.quackquack.ui.color.QuackColor
 
 @Composable
-internal fun DuckieLoadingIndicator(){
+internal fun DuckieLoadingIndicator() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
-    ){
+    ) {
         CircularProgressIndicator(
             color = QuackColor.DuckieOrange.composeColor
         )
