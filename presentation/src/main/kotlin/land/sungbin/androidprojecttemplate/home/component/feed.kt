@@ -24,6 +24,7 @@ import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackCardImageRow
 import team.duckie.quackquack.ui.component.QuackIconTextToggle
 import team.duckie.quackquack.ui.component.QuackImage
+import team.duckie.quackquack.ui.component.QuackMultiLineTagRow
 import team.duckie.quackquack.ui.component.QuackRoundImage
 import team.duckie.quackquack.ui.component.QuackRowTag
 import team.duckie.quackquack.ui.component.QuackSimpleLabel
@@ -61,18 +62,12 @@ private val ProfileSize = DpSize(
     height = 36.dp,
 )
 
-
-val dummyTags = persistentListOf(
-    "디즈니", "픽사", "마블", "DC", "애니메이션", "지브리", "ost", "피규어"
-)
-
 @Composable
 internal fun FeedHeader(
     @DrawableRes profile: Int,
     title: String,
     content: String,
-    tagItems: PersistentList<String>,
-    tagItemsSelection: List<Boolean>,
+    tagItems: List<String>,
     onTagClick: (
         index: Int,
     ) -> Unit,
@@ -107,10 +102,11 @@ internal fun FeedHeader(
                     singleLine = false,
                 )
             }
-            QuackRowTag(
+            QuackMultiLineTagRow(
                 items = tagItems,
-                itemsSelection = tagItemsSelection,
-                onClick = onTagClick,
+                icon = QuackIcon.Close,
+                onClickIcon = onTagClick,
+                mainAxisSpacing = 8.dp,
             )
         }
 
