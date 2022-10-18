@@ -22,11 +22,14 @@ import team.duckie.quackquack.ui.component.QuackBottomNavigation
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    companion object{
+        private const val InitialNavigationIndex = 0
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             var selectedNavigationIndex by remember {
-                mutableStateOf(0)
+                mutableStateOf(InitialNavigationIndex)
             }
             val navController = rememberNavController()
 
