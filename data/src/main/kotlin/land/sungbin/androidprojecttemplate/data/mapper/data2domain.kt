@@ -1,49 +1,42 @@
 @file:Suppress("ReplaceGetOrSet")
+@file:OptIn(NewField::class)
 
 package land.sungbin.androidprojecttemplate.data.mapper
 
 import java.text.SimpleDateFormat
 import java.util.Locale
 import land.sungbin.androidprojecttemplate.data.model.ChatData
-import land.sungbin.androidprojecttemplate.data.model.ChatReadData
 import land.sungbin.androidprojecttemplate.data.model.ChatRoomData
 import land.sungbin.androidprojecttemplate.data.model.CommentData
-import land.sungbin.androidprojecttemplate.data.model.ContentStayTimeData
 import land.sungbin.androidprojecttemplate.data.model.DealReviewData
 import land.sungbin.androidprojecttemplate.data.model.DuckFeedCoreInformationData
 import land.sungbin.androidprojecttemplate.data.model.FeedData
-import land.sungbin.androidprojecttemplate.data.model.FeedScoreData
 import land.sungbin.androidprojecttemplate.data.model.FollowData
-import land.sungbin.androidprojecttemplate.data.model.HeartData
 import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.UserData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
+import land.sungbin.androidprojecttemplate.data.model.util.NewField
 import land.sungbin.androidprojecttemplate.domain.model.Chat
-import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
-import land.sungbin.androidprojecttemplate.domain.model.ChatRoomType
-import land.sungbin.androidprojecttemplate.domain.model.ChatType
 import land.sungbin.androidprojecttemplate.domain.model.Comment
-import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
 import land.sungbin.androidprojecttemplate.domain.model.DealReview
-import land.sungbin.androidprojecttemplate.domain.model.DealState
-import land.sungbin.androidprojecttemplate.domain.model.DislikeReason
 import land.sungbin.androidprojecttemplate.domain.model.DuckFeedCoreInformation
 import land.sungbin.androidprojecttemplate.domain.model.Feed
-import land.sungbin.androidprojecttemplate.domain.model.FeedScore
-import land.sungbin.androidprojecttemplate.domain.model.FeedType
 import land.sungbin.androidprojecttemplate.domain.model.Follow
-import land.sungbin.androidprojecttemplate.domain.model.Heart
-import land.sungbin.androidprojecttemplate.domain.model.HeartTarget
-import land.sungbin.androidprojecttemplate.domain.model.LikeReason
 import land.sungbin.androidprojecttemplate.domain.model.Report
-import land.sungbin.androidprojecttemplate.domain.model.Review
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badge
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.ChatRoomType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.ChatType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
+import land.sungbin.androidprojecttemplate.domain.model.constraint.DislikeReason
+import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
+import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
 
 private fun ContentData.toDomain() = Content(
     text = text.unwrap(
@@ -104,7 +97,7 @@ internal fun ChatData.toDomain() = Chat(
     duckFeedData = duckFeedData?.toDomain(),
 )
 
-internal fun ChatReadData.toDomain() = ChatRead(
+/*internal fun ChatReadData.toDomain() = ChatRead(
     chatRoomId = chatRoomId.unwrap(
         field = "chatRoomId",
     ),
@@ -114,7 +107,7 @@ internal fun ChatReadData.toDomain() = ChatRead(
     lastestReadChatId = lastestReadChatId.unwrap(
         field = "lastestReadChatId",
     ),
-)
+)*/
 
 internal fun ChatRoomData.toDomain() = ChatRoom(
     id = id.unwrap(
@@ -129,6 +122,9 @@ internal fun ChatRoomData.toDomain() = ChatRoom(
     name = name.unwrap(
         field = "name",
     ),
+    ownerId = ownerId.unwrap(
+        field = "ownerId",
+    ),
     categories = categories?.map { categoryIndex ->
         Category.values()[categoryIndex]
     },
@@ -140,7 +136,7 @@ internal fun CommentData.toDomain() = Comment(
         field = "id",
     ),
     parentId = parentId,
-    userId = userId.unwrap(
+    ownerId = userId.unwrap(
         field = "userId",
     ),
     content = content.unwrap(
@@ -151,7 +147,7 @@ internal fun CommentData.toDomain() = Comment(
     ).toDate(),
 )
 
-internal fun ContentStayTimeData.toDomain() = ContentStayTime(
+/*internal fun ContentStayTimeData.toDomain() = ContentStayTime(
     userId = userId.unwrap(
         field = "userId",
     ),
@@ -167,7 +163,7 @@ internal fun ContentStayTimeData.toDomain() = ContentStayTime(
     notification = notification.unwrap(
         field = "notification",
     ),
-)
+)*/
 
 internal fun DealReviewData.toDomain() = DealReview(
     id = id.unwrap(
@@ -236,6 +232,8 @@ internal fun FeedData.toDomain() = Feed(
     ).toDate(),
     title = title,
     price = price,
+    pushCount = pushCount,
+    latestPushAt = latestPushAt,
     location = location,
     isDirectDealing = isDirectDealing,
     parcelable = parcelable,
@@ -244,7 +242,7 @@ internal fun FeedData.toDomain() = Feed(
     },
 )
 
-internal fun FeedScoreData.toDomain() = FeedScore(
+/*internal fun FeedScoreData.toDomain() = FeedScore(
     userId = userId.unwrap(
         field = "userId",
     ),
@@ -257,7 +255,7 @@ internal fun FeedScoreData.toDomain() = FeedScore(
     score = score.unwrap(
         field = "score",
     ),
-)
+)*/
 
 internal fun FollowData.toDomain() = Follow(
     accountId = accountId.unwrap(
@@ -274,7 +272,7 @@ internal fun FollowData.toDomain() = Follow(
     ),
 )
 
-internal fun HeartData.toDomain() = Heart(
+/*internal fun HeartData.toDomain() = Heart(
     type = HeartTarget.values().get(
         type.unwrap(
             field = "type",
@@ -286,7 +284,7 @@ internal fun HeartData.toDomain() = Heart(
     userId = userId.unwrap(
         field = "userId",
     ),
-)
+)*/
 
 internal fun ReportData.toDomain() = Report(
     id = id.unwrap(
@@ -333,6 +331,7 @@ internal fun UserData.toDomain() = User(
         field = "accountAvailable",
     ),
     profileUrl = profileUrl,
+    tier = tier,
     badges = badges.unwrap(
         field = "badges",
     ).map { badgeIndex ->

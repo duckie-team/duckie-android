@@ -3,7 +3,9 @@ package land.sungbin.androidprojecttemplate.domain.model
 import androidx.annotation.IntRange
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Categories
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
 /**
@@ -20,7 +22,8 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * @param dm DM 화면에 머문 시간
  * @param notification 알림 화면에 머문 시간
  */
-data class ContentStayTime(
+@Suppress("DataClassPrivateConstructor")
+data class ContentStayTime @Unsupported private constructor(
     val userId: String,
     val categories: List<Int>,
     @IntRange(from = 0) val search: Int,
@@ -38,17 +41,17 @@ data class ContentStayTime(
             field = "categories",
             value = categories,
         )
-        requireSize(
+        requireRange(
             min = 0,
             field = "search",
             value = search,
         )
-        requireSize(
+        requireRange(
             min = 0,
             field = "dm",
             value = dm,
         )
-        requireSize(
+        requireRange(
             min = 0,
             field = "notification",
             value = notification,

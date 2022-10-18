@@ -5,7 +5,10 @@ import java.util.Date
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badges
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Categories
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Collections
+import land.sungbin.androidprojecttemplate.domain.model.constraint.DuckTier
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Tags
+import land.sungbin.androidprojecttemplate.domain.model.util.PK
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
@@ -18,6 +21,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * @param accountAvailable 계정 사용 가능 여부
  * @param profileUrl 프로필 사진 주소.
  * 만약 프로필 사진이 설정되지 않았다면 null 을 받습니다.
+ * @param tier 유저의 덕티어
  * @param badges 활성화된 배지 목록
  * @param likeCategories 좋아하는 분야 목록.
  * **최소 1개는 있어야 합니다.**
@@ -31,16 +35,17 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * @param bannedAt 계정이 정지된 시간
  */
 data class User(
-    val nickname: String,
+    @PK val nickname: String,
     val accountAvailable: Boolean,
     val profileUrl: String?,
-    val badges: Badges,
+    @Unsupported val tier: DuckTier? = null,
+    @Unsupported val badges: Badges? = null,
     @Size(min = 1) val likeCategories: Categories,
     val interestedTags: Tags,
     val nonInterestedTags: Tags,
     val notificationTags: Tags,
     val tradePreferenceTags: Tags,
-    val collections: Collections,
+    @Unsupported val collections: Collections? = null,
     val createdAt: Date,
     val deletedAt: Date?,
     val bannedAt: Date?,
