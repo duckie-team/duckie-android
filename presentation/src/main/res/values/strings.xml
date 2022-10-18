@@ -2,8 +2,31 @@
     <string name="app_name">ComposeTemplate</string>
 
     <!-- home -->
-    <string name="feed_filtering_title">홈에서 피드와 덕딜을 모두 보고있어요</string>
+    <string name="duckie_name">더키</string>
+    <string name="duckie_introduce">덕키즈 무지개 양말, 만나서 반갑덕!\n관심 태그를 추가 하면 피드를 추천해 주겠덕</string>
+    <string name="both_direct_dealing_parcelable">택배, 직거래</string>
+    <string name="direct_dealing">직거래</string>
+    <string name="parcelable">택배</string>
+
+    <!-- BottomSheet -->
+    <string name="feed_filtering_title">홈에서 피드와 덕딜을 모두 보고 있어요</string>
     <string name="feed_filtering_both_feed_duck_deal">피드, 덕딜 함께 보기</string>
     <string name="feed_filtering_feed">피드만 보기</string>
     <string name="feed_filtering_duck_deal">덕딜만 보기</string>
+    <string name="follow_other">%s님 팔로우</string>
+    <string name="blocking_other_feed">%s님 피드 차단</string>
+    <string name="report">신고 하기</string>
+
+    <!-- ModalDrawer -->
+    <string name="follower">팔로워</string>
+    <string name="following">팔로잉</string>
+    <string name="feed">피드</string>
+    <string name="trading_activity">거래 활동</string>
+    <string name="list_of_interests">관심 목록</string>
+    <string name="sales_history">판매 내역</string>
+    <string name="purchase_history">구매 내역</string>
+    <string name="my_activity">나의 활동</string>
+    <string name="setting_up_areas_interest">관심 분야 설정</string>
+    <string name="edit_interest_tags">관심 태그 편집</string>
+    <string name="app_settings">앱 설정</string>
 </resources>

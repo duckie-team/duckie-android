@@ -45,7 +45,7 @@ import land.sungbin.androidprojecttemplate.home.component.FeedHolder
 import land.sungbin.androidprojecttemplate.home.component.HomeDuckDealFeed
 import land.sungbin.androidprojecttemplate.home.component.HomeNormalFeed
 import land.sungbin.androidprojecttemplate.home.component.dummyTags
-import land.sungbin.androidprojecttemplate.home.component.getTradingMethod
+import land.sungbin.androidprojecttemplate.home.component.getTradingMethodResourceId
 import land.sungbin.androidprojecttemplate.home.component.priceToString
 import land.sungbin.androidprojecttemplate.shared.compose.extension.noRippleClickable
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -137,15 +137,15 @@ internal fun HomeScreen(
                 bottomSheetState = moreBottomSheetState,
                 items = persistentListOf(
                     QuackBottomSheetItem(
-                        title = "${selectedUser}님 팔로우",
+                        title = stringResource(R.string.follow_other, selectedUser),
                         isImportant = false,
                     ),
                     QuackBottomSheetItem(
-                        title = "${selectedUser}님 피드 차단",
+                        title = stringResource(R.string.blocking_other_feed, selectedUser),
                         isImportant = false,
                     ),
                     QuackBottomSheetItem(
-                        title = "피드 신고",
+                        title = stringResource(R.string.report),
                         isImportant = true,
                     )
                 ),
@@ -240,8 +240,8 @@ fun HomeComponent(
             item {
                 FeedHeader(
                     profile = R.drawable.duckie_profile,
-                    title = "더키",
-                    content = "덕키즈 무지개양말, 만나서 반갑덕!\n관심 태그를 추가하면 피드를 추천해주겠덕",
+                    title = stringResource(id = R.string.duckie_name),
+                    content = stringResource(id = R.string.duckie_introduce),
                     tagItems = dummyTags,
                     tagItemsSelection = selectedTags,
                     onTagClick = { index ->
@@ -306,9 +306,11 @@ fun HomeComponent(
                                 images = feed.content.images.toPersistentList()
                             ),
                             DuckDealHolder(
-                                tradingMethod = getTradingMethod(
-                                    feed.isDirectDealing!!,
-                                    feed.parcelable!!
+                                tradingMethod = stringResource(
+                                    id = getTradingMethodResourceId(
+                                        feed.isDirectDealing!!,
+                                        feed.parcelable!!
+                                    )
                                 ),
                                 price = feed.price!!.priceToString(),
                                 dealState = feed.dealState!!,
@@ -351,25 +353,25 @@ fun DrawerContent() {
             )
         ) {
             QuackTitle2(
-                text = "거래 활동"
+                text = stringResource(id = R.string.trading_activity)
             )
             DrawerIconText(
                 icon = QuackIcon.Heart,
-                text = "관심 목록",
+                text = stringResource(id = R.string.list_of_interests),
                 onClick = {
 
                 }
             )
             DrawerIconText(
                 icon = QuackIcon.Sell,
-                text = "판매 내역",
+                text = stringResource(id = R.string.sales_history),
                 onClick = {
 
                 }
             )
             DrawerIconText(
                 icon = QuackIcon.Buy,
-                text = "구매 내역",
+                text = stringResource(id = R.string.purchase_history),
                 onClick = {
 
                 }
@@ -385,18 +387,18 @@ fun DrawerContent() {
             )
         ) {
             QuackTitle2(
-                text = "나의 활동"
+                text = stringResource(id = R.string.my_activity)
             )
             DrawerIconText(
                 icon = QuackIcon.Area,
-                text = "관심 분야 설정",
+                text = stringResource(id = R.string.setting_up_areas_interest),
                 onClick = {
 
                 }
             )
             DrawerIconText(
                 icon = QuackIcon.Tag,
-                text = "관심 태그 편집",
+                text = stringResource(id = R.string.edit_interest_tags),
                 onClick = {
 
                 }
@@ -408,7 +410,7 @@ fun DrawerContent() {
                 start = 16.dp,
             ),
             icon = QuackIcon.Setting,
-            text = "앱 설정",
+            text = stringResource(id = R.string.app_settings),
             onClick = {
 
             }
@@ -467,9 +469,9 @@ private fun DrawerHeader() {
                 space = 42.dp,
             )
         ) {
-            DrawerNumberText(number = "2.6만", text = "팔로워")
-            DrawerNumberText(number = "167", text = "팔로잉")
-            DrawerNumberText(number = "88", text = "피드")
+            DrawerNumberText(number = "2.6만", text = stringResource(id = R.string.follower))
+            DrawerNumberText(number = "167", text = stringResource(id = R.string.following))
+            DrawerNumberText(number = "88", text = stringResource(id = R.string.feed))
         }
     }
 

@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
@@ -264,13 +266,13 @@ private fun BaseHomeFeed(
     }
 }
 
-fun getTradingMethod(isDirectDealing: Boolean, parcelable: Boolean): String {
+fun getTradingMethodResourceId(isDirectDealing: Boolean, parcelable: Boolean): Int {
     return if (isDirectDealing && parcelable) {
-        "택배, 직거래"
+        R.string.both_direct_dealing_parcelable
     } else if (isDirectDealing) {
-        "택배"
+        R.string.parcelable
     } else {
-        "직거래"
+        R.string.direct_dealing
     }
 }
 
