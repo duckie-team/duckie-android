@@ -2,6 +2,7 @@ package land.sungbin.androidprojecttemplate.home
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -180,6 +181,8 @@ internal fun HomeScreen(
                             DuckieLoadingIndicator()
                         }
                     }
+
+                    else -> {}
                 }
             }
         }
@@ -194,8 +197,8 @@ fun HomeComponent(
     onClickMoreIcon: () -> Unit,
 ) {
     val selectedTags = remember {
-        mutableStateListOf(
-            elements = Array(dummyTags.size) { false }
+        mutableStateOf(
+            dummyTags
         )
     }
     val commentCount by remember {
@@ -225,30 +228,35 @@ fun HomeComponent(
             trailingIcon = QuackIcon.Filter,
             onClickTrailingIcon = onClickTrailingIcon,
         )
+        Box(
+            modifier = Modifier.padding(
+                top = 8.dp,
+                bottom = 24.dp,
+                start = 16.dp,
+                end = 16.dp,
+            )
+        ) {
+            FeedHeader(
+                profile = R.drawable.duckie_profile,
+                title = stringResource(id = R.string.duckie_name),
+                content = stringResource(id = R.string.duckie_introduce),
+                tagItems = selectedTags.value,
+                onTagClick = { index: Int ->
+                    selectedTags.value = selectedTags.value - selectedTags.value[index]
+                }
+            )
+        }
         LazyColumn(
             modifier = Modifier.weight(
                 weight = 1f,
             ),
             contentPadding = PaddingValues(
                 horizontal = 16.dp,
-                vertical = 8.dp,
             ),
             verticalArrangement = Arrangement.spacedBy(
                 space = 24.dp,
             )
         ) {
-            item {
-                FeedHeader(
-                    profile = R.drawable.duckie_profile,
-                    title = stringResource(id = R.string.duckie_name),
-                    content = stringResource(id = R.string.duckie_introduce),
-                    tagItems = dummyTags,
-                    tagItemsSelection = selectedTags,
-                    onTagClick = { index ->
-                        selectedTags[index] = !selectedTags[index]
-                    }
-                )
-            }
             items(
                 items = feeds,
                 key = { feed: Feed ->

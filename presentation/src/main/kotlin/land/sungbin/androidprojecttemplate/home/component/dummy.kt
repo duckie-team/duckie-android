@@ -6,7 +6,10 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
 import java.util.Date
 
-// 테스트를 위한 더미 데이터
+val dummyTags = listOf(
+    "디즈니", "픽사", "마블", "DC", "애니메이션", "지브리", "ost", "피규어","카툰네트워크"
+)
+
 val dummyFeeds = listOf(
     Feed(
         id = "a",
