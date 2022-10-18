@@ -2,7 +2,6 @@ package land.sungbin.androidprojecttemplate.domain.model
 
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
-import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 
 /**
@@ -17,8 +16,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
  * **신고 메시지는 공백을 허용하지 않습니다.**
  * @param checked 덕키팀 확인 여부
  */
-@Suppress("DataClassPrivateConstructor")
-data class Report @Unsupported private constructor(
+data class Report(
     @PK val id: String,
     @FK val reporterId: String,
     @FK val targetId: String,
