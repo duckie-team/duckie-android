@@ -1,8 +1,11 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
 import androidx.annotation.IntRange
+import land.sungbin.androidprojecttemplate.domain.model.util.FK
+import land.sungbin.androidprojecttemplate.domain.model.util.PK
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
-import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
+import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
 
 /**
  * 덕키 추천 시스템에 사용될 피드 점수 모델
@@ -24,9 +27,10 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * | 공유 | 5 |
  * | 관심 없음 | -3 |
  */
-data class FeedScore(
-    val userId: String,
-    val feedId: String,
+@Suppress("DataClassPrivateConstructor")
+data class FeedScore @Unsupported private constructor(
+    @PK @FK val userId: String,
+    @FK val feedId: String,
     @IntRange(from = 0) val stayTime: Int = 0,
     val score: Int,
 ) {
@@ -39,7 +43,7 @@ data class FeedScore(
             field = "feedId",
             value = feedId,
         )
-        requireSize(
+        requireRange(
             min = 0,
             field = "stayTime",
             value = stayTime,

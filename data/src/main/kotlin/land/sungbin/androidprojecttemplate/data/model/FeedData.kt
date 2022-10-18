@@ -1,5 +1,6 @@
 package land.sungbin.androidprojecttemplate.data.model
 
+import java.util.Date
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
 import land.sungbin.androidprojecttemplate.data.model.constraint.CategoriesData
 
@@ -14,6 +15,8 @@ internal data class FeedData(
     val createdAt: String? = null,
     val title: String? = null,
     val price: Int? = null,
+    val pushCount: Int? = null,
+    val latestPushAt: Date? = null,
     val location: String? = null,
     val isDirectDealing: Boolean? = null,
     val parcelable: Boolean? = null,
