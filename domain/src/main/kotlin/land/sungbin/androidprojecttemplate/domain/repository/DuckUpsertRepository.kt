@@ -24,7 +24,7 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
  */
 private typealias DuckFirebaseResult = Result<Unit>
 
-interface DuckRepository {
+interface DuckUpsertRepository {
     /**
      * [유저][User] 정보를 생성하거나 업데이트합니다.
      *
@@ -33,7 +33,7 @@ interface DuckRepository {
      *
      * @param user 정보를 생성하거나 업데이트할 [유저][User] 객체
      */
-    suspend fun createOrUpdateUser(
+    suspend fun upsertUser(
         user: User,
     ): DuckFirebaseResult
 
@@ -45,7 +45,7 @@ interface DuckRepository {
      *
      * @param follow 정보를 생성하거나 업데이트할 [팔로우][Follow] 객체
      */
-    suspend fun createOrUpdateFollow(
+    suspend fun upsertFollow(
         follow: Follow,
     ): DuckFirebaseResult
 
@@ -57,7 +57,7 @@ interface DuckRepository {
      *
      * @param chatRoom 정보를 생성하거나 업데이트할 [채팅방][ChatRoom] 객체
      */
-    suspend fun createOrUpdateChatRoom(
+    suspend fun upsertChatRoom(
         chatRoom: ChatRoom,
     ): DuckFirebaseResult
 
@@ -69,7 +69,7 @@ interface DuckRepository {
      *
      * @param chat 정보를 생성하거나 업데이트할 [채팅][Chat] 객체
      */
-    suspend fun createOrUpdateChat(
+    suspend fun upsertChat(
         chat: Chat,
     ): DuckFirebaseResult
 
@@ -81,7 +81,7 @@ interface DuckRepository {
      *
      * @param feed 정보를 생성하거나 업데이트할 [피드][Feed] 객체
      */
-    suspend fun createOrUpdateFeed(
+    suspend fun upsertFeed(
         feed: Feed,
     ): DuckFirebaseResult
 
@@ -93,7 +93,7 @@ interface DuckRepository {
      *
      * @param chatRead 정보를 생성하거나 업데이트할 [채팅 확인][ChatRead] 객체
      */
-    suspend fun createOrUpdateChatRead(
+    suspend fun upsertChatRead(
         chatRead: ChatRead,
     ): DuckFirebaseResult
 
@@ -105,7 +105,7 @@ interface DuckRepository {
      *
      * @param heart 정보를 생성하거나 업데이트할 [좋아요][Heart] 객체
      */
-    suspend fun createOrUpdateHeart(
+    suspend fun upsertHeart(
         heart: Heart,
     ): DuckFirebaseResult
 
@@ -117,7 +117,7 @@ interface DuckRepository {
      *
      * @param comment 정보를 생성하거나 업데이트할 [댓글][Comment] 객체
      */
-    suspend fun createOrUpdateComment(
+    suspend fun upsertComment(
         comment: Comment,
     ): DuckFirebaseResult
 
@@ -129,7 +129,7 @@ interface DuckRepository {
      *
      * @param review 정보를 생성하거나 업데이트할 [리뷰][Review] 객체
      */
-    suspend fun createOrUpdateReview(
+    suspend fun upsertReview(
         review: Review,
     ): DuckFirebaseResult
 
@@ -141,7 +141,7 @@ interface DuckRepository {
      *
      * @param saleRequest 정보를 생성하거나 업데이트할 [판매 요청][SaleRequest] 객체
      */
-    suspend fun createOrUpdateSaleRequest(
+    suspend fun upsertSaleRequest(
         saleRequest: SaleRequest,
     ): DuckFirebaseResult
 
@@ -153,7 +153,7 @@ interface DuckRepository {
      *
      * @param report 정보를 생성하거나 업데이트할 [신고][Report] 객체
      */
-    suspend fun createOrUpdateReport(
+    suspend fun upsertReport(
         report: Report,
     ): DuckFirebaseResult
 
@@ -165,7 +165,7 @@ interface DuckRepository {
      *
      * @param feedScore 정보를 생성하거나 업데이트할 [피드 선호도][FeedScore] 객체
      */
-    suspend fun createOrUpdateFeedScore(
+    suspend fun upsertFeedScore(
         feedScore: FeedScore,
     ): DuckFirebaseResult
 
@@ -177,7 +177,7 @@ interface DuckRepository {
      *
      * @param contentStayTime 정보를 생성하거나 업데이트할 [컨텐츠 별 머문 시간][ContentStayTime] 객체
      */
-    suspend fun createOrUpdateTime(
+    suspend fun upsertTime(
         contentStayTime: ContentStayTime,
     ): DuckFirebaseResult
 }
