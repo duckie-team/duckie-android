@@ -16,13 +16,13 @@ import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
 
 /**
- * 덕키 Firebase API 사용 결과를 나타냅니다.
+ * 덕키 Firebase API upsert 결과를 나타냅니다.
  * 결과 처리를 쉽게하기 위해 [Result] 클래스를 이용합니다.
  *
- * Firebase API Result 는 [Unit] or [DuckApiException] 으로 나타나므로
+ * Firebase API upsert 결과는 [Unit] 혹은 [DuckApiException] 으로 결정되므로
  * `Result<Unit>` 타입이 유효합니다.
  */
-private typealias DuckFirebaseResult = Result<Unit>
+private typealias DuckUpsertResult = Result<Unit>
 
 interface DuckUpsertRepository {
     /**
@@ -35,7 +35,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertUser(
         user: User,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [팔로우][Follow] 정보를 생성하거나 업데이트합니다.
@@ -47,7 +47,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertFollow(
         follow: Follow,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [채팅방][ChatRoom] 정보를 생성하거나 업데이트합니다.
@@ -59,7 +59,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertChatRoom(
         chatRoom: ChatRoom,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [채팅][Chat] 정보를 생성하거나 업데이트합니다.
@@ -71,7 +71,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertChat(
         chat: Chat,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [피드][Feed] 정보를 생성하거나 업데이트합니다.
@@ -83,7 +83,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertFeed(
         feed: Feed,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [채팅 확인][ChatRead] 정보를 생성하거나 업데이트합니다.
@@ -95,7 +95,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertChatRead(
         chatRead: ChatRead,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [좋아요][Heart] 정보를 생성하거나 업데이트합니다.
@@ -107,7 +107,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertHeart(
         heart: Heart,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [댓글][Comment] 정보를 생성하거나 업데이트합니다.
@@ -119,7 +119,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertComment(
         comment: Comment,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [리뷰][Review] 정보를 생성하거나 업데이트합니다.
@@ -131,7 +131,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertReview(
         review: Review,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [판매 요청][SaleRequest] 정보를 생성하거나 업데이트합니다.
@@ -143,7 +143,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertSaleRequest(
         saleRequest: SaleRequest,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [신고][Report] 정보를 생성하거나 업데이트합니다.
@@ -155,7 +155,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertReport(
         report: Report,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [피드 선호도][ChatRoom] 정보를 생성하거나 업데이트합니다.
@@ -167,7 +167,7 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertFeedScore(
         feedScore: FeedScore,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 
     /**
      * [컨텐츠 별 머문 시간][ContentStayTime] 정보를 생성하거나 업데이트합니다.
@@ -179,5 +179,5 @@ interface DuckUpsertRepository {
      */
     suspend fun upsertTime(
         contentStayTime: ContentStayTime,
-    ): DuckFirebaseResult
+    ): DuckUpsertResult
 }
