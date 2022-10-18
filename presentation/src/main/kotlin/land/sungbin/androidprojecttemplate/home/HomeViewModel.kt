@@ -1,6 +1,7 @@
 package land.sungbin.androidprojecttemplate.home
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import land.sungbin.androidprojecttemplate.common.UiStatus
 import land.sungbin.androidprojecttemplate.home.component.dummyFeeds
