@@ -10,11 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import team.duckie.quackquack.ui.color.QuackColor
@@ -26,7 +24,6 @@ import team.duckie.quackquack.ui.component.QuackIconTextToggle
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMultiLineTagRow
 import team.duckie.quackquack.ui.component.QuackRoundImage
-import team.duckie.quackquack.ui.component.QuackRowTag
 import team.duckie.quackquack.ui.component.QuackSimpleLabel
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.component.QuackTitle2
@@ -34,13 +31,14 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 import java.text.NumberFormat
 import java.util.Locale
 
-
 data class FeedHolder(
     val profile: Any?,
     val nickname: String,
     val time: String,
     val content: String,
-    val onMoreClick: () -> Unit,
+    val onMoreClick: (
+        user: String,
+    ) -> Unit,
     val commentCount: () -> String,
     val onClickComment: () -> Unit,
     val isLike: () -> Boolean,
@@ -215,7 +213,9 @@ private fun BaseHomeFeed(
                         height = 16.dp,
                     ),
                     tint = QuackColor.Gray1,
-                    onClick = feedHolder.onMoreClick,
+                    onClick = {
+                        feedHolder.onMoreClick(feedHolder.nickname)
+                    },
                 )
             }
             Column(

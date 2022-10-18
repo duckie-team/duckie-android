@@ -19,39 +19,43 @@ import land.sungbin.androidprojecttemplate.navigation.MainNavigation
 import land.sungbin.androidprojecttemplate.navigation.MainScreens
 import land.sungbin.androidprojecttemplate.navigation.homeBottomNavItems
 import team.duckie.quackquack.ui.component.QuackBottomNavigation
+import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    companion object{
+    companion object {
         private const val InitialNavigationIndex = 0
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var selectedNavigationIndex by remember {
-                mutableStateOf(InitialNavigationIndex)
-            }
-            val navController = rememberNavController()
+            QuackTheme {
+                var selectedNavigationIndex by remember {
+                    mutableStateOf(InitialNavigationIndex)
+                }
+                val navController = rememberNavController()
 
-            Column(modifier = Modifier.fillMaxSize()) {
-                Box(modifier = Modifier.weight(1f)) {
-                    MainNavigation(
-                        navController = navController,
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Box(modifier = Modifier.weight(1f)) {
+                        MainNavigation(
+                            navController = navController,
+                        )
+                    }
+                    QuackBottomNavigation(
+                        selectedIndex = selectedNavigationIndex,
+                        onClick = { index ->
+                            selectedNavigationIndex = index
+                            navController.navigate(homeBottomNavItems[index]) {
+                                navController.graph.startDestinationRoute?.let { startDestinationRoute ->
+                                    popUpTo(startDestinationRoute) { saveState = true }
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
                     )
                 }
-                QuackBottomNavigation(
-                    selectedIndex = selectedNavigationIndex,
-                    onClick = { index ->
-                        selectedNavigationIndex = index
-                        navController.navigate(homeBottomNavItems[index]) {
-                            navController.graph.startDestinationRoute?.let { startDestinationRoute ->
-                                popUpTo(startDestinationRoute) { saveState = true }
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                )
             }
         }
     }

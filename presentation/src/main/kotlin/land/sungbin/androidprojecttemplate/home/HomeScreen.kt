@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
@@ -66,19 +67,45 @@ internal val homeFabPadding = PaddingValues(
     end = 16.dp
 )
 
-internal val homeFabMenuItems = persistentListOf(
-    QuackMenuFabItem(
-        icon = QuackIcon.Feed,
-        text = "피드",
-    ),
-    QuackMenuFabItem(
-        icon = QuackIcon.Buy,
-        text = "덕딜",
+@Stable
+@Composable
+internal fun homeFabMenuItems(): PersistentList<QuackMenuFabItem> {
+    return persistentListOf(
+        QuackMenuFabItem(
+            icon = QuackIcon.Feed,
+            text = stringResource(id = R.string.feed),
+        ),
+        QuackMenuFabItem(
+            icon = QuackIcon.Buy,
+            text = stringResource(id = R.string.duck_deal),
+        )
     )
+}
+
+@Stable
+@Composable
+internal fun homeFilterBottomSheetItems(): PersistentList<QuackBottomSheetItem> {
+    return persistentListOf(
+        QuackBottomSheetItem(
+            title = stringResource(id = R.string.feed_filtering_both_feed_duck_deal),
+            isImportant = false,
+        ),
+        QuackBottomSheetItem(
+            title = stringResource(id = R.string.feed_filtering_feed),
+            isImportant = true,
+        ),
+        QuackBottomSheetItem(
+            title = stringResource(id = R.string.feed_filtering_duck_deal),
+            isImportant = false,
+        )
+    )
+}
+
+
+@OptIn(
+    ExperimentalMaterialApi::class,
+    ExperimentalLifecycleComposeApi::class,
 )
-
-
-@OptIn(ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -86,15 +113,12 @@ internal fun HomeScreen(
     val homeState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberQuackDrawerState()
-    val homeBottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden
-    )
-    val moreBottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden
-    )
-    var selectedUser by remember {
-        mutableStateOf("")
-    }
+    val homeBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val moreBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    var selectedUser by remember { mutableStateOf("") }
+    val dummy = homeFilterBottomSheetItems()
+    val filterBottomSheetItems = remember { mutableStateOf(dummy) }
+
     QuackModalDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -104,23 +128,15 @@ internal fun HomeScreen(
         QuackHeadlineBottomSheet(
             bottomSheetState = homeBottomSheetState,
             headline = stringResource(id = R.string.feed_filtering_title),
-            items = persistentListOf(
-                QuackBottomSheetItem(
-                    title = stringResource(id = R.string.feed_filtering_both_feed_duck_deal),
-                    isImportant = false,
-                ),
-                QuackBottomSheetItem(
-                    title = stringResource(id = R.string.feed_filtering_feed),
-                    isImportant = true,
-                ),
-                QuackBottomSheetItem(
-                    title = stringResource(id = R.string.feed_filtering_duck_deal),
-                    isImportant = false,
-                )
-
-            ),
-            onClick = { quackBottomSheetItem ->
-
+            items = filterBottomSheetItems.value,
+            onClick = { headLineBottomSheetItem: QuackBottomSheetItem ->
+                filterBottomSheetItems.value = filterBottomSheetItems.value.map { item ->
+                    if (headLineBottomSheetItem == item) {
+                        QuackBottomSheetItem(item.title, true)
+                    } else {
+                        QuackBottomSheetItem(item.title, false)
+                    }
+                }.toPersistentList()
             }
         ) {
             QuackSimpleBottomSheet(
@@ -139,7 +155,7 @@ internal fun HomeScreen(
                         isImportant = true,
                     )
                 ),
-                onClick = {
+                onClick = { simpleBottomSheetItem: QuackBottomSheetItem ->
 
                 }
             ) {
@@ -157,11 +173,12 @@ internal fun HomeScreen(
                                     homeBottomSheetState.show()
                                 }
                             },
-                            onClickMoreIcon = {
+                            onClickMoreIcon = { user ->
                                 coroutineScope.launch {
                                     moreBottomSheetState.show()
                                 }
-                            }
+                                selectedUser = user
+                            },
                         )
                     }
 
@@ -183,25 +200,15 @@ fun HomeComponent(
     feeds: List<Feed>,
     onClickLeadingIcon: () -> Unit,
     onClickTrailingIcon: () -> Unit,
-    onClickMoreIcon: () -> Unit,
+    onClickMoreIcon: (
+        user: String,
+    ) -> Unit,
 ) {
-    val selectedTags = remember {
-        mutableStateOf(
-            dummyTags
-        )
-    }
-    val commentCount by remember {
-        mutableStateOf(0)
-    }
-    var isLike by remember {
-        mutableStateOf(false)
-    }
-    var likeCount by remember {
-        mutableStateOf(0)
-    }
-    var fabExpanded by remember {
-        mutableStateOf(false)
-    }
+    val selectedTags = remember { mutableStateOf(dummyTags) }
+    val commentCount by remember { mutableStateOf(0) }
+    var isLike by remember { mutableStateOf(false) }
+    var likeCount by remember { mutableStateOf(0) }
+    var fabExpanded by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -236,15 +243,9 @@ fun HomeComponent(
             )
         }
         LazyColumn(
-            modifier = Modifier.weight(
-                weight = 1f,
-            ),
-            contentPadding = PaddingValues(
-                horizontal = 16.dp,
-            ),
-            verticalArrangement = Arrangement.spacedBy(
-                space = 24.dp,
-            )
+            modifier = Modifier.weight(weight = 1f),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(space = 24.dp)
         ) {
             items(
                 items = feeds,
@@ -320,7 +321,7 @@ fun HomeComponent(
         }
     }
     DuckieFab(
-        items = homeFabMenuItems,
+        items = homeFabMenuItems(),
         expanded = fabExpanded,
         onFabClick = {
             fabExpanded = !fabExpanded
