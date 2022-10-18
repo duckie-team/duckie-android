@@ -45,7 +45,8 @@ object Dependencies {
         "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.LifecycleCompose}",
         "androidx.lifecycle:lifecycle-runtime-compose:${Versions.Compose.LifecycleCompose}",
         "com.google.accompanist:accompanist-navigation-animation:${Versions.Compose.Accompanist}",
-        "androidx.constraintlayout:constraintlayout-compose:${Versions.Compose.ConstraintLayout}"
+        "androidx.constraintlayout:constraintlayout-compose:${Versions.Compose.ConstraintLayout}",
+        "androidx.hilt:hilt-navigation-compose:${Versions.Compose.HiltNavigation}",
     )
 
     val Ui = listOf(
