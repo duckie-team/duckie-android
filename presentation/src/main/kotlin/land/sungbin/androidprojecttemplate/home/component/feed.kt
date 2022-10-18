@@ -31,35 +31,6 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 import java.text.NumberFormat
 import java.util.Locale
 
-data class FeedHolder(
-    val profile: Any?,
-    val nickname: String,
-    val time: String,
-    val content: String,
-    val onMoreClick: (
-        user: String,
-    ) -> Unit,
-    val commentCount: () -> String,
-    val onClickComment: () -> Unit,
-    val isLike: () -> Boolean,
-    val likeCount: () -> String,
-    val onClickLike: () -> Unit,
-    val images: PersistentList<Any>? = null,
-)
-
-data class DuckDealHolder(
-    val tradingMethod: String,
-    val price: String,
-    val dealState: DealState,
-    val location: String,
-)
-
-@Stable
-private val ProfileSize = DpSize(
-    width = 36.dp,
-    height = 36.dp,
-)
-
 @Composable
 internal fun FeedHeader(
     @DrawableRes profile: Int,
@@ -261,6 +232,35 @@ private fun BaseHomeFeed(
         }
     }
 }
+
+data class FeedHolder(
+    val profile: Any?,
+    val nickname: String,
+    val time: String,
+    val content: String,
+    val onMoreClick: (
+        user: String,
+    ) -> Unit,
+    val commentCount: () -> String,
+    val onClickComment: () -> Unit,
+    val isLike: () -> Boolean,
+    val likeCount: () -> String,
+    val onClickLike: () -> Unit,
+    val images: PersistentList<Any>? = null,
+)
+
+data class DuckDealHolder(
+    val tradingMethod: String,
+    val price: String,
+    val dealState: DealState,
+    val location: String,
+)
+
+@Stable
+private val ProfileSize = DpSize(
+    width = 36.dp,
+    height = 36.dp,
+)
 
 fun getTradingMethodResourceId(isDirectDealing: Boolean, parcelable: Boolean): Int {
     return if (isDirectDealing && parcelable) {
