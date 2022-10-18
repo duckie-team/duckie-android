@@ -1,4 +1,5 @@
 @file:Suppress("ReplaceGetOrSet")
+@file:OptIn(NewField::class)
 
 package land.sungbin.androidprojecttemplate.data.mapper
 
@@ -11,9 +12,11 @@ import land.sungbin.androidprojecttemplate.data.model.DealReviewData
 import land.sungbin.androidprojecttemplate.data.model.DuckFeedCoreInformationData
 import land.sungbin.androidprojecttemplate.data.model.FeedData
 import land.sungbin.androidprojecttemplate.data.model.FollowData
+import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.UserData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
+import land.sungbin.androidprojecttemplate.data.model.util.NewField
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
 import land.sungbin.androidprojecttemplate.domain.model.Comment
@@ -21,6 +24,7 @@ import land.sungbin.androidprojecttemplate.domain.model.DealReview
 import land.sungbin.androidprojecttemplate.domain.model.DuckFeedCoreInformation
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.Follow
+import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
@@ -282,7 +286,7 @@ internal fun FollowData.toDomain() = Follow(
     ),
 )*/
 
-/*internal fun ReportData.toDomain() = Report(
+internal fun ReportData.toDomain() = Report(
     id = id.unwrap(
         field = "id",
     ),
@@ -299,7 +303,7 @@ internal fun FollowData.toDomain() = Follow(
     checked = checked.unwrap(
         field = "checked",
     ),
-)*/
+)
 
 internal fun SaleRequestData.toDomain() = SaleRequest(
     id = id.unwrap(
