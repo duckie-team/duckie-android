@@ -55,53 +55,6 @@ import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.component.rememberQuackDrawerState
 import team.duckie.quackquack.ui.icon.QuackIcon
 
-@Stable
-internal val DuckieLogoSize = DpSize(
-    width = 72.dp,
-    height = 24.dp,
-)
-
-@Stable
-internal val homeFabPadding = PaddingValues(
-    bottom = 12.dp,
-    end = 16.dp
-)
-
-@Stable
-@Composable
-internal fun homeFabMenuItems(): PersistentList<QuackMenuFabItem> {
-    return persistentListOf(
-        QuackMenuFabItem(
-            icon = QuackIcon.Feed,
-            text = stringResource(id = R.string.feed),
-        ),
-        QuackMenuFabItem(
-            icon = QuackIcon.Buy,
-            text = stringResource(id = R.string.duck_deal),
-        )
-    )
-}
-
-@Stable
-@Composable
-internal fun homeFilterBottomSheetItems(): PersistentList<QuackBottomSheetItem> {
-    return persistentListOf(
-        QuackBottomSheetItem(
-            title = stringResource(id = R.string.feed_filtering_both_feed_duck_deal),
-            isImportant = false,
-        ),
-        QuackBottomSheetItem(
-            title = stringResource(id = R.string.feed_filtering_feed),
-            isImportant = true,
-        ),
-        QuackBottomSheetItem(
-            title = stringResource(id = R.string.feed_filtering_duck_deal),
-            isImportant = false,
-        )
-    )
-}
-
-
 @OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalLifecycleComposeApi::class,
@@ -116,8 +69,12 @@ internal fun HomeScreen(
     val homeBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val moreBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     var selectedUser by remember { mutableStateOf("") }
-    val dummy = homeFilterBottomSheetItems()
-    val filterBottomSheetItems = remember { mutableStateOf(dummy) }
+
+    val filterQuackBottomSheetItems = homeFilterBottomSheetItems()
+    val moreQuackBottomSheetItems = MoreBottomSheetItems(selectedUser = selectedUser)
+
+    var filterBottomSheetItems by remember { mutableStateOf(filterQuackBottomSheetItems) }
+    var moreBottomSheetItems by remember { mutableStateOf(filterQuackBottomSheetItems) }
 
     QuackModalDrawer(
         drawerState = drawerState,
@@ -128,9 +85,9 @@ internal fun HomeScreen(
         QuackHeadlineBottomSheet(
             bottomSheetState = homeBottomSheetState,
             headline = stringResource(id = R.string.feed_filtering_title),
-            items = filterBottomSheetItems.value,
+            items = filterBottomSheetItems,
             onClick = { headLineBottomSheetItem: QuackBottomSheetItem ->
-                filterBottomSheetItems.value = filterBottomSheetItems.value.map { item ->
+                filterBottomSheetItems = filterBottomSheetItems.map { item: QuackBottomSheetItem ->
                     if (headLineBottomSheetItem == item) {
                         QuackBottomSheetItem(item.title, true)
                     } else {
@@ -141,28 +98,25 @@ internal fun HomeScreen(
         ) {
             QuackSimpleBottomSheet(
                 bottomSheetState = moreBottomSheetState,
-                items = persistentListOf(
-                    QuackBottomSheetItem(
-                        title = stringResource(R.string.follow_other, selectedUser),
-                        isImportant = false,
-                    ),
-                    QuackBottomSheetItem(
-                        title = stringResource(R.string.blocking_other_feed, selectedUser),
-                        isImportant = false,
-                    ),
-                    QuackBottomSheetItem(
-                        title = stringResource(R.string.report),
-                        isImportant = true,
-                    )
-                ),
+                items = moreQuackBottomSheetItems,
                 onClick = { simpleBottomSheetItem: QuackBottomSheetItem ->
-
+                    //index에 따라 팔로우, 피드차단, 신고하기
                 }
             ) {
                 when (homeState.status) {
                     is UiStatus.Success -> {
                         HomeComponent(
-                            feeds = homeState.feeds,
+                            feeds = when {
+                                filterBottomSheetItems[FeedIndex].isImportant -> homeState.feeds.filter { feed: Feed ->
+                                    feed.type == FeedType.Normal
+                                }
+
+                                filterBottomSheetItems[DuckDealIndex].isImportant -> homeState.feeds.filter { feed: Feed ->
+                                    feed.type == FeedType.DuckDeal
+                                }
+
+                                else -> homeState.feeds
+                            },
                             onClickLeadingIcon = {
                                 coroutineScope.launch {
                                     drawerState.open()
@@ -206,6 +160,7 @@ fun HomeComponent(
 ) {
     val selectedTags = remember { mutableStateOf(dummyTags) }
     val commentCount by remember { mutableStateOf(0) }
+    val feedState = remember { mutableStateOf(feeds) }
     var isLike by remember { mutableStateOf(false) }
     var likeCount by remember { mutableStateOf(0) }
     var fabExpanded by remember { mutableStateOf(false) }
@@ -330,5 +285,73 @@ fun HomeComponent(
 
         },
         paddingValues = homeFabPadding,
+    )
+}
+
+@Stable
+internal val DuckieLogoSize = DpSize(
+    width = 72.dp,
+    height = 24.dp,
+)
+
+@Stable
+internal val homeFabPadding = PaddingValues(
+    bottom = 12.dp,
+    end = 16.dp
+)
+
+private const val FeedIndex = 1
+private const val DuckDealIndex = 2
+
+@Stable
+@Composable
+internal fun homeFabMenuItems(): PersistentList<QuackMenuFabItem> {
+    return persistentListOf(
+        QuackMenuFabItem(
+            icon = QuackIcon.Feed,
+            text = stringResource(id = R.string.feed),
+        ),
+        QuackMenuFabItem(
+            icon = QuackIcon.Buy,
+            text = stringResource(id = R.string.duck_deal),
+        )
+    )
+}
+
+@Stable
+@Composable
+internal fun homeFilterBottomSheetItems(): PersistentList<QuackBottomSheetItem> {
+    return persistentListOf(
+        QuackBottomSheetItem(
+            title = stringResource(id = R.string.feed_filtering_both_feed_duck_deal),
+            isImportant = false,
+        ),
+        QuackBottomSheetItem(
+            title = stringResource(id = R.string.feed_filtering_feed),
+            isImportant = true,
+        ),
+        QuackBottomSheetItem(
+            title = stringResource(id = R.string.feed_filtering_duck_deal),
+            isImportant = false,
+        )
+    )
+}
+
+@Stable
+@Composable
+internal fun MoreBottomSheetItems(selectedUser: String): PersistentList<QuackBottomSheetItem> {
+    return persistentListOf(
+        QuackBottomSheetItem(
+            title = stringResource(R.string.follow_other, selectedUser),
+            isImportant = false,
+        ),
+        QuackBottomSheetItem(
+            title = stringResource(R.string.blocking_other_feed, selectedUser),
+            isImportant = false,
+        ),
+        QuackBottomSheetItem(
+            title = stringResource(R.string.report),
+            isImportant = false,
+        )
     )
 }
