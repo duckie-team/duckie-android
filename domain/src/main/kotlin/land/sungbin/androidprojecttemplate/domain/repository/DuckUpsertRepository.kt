@@ -18,10 +18,13 @@ import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResul
 /**
  * 덕키 Firebase API upsert 결과를 나타냅니다.
  *
- * upsert result 는 반환 값이 없으므로 `DuckApiResult<Nothing>` 타입이 유효합니다.
+ * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 타입이 유효합니다.
  */
 private typealias DuckUpsertResult = DuckApiResult<Nothing>
 
+/**
+ * Upsert 요청을 하는 API 들의 시그니처를 정의합니다.
+ */
 interface DuckUpsertRepository : DuckRepository {
     /**
      * [유저][User] 정보를 생성하거나 업데이트합니다.
@@ -30,6 +33,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param user 정보를 생성하거나 업데이트할 [유저][User] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertUser(
         user: User,
@@ -42,6 +47,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param follow 정보를 생성하거나 업데이트할 [팔로우][Follow] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertFollow(
         follow: Follow,
@@ -54,6 +61,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param chatRoom 정보를 생성하거나 업데이트할 [채팅방][ChatRoom] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertChatRoom(
         chatRoom: ChatRoom,
@@ -66,6 +75,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param chat 정보를 생성하거나 업데이트할 [채팅][Chat] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertChat(
         chat: Chat,
@@ -78,6 +89,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param feed 정보를 생성하거나 업데이트할 [피드][Feed] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertFeed(
         feed: Feed,
@@ -90,6 +103,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param chatRead 정보를 생성하거나 업데이트할 [채팅 확인][ChatRead] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertChatRead(
         chatRead: ChatRead,
@@ -102,6 +117,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param heart 정보를 생성하거나 업데이트할 [좋아요][Heart] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertHeart(
         heart: Heart,
@@ -114,6 +131,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param comment 정보를 생성하거나 업데이트할 [댓글][Comment] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertComment(
         comment: Comment,
@@ -126,6 +145,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param review 정보를 생성하거나 업데이트할 [리뷰][Review] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertReview(
         review: Review,
@@ -138,6 +159,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param saleRequest 정보를 생성하거나 업데이트할 [판매 요청][SaleRequest] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertSaleRequest(
         saleRequest: SaleRequest,
@@ -150,6 +173,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param report 정보를 생성하거나 업데이트할 [신고][Report] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertReport(
         report: Report,
@@ -162,6 +187,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param feedScore 정보를 생성하거나 업데이트할 [피드 선호도][FeedScore] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertFeedScore(
         feedScore: FeedScore,
@@ -174,6 +201,8 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param contentStayTime 정보를 생성하거나 업데이트할 [컨텐츠 별 머문 시간][ContentStayTime] 객체
+     * @return Upsert 결과.
+     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertTime(
         contentStayTime: ContentStayTime,
