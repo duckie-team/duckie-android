@@ -5,11 +5,11 @@ import land.sungbin.androidprojecttemplate.domain.repository.DuckUpsertRepositor
 /**
  * [DuckUpsertRepository] 의 결과를 나타냅니다.
  */
-sealed class DuckUpsertResult<out T> : DuckApiResult<T> {
+sealed class DuckUpsertResult<T> : DuckApiResult<T> {
     /**
      * [DuckUpsertRepository] 에서 값 upsert 에 성공했을 때 반환되는 결과입니다.
      */
-    class Done<out T> : DuckUpsertResult<T>()
+    class Done<T> : DuckUpsertResult<T>()
 }
 
 /**
