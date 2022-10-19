@@ -1,6 +1,5 @@
 package land.sungbin.androidprojecttemplate.domain.repository
 
-import land.sungbin.androidprojecttemplate.domain.exception.DuckApiException
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
@@ -14,17 +13,16 @@ import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
+import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 
 /**
  * 덕키 Firebase API upsert 결과를 나타냅니다.
- * 결과 처리를 쉽게하기 위해 [Result] 클래스를 이용합니다.
  *
- * Firebase API upsert 결과는 [Unit] 혹은 [DuckApiException] 으로 결정되므로
- * `Result<Unit>` 타입이 유효합니다.
+ * upsert result 는 반환 값이 없으므로 `DuckApiResult<Nothing>` 타입이 유효합니다.
  */
-private typealias DuckUpsertResult = Result<Unit>
+private typealias DuckUpsertResult = DuckApiResult<Nothing>
 
-interface DuckUpsertRepository {
+interface DuckUpsertRepository : DuckRepository {
     /**
      * [유저][User] 정보를 생성하거나 업데이트합니다.
      *
