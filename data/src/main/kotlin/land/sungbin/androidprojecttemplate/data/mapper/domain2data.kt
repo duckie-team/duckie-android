@@ -135,7 +135,7 @@ internal fun FeedScore.toData() = FeedScoreData(
 )
 
 internal fun Follow.toData() = FollowData(
-    accountId = accountId,
+    accountId = userId,
     followings = followings,
     followers = followers,
     blocks = blocks,
