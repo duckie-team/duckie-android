@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.PersistentList
@@ -112,29 +113,18 @@ internal fun HomeDuckDealFeed(
                     space = 4.dp
                 )
             ) {
-                when (duckDealHolder.dealState) {
-                    DealState.Booking -> {
-                        QuackSimpleLabel(
-                            text = duckDealHolder.dealState.description,
-                            active = true
-                        )
-                    }
-
-                    DealState.Done -> {
-                        QuackSimpleLabel(
-                            text = duckDealHolder.dealState.description,
-                            active = false
-                        )
-                    }
-
-                    else -> {}
+                with(duckDealHolder) {
+                    FeedLabel(dealState = dealState, description = dealState.description)
                 }
                 QuackTitle2(
                     text = duckDealHolder.price
                 )
             }
             QuackBody2(
-                text = "${duckDealHolder.tradingMethod} · ${duckDealHolder.location}"
+                text = with(duckDealHolder) {
+                    getTradingMethodAndLocation(isDirectDealing, parcelable, location)
+                }
+
             )
         }
     }
@@ -250,7 +240,8 @@ data class FeedHolder(
 )
 
 data class DuckDealHolder(
-    val tradingMethod: String,
+    val isDirectDealing: Boolean,
+    val parcelable: Boolean,
     val price: String,
     val dealState: DealState,
     val location: String,
@@ -262,7 +253,49 @@ private val ProfileSize = DpSize(
     height = 36.dp,
 )
 
-fun getTradingMethodResourceId(isDirectDealing: Boolean, parcelable: Boolean): Int {
+@Composable
+internal fun FeedLabel(
+    dealState: DealState,
+    description: String,
+) = when (dealState) {
+    DealState.Booking -> {
+        QuackSimpleLabel(
+            text = description,
+            active = true
+        )
+    }
+
+    DealState.Done -> {
+        QuackSimpleLabel(
+            text = description,
+            active = false
+        )
+    }
+
+    else -> {}
+}
+
+@Composable
+internal fun getTradingMethodAndLocation(
+    isDirectDealing: Boolean,
+    parcelable: Boolean,
+    location: String,
+) =
+    stringResource(
+        id = R.string.center_period_between_text,
+        stringResource(id = getTradingMethodResourceId(isDirectDealing, parcelable)),
+        location
+    )
+
+@Composable
+internal fun Int.priceToString(): String =
+    stringResource(
+        id = R.string.price_with_won,
+        NumberFormat.getInstance(Locale.getDefault()).format(this)
+    )
+
+
+internal fun getTradingMethodResourceId(isDirectDealing: Boolean, parcelable: Boolean): Int {
     return if (isDirectDealing && parcelable) {
         R.string.both_direct_dealing_parcelable
     } else if (isDirectDealing) {
@@ -272,4 +305,3 @@ fun getTradingMethodResourceId(isDirectDealing: Boolean, parcelable: Boolean): I
     }
 }
 
-fun Int.priceToString(): String = NumberFormat.getInstance(Locale.getDefault()).format(this)

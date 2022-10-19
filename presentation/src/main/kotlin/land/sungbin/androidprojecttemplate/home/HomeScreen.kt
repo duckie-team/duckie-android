@@ -259,12 +259,8 @@ fun HomeComponent(
                                 images = feed.content.images.toPersistentList()
                             ),
                             DuckDealHolder(
-                                tradingMethod = stringResource(
-                                    id = getTradingMethodResourceId(
-                                        feed.isDirectDealing!!,
-                                        feed.parcelable!!
-                                    )
-                                ),
+                                isDirectDealing = feed.isDirectDealing!!,
+                                parcelable = feed.parcelable!!,
                                 price = feed.price!!.priceToString(),
                                 dealState = feed.dealState!!,
                                 location = feed.location!!,
