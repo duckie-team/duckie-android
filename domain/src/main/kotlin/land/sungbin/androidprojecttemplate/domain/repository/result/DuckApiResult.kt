@@ -5,13 +5,13 @@ import land.sungbin.androidprojecttemplate.domain.repository.DuckRepository
 /**
  * [DuckRepository] 의 결과를 나타냅니다.
  */
-sealed interface DuckApiResult<out T> {
+sealed interface DuckApiResult<T> {
     /**
      * [DuckRepository] 에서 API 호출에 예외가 발생했을 때 반환되는 결과입니다.
      *
      * @param message 발생한 예외 메시지
      */
-    data class Exception<out T>(val message: String?) : DuckApiResult<T>
+    data class Exception<T>(val message: String?) : DuckApiResult<T>
 }
 
 /**
