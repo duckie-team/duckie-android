@@ -33,14 +33,18 @@ internal annotation class FK
 @Target(
     AnnotationTarget.PROPERTY,
 )
+@RequiresOptIn(
+    message = "이 필드는 API 사용에 편의를 위해 추가된 필드로, DB 명세에는 없는 필드입니다. " +
+            "API 요청에서 주의해야 합니다.",
+)
 internal annotation class New
 
 /**
  * 덕키가 MVP 작업으로 진행되면서 사용되지 않는 필드를 나타냅니다.
  * 모델들은 추후 정식 개발을 위해 MVP 에서 사용되지 않는 필드들까지 다
- * 추가하였기 때문에, 이 어노테이션이 붙은 필드는 nullable 혹은
+ * 추가하였기 때문에, **이 어노테이션이 붙은 필드는 nullable 혹은
  * 정해진 값을 가져가며 기본값이 null 혹은 정해진 값으로 설정됩니다.
- * 설정된 기본값의 의미를 나타내기 위해 사용됩니다.
+ * 설정된 기본값은 변경되면 안되며,** 설정된 기본값의 의미를 나타내기 위해 사용됩니다.
  * 만약 이 어노테이션이 생성자에 붙었다면 해당 클래스는 presentation 계층에서
  * 사용되면 안됨을 나타냅니다. 이러한 경우 실제 API request 에도 사용되지
  * 않습니다.
@@ -48,5 +52,8 @@ internal annotation class New
 @Target(
     AnnotationTarget.PROPERTY,
     AnnotationTarget.CONSTRUCTOR,
+)
+@RequiresOptIn(
+    message = "이 필드는 MVP 개발 환경에서는 사용되서는 안됩니다.",
 )
 internal annotation class Unsupported
