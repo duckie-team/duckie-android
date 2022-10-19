@@ -3,6 +3,7 @@ package land.sungbin.androidprojecttemplate.home.component
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
 import java.util.Date
 
@@ -36,7 +37,7 @@ val dummyFeeds = listOf(
     Feed(
         id = "c",
         writerId = "d",
-        type = FeedType.Normal,
+        type = FeedType.DuckDeal,
         isDeleted = false,
         isHidden = false,
         content = Content(
@@ -48,11 +49,11 @@ val dummyFeeds = listOf(
         ),
         categories = listOf(Category.Celebrity),
         createdAt = Date(),
-        title = null,
-        price = null,
-        location = null,
-        isDirectDealing = null,
-        parcelable = null,
-        dealState = null
+        title = "덕딜 상품 제목",
+        price = 30000,
+        location = "마포구 도화동",
+        isDirectDealing = true,
+        parcelable = true,
+        dealState = DealState.Booking
     )
 )
