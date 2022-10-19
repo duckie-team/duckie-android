@@ -10,12 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.PersistentList
-import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
+import land.sungbin.androidprojecttemplate.home.util.getTradingMethodAndLocation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -29,8 +28,6 @@ import team.duckie.quackquack.ui.component.QuackSimpleLabel
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
-import java.text.NumberFormat
-import java.util.Locale
 
 @Composable
 internal fun FeedHeader(
@@ -124,7 +121,6 @@ internal fun HomeDuckDealFeed(
                 text = with(duckDealHolder) {
                     getTradingMethodAndLocation(isDirectDealing, parcelable, location)
                 }
-
             )
         }
     }
@@ -274,27 +270,3 @@ internal fun FeedLabel(
 
     else -> {}
 }
-
-@Composable
-internal fun getTradingMethodAndLocation(
-    isDirectDealing: Boolean,
-    parcelable: Boolean,
-    location: String,
-) = stringResource(
-    id = R.string.center_period_between_text,
-    stringResource(id = getTradingMethodResourceId(isDirectDealing, parcelable)),
-    location
-)
-
-
-
-private fun getTradingMethodResourceId(isDirectDealing: Boolean, parcelable: Boolean): Int {
-    return if (isDirectDealing && parcelable) {
-        R.string.both_direct_dealing_parcelable
-    } else if (isDirectDealing) {
-        R.string.parcelable
-    } else {
-        R.string.direct_dealing
-    }
-}
-
