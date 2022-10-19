@@ -43,8 +43,8 @@ import land.sungbin.androidprojecttemplate.home.component.FeedHolder
 import land.sungbin.androidprojecttemplate.home.component.HomeDuckDealFeed
 import land.sungbin.androidprojecttemplate.home.component.HomeNormalFeed
 import land.sungbin.androidprojecttemplate.home.component.dummyTags
-import land.sungbin.androidprojecttemplate.home.component.priceToString
-import land.sungbin.androidprojecttemplate.home.component.toUnitString
+import land.sungbin.androidprojecttemplate.home.util.priceToString
+import land.sungbin.androidprojecttemplate.home.util.toUnitString
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 import team.duckie.quackquack.ui.component.QuackHeadlineBottomSheet
 import team.duckie.quackquack.ui.component.QuackImage
