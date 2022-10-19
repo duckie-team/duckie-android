@@ -43,8 +43,8 @@ import land.sungbin.androidprojecttemplate.home.component.FeedHolder
 import land.sungbin.androidprojecttemplate.home.component.HomeDuckDealFeed
 import land.sungbin.androidprojecttemplate.home.component.HomeNormalFeed
 import land.sungbin.androidprojecttemplate.home.component.dummyTags
-import land.sungbin.androidprojecttemplate.home.component.getTradingMethodResourceId
 import land.sungbin.androidprojecttemplate.home.component.priceToString
+import land.sungbin.androidprojecttemplate.home.component.toUnitString
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 import team.duckie.quackquack.ui.component.QuackHeadlineBottomSheet
 import team.duckie.quackquack.ui.component.QuackImage
@@ -162,7 +162,7 @@ fun HomeComponent(
     val commentCount by remember { mutableStateOf(0) }
     val feedState = remember { mutableStateOf(feeds) }
     var isLike by remember { mutableStateOf(false) }
-    var likeCount by remember { mutableStateOf(0) }
+    var likeCount by remember { mutableStateOf(12000) }
     var fabExpanded by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -247,7 +247,7 @@ fun HomeComponent(
                                 onClickComment = {
                                     //navigate
                                 },
-                                likeCount = { likeCount.toString() },
+                                likeCount = { likeCount.toUnitString() },
                                 isLike = { isLike },
                                 onClickLike = {
                                     when (isLike) {

@@ -280,22 +280,15 @@ internal fun getTradingMethodAndLocation(
     isDirectDealing: Boolean,
     parcelable: Boolean,
     location: String,
-) =
-    stringResource(
-        id = R.string.center_period_between_text,
-        stringResource(id = getTradingMethodResourceId(isDirectDealing, parcelable)),
-        location
-    )
-
-@Composable
-internal fun Int.priceToString(): String =
-    stringResource(
-        id = R.string.price_with_won,
-        NumberFormat.getInstance(Locale.getDefault()).format(this)
-    )
+) = stringResource(
+    id = R.string.center_period_between_text,
+    stringResource(id = getTradingMethodResourceId(isDirectDealing, parcelable)),
+    location
+)
 
 
-internal fun getTradingMethodResourceId(isDirectDealing: Boolean, parcelable: Boolean): Int {
+
+private fun getTradingMethodResourceId(isDirectDealing: Boolean, parcelable: Boolean): Int {
     return if (isDirectDealing && parcelable) {
         R.string.both_direct_dealing_parcelable
     } else if (isDirectDealing) {
