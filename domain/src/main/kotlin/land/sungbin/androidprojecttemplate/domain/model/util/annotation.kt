@@ -8,6 +8,7 @@ package land.sungbin.androidprojecttemplate.domain.model.util
  */
 @Target(
     AnnotationTarget.PROPERTY,
+    AnnotationTarget.VALUE_PARAMETER,
 )
 internal annotation class PK
 
@@ -19,6 +20,7 @@ internal annotation class PK
  */
 @Target(
     AnnotationTarget.PROPERTY,
+    AnnotationTarget.VALUE_PARAMETER,
 )
 internal annotation class FK
 
