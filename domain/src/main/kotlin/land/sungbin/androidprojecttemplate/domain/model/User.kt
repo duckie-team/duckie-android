@@ -15,9 +15,9 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 /**
  * 유저 모델
  *
- * @param nickname 닉네임. **덕키에서는 유저 닉네임을
- * 유저의 고유 키로 사용합니다.** 즉, 유저 아이디는
- * 이 값을 나타냅니다.
+ * @param nickname 닉네임. **덕키에서는 유저 닉네임을 유저의
+ * 고유 키로 사용합니다.** 즉, 유저 아이디는 이 값을 나타냅니다.
+ * 이 값은 `User.id` 를 통해서도 가져올 수 있습니다.
  * @param accountAvailable 계정 사용 가능 여부
  * @param profileUrl 프로필 사진 주소.
  * 만약 프로필 사진이 설정되지 않았다면 null 을 받습니다.
