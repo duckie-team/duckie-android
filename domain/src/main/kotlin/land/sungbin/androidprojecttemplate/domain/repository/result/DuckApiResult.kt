@@ -15,7 +15,7 @@ sealed interface DuckApiResult<out T> {
 }
 
 /**
- * [runCatching] 과 유사하며, 작업 중 예외 발생시 [DuckApiResult.Exception] 을
+ * [runCatching] 과 유사하며, [DuckRepository] 작업 중 예외 발생시 [DuckApiResult.Exception] 을
  * 반환합니다.
  *
  * @param execute 실행할 [DuckRepository] 작업
