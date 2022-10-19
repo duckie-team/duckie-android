@@ -177,6 +177,7 @@ interface DuckUpsertRepository : DuckRepository {
      * @return Upsert 결과.
      * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
+    // TODO: 신고 조회는 덕키 앱에서 사용되지 않으므로 추후 덕키 관리 서비스에서 구현해야 합니다.
     suspend fun upsertReport(
         report: Report,
     ): DuckUpsertResult
