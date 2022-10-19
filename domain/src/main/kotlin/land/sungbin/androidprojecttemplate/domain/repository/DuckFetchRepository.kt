@@ -4,170 +4,168 @@ import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
 import land.sungbin.androidprojecttemplate.domain.model.Comment
-import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
+import land.sungbin.androidprojecttemplate.domain.model.DealReview
 import land.sungbin.androidprojecttemplate.domain.model.Feed
-import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
-import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
-import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
+import land.sungbin.androidprojecttemplate.domain.model.util.FK
+import land.sungbin.androidprojecttemplate.domain.model.util.PK
+import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
+import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 
-interface DuckFetchRepository {
+/**
+ * Fetch 요청을 하는 API 들의 시그니처를 정의합니다.
+ */
+interface DuckFetchRepository : DuckRepository {
     /**
      * 주어진 아이디로부터 [유저][User] 정보를 조회합니다.
      *
-     * 등록된 정보가 있다면 해당 값을 반환하고, 그렇지 않다면
-     * null 을 반환합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
      * @param id 조회할 [유저의 아이디][User.nickname]
+     * @return 조회된 [유저][User] 정보를 담은 [fetch 결과][DuckFetchResult]
      */
     suspend fun fetchUser(
-        id: String,
-    ): User?
+        @PK id: String,
+    ): DuckFetchResult<User>
 
     /**
-     * [팔로우][Follow] 정보를 생성하거나 업데이트합니다.
+     * 주어진 아이디로부터 [팔로우][Follow] 정보를 조회합니다.
      *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param follow 정보를 생성하거나 업데이트할 [팔로우][Follow] 객체
+     * @param userId 조회할 [유저의 아이디][User.nickname]
+     * @return 조회된 [팔로우][Follow] 정보를 담은 [fetch 결과][DuckFetchResult]
      */
     suspend fun fetchFollow(
-        follow: Follow,
-    )
+        @PK userId: String,
+    ): DuckFetchResult<Follow>
 
     /**
-     * [채팅방][ChatRoom] 정보를 생성하거나 업데이트합니다.
+     * 특정 [유저][User]가 참여중인 [채팅방][ChatRoom] 목록을 조회합니다.
      *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param chatRoom 정보를 생성하거나 업데이트할 [채팅방][ChatRoom] 객체
+     * @param userId 조회할 [유저의 아이디][User.nickname]
+     * @return 조회된 [채팅방][ChatRoom] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
-    suspend fun fetchChatRoom(
-        chatRoom: ChatRoom,
-    )
+    suspend fun fetchChatRooms(
+        @FK userId: String,
+    ): DuckFetchResult<List<ChatRoom>>
 
     /**
-     * [채팅][Chat] 정보를 생성하거나 업데이트합니다.
+     * 특정 [채팅방][ChatRoom]에 전송된 [채팅][Chat] 목록을 조회합니다.
      *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param chat 정보를 생성하거나 업데이트할 [채팅][Chat] 객체
+     * @param chatRoomId 조회할 [채팅방 아이디][ChatRoom.id]
+     * @return 조회된 [채팅][Chat] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
-    suspend fun fetchChat(
-        chat: Chat,
-    )
+    suspend fun fetchChats(
+        @FK chatRoomId: String,
+    ): DuckFetchResult<List<Chat>>
 
     /**
-     * [피드][Feed] 정보를 생성하거나 업데이트합니다.
+     * 전체 [피드][Feed] 목록을 조회합니다.
+     * 추천 시스템이 반영된 피드 목록 조회는 [fetchRecommendationFeeds] 를 사용하세요.
      *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param feed 정보를 생성하거나 업데이트할 [피드][Feed] 객체
+     * @return 전체 [피드][Feed] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
-    suspend fun fetchFeed(
-        feed: Feed,
-    )
+    suspend fun fetchAllFeeds(): DuckFetchResult<List<Feed>>
 
     /**
-     * [채팅 확인][ChatRead] 정보를 생성하거나 업데이트합니다.
+     * 특정 유저의 취향이 반영된 [피드][Feed] 목록을 조회합니다.
+     * 내부적으로 [duckie-recommender-sysytem](https://github.com/duckie-team/duckie-recommender-system) 을 이용합니다.
+     * 추천 시스템이 적용되지 않은 전체 [피드][Feed] 목록 조회는 [fetchAllFeeds] 를 사용하세요.
      *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param chatRead 정보를 생성하거나 업데이트할 [채팅 확인][ChatRead] 객체
+     * @param userId 조회할 [유저의 아이디][User.nickname]
+     * @return 추천된 [피드][Feed] 목록을 담은 [fetch 결과][DuckFetchResult]
+     */
+    suspend fun fetchRecommendationFeeds(
+        @PK userId: String,
+    ): DuckFetchResult<List<Feed>>
+
+    /**
+     * 주어진 [유저][User]가 마지막으로 [읽은 채팅][ChatRead]의 목록을 조회합니다.
+     *
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
+     *
+     * @param userId 조회할 [유저의 아이디][User.nickname]
+     * @return 조회된 마지막으로 [읽은 채팅][ChatRead]의 목록을 담은 [fetch 결과][DuckFetchResult]
      */
     suspend fun fetchChatRead(
-        chatRead: ChatRead,
-    )
+        @PK @FK userId: String,
+    ): DuckApiResult<ChatRead>
 
     /**
-     * [좋아요][Heart] 정보를 생성하거나 업데이트합니다.
+     * 주어진 피드가 받은 [좋아요][Heart] 목록을 조회합니다.
      *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param heart 정보를 생성하거나 업데이트할 [좋아요][Heart] 객체
+     * @param feedId 조회할 [피드 아이디][Feed.id]
+     * @return 조회된 [좋아요][Heart] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
-    suspend fun fetchHeart(
-        heart: Heart,
-    )
+    suspend fun fetchHearts(
+        @PK @FK feedId: String,
+    ): DuckApiResult<Heart>
 
     /**
-     * [댓글][Comment] 정보를 생성하거나 업데이트합니다.
+     * 주어진 피드에 작성된 [댓글][Comment] 목록을 조회합니다.
      *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param comment 정보를 생성하거나 업데이트할 [댓글][Comment] 객체
+     * @param feedId 조회할 [피드 아이디][Feed.id]
+     * @return 조회된 [댓글][Comment] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
-    suspend fun fetchComment(
-        comment: Comment,
-    )
+    suspend fun fetchComments(
+        @FK feedId: String,
+    ): DuckApiResult<List<Comment>>
 
     /**
-     * [리뷰][Review] 정보를 생성하거나 업데이트합니다.
+     * 주어진 덕딜피드로부터 등록된 [리뷰][DealReview] 정보를 조회합니다.
      *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param review 정보를 생성하거나 업데이트할 [리뷰][Review] 객체
+     * @param feedId 조회할 [덕딜피드 아이디][Feed.id].
+     * 주어진 피드 아이디가 덕딜피드 아이디인지는 검사하지 않습니다.
+     * 해당 아이디에 등록된 리뷰가 없다면 피드 종류에 관계 없이 항상
+     * [DuckFetchResult.Empty] 를 반환합니다.
+     * @return 조회된 [리뷰][DealReview] 정보를 담은 [fetch 결과][DuckFetchResult]
      */
+    // See: https://github.com/duckie-team/duckie-app-mvp/issues/32
     suspend fun fetchReview(
-        review: Review,
-    )
+        @FK feedId: String,
+    ): DuckApiResult<DealReview>
 
     /**
-     * [판매 요청][SaleRequest] 정보를 생성하거나 업데이트합니다.
+     * 주어진 덕딜피드로부터 [판매 요청][SaleRequest]된 기록을 조회합니다.
      *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
+     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
+     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param saleRequest 정보를 생성하거나 업데이트할 [판매 요청][SaleRequest] 객체
+     * @param feedId 조회할 [덕딜피드 아이디][Feed.id].
+     * 주어진 피드 아이디가 덕딜피드 아이디인지는 검사하지 않습니다.
+     * 해당 아이디에 등록된 리뷰가 없다면 피드 종류에 관계 없이 항상
+     * [DuckFetchResult.Empty] 를 반환합니다.
+     * @return 조회된 [판매 요청][SaleRequest] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
     suspend fun fetchSaleRequest(
-        saleRequest: SaleRequest,
-    )
-
-    /**
-     * [신고][Report] 정보를 생성하거나 업데이트합니다.
-     *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
-     *
-     * @param report 정보를 생성하거나 업데이트할 [신고][Report] 객체
-     */
-    suspend fun fetchReport(
-        report: Report,
-    )
-
-    /**
-     * [피드 선호도][ChatRoom] 정보를 생성하거나 업데이트합니다.
-     *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
-     *
-     * @param feedScore 정보를 생성하거나 업데이트할 [피드 선호도][FeedScore] 객체
-     */
-    suspend fun fetchFeedScore(
-        feedScore: FeedScore,
-    )
-
-    /**
-     * [컨텐츠 별 머문 시간][ContentStayTime] 정보를 생성하거나 업데이트합니다.
-     *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
-     *
-     * @param contentStayTime 정보를 생성하거나 업데이트할 [컨텐츠 별 머문 시간][ContentStayTime] 객체
-     */
-    suspend fun fetchTime(
-        contentStayTime: ContentStayTime,
-    )
+        @FK feedId: String,
+    ): DuckApiResult<List<SaleRequest>>
 }
