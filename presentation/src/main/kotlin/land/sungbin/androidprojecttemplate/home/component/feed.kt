@@ -1,6 +1,5 @@
 package land.sungbin.androidprojecttemplate.home.component
 
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
@@ -20,6 +18,8 @@ import kotlinx.collections.immutable.toPersistentList
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
+import land.sungbin.androidprojecttemplate.home.dto.FeedDTO
+import land.sungbin.androidprojecttemplate.home.dto.priceToString
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -41,14 +41,7 @@ internal fun FeedHeader(
         index: Int,
     ) -> Unit,
 ) {
-    Box(
-        modifier = Modifier.padding(
-            top = 8.dp,
-            bottom = 24.dp,
-            start = 16.dp,
-            end = 16.dp,
-        )
-    ) {
+    Box{
         Row(
             horizontalArrangement = Arrangement.spacedBy(
                 space = 8.dp,
@@ -89,95 +82,38 @@ internal fun FeedHeader(
     }
 }
 
-/*
-@Composable
-internal fun HomeNormalFeed(
-    feedHolder: FeedHolder, //TODO 태그 생기면 태그 추가
-) {
-    NormalFeed(
-
-    )
-}
-
-@Composable
-internal fun HomeDuckDealFeed(
-    feedHolder: FeedHolder, //TODO 태그 생기면 태그 추가
-    duckDealHolder: DuckDealHolder,
-) {
-    BaseHomeFeed(
-        feedHolder = feedHolder
-    ) {
-        Column(
-            modifier = Modifier.padding(
-                top = 2.dp,
-            ),
-            verticalArrangement = Arrangement.spacedBy(
-                space = 8.dp
-            )
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(
-                    space = 4.dp
-                )
-            ) {
-                with(duckDealHolder) {
-                    FeedLabel(dealState = dealState, description = dealState.description)
-                }
-                QuackTitle2(
-                    text = duckDealHolder.price
-                )
-            }
-            QuackBody2(
-                text = with(duckDealHolder) {
-                    getTradingMethodAndLocation(isDirectDealing, parcelable, location)
-                }
-            )
-        }
-    }
-}
-*/
 @Composable
 internal fun NormalFeed(
-    profileUrl: String,
-    nickname: String,
-    createdAt: String,
-    content: Content = Content(
-        "버즈 라이트",
-        images = listOf()
-    ),
-) = BasicFeed(
-    profileUrl = profileUrl,
-    nickname = nickname,
-    createdAt = createdAt,
-) {
-    NormalFeedContent(content = content)
+    normalFeed: FeedDTO.Normal,
+) = with(normalFeed) {
+    BasicFeed(
+        profileUrl = writerId,
+        nickname = writerId,
+        createdAt = createdAt,
+    ) {
+        NormalFeedContent(content = content)
+    }
 }
 
 @Composable
 internal fun DuckDealFeed(
-    profileUrl: String,
-    nickname: String,
-    createdAt: String,
-    content: Content = Content(
-        "버즈 라이트",
-        images = listOf("https://images.unsplash.com/photo-1617854818583-09e7f077a156?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80","https://tedblob.com/wp-content/uploads/2021/09/android.png",)
-    ),
-    title: String = "제목",
-    dealState: DealState = DealState.Booking,
-    price: String = "30,000 원",
-    dealMethodAndLocation: String = "택배, 직거래 - 마포구 도화동"
-) = BasicFeed(
-    profileUrl = profileUrl,
-    nickname = nickname,
-    createdAt = createdAt,
-) {
-    DuckDealFeedContent(
-        content = content,
-        title = title,
-        dealState = dealState,
-        price = price,
-        dealMethodAndLocation = dealMethodAndLocation
-    )
+    duckDealFeed: FeedDTO.DuckDeal,
+) = with(duckDealFeed) {
+    BasicFeed(
+        profileUrl = writerId,
+        nickname = writerId,
+        createdAt = createdAt,
+    ) {
+        DuckDealFeedContent(
+            content = content,
+            title = title,
+            dealState = dealState,
+            price = price,
+            location = location,
+            isDirectDealing = isDirectDealing,
+            parcelable = parcelable,
+        )
+    }
 }
 
 @Composable
@@ -199,8 +135,10 @@ internal fun DuckDealFeedContent(
     content: Content,
     title: String,
     dealState: DealState,
-    price: String,
-    dealMethodAndLocation: String,
+    price: Int,
+    location: String,
+    isDirectDealing: Boolean,
+    parcelable: Boolean,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -214,15 +152,31 @@ internal fun DuckDealFeedContent(
                 description = dealState.description
             )
             QuackTitle2(
-                text = price
+                text = price.priceToString()
             )
         }
-        if(content.images.isNotEmpty()){
+        if (content.images.isNotEmpty()) {
             Spacer(modifier = Modifier.height(6.dp))
             QuackCardImageRow(images = content.images.toPersistentList())
         }
         Spacer(modifier = Modifier.height(6.dp))
-        QuackBody2(text = dealMethodAndLocation)
+        QuackBody2(
+            text = when (isDirectDealing) {
+                true -> {
+                    stringResource(
+                        R.string.center_period_between_text,
+                        if (parcelable) {
+                            stringResource(id = R.string.both_direct_dealing_parcelable)
+                        } else {
+                            stringResource(id = R.string.direct_dealing)
+                        },
+                        location
+                    )
+                }
+
+                false -> stringResource(id = R.string.parcelable)
+            }
+        )
     }
 }
 
