@@ -1,10 +1,8 @@
 package land.sungbin.androidprojecttemplate.home
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import land.sungbin.androidprojecttemplate.common.UiStatus
-import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.home.component.dummyFeeds
 import land.sungbin.androidprojecttemplate.home.component.dummyTags
 import org.orbitmvi.orbit.Container
@@ -18,7 +16,7 @@ import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
     override val container: Container<HomeState, HomeSideEffect> = container(HomeState())
 
-    init {
+    fun init() =
         intent {
             delay(2000L)
             reduce {
@@ -26,10 +24,12 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
                     itemStatus = UiStatus.Success,
                     feeds = dummyFeeds,
                     interestedTags = dummyTags,
+                    filterBottomSheetItems = filterBottomSheetItems,
+                    moreBottomSheetItems = moreBottomSheetItems,
                 )
             }
         }
-    }
+
 
     fun refresh() = intent {
         reduce {
@@ -49,7 +49,16 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
 
     fun changeSelectedUser(user: String) = intent {
         reduce {
-            state.copy(selectedUser = user)
+            state.copy(
+                selectedUser = user,
+                moreBottomSheetItems = state.moreBottomSheetItems.mapIndexed { index: Int, item: QuackBottomSheetItem ->
+                    when (index) {
+                        FollowIndex -> QuackBottomSheetItem("${user}님 팔로우", item.isImportant)
+                        BlockFeedIndex -> QuackBottomSheetItem("${user}님 피드 차단", item.isImportant)
+                        else -> QuackBottomSheetItem(item.title, item.isImportant)
+                    }
+                }
+            )
         }
     }
 
@@ -76,23 +85,26 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
     }
 
     fun selectMoreBottomSheet(bottomSheetItem: QuackBottomSheetItem) = intent {
-        reduce {
-            state.copy(
-                moreBottomSheetItems = state.moreBottomSheetItems.map { item: QuackBottomSheetItem ->
-                    if (bottomSheetItem == item) {
-                        QuackBottomSheetItem(item.title, item.isImportant)
-                    } else {
-                        QuackBottomSheetItem(item.title, item.isImportant)
-                    }
-                }
-            )
+        when (state.moreBottomSheetItems.indexOf(bottomSheetItem)) {
+            FollowIndex -> {}
+            BlockFeedIndex -> {}
+            ReportIndex -> {}
         }
     }
 
     fun onFabMenuClick(index: Int) = intent {
         when (index) {
-            0 -> postSideEffect(HomeSideEffect.NavigateToWriteFeed)
-            1 -> postSideEffect(HomeSideEffect.NavigateToWriteDuckDeal)
+            FeedIndex -> postSideEffect(HomeSideEffect.NavigateToWriteFeed)
+            DuckDealIndex -> postSideEffect(HomeSideEffect.NavigateToWriteDuckDeal)
         }
+    }
+
+    companion object {
+        private const val FeedIndex = 0
+        private const val DuckDealIndex = 1
+
+        private const val FollowIndex = 0
+        private const val BlockFeedIndex = 1
+        private const val ReportIndex = 2
     }
 }

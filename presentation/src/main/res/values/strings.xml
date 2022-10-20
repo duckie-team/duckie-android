@@ -8,15 +8,11 @@
     <string name="direct_dealing">직거래</string>
     <string name="parcelable">택배</string>
     <string name="feed">피드</string>
-    <string name="duck_deal">덕딜</string>
     <string name="center_period_between_text">%s · %s</string>
     <string name="price_with_won">%s 원</string>
 
     <!-- BottomSheet -->
     <string name="feed_filtering_title">홈에서 피드와 덕딜을 모두 보고 있어요</string>
-    <string name="feed_filtering_both_feed_duck_deal">피드, 덕딜 함께 보기</string>
-    <string name="feed_filtering_feed">피드만 보기</string>
-    <string name="feed_filtering_duck_deal">덕딜만 보기</string>
     <string name="follow_other">%s님 팔로우</string>
     <string name="blocking_other_feed">%s님 피드 차단</string>
     <string name="report">신고 하기</string>
