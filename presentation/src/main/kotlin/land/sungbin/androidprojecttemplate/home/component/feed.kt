@@ -1,20 +1,25 @@
 package land.sungbin.androidprojecttemplate.home.component
 
-import androidx.annotation.DrawableRes
+import android.provider.ContactsContract.CommonDataKinds.Nickname
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import land.sungbin.androidprojecttemplate.R
+import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
-import land.sungbin.androidprojecttemplate.home.util.getTradingMethodAndLocation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -36,51 +41,61 @@ internal fun FeedHeader(
         index: Int,
     ) -> Unit,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(
-            space = 8.dp,
+    Box(
+        modifier = Modifier.padding(
+            top = 8.dp,
+            bottom = 24.dp,
+            start = 16.dp,
+            end = 16.dp,
         )
     ) {
-        QuackImage(
-            src = R.drawable.duckie_profile,
-            overrideSize = ProfileSize
-        )
-        Column(
-            verticalArrangement = Arrangement.spacedBy(
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(
                 space = 8.dp,
             )
         ) {
+            QuackImage(
+                src = R.drawable.duckie_profile,
+                overrideSize = ProfileSize
+            )
             Column(
                 verticalArrangement = Arrangement.spacedBy(
-                    space = 4.dp,
+                    space = 8.dp,
                 )
             ) {
-                QuackSubtitle2(
-                    text = stringResource(id = R.string.duckie_name),
-                )
-                QuackBody1(
-                    text = stringResource(id = R.string.duckie_introduce),
-                    singleLine = false,
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(
+                        space = 4.dp,
+                    )
+                ) {
+                    QuackSubtitle2(
+                        text = stringResource(id = R.string.duckie_name),
+                    )
+                    QuackBody1(
+                        text = stringResource(id = R.string.duckie_introduce),
+                        singleLine = false,
+                    )
+                }
+                QuackMultiLineTagRow(
+                    items = tagItems,
+                    icon = QuackIcon.Close,
+                    onClickIcon = onTagClick,
+                    mainAxisSpacing = 8.dp,
+                    crossAxisSpacing = 8.dp,
                 )
             }
-            QuackMultiLineTagRow(
-                items = tagItems,
-                icon = QuackIcon.Close,
-                onClickIcon = onTagClick,
-                mainAxisSpacing = 8.dp,
-                crossAxisSpacing = 8.dp,
-            )
-        }
 
+        }
     }
 }
 
+/*
 @Composable
 internal fun HomeNormalFeed(
     feedHolder: FeedHolder, //TODO 태그 생기면 태그 추가
 ) {
-    BaseHomeFeed(
-        feedHolder = feedHolder
+    NormalFeed(
+
     )
 }
 
@@ -120,25 +135,168 @@ internal fun HomeDuckDealFeed(
         }
     }
 }
+*/
+@Composable
+internal fun NormalFeed(
+    profileUrl: String,
+    nickname: String,
+    createdAt: String,
+    content: Content = Content(
+        "버즈 라이트",
+        images = listOf()
+    ),
+) = BasicFeed(
+    profileUrl = profileUrl,
+    nickname = nickname,
+    createdAt = createdAt,
+) {
+    NormalFeedContent(content = content)
+}
 
 @Composable
-private fun BaseHomeFeed(
-    feedHolder: FeedHolder,
-    component: (@Composable () -> Unit)? = null,
+internal fun DuckDealFeed(
+    profileUrl: String,
+    nickname: String,
+    createdAt: String,
+    content: Content = Content(
+        "버즈 라이트",
+        images = listOf("https://images.unsplash.com/photo-1617854818583-09e7f077a156?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80","https://tedblob.com/wp-content/uploads/2021/09/android.png",)
+    ),
+    title: String = "제목",
+    dealState: DealState = DealState.Booking,
+    price: String = "30,000 원",
+    dealMethodAndLocation: String = "택배, 직거래 - 마포구 도화동"
+) = BasicFeed(
+    profileUrl = profileUrl,
+    nickname = nickname,
+    createdAt = createdAt,
+) {
+    DuckDealFeedContent(
+        content = content,
+        title = title,
+        dealState = dealState,
+        price = price,
+        dealMethodAndLocation = dealMethodAndLocation
+    )
+}
+
+@Composable
+internal fun NormalFeedContent(
+    content: Content,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+    ) {
+        if (content.text.isNotEmpty()) {
+            QuackBody1(text = content.text)
+        }
+        QuackCardImageRow(images = content.images.toPersistentList())
+    }
+}
+
+@Composable
+internal fun DuckDealFeedContent(
+    content: Content,
+    title: String,
+    dealState: DealState,
+    price: String,
+    dealMethodAndLocation: String,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        QuackBody1(text = title)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            FeedLabel(
+                dealState = dealState,
+                description = dealState.description
+            )
+            QuackTitle2(
+                text = price
+            )
+        }
+        if(content.images.isNotEmpty()){
+            Spacer(modifier = Modifier.height(6.dp))
+            QuackCardImageRow(images = content.images.toPersistentList())
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        QuackBody2(text = dealMethodAndLocation)
+    }
+}
+
+@Composable
+internal fun DuckDealCardContent(
+    title: String,
+    dealState: DealState,
+    price: String,
+    dealMethodAndLocation: String,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        QuackBody1(text = title)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            FeedLabel(
+                dealState = dealState,
+                description = dealState.description
+            )
+            QuackTitle2(
+                text = price
+            )
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        QuackBody2(text = dealMethodAndLocation)
+    }
+}
+
+@Composable
+internal fun CommentAndHeart(
+    commentCount: String,
+    heartCount: String,
+    heartChecked: Boolean,
+    heartOnToggle: (Boolean) -> Unit,
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(
-            space = 8.dp,
+        horizontalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        QuackIconTextToggle(
+            checkedIcon = null,
+            uncheckedIcon = QuackIcon.Comment,
+            checked = false,
+            text = commentCount,
+            onToggle = {}
         )
+        QuackIconTextToggle(
+            checkedIcon = QuackIcon.FilledHeart,
+            uncheckedIcon = QuackIcon.Heart,
+            checked = heartChecked,
+            text = heartCount,
+            onToggle = heartOnToggle
+        )
+    }
+}
+
+@Composable
+private fun BasicFeed(
+    profileUrl: String,
+    nickname: String,
+    createdAt: String,
+    feedContent: @Composable () -> Unit,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         QuackRoundImage(
-            src = feedHolder.profile,
+            src = profileUrl,
             size = ProfileSize,
         )
         Column(
-            verticalArrangement = Arrangement.spacedBy(
-                space = 4.dp,
-            )
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -146,97 +304,33 @@ private fun BaseHomeFeed(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(
-                        space = 4.dp,
-                    ),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    QuackSubtitle2(
-                        text = feedHolder.nickname,
-                    )
-                    QuackBody3(
-                        text = feedHolder.time,
-                    )
+                    QuackSubtitle2(text = nickname)
+                    QuackBody3(text = createdAt)
                 }
                 QuackImage(
                     src = QuackIcon.More,
-                    overrideSize = DpSize(
-                        width = 16.dp,
-                        height = 16.dp,
-                    ),
+                    overrideSize = MoreIconSize,
                     tint = QuackColor.Gray1,
                     onClick = {
-                        feedHolder.onMoreClick(feedHolder.nickname)
+
                     },
                 )
             }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(
-                    space = 8.dp,
-                )
-            ) {
-                QuackBody1(
-                    text = feedHolder.content,
-                    singleLine = false,
-                )
-                if (component != null) {
-                    component()
+            feedContent()
+            CommentAndHeart(
+                commentCount = "100",
+                heartCount = "100",
+                heartChecked = true,
+                heartOnToggle = {
+
                 }
-                feedHolder.images?.let { list ->
-                    if (list.isNotEmpty()) {
-                        QuackCardImageRow(
-                            images = list
-                        )
-                    }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(
-                        space = 24.dp,
-                    )
-                ) {
-                    QuackIconTextToggle(
-                        checkedIcon = null,
-                        uncheckedIcon = QuackIcon.Comment,
-                        checked = false,
-                        text = feedHolder.commentCount(),
-                        onToggle = feedHolder.onClickComment,
-                    )
-                    QuackIconTextToggle(
-                        checkedIcon = QuackIcon.FilledHeart,
-                        uncheckedIcon = QuackIcon.Heart,
-                        checked = feedHolder.isLike(),
-                        text = feedHolder.likeCount(),
-                        onToggle = feedHolder.onClickLike,
-                    )
-                }
-            }
+            )
         }
     }
 }
-
-data class FeedHolder(
-    val profile: Any?,
-    val nickname: String,
-    val time: String,
-    val content: String,
-    val onMoreClick: (
-        user: String,
-    ) -> Unit,
-    val commentCount: () -> String,
-    val onClickComment: () -> Unit,
-    val isLike: () -> Boolean,
-    val likeCount: () -> String,
-    val onClickLike: () -> Unit,
-    val images: PersistentList<Any>? = null,
-)
-
-data class DuckDealHolder(
-    val isDirectDealing: Boolean,
-    val parcelable: Boolean,
-    val price: String,
-    val dealState: DealState,
-    val location: String,
-)
 
 @Stable
 private val ProfileSize = DpSize(
@@ -244,8 +338,15 @@ private val ProfileSize = DpSize(
     height = 36.dp,
 )
 
+@Stable
+private val MoreIconSize = DpSize(
+    width = 16.dp,
+    height = 16.dp,
+)
+
+
 @Composable
-internal fun FeedLabel(
+private fun FeedLabel(
     dealState: DealState,
     description: String,
 ) = when (dealState) {
