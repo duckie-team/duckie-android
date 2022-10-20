@@ -11,7 +11,7 @@ import land.sungbin.androidprojecttemplate.domain.model.User
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 
 data class HomeState(
-    val status: UiStatus = UiStatus.Loading,
+    val itemStatus: UiStatus = UiStatus.Loading,
     val feeds: List<Feed> = emptyList(),
     val selectedUser: String = "",
     val filterBottomSheetItems: List<QuackBottomSheetItem> = emptyList(),

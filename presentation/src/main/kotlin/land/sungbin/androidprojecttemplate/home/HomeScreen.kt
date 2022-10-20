@@ -94,7 +94,7 @@ internal fun HomeScreen(
             ) {
                 HomeContent(
                     feeds = homeState.feeds,
-                    uiStatus = homeState.homeStatus,
+                    itemStatus = homeState.itemStatus,
                     interestedTags = homeState.interestedTags,
                     onClickLeadingIcon = {
                         coroutineScope.launch { drawerState.open() }
@@ -146,7 +146,7 @@ private fun HomeContentByStatus(
 
 @Composable
 fun HomeContent(
-    uiStatus: UiStatus,
+    itemStatus: UiStatus,
     feeds: List<Feed>,
     interestedTags: List<String>,
     onClickLeadingIcon: () -> Unit,
@@ -176,7 +176,7 @@ fun HomeContent(
             onClickTrailingIcon = onClickTrailingIcon,
         )
         HomeContentByStatus(
-            status = uiStatus,
+            status = itemStatus,
             success = {
                 LazyFeedColumn(
                     feeds = feeds,
@@ -190,7 +190,7 @@ fun HomeContent(
                 )
             },
             loading = {
-                Crossfade(targetState = uiStatus) {
+                Crossfade(targetState = itemStatus) {
                     DuckieLoadingIndicator()
                 }
             },
