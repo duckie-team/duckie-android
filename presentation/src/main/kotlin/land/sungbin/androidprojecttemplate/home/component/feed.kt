@@ -31,9 +31,6 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun FeedHeader(
-    @DrawableRes profile: Int,
-    title: String,
-    content: String,
     tagItems: List<String>,
     onTagClick: (
         index: Int,
@@ -45,11 +42,8 @@ internal fun FeedHeader(
         )
     ) {
         QuackImage(
-            src = profile,
-            overrideSize = DpSize(
-                width = 36.dp,
-                height = 36.dp
-            )
+            src = R.drawable.duckie_profile,
+            overrideSize = ProfileSize
         )
         Column(
             verticalArrangement = Arrangement.spacedBy(
@@ -62,10 +56,10 @@ internal fun FeedHeader(
                 )
             ) {
                 QuackSubtitle2(
-                    text = title,
+                    text = stringResource(id = R.string.duckie_name),
                 )
                 QuackBody1(
-                    text = content,
+                    text = stringResource(id = R.string.duckie_introduce),
                     singleLine = false,
                 )
             }
@@ -74,6 +68,7 @@ internal fun FeedHeader(
                 icon = QuackIcon.Close,
                 onClickIcon = onTagClick,
                 mainAxisSpacing = 8.dp,
+                crossAxisSpacing = 8.dp,
             )
         }
 
