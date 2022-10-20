@@ -12,3 +12,4 @@ data class HomeState(
     val moreBottomSheetItems: List<QuackBottomSheetItem> = emptyList(),
     val interestedTags: List<String> = emptyList(),
 )
+

@@ -2,15 +2,12 @@ package land.sungbin.androidprojecttemplate.home
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.LocalAbsoluteElevation
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -22,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -31,8 +27,6 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
@@ -71,6 +65,9 @@ internal fun HomeScreen(
     val homeBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val moreBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
+    LaunchedEffect(Unit) {
+        viewModel.init()
+    }
     QuackModalDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -131,20 +128,6 @@ internal fun HomeScreen(
 }
 
 @Composable
-private fun HomeContentByStatus(
-    status: UiStatus,
-    success: @Composable () -> Unit,
-    failed: @Composable () -> Unit,
-    loading: @Composable () -> Unit,
-) = when (status) {
-    UiStatus.Success -> success()
-
-    UiStatus.Loading -> loading()
-
-    is UiStatus.Failed -> failed()
-}
-
-@Composable
 fun HomeContent(
     itemStatus: UiStatus,
     feeds: List<Feed>,
@@ -156,9 +139,6 @@ fun HomeContent(
     onFabMenuClick: (index: Int) -> Unit,
     onRefresh: () -> Unit,
 ) {
-    /*val commentCount by remember { mutableStateOf(0) }
-    var isLike by remember { mutableStateOf(false) }
-    var likeCount by remember { mutableStateOf(12000) }*/
     var fabExpanded by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -175,7 +155,7 @@ fun HomeContent(
             trailingIcon = QuackIcon.Filter,
             onClickTrailingIcon = onClickTrailingIcon,
         )
-        HomeContentByStatus(
+        ContentByUiStatus(
             status = itemStatus,
             success = {
                 LazyFeedColumn(
@@ -187,6 +167,7 @@ fun HomeContent(
                         )
                     },
                     onRefresh = onRefresh,
+                    onClickMoreIcon = onClickMoreIcon,
                 )
             },
             loading = {
@@ -198,7 +179,7 @@ fun HomeContent(
         )
     }
     DuckieFab(
-        items = homeFabMenuItems(),
+        items = homeFabMenuItems.toPersistentList(),
         expanded = fabExpanded,
         onFabClick = {
             fabExpanded = !fabExpanded
@@ -218,9 +199,10 @@ internal fun LazyFeedColumn(
         horizontal = 16.dp
     ),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(space = 28.dp),
-    header: @Composable () -> Unit,
+    header: (@Composable () -> Unit)? = null,
     feeds: List<Feed>,
     onRefresh: () -> Unit,
+    onClickMoreIcon: (selectedUser: String) -> Unit,
 ) {
     val swipeRefreshState = rememberSwipeRefreshState(false)
     SwipeRefresh(
@@ -232,30 +214,46 @@ internal fun LazyFeedColumn(
             contentPadding = contentPadding,
             verticalArrangement = verticalArrangement
         ) {
-            item {
-                header()
+            if (header != null) {
+                item { header() }
             }
             items(
                 items = feeds,
-                key = { feed: Feed ->
-                    feed.id
-                }
-            ) { feed: Feed -> // //DuckDeal 이므로 null이 아님을 보장
+                key = { feed -> feed.id }
+            ) { feed: Feed ->
                 when (feed.type) {
                     FeedType.Normal -> {
-                        NormalFeed(feed.toNormalFeed())
+                        NormalFeed(
+                            normalFeed = feed.toNormalFeed(),
+                            onClickMoreIcon = onClickMoreIcon,
+                        )
                     }
 
                     FeedType.DuckDeal -> {
-                        DuckDealFeed(feed.toDuckDealFeed())
+                        DuckDealFeed(
+                            duckDealFeed = feed.toDuckDealFeed(),
+                            onClickMoreIcon = onClickMoreIcon,
+                        )
                     }
                 }
             }
         }
     }
-
 }
 
+@Composable
+internal fun ContentByUiStatus(
+    status: UiStatus,
+    success: @Composable () -> Unit,
+    failed: @Composable () -> Unit,
+    loading: @Composable () -> Unit,
+) = when (status) {
+    UiStatus.Success -> success()
+
+    UiStatus.Loading -> loading()
+
+    is UiStatus.Failed -> failed()
+}
 
 @Stable
 internal val DuckieLogoSize = DpSize(
@@ -269,58 +267,43 @@ internal val homeFabPadding = PaddingValues(
     end = 16.dp
 )
 
-private const val FeedIndex = 1
-private const val DuckDealIndex = 2
-
-@Stable
-@Composable
-internal fun homeFabMenuItems(): PersistentList<QuackMenuFabItem> {
-    return persistentListOf(
-        QuackMenuFabItem(
-            icon = QuackIcon.Feed,
-            text = stringResource(id = R.string.feed),
-        ),
-        QuackMenuFabItem(
-            icon = QuackIcon.Buy,
-            text = stringResource(id = R.string.duck_deal),
-        )
+internal val homeFabMenuItems = listOf(
+    QuackMenuFabItem(
+        icon = QuackIcon.Feed,
+        text = "피드",
+    ),
+    QuackMenuFabItem(
+        icon = QuackIcon.Buy,
+        text = "덕딜",
     )
-}
+)
 
-@Stable
-@Composable
-internal fun homeFilterBottomSheetItems(): PersistentList<QuackBottomSheetItem> {
-    return persistentListOf(
-        QuackBottomSheetItem(
-            title = stringResource(id = R.string.feed_filtering_both_feed_duck_deal),
-            isImportant = false,
-        ),
-        QuackBottomSheetItem(
-            title = stringResource(id = R.string.feed_filtering_feed),
-            isImportant = true,
-        ),
-        QuackBottomSheetItem(
-            title = stringResource(id = R.string.feed_filtering_duck_deal),
-            isImportant = false,
-        )
+internal val filterBottomSheetItems = listOf(
+    QuackBottomSheetItem(
+        title = "피드, 덕딜 함께 보기",
+        isImportant = true,
+    ),
+    QuackBottomSheetItem(
+        title = "피드만 보기",
+        isImportant = false,
+    ),
+    QuackBottomSheetItem(
+        title = "덕딜만 보기",
+        isImportant = false,
     )
-}
+)
 
-@Stable
-@Composable
-internal fun MoreBottomSheetItems(selectedUser: String): PersistentList<QuackBottomSheetItem> {
-    return persistentListOf(
-        QuackBottomSheetItem(
-            title = stringResource(R.string.follow_other, selectedUser),
-            isImportant = false,
-        ),
-        QuackBottomSheetItem(
-            title = stringResource(R.string.blocking_other_feed, selectedUser),
-            isImportant = false,
-        ),
-        QuackBottomSheetItem(
-            title = stringResource(R.string.report),
-            isImportant = false,
-        )
+internal val moreBottomSheetItems = listOf(
+    QuackBottomSheetItem(
+        title = "",
+        isImportant = false,
+    ),
+    QuackBottomSheetItem(
+        title = "",
+        isImportant = false,
+    ),
+    QuackBottomSheetItem(
+        title = "신고 하기",
+        isImportant = false,
     )
-}
+)

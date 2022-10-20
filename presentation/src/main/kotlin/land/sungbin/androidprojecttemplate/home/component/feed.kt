@@ -41,7 +41,7 @@ internal fun FeedHeader(
         index: Int,
     ) -> Unit,
 ) {
-    Box{
+    Box {
         Row(
             horizontalArrangement = Arrangement.spacedBy(
                 space = 8.dp,
@@ -85,11 +85,13 @@ internal fun FeedHeader(
 @Composable
 internal fun NormalFeed(
     normalFeed: FeedDTO.Normal,
+    onClickMoreIcon: (selectedUser: String) -> Unit,
 ) = with(normalFeed) {
     BasicFeed(
         profileUrl = writerId,
         nickname = writerId,
         createdAt = createdAt,
+        onClickMoreIcon = onClickMoreIcon
     ) {
         NormalFeedContent(content = content)
     }
@@ -98,11 +100,13 @@ internal fun NormalFeed(
 @Composable
 internal fun DuckDealFeed(
     duckDealFeed: FeedDTO.DuckDeal,
+    onClickMoreIcon: (selectedUser: String) -> Unit,
 ) = with(duckDealFeed) {
     BasicFeed(
         profileUrl = writerId,
         nickname = writerId,
         createdAt = createdAt,
+        onClickMoreIcon = onClickMoreIcon,
     ) {
         DuckDealFeedContent(
             content = content,
@@ -240,6 +244,7 @@ private fun BasicFeed(
     profileUrl: String,
     nickname: String,
     createdAt: String,
+    onClickMoreIcon: (selectedUser: String) -> Unit,
     feedContent: @Composable () -> Unit,
 ) {
     Row(
@@ -269,7 +274,7 @@ private fun BasicFeed(
                     overrideSize = MoreIconSize,
                     tint = QuackColor.Gray1,
                     onClick = {
-
+                        onClickMoreIcon(nickname)
                     },
                 )
             }
