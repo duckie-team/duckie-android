@@ -211,7 +211,7 @@ fun HomeContent(
 }
 
 @Composable
-fun LazyFeedColumn(
+internal fun LazyFeedColumn(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(
         vertical = 8.dp,

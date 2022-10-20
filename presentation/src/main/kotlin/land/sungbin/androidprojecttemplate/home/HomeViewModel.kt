@@ -23,7 +23,7 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
             delay(2000L)
             reduce {
                 state.copy(
-                    homeStatus = UiStatus.Success,
+                    itemStatus = UiStatus.Success,
                     feeds = dummyFeeds,
                     interestedTags = dummyTags,
                 )
@@ -34,13 +34,13 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
     fun refresh() = intent {
         reduce {
             state.copy(
-                homeStatus = UiStatus.Loading,
+                itemStatus = UiStatus.Loading,
             )
         }
         delay(1000L)
         reduce {
             state.copy(
-                homeStatus = UiStatus.Success,
+                itemStatus = UiStatus.Success,
                 feeds = dummyFeeds,
                 interestedTags = dummyTags,
             )
@@ -56,9 +56,7 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
     fun deleteTag(index: Int) = intent {
         reduce {
             state.copy(
-                interestedTags = state.interestedTags.apply {
-                    this - this[index]
-                }
+                interestedTags = state.interestedTags - state.interestedTags[index]
             )
         }
     }
