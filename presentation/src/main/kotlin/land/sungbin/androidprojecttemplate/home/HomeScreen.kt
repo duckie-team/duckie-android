@@ -37,14 +37,9 @@ import land.sungbin.androidprojecttemplate.common.component.DuckieLoadingIndicat
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
 import land.sungbin.androidprojecttemplate.home.component.DrawerContent
-import land.sungbin.androidprojecttemplate.home.component.DuckDealHolder
+import land.sungbin.androidprojecttemplate.home.component.DuckDealFeed
 import land.sungbin.androidprojecttemplate.home.component.FeedHeader
-import land.sungbin.androidprojecttemplate.home.component.FeedHolder
-import land.sungbin.androidprojecttemplate.home.component.HomeDuckDealFeed
-import land.sungbin.androidprojecttemplate.home.component.HomeNormalFeed
-import land.sungbin.androidprojecttemplate.home.component.dummyTags
-import land.sungbin.androidprojecttemplate.home.util.priceToString
-import land.sungbin.androidprojecttemplate.home.util.toUnitString
+import land.sungbin.androidprojecttemplate.home.component.NormalFeed
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 import team.duckie.quackquack.ui.component.QuackHeadlineBottomSheet
 import team.duckie.quackquack.ui.component.QuackImage
@@ -68,13 +63,6 @@ internal fun HomeScreen(
     val drawerState = rememberQuackDrawerState()
     val homeBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val moreBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    var selectedUser by remember { mutableStateOf("") }
-
-    val filterQuackBottomSheetItems = homeFilterBottomSheetItems()
-    val moreQuackBottomSheetItems = MoreBottomSheetItems(selectedUser = selectedUser)
-
-    var filterBottomSheetItems by remember { mutableStateOf(filterQuackBottomSheetItems) }
-    var moreBottomSheetItems by remember { mutableStateOf(filterQuackBottomSheetItems) }
 
     QuackModalDrawer(
         drawerState = drawerState,
@@ -85,54 +73,36 @@ internal fun HomeScreen(
         QuackHeadlineBottomSheet(
             bottomSheetState = homeBottomSheetState,
             headline = stringResource(id = R.string.feed_filtering_title),
-            items = filterBottomSheetItems,
-            onClick = { headLineBottomSheetItem: QuackBottomSheetItem ->
-                filterBottomSheetItems = filterBottomSheetItems.map { item: QuackBottomSheetItem ->
-                    if (headLineBottomSheetItem == item) {
-                        QuackBottomSheetItem(item.title, true)
-                    } else {
-                        QuackBottomSheetItem(item.title, false)
-                    }
-                }.toPersistentList()
+            items = homeState.filterBottomSheetItems.toPersistentList(),
+            onClick = { bottomSheetItem: QuackBottomSheetItem ->
+                viewModel.selectFilterBottomSheet(bottomSheetItem)
             }
         ) {
             QuackSimpleBottomSheet(
                 bottomSheetState = moreBottomSheetState,
-                items = moreQuackBottomSheetItems,
-                onClick = { simpleBottomSheetItem: QuackBottomSheetItem ->
-                    //index에 따라 팔로우, 피드차단, 신고하기
+                items = homeState.moreBottomSheetItems.toPersistentList(),
+                onClick = { bottomSheetItem: QuackBottomSheetItem ->
+                    viewModel.selectMoreBottomSheet(bottomSheetItem)
                 }
             ) {
                 when (homeState.status) {
-                    is UiStatus.Success -> {
-                        HomeComponent(
-                            feeds = when {
-                                filterBottomSheetItems[FeedIndex].isImportant -> homeState.feeds.filter { feed: Feed ->
-                                    feed.type == FeedType.Normal
-                                }
-
-                                filterBottomSheetItems[DuckDealIndex].isImportant -> homeState.feeds.filter { feed: Feed ->
-                                    feed.type == FeedType.DuckDeal
-                                }
-
-                                else -> homeState.feeds
-                            },
+                    UiStatus.Success -> {
+                        HomeContent(
+                            feeds = homeState.feeds,
+                            interestedTags = homeState.interestedTags,
                             onClickLeadingIcon = {
-                                coroutineScope.launch {
-                                    drawerState.open()
-                                }
+                                coroutineScope.launch { drawerState.open() }
                             },
                             onClickTrailingIcon = {
-                                coroutineScope.launch {
-                                    homeBottomSheetState.show()
-                                }
+                                coroutineScope.launch { homeBottomSheetState.show() }
                             },
-                            onClickMoreIcon = { user ->
-                                coroutineScope.launch {
-                                    moreBottomSheetState.show()
-                                }
-                                selectedUser = user
+                            onClickMoreIcon = { selectedUser: String ->
+                                viewModel.changeSelectedUser(selectedUser)
+                                coroutineScope.launch { moreBottomSheetState.show() }
                             },
+                            onClickTag = { index: Int ->
+                                viewModel.deleteTag(index)
+                            }
                         )
                     }
 
@@ -142,7 +112,10 @@ internal fun HomeScreen(
                         }
                     }
 
-                    else -> {}
+                    is UiStatus.Failed -> {
+
+
+                    }
                 }
             }
         }
@@ -150,17 +123,15 @@ internal fun HomeScreen(
 }
 
 @Composable
-fun HomeComponent(
+fun HomeContent(
     feeds: List<Feed>,
+    interestedTags: List<String>,
     onClickLeadingIcon: () -> Unit,
     onClickTrailingIcon: () -> Unit,
-    onClickMoreIcon: (
-        user: String,
-    ) -> Unit,
+    onClickMoreIcon: (user: String) -> Unit,
+    onClickTag: (index: Int) -> Unit,
 ) {
-    val selectedTags = remember { mutableStateOf(dummyTags) }
     val commentCount by remember { mutableStateOf(0) }
-    val feedState = remember { mutableStateOf(feeds) }
     var isLike by remember { mutableStateOf(false) }
     var likeCount by remember { mutableStateOf(12000) }
     var fabExpanded by remember { mutableStateOf(false) }
@@ -179,97 +150,13 @@ fun HomeComponent(
             trailingIcon = QuackIcon.Filter,
             onClickTrailingIcon = onClickTrailingIcon,
         )
-        Box(
-            modifier = Modifier.padding(
-                top = 8.dp,
-                bottom = 24.dp,
-                start = 16.dp,
-                end = 16.dp,
-            )
-        ) {
-            FeedHeader(
-                profile = R.drawable.duckie_profile,
-                title = stringResource(id = R.string.duckie_name),
-                content = stringResource(id = R.string.duckie_introduce),
-                tagItems = selectedTags.value,
-                onTagClick = { index: Int ->
-                    selectedTags.value = selectedTags.value - selectedTags.value[index]
-                }
-            )
-        }
-        LazyColumn(
-            modifier = Modifier.weight(weight = 1f),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(space = 24.dp)
-        ) {
-            items(
-                items = feeds,
-                key = { feed: Feed ->
-                    feed.id
-                }
-            ) { feed: Feed -> // //DuckDeal 이므로 null이 아님을 보장
-                when (feed.type) {
-                    FeedType.Normal -> {
-                        HomeNormalFeed(
-                            FeedHolder(
-                                profile = R.drawable.duckie_profile,
-                                nickname = feed.writerId,
-                                time = "3일 전", //Date 로직 작성 필요
-                                content = feed.content.text,
-                                onMoreClick = onClickMoreIcon,
-                                commentCount = { commentCount.toString() },
-                                onClickComment = {
-                                    //navigate
-                                },
-                                likeCount = { likeCount.toString() },
-                                isLike = { isLike },
-                                onClickLike = {
-                                    when (isLike) {
-                                        true -> likeCount--
-                                        false -> likeCount++
-                                    }
-                                    isLike = !isLike
-                                },
-                                images = feed.content.images.toPersistentList()
-                            ),
-                        )
-                    }
-
-                    FeedType.DuckDeal -> {
-                        HomeDuckDealFeed(
-                            FeedHolder(
-                                profile = R.drawable.duckie_profile,
-                                nickname = feed.writerId,
-                                time = "3일 전", //Date 로직 작성 필요
-                                content = feed.content.text,
-                                onMoreClick = onClickMoreIcon,
-                                commentCount = { commentCount.toString() },
-                                onClickComment = {
-                                    //navigate
-                                },
-                                likeCount = { likeCount.toUnitString() },
-                                isLike = { isLike },
-                                onClickLike = {
-                                    when (isLike) {
-                                        true -> likeCount--
-                                        false -> likeCount++
-                                    }
-                                    isLike = !isLike
-                                },
-                                images = feed.content.images.toPersistentList()
-                            ),
-                            DuckDealHolder(
-                                isDirectDealing = feed.isDirectDealing!!,
-                                parcelable = feed.parcelable!!,
-                                price = feed.price!!.priceToString(),
-                                dealState = feed.dealState!!,
-                                location = feed.location!!,
-                            ),
-                        )
-                    }
-                }
+        FeedHeader(
+            tagItems = interestedTags,
+            onTagClick = { index: Int ->
+                onClickTag(index)
             }
-        }
+        )
+        LazyFeedColumn(feeds = feeds)
     }
     DuckieFab(
         items = homeFabMenuItems(),
@@ -283,6 +170,46 @@ fun HomeComponent(
         paddingValues = homeFabPadding,
     )
 }
+
+@Composable
+fun LazyFeedColumn(
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(space = 28.dp),
+    feeds: List<Feed>,
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement
+    ) {
+        items(
+            items = feeds,
+            key = { feed: Feed ->
+                feed.id
+            }
+        ) { feed: Feed -> // //DuckDeal 이므로 null이 아님을 보장
+            when (feed.type) {
+                FeedType.Normal -> {
+                    NormalFeed(
+                        profileUrl = "example",
+                        createdAt = "3시 전",
+                        nickname = "우주 사령관"
+                    )
+                }
+
+                FeedType.DuckDeal -> {
+                    DuckDealFeed(
+                        profileUrl = "example",
+                        createdAt = "3시 전",
+                        nickname = "우주 사령관"
+                    )
+                }
+            }
+        }
+    }
+}
+
 
 @Stable
 internal val DuckieLogoSize = DpSize(
