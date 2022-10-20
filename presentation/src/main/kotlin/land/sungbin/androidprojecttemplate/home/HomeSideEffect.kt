@@ -1,4 +1,6 @@
 package land.sungbin.androidprojecttemplate.home
 
-class HomeSideEffect {
+sealed class HomeSideEffect {
+    object NavigateToWriteFeed : HomeSideEffect()
+    object NavigateToWriteDuckDeal : HomeSideEffect()
 }

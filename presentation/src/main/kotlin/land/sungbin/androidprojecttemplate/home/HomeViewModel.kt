@@ -10,6 +10,7 @@ import land.sungbin.androidprojecttemplate.home.component.dummyTags
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
@@ -22,11 +23,27 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
             delay(2000L)
             reduce {
                 state.copy(
-                    status = UiStatus.Success,
+                    homeStatus = UiStatus.Success,
                     feeds = dummyFeeds,
                     interestedTags = dummyTags,
                 )
             }
+        }
+    }
+
+    fun refresh() = intent {
+        reduce {
+            state.copy(
+                homeStatus = UiStatus.Loading,
+            )
+        }
+        delay(1000L)
+        reduce {
+            state.copy(
+                homeStatus = UiStatus.Success,
+                feeds = dummyFeeds,
+                interestedTags = dummyTags,
+            )
         }
     }
 
@@ -71,6 +88,13 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
                     }
                 }
             )
+        }
+    }
+
+    fun onFabMenuClick(index: Int) = intent {
+        when (index) {
+            0 -> postSideEffect(HomeSideEffect.NavigateToWriteFeed)
+            1 -> postSideEffect(HomeSideEffect.NavigateToWriteDuckDeal)
         }
     }
 }
