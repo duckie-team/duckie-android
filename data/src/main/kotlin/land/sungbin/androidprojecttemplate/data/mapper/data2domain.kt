@@ -296,7 +296,7 @@ internal fun ReportData.toDomain() = Report(
     targetId = targetId.unwrap(
         field = "targetId",
     ),
-    targetFeedId = targetFeedId,
+    targetContentId = targetFeedId,
     message = message.unwrap(
         field = "message",
     ),
