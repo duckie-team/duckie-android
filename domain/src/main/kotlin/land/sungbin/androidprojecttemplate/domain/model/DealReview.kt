@@ -62,10 +62,16 @@ data class DealReview(
             field = "dislikeReason",
             value = dislikeReason,
         )
-        if (likeReason.any { it.token == ReasonToken.Buyer } && likeReason.any { it.token == ReasonToken.Seller }) {
+        if (
+            likeReason.any { it.token == ReasonToken.Buyer } &&
+            likeReason.any { it.token == ReasonToken.Seller }
+        ) {
             throw IllegalArgumentException("Buyer and Seller cannot be selected at the same time.")
         }
-        if (dislikeReason.any { it.token == ReasonToken.Buyer } && dislikeReason.any { it.token == ReasonToken.Seller }) {
+        if (
+            dislikeReason.any { it.token == ReasonToken.Buyer } &&
+            dislikeReason.any { it.token == ReasonToken.Seller }
+        ) {
             throw IllegalArgumentException("Buyer and Seller cannot be selected at the same time.")
         }
     }
