@@ -68,6 +68,7 @@ internal fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.init()
     }
+
     QuackModalDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -90,7 +91,7 @@ internal fun HomeScreen(
                 }
             ) {
                 HomeContent(
-                    feeds = homeState.feeds,
+                    feeds = homeState.filteredFeeds,
                     itemStatus = homeState.itemStatus,
                     interestedTags = homeState.interestedTags,
                     onClickLeadingIcon = {
@@ -140,6 +141,7 @@ fun HomeContent(
     onRefresh: () -> Unit,
 ) {
     var fabExpanded by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -219,7 +221,8 @@ internal fun LazyFeedColumn(
             }
             items(
                 items = feeds,
-                key = { feed -> feed.id }
+                key = { feed -> feed.id },
+                contentType = { feed -> feed.type }
             ) { feed: Feed ->
                 when (feed.type) {
                     FeedType.Normal -> {

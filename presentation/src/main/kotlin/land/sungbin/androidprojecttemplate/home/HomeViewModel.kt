@@ -3,6 +3,7 @@ package land.sungbin.androidprojecttemplate.home
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.delay
 import land.sungbin.androidprojecttemplate.common.UiStatus
+import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
 import land.sungbin.androidprojecttemplate.home.component.dummyFeeds
 import land.sungbin.androidprojecttemplate.home.component.dummyTags
 import org.orbitmvi.orbit.Container
@@ -18,11 +19,12 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
 
     fun init() =
         intent {
-            delay(2000L)
+            delay(TestMilliSecond)
             reduce {
                 state.copy(
                     itemStatus = UiStatus.Success,
                     feeds = dummyFeeds,
+                    filteredFeeds = dummyFeeds,
                     interestedTags = dummyTags,
                     filterBottomSheetItems = filterBottomSheetItems,
                     moreBottomSheetItems = moreBottomSheetItems,
@@ -37,7 +39,7 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
                 itemStatus = UiStatus.Loading,
             )
         }
-        delay(1000L)
+        delay(TestMilliSecond)
         reduce {
             state.copy(
                 itemStatus = UiStatus.Success,
@@ -53,8 +55,8 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
                 selectedUser = user,
                 moreBottomSheetItems = state.moreBottomSheetItems.mapIndexed { index: Int, item: QuackBottomSheetItem ->
                     when (index) {
-                        FollowIndex -> QuackBottomSheetItem("${user}님 팔로우", item.isImportant)
-                        BlockFeedIndex -> QuackBottomSheetItem("${user}님 피드 차단", item.isImportant)
+                        0 -> QuackBottomSheetItem("${user}님 팔로우", item.isImportant)
+                        1 -> QuackBottomSheetItem("${user}님 피드 차단", item.isImportant)
                         else -> QuackBottomSheetItem(item.title, item.isImportant)
                     }
                 }
@@ -71,10 +73,12 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
     }
 
     fun selectFilterBottomSheet(bottomSheetItem: QuackBottomSheetItem) = intent {
+        var selectedIndex = 0
         reduce {
             state.copy(
-                filterBottomSheetItems = state.filterBottomSheetItems.map { item: QuackBottomSheetItem ->
+                filterBottomSheetItems = state.filterBottomSheetItems.mapIndexed { index: Int, item: QuackBottomSheetItem ->
                     if (bottomSheetItem == item) {
+                        selectedIndex = index
                         QuackBottomSheetItem(item.title, true)
                     } else {
                         QuackBottomSheetItem(item.title, false)
@@ -82,29 +86,33 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
                 }
             )
         }
+        reduce {
+            state.copy(filteredFeeds = state.feeds.filter { feed ->
+                when (selectedIndex) {
+                    1 -> feed.type == FeedType.Normal
+                    2 -> feed.type == FeedType.DuckDeal
+                    else -> true
+                }
+            })
+        }
     }
 
     fun selectMoreBottomSheet(bottomSheetItem: QuackBottomSheetItem) = intent {
         when (state.moreBottomSheetItems.indexOf(bottomSheetItem)) {
-            FollowIndex -> {}
-            BlockFeedIndex -> {}
-            ReportIndex -> {}
+            0 -> {}
+            1 -> {}
+            2 -> {}
         }
     }
 
     fun onFabMenuClick(index: Int) = intent {
         when (index) {
-            FeedIndex -> postSideEffect(HomeSideEffect.NavigateToWriteFeed)
-            DuckDealIndex -> postSideEffect(HomeSideEffect.NavigateToWriteDuckDeal)
+            0 -> postSideEffect(HomeSideEffect.NavigateToWriteFeed)
+            1 -> postSideEffect(HomeSideEffect.NavigateToWriteDuckDeal)
         }
     }
 
     companion object {
-        private const val FeedIndex = 0
-        private const val DuckDealIndex = 1
-
-        private const val FollowIndex = 0
-        private const val BlockFeedIndex = 1
-        private const val ReportIndex = 2
+        private const val TestMilliSecond = 1000L
     }
 }
