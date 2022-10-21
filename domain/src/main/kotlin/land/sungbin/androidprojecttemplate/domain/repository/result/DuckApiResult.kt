@@ -23,7 +23,7 @@ sealed interface DuckApiResult<T> {
  * 만약 [execute] 를 실행한 결과가 성공적이라면 그대로 [DuckApiResult] 를 반환하고,
  * 실행 도중에 예외가 발생했다면 예외 메시지를 [DuckApiResult.Exception] 으로 반환합니다.
  */
-internal inline fun <T> runDuckApiCatching(
+inline fun <T> runDuckApiCatching(
     execute: () -> DuckApiResult<T>,
 ) = try {
     execute()
