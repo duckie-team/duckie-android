@@ -143,7 +143,7 @@ internal fun Follow.toData() = FollowData(
 
 internal fun Heart.toData() = HeartData(
     type = type.index,
-    feedId = feedId,
+    feedId = commentId,
     userId = userId,
 )
 
@@ -151,7 +151,7 @@ internal fun Report.toData() = ReportData(
     id = id,
     reporterId = reporterId,
     targetId = targetId,
-    targetFeedId = targetFeedId,
+    targetFeedId = targetContentId,
     message = message,
     checked = checked,
 )
