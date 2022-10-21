@@ -7,6 +7,7 @@ import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 data class HomeState(
     val itemStatus: UiStatus = UiStatus.Loading,
     val feeds: List<Feed> = emptyList(),
+    val filteredFeeds: List<Feed> = emptyList(),
     val selectedUser: String = "",
     val filterBottomSheetItems: List<QuackBottomSheetItem> = emptyList(),
     val moreBottomSheetItems: List<QuackBottomSheetItem> = emptyList(),
