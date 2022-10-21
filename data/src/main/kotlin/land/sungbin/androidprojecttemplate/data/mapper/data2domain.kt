@@ -258,7 +258,7 @@ internal fun FeedData.toDomain() = Feed(
 )*/
 
 internal fun FollowData.toDomain() = Follow(
-    accountId = accountId.unwrap(
+    userId = accountId.unwrap(
         field = "accountId",
     ),
     followings = followings.unwrap(

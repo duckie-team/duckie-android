@@ -29,6 +29,10 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * [type] 이 [ChatType.DuckDeal] 일 때만 유효합니다.
  * [type] 이 [ChatType.DuckDeal] 이 아니라면 null 을 받습니다.
  */
+@OptIn(
+    New::class,
+    Unsupported::class,
+)
 data class Chat(
     @PK val id: String,
     @FK val chatRoomId: String,

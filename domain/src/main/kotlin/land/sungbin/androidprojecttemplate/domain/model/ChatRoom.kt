@@ -25,6 +25,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSetting
  * [type] 이 [ChatRoomType.Open] 일 때만 유효합니다.
  * [type] 이 [ChatRoomType.Open] 이 아니라면 null 을 받습니다.
  */
+@OptIn(Unsupported::class)
 data class ChatRoom(
     @PK val id: String,
     @Unsupported val type: ChatRoomType = ChatRoomType.DuckDeal,
