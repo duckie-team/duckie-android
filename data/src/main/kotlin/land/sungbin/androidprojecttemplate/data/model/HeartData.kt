@@ -1,6 +1,7 @@
 package land.sungbin.androidprojecttemplate.data.model
 
 import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 
 internal interface HeartData {
     val type: HeartTarget
@@ -8,6 +9,7 @@ internal interface HeartData {
     val userId: String?
 }
 
+@Unsupported
 internal data class CommentHeartData(
     override val targetId: String? = null,
     override val userId: String? = null,
