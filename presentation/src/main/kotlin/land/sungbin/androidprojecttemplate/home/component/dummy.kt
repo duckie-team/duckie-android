@@ -1,10 +1,12 @@
 package land.sungbin.androidprojecttemplate.home.component
 
 import land.sungbin.androidprojecttemplate.domain.model.Feed
+import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import java.util.Date
 
 val dummyTags = listOf(
@@ -32,7 +34,9 @@ val dummyFeeds = listOf(
         location = null,
         isDirectDealing = null,
         parcelable = null,
-        dealState = null
+        dealState = null,
+        hearts = emptyList(),
+        comments = emptyList(),
     ),
     Feed(
         id = "feed2",
@@ -57,7 +61,9 @@ val dummyFeeds = listOf(
         location = "마포구 도화동",
         isDirectDealing = true,
         parcelable = true,
-        dealState = DealState.Booking
+        dealState = DealState.Booking,
+        hearts = emptyList(),
+        comments = emptyList(),
     ),
     Feed(
         id = "feed3",
@@ -82,6 +88,8 @@ val dummyFeeds = listOf(
         location = "마포구 도화동",
         isDirectDealing = false,
         parcelable = true,
-        dealState = DealState.Booking
+        dealState = DealState.Booking,
+        hearts = emptyList(),
+        comments = emptyList(),
     )
 )

@@ -104,6 +104,8 @@ internal fun HomeScreen(
                         viewModel.changeSelectedUser(selectedUser)
                         coroutineScope.launch { moreBottomSheetState.show() }
                     },
+                    onClickHeartIcon = viewModel::onHeartClick,
+                    onClickCommentIcon = viewModel::onCommentClick,
                     onClickTag = viewModel::deleteTag,
                     onFabMenuClick = viewModel::onFabMenuClick,
                     onRefresh = viewModel::refresh,
@@ -135,6 +137,8 @@ fun HomeContent(
     interestedTags: List<String>,
     onClickLeadingIcon: () -> Unit,
     onClickTrailingIcon: () -> Unit,
+    onClickHeartIcon: () -> Unit,
+    onClickCommentIcon: () -> Unit,
     onClickMoreIcon: (user: String) -> Unit,
     onClickTag: (index: Int) -> Unit,
     onFabMenuClick: (index: Int) -> Unit,
@@ -170,6 +174,8 @@ fun HomeContent(
                     },
                     onRefresh = onRefresh,
                     onClickMoreIcon = onClickMoreIcon,
+                    onClickHeartIcon = onClickHeartIcon,
+                    onClickCommentIcon = onClickCommentIcon,
                 )
             },
             loading = {
@@ -205,6 +211,8 @@ internal fun LazyFeedColumn(
     feeds: List<Feed>,
     onRefresh: () -> Unit,
     onClickMoreIcon: (selectedUser: String) -> Unit,
+    onClickHeartIcon: () -> Unit,
+    onClickCommentIcon: () -> Unit,
 ) {
     val swipeRefreshState = rememberSwipeRefreshState(false)
     SwipeRefresh(
@@ -229,6 +237,8 @@ internal fun LazyFeedColumn(
                         NormalFeed(
                             normalFeed = feed.toNormalFeed(),
                             onClickMoreIcon = onClickMoreIcon,
+                            onClickHeartIcon = onClickHeartIcon,
+                            onClickCommentIcon = onClickCommentIcon,
                         )
                     }
 
@@ -236,6 +246,8 @@ internal fun LazyFeedColumn(
                         DuckDealFeed(
                             duckDealFeed = feed.toDuckDealFeed(),
                             onClickMoreIcon = onClickMoreIcon,
+                            onClickHeartIcon = onClickHeartIcon,
+                            onClickCommentIcon = onClickCommentIcon,
                         )
                     }
                 }

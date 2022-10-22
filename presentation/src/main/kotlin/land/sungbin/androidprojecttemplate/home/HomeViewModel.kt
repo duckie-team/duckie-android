@@ -3,6 +3,7 @@ package land.sungbin.androidprojecttemplate.home
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.delay
 import land.sungbin.androidprojecttemplate.common.UiStatus
+import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
 import land.sungbin.androidprojecttemplate.home.component.dummyFeeds
 import land.sungbin.androidprojecttemplate.home.component.dummyTags
@@ -111,6 +112,15 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
             1 -> postSideEffect(HomeSideEffect.NavigateToWriteDuckDeal)
         }
     }
+
+    fun onHeartClick() = intent {
+
+    }
+
+    fun onCommentClick() = intent {
+
+    }
+
 
     companion object {
         private const val TestMilliSecond = 1000L
