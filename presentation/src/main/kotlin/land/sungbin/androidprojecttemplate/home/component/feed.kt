@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,10 +18,13 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toPersistentList
 import land.sungbin.androidprojecttemplate.R
+import land.sungbin.androidprojecttemplate.domain.model.Comment
+import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.home.dto.FeedDTO
 import land.sungbin.androidprojecttemplate.home.dto.priceToString
+import land.sungbin.androidprojecttemplate.home.dto.toUnitString
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -86,12 +91,18 @@ internal fun FeedHeader(
 internal fun NormalFeed(
     normalFeed: FeedDTO.Normal,
     onClickMoreIcon: (selectedUser: String) -> Unit,
+    onClickHeartIcon: () -> Unit,
+    onClickCommentIcon: () -> Unit,
 ) = with(normalFeed) {
     BasicFeed(
         profileUrl = writerId,
         nickname = writerId,
         createdAt = createdAt,
-        onClickMoreIcon = onClickMoreIcon
+        hearts = hearts,
+        comments = comments,
+        onClickHeartIcon = onClickHeartIcon,
+        onClickCommentIcon = onClickCommentIcon,
+        onClickMoreIcon = onClickMoreIcon,
     ) {
         NormalFeedContent(content = content)
     }
@@ -101,12 +112,18 @@ internal fun NormalFeed(
 internal fun DuckDealFeed(
     duckDealFeed: FeedDTO.DuckDeal,
     onClickMoreIcon: (selectedUser: String) -> Unit,
+    onClickHeartIcon: () -> Unit,
+    onClickCommentIcon: () -> Unit,
 ) = with(duckDealFeed) {
     BasicFeed(
         profileUrl = writerId,
         nickname = writerId,
         createdAt = createdAt,
         onClickMoreIcon = onClickMoreIcon,
+        onClickHeartIcon = onClickHeartIcon,
+        onClickCommentIcon = onClickCommentIcon,
+        comments = comments,
+        hearts = hearts,
     ) {
         DuckDealFeedContent(
             content = content,
@@ -213,40 +230,18 @@ internal fun DuckDealCardContent(
 }
 
 @Composable
-internal fun CommentAndHeart(
-    commentCount: String,
-    heartCount: String,
-    heartChecked: Boolean,
-    heartOnToggle: (Boolean) -> Unit,
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(24.dp)
-    ) {
-        QuackIconTextToggle(
-            checkedIcon = null,
-            uncheckedIcon = QuackIcon.Comment,
-            checked = false,
-            text = commentCount,
-            onToggle = {}
-        )
-        QuackIconTextToggle(
-            checkedIcon = QuackIcon.FilledHeart,
-            uncheckedIcon = QuackIcon.Heart,
-            checked = heartChecked,
-            text = heartCount,
-            onToggle = heartOnToggle
-        )
-    }
-}
-
-@Composable
 private fun BasicFeed(
     profileUrl: String,
     nickname: String,
     createdAt: String,
+    comments: List<Comment>,
+    hearts: List<Heart>,
+    onClickHeartIcon: () -> Unit,
+    onClickCommentIcon: () -> Unit,
     onClickMoreIcon: (selectedUser: String) -> Unit,
     feedContent: @Composable () -> Unit,
 ) {
+    val isHeartCheck = remember { mutableStateOf(false) }
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -279,14 +274,26 @@ private fun BasicFeed(
                 )
             }
             feedContent()
-            CommentAndHeart(
-                commentCount = "100",
-                heartCount = "100",
-                heartChecked = true,
-                heartOnToggle = {
-
-                }
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                QuackIconTextToggle(
+                    checkedIcon = null,
+                    uncheckedIcon = QuackIcon.Comment,
+                    checked = false,
+                    text = comments.size.toUnitString(),
+                    onToggle = {}
+                )
+                QuackIconTextToggle(
+                    checkedIcon = QuackIcon.FilledHeart,
+                    uncheckedIcon = QuackIcon.Heart,
+                    checked = isHeartCheck.value,
+                    text = hearts.size.toUnitString(),
+                    onToggle = {
+                        isHeartCheck.value = !isHeartCheck.value
+                    },
+                )
+            }
         }
     }
 }

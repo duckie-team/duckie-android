@@ -1,6 +1,8 @@
 package land.sungbin.androidprojecttemplate.home.dto
 
+import land.sungbin.androidprojecttemplate.domain.model.Comment
 import land.sungbin.androidprojecttemplate.domain.model.Feed
+import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
@@ -12,26 +14,32 @@ sealed class FeedDTO(
     open val type: FeedType,
     open val content: Content,
     open val createdAt: String,
+    open val hearts: List<Heart>,
+    open val comments: List<Comment>,
 ) {
     data class Normal(
         override val writerId: String,
         override val type: FeedType,
         override val content: Content,
         override val createdAt: String,
-    ) : FeedDTO(writerId, type, content, createdAt)
+        override val hearts: List<Heart>,
+        override val comments: List<Comment>,
+    ) : FeedDTO(writerId, type, content, createdAt, hearts, comments)
 
     data class DuckDeal(
         override val writerId: String,
         override val type: FeedType,
         override val content: Content,
         override val createdAt: String,
+        override val hearts: List<Heart>,
+        override val comments: List<Comment>,
         val title: String,
         val dealState: DealState,
         val price: Int,
         val location: String,
         val isDirectDealing: Boolean,
         val parcelable: Boolean,
-    ) : FeedDTO(writerId, type, content, createdAt)
+    ) : FeedDTO(writerId, type, content, createdAt, hearts, comments)
 }
 
 fun Feed.toNormalFeed() = FeedDTO.Normal(
@@ -39,6 +47,8 @@ fun Feed.toNormalFeed() = FeedDTO.Normal(
     type = type,
     content = content,
     createdAt = "",
+    hearts = hearts,
+    comments = comments,
 )
 
 fun Feed.toDuckDealFeed() = FeedDTO.DuckDeal(
@@ -46,6 +56,8 @@ fun Feed.toDuckDealFeed() = FeedDTO.DuckDeal(
     type = type,
     content = content,
     createdAt = "",
+    hearts = hearts,
+    comments = comments,
     title = title!!,
     dealState = dealState!!,
     price = price!!,
