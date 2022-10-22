@@ -103,8 +103,8 @@ internal fun DealReview.toData() = DealReviewData(
     feedId = feedId,
     isDirect = isDirect,
     review = review.index,
-    likeReason = likeReason.map(LikeReason::index),
-    dislikeReason = dislikeReason.map(DislikeReason::index),
+    likeReason = likeReasons.map(LikeReason::index),
+    dislikeReason = dislikeReasons.map(DislikeReason::index),
     etc = etc,
 )
 

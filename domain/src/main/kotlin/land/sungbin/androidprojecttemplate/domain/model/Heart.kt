@@ -15,8 +15,8 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
  * [피드 아이디][Feed.id] 혹은 [댓글 아이디][Comment.id]가 될 수 있습니다.
  * @param userId 해당 이벤트를 발생시킨 [유저 아이디][User.nickname]
  */
-@Suppress("DataClassPrivateConstructor")
-data class Heart @Unsupported private constructor(
+@Unsupported
+data class Heart(
     @New val type: HeartTarget,
     @PK @FK val commentId: String,
     @PK @FK val userId: String,
