@@ -186,12 +186,12 @@ internal fun DealReviewData.toDomain() = DealReview(
             field = "review",
         )
     ),
-    likeReason = likeReason.unwrap(
+    likeReasons = likeReason.unwrap(
         field = "likeReason",
     ).map { reasonIndex ->
         LikeReason.values()[reasonIndex]
     },
-    dislikeReason = dislikeReason.unwrap(
+    dislikeReasons = dislikeReason.unwrap(
         field = "dislikeReason",
     ).map { reasonIndex ->
         DislikeReason.values()[reasonIndex]

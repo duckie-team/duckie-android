@@ -12,8 +12,8 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
  * @param userId [유저 아이디][User.nickname]
  * @param lastestReadChatId 마지막으로 읽은 [채팅 아이디][Chat.id]
  */
-@Suppress("DataClassPrivateConstructor")
-data class ChatRead @Unsupported private constructor(
+@Unsupported
+data class ChatRead(
     @PK @FK val chatRoomId: String,
     @PK @FK val userId: String,
     @FK val lastestReadChatId: String,
