@@ -5,6 +5,7 @@ import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
 import land.sungbin.androidprojecttemplate.domain.model.Comment
 import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
+import land.sungbin.androidprojecttemplate.domain.model.DealReview
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.Follow
@@ -13,6 +14,7 @@ import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 
 /**
@@ -106,6 +108,7 @@ interface DuckUpsertRepository : DuckRepository {
      * @return Upsert 결과.
      * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
+    @Unsupported
     suspend fun upsertChatRead(
         chatRead: ChatRead,
     ): DuckUpsertResult
@@ -120,6 +123,7 @@ interface DuckUpsertRepository : DuckRepository {
      * @return Upsert 결과.
      * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
+    @Unsupported
     suspend fun upsertHeart(
         heart: Heart,
     ): DuckUpsertResult
@@ -144,13 +148,13 @@ interface DuckUpsertRepository : DuckRepository {
      * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
      * 기존에 등록된 정보를 업데이트합니다.
      *
-     * @param review 정보를 생성하거나 업데이트할 [리뷰][Review] 객체
+     * @param review 정보를 생성하거나 업데이트할 [리뷰][DealReview] 객체
      * @return Upsert 결과.
      * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     // See: https://github.com/duckie-team/duckie-app-mvp/issues/32
     suspend fun upsertReview(
-        review: Review,
+        review: DealReview,
     ): DuckUpsertResult
 
     /**
@@ -183,7 +187,7 @@ interface DuckUpsertRepository : DuckRepository {
     ): DuckUpsertResult
 
     /**
-     * [피드 선호도][ChatRoom] 정보를 생성하거나 업데이트합니다.
+     * [피드 선호도][FeedScore] 정보를 생성하거나 업데이트합니다.
      *
      * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
      * 기존에 등록된 정보를 업데이트합니다.
@@ -192,6 +196,7 @@ interface DuckUpsertRepository : DuckRepository {
      * @return Upsert 결과.
      * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
+    @Unsupported
     suspend fun upsertFeedScore(
         feedScore: FeedScore,
     ): DuckUpsertResult
@@ -206,7 +211,8 @@ interface DuckUpsertRepository : DuckRepository {
      * @return Upsert 결과.
      * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
-    suspend fun upsertTime(
+    @Unsupported
+    suspend fun upsertContentStayTime(
         contentStayTime: ContentStayTime,
     ): DuckUpsertResult
 }

@@ -15,7 +15,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
  * @param stayTime 해당 피드에 머문 시간. (단위: 초)
  * 현재는 이 값을 얻을 방법이 아직 구현되지 않았으므로
  * 기본 값인 0 을 그대로 사용합니다.
- * @param score 점수.
+ * @param score 추천 시스템에 반영될 점수.
  *
  * | 상황 | 점수 |
  * | --- | :---: |
@@ -27,8 +27,8 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
  * | 공유 | 5 |
  * | 관심 없음 | -3 |
  */
-@Suppress("DataClassPrivateConstructor")
-data class FeedScore @Unsupported private constructor(
+@Unsupported
+data class FeedScore(
     @PK @FK val userId: String,
     @FK val feedId: String,
     @IntRange(from = 0) val stayTime: Int = 0,

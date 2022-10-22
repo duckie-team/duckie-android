@@ -53,7 +53,8 @@ internal annotation class New
  */
 @Target(
     AnnotationTarget.PROPERTY,
-    AnnotationTarget.CONSTRUCTOR,
+    AnnotationTarget.CLASS,
+    AnnotationTarget.FUNCTION,
 )
 @RequiresOptIn(
     message = "이 필드는 MVP 개발 환경에서는 사용되서는 안됩니다.",

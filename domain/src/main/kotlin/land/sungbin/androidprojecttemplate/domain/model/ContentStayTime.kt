@@ -22,8 +22,8 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * @param dm DM 화면에 머문 시간
  * @param notification 알림 화면에 머문 시간
  */
-@Suppress("DataClassPrivateConstructor")
-data class ContentStayTime @Unsupported private constructor(
+@Unsupported
+data class ContentStayTime(
     val userId: String,
     val categories: List<Int>,
     @IntRange(from = 0) val search: Int,
