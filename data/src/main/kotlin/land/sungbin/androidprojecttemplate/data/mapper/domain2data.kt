@@ -1,3 +1,6 @@
+@file:Suppress("KDocFields")
+@file:OptIn(Unsupported::class)
+
 package land.sungbin.androidprojecttemplate.data.mapper
 
 import java.text.SimpleDateFormat
@@ -7,10 +10,11 @@ import land.sungbin.androidprojecttemplate.data.model.ChatData
 import land.sungbin.androidprojecttemplate.data.model.ChatReadData
 import land.sungbin.androidprojecttemplate.data.model.ChatRoomData
 import land.sungbin.androidprojecttemplate.data.model.CommentData
+import land.sungbin.androidprojecttemplate.data.model.CommentHeartData
 import land.sungbin.androidprojecttemplate.data.model.ContentStayTimeData
 import land.sungbin.androidprojecttemplate.data.model.DealReviewData
-import land.sungbin.androidprojecttemplate.data.model.DuckFeedCoreInformationData
 import land.sungbin.androidprojecttemplate.data.model.FeedData
+import land.sungbin.androidprojecttemplate.data.model.FeedHeartData
 import land.sungbin.androidprojecttemplate.data.model.FeedScoreData
 import land.sungbin.androidprojecttemplate.data.model.FollowData
 import land.sungbin.androidprojecttemplate.data.model.HeartData
@@ -36,7 +40,10 @@ import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badge
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DislikeReason
+import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
+import land.sungbin.androidprojecttemplate.domain.model.util.NewField
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 
 private fun Content.toData() = ContentData(
     text = text,
@@ -47,12 +54,13 @@ private fun Content.toData() = ContentData(
 private fun Date.toDataString() =
     SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.KOREA).format(this)
 
-private fun DuckFeedCoreInformation.toData() = DuckFeedCoreInformationData(
-    images = images,
-    title = title,
-    price = price,
+private fun DuckFeedCoreInformation.toData() = listOf(
+    image,
+    title,
+    price.toString(),
 )
 
+@OptIn(NewField::class)
 internal fun Chat.toData() = ChatData(
     id = id,
     chatRoomId = chatRoomId,
@@ -62,7 +70,7 @@ internal fun Chat.toData() = ChatData(
     isEdited = isEdited,
     content = content.toData(),
     sentAt = sentAt.toDataString(),
-    duckFeedData = duckFeedData?.toData(),
+    duckFeedDatas = duckFeedData?.toData(),
 )
 
 internal fun ChatRead.toData() = ChatReadData(
@@ -76,6 +84,7 @@ internal fun ChatRoom.toData() = ChatRoomData(
     type = type.index,
     coverImageUrl = coverImageUrl,
     name = name,
+    ownerId = ownerId,
     categories = categories?.map(Category::index),
     tags = tags,
 )
@@ -83,7 +92,8 @@ internal fun ChatRoom.toData() = ChatRoomData(
 internal fun Comment.toDat() = CommentData(
     id = id,
     parentId = parentId,
-    userId = ownerId,
+    ownerId = ownerId,
+    feedId = feedId,
     content = content.toData(),
     createdAt = createdAt.toDataString(),
 )
@@ -103,8 +113,8 @@ internal fun DealReview.toData() = DealReviewData(
     feedId = feedId,
     isDirect = isDirect,
     review = review.index,
-    likeReason = likeReasons.map(LikeReason::index),
-    dislikeReason = dislikeReasons.map(DislikeReason::index),
+    likeReasons = likeReasons.map(LikeReason::index),
+    dislikeReasons = dislikeReasons.map(DislikeReason::index),
     etc = etc,
 )
 
@@ -141,11 +151,19 @@ internal fun Follow.toData() = FollowData(
     blocks = blocks,
 )
 
-internal fun Heart.toData() = HeartData(
-    type = type.index,
-    feedId = commentId,
-    userId = userId,
-)
+@OptIn(NewField::class)
+internal fun Heart.toData(): HeartData {
+    return when (target) {
+        HeartTarget.Feed -> FeedHeartData(
+            userId = userId,
+            targetId = targetId,
+        )
+        HeartTarget.Comment -> CommentHeartData(
+            userId = userId,
+            targetId = targetId,
+        )
+    }
+}
 
 internal fun Report.toData() = ReportData(
     id = id,
