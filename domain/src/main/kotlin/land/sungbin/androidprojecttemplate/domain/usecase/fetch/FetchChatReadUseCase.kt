@@ -4,10 +4,12 @@ import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.repository.DuckFetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
+@Unsupported
 class FetchChatReadUseCase(
     private val repository: DuckFetchRepository,
 ) {
