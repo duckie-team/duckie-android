@@ -6,7 +6,6 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
 import land.sungbin.androidprojecttemplate.domain.model.constraint.ReasonToken
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.model.util.New
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
@@ -29,7 +28,7 @@ data class DealReview(
     @FK val buyerId: String,
     @FK val sellerId: String,
     @FK val feedId: String,
-    @New val isDirect: Boolean,
+    val isDirect: Boolean,
     val review: Review,
     @Size(min = 1) val likeReasons: List<LikeReason>,
     @Size(min = 1) val dislikeReasons: List<DislikeReason>,
