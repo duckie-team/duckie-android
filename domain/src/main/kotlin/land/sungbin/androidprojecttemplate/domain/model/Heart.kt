@@ -4,7 +4,6 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.NewField
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
-import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 
 /**
@@ -15,7 +14,6 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
  * [피드 아이디][Feed.id] 혹은 [댓글 아이디][Comment.id]가 될 수 있습니다.
  * @param userId 해당 이벤트를 발생시킨 [유저 아이디][User.nickname]
  */
-@Unsupported
 data class Heart(
     @NewField val target: HeartTarget,
     @PK @FK val targetId: String,
