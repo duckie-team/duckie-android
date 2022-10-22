@@ -37,8 +37,8 @@ class UpsertHeartUseCase(
     ) = runDuckApiCatching {
         repository.upsertHeart(
             heart = Heart(
-                type = type,
-                commentId = commentId,
+                target = type,
+                targetId = commentId,
                 userId = userId,
             ),
         )
