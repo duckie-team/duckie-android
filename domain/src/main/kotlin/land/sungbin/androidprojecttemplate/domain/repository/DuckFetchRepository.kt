@@ -12,6 +12,7 @@ import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 
@@ -106,6 +107,7 @@ interface DuckFetchRepository : DuckRepository {
      * @param userId 조회할 [유저의 아이디][User.nickname]
      * @return 조회된 마지막으로 [읽은 채팅][ChatRead]의 목록을 담은 [fetch 결과][DuckFetchResult]
      */
+    @Unsupported
     suspend fun fetchChatRead(
         @PK @FK userId: String,
     ): DuckApiResult<ChatRead>
@@ -119,7 +121,8 @@ interface DuckFetchRepository : DuckRepository {
      * @param feedId 조회할 [피드 아이디][Feed.id]
      * @return 조회된 [좋아요][Heart] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
-    suspend fun fetchHearts(
+    @Unsupported
+    suspend fun fetchHeart(
         @PK @FK feedId: String,
     ): DuckApiResult<Heart>
 
