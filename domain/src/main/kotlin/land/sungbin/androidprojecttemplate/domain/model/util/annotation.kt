@@ -26,8 +26,8 @@ internal annotation class FK
 
 /**
  * API 사용에 편의를 위해 추가된 DB 명세에는 없는 필드임을 나타냅니다.
- * 이 어노테이션이 붙는 필드는 data 계층에서 `NewField` optin 으로 변경되어,
- * 별도로 관리됩니다. DB 명세와 대조하면서 혼동을 방지하기 위해 사용됩니다.
+ * 이 어노테이션이 붙는 필드는 data 계층에서 별도로 관리됩니다.
+ * DB 명세와 대조하면서 혼동을 방지하기 위해 사용됩니다.
  *
  * `Int` 에서 `enum class` 로 변경된 경우를 제외하고, 새로운 타입으로
  * 설정된 경우도 이 어노테이션으로 표가됩니다.
@@ -39,7 +39,7 @@ internal annotation class FK
     message = "이 필드는 API 사용에 편의를 위해 추가된 필드로, DB 명세에는 없는 필드입니다. " +
             "API 요청에서 주의해야 합니다.",
 )
-internal annotation class New
+annotation class NewField
 
 /**
  * 덕키가 MVP 작업으로 진행되면서 사용되지 않는 필드를 나타냅니다.
@@ -59,4 +59,4 @@ internal annotation class New
 @RequiresOptIn(
     message = "이 필드는 MVP 개발 환경에서는 사용되서는 안됩니다.",
 )
-internal annotation class Unsupported
+annotation class Unsupported
