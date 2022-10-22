@@ -14,6 +14,6 @@ interface DuckAssertRepository : DuckRepository {
      * @return 사용 가능 여부
      */
     suspend fun checkNicknameAvailable(
-        nickname: String
-    ): Result<Boolean>
+        nickname: String,
+    ): Boolean
 }
