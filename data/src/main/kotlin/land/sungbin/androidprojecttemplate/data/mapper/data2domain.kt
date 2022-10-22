@@ -166,7 +166,7 @@ internal fun CommentData.toDomain() = Comment(
 
 @Unsupported
 internal fun ContentStayTimeData.toDomain() = ContentStayTime(
-    userId = userId.unwrap(
+    userId = user_id.unwrap(
         field = "userId",
     ),
     categories = categories.unwrap(
@@ -223,7 +223,7 @@ internal fun FeedData.toDomain() = Feed(
     id = id.unwrap(
         field = "id",
     ),
-    writerId = writerId.unwrap(
+    writerId = writer_id.unwrap(
         field = "writerId",
     ),
     type = FeedType.values().get(
@@ -231,10 +231,10 @@ internal fun FeedData.toDomain() = Feed(
             field = "type",
         )
     ),
-    isDeleted = isDeleted.unwrap(
+    isDeleted = is_delete.unwrap(
         field = "isDeleted",
     ),
-    isHidden = isHidden.unwrap(
+    isHidden = is_hidden.unwrap(
         field = "isHidden",
     ),
     content = content.unwrap(
@@ -245,30 +245,30 @@ internal fun FeedData.toDomain() = Feed(
     ).map { categoryIndex ->
         Category.values()[categoryIndex]
     },
-    createdAt = createdAt.unwrap(
+    createdAt = create_at.unwrap(
         field = "createdAt",
     ).toDate(),
     title = title,
     price = price,
-    pushCount = pushCount,
-    latestPushAt = latestPushAt,
+    pushCount = push_count,
+    latestPushAt = lastest_push_at,
     location = location,
-    isDirectDealing = isDirectDealing,
+    isDirectDealing = is_direct_dealing,
     parcelable = parcelable,
-    dealState = dealState?.let { stateIndex ->
+    dealState = deal_state?.let { stateIndex ->
         DealState.values()[stateIndex]
     },
 )
 
 @Unsupported
 internal fun FeedScoreData.toDomain() = FeedScore(
-    userId = userId.unwrap(
+    userId = user_id.unwrap(
         field = "userId",
     ),
-    feedId = feedId.unwrap(
+    feedId = feed_id.unwrap(
         field = "feedId",
     ),
-    stayTime = stayTime.unwrap(
+    stayTime = stay_time.unwrap(
         field = "stayTime",
     ),
     score = score.unwrap(
@@ -277,7 +277,7 @@ internal fun FeedScoreData.toDomain() = FeedScore(
 )
 
 internal fun FollowData.toDomain() = Follow(
-    userId = accountId.unwrap(
+    userId = account_id.unwrap(
         field = "accountId",
     ),
     followings = followings.unwrap(
@@ -296,10 +296,10 @@ internal fun HeartData.toDomain() = Heart(
     target = type.unwrap(
         field = "type",
     ),
-    targetId = targetId.unwrap(
+    targetId = target_id.unwrap(
         field = "feedId",
     ),
-    userId = userId.unwrap(
+    userId = user_id.unwrap(
         field = "userId",
     ),
 )
@@ -342,42 +342,42 @@ internal fun SaleRequestData.toDomain() = SaleRequest(
 )
 
 internal fun UserData.toDomain() = User(
-    nickname = nickname.unwrap(
+    nickname = nick_name.unwrap(
         field = "nickname",
     ),
-    accountAvailable = accountAvailable.unwrap(
+    accountAvailable = account_enabled.unwrap(
         field = "accountAvailable",
     ),
-    profileUrl = profileUrl,
+    profileUrl = profile_url,
     tier = tier,
     badges = badges.unwrap(
         field = "badges",
     ).map { badgeIndex ->
         Badge.values()[badgeIndex]
     },
-    likeCategories = likeCategories.unwrap(
+    likeCategories = like_categories.unwrap(
         field = "likeCategories",
     ).map { categoryIndex ->
         Category.values()[categoryIndex]
     },
-    interestedTags = interestedTags.unwrap(
+    interestedTags = interested_tags.unwrap(
         field = "interestedTags",
     ),
-    nonInterestedTags = nonInterestedTags.unwrap(
+    nonInterestedTags = non_interested_tags.unwrap(
         field = "nonInterestedTags",
     ),
-    notificationTags = notificationTags.unwrap(
+    notificationTags = notification_tags.unwrap(
         field = "notificationTags",
     ),
-    tradePreferenceTags = tradePreferenceTags.unwrap(
+    tradePreferenceTags = trade_preference_tags.unwrap(
         field = "tradePreferenceTags",
     ),
     collections = collections.unwrap(
         field = "collections",
     ),
-    createdAt = createdAt.unwrap(
+    createdAt = create_at.unwrap(
         field = "createdAt",
     ).toDate(),
-    deletedAt = deletedAt?.toDate(),
-    bannedAt = bannedAt?.toDate(),
+    deletedAt = delete_at?.toDate(),
+    bannedAt = banned_at?.toDate(),
 )
