@@ -99,7 +99,7 @@ internal fun Comment.toDat() = CommentData(
 )
 
 internal fun ContentStayTime.toData() = ContentStayTimeData(
-    userId = userId,
+    user_id = userId,
     categories = categories,
     search = search,
     dm = dm,
@@ -120,32 +120,32 @@ internal fun DealReview.toData() = DealReviewData(
 
 internal fun Feed.toData() = FeedData(
     id = id,
-    writerId = writerId,
+    writer_id = writerId,
     type = type.index,
-    isDeleted = isDeleted,
-    isHidden = isHidden,
+    is_delete = isDeleted,
+    is_hidden = isHidden,
     content = content.toData(),
     categories = categories.map(Category::index),
-    createdAt = createdAt.toDataString(),
+    create_at = createdAt.toDataString(),
     title = title,
     price = price,
-    pushCount = pushCount,
-    latestPushAt = latestPushAt,
+    push_count = pushCount,
+    lastest_push_at = latestPushAt,
     location = location,
-    isDirectDealing = isDirectDealing,
+    is_direct_dealing = isDirectDealing,
     parcelable = parcelable,
-    dealState = dealState?.index,
+    deal_state = dealState?.index,
 )
 
 internal fun FeedScore.toData() = FeedScoreData(
-    userId = userId,
-    feedId = feedId,
-    stayTime = stayTime,
+    user_id = userId,
+    feed_id = feedId,
+    stay_time = stayTime,
     score = score,
 )
 
 internal fun Follow.toData() = FollowData(
-    accountId = userId,
+    account_id = userId,
     followings = followings,
     followers = followers,
     blocks = blocks,
@@ -155,12 +155,12 @@ internal fun Follow.toData() = FollowData(
 internal fun Heart.toData(): HeartData {
     return when (target) {
         HeartTarget.Feed -> FeedHeartData(
-            userId = userId,
-            targetId = targetId,
+            user_id = userId,
+            target_id = targetId,
         )
         HeartTarget.Comment -> CommentHeartData(
-            userId = userId,
-            targetId = targetId,
+            user_id = userId,
+            target_id = targetId,
         )
     }
 }
@@ -183,18 +183,18 @@ internal fun SaleRequest.toData() = SaleRequestData(
 )
 
 internal fun User.toData() = UserData(
-    nickname = nickname,
-    accountAvailable = accountAvailable,
-    profileUrl = profileUrl,
+    nick_name = nickname,
+    account_enabled = accountAvailable,
+    profile_url = profileUrl,
     tier = tier,
     badges = badges?.map(Badge::index),
-    likeCategories = likeCategories.map(Category::index),
-    interestedTags = interestedTags,
-    nonInterestedTags = nonInterestedTags,
-    notificationTags = notificationTags,
-    tradePreferenceTags = tradePreferenceTags,
+    like_categories = likeCategories.map(Category::index),
+    interested_tags = interestedTags,
+    non_interested_tags = nonInterestedTags,
+    notification_tags = notificationTags,
+    trade_preference_tags = tradePreferenceTags,
     collections = collections,
-    createdAt = createdAt.toDataString(),
-    deletedAt = deletedAt?.toDataString(),
-    bannedAt = bannedAt?.toDataString(),
+    create_at = createdAt.toDataString(),
+    delete_at = deletedAt?.toDataString(),
+    banned_at = bannedAt?.toDataString(),
 )
