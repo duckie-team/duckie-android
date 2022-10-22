@@ -1,18 +1,16 @@
 package land.sungbin.androidprojecttemplate.domain.model
 
 import androidx.annotation.IntRange
-import androidx.annotation.Size
 import java.util.Date
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.ChatType
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.model.util.New
+import land.sungbin.androidprojecttemplate.domain.model.util.NewField
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
 import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSetting
-import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
 /**
  * 채팅 모델
@@ -30,7 +28,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * [type] 이 [ChatType.DuckDeal] 이 아니라면 null 을 받습니다.
  */
 @OptIn(
-    New::class,
+    NewField::class,
     Unsupported::class,
 )
 data class Chat(
@@ -42,7 +40,7 @@ data class Chat(
     @Unsupported val isEdited: Boolean? = null,
     val content: Content,
     val sentAt: Date,
-    @New val duckFeedData: DuckFeedCoreInformation?,
+    @NewField val duckFeedData: DuckFeedCoreInformation?,
 ) {
     init {
         requireInput(
