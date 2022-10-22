@@ -34,6 +34,28 @@ inline fun <T> runDuckApiCatching(
 }
 
 /**
+ * 주어진 결과가 [DuckApiResult.Exception] 아닐 때 값을 반환합니다.
+ *
+ * 만약 [DuckApiResult.Exception] 이라면 [IllegalStateException] 를 throw 합니다.
+ * 그렇지 않고, 만약 [DuckFetchResult.Success] 상태라면 [DuckFetchResult.Success.value] 를 반환합니다.
+ * [DuckFetchResult.Success] 가 아닌 상태로 성공했다면 null 을 반환합니다.
+ *
+ * @receiver [DuckRepository] 의 실행 결과
+ * @return 결과로 받은 값. 결과 상태에 따라 반환 값이 달라집니다.
+ * @exception IllegalStateException [DuckApiResult.Exception] 일 때 발생합니다.
+ */
+fun <T> DuckApiResult<T>.getOrThrow(): T? {
+    if (this is DuckApiResult.Exception) {
+        throw IllegalStateException(message)
+    }
+    return if (this is DuckFetchResult.Success) {
+        this.value
+    } else {
+        null
+    }
+}
+
+/**
  * [DuckApiResult] 가 [DuckApiResult.Exception] 일 때 주어진
  * 콜백을 실행하는 확장 함수 입니다.
  *
