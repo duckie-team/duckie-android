@@ -58,6 +58,7 @@ class UpsertRepositoryImpl : UpsertRepository {
 
     override suspend fun upsertHeart(
         heart: Heart,
+        isDeletion: Boolean,
     ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> { continuation ->
 
     }
