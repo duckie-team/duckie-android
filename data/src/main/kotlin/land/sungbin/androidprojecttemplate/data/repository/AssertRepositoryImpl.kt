@@ -5,8 +5,8 @@ package land.sungbin.androidprojecttemplate.data.repository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import land.sungbin.androidprojecttemplate.data.repository.util.setDefaultFailure
 import land.sungbin.androidprojecttemplate.domain.repository.AssertRepository
 
 class AssertRepositoryImpl : AssertRepository {
@@ -21,10 +21,8 @@ class AssertRepositoryImpl : AssertRepository {
                     value = result.isEmpty,
                 )
             }
-            .addOnFailureListener { exception ->
-                continuation.resumeWithException(
-                    exception = exception,
-                )
-            }
+            .setDefaultFailure(
+                continuation = continuation,
+            )
     }
 }

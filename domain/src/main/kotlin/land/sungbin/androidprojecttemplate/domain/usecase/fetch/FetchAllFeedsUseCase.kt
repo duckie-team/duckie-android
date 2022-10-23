@@ -5,7 +5,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.Heart
-import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
+import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
@@ -30,12 +30,9 @@ class FetchAllFeedsUseCase(
      * @return 전체 [피드][Feed] 목록과 각각 [피드][Feed]에 대한 [좋아요][Heart] 정보를 담은 [fetch 결과][DuckFetchResult].
      * [Pair] 를 이용해 [피드][Feed] 목록과 [좋아요][Heart] 정보를 반환합니다.
      */
-    @OptIn(Unsupported::class) // 좋아요 정보 제공
-    // 현재 Heart 는 [Unsupported] 상태이므로 높은 확률로 null 을 반환합니다.
-    // 따라서 Heart 를 nullable 하게 받습니다.
     suspend operator fun invoke(
         force: Boolean = false,
-    ): DuckApiResult<List<Pair<Feed, Heart?>>> = invokeOrLoadCache(
+    ): DuckApiResult<List<Pair<Feed, List<Heart>>>> = invokeOrLoadCache(
         type = CacheType.AllFeeds,
         pk = Unit.toString(), // 피드는 특정 키로 한정지어 캐싱할 필요가 없음
         forceUpdate = force,
@@ -46,9 +43,10 @@ class FetchAllFeedsUseCase(
                     ?: return@coroutineScope DuckFetchResult.Empty()
                 val feedWithHearts = feeds.map { feed ->
                     async {
-                        feed to repository.fetchHeart(
-                            feedId = feed.id,
-                        ).getOrThrow()
+                        feed to (repository.fetchHearts(
+                            target = HeartTarget.Feed,
+                            targetId = feed.id,
+                        ).getOrThrow() ?: emptyList())
                     }
                 }
                 DuckFetchResult.Success(

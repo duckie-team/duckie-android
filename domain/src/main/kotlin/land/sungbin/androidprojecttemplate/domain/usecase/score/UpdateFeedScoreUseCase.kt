@@ -8,6 +8,7 @@ import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.repository.ScoreRepository
+import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
 class UpdateFeedScoreUseCase(
     private val repository: ScoreRepository,
@@ -33,7 +34,7 @@ class UpdateFeedScoreUseCase(
         @FK feedId: String,
         @IntRange(from = 0) stayTime: Int? = null,
         scoreType: ScoreType? = null,
-    ) = runCatching {
+    ) = runDuckApiCatching {
         repository.updateFeedScore(
             feedScore = FeedScore(
                 userId = userId,
