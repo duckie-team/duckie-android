@@ -25,6 +25,7 @@ class FetchCommentsUseCase(
      * @param force 캐시를 무시하고 요청할지 여부
      * @return 조회된 [댓글][Comment] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
+    // TODO: 좋아요 정보 같이 제공
     suspend operator fun invoke(
         @FK feedId: String,
         force: Boolean = false,
