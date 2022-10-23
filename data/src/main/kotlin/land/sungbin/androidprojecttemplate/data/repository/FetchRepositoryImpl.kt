@@ -2,14 +2,10 @@
 
 package land.sungbin.androidprojecttemplate.data.repository
 
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObjects
-import com.google.firebase.ktx.Firebase
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
 import land.sungbin.androidprojecttemplate.data.repository.constants.CollectionNames
-import land.sungbin.androidprojecttemplate.data.repository.util.setDefaultFailure
+import land.sungbin.androidprojecttemplate.data.repository.util.findObject
+import land.sungbin.androidprojecttemplate.data.repository.util.findObjects
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
@@ -27,76 +23,6 @@ import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResul
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 
 class FetchRepositoryImpl : FetchRepository {
-    @Suppress("UNCHECKED_CAST")
-    private fun <V, T : DuckApiResult<V>> findObject(
-        collection: String,
-        field: String? = null,
-        value: String? = null,
-        continuation: Continuation<T>,
-    ) {
-        Firebase.firestore
-            .collection(collection)
-            .run {
-                if (field != null && value != null) {
-                    whereEqualTo(field, value)
-                } else {
-                    this
-                }
-            }
-            .get()
-            .addOnSuccessListener { result ->
-                if (result.isEmpty) {
-                    continuation.resume(
-                        value = DuckFetchResult.Empty<V>() as T,
-                    )
-                } else {
-                    continuation.resume(
-                        value = DuckFetchResult.Success(
-                            value = result.documents.first().toObject(User::class.java)!!,
-                        ) as T,
-                    )
-                }
-            }
-            .setDefaultFailure(
-                continuation = continuation,
-            )
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private inline fun <reified V : Any, T : DuckApiResult<V>> findObjects(
-        collection: String,
-        field: String? = null,
-        value: String? = null,
-        continuation: Continuation<T>,
-    ) {
-        Firebase.firestore
-            .collection(collection)
-            .run {
-                if (field != null && value != null) {
-                    whereEqualTo(field, value)
-                } else {
-                    this
-                }
-            }
-            .get()
-            .addOnSuccessListener { result ->
-                if (result.isEmpty) {
-                    continuation.resume(
-                        value = DuckFetchResult.Empty<V>() as T,
-                    )
-                } else {
-                    continuation.resume(
-                        value = DuckFetchResult.Success(
-                            value = result.toObjects<V>(),
-                        ) as T,
-                    )
-                }
-            }
-            .setDefaultFailure(
-                continuation = continuation,
-            )
-    }
-
     override suspend fun fetchUser(
         id: String,
     ) = suspendCancellableCoroutine<DuckFetchResult<User>> { continuation ->
