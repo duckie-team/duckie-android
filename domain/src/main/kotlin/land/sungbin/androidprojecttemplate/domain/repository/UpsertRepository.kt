@@ -111,11 +111,14 @@ interface UpsertRepository : DuckRepository {
      * 기존에 등록된 정보를 업데이트합니다.
      *
      * @param heart 정보를 생성하거나 업데이트할 [좋아요][Heart] 객체
+     * @param isDeletion 좋아요 삭제 이벤트인지 여부
+     *
      * @return Upsert 결과.
      * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun upsertHeart(
         heart: Heart,
+        isDeletion: Boolean,
     ): DuckApiResult<Nothing>
 
     /**
