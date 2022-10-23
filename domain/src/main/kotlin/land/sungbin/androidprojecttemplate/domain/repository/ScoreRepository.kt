@@ -3,6 +3,7 @@ package land.sungbin.androidprojecttemplate.domain.repository
 import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
 import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
+import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 
 /**
  * 추천 시스템에 사용되는 모델들을 다루는 API 들의 시그니처를 정의합니다.
@@ -13,11 +14,12 @@ interface ScoreRepository : DuckRepository {
      *
      * @param feedScore [피드 선호도][FeedScore] 정보
      *
-     * @return 업데이트 성공 여부
+     * @return 업데이트 성공 여부.
+     * 성공 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun updateFeedScore(
         feedScore: FeedScore,
-    ): Boolean
+    ): DuckApiResult<Nothing>
 
     /**
      * [컨텐츠 별 머문 시간][ContentStayTime] 정보를 생성하거나 업데이트합니다.
@@ -29,10 +31,11 @@ interface ScoreRepository : DuckRepository {
      *
      * @param contentStayTime [컨텐츠 별 머문 시간][ContentStayTime] 정보
      *
-     * @return 업데이트 성공 여부
+     * @return 업데이트 성공 여부.
+     * 성공 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     @Unsupported
     suspend fun updateContentStayTime(
         contentStayTime: ContentStayTime,
-    ): Boolean
+    ): DuckApiResult<Nothing>
 }
