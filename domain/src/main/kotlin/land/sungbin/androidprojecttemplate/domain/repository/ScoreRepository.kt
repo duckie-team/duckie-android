@@ -4,6 +4,9 @@ import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
 import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 
+/**
+ * 추천 시스템에 사용되는 모델들을 다루는 API 들의 시그니처를 정의합니다.
+ */
 interface ScoreRepository : DuckRepository {
     /**
      * [피드 선호도][FeedScore] 정보를 생성하거나 업데이트합니다.
