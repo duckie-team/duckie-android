@@ -4,7 +4,7 @@ import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
 import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 
-interface ScoreRepository : Repository {
+interface ScoreRepository : DuckRepository {
     /**
      * [피드 선호도][FeedScore] 정보를 생성하거나 업데이트합니다.
      *

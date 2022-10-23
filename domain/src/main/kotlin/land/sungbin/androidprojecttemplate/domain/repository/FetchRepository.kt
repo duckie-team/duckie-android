@@ -19,7 +19,7 @@ import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchRes
 /**
  * Fetch 요청을 하는 API 들의 시그니처를 정의합니다.
  */
-interface FetchRepository : Repository {
+interface FetchRepository : DuckRepository {
     /**
      * 주어진 아이디로부터 [유저][User] 정보를 조회합니다.
      *
