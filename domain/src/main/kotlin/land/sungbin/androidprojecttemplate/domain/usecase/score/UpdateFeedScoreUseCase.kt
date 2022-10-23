@@ -7,10 +7,10 @@ import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckScoreRepository
+import land.sungbin.androidprojecttemplate.domain.repository.ScoreRepository
 
 class UpdateFeedScoreUseCase(
-    private val repository: DuckScoreRepository,
+    private val repository: ScoreRepository,
 ) {
     /**
      * [피드 선호도][FeedScore] 정보를 생성하거나 업데이트합니다.

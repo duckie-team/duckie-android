@@ -3,7 +3,7 @@ package land.sungbin.androidprojecttemplate.domain.usecase.fetch
 import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckFetchRepository
+import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
@@ -12,7 +12,7 @@ import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.invokeOrLo
 
 
 class FetchFollowUseCase(
-    private val repository: DuckFetchRepository,
+    private val repository: FetchRepository,
 ) {
     /**
      * 주어진 아이디로부터 [팔로우][Follow] 정보를 조회합니다.
