@@ -119,3 +119,27 @@ internal inline fun <reified V : Any, T : DuckApiResult<V>> findObjects(
     isList = true,
     continuation = continuation,
 )
+
+/**
+ * UpdateRepository 에서 호출하는 Firestore API 의 기본 이벤트 동작을 정의합니다.
+ *
+ * 기본적으로 성공했을 때에는 [DuckApiResult.Success] 를 resume 하고,
+ * 실패했을 경우에는 [DuckApiResult.Exception] 을 resume 합니다.
+ *
+ * @param continuation 이벤트를 받으면 처리할 [continuation][Continuation]
+ * @return 이벤트 처리 방식이 적용된 [Task]
+ */
+@Suppress("UNCHECKED_CAST")
+internal fun <V, T : DuckApiResult<V>, TResult> Task<TResult>.defaultEventHandles(
+    continuation: Continuation<T>,
+) = this
+    .addOnSuccessListener {
+        continuation.resume(
+            value = DuckApiResult.Success<V>() as T,
+        )
+    }
+    .addOnFailureListener { exception ->
+        continuation.resumeWithException(
+            exception = exception,
+        )
+    }
