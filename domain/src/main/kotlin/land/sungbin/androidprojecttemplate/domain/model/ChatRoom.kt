@@ -26,9 +26,10 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSetting
  * @param categories 채팅방 카테고리.
  * @param tags 채팅방 태그.
  */
+@OptIn(Unsupported::class)
 data class ChatRoom(
     @PK val id: String,
-    @Unsupported val type: ChatRoomType = ChatRoomType.DuckDeal,
+    @property:Unsupported val type: ChatRoomType = ChatRoomType.DuckDeal,
     val coverImageUrl: String?,
     val name: String,
     @FK val ownerId: String,
