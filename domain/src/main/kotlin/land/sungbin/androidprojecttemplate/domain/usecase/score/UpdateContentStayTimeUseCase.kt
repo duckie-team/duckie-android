@@ -7,11 +7,11 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
-import land.sungbin.androidprojecttemplate.domain.repository.DuckScoreRepository
+import land.sungbin.androidprojecttemplate.domain.repository.ScoreRepository
 
 @Unsupported
 class UpdateContentStayTimeUseCase(
-    private val repository: DuckScoreRepository,
+    private val repository: ScoreRepository,
 ) {
     /**
      * [컨텐츠 별 머문 시간][ContentStayTime] 정보를 생성하거나 업데이트합니다.

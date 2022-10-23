@@ -9,12 +9,12 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.DislikeReason
 import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckUpsertRepository
+import land.sungbin.androidprojecttemplate.domain.repository.UpsertRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
 class UpsertReviewUseCase(
-    private val repository: DuckUpsertRepository,
+    private val repository: UpsertRepository,
 ) {
     /**
      * [리뷰][Review] 정보를 생성하거나 업데이트합니다.

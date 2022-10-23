@@ -7,9 +7,9 @@ import com.google.firebase.ktx.Firebase
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
-import land.sungbin.androidprojecttemplate.domain.repository.DuckAssertRepository
+import land.sungbin.androidprojecttemplate.domain.repository.AssertRepository
 
-class DuckAssertRepositoryImpl : DuckAssertRepository {
+class AssertRepositoryImpl : AssertRepository {
     override suspend fun checkNicknameAvailable(
         nickname: String,
     ) = suspendCancellableCoroutine<Boolean> { continuation ->

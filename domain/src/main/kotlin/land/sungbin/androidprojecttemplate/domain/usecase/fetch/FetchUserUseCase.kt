@@ -2,12 +2,12 @@ package land.sungbin.androidprojecttemplate.domain.usecase.fetch
 
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckFetchRepository
+import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
 class FetchUserUseCase(
-    private val repository: DuckFetchRepository,
+    private val repository: FetchRepository,
 ) {
     /**
      * 주어진 아이디로부터 [유저][User] 정보를 조회합니다.

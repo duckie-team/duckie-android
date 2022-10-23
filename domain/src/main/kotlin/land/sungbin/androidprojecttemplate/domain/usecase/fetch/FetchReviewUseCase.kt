@@ -3,7 +3,7 @@ package land.sungbin.androidprojecttemplate.domain.usecase.fetch
 import land.sungbin.androidprojecttemplate.domain.model.DealReview
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckFetchRepository
+import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
@@ -11,7 +11,7 @@ import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.CacheType
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.invokeOrLoadCache
 
 class FetchReviewUseCase(
-    private val repository: DuckFetchRepository,
+    private val repository: FetchRepository,
 ) {
     /**
      * 주어진 덕딜피드로부터 등록된 [리뷰][DealReview] 정보를 조회합니다.
