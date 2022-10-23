@@ -10,6 +10,7 @@ import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
+import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
@@ -118,12 +119,14 @@ interface FetchRepository : DuckRepository {
      * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
      * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param feedId 조회할 [피드 아이디][Feed.id]
+     * @param target 조회할 [좋아요][Heart]의 대상
+     * @param targetId 조회할 [피드 아이디][Feed.id]
      * @return 조회된 [좋아요][Heart] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
     @Unsupported
     suspend fun fetchHeart(
-        @PK @FK feedId: String,
+        target: HeartTarget,
+        @PK @FK targetId: String,
     ): DuckApiResult<Heart>
 
     /**

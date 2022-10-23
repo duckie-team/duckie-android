@@ -5,6 +5,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.Heart
+import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
@@ -47,7 +48,8 @@ class FetchAllFeedsUseCase(
                 val feedWithHearts = feeds.map { feed ->
                     async {
                         feed to repository.fetchHeart(
-                            feedId = feed.id,
+                            target = HeartTarget.Feed,
+                            targetId = feed.id,
                         ).getOrThrow()
                     }
                 }
