@@ -12,7 +12,6 @@ import land.sungbin.androidprojecttemplate.domain.repository.DuckUpsertRepositor
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
-@Unsupported
 class UpsertHeartUseCase(
     private val repository: DuckUpsertRepository,
 ) {
