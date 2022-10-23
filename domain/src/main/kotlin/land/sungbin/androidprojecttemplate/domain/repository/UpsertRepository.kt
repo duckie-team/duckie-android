@@ -18,7 +18,7 @@ import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResul
 /**
  * Upsert 요청을 하는 API 들의 시그니처를 정의합니다.
  */
-interface UpsertRepository : Repository {
+interface UpsertRepository : DuckRepository {
     /**
      * [유저][User] 정보를 생성하거나 업데이트합니다.
      *
