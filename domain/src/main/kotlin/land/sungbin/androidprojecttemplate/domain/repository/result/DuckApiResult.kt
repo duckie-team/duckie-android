@@ -12,6 +12,12 @@ sealed interface DuckApiResult<T> {
      * @param message 발생한 예외 메시지
      */
     data class Exception<T>(val message: String?) : DuckApiResult<T>
+
+    /**
+     * [DuckRepository] 에서 API 호출에 성공했고 반환 값이 없을 때
+     * 반환되는 결과입니다.
+     */
+    class Success<T> : DuckApiResult<T>
 }
 
 /**

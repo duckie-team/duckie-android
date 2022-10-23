@@ -10,6 +10,7 @@ import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
+import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
@@ -60,17 +61,23 @@ interface FetchRepository : DuckRepository {
     ): DuckFetchResult<List<ChatRoom>>
 
     /**
-     * 특정 [채팅방][ChatRoom]에 전송된 [채팅][Chat] 목록을 조회합니다.
-     *
-     * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
-     * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
+     * 특정 [채팅방][ChatRoom]에 전송된 [채팅][Chat] 목록을 실시간으로 조회합니다.
      *
      * @param chatRoomId 조회할 [채팅방 아이디][ChatRoom.id]
-     * @return 조회된 [채팅][Chat] 목록을 담은 [fetch 결과][DuckFetchResult]
+     * @param onNewChat 새로운 채팅이 조회될 때마다 실행될 콜백.
+     * 콜백의 인자로는 [채팅][Chat] 이 전달됩니다.
+     * @param onError 채팅 조회 도중에 에러가 발생할 때마다 실행될 콜백.
+     * 콜백의 인자로는 [에러][Throwable] 가 전달됩니다.
+     *
+     * @return 실시간 [채팅][Chat] 조회를 종료하는 람다식.
+     * **더 이상 실시간 [채팅][Chat] 조회가 필요 없을 때 무조건 실행해야 합니다.**
+     * 그렇지 않으면 메모리 누수가 발생할 수 있습니다.
      */
-    suspend fun fetchChats(
+    suspend fun fetchRealtimeChats(
         @FK chatRoomId: String,
-    ): DuckFetchResult<List<Chat>>
+        onNewChat: (chat: Chat) -> Unit,
+        onError: (error: Throwable) -> Unit,
+    ): () -> Unit
 
     /**
      * 전체 [피드][Feed] 목록을 조회합니다.
@@ -118,13 +125,14 @@ interface FetchRepository : DuckRepository {
      * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
      * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param feedId 조회할 [피드 아이디][Feed.id]
+     * @param target 조회할 [좋아요][Heart]의 대상
+     * @param targetId 조회할 [피드 아이디][Feed.id]
      * @return 조회된 [좋아요][Heart] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
-    @Unsupported
-    suspend fun fetchHeart(
-        @PK @FK feedId: String,
-    ): DuckApiResult<Heart>
+    suspend fun fetchHearts(
+        target: HeartTarget,
+        @PK @FK targetId: String,
+    ): DuckApiResult<List<Heart>>
 
     /**
      * 주어진 피드에 작성된 [댓글][Comment] 목록을 조회합니다.
