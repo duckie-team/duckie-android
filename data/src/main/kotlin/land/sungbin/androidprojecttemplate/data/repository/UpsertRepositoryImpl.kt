@@ -2,6 +2,7 @@
 
 package land.sungbin.androidprojecttemplate.data.repository
 
+import kotlinx.coroutines.suspendCancellableCoroutine
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
@@ -20,68 +21,68 @@ import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResul
 class UpsertRepositoryImpl : UpsertRepository {
     override suspend fun upsertUser(
         user: User,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     override suspend fun upsertFollow(
         follow: Follow,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     override suspend fun upsertChatRoom(
         chatRoom: ChatRoom,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     override suspend fun upsertChat(
         chat: Chat,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     override suspend fun upsertFeed(
         feed: Feed,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     @Unsupported
     override suspend fun upsertChatRead(
         chatRead: ChatRead,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     override suspend fun upsertHeart(
         heart: Heart,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     override suspend fun upsertComment(
         comment: Comment,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     override suspend fun upsertReview(
         review: DealReview,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     override suspend fun upsertSaleRequest(
         saleRequest: SaleRequest,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 
     override suspend fun upsertReport(
         report: Report,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
+    ) = suspendCancellableCoroutine<DuckApiResult<Nothing>> {
+
     }
 }

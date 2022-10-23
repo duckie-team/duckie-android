@@ -2,6 +2,7 @@
 
 package land.sungbin.androidprojecttemplate.data.repository
 
+import kotlinx.coroutines.suspendCancellableCoroutine
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
@@ -20,67 +21,68 @@ import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchRes
 class FetchRepositoryImpl : FetchRepository {
     override suspend fun fetchUser(
         id: String,
-    ): DuckFetchResult<User> {
+    ) = suspendCancellableCoroutine<DuckFetchResult<User>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun fetchFollow(
         userId: String,
-    ): DuckFetchResult<Follow> {
+    ) = suspendCancellableCoroutine<DuckFetchResult<Follow>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun fetchChatRooms(
         userId: String,
-    ): DuckFetchResult<List<ChatRoom>> {
+    ) = suspendCancellableCoroutine<DuckFetchResult<List<ChatRoom>>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun fetchChats(
         chatRoomId: String,
-    ): DuckFetchResult<List<Chat>> {
+    ) = suspendCancellableCoroutine<DuckFetchResult<List<Chat>>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchAllFeeds(): DuckFetchResult<List<Feed>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun fetchAllFeeds() =
+        suspendCancellableCoroutine<DuckFetchResult<List<Feed>>> {
+            TODO("Not yet implemented")
+        }
 
     override suspend fun fetchRecommendationFeeds(
         userId: String,
-    ): DuckFetchResult<List<Feed>> {
+    ) = suspendCancellableCoroutine<DuckFetchResult<List<Feed>>> {
         TODO("Not yet implemented")
     }
 
     @Unsupported
     override suspend fun fetchChatRead(
         userId: String,
-    ): DuckApiResult<ChatRead> {
+    ) = suspendCancellableCoroutine<DuckApiResult<ChatRead>> {
         TODO("Not yet implemented")
     }
 
     @Unsupported
     override suspend fun fetchHeart(
         feedId: String,
-    ): DuckApiResult<Heart> {
+    ) = suspendCancellableCoroutine<DuckApiResult<Heart>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun fetchComments(
         feedId: String,
-    ): DuckApiResult<List<Comment>> {
+    ) = suspendCancellableCoroutine<DuckApiResult<List<Comment>>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun fetchReview(
         feedId: String,
-    ): DuckApiResult<DealReview> {
+    ) = suspendCancellableCoroutine<DuckApiResult<DealReview>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun fetchSaleRequest(
         feedId: String,
-    ): DuckApiResult<List<SaleRequest>> {
+    ) = suspendCancellableCoroutine<DuckApiResult<List<SaleRequest>>> {
         TODO("Not yet implemented")
     }
 }
