@@ -55,6 +55,7 @@ annotation class NewField
     AnnotationTarget.PROPERTY,
     AnnotationTarget.CLASS,
     AnnotationTarget.FUNCTION,
+    AnnotationTarget.VALUE_PARAMETER
 )
 @RequiresOptIn(
     message = "이 필드는 MVP 개발 환경에서는 사용되서는 안됩니다.",

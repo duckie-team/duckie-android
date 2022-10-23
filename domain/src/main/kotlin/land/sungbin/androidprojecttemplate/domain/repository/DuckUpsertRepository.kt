@@ -4,10 +4,8 @@ import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
 import land.sungbin.androidprojecttemplate.domain.model.Comment
-import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
 import land.sungbin.androidprojecttemplate.domain.model.DealReview
 import land.sungbin.androidprojecttemplate.domain.model.Feed
-import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.Report
@@ -183,35 +181,5 @@ interface DuckUpsertRepository : DuckRepository {
     // TODO: 신고 조회는 덕키 앱에서 사용되지 않으므로 추후 덕키 관리 서비스에서 구현해야 합니다.
     suspend fun upsertReport(
         report: Report,
-    ): DuckUpsertResult
-
-    /**
-     * [피드 선호도][FeedScore] 정보를 생성하거나 업데이트합니다.
-     *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
-     *
-     * @param feedScore 정보를 생성하거나 업데이트할 [피드 선호도][FeedScore] 객체
-     * @return Upsert 결과.
-     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
-     */
-    @Unsupported
-    suspend fun upsertFeedScore(
-        feedScore: FeedScore,
-    ): DuckUpsertResult
-
-    /**
-     * [컨텐츠 별 머문 시간][ContentStayTime] 정보를 생성하거나 업데이트합니다.
-     *
-     * 기존에 등록된 정보가 없다면 새로 생성하고, 그렇지 않다면
-     * 기존에 등록된 정보를 업데이트합니다.
-     *
-     * @param contentStayTime 정보를 생성하거나 업데이트할 [컨텐츠 별 머문 시간][ContentStayTime] 객체
-     * @return Upsert 결과.
-     * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
-     */
-    @Unsupported
-    suspend fun upsertContentStayTime(
-        contentStayTime: ContentStayTime,
     ): DuckUpsertResult
 }
