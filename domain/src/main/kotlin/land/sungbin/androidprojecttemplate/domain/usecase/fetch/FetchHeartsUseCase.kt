@@ -14,7 +14,7 @@ import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.CacheType
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.invokeOrLoadCache
 
 @Unsupported
-class FetchHeartUseCase(
+class FetchHeartsUseCase(
     private val repository: FetchRepository,
 ) {
     /**
@@ -35,13 +35,13 @@ class FetchHeartUseCase(
         target: HeartTarget,
         @PK @FK feedId: String,
         force: Boolean = false,
-    ): DuckApiResult<Heart> = invokeOrLoadCache(
+    ): DuckApiResult<List<Heart>> = invokeOrLoadCache(
         type = CacheType.Hearts,
         pk = feedId,
         forceUpdate = force,
     ) {
         runDuckApiCatching {
-            repository.fetchHeart(
+            repository.fetchHearts(
                 target = target,
                 targetId = feedId,
             )

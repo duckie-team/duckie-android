@@ -13,7 +13,6 @@ enum class HeartTarget(
         index = 0,
         description = "피드",
     ),
-    @Unsupported
     Comment(
         index = 1,
         description = "댓글",

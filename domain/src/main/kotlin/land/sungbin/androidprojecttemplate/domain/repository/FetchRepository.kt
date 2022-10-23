@@ -129,11 +129,10 @@ interface FetchRepository : DuckRepository {
      * @param targetId 조회할 [피드 아이디][Feed.id]
      * @return 조회된 [좋아요][Heart] 목록을 담은 [fetch 결과][DuckFetchResult]
      */
-    @Unsupported
-    suspend fun fetchHeart(
+    suspend fun fetchHearts(
         target: HeartTarget,
         @PK @FK targetId: String,
-    ): DuckApiResult<Heart>
+    ): DuckApiResult<List<Heart>>
 
     /**
      * 주어진 피드에 작성된 [댓글][Comment] 목록을 조회합니다.

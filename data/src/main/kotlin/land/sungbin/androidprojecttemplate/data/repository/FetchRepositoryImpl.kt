@@ -123,12 +123,11 @@ class FetchRepositoryImpl : FetchRepository {
         )
     }
 
-    @Unsupported
-    override suspend fun fetchHeart(
+    override suspend fun fetchHearts(
         target: HeartTarget,
         targetId: String,
-    ) = suspendCancellableCoroutine<DuckApiResult<Heart>> { continuation ->
-        findObject(
+    ) = suspendCancellableCoroutine<DuckApiResult<List<Heart>>> { continuation ->
+        findObjects(
             collection = when (target) {
                 HeartTarget.Feed -> CollectionNames.FeedHeart
                 HeartTarget.Comment -> CollectionNames.CommentHeart

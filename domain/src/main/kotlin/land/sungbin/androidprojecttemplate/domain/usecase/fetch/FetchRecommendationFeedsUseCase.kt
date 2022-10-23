@@ -9,7 +9,6 @@ import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
-import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
@@ -29,28 +28,23 @@ class FetchRecommendationFeedsUseCase(
      * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
      * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
-     * @param target 조회할 [좋아요][Heart]의 대상
      * @param userId 조회할 [유저의 아이디][User.nickname]
      * @return 추천된 [피드][Feed] 목록과 각각 [피드][Feed]에 대한 [좋아요][Heart] 정보를 담은 [fetch 결과][DuckFetchResult].
      * [Pair] 를 이용해 [피드][Feed] 목록과 [좋아요][Heart] 정보를 반환합니다.
      */
-    @OptIn(Unsupported::class) // 좋아요 정보 제공
-    // 현재 Heart 는 [Unsupported] 상태이므로 높은 확률로 null 을 반환합니다.
-    // 따라서 Heart 를 nullable 하게 받습니다.
     suspend operator fun invoke(
-        target: HeartTarget,
         @PK userId: String,
     ) = runDuckApiCatching {
-        coroutineScope<DuckApiResult<List<Pair<Feed, Heart?>>>> {
+        coroutineScope<DuckApiResult<List<Pair<Feed, List<Heart>>>>> {
             val feeds = repository.fetchRecommendationFeeds(
                 userId = userId,
             ).getOrThrow() ?: return@coroutineScope DuckFetchResult.Empty()
             val feedWithHearts = feeds.map { feed ->
                 async {
-                    feed to repository.fetchHeart(
-                        target = target,
+                    feed to (repository.fetchHearts(
+                        target = HeartTarget.Feed,
                         targetId = feed.id,
-                    ).getOrThrow()
+                    ).getOrThrow() ?: emptyList())
                 }
             }
             DuckFetchResult.Success(
