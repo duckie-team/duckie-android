@@ -123,7 +123,6 @@ interface DuckUpsertRepository : DuckRepository {
      * @return Upsert 결과.
      * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
-    @Unsupported
     suspend fun upsertHeart(
         heart: Heart,
     ): DuckUpsertResult
