@@ -11,14 +11,14 @@ import land.sungbin.androidprojecttemplate.domain.repository.ScoreRepository
 class ScoreRepositoryImpl : ScoreRepository {
     override suspend fun updateFeedScore(
         feedScore: FeedScore,
-    ) = suspendCancellableCoroutine<Boolean> {
+    ) = suspendCancellableCoroutine<Boolean> { continuation ->
 
     }
 
     @Unsupported
     override suspend fun updateContentStayTime(
         contentStayTime: ContentStayTime,
-    ) = suspendCancellableCoroutine<Boolean> {
+    ) = suspendCancellableCoroutine<Boolean> { continuation ->
 
     }
 }
