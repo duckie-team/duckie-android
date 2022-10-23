@@ -3,12 +3,12 @@ package land.sungbin.androidprojecttemplate.domain.usecase.fetch
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckFetchRepository
+import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
 class FetchChatsUseCase(
-    private val repository: DuckFetchRepository,
+    private val repository: FetchRepository,
 ) {
     /**
      * 특정 [채팅방][ChatRoom]에 전송된 [채팅][Chat] 목록을 조회합니다.

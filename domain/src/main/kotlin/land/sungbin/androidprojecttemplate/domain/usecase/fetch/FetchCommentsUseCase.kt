@@ -3,7 +3,7 @@ package land.sungbin.androidprojecttemplate.domain.usecase.fetch
 import land.sungbin.androidprojecttemplate.domain.model.Comment
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckFetchRepository
+import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
@@ -11,7 +11,7 @@ import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.CacheType
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.invokeOrLoadCache
 
 class FetchCommentsUseCase(
-    private val repository: DuckFetchRepository,
+    private val repository: FetchRepository,
 ) {
     /**
      * 주어진 피드에 작성된 [댓글][Comment] 목록을 조회합니다.

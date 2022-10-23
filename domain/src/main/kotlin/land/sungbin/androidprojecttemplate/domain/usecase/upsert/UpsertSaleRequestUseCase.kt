@@ -5,12 +5,12 @@ import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckUpsertRepository
+import land.sungbin.androidprojecttemplate.domain.repository.UpsertRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
 class UpsertSaleRequestUseCase(
-    private val repository: DuckUpsertRepository,
+    private val repository: UpsertRepository,
 ) {
     /**
      * [판매 요청][SaleRequest] 정보를 생성하거나 업데이트합니다.

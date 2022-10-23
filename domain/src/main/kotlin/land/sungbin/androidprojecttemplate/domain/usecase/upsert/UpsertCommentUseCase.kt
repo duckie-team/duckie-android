@@ -7,12 +7,12 @@ import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckUpsertRepository
+import land.sungbin.androidprojecttemplate.domain.repository.UpsertRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
 class UpsertCommentUseCase(
-    private val repository: DuckUpsertRepository,
+    private val repository: UpsertRepository,
 ) {
     /**
      * [댓글][Comment] 정보를 생성하거나 업데이트합니다.

@@ -16,90 +16,88 @@ import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
-import land.sungbin.androidprojecttemplate.domain.repository.DuckUpsertRepository
+import land.sungbin.androidprojecttemplate.domain.repository.UpsertRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 
-private typealias DuckUpsertResult = DuckApiResult<Nothing>
-
-class DuckUpsertRepositoryImpl : DuckUpsertRepository {
+class UpsertRepositoryImpl : UpsertRepository {
     override suspend fun upsertUser(
         user: User,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     override suspend fun upsertFollow(
         follow: Follow,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     override suspend fun upsertChatRoom(
         chatRoom: ChatRoom,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     override suspend fun upsertChat(
         chat: Chat,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     override suspend fun upsertFeed(
         feed: Feed,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     @Unsupported
     override suspend fun upsertChatRead(
         chatRead: ChatRead,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     override suspend fun upsertHeart(
         heart: Heart,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     override suspend fun upsertComment(
         comment: Comment,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     override suspend fun upsertReview(
         review: DealReview,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     override suspend fun upsertSaleRequest(
         saleRequest: SaleRequest,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     override suspend fun upsertReport(
         report: Report,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     @Unsupported
     override suspend fun upsertFeedScore(
         feedScore: FeedScore,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 
     @Unsupported
     override suspend fun upsertContentStayTime(
         contentStayTime: ContentStayTime,
-    ): DuckUpsertResult {
+    ): DuckApiResult<Nothing> {
         TODO("Not yet implemented")
     }
 }

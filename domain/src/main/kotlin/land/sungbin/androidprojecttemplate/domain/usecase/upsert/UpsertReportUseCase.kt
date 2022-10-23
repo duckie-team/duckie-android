@@ -4,12 +4,12 @@ import im.toss.util.tuid.tuid
 import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckUpsertRepository
+import land.sungbin.androidprojecttemplate.domain.repository.UpsertRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
 class UpsertReportUseCase(
-    private val repository: DuckUpsertRepository,
+    private val repository: UpsertRepository,
 ) {
     /**
      * [신고][Report] 정보를 생성하거나 업데이트합니다.

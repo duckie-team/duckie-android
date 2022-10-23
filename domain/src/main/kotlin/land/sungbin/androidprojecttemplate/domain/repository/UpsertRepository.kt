@@ -16,16 +16,9 @@ import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 
 /**
- * 덕키 Firebase API upsert 결과를 나타냅니다.
- *
- * Upsert 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 타입이 유효합니다.
- */
-private typealias DuckUpsertResult = DuckApiResult<Nothing>
-
-/**
  * Upsert 요청을 하는 API 들의 시그니처를 정의합니다.
  */
-interface DuckUpsertRepository : DuckRepository {
+interface UpsertRepository : Repository {
     /**
      * [유저][User] 정보를 생성하거나 업데이트합니다.
      *
@@ -38,7 +31,7 @@ interface DuckUpsertRepository : DuckRepository {
      */
     suspend fun upsertUser(
         user: User,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [팔로우][Follow] 정보를 생성하거나 업데이트합니다.
@@ -52,7 +45,7 @@ interface DuckUpsertRepository : DuckRepository {
      */
     suspend fun upsertFollow(
         follow: Follow,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [채팅방][ChatRoom] 정보를 생성하거나 업데이트합니다.
@@ -66,7 +59,7 @@ interface DuckUpsertRepository : DuckRepository {
      */
     suspend fun upsertChatRoom(
         chatRoom: ChatRoom,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [채팅][Chat] 정보를 생성하거나 업데이트합니다.
@@ -80,7 +73,7 @@ interface DuckUpsertRepository : DuckRepository {
      */
     suspend fun upsertChat(
         chat: Chat,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [피드][Feed] 정보를 생성하거나 업데이트합니다.
@@ -94,7 +87,7 @@ interface DuckUpsertRepository : DuckRepository {
      */
     suspend fun upsertFeed(
         feed: Feed,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [채팅 확인][ChatRead] 정보를 생성하거나 업데이트합니다.
@@ -109,7 +102,7 @@ interface DuckUpsertRepository : DuckRepository {
     @Unsupported
     suspend fun upsertChatRead(
         chatRead: ChatRead,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [좋아요][Heart] 정보를 생성하거나 업데이트합니다.
@@ -123,7 +116,7 @@ interface DuckUpsertRepository : DuckRepository {
      */
     suspend fun upsertHeart(
         heart: Heart,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [댓글][Comment] 정보를 생성하거나 업데이트합니다.
@@ -137,7 +130,7 @@ interface DuckUpsertRepository : DuckRepository {
      */
     suspend fun upsertComment(
         comment: Comment,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [리뷰][Review] 정보를 생성하거나 업데이트합니다.
@@ -152,7 +145,7 @@ interface DuckUpsertRepository : DuckRepository {
     // See: https://github.com/duckie-team/duckie-app-mvp/issues/32
     suspend fun upsertReview(
         review: DealReview,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [판매 요청][SaleRequest] 정보를 생성하거나 업데이트합니다.
@@ -166,7 +159,7 @@ interface DuckUpsertRepository : DuckRepository {
      */
     suspend fun upsertSaleRequest(
         saleRequest: SaleRequest,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 
     /**
      * [신고][Report] 정보를 생성하거나 업데이트합니다.
@@ -181,5 +174,5 @@ interface DuckUpsertRepository : DuckRepository {
     // TODO: 신고 조회는 덕키 앱에서 사용되지 않으므로 추후 덕키 관리 서비스에서 구현해야 합니다.
     suspend fun upsertReport(
         report: Report,
-    ): DuckUpsertResult
+    ): DuckApiResult<Nothing>
 }
