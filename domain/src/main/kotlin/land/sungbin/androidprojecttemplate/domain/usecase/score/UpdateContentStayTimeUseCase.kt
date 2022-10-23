@@ -8,6 +8,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.repository.ScoreRepository
+import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
 @Unsupported
 class UpdateContentStayTimeUseCase(
@@ -47,7 +48,7 @@ class UpdateContentStayTimeUseCase(
         @IntRange(from = 0) search: Int? = null,
         @IntRange(from = 0) dm: Int? = null,
         @IntRange(from = 0) notification: Int? = null,
-    ) = runCatching {
+    ) = runDuckApiCatching {
         repository.updateContentStayTime(
             contentStayTime = ContentStayTime(
                 userId = userId,
