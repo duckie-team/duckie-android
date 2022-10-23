@@ -10,78 +10,77 @@ import land.sungbin.androidprojecttemplate.domain.model.DealReview
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
-import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
-import land.sungbin.androidprojecttemplate.domain.repository.UpsertRepository
+import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
+import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 
-class UpsertRepositoryImpl : UpsertRepository {
-    override suspend fun upsertUser(
-        user: User,
-    ): DuckApiResult<Nothing> {
+class FetchRepositoryImpl : FetchRepository {
+    override suspend fun fetchUser(
+        id: String,
+    ): DuckFetchResult<User> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun upsertFollow(
-        follow: Follow,
-    ): DuckApiResult<Nothing> {
+    override suspend fun fetchFollow(
+        userId: String,
+    ): DuckFetchResult<Follow> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun upsertChatRoom(
-        chatRoom: ChatRoom,
-    ): DuckApiResult<Nothing> {
+    override suspend fun fetchChatRooms(
+        userId: String,
+    ): DuckFetchResult<List<ChatRoom>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun upsertChat(
-        chat: Chat,
-    ): DuckApiResult<Nothing> {
+    override suspend fun fetchChats(
+        chatRoomId: String,
+    ): DuckFetchResult<List<Chat>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun upsertFeed(
-        feed: Feed,
-    ): DuckApiResult<Nothing> {
+    override suspend fun fetchAllFeeds(): DuckFetchResult<List<Feed>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun fetchRecommendationFeeds(
+        userId: String,
+    ): DuckFetchResult<List<Feed>> {
         TODO("Not yet implemented")
     }
 
     @Unsupported
-    override suspend fun upsertChatRead(
-        chatRead: ChatRead,
-    ): DuckApiResult<Nothing> {
+    override suspend fun fetchChatRead(
+        userId: String,
+    ): DuckApiResult<ChatRead> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun upsertHeart(
-        heart: Heart,
-    ): DuckApiResult<Nothing> {
+    @Unsupported
+    override suspend fun fetchHeart(
+        feedId: String,
+    ): DuckApiResult<Heart> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun upsertComment(
-        comment: Comment,
-    ): DuckApiResult<Nothing> {
+    override suspend fun fetchComments(
+        feedId: String,
+    ): DuckApiResult<List<Comment>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun upsertReview(
-        review: DealReview,
-    ): DuckApiResult<Nothing> {
+    override suspend fun fetchReview(
+        feedId: String,
+    ): DuckApiResult<DealReview> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun upsertSaleRequest(
-        saleRequest: SaleRequest,
-    ): DuckApiResult<Nothing> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun upsertReport(
-        report: Report,
-    ): DuckApiResult<Nothing> {
+    override suspend fun fetchSaleRequest(
+        feedId: String,
+    ): DuckApiResult<List<SaleRequest>> {
         TODO("Not yet implemented")
     }
 }
