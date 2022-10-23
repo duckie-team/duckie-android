@@ -15,7 +15,7 @@ interface UpdateRepository : DuckRepository {
      * @param userId 채팅방에 입장할 [유저의 아이디][User.nickname]
      * @param roomId 입장할 [채팅방의 아이디][ChatRoom.id]
      * @return 입장 결과.
-     * 입장 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다
+     * 입장 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun joinChatRoom(
         userId: String,
@@ -28,7 +28,7 @@ interface UpdateRepository : DuckRepository {
      * @param userId 채팅방에서 퇴장할 [유저의 아이디][User.nickname]
      * @param roomId 퇴장할 [채팅방의 아이디][ChatRoom.id]
      * @return 퇴장 결과.
-     * 퇴장 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다
+     * 퇴장 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun leaveChatRoom(
         userId: String,
@@ -40,7 +40,7 @@ interface UpdateRepository : DuckRepository {
      *
      * @param commentId 삭제할 [댓글의 아이디][Comment.id]
      * @return 삭제 결과.
-     * 삭제 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다
+     * 삭제 결과는 반환 값이 없으므로 [Nothing] 타입의 [DuckApiResult] 를 을 반환합니다.
      */
     suspend fun deleteComment(
         commentId: String,
