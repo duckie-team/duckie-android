@@ -2,6 +2,10 @@
 
 package land.sungbin.androidprojecttemplate.data.repository
 
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.suspendCancellableCoroutine
 import land.sungbin.androidprojecttemplate.data.repository.constants.CollectionNames
 import land.sungbin.androidprojecttemplate.data.repository.util.findObject
@@ -56,15 +60,41 @@ class FetchRepositoryImpl : FetchRepository {
         )
     }
 
-    override suspend fun fetchChats(
+    override suspend fun fetchRealtimeChats(
         chatRoomId: String,
-    ) = suspendCancellableCoroutine<DuckFetchResult<List<Chat>>> { continuation ->
-        findObjects(
-            collection = CollectionNames.Chat,
-            field = Chat::chatRoomId.name,
-            value = chatRoomId,
-            continuation = continuation,
-        )
+        onNewChat: (chat: Chat) -> Unit,
+        onError: (exception: Throwable) -> Unit,
+    ): () -> Unit {
+        val database = FirebaseDatabase.getInstance()
+            .reference
+            .child(CollectionNames.Chat)
+            .child(chatRoomId)
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(
+                snapshot: DataSnapshot,
+            ) {
+                val chat = snapshot.getValue(Chat::class.java)
+                if (chat != null) {
+                    onNewChat(
+                        /* chat = */
+                        chat,
+                    )
+                }
+            }
+
+            override fun onCancelled(
+                error: DatabaseError,
+            ) {
+                onError(
+                    /* exception = */
+                    error.toException(),
+                )
+            }
+        }
+        database.addValueEventListener(postListener)
+        return {
+            database.removeEventListener(postListener)
+        }
     }
 
     override suspend fun fetchAllFeeds() =
