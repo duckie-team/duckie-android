@@ -6,6 +6,10 @@ plugins {
 
 android {
     namespace = "land.sungbin.androidprojecttemplate.data"
+
+    lint {
+        disable.add("ListNaming")
+    }
 }
 
 dependencies {
