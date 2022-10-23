@@ -61,17 +61,24 @@ interface FetchRepository : DuckRepository {
     ): DuckFetchResult<List<ChatRoom>>
 
     /**
-     * 특정 [채팅방][ChatRoom]에 전송된 [채팅][Chat] 목록을 조회합니다.
+     * 특정 [채팅방][ChatRoom]에 전송된 [채팅][Chat] 목록을 실시간으로 조회합니다.
      *
      * 등록된 정보가 있다면 [DuckFetchResult.Success] 로 해당 값을 반환하고,
      * 그렇지 않다면 [DuckFetchResult.Empty] 를 반환합니다.
      *
      * @param chatRoomId 조회할 [채팅방 아이디][ChatRoom.id]
-     * @return 조회된 [채팅][Chat] 목록을 담은 [fetch 결과][DuckFetchResult]
+     * @param onNewChat 새로운 채팅이 조회될 때마다 실행될 콜백.
+     * 콜백의 인자로는 [채팅][Chat] 이 전달됩니다.
+     * @param onError 채팅 조회 도중에 에러가 발생할 때마다 실행될 콜백.
+     * 콜백의 인자로는 [에러][Throwable] 가 전달됩니다.
+     *
+     * @return Unit
      */
-    suspend fun fetchChats(
+    suspend fun fetchRealtimeChats(
         @FK chatRoomId: String,
-    ): DuckFetchResult<List<Chat>>
+        onNewChat: (chat: Chat) -> Unit,
+        onError: (exception: Throwable) -> Unit,
+    )
 
     /**
      * 전체 [피드][Feed] 목록을 조회합니다.
