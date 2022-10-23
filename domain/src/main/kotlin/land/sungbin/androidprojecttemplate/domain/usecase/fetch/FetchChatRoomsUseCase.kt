@@ -3,7 +3,7 @@ package land.sungbin.androidprojecttemplate.domain.usecase.fetch
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckFetchRepository
+import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
@@ -11,7 +11,7 @@ import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.CacheType
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.invokeOrLoadCache
 
 class FetchChatRoomsUseCase(
-    private val repository: DuckFetchRepository,
+    private val repository: FetchRepository,
 ) {
     /**
      * 특정 [유저][User]가 참여중인 [채팅방][ChatRoom] 목록을 조회합니다.

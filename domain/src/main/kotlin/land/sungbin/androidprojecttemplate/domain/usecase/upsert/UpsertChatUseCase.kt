@@ -8,12 +8,12 @@ import land.sungbin.androidprojecttemplate.domain.model.DuckFeedCoreInformation
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
-import land.sungbin.androidprojecttemplate.domain.repository.DuckUpsertRepository
+import land.sungbin.androidprojecttemplate.domain.repository.UpsertRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.runDuckApiCatching
 
 class UpsertChatUseCase(
-    private val repository: DuckUpsertRepository,
+    private val repository: UpsertRepository,
 ) {
     /**
      * [채팅][Chat] 정보를 생성하거나 업데이트합니다.

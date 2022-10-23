@@ -3,7 +3,7 @@ package land.sungbin.androidprojecttemplate.domain.repository
 /**
  * 값 체크(assertion) 요청을 하는 API 들의 시그니처를 정의합니다.
  */
-interface DuckAssertRepository : DuckRepository {
+interface AssertRepository : Repository {
     /**
      * 주어진 닉네임이 사용 가능한 상태인지 조회합니다.
      *

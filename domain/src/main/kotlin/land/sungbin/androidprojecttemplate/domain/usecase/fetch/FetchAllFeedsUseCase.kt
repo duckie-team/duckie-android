@@ -6,7 +6,7 @@ import kotlinx.coroutines.coroutineScope
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
-import land.sungbin.androidprojecttemplate.domain.repository.DuckFetchRepository
+import land.sungbin.androidprojecttemplate.domain.repository.FetchRepository
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckApiResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.DuckFetchResult
 import land.sungbin.androidprojecttemplate.domain.repository.result.getOrThrow
@@ -15,7 +15,7 @@ import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.CacheType
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.cache.invokeOrLoadCache
 
 class FetchAllFeedsUseCase(
-    private val repository: DuckFetchRepository,
+    private val repository: FetchRepository,
 ) {
     /**
      * 전체 [피드][Feed] 목록과 각각 [피드][Feed]에 대한 [좋아요][Heart] 정보를 조회합니다.

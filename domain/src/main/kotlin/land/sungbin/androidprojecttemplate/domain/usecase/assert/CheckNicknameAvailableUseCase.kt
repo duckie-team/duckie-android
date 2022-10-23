@@ -1,9 +1,9 @@
 package land.sungbin.androidprojecttemplate.domain.usecase.assert
 
-import land.sungbin.androidprojecttemplate.domain.repository.DuckAssertRepository
+import land.sungbin.androidprojecttemplate.domain.repository.AssertRepository
 
 class CheckNicknameAvailableUseCase(
-    private val repository: DuckAssertRepository,
+    private val repository: AssertRepository,
 ) {
     /**
      * 주어진 닉네임이 사용 가능한 상태인지 조회합니다.
