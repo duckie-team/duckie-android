@@ -12,5 +12,6 @@ data class HomeState(
     val filterBottomSheetItems: List<QuackBottomSheetItem> = emptyList(),
     val moreBottomSheetItems: List<QuackBottomSheetItem> = emptyList(),
     val interestedTags: List<String> = emptyList(),
+    val fabExpanded: Boolean = false,
 )
 

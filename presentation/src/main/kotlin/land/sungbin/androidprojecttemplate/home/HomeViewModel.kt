@@ -36,9 +36,7 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
 
     fun refresh() = intent {
         reduce {
-            state.copy(
-                itemStatus = UiStatus.Loading,
-            )
+            state.copy(itemStatus = UiStatus.Loading)
         }
         delay(TestMilliSecond)
         reduce {
@@ -67,9 +65,7 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
 
     fun deleteTag(index: Int) = intent {
         reduce {
-            state.copy(
-                interestedTags = state.interestedTags - state.interestedTags[index]
-            )
+            state.copy(interestedTags = state.interestedTags - state.interestedTags[index])
         }
     }
 
@@ -123,6 +119,12 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
 
     fun onCommentClick() = intent {
 
+    }
+
+    fun onFabClick(expanded: Boolean) = intent {
+        reduce {
+            state.copy(fabExpanded = expanded.not())
+        }
     }
 
 
