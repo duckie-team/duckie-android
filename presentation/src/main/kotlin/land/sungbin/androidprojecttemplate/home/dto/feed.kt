@@ -1,8 +1,5 @@
 package land.sungbin.androidprojecttemplate.home.dto
-
-import land.sungbin.androidprojecttemplate.domain.model.Comment
 import land.sungbin.androidprojecttemplate.domain.model.Feed
-import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
@@ -14,32 +11,35 @@ sealed class FeedDTO(
     open val type: FeedType,
     open val content: Content,
     open val createdAt: String,
-    open val hearts: List<Heart>,
-    open val comments: List<Comment>,
+    open val isHearted: Boolean,
+    open val heartCount: Int,
+    open val commentCount: Int,
 ) {
     data class Normal(
         override val writerId: String,
         override val type: FeedType,
         override val content: Content,
         override val createdAt: String,
-        override val hearts: List<Heart>,
-        override val comments: List<Comment>,
-    ) : FeedDTO(writerId, type, content, createdAt, hearts, comments)
+        override val isHearted: Boolean,
+        override val heartCount: Int,
+        override val commentCount: Int,
+    ) : FeedDTO(writerId, type, content, createdAt, isHearted, heartCount, commentCount)
 
     data class DuckDeal(
         override val writerId: String,
         override val type: FeedType,
         override val content: Content,
         override val createdAt: String,
-        override val hearts: List<Heart>,
-        override val comments: List<Comment>,
+        override val isHearted: Boolean,
+        override val heartCount: Int,
+        override val commentCount: Int,
         val title: String,
         val dealState: DealState,
         val price: Int,
         val location: String,
         val isDirectDealing: Boolean,
         val parcelable: Boolean,
-    ) : FeedDTO(writerId, type, content, createdAt, hearts, comments)
+    ) : FeedDTO(writerId, type, content, createdAt, isHearted, heartCount, commentCount)
 }
 
 fun Feed.toNormalFeed() = FeedDTO.Normal(
@@ -47,8 +47,9 @@ fun Feed.toNormalFeed() = FeedDTO.Normal(
     type = type,
     content = content,
     createdAt = "",
-    hearts = hearts,
-    comments = comments,
+    isHearted = isHearted,
+    heartCount = heartCount,
+    commentCount = commentCount,
 )
 
 fun Feed.toDuckDealFeed() = FeedDTO.DuckDeal(
@@ -56,8 +57,9 @@ fun Feed.toDuckDealFeed() = FeedDTO.DuckDeal(
     type = type,
     content = content,
     createdAt = "",
-    hearts = hearts,
-    comments = comments,
+    isHearted = isHearted,
+    heartCount = heartCount,
+    commentCount = commentCount,
     title = title!!,
     dealState = dealState!!,
     price = price!!,

@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toPersistentList
 import land.sungbin.androidprojecttemplate.R
-import land.sungbin.androidprojecttemplate.domain.model.Comment
-import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.home.dto.FeedDTO
@@ -91,15 +89,16 @@ internal fun FeedHeader(
 internal fun NormalFeed(
     normalFeed: FeedDTO.Normal,
     onClickMoreIcon: (selectedUser: String) -> Unit,
-    onClickHeartIcon: () -> Unit,
+    onClickHeartIcon: (Boolean) -> Unit,
     onClickCommentIcon: () -> Unit,
 ) = with(normalFeed) {
     BasicFeed(
         profileUrl = writerId,
         nickname = writerId,
         createdAt = createdAt,
-        hearts = hearts,
-        comments = comments,
+        isHearted = isHearted,
+        heartCount = heartCount,
+        commentCount = commentCount,
         onClickHeartIcon = onClickHeartIcon,
         onClickCommentIcon = onClickCommentIcon,
         onClickMoreIcon = onClickMoreIcon,
@@ -112,18 +111,19 @@ internal fun NormalFeed(
 internal fun DuckDealFeed(
     duckDealFeed: FeedDTO.DuckDeal,
     onClickMoreIcon: (selectedUser: String) -> Unit,
-    onClickHeartIcon: () -> Unit,
+    onClickHeartIcon: (Boolean) -> Unit,
     onClickCommentIcon: () -> Unit,
 ) = with(duckDealFeed) {
     BasicFeed(
         profileUrl = writerId,
         nickname = writerId,
         createdAt = createdAt,
+        isHearted = isHearted,
+        heartCount = heartCount,
+        commentCount = commentCount,
         onClickMoreIcon = onClickMoreIcon,
         onClickHeartIcon = onClickHeartIcon,
         onClickCommentIcon = onClickCommentIcon,
-        comments = comments,
-        hearts = hearts,
     ) {
         DuckDealFeedContent(
             content = content,
@@ -234,9 +234,10 @@ private fun BasicFeed(
     profileUrl: String,
     nickname: String,
     createdAt: String,
-    comments: List<Comment>,
-    hearts: List<Heart>,
-    onClickHeartIcon: () -> Unit,
+    isHearted: Boolean,
+    heartCount: Int,
+    commentCount: Int,
+    onClickHeartIcon: (Boolean) -> Unit,
     onClickCommentIcon: () -> Unit,
     onClickMoreIcon: (selectedUser: String) -> Unit,
     feedContent: @Composable () -> Unit,
@@ -281,17 +282,15 @@ private fun BasicFeed(
                     checkedIcon = null,
                     uncheckedIcon = QuackIcon.Comment,
                     checked = false,
-                    text = comments.size.toUnitString(),
-                    onToggle = {}
+                    text = commentCount.toUnitString(),
+                    onToggle = { onClickCommentIcon() }
                 )
                 QuackIconTextToggle(
                     checkedIcon = QuackIcon.FilledHeart,
                     uncheckedIcon = QuackIcon.Heart,
-                    checked = isHeartCheck.value,
-                    text = hearts.size.toUnitString(),
-                    onToggle = {
-                        isHeartCheck.value = !isHeartCheck.value
-                    },
+                    checked = isHearted,
+                    text = heartCount.toUnitString(),
+                    onToggle = { onClickHeartIcon(it) },
                 )
             }
         }
