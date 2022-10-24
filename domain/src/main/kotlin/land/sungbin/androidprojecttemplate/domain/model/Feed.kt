@@ -45,6 +45,8 @@ data class Feed(
     @FK val writerId: String,
     val type: FeedType,
     val isHearted: Boolean,
+    val heartCount: Int,
+    val commentCount: Int,
     val isDeleted: Boolean,
     @Unsupported val isHidden: Boolean? = null,
     val content: Content,
@@ -58,8 +60,6 @@ data class Feed(
     val isDirectDealing: Boolean?,
     val parcelable: Boolean?,
     val dealState: DealState?,
-    val hearts: List<Heart>,
-    val comments: List<Comment>,
 ) {
     init {
         requireInput(
