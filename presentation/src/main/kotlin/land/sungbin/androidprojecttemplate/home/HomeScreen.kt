@@ -14,10 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
@@ -94,6 +91,7 @@ internal fun HomeScreen(
                     feeds = homeState.filteredFeeds,
                     itemStatus = homeState.itemStatus,
                     interestedTags = homeState.interestedTags,
+                    fabExpanded = homeState.fabExpanded,
                     onClickLeadingIcon = {
                         coroutineScope.launch { drawerState.open() }
                     },
@@ -109,6 +107,7 @@ internal fun HomeScreen(
                     onClickTag = viewModel::deleteTag,
                     onFabMenuClick = viewModel::onFabMenuClick,
                     onRefresh = viewModel::refresh,
+                    onFabClick = viewModel::onFabClick,
                 )
             }
         }
@@ -135,17 +134,17 @@ fun HomeContent(
     itemStatus: UiStatus,
     feeds: List<Feed>,
     interestedTags: List<String>,
+    fabExpanded: Boolean,
     onClickLeadingIcon: () -> Unit,
     onClickTrailingIcon: () -> Unit,
     onClickHeartIcon: (Boolean) -> Unit,
     onClickCommentIcon: () -> Unit,
     onClickMoreIcon: (user: String) -> Unit,
     onClickTag: (index: Int) -> Unit,
+    onFabClick: (expanded: Boolean) -> Unit,
     onFabMenuClick: (index: Int) -> Unit,
     onRefresh: () -> Unit,
 ) {
-    var fabExpanded by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -189,9 +188,7 @@ fun HomeContent(
     DuckieFab(
         items = homeFabMenuItems.toPersistentList(),
         expanded = fabExpanded,
-        onFabClick = {
-            fabExpanded = !fabExpanded
-        },
+        onFabClick = { onFabClick(fabExpanded) },
         onItemClick = { index, _ ->
             onFabMenuClick(index)
         },
@@ -241,6 +238,7 @@ internal fun LazyFeedColumn(
                             onClickCommentIcon = onClickCommentIcon,
                         )
                     }
+
                     FeedType.DuckDeal -> {
                         DuckDealFeed(
                             duckDealFeed = feed.toDuckDealFeed(),
