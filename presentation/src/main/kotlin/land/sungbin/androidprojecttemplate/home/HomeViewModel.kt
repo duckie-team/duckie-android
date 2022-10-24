@@ -113,8 +113,12 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
         }
     }
 
-    fun onHeartClick() = intent {
-
+    fun onHeartClick(isHearted: Boolean) = intent {
+        reduce {
+            state.copy(
+                //state.interestedTags.indexOf()
+            )
+        }
     }
 
     fun onCommentClick() = intent {

@@ -1,12 +1,10 @@
 package land.sungbin.androidprojecttemplate.home.component
 
 import land.sungbin.androidprojecttemplate.domain.model.Feed
-import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
-import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import java.util.Date
 
 val dummyTags = listOf(
@@ -20,6 +18,9 @@ val dummyFeeds = listOf(
         type = FeedType.Normal,
         isDeleted = false,
         isHidden = false,
+        isHearted = false,
+        heartCount = 1042,
+        commentCount = 10000,
         content = Content(
             text = "버즈 라이트이어 개봉 앞둔 기념!\n" +
                     "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
@@ -35,8 +36,6 @@ val dummyFeeds = listOf(
         isDirectDealing = null,
         parcelable = null,
         dealState = null,
-        hearts = emptyList(),
-        comments = emptyList(),
     ),
     Feed(
         id = "feed2",
@@ -44,6 +43,9 @@ val dummyFeeds = listOf(
         type = FeedType.DuckDeal,
         isDeleted = false,
         isHidden = false,
+        isHearted = false,
+        heartCount = 1042,
+        commentCount = 10000,
         content = Content(
             text = "버즈 라이트이어 개봉 앞둔 기념!\n" +
                     "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
@@ -62,8 +64,6 @@ val dummyFeeds = listOf(
         isDirectDealing = true,
         parcelable = true,
         dealState = DealState.Booking,
-        hearts = emptyList(),
-        comments = emptyList(),
     ),
     Feed(
         id = "feed3",
@@ -71,6 +71,9 @@ val dummyFeeds = listOf(
         type = FeedType.DuckDeal,
         isDeleted = false,
         isHidden = false,
+        isHearted = false,
+        heartCount = 1042,
+        commentCount = 10000,
         content = Content(
             text = "버즈 라이트이어 개봉 앞둔 기념!\n" +
                     "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
@@ -89,7 +92,5 @@ val dummyFeeds = listOf(
         isDirectDealing = false,
         parcelable = true,
         dealState = DealState.Booking,
-        hearts = emptyList(),
-        comments = emptyList(),
     )
 )

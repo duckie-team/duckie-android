@@ -137,7 +137,7 @@ fun HomeContent(
     interestedTags: List<String>,
     onClickLeadingIcon: () -> Unit,
     onClickTrailingIcon: () -> Unit,
-    onClickHeartIcon: () -> Unit,
+    onClickHeartIcon: (Boolean) -> Unit,
     onClickCommentIcon: () -> Unit,
     onClickMoreIcon: (user: String) -> Unit,
     onClickTag: (index: Int) -> Unit,
@@ -211,7 +211,7 @@ internal fun LazyFeedColumn(
     feeds: List<Feed>,
     onRefresh: () -> Unit,
     onClickMoreIcon: (selectedUser: String) -> Unit,
-    onClickHeartIcon: () -> Unit,
+    onClickHeartIcon: (Boolean) -> Unit,
     onClickCommentIcon: () -> Unit,
 ) {
     val swipeRefreshState = rememberSwipeRefreshState(false)
@@ -241,7 +241,6 @@ internal fun LazyFeedColumn(
                             onClickCommentIcon = onClickCommentIcon,
                         )
                     }
-
                     FeedType.DuckDeal -> {
                         DuckDealFeed(
                             duckDealFeed = feed.toDuckDealFeed(),
