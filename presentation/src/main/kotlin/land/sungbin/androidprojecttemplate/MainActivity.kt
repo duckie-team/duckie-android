@@ -13,10 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import land.sungbin.androidprojecttemplate.home.HomeScreen
-import land.sungbin.androidprojecttemplate.home.HomeViewModel
 import land.sungbin.androidprojecttemplate.navigation.MainNavigation
-import land.sungbin.androidprojecttemplate.navigation.MainScreens
 import land.sungbin.androidprojecttemplate.navigation.homeBottomNavItems
 import team.duckie.quackquack.ui.component.QuackBottomNavigation
 import team.duckie.quackquack.ui.theme.QuackTheme

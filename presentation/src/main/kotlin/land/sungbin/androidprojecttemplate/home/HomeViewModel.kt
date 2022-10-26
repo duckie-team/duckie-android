@@ -16,22 +16,23 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 
 class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
-    override val container: Container<HomeState, HomeSideEffect> = container(HomeState())
+    override val container: Container<HomeState, HomeSideEffect> = container(HomeState()) {
+        init()
+    }
 
-    fun init() =
-        intent {
-            delay(TestMilliSecond)
-            reduce {
-                state.copy(
-                    itemStatus = UiStatus.Success,
-                    feeds = dummyFeeds,
-                    filteredFeeds = dummyFeeds,
-                    interestedTags = dummyTags,
-                    filterBottomSheetItems = filterBottomSheetItems,
-                    moreBottomSheetItems = moreBottomSheetItems,
-                )
-            }
+    private fun init() = intent {
+        delay(TestMilliSecond)
+        reduce {
+            state.copy(
+                itemStatus = UiStatus.Success,
+                feeds = dummyFeeds,
+                filteredFeeds = dummyFeeds,
+                interestedTags = dummyTags,
+                filterBottomSheetItems = filterBottomSheetItems,
+                moreBottomSheetItems = moreBottomSheetItems,
+            )
         }
+    }
 
 
     fun refresh() = intent {
@@ -109,11 +110,27 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
         }
     }
 
-    fun onHeartClick(isHearted: Boolean) = intent {
+    fun onHeartClick(
+        feedId: String,
+        isHearted: Boolean,
+    ) = intent {
         reduce {
             state.copy(
-                //state.interestedTags.indexOf()
+                feeds = state.feeds.map { feed: Feed ->
+                    if (feed.id == feedId) {
+                        feed.copy(
+                            isHearted = isHearted,
+                            heartCount = when (isHearted) {
+                                true -> feed.heartCount + 1
+                                else -> feed.heartCount - 1
+                            },
+                        )
+                    } else feed
+                },
             )
+        }
+        reduce {
+            state.copy(filteredFeeds = state.feeds)
         }
     }
 
