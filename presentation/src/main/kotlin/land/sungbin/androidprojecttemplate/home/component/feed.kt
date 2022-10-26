@@ -1,5 +1,6 @@
 package land.sungbin.androidprojecttemplate.home.component
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,8 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toPersistentList
+import land.sungbin.androidprojecttemplate.BuildConfig
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
@@ -89,10 +91,14 @@ internal fun FeedHeader(
 internal fun NormalFeed(
     normalFeed: FeedDTO.Normal,
     onClickMoreIcon: (selectedUser: String) -> Unit,
-    onClickHeartIcon: (Boolean) -> Unit,
+    onClickHeartIcon: (
+        feedId: String,
+        isHearted: Boolean,
+    ) -> Unit,
     onClickCommentIcon: () -> Unit,
 ) = with(normalFeed) {
     BasicFeed(
+        feedId = feedId,
         profileUrl = writerId,
         nickname = writerId,
         createdAt = createdAt,
@@ -111,10 +117,14 @@ internal fun NormalFeed(
 internal fun DuckDealFeed(
     duckDealFeed: FeedDTO.DuckDeal,
     onClickMoreIcon: (selectedUser: String) -> Unit,
-    onClickHeartIcon: (Boolean) -> Unit,
+    onClickHeartIcon: (
+        feedId: String,
+        isHearted: Boolean,
+    ) -> Unit,
     onClickCommentIcon: () -> Unit,
 ) = with(duckDealFeed) {
     BasicFeed(
+        feedId = feedId,
         profileUrl = writerId,
         nickname = writerId,
         createdAt = createdAt,
@@ -231,18 +241,21 @@ internal fun DuckDealCardContent(
 
 @Composable
 private fun BasicFeed(
+    feedId: String,
     profileUrl: String,
     nickname: String,
     createdAt: String,
     isHearted: Boolean,
     heartCount: Int,
     commentCount: Int,
-    onClickHeartIcon: (Boolean) -> Unit,
+    onClickHeartIcon: (
+        feedId: String,
+        isHearted: Boolean,
+    ) -> Unit,
     onClickCommentIcon: () -> Unit,
     onClickMoreIcon: (selectedUser: String) -> Unit,
     feedContent: @Composable () -> Unit,
 ) {
-    val isHeartCheck = remember { mutableStateOf(false) }
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -290,7 +303,10 @@ private fun BasicFeed(
                     uncheckedIcon = QuackIcon.Heart,
                     checked = isHearted,
                     text = heartCount.toUnitString(),
-                    onToggle = { onClickHeartIcon(it) },
+                    onToggle = {
+                        Log.d("클릭된거", "$it")
+                        onClickHeartIcon(feedId, it)
+                    },
                 )
             }
         }

@@ -14,14 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.collections.immutable.toPersistentList
@@ -38,6 +40,7 @@ import land.sungbin.androidprojecttemplate.home.component.FeedHeader
 import land.sungbin.androidprojecttemplate.home.component.NormalFeed
 import land.sungbin.androidprojecttemplate.home.dto.toDuckDealFeed
 import land.sungbin.androidprojecttemplate.home.dto.toNormalFeed
+import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 import team.duckie.quackquack.ui.component.QuackHeadlineBottomSheet
 import team.duckie.quackquack.ui.component.QuackImage
@@ -50,20 +53,36 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @OptIn(
     ExperimentalMaterialApi::class,
-    ExperimentalLifecycleComposeApi::class,
 )
 @Composable
 internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val homeState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
+    var homeState by remember { mutableStateOf(HomeState()) }
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberQuackDrawerState()
     val homeBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val moreBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(Unit) {
-        viewModel.init()
+        viewModel.observe(
+            lifecycleOwner = lifecycleOwner,
+            state = { state ->
+                homeState = state
+            },
+            sideEffect = { sideEffect ->
+                when (sideEffect) {
+                    HomeSideEffect.NavigateToWriteFeed -> {
+
+                    }
+
+                    HomeSideEffect.NavigateToWriteDuckDeal -> {
+
+                    }
+                }
+            }
+        )
     }
 
     QuackModalDrawer(
@@ -111,21 +130,6 @@ internal fun HomeScreen(
                 )
             }
         }
-        viewModel.container.sideEffectFlow.run {
-            LaunchedEffect(key1 = this) {
-                collect { sideEffect ->
-                    when (sideEffect) {
-                        HomeSideEffect.NavigateToWriteFeed -> {
-
-                        }
-
-                        HomeSideEffect.NavigateToWriteDuckDeal -> {
-
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -137,7 +141,10 @@ fun HomeContent(
     fabExpanded: Boolean,
     onClickLeadingIcon: () -> Unit,
     onClickTrailingIcon: () -> Unit,
-    onClickHeartIcon: (Boolean) -> Unit,
+    onClickHeartIcon: (
+        feedId: String,
+        isHearted: Boolean,
+    ) -> Unit,
     onClickCommentIcon: () -> Unit,
     onClickMoreIcon: (user: String) -> Unit,
     onClickTag: (index: Int) -> Unit,
@@ -211,7 +218,10 @@ internal fun LazyFeedColumn(
     feeds: List<Feed>,
     onRefresh: () -> Unit,
     onClickMoreIcon: (selectedUser: String) -> Unit,
-    onClickHeartIcon: (Boolean) -> Unit,
+    onClickHeartIcon: (
+        feedId: String,
+        isHearted: Boolean,
+    ) -> Unit,
     onClickCommentIcon: () -> Unit,
 ) {
     val swipeRefreshState = rememberSwipeRefreshState(false)

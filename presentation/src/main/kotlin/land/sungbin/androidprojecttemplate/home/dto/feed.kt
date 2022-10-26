@@ -1,4 +1,5 @@
 package land.sungbin.androidprojecttemplate.home.dto
+
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
@@ -7,6 +8,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 sealed class FeedDTO(
+    open val feedId: String,
     open val writerId: String,
     open val type: FeedType,
     open val content: Content,
@@ -16,6 +18,7 @@ sealed class FeedDTO(
     open val commentCount: Int,
 ) {
     data class Normal(
+        override val feedId: String,
         override val writerId: String,
         override val type: FeedType,
         override val content: Content,
@@ -23,9 +26,10 @@ sealed class FeedDTO(
         override val isHearted: Boolean,
         override val heartCount: Int,
         override val commentCount: Int,
-    ) : FeedDTO(writerId, type, content, createdAt, isHearted, heartCount, commentCount)
+    ) : FeedDTO(feedId, writerId, type, content, createdAt, isHearted, heartCount, commentCount)
 
     data class DuckDeal(
+        override val feedId: String,
         override val writerId: String,
         override val type: FeedType,
         override val content: Content,
@@ -39,10 +43,11 @@ sealed class FeedDTO(
         val location: String,
         val isDirectDealing: Boolean,
         val parcelable: Boolean,
-    ) : FeedDTO(writerId, type, content, createdAt, isHearted, heartCount, commentCount)
+    ) : FeedDTO(feedId, writerId, type, content, createdAt, isHearted, heartCount, commentCount)
 }
 
 fun Feed.toNormalFeed() = FeedDTO.Normal(
+    feedId = id,
     writerId = writerId,
     type = type,
     content = content,
@@ -53,6 +58,7 @@ fun Feed.toNormalFeed() = FeedDTO.Normal(
 )
 
 fun Feed.toDuckDealFeed() = FeedDTO.DuckDeal(
+    feedId = id,
     writerId = writerId,
     type = type,
     content = content,
