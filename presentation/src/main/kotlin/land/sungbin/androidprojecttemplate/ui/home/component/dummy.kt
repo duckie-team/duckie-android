@@ -5,6 +5,7 @@ import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
+import java.util.Calendar
 import java.util.Date
 
 val dummyTags = listOf(
@@ -29,7 +30,7 @@ val dummyFeeds = listOf(
             video = null,
         ),
         categories = listOf(Category.Celebrity),
-        createdAt = Date(),
+        createdAt = dummyDate(),
         title = null,
         price = null,
         location = null,
@@ -57,7 +58,7 @@ val dummyFeeds = listOf(
             video = null,
         ),
         categories = listOf(Category.Celebrity),
-        createdAt = Date(),
+        createdAt = dummyDate(),
         title = "덕딜 상품 제목",
         price = 30000,
         location = "마포구 도화동",
@@ -85,7 +86,7 @@ val dummyFeeds = listOf(
             video = null,
         ),
         categories = listOf(Category.Celebrity),
-        createdAt = Date(),
+        createdAt = dummyDate(),
         title = "덕딜 상품 제목",
         price = 30000,
         location = "마포구 도화동",
@@ -94,3 +95,10 @@ val dummyFeeds = listOf(
         dealState = DealState.Booking,
     )
 )
+
+fun dummyDate(): Date {
+    val calendar = Calendar.getInstance().apply {
+        add(Calendar.MONTH, -1)
+    }
+    return calendar.time
+}

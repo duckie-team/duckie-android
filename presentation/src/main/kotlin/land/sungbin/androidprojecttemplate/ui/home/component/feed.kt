@@ -20,8 +20,9 @@ import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.ui.home.dto.FeedDTO
-import land.sungbin.androidprojecttemplate.ui.home.dto.priceToString
-import land.sungbin.androidprojecttemplate.ui.home.dto.toUnitString
+import land.sungbin.androidprojecttemplate.util.DateUtil
+import land.sungbin.androidprojecttemplate.util.IntUtil.priceToString
+import land.sungbin.androidprojecttemplate.util.IntUtil.toUnitString
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -35,6 +36,7 @@ import team.duckie.quackquack.ui.component.QuackSimpleLabel
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
+import java.util.Date
 
 @Composable
 internal fun FeedHeader(
@@ -241,7 +243,7 @@ private fun BasicFeed(
     feedId: String,
     profileUrl: String,
     nickname: String,
-    createdAt: String,
+    createdAt: Date,
     isHearted: Boolean,
     heartCount: Int,
     commentCount: Int,
@@ -273,7 +275,7 @@ private fun BasicFeed(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     QuackSubtitle2(text = nickname)
-                    QuackBody3(text = createdAt)
+                    QuackBody3(text = DateUtil.formatTimeString(createdAt))
                 }
                 QuackImage(
                     src = QuackIcon.More,
