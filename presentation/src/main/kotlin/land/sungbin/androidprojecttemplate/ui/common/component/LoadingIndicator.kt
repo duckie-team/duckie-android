@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.common.component
+package land.sungbin.androidprojecttemplate.ui.common.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

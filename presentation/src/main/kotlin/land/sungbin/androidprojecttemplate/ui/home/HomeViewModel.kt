@@ -1,12 +1,12 @@
-package land.sungbin.androidprojecttemplate.home
+package land.sungbin.androidprojecttemplate.ui.home
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.delay
-import land.sungbin.androidprojecttemplate.common.UiStatus
+import land.sungbin.androidprojecttemplate.ui.common.UiStatus
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
-import land.sungbin.androidprojecttemplate.home.component.dummyFeeds
-import land.sungbin.androidprojecttemplate.home.component.dummyTags
+import land.sungbin.androidprojecttemplate.ui.home.component.dummyFeeds
+import land.sungbin.androidprojecttemplate.ui.home.component.dummyTags
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent

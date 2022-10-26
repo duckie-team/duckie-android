@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.home.component
+package land.sungbin.androidprojecttemplate.ui.home.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

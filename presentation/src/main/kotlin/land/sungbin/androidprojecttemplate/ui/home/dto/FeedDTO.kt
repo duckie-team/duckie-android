@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.home.dto
+package land.sungbin.androidprojecttemplate.ui.home.dto
 
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.common.Content

@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.common
+package land.sungbin.androidprojecttemplate.ui.common
 
 sealed class UiStatus {
     object Loading : UiStatus()

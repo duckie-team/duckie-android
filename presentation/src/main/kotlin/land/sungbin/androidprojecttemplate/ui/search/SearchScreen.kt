@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.search
+package land.sungbin.androidprojecttemplate.ui.search
 
 import androidx.compose.runtime.Composable
 import team.duckie.quackquack.ui.component.QuackTitle2

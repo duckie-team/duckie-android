@@ -1,13 +1,13 @@
-package land.sungbin.androidprojecttemplate.navigation
+package land.sungbin.androidprojecttemplate.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import land.sungbin.androidprojecttemplate.duckchat.DuckChatScreen
-import land.sungbin.androidprojecttemplate.home.HomeScreen
-import land.sungbin.androidprojecttemplate.notification.NotificationScreen
-import land.sungbin.androidprojecttemplate.search.SearchScreen
+import land.sungbin.androidprojecttemplate.ui.duckchat.DuckChatScreen
+import land.sungbin.androidprojecttemplate.ui.home.HomeScreen
+import land.sungbin.androidprojecttemplate.ui.notification.NotificationScreen
+import land.sungbin.androidprojecttemplate.ui.search.SearchScreen
 
 @Composable
 internal fun MainNavigation(navController: NavHostController) {

@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.navigation
+package land.sungbin.androidprojecttemplate.ui.navigation
 
 sealed class MainScreens(
     val route: String,

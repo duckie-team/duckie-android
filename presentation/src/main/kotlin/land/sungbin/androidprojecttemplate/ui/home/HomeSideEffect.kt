@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.home
+package land.sungbin.androidprojecttemplate.ui.home
 
 sealed class HomeSideEffect {
     object NavigateToWriteFeed : HomeSideEffect()
