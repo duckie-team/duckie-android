@@ -160,9 +160,8 @@ fun HomeContent(
             trailingIcon = QuackIcon.Filter,
             onClickTrailingIcon = onClickTrailingIcon,
         )
-        ContentByUiStatus(
-            status = itemStatus,
-            success = {
+        when (itemStatus) {
+            UiStatus.Success -> {
                 LazyFeedColumn(
                     feeds = feeds,
                     header = {
@@ -176,14 +175,18 @@ fun HomeContent(
                     onClickHeartIcon = onClickHeartIcon,
                     onClickCommentIcon = onClickCommentIcon,
                 )
-            },
-            loading = {
+            }
+
+            UiStatus.Loading -> {
                 Crossfade(targetState = itemStatus) {
                     DuckieLoadingIndicator()
                 }
-            },
-            failed = { }
-        )
+            }
+
+            is UiStatus.Failed -> {
+
+            }
+        }
     }
     DuckieFab(
         items = homeFabMenuItems.toPersistentList(),
@@ -251,20 +254,6 @@ internal fun LazyFeedColumn(
             }
         }
     }
-}
-
-@Composable
-internal fun ContentByUiStatus(
-    status: UiStatus,
-    success: @Composable () -> Unit,
-    failed: @Composable () -> Unit,
-    loading: @Composable () -> Unit,
-) = when (status) {
-    UiStatus.Success -> success()
-
-    UiStatus.Loading -> loading()
-
-    is UiStatus.Failed -> failed()
 }
 
 @Stable
