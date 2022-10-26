@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.home
+package land.sungbin.androidprojecttemplate.ui.home
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
@@ -29,17 +29,17 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
-import land.sungbin.androidprojecttemplate.common.component.DuckieFab
-import land.sungbin.androidprojecttemplate.common.UiStatus
-import land.sungbin.androidprojecttemplate.common.component.DuckieLoadingIndicator
+import land.sungbin.androidprojecttemplate.ui.common.component.DuckieFab
+import land.sungbin.androidprojecttemplate.ui.common.UiStatus
+import land.sungbin.androidprojecttemplate.ui.common.component.DuckieLoadingIndicator
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
-import land.sungbin.androidprojecttemplate.home.component.DrawerContent
-import land.sungbin.androidprojecttemplate.home.component.DuckDealFeed
-import land.sungbin.androidprojecttemplate.home.component.FeedHeader
-import land.sungbin.androidprojecttemplate.home.component.NormalFeed
-import land.sungbin.androidprojecttemplate.home.dto.toDuckDealFeed
-import land.sungbin.androidprojecttemplate.home.dto.toNormalFeed
+import land.sungbin.androidprojecttemplate.ui.home.component.DrawerContent
+import land.sungbin.androidprojecttemplate.ui.home.component.DuckDealFeed
+import land.sungbin.androidprojecttemplate.ui.home.component.FeedHeader
+import land.sungbin.androidprojecttemplate.ui.home.component.NormalFeed
+import land.sungbin.androidprojecttemplate.ui.home.dto.toDuckDealFeed
+import land.sungbin.androidprojecttemplate.ui.home.dto.toNormalFeed
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 import team.duckie.quackquack.ui.component.QuackHeadlineBottomSheet

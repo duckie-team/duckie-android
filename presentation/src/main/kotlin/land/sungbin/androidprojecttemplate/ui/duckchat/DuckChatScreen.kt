@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.duckchat
+package land.sungbin.androidprojecttemplate.ui.duckchat
 
 import androidx.compose.runtime.Composable
 import team.duckie.quackquack.ui.component.QuackTitle2

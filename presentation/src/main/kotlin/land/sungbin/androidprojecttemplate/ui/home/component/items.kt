@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.home.component
+package land.sungbin.androidprojecttemplate.ui.home.component
 
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 import team.duckie.quackquack.ui.component.QuackMenuFabItem

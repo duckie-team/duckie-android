@@ -1,6 +1,6 @@
-package land.sungbin.androidprojecttemplate.home
+package land.sungbin.androidprojecttemplate.ui.home
 
-import land.sungbin.androidprojecttemplate.common.UiStatus
+import land.sungbin.androidprojecttemplate.ui.common.UiStatus
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 

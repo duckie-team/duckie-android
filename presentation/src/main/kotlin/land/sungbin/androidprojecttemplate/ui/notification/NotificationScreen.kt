@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.notification
+package land.sungbin.androidprojecttemplate.ui.notification
 
 import androidx.compose.runtime.Composable
 import team.duckie.quackquack.ui.component.QuackTitle2
