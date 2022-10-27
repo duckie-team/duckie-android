@@ -1,34 +1,39 @@
+# 덕키 아키텍처 제안서
+
 작성자: [Ji Sungbin](https://www.linkedin.com/in/ji-sungbin-4343b7219/)  
 마지막 업데이트: 2022. 10. 28.
 
 ### 목차
 
-1. [덕키 아키텍처 제안서](#Architecture)
-    2. [기본 컨셉](#Basic)
-       1. [참고 자료](#reference)
-    3. [제약](#Limitation)
-       1. [참고 자료](#reference-1)
-    4. [View](#View)
-       1. [참고 자료](#reference-2)
-    5. [Model](#Model)
-       1. [참고 자료](#reference-3)
-    6. [ViewModel](#ViewModel)
-       1. [DataBinding](#DataBinding)
-       2. [AAC ViewModel](#AAC-ViewModel)
-       3. [참고 자료](#reference-4)
-    7. [UDF](#Unidirectional-Data-Flow)
-       1. [Flux](#Flux)
-       2. [Redux](#Redux)
-       3. [Model-View-Intent](#Model-View-Intent)
-       4. [참고 자료](#reference-5)
-    8. [결론](#conclusion)
-9. [예제 프로젝트](#ApiLibrary)
+1. [제안서](#Architecture)
+2. [예제 프로젝트](#ApiLibrary)
 
 ---
 
 # Architecture
 
 덕키에서 사용할 "덕키만의 아키텍처" 에 대해 서술합니다.
+
+### 목차
+
+1. [기본 컨셉](#Basic)
+   1. [참고 자료](#reference)
+2. [제약](#Limitation)
+   1. [참고 자료](#reference-1)
+3. [View](#View)
+   1. [참고 자료](#reference-2)
+4. [Model](#Model)
+   1. [참고 자료](#reference-3)
+5. [ViewModel](#ViewModel)
+   1. [DataBinding](#DataBinding)
+   2. [AAC ViewModel](#AAC-ViewModel)
+   3. [참고 자료](#reference-4)
+6. [UDF](#Unidirectional-Data-Flow)
+   1. [Flux](#Flux)
+   2. [Redux](#Redux)
+   3. [Model-View-Intent](#Model-View-Intent)
+   4. [참고 자료](#reference-5)
+7. [결론](#conclusion)
 
 ## Basic
 
