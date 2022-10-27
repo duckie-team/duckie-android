@@ -43,7 +43,7 @@
    2. [AAC ViewModel](#aac-viewmodel)
    3. [Why?](#why-2)
    4. [참고 자료](#reference-4)
-6. [Composable is Reactive](#reactive-programming-in-composable)
+6. [Composable 은 반응형임](#reactive-programming-in-composable)
 	 1. [참고 자료](#reference-5)	
 7. [Two-way binding](#two-way-binding)
    1. [참고 자료](#reference-6)	
@@ -56,23 +56,30 @@
 
 ## Basic
 
-이 제안서는 MVVM 과 UDF 에 중심을 두고 있습니다. 이때, 여기에서 의미하는 MVVM 는 Microsoft 가 제안한 "Model-View-ViewModel" 을 의미합니다. VM 으로 AAC 의 ViewModel 을 의미하지 않습니다.
+이 제안서는 MVVM, Clean Architecture, Data binding, Jetpack Compose, Android(lifecycle 및 configuration change) 의 개념을 포함하고 있습니다. 
+
+#### 주의
+
+1. 여기에서 의미하는 MVVM 는 Microsoft 가 제안한 "Model-View-ViewModel" 을 의미합니다. 즉, MVVM 의 ViewModel 은 AAC 의 ViewModel 을 의미하지 않습니다. 
+2. 여기에서 의미하는 Data binding 은 AAC 와 MVVM(Xamarin) 의 Data binding 을 의미하지 않습니다. Computer programming 에서 사용되는 대중적인 Data binding 을 의미합니다.
+3. 여기에서 의미하는 Jetpack Compose 는 Jetpack Compose UI 가 아닌 Jetpack Compose Runtime 을 의미합니다.
 
 ##### Reference
 
 - [The Model-View-ViewModel Pattern](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm)
-- [AAC ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
+- [The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Data binding](https://en.wikipedia.org/wiki/Data_binding)
+- [Jetpack Compose Runtime](https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/runtime/runtime/src/commonMain/kotlin/androidx/compose/runtime/compose-runtime-documentation.md)
+- [Android lifecycle](https://developer.android.com/guide/components/activities/activity-lifecycle)
+- [Android configuration change](https://developer.android.com/guide/topics/resources/runtime-changes)
 
 ## Limitation
 
-덕키 아키텍처는 덕키 안드로이드 앱을 기준으로 고안되었습니다. 모든 경우에 적합하지 않을 수 있으며, 모든 경우에 검증되지 않았습니다.
-
-덕키 안드로이드 앱에서는 Jetpack Compose 를 사용합니다. 따라서 이 제안 역시 Jetpack Compose 사용 사례에 적합하며, 안드로이드 환경에서 Jetpack Compose 를 사용해야 이 아키텍처의 의도를 제대로 활용할 수 있습니다.
+이 아키텍처는 Jetpack Compose 를 사용하는 안드로이드 애플리케이션을 기준으로 고안되었습니다. 또한 모든 경우에서 충분한 검증을 거치지 않았습니다. 모든 경우에서 부적합할 수 있습니다.
 
 ##### Reference
 
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
-- [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html)
 
 ## View
 
@@ -82,12 +89,12 @@ View 는 Presenter 계층에 포함될 수 있습니다.
 
 #### Why
 
-##### 사용자와 상호작용 의외의 것은 View 가 알면 안됩니다.
+> 사용자와 상호작용 의외의 것은 View 가 알면 안됩니다.
 
 View 와 business logic 간의 관심사 분리를 위합니다. 관심사 분리로 얻는 이점은 다음과 같습니다.
 
 1. View 개발자가 전체적인 코드 파악을 진행할 때 business logic 부분을 몰라도 되므로 효율성을 높입니다.
-2. View 를 개발하는데 불필요한 codebase 를 제거해 View 개발자가 작업에 좀 더 집중할 수 있습니다
+2. View 를 개발하는데 불필요한 codebase 를 제거해 View 개발자가 작업에 좀 더 집중할 수 있습니다.
 3. business logic 를 구현하는데 필요한 의존성을 포함하지 않으므로 빌드 속도를 단축시킵니다. (gradle 을 사용하는 멀티 모듈 프로젝트에 한함)
 4. View 모듈이 business logic 의 구현 방법에 영향을 받지 않으므로 View 모듈을 여러 곳에서 재사용할 수 있습니다.
 
@@ -98,9 +105,21 @@ View 와 business logic 간의 관심사 분리를 위합니다. 관심사 분�
 
 ## Model
 
+Model 은 business logic 의 실제 구현을 나타냅니다. 크게 Datasource, Repository, Usecase 로 나눌 수 있으며, 바로 독립적으로 사용하는게 아닌 ViewModel 을 통해 View 와 상호작용해야 합니다.
+
+#### Datasource
+
+#### Repository
+
+#### Usecase
+
 #### Why
 
+> 바로 독립적으로 사용하는게 아닌 ViewModel 을 통해 View 와 상호작용해야 합니다.
+
 ##### Reference
+
+- [MVVM Model](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#model)
 
 ## ViewModel
 
@@ -111,6 +130,8 @@ View 와 business logic 간의 관심사 분리를 위합니다. 관심사 분�
 #### Why
 
 ##### Reference
+
+- [MVVM ViewModel](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#viewmodel)
 
 ## Reactive Programming in Composable
 
