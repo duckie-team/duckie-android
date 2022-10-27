@@ -1,3 +1,4 @@
-## Architecture
+# Architecture
 
-TBD
+덕키에서 사용할 "덕키만의 아키텍처" 에 대해 서술합니다.
+
