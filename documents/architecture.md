@@ -76,11 +76,15 @@
 
 View 는 Composable 을 통해 사용자와 상호작용을 담당합니다. 사용자와 상호작용 의외의 것은 View 가 알면 안됩니다. 예를 들어 business logic 은 View 가 절대 알아선 안됩니다. 이는 View 에 과한 역할을 부여합니다.
 
+#### Why
+
 ##### Reference
 
 - [MVVM View](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#view)
 
 ## Model
+
+#### Why
 
 ##### Reference
 
@@ -89,6 +93,8 @@ View 는 Composable 을 통해 사용자와 상호작용을 담당합니다. 사
 #### DataBinding
 
 #### AAC ViewModel
+
+#### Why
 
 ##### Reference
 
