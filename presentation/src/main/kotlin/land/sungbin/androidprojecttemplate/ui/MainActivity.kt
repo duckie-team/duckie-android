@@ -20,17 +20,11 @@ import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    companion object {
-        private const val InitialNavigationIndex = 0
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             QuackTheme {
-                var selectedNavigationIndex by remember {
-                    mutableStateOf(InitialNavigationIndex)
-                }
+                var selectedNavigationIndex by remember { mutableStateOf(0) }
                 val navController = rememberNavController()
 
                 Column(modifier = Modifier.fillMaxSize()) {
