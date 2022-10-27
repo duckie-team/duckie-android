@@ -5,7 +5,7 @@
 작성자: [@jisungbin](https://github.com/jisungbin)  
 마지막 업데이트: 2022. 10. 28.섷
 
-**[목차]**
+### 목차
 
 1. [기본 컨셉](#Basic)
 2. [제약](#Limitation)
