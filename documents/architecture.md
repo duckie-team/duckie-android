@@ -5,10 +5,21 @@
 
 ### 목차
 
-1. [제안서](#Proposal)
-2. [예제 프로젝트](#ApiLibrary)
+1. [규칙](#Prerequisites)
+2. [제안서](#Proposal)
+3. [예제 프로젝트](#ApiLibrary)
 
 ---
+
+# Prerequisites
+
+이 제안서에서는 정확한 의미 전달을 위해 영문을 영문 그대로 표시합니다.
+
+- 컴포저블 → Composable
+- 리포지토리 → Repository
+- 유즈케이스 → Usecase
+
+....
 
 # Proposal
 
@@ -37,7 +48,7 @@
 
 ## Basic
 
-이 제안서는 MVVM 과 UDF 에 중심을 두고 있습니다. 이때, 여기에서 의미하는 MVVM 는 Microsoft 가 제안한 "Model-View-ViewModel Pattern" 을 의미합니다. VM 으로 AAC 의 ViewModel 을 의미하지 않습니다.
+이 제안서는 MVVM 과 UDF 에 중심을 두고 있습니다. 이때, 여기에서 의미하는 MVVM 는 Microsoft 가 제안한 "Model-View-ViewModel" 을 의미합니다. VM 으로 AAC 의 ViewModel 을 의미하지 않습니다.
 
 ##### Reference
 
@@ -46,17 +57,22 @@
 
 ## Limitation
 
-덕키 아키텍처는 덕키 안드로이드 앱을 기준으로 고안되었습니다. 모든 경우에 적합하지 않을 수 있으며, 모든 경우에 테스트되지 않았습니다.
+덕키 아키텍처는 덕키 안드로이드 앱을 기준으로 고안되었습니다. 모든 경우에 적합하지 않을 수 있으며, 모든 경우에 검증되지 않았습니다.
 
 덕키 안드로이드 앱에서는 Jetpack Compose 를 사용합니다. 따라서 이 제안 역시 Jetpack Compose 사용 사례에 적합하며, 안드로이드 환경에서 Jetpack Compose 를 사용해야 이 아키텍처의 의도를 제대로 활용할 수 있습니다.
 
 ##### Reference
 
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
+- [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html)
 
 ## View
 
+View 는 Composable 을 통해 
+
 ##### Reference
+
+- [MVVM View](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#view)
 
 ## Model
 
