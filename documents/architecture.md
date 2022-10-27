@@ -43,7 +43,7 @@
    2. [AAC ViewModel](#aac-viewmodel)
    3. [Why?](#why-2)
    4. [참고 자료](#reference-4)
-6. [Composable 은 반응형임](#reactive-programming-in-composable)
+6. [Jetpack Compose 는 반응형임](#reactive-programming-in-jetpack-compose)
 	 1. [참고 자료](#reference-5)	
 7. [Two-way binding](#two-way-binding)
    1. [참고 자료](#reference-6)	
@@ -179,7 +179,7 @@ Usecase 는 [Usecase 세션](#usecase)에서 설명하고 있듯이 Repository �
 
 - [MVVM ViewModel](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#viewmodel)
 
-## Reactive Programming in Composable
+## Reactive Programming in Jetpack Compose
 
 #### Reference
 
