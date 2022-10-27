@@ -20,6 +20,8 @@
 - 유즈케이스 → Usecase
 - ... 등등
 
+---
+
 # Proposal
 
 덕키에서 사용할 "덕키 아키텍처" 에 대해 제안합니다.
@@ -76,11 +78,23 @@
 
 View 는 Composable 을 통해 사용자와 상호작용을 담당합니다. 사용자와 상호작용 의외의 것은 View 가 알면 안됩니다. 예를 들어 business logic 은 View 가 절대 알아선 안됩니다. 이는 View 에 과한 역할을 부여합니다.
 
+View 는 Presenter 계층에 포함될 수 있습니다.
+
 #### Why
+
+##### 사용자와 상호작용 의외의 것은 View 가 알면 안됩니다.
+
+View 와 business logic 간의 관심사 분리를 위합니다. 관심사 분리로 얻는 이점은 다음과 같습니다.
+
+1. View 개발자가 전체적인 코드 파악을 진행할 때 business logic 부분을 몰라도 되므로 효율성을 높입니다.
+2. View 를 개발하는데 불필요한 codebase 를 제거해 View 개발자가 작업에 좀 더 집중할 수 있습니다
+3. business logic 를 구현하는데 필요한 의존성을 포함하지 않으므로 빌드 속도를 단축시킵니다. (gradle 을 사용하는 멀티 모듈 프로젝트에 한함)
+4. View 모듈이 business logic 의 구현 방법에 영향을 받지 않으므로 View 모듈을 여러 곳에서 재사용할 수 있습니다.
 
 ##### Reference
 
 - [MVVM View](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#view)
+- [Separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns)
 
 ## Model
 
