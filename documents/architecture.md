@@ -8,23 +8,23 @@
 ### 목차
 
 1. [기본 컨셉](#Basic)
-
-2. [제약](#Limitation)
-
-3. [View](#View)
-
-4. [Model](#Model)
-
-5. [ViewModel](#ViewModel)
+   1. [참고 자료](#reference)
+3. [제약](#Limitation)
+   1. [참고 자료](#reference-1)
+5. [View](#View)
+   1. [참고 자료](#reference-2)
+6. [Model](#Model)
+   1. [참고 자료](#reference-3)
+8. [ViewModel](#ViewModel)
    1. [DataBinding](#DataBinding)
-   - [AAC ViewModel](#AAC-ViewModel)
-
-6. [UDF](#Unidirectional-Data-Flow)
+   2. [AAC ViewModel](#AAC-ViewModel)
+   3. [참고 자료](#reference-4)
+9. [UDF](#Unidirectional-Data-Flow)
    1. [Flux](#Flux)
    2. [Redux](#Redux)
    3. [Model-View-Intent](#Model-View-Intent)
-
-7. [결론](#conclusion)
+   4. [참고 자료](#reference-5)
+10. [결론](#conclusion)
 
 ---
 
@@ -39,15 +39,23 @@
 
 ## Limitation
 
+##### Reference
+
 ## View
 
+##### Reference
+
 ## Model
+
+##### Reference
 
 ## ViewModel
 
 #### DataBinding
 
-### AAC ViewModel
+#### AAC ViewModel
+
+##### Reference
 
 ## Unidirectional Data Flow
 
@@ -56,5 +64,7 @@
 #### Redux
 
 #### Model-View-Intent
+
+##### Reference
 
 ## Conclusion
