@@ -18,8 +18,7 @@
 - 컴포저블 → Composable
 - 리포지토리 → Repository
 - 유즈케이스 → Usecase
-
-....
+- ... 등등
 
 # Proposal
 
