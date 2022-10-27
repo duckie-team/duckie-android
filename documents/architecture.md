@@ -13,7 +13,7 @@
 
 # Prerequisites
 
-이 제안서에서는 정확한 의미 전달을 위해 영문을 영문 그대로 표시합니다.
+이 제안서에서는 정확한 의미 전달을 위해 해당 문맥에서 중요한 영문은 영문 그대로 표시합니다.
 
 - 컴포저블 → Composable
 - 리포지토리 → Repository
@@ -27,24 +27,31 @@
 
 ### 목차
 
-1. [기본 컨셉](#Basic)
+1. [기본 컨셉](#basic)
    1. [참고 자료](#reference)
-2. [제약](#Limitation)
+2. [제약](#limitation)
    1. [참고 자료](#reference-1)
-3. [View](#View)
-   1. [참고 자료](#reference-2)
-4. [Model](#Model)
-   1. [참고 자료](#reference-3)
-5. [ViewModel](#ViewModel)
-   1. [DataBinding](#DataBinding)
-   2. [AAC ViewModel](#AAC-ViewModel)
-   3. [참고 자료](#reference-4)
-6. [UDF](#Unidirectional-Data-Flow)
-   1. [Flux](#Flux)
-   2. [Redux](#Redux)
-   3. [Model-View-Intent](#Model-View-Intent)
-   4. [참고 자료](#reference-5)
-7. [결론](#conclusion)
+3. [View](#view)
+   1. [Why?](#why)
+   2. [참고 자료](#reference-2)
+4. [Model](#model)
+   1. [Why?](#why-1)
+   2. [참고 자료](#reference-3)
+5. [ViewModel](#viewModel)
+   1. [DataBinding](#databinding)
+   2. [AAC ViewModel](#aac-viewmodel)
+   3. [Why?](#why-2)
+   4. [참고 자료](#reference-4)
+6. [Composable is Reactive](#reactive-programming-in-composable)
+	 1. [참고 자료](#reference-5)	
+7. [Two-way binding](#two-way-binding)
+   1. [참고 자료](#reference-6)	
+8. [UDF](#unidirectional-data-flow)
+   1. [Flux](#flux)
+   2. [Redux](#redux)
+   3. [Model-View-Intent](#model-view-intent)
+   4. [참고 자료](#reference-7)
+9. [결론](#conclusion)
 
 ## Basic
 
@@ -68,7 +75,7 @@
 
 ## View
 
-View 는 Composable 을 통해 
+View 는 Composable 을 통해 사용자와 상호작용을 담당합니다. 사용자와 상호작용 의외의 것은 View 가 알면 안됩니다. 예를 들어 business logic 은 View 가 절대 알아선 안됩니다. 이는 View 에 과한 역할을 부여합니다.
 
 ##### Reference
 
@@ -85,6 +92,14 @@ View 는 Composable 을 통해
 #### AAC ViewModel
 
 ##### Reference
+
+## Reactive Programming in Composable
+
+#### Reference
+
+## Two-way binding
+
+#### Reference
 
 ## Unidirectional Data Flow
 
