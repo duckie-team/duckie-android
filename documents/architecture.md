@@ -56,7 +56,7 @@
 
 ## Basic
 
-이 제안서는 MVVM, Clean Architecture, Data binding, Jetpack Compose, Android(lifecycle 및 configuration change) 의 개념을 포함하고 있습니다. 
+이 제안서는 MVVM Pattern, Repository pattern, Clean Architecture, Data binding, Jetpack Compose, Android(lifecycle 및 configuration change) 의 개념을 토대로 고안되었습니다.
 
 #### 주의
 
@@ -67,6 +67,7 @@
 ##### Reference
 
 - [The Model-View-ViewModel Pattern](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm)
+- [The Repository pattern](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design#the-repository-pattern)
 - [The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [Data binding](https://en.wikipedia.org/wiki/Data_binding)
 - [Jetpack Compose Runtime](https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/runtime/runtime/src/commonMain/kotlin/androidx/compose/runtime/compose-runtime-documentation.md)
@@ -95,7 +96,7 @@ View 와 business logic 간의 관심사 분리를 위합니다. 관심사 분�
 
 1. View 개발자가 전체적인 코드 파악을 진행할 때 business logic 부분을 몰라도 되므로 효율성을 높입니다.
 2. View 를 개발하는데 불필요한 codebase 를 제거해 View 개발자가 작업에 좀 더 집중할 수 있습니다.
-3. business logic 를 구현하는데 필요한 의존성을 포함하지 않으므로 빌드 속도를 단축시킵니다. (gradle 을 사용하는 멀티 모듈 프로젝트에 한함)
+3. business logic 를 구현하는데 필요한 의존성을 포함하지 않으므로 빌드 속도를 단축시킵니다. (멀티 모듈 프로젝트에 한함)
 4. View 모듈이 business logic 의 구현 방법에 영향을 받지 않으므로 View 모듈을 여러 곳에서 재사용할 수 있습니다.
 
 ##### Reference
@@ -105,21 +106,66 @@ View 와 business logic 간의 관심사 분리를 위합니다. 관심사 분�
 
 ## Model
 
-Model 은 business logic 의 실제 구현을 나타냅니다. 크게 Datasource, Repository, Usecase 로 나눌 수 있으며, 바로 독립적으로 사용하는게 아닌 ViewModel 을 통해 View 와 상호작용해야 합니다.
+Model 은 business logic 의 실제 구현을 나타냅니다. Datasource, Repository, Usecase 에서 상호작용될 수 있으며, 독립적으로 바로 사용하는게 아닌 최종적으로 Usecase 를 통해 사용되야 합니다.
+
+Model 은 Domain 과 Data 계층에 포함될 수 있습니다.
 
 #### Datasource
 
+Datasource 는 business logic 에서 데이터의 출처를 정의합니다. Datsource 는 필요에 따라 remote 와 local 로 나뉠 수 있습니다. 이 경우 remote 는 온라인에서의 데이터 출처를 의미하고, local 은 오프라인에서의 데이터 출처를 의미합니다.
+
+예를 들어 remote datasource 에서는 Ktor client 를 통해 데이터를 불러오고, local datasource 에서는 Room 을 통해 데이터를 불러올 수 있습니다.
+
 #### Repository
+
+Repository 는 같은 도메인을 나타내는 business logic 의 모임입니다.
+
+```kotlin
+// # example
+// file: UserRepository.kt
+
+interface UserRepository {
+    fun changeUserName(newName: String): Boolean
+    fun changeUserPhoto(newPhoto: Bitmap): Boolean
+    fun changeUserAge(newAge: Int): Boolean
+}
+```
+
+만약 특정 도메인에 포함되는 business logic 이 하나 뿐이라도 다른 Repository 와 통일성을 위해 Repository 에 제공해야 합니다.
+
+```kotlin
+// # example
+// file: CatRepository.kt
+
+interface CatRepository {
+    fun giveLove()
+}
+```
+
+또한 상황에 따라 사용해야 하는 Datasource 를 결정하여 제공하는 캡슐화를 담당합니다. Side effect 이 있어서는 안되며, 상황에 따라 사용할 Datasource 를 delegate 하는 역할만 수행해야 합니다.
+
+예를 들어 remote datasource 와 local datasoure 가 있다면 디바이스의 인터넷 여부에 따라 둘 중 하나를 결정하여 delegate 한 결과를 그대로 제공해야 합니다.
 
 #### Usecase
 
+Usecase 는 Repository 로 부터 받은 결과를 View 가 사용하기 편하게 변조하거나 UI State 로 mapping 하는 역할을 담당합니다. 즉, Repository 의 결과를 View 가 바로 사용할 수 있게 추상화합니다.
+
+Repository 와 달리 Usecase 는 Side effect 이 포함될 수 있습니다.
+
+Usecase 는 View 가 바로 사용할 수 있게 만드는 추상화 의외에도 한 번에 하나의 business logic 만 노출시켜 Usecase 를 사용하는 부분의 역할을 분명하게 나타낼 수 있습니다. 이러한 이유로 별도 Side effect 처리가 필요 없는 business logic 일 경우에도 Usecase 를 제공해야 합니다.
+
 #### Why
 
-> 바로 독립적으로 사용하는게 아닌 ViewModel 을 통해 View 와 상호작용해야 합니다.
+> 독립적으로 바로 사용하는게 아닌 최종적으로 Usecase 를 통해 사용되야 합니다.
+
+Usecase 는 [Usecase 세션](#usecase)에서 설명하고 있듯이 Repository 의 결과로 부터 추상화를 제공하고 사용 역할을 분명하게 만들어 줍니다. Model 을 직접 다루게 되면 수행하고자 하는 business logic 과 추가로 필요한 Side effect 의 구현이 혼재되어 해당 Model 의 의도를 파악하기 어렵고 유지보수하기 어렵게 만듭니다.
 
 ##### Reference
 
 - [MVVM Model](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#model)
+- [Ktor Client](https://ktor.io/docs/create-client.html)
+- [Room](https://developer.android.com/training/data-storage/room)
+- [Side effect](https://en.wikipedia.org/wiki/Side_effect_(computer_science))
 
 ## ViewModel
 
