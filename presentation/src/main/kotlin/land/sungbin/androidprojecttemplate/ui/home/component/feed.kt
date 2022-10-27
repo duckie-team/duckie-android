@@ -303,7 +303,6 @@ private fun BasicFeed(
                     checked = isHearted,
                     text = heartCount.toUnitString(),
                     onToggle = {
-                        Log.d("클릭된거", "$it")
                         onClickHeartIcon(feedId, it)
                     },
                 )
