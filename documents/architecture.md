@@ -142,15 +142,13 @@ interface CatRepository {
 }
 ```
 
-또한 상황에 따라 사용해야 하는 Datasource 를 결정하여 제공하는 캡슐화를 담당합니다. Side effect 이 있어서는 안되며, 상황에 따라 사용할 Datasource 를 delegate 하는 역할만 수행해야 합니다.
+또한 상황에 따라 사용해야 하는 Datasource 를 결정하여 제공하는 캡슐화를 담당합니다.
 
-예를 들어 remote datasource 와 local datasoure 가 있다면 디바이스의 인터넷 여부에 따라 둘 중 하나를 결정하여 delegate 한 결과를 그대로 제공해야 합니다.
+예를 들어 remote datasource 와 local datasoure 가 있다면 디바이스의 인터넷 여부에 따라 둘 중 하나를 결정하여 delegate 한 결과를 제공합니다.
 
 #### Usecase
 
 Usecase 는 Repository 로 부터 받은 결과를 View 가 사용하기 편하게 변조하거나 UI State 로 mapping 하는 역할을 담당합니다. 즉, Repository 의 결과를 View 가 바로 사용할 수 있게 추상화합니다.
-
-Repository 와 달리 Usecase 는 Side effect 이 포함될 수 있습니다.
 
 Usecase 는 View 가 바로 사용할 수 있게 만드는 추상화 의외에도 한 번에 하나의 business logic 만 노출시켜 Usecase 를 사용하는 부분의 역할을 분명하게 나타낼 수 있습니다. 이러한 이유로 별도 Side effect 처리가 필요 없는 business logic 일 경우에도 Usecase 를 제공해야 합니다.
 
