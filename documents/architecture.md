@@ -162,8 +162,6 @@ Usecase 는 [Usecase 세션](#usecase)에서 설명하고 있듯이 Repository �
 ##### Reference
 
 - [MVVM Model](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#model)
-- [Ktor client](https://ktor.io/docs/create-client.html)
-- [Room](https://developer.android.com/training/data-storage/room)
 - [Side effect](https://en.wikipedia.org/wiki/Side_effect_(computer_science))
 
 ## ViewModel
@@ -258,7 +256,6 @@ UDF 는 상태를 다루는 방법론중 하나이고, 만족하기 위한 조�
 ##### Reference
 
 - [Data Binding](https://docs.angularjs.org/guide/databinding)
-
 - [Uni-Directional Architecture on Android Using Realm](https://academy.realm.io/posts/eric-maxwell-uni-directional-architecture-android-using-realm/)
 - [Flux](http://facebook.github.io/flux/)
 - [Redux](https://redux.js.org/)
