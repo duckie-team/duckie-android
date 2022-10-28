@@ -268,7 +268,7 @@ UDF 는 상태를 다루는 방법론중 하나이고, 만족하기 위한 조�
 
 최종적인 모습은 다음과 같습니다.
 
-<image alt="conclusion" src="art/conclusion.svg" width="70%" />
+<image alt="conclusion" src="art/conclusion.svg" width="50%" />
 
 이로부터 얻을 수 있는 대표적인 이점은 다음과 같습니다.
 
