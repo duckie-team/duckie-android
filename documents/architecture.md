@@ -16,6 +16,7 @@
 이 제안서에서는 정확한 의미 전달을 위해 해당 문맥에서 중요한 영문은 영문 그대로 표시합니다.
 
 - 컴포저블 → Composable
+- 컴포지션 → Composition
 - 리포지토리 → Repository
 - 유즈케이스 → Usecase
 - ... 등등
@@ -203,9 +204,9 @@ Jetpack Compose 에서 모든 상태는 반응형입니다. 즉, configuration �
 
 Jetpack Compose 에서 모든 상태는 Snapshot System 에 의해 관리되며, Snapshot System 은 반응형 프로그래밍으로 개발됐습니다.
 
-Jetpack Compose 에서 현재 configuration 을 얻어오는 수단인 `LocalConfiguration` 역시 Snapshot System 에 의해 관리되기 때문에 configuration change 가 일어나면 configuration 에 영향을 받는 컴포저블들이 새로운 configuration 에 맞게 리컴포지션됩니다.
+Jetpack Compose 에서 현재 configuration 을 얻어오는 수단인 `LocalConfiguration` 역시 Snapshot System 에 의해 관리되기 때문에 configuration change 가 일어나면 configuration 에 영향을 받는 Composable 들이 새로운 configuration 에 맞게 Recomposition 됩니다.
 
-예를 들어 locale 이 변경됐다면 `stringResource` 을 사용중인 컴포저블들이 새로운 locale 에 맞게 리컴포지션되고, orientation 에 따라 레이아웃을 동적으로 그리는 컴포저블이 있다면 새로운 orientation 에 맞게 레이아웃을 다시 그립니다(리컴포지션을 수행합니다).
+예를 들어 locale 이 변경됐다면 `stringResource` 을 사용중인 Composable 들이 새로운 locale 에 맞게 Recomposition 되고, orientation 에 따라 레이아웃을 동적으로 그리는 Composable 이 있다면 새로운 orientation 에 맞게 레이아웃을 다시 그립니다(Recomposition 을 수행합니다).
 
 Jetpack Compose 를 사용하지 않는 안드로이드에서는 configuration change 를 대응하기 위해 Activity 를 recreation 하여 시스템이 자체적으로 새로운 configuration 에 맞게 처리하도록 해야 했습니다. 하지만 이렇듯 Jetpack Compose 를 사용하는 안드로이드는 configuration change 가 개발자의 수고 없이 반응형으로 처리되므로 Activity 의 recreation 을 필요로 하지 않습니다.
 
