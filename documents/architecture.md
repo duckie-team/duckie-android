@@ -48,10 +48,8 @@
 7. [Two-way binding](#two-way-binding)
    1. [참고 자료](#reference-6)	
 8. [UDF](#unidirectional-data-flow)
-   1. [Flux](#flux)
-   2. [Redux](#redux)
-   3. [Model-View-Intent](#model-view-intent)
-   4. [참고 자료](#reference-7)
+   1. [Why?](#why-3)
+   2. [참고 자료](#reference-7)
 9. [결론](#conclusion)
 
 ## Basic
@@ -234,17 +232,34 @@ Two-way binding 은 Model 의 상태를 변화시키는 출처에 제한을 두�
 
 ## Unidirectional Data Flow
 
-#### Flux
+Unidirectional Data Flow, 줄여서 UDF 는 One-way binding 이라고도 불리며, Model 의 상태를 변화시키는 출처를 단 한 곳으로 제안합니다. 따라서 Model 에서만 View 의 상태를 변화시키는 형태가 됩니다.
 
-#### Redux
+![one-way-binding](art/one-way-binding.svg)
 
-#### Model-View-Intent
+UDF 를 달성하기 위해선 다음과 같은 조건이 필요합니다.
+
+- 상태가 불변으로 관리돼야 합니다.
+- 상태를 변경하는 API 가 ViewModel 에 은닉돼야 합니다. 
+- 상태의 변경이 한 곳에서만 진행돼야 합니다.
+
+위 조건을 모두 지키지 않으면 상태를 어떠한 곳에서든 변경할 수 있으므로 UDF 에 적합하지 않고, 만약 이를 모두 지킨다면 UDF 라고 볼 수 있습니다.
+
+UDF 를 구현하는 대표적인 방법으론 Flux, Redux, Model-View-Intent 가 있습니다. 덕키 아키텍처는 사전에 정의된 구현법을 사용하는게 아닌, UDF 조건에 맞춰 직접 개발합니다.
+
+####  Why
+
+> 덕키 아키텍처는 사전에 정의된 구현법을 사용하는게 아닌, UDF 조건에 맞춰 직접 개발합니다.
+
+UDF 는 상태를 다루는 방법론중 하나이고, 만족하기 위한 조건이 어렵지 않습니다. UDF 만족을 위해 이미 개발된 라이브러리를 그대로 사용하는건 과한 리소스일 수 있으며, 충분한 메리트가 존재하지 않습니다.
 
 ##### Reference
 
 - [Data Binding](https://docs.angularjs.org/guide/databinding)
 
 - [Uni-Directional Architecture on Android Using Realm](https://academy.realm.io/posts/eric-maxwell-uni-directional-architecture-android-using-realm/)
+- [Flux](http://facebook.github.io/flux/)
+- [Redux](https://redux.js.org/)
+- [Model-View-Intent](https://hannesdorfmann.com/android/mosby3-mvi-1/)
 
 ## Conclusion
 
