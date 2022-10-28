@@ -255,7 +255,6 @@ UDF 는 상태를 다루는 방법론중 하나이고, 만족하기 위한 조�
 
 ##### Reference
 
-- [Data Binding](https://docs.angularjs.org/guide/databinding)
 - [Uni-Directional Architecture on Android Using Realm](https://academy.realm.io/posts/eric-maxwell-uni-directional-architecture-android-using-realm/)
 - [Flux](http://facebook.github.io/flux/)
 - [Redux](https://redux.js.org/)
