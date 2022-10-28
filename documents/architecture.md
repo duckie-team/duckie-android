@@ -221,7 +221,7 @@ Jetpack Compose 를 사용하지 않는 안드로이드에서는 configuration c
 
 Two-way binding 은 Model 의 상태를 변화시키는 출처에 제한을 두지 않습니다. 따라서 Model 에서 View 의 상태를 변화시킬 수 있고, View 에서도 Model 의 상태를 변화시킬 수 있습니다.
 
-![two-way-binding](art/two-way-binding.svg)
+<image alt="two-way-binding" src="art/two-way-binding.svg" width="70%" />
 
 이 방식을 사용하면 개발자의 수고 없이 View 와 Model 간의 상태가 항상 동기화된다는 장점이 있지만, 상태가 mutable 하고 상태의 변경이 여러 곳에서 발생할 수 있어서 코드의 예측과 디버깅을 어렵게 만든다는 단점이 있습니다. 이러한 단점이 있어서 이 아키텍처에서는 UDF 를 사용할 것을 제안합니다.
 
@@ -233,7 +233,7 @@ Two-way binding 은 Model 의 상태를 변화시키는 출처에 제한을 두�
 
 Unidirectional Data Flow, 줄여서 UDF 는 One-way binding 이라고도 불리며, Model 의 상태를 변화시키는 출처를 단 한 곳으로 제안합니다. 따라서 Model 에서만 View 의 상태를 변화시키는 형태가 됩니다.
 
-![one-way-binding](art/one-way-binding.svg)
+<image alt="one-way-binding" src="art/one-way-binding.svg" width="70%" />
 
 UDF 를 달성하기 위해선 다음과 같은 조건이 필요합니다.
 
