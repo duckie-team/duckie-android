@@ -85,7 +85,7 @@
 
 View 는 Composable 을 통해 사용자와 상호작용을 담당합니다. 사용자와 상호작용 의외의 것은 View 가 알면 안됩니다. 예를 들어 business logic 은 View 가 절대 알아선 안됩니다. 이는 View 에 과한 역할을 부여합니다.
 
-View 는 Presenter 계층에 포함될 수 있습니다.
+View 는 Presentation 계층에 포함될 수 있습니다.
 
 #### Why
 
@@ -167,6 +167,8 @@ Usecase 는 Usecase 세션에서 설명하고 있듯이 Repository 의 결과로
 ## ViewModel
 
 ViewModel 은 View 와 Model 을 이어주는 중개자 역할을 담당합니다. View 에서 특정 Model 을 표시하는데 필요한 상태(ex_UI State... etc)들을 저장하고, Usecase 를 통해 특정 상태를 업데이트할 수 있습니다.
+
+ViewModel 은 Presentation 계층에 포함될 수 있습니다.
 
 #### Data binding
 
