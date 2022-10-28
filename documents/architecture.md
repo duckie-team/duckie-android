@@ -173,7 +173,7 @@ ViewModel 은 View 와 Model 을 이어주는 중개자 역할을 담당합니�
 
 #### Data binding
 
-Data binding 은 View 와 ViewModel 간에 상태를 동기화하는 역할을 담당합니다. One-way binding 과 Two-way binding 으로 구현될 수 있으며, 이 제안서에서는 One-way binding, 즉 Unidirectional Data Flow 를 사용합니다.
+Data binding 은 View 와 Model 간에 상태를 동기화하는 역할을 담당합니다. One-way binding 과 Two-way binding 으로 구현될 수 있으며, 이 제안서에서는 One-way binding, 즉 Unidirectional Data Flow 를 사용합니다.
 
 자세한 내용은 각각 세부 파트를 참고해 주세요.
 
@@ -220,7 +220,15 @@ Jetpack Compose 를 사용하지 않는 안드로이드에서는 configuration c
 
 ## Two-way binding
 
+Two-way binding 은 Model 의 상태를 변화시키는 출처에 제한을 두지 않습니다. 따라서 Model 에서 View 의 상태를 변화시킬 수 있고, View 에서도 Model 의 상태를 변화시킬 수 있습니다.
+
+![two-way-binding](art/two-way-binding.svg)
+
+이 방식을 사용하면 개발자의 수고 없이 View 와 Model 간의 상태가 항상 동기화된다는 장점이 있지만, 상태가 mutation 하고 상태의 변경이 여러 곳에서 발생할 수 있어서 코드의 예측과 디버깅을 어렵게 만든다는 단점이 있습니다.
+
 #### Reference
+
+- [Data Binding](https://docs.angularjs.org/guide/databinding)
 
 ## Unidirectional Data Flow
 
@@ -231,6 +239,10 @@ Jetpack Compose 를 사용하지 않는 안드로이드에서는 configuration c
 #### Model-View-Intent
 
 ##### Reference
+
+- [Data Binding](https://docs.angularjs.org/guide/databinding)
+
+- [Uni-Directional Architecture on Android Using Realm](https://academy.realm.io/posts/eric-maxwell-uni-directional-architecture-android-using-realm/)
 
 ## Conclusion
 
