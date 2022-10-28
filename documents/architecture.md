@@ -214,7 +214,7 @@ Jetpack Compose 를 사용하지 않는 안드로이드에서는 configuration c
 #### Reference
 
 - [Reactive programming](https://en.wikipedia.org/wiki/Reactive_programming)
-- [Jetpack Compose Snapshot](https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/runtime/runtime/src/commonMain/kotlin/androidx/compose/runtime/snapshots/Snapshot.kt)
+- [Jetpack Compose Snapshot System](https://dev.to/zachklipp/introduction-to-the-compose-snapshot-system-19cn)
 - [With Compose, the UI updates automatically (with some exceptions) without effort from the developer.](https://twitter.com/JordiSaumell1/status/1585205514824077312?s=20&t=Jdy6TsjAYVY9qcy1f3SRhA)
 - [The ideal solution is for your Activity to handle all config changes (rather than recreating)](https://twitter.com/chrisbanes/status/1395108877251788800?s=20&t=VbP3J6l4I8VHCjzeyAOWEQ)
 
