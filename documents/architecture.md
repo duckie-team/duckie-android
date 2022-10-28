@@ -201,7 +201,20 @@ Jetpack Compose 에서 모든 상태는 반응형입니다. 즉, configuration �
 
 ## Reactive Programming in Jetpack Compose
 
+> **Note**: 이 파트는 덕키 아키텍처의 내용이 아닌, AAC ViewModel 세션을 보충하기 위한 파트입니다.
+
+Jetpack Compose 에서 모든 상태는 Snapshot System 에 의해 관리되며, Snapshot System 은 반응형 프로그래밍으로 개발됐습니다.
+
+Jetpack Compose 에서 현재 configuration 을 얻어오는 수단인 LocalConfiguration 역시 Snapshot System 에 의해 관리되기 때문에 configuration change 가 일어나면 configuration 에 영향을 받는 컴포저블들이 새로운 configuration 에 맞게 리컴포지션됩니다.
+
+예를 들어 locale 이 변경됐다면 stringResources 을 사용중인 컴포저블들이 새로운 locale 에 맞게 리컴포지션되고, orientation 에 따라 레이아웃을 동적으로 그리는 컴포저블이 있다면 새로운 orientation 에 맞게 레이아웃을 다시 그립니다(리컴포지션을 수행합니다).
+
+Jetpack Compose 를 사용하지 않는 안드로이드에서는 configuration change 를 대응하기 위해 Activity 를 recreation 하여 시스템이 자체적으로 새로운 configuration 에 맞게 처리하도록 해야 했습니다. 하지만 이렇듯 Jetpack Compose 를 사용하는 안드로이드는 configuration change 가 개발자의 수고 없이 반응형으로 처리되므로 Activity 의 recreation 을 필요로 하지 않습니다.
+
 #### Reference
+
+- [Reactive programming](https://en.wikipedia.org/wiki/Reactive_programming)
+- [Jetpack Compose Snapshot](https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/runtime/runtime/src/commonMain/kotlin/androidx/compose/runtime/snapshots/Snapshot.kt)
 
 ## Two-way binding
 
