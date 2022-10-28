@@ -157,7 +157,7 @@ Usecase 는 View 가 바로 사용할 수 있게 만드는 추상화 의외에�
 
 > 독립적으로 바로 사용하는게 아닌 최종적으로 Usecase 를 통해 사용되야 합니다.
 
-Usecase 는 [Usecase 세션](#usecase)에서 설명하고 있듯이 Repository 의 결과로 부터 추상화를 제공하고 사용 역할을 분명하게 만들어 줍니다. Model 을 직접 다루게 되면 수행하고자 하는 business logic 과 추가로 필요한 Side effect 의 구현이 혼재되어 해당 Model 의 의도를 파악하기 어렵고 유지보수하기 어렵게 만들 수 있습니다.
+Usecase 는 Usecase 세션에서 설명하고 있듯이 Repository 의 결과로 부터 추상화를 제공하고 사용 역할을 분명하게 만들어 줍니다. Model 을 직접 다루게 되면 수행하고자 하는 business logic 과 추가로 필요한 Side effect 의 구현이 혼재되어 해당 Model 의 의도를 파악하기 어렵고 유지보수하기 어렵게 만들 수 있습니다.
 
 ##### Reference
 
