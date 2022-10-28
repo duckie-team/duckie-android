@@ -39,7 +39,7 @@
    1. [Why?](#why-1)
    2. [참고 자료](#reference-3)
 5. [ViewModel](#viewModel)
-   1. [DataBinding](#databinding)
+   1. [Data binding](#data-binding)
    2. [AAC ViewModel](#aac-viewmodel)
    3. [Why?](#why-2)
    4. [참고 자료](#reference-4)
@@ -56,7 +56,7 @@
 
 ## Basic
 
-이 제안서는 MVVM Pattern, Repository pattern, Clean Architecture, Data binding, Jetpack Compose, Android(lifecycle 및 configuration change) 의 개념을 토대로 고안되었습니다.
+이 제안서는 MVVM pattern, Repository pattern, Clean Architecture, Data binding, Jetpack Compose, Android(lifecycle 및 configuration change) 의 개념을 토대로 고안되었습니다.
 
 #### 주의
 
@@ -158,26 +158,46 @@ Usecase 는 View 가 바로 사용할 수 있게 만드는 추상화 의외에�
 
 > 독립적으로 바로 사용하는게 아닌 최종적으로 Usecase 를 통해 사용되야 합니다.
 
-Usecase 는 [Usecase 세션](#usecase)에서 설명하고 있듯이 Repository 의 결과로 부터 추상화를 제공하고 사용 역할을 분명하게 만들어 줍니다. Model 을 직접 다루게 되면 수행하고자 하는 business logic 과 추가로 필요한 Side effect 의 구현이 혼재되어 해당 Model 의 의도를 파악하기 어렵고 유지보수하기 어렵게 만듭니다.
+Usecase 는 [Usecase 세션](#usecase)에서 설명하고 있듯이 Repository 의 결과로 부터 추상화를 제공하고 사용 역할을 분명하게 만들어 줍니다. Model 을 직접 다루게 되면 수행하고자 하는 business logic 과 추가로 필요한 Side effect 의 구현이 혼재되어 해당 Model 의 의도를 파악하기 어렵고 유지보수하기 어렵게 만들 수 있습니다.
 
 ##### Reference
 
 - [MVVM Model](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#model)
-- [Ktor Client](https://ktor.io/docs/create-client.html)
+- [Ktor client](https://ktor.io/docs/create-client.html)
 - [Room](https://developer.android.com/training/data-storage/room)
 - [Side effect](https://en.wikipedia.org/wiki/Side_effect_(computer_science))
 
 ## ViewModel
 
-#### DataBinding
+ViewModel 은 View 와 Model 을 이어주는 중개자 역할을 담당합니다. View 에서 특정 Model 을 표시하는데 필요한 상태(ex_UI State... etc)들을 저장하고, Usecase 를 통해 특정 상태를 업데이트할 수 있습니다.
+
+#### Data binding
+
+Data binding 은 View 와 ViewModel 간에 상태를 동기화하는 역할을 담당합니다. One-way binding 과 Two-way binding 으로 구현될 수 있으며, 이 제안서에서는 One-way binding, 즉 Unidirectional Data Flow 를 사용합니다.
+
+자세한 내용은 각각 세부 파트를 참고해 주세요.
 
 #### AAC ViewModel
 
+우리는 그동안 안드로이드에서 AAC ViewModel 을 사용해 왔습니다. AAC ViewModel 을 통해 얻을 수 있었던 이점은 configuration change 로 부터 객체 재생성이 일어나지 않고, 그대로 보존된다는 점이였습니다. 따라서 AAC ViewModel 을 사용하여 객체를 저장하면, configuration change 에 의해 Activity 의 recreation 이 일어나도 객체들은 재생성되지 않고 오직 새로운 configuration 만 반영됩니다.
+
+Jetpack Compose 에서 모든 상태는 반응형입니다. 즉, configuration 또한 상태이기 때문에 우리가 직접 configuration change 를 신경쓰지 않아도 항상 최신 상태의 configuration 을 사용합니다. 따라서 Activity 의 configuration 제어권을 가져와서 configuration change 가 일어나도 Activity 의 recreation 이 일어나지 않게 하면, configuration change 가 일어나도 객체들이 재생성되지 않고 AAC ViewModel 을 사용한 것과 동일한 효과를 볼 수 있습니다. 자세한 내용은 "Reactive Programming in Jetpack Compose" 파트를 참고해 주세요.
+
+이러한 이유로 AAC ViewModel 을 사용하지 않고 ViewModel 자체만 사용합니다.
+
 #### Why
+
+> 이러한 이유로 AAC ViewModel 을 사용하지 않고 ViewModel 자체만 사용합니다.
+
+추가적인 이점을 서술합니다. AAC ViewModel 을 상속한 ViewModel 은 안드로이드에 의존적인 상태가 됩니다. 따라서 Unit Test 가 힘들어지며, 재사용에 제약이 있습니다.
+
+하지만 AAC ViewModel 이 아닌 일반 ViewModel 을 사용하게 되면 안드로이드에 의존적인 상태가 사라지므로 앞써 말한 단점들도 사라집니다.
 
 ##### Reference
 
 - [MVVM ViewModel](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/enterprise-application-patterns/mvvm#viewmodel)
+- [AAC ViewModel shouldn't be necessary with Compose.](https://twitter.com/JimSproch/status/1454620401934364679?s=20&t=a5EG8ssVDQfy7f1z8O7uzQ)
+- [I am glad that Compose was conceived in such a way that made the AAC ViewModel useless.](https://twitter.com/dbaroncellimob/status/1561037972526481411?s=20&t=a5EG8ssVDQfy7f1z8O7uzQ)
 
 ## Reactive Programming in Jetpack Compose
 
