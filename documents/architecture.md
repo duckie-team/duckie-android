@@ -220,6 +220,8 @@ Jetpack Compose 를 사용하지 않는 안드로이드에서는 configuration c
 
 ## Two-way binding
 
+> **Note**: 이 파트는 덕키 아키텍처의 내용이 아닌, UDF 의 이해를 돕기 위한 파트입니다.
+
 Two-way binding 은 Model 의 상태를 변화시키는 출처에 제한을 두지 않습니다. 따라서 Model 에서 View 의 상태를 변화시킬 수 있고, View 에서도 Model 의 상태를 변화시킬 수 있습니다.
 
 ![two-way-binding](art/two-way-binding.svg)
