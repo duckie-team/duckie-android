@@ -286,10 +286,26 @@ UDF 는 상태를 다루는 방법론중 하나이고, 만족하기 위한 조�
 
 # ApiLibrary
 
-이 제안서가 나타내는 아키텍처를 사용한 예제 프로젝트입니다.
+이 제안서가 나타내는 아키텍처를 사용한 예제 프로젝트입니다. 
+
+해당 프로젝트는 [duckie-team/ApiLibrary](https://github.com/duckie-team/ApiLibrary) 에서 확인할 수 있습니다.
 
 ### 목차
 
-미정
+1. [domain 계층](#domain-layer)
+   1. [Datasource](#datasource)
+   2. [Repository](#repository)
+   3. [Usecase](#usecase)
+2. [data 계층](#data-layer)
+   1. [Remote Datasource](#remote-datasource)
+   2. [Local Datasource](#local-datasource)
+   3. [RepositoryImpl](#repository)
+3. [app 계층](#app-layer)
+4. [presentation 계층](#presentation-layer)
+   1. [ViewModel](#mainviewmodel)
+   2. [Ui State](#apilibrarystate)
+5. [테스트](#test)
+   1. [data 계층 테스트](#data-layer-test)
+   2. [presentation 계층 테스트](#presentation-layer-test) 
 
 [⬆ 처음으로](#덕키-아키텍처-제안서)
