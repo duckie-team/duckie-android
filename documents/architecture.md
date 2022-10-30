@@ -293,9 +293,9 @@ UDF 는 상태를 다루는 방법론중 하나이고, 만족하기 위한 조�
 ### 목차
 
 1. [domain 계층](#domain-layer)
-   1. [Datasource](#datasource)
-   2. [Repository](#repository)
-   3. [Usecase](#usecase)
+   1. [Datasource](#datasource-1)
+   2. [Repository](#repository-1)
+   3. [Usecase](#usecase-1)
 2. [data 계층](#data-layer)
    1. [Remote Datasource](#remote-datasource)
    2. [Local Datasource](#local-datasource)
@@ -305,8 +305,8 @@ UDF 는 상태를 다루는 방법론중 하나이고, 만족하기 위한 조�
    1. [ViewModel](#mainviewmodel)
    2. [Ui State](#apilibrarystate)
 5. [테스트](#test)
-   1. [data 계층 테스트](#data-layer-test)
-   2. [presentation 계층 테스트](#presentation-layer-test) 
+   1. [data 계층 테스트](#data-layer-1)
+   2. [presentation 계층 테스트](#presentation-layer-1) 
 
 [⬆ 처음으로](#덕키-아키텍처-제안서)
 
@@ -394,3 +394,5 @@ data 계층에서는 unit test 를 통해 Remote Datasource 의 테스트를 진
 #### Presentation Layer
 
 presentation 계층에서는 unit test 를 통해 MainViewModel 의 테스트를 진행하고 있습니다. ViewModel 의 Ui State 가 의도한대로 잘 흘러가는지를 중점으로 테스트 합니다.
+
+[⬆ 처음으로](#덕키-아키텍처-제안서)
