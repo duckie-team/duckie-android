@@ -7,7 +7,7 @@ internal data class DealReviewData(
     val feedId: String? = null,
     val isDirect: Boolean? = null,
     val review: Int? = null,
-    val likeReason: List<Int>? = null,
-    val dislikeReason: List<Int>? = null,
+    val likeReasons: List<Int>? = null,
+    val dislikeReasons: List<Int>? = null,
     val etc: String? = null,
 )

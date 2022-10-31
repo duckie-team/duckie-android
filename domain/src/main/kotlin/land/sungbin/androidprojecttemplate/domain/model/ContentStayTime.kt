@@ -3,13 +3,17 @@ package land.sungbin.androidprojecttemplate.domain.model
 import androidx.annotation.IntRange
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Categories
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
+import land.sungbin.androidprojecttemplate.domain.model.util.requireRange
 import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 
 /**
  * 유저가 특정 컨텐츠를 보고 있는 시간 모델
  *
  * 모든 시간의 기준은 초를 사용합니다.
+ * 각 필드별 업데이트된 값만 새로 받기 위해 모든 필드는
+ * nullable 입니다. 단, 적어도 한 필드는 값이 있어야 합니다.
  *
  * @param userId [유저 아이디][User.nickname]
  * @param categories 각각 카테고리별 머문 시간.
@@ -20,12 +24,13 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * @param dm DM 화면에 머문 시간
  * @param notification 알림 화면에 머문 시간
  */
+@Unsupported
 data class ContentStayTime(
     val userId: String,
-    val categories: List<Int>,
-    @IntRange(from = 0) val search: Int,
-    @IntRange(from = 0) val dm: Int,
-    @IntRange(from = 0) val notification: Int,
+    val categories: List<Int?>,
+    @IntRange(from = 0) val search: Int? = null,
+    @IntRange(from = 0) val dm: Int? = null,
+    @IntRange(from = 0) val notification: Int? = null,
 ) {
     init {
         requireInput(
@@ -38,20 +43,45 @@ data class ContentStayTime(
             field = "categories",
             value = categories,
         )
-        requireSize(
-            min = 0,
-            field = "search",
-            value = search,
-        )
-        requireSize(
-            min = 0,
-            field = "dm",
-            value = dm,
-        )
-        requireSize(
-            min = 0,
-            field = "notification",
-            value = notification,
-        )
+        if (
+            categories.all { category ->
+                category == null
+            } &&
+            search == null &&
+            dm == null &&
+            notification == null
+        ) {
+            throw IllegalArgumentException("At least one field must be not null.")
+        }
+        categories.forEachIndexed { index, time ->
+            if (time != null) {
+                requireRange(
+                    min = 0,
+                    field = "categories[$index] (${Category.values()[index].name})",
+                    value = time,
+                )
+            }
+        }
+        if (search != null) {
+            requireRange(
+                min = 0,
+                field = "search",
+                value = search,
+            )
+        }
+        if (dm != null) {
+            requireRange(
+                min = 0,
+                field = "dm",
+                value = dm,
+            )
+        }
+        if (notification != null) {
+            requireRange(
+                min = 0,
+                field = "notification",
+                value = notification,
+            )
+        }
     }
 }

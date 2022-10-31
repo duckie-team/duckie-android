@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package land.sungbin.androidprojecttemplate.domain.model.constraint
 
 /** 유저 배지 */

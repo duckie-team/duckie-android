@@ -1,4 +1,7 @@
-@file:Suppress("ReplaceGetOrSet")
+@file:Suppress(
+    "ReplaceGetOrSet",
+    "KDocFields",
+)
 
 package land.sungbin.androidprojecttemplate.data.mapper
 
@@ -22,28 +25,28 @@ import land.sungbin.androidprojecttemplate.data.model.common.ContentData
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
-import land.sungbin.androidprojecttemplate.domain.model.ChatRoomType
-import land.sungbin.androidprojecttemplate.domain.model.ChatType
 import land.sungbin.androidprojecttemplate.domain.model.Comment
 import land.sungbin.androidprojecttemplate.domain.model.ContentStayTime
 import land.sungbin.androidprojecttemplate.domain.model.DealReview
-import land.sungbin.androidprojecttemplate.domain.model.DealState
-import land.sungbin.androidprojecttemplate.domain.model.DislikeReason
 import land.sungbin.androidprojecttemplate.domain.model.DuckFeedCoreInformation
 import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.FeedScore
-import land.sungbin.androidprojecttemplate.domain.model.FeedType
 import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
-import land.sungbin.androidprojecttemplate.domain.model.HeartTarget
-import land.sungbin.androidprojecttemplate.domain.model.LikeReason
 import land.sungbin.androidprojecttemplate.domain.model.Report
-import land.sungbin.androidprojecttemplate.domain.model.Review
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badge
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.ChatRoomType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.ChatType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
+import land.sungbin.androidprojecttemplate.domain.model.constraint.DislikeReason
+import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
+import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 
 private fun ContentData.toDomain() = Content(
     text = text.unwrap(
@@ -62,17 +65,20 @@ private fun String.toDate() =
             field = "date",
         )
 
-private fun DuckFeedCoreInformationData.toDomain() = DuckFeedCoreInformation(
-    images = images.unwrap(
-        field = "images",
-    ),
-    title = title.unwrap(
-        field = "title",
-    ),
-    price = price.unwrap(
-        field = "price",
-    ),
-)
+private fun DuckFeedCoreInformationData.toDomain(): DuckFeedCoreInformation {
+    val (image, title, price) = this
+    return DuckFeedCoreInformation(
+        image = image.unwrap(
+            field = "image",
+        ),
+        title = title.unwrap(
+            field = "title",
+        ),
+        price = price.unwrap(
+            field = "price",
+        ).toInt(),
+    )
+}
 
 internal fun ChatData.toDomain() = Chat(
     id = id.unwrap(
@@ -101,9 +107,10 @@ internal fun ChatData.toDomain() = Chat(
     sentAt = sentAt.unwrap(
         field = "sentAt",
     ).toDate(),
-    duckFeedData = duckFeedData?.toDomain(),
+    duckFeedData = duckFeedDatas?.toDomain(),
 )
 
+@Unsupported
 internal fun ChatReadData.toDomain() = ChatRead(
     chatRoomId = chatRoomId.unwrap(
         field = "chatRoomId",
@@ -129,6 +136,9 @@ internal fun ChatRoomData.toDomain() = ChatRoom(
     name = name.unwrap(
         field = "name",
     ),
+    ownerId = ownerId.unwrap(
+        field = "ownerId",
+    ),
     categories = categories?.map { categoryIndex ->
         Category.values()[categoryIndex]
     },
@@ -140,8 +150,11 @@ internal fun CommentData.toDomain() = Comment(
         field = "id",
     ),
     parentId = parentId,
-    userId = userId.unwrap(
+    ownerId = ownerId.unwrap(
         field = "userId",
+    ),
+    feedId = feedId.unwrap(
+        field = "feedId",
     ),
     content = content.unwrap(
         field = "content",
@@ -151,8 +164,9 @@ internal fun CommentData.toDomain() = Comment(
     ).toDate(),
 )
 
+@Unsupported
 internal fun ContentStayTimeData.toDomain() = ContentStayTime(
-    userId = userId.unwrap(
+    userId = user_id.unwrap(
         field = "userId",
     ),
     categories = categories.unwrap(
@@ -190,12 +204,12 @@ internal fun DealReviewData.toDomain() = DealReview(
             field = "review",
         )
     ),
-    likeReason = likeReason.unwrap(
+    likeReasons = likeReasons.unwrap(
         field = "likeReason",
     ).map { reasonIndex ->
         LikeReason.values()[reasonIndex]
     },
-    dislikeReason = dislikeReason.unwrap(
+    dislikeReasons = dislikeReasons.unwrap(
         field = "dislikeReason",
     ).map { reasonIndex ->
         DislikeReason.values()[reasonIndex]
@@ -209,7 +223,7 @@ internal fun FeedData.toDomain() = Feed(
     id = id.unwrap(
         field = "id",
     ),
-    writerId = writerId.unwrap(
+    writerId = writer_id.unwrap(
         field = "writerId",
     ),
     type = FeedType.values().get(
@@ -217,10 +231,10 @@ internal fun FeedData.toDomain() = Feed(
             field = "type",
         )
     ),
-    isDeleted = isDeleted.unwrap(
+    isDeleted = is_delete.unwrap(
         field = "isDeleted",
     ),
-    isHidden = isHidden.unwrap(
+    isHidden = is_hidden.unwrap(
         field = "isHidden",
     ),
     content = content.unwrap(
@@ -231,27 +245,30 @@ internal fun FeedData.toDomain() = Feed(
     ).map { categoryIndex ->
         Category.values()[categoryIndex]
     },
-    createdAt = createdAt.unwrap(
+    createdAt = create_at.unwrap(
         field = "createdAt",
     ).toDate(),
     title = title,
     price = price,
+    pushCount = push_count,
+    latestPushAt = lastest_push_at,
     location = location,
-    isDirectDealing = isDirectDealing,
+    isDirectDealing = is_direct_dealing,
     parcelable = parcelable,
-    dealState = dealState?.let { stateIndex ->
+    dealState = deal_state?.let { stateIndex ->
         DealState.values()[stateIndex]
     },
 )
 
+@Unsupported
 internal fun FeedScoreData.toDomain() = FeedScore(
-    userId = userId.unwrap(
+    userId = user_id.unwrap(
         field = "userId",
     ),
-    feedId = feedId.unwrap(
+    feedId = feed_id.unwrap(
         field = "feedId",
     ),
-    stayTime = stayTime.unwrap(
+    stayTime = stay_time.unwrap(
         field = "stayTime",
     ),
     score = score.unwrap(
@@ -260,7 +277,7 @@ internal fun FeedScoreData.toDomain() = FeedScore(
 )
 
 internal fun FollowData.toDomain() = Follow(
-    accountId = accountId.unwrap(
+    userId = account_id.unwrap(
         field = "accountId",
     ),
     followings = followings.unwrap(
@@ -274,16 +291,15 @@ internal fun FollowData.toDomain() = Follow(
     ),
 )
 
+@Unsupported
 internal fun HeartData.toDomain() = Heart(
-    type = HeartTarget.values().get(
-        type.unwrap(
-            field = "type",
-        )
+    target = type.unwrap(
+        field = "type",
     ),
-    feedId = feedId.unwrap(
+    targetId = target_id.unwrap(
         field = "feedId",
     ),
-    userId = userId.unwrap(
+    userId = user_id.unwrap(
         field = "userId",
     ),
 )
@@ -298,7 +314,7 @@ internal fun ReportData.toDomain() = Report(
     targetId = targetId.unwrap(
         field = "targetId",
     ),
-    targetFeedId = targetFeedId,
+    targetContentId = targetFeedId,
     message = message.unwrap(
         field = "message",
     ),
@@ -315,7 +331,7 @@ internal fun SaleRequestData.toDomain() = SaleRequest(
         field = "feedId",
     ),
     ownerId = ownerId.unwrap(
-        field = "ownerId",
+        field = "ownerId"
     ),
     requesterId = requesterId.unwrap(
         field = "requesterId",
@@ -326,41 +342,42 @@ internal fun SaleRequestData.toDomain() = SaleRequest(
 )
 
 internal fun UserData.toDomain() = User(
-    nickname = nickname.unwrap(
+    nickname = nick_name.unwrap(
         field = "nickname",
     ),
-    accountAvailable = accountAvailable.unwrap(
+    accountAvailable = account_enabled.unwrap(
         field = "accountAvailable",
     ),
-    profileUrl = profileUrl,
+    profileUrl = profile_url,
+    tier = tier,
     badges = badges.unwrap(
         field = "badges",
     ).map { badgeIndex ->
         Badge.values()[badgeIndex]
     },
-    likeCategories = likeCategories.unwrap(
+    likeCategories = like_categories.unwrap(
         field = "likeCategories",
     ).map { categoryIndex ->
         Category.values()[categoryIndex]
     },
-    interestedTags = interestedTags.unwrap(
+    interestedTags = interested_tags.unwrap(
         field = "interestedTags",
     ),
-    nonInterestedTags = nonInterestedTags.unwrap(
+    nonInterestedTags = non_interested_tags.unwrap(
         field = "nonInterestedTags",
     ),
-    notificationTags = notificationTags.unwrap(
+    notificationTags = notification_tags.unwrap(
         field = "notificationTags",
     ),
-    tradePreferenceTags = tradePreferenceTags.unwrap(
+    tradePreferenceTags = trade_preference_tags.unwrap(
         field = "tradePreferenceTags",
     ),
     collections = collections.unwrap(
         field = "collections",
     ),
-    createdAt = createdAt.unwrap(
+    createdAt = create_at.unwrap(
         field = "createdAt",
     ).toDate(),
-    deletedAt = deletedAt?.toDate(),
-    bannedAt = bannedAt?.toDate(),
+    deletedAt = delete_at?.toDate(),
+    bannedAt = banned_at?.toDate(),
 )

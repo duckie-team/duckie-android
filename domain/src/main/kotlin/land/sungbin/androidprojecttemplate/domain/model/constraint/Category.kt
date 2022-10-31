@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package land.sungbin.androidprojecttemplate.domain.model.constraint
 
 /** 덕질 분야 */
