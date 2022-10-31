@@ -1,0 +1,3 @@
+interface CatRepository {
+    fun giveLove()
+}
