@@ -113,7 +113,7 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
             1 -> postSideEffect(HomeSideEffect.NavigateToWriteDuckDeal)
         }
     }
-
+/*
     fun onHeartClick(
         feedId: String,
         isHearted: Boolean,
@@ -141,7 +141,7 @@ class HomeViewModel : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
     fun onCommentClick() = intent {
 
     }
-
+*/
     fun onFabClick(expanded: Boolean) = intent {
         reduce {
             state.copy(fabExpanded = expanded.not())

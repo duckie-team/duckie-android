@@ -122,8 +122,8 @@ internal fun HomeScreen(
                         viewModel.changeSelectedUser(selectedUser)
                         coroutineScope.launch { moreBottomSheetState.show() }
                     },
-                    onClickHeartIcon = viewModel::onHeartClick,
-                    onClickCommentIcon = viewModel::onCommentClick,
+                    onClickHeartIcon = { _, _ -> }, //viewModel::onHeartClick,
+                    onClickCommentIcon = {}, //viewModel::onCommentClick,
                     onClickTag = viewModel::deleteTag,
                     onFabMenuClick = viewModel::onFabMenuClick,
                     onRefresh = viewModel::refresh,
