@@ -23,6 +23,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * @param id 피드 고유 아이디
  * @param writerId 작성자 아이디
  * @param type 피드 타입
+ * @param isHearted 사용자의 좋아요 여부
  * @param isDeleted 삭제됐는지 여부
  * @param isHidden 숨김처리 됐는지 여부
  * @param content 피드 내용
@@ -36,20 +37,22 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
  * @param isDirectDealing 직거래 여부
  * @param parcelable 택배 거래 여부
  * @param dealState 거래 상태
+ * @param hearts 좋아요 목록
+ * @param comments 댓글 목록
  */
 data class Feed(
     @PK val id: String,
     @FK val writerId: String,
     val type: FeedType,
     val isDeleted: Boolean,
-    @Unsupported val isHidden: Boolean? = null,
+    @property:Unsupported val isHidden: Boolean? = null,
     val content: Content,
     @Size(min = 1) val categories: Categories,
     val createdAt: Date,
     val title: String?,
     val price: Int?,
-    @Unsupported val pushCount: Int? = null,
-    @Unsupported val latestPushAt: Date? = null,
+    @property:Unsupported val pushCount: Int? = null,
+    @property:Unsupported val latestPushAt: Date? = null,
     val location: String?,
     val isDirectDealing: Boolean?,
     val parcelable: Boolean?,
