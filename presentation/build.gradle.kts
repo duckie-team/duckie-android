@@ -82,7 +82,7 @@ dependencies {
     debugImplementation(Dependencies.Debug.LeakCanary)
     installDependencies(
         isSharedModule = false,
-        orbit = false,
+        orbit = true,
         hilt = true,
         compose = true,
         test = false
