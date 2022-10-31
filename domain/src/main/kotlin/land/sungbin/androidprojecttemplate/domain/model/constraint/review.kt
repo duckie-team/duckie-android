@@ -2,7 +2,20 @@
 
 package land.sungbin.androidprojecttemplate.domain.model.constraint
 
-/** 거래 상태 */
+/**
+ * 거래 상태
+ *
+ * @param index 실제 API 요청에 사용됩니다.
+ * 각각 리뷰 값은 서버에 [int][Int] 형식으로 저장되며, 이 값을 나타냅니다.
+ * @param description 해당 리뷰를 텍스트 형식으로 나타냅니다.
+ * presentation 에서 하드코딩을 막기 위함과 각각 리뷰 값 설명을 위해 추가됐습니다.
+ * presentation 에서는 아래와 같이 사용될 수 있습니다.
+ *
+ * ```kotlin
+ * val reviews = Review.values().map(Review::description)
+ * // 위 값으로 리뷰 아이템들을 구성하면 일일이 리뷰 값들을 하드코딩할 필요가 없습니다.
+ * ```
+ */
 enum class Review(
     val index: Int,
     val description: String,
@@ -11,7 +24,7 @@ enum class Review(
         index = 0,
         description = "아쉬워요",
     ),
-    Like(
+    Good(
         index = 1,
         description = "좋아요",
     ),
@@ -22,16 +35,17 @@ enum class Review(
 }
 
 /**
- * 사유 토큰
+ * 사유 토큰.
+ * 이 값은 domain 모듈에서만 assertion 용도로 사용됩니다.
  *
- * 사유마다 각각 사용 가능한 상황이 있기 때문에
- * 해당 상황을 구분하기 위해 사용됩니다.
+ * 사유마다 각각 사용 가능한 상황이 있기 때문에 해당 상황을
+ * 구분하기 위해 사용됩니다.
  *
  * @property All 구매자와 판매자 모두에게 해당합니다.
  * @property Buyer 구매자가 판매자에게 보내는 상황에 해당합니다.
  * @property Seller 판매자가 구매자에게 보내는 상황에 해당합니다.
  */
-enum class ReasonToken(
+internal enum class ReasonToken(
     val index: Int,
     val description: String,
 ) {
@@ -49,11 +63,26 @@ enum class ReasonToken(
     ),
 }
 
-/** 좋은 점 (사유) */
+/**
+ * 좋은 점 (사유)
+ *
+ * @param index 실제 API 요청에 사용됩니다.
+ * 각각 사유 값은 서버에 [int][Int] 형식으로 저장되며, 이 값을 나타냅니다.
+ * @param description 해당 사유를 텍스트 형식으로 나타냅니다.
+ * presentation 에서 하드코딩을 막기 위함과 각각 사유 값 설명을 위해 추가됐습니다.
+ * presentation 에서는 아래와 같이 사용될 수 있습니다.
+ *
+ * ```kotlin
+ * val likeReasons = LikeReason.values().map(LikeReason::description)
+ * // 위 값으로 사유 아이템들을 구성하면 일일이 사유 값들을 하드코딩할 필요가 없습니다.
+ * ```
+ * @param token **이 값은 domain 모듈에서만 assertion 용도로 사용됩니다.**
+ * 사유마다 각각 사용 가능한 상황이 있기 때문에 해당 상황을 구분하기 위해 사용됩니다.
+ */
 enum class LikeReason(
     val index: Int,
     val description: String,
-    val token: ReasonToken = ReasonToken.All,
+    internal val token: ReasonToken = ReasonToken.All,
 ) {
     KeepTime(
         index = 0,
@@ -89,11 +118,26 @@ enum class LikeReason(
     ),
 }
 
-/** 아쉬운 점 (사유) */
+/**
+ * 아쉬운 점 (사유)
+ *
+ * @param index 실제 API 요청에 사용됩니다.
+ * 각각 사유 값은 서버에 [int][Int] 형식으로 저장되며, 이 값을 나타냅니다.
+ * @param description 해당 사유를 텍스트 형식으로 나타냅니다.
+ * presentation 에서 하드코딩을 막기 위함과 각각 사유 값 설명을 위해 추가됐습니다.
+ * presentation 에서는 아래와 같이 사용될 수 있습니다.
+ *
+ * ```kotlin
+ * val dislikeReasons = DislikeReason.values().map(DislikeReason::description)
+ * // 위 값으로 사유 아이템들을 구성하면 일일이 사유 값들을 하드코딩할 필요가 없습니다.
+ * ```
+ * @param token **이 값은 domain 모듈에서만 assertion 용도로 사용됩니다.**
+ * 사유마다 각각 사용 가능한 상황이 있기 때문에 해당 상황을 구분하기 위해 사용됩니다.
+ */
 enum class DislikeReason(
     val index: Int,
     val description: String,
-    val token: ReasonToken = ReasonToken.All,
+    internal val token: ReasonToken = ReasonToken.All,
 ) {
     BreakTime(
         index = 0,

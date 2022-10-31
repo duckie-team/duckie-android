@@ -1,3 +1,6 @@
+@file:Suppress("KDocFields")
+@file:OptIn(Unsupported::class)
+
 package land.sungbin.androidprojecttemplate.data.mapper
 
 import java.text.SimpleDateFormat
@@ -7,10 +10,11 @@ import land.sungbin.androidprojecttemplate.data.model.ChatData
 import land.sungbin.androidprojecttemplate.data.model.ChatReadData
 import land.sungbin.androidprojecttemplate.data.model.ChatRoomData
 import land.sungbin.androidprojecttemplate.data.model.CommentData
+import land.sungbin.androidprojecttemplate.data.model.CommentHeartData
 import land.sungbin.androidprojecttemplate.data.model.ContentStayTimeData
 import land.sungbin.androidprojecttemplate.data.model.DealReviewData
-import land.sungbin.androidprojecttemplate.data.model.DuckFeedCoreInformationData
 import land.sungbin.androidprojecttemplate.data.model.FeedData
+import land.sungbin.androidprojecttemplate.data.model.FeedHeartData
 import land.sungbin.androidprojecttemplate.data.model.FeedScoreData
 import land.sungbin.androidprojecttemplate.data.model.FollowData
 import land.sungbin.androidprojecttemplate.data.model.HeartData
@@ -36,7 +40,10 @@ import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badge
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DislikeReason
+import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
+import land.sungbin.androidprojecttemplate.domain.model.util.NewField
+import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
 
 private fun Content.toData() = ContentData(
     text = text,
@@ -47,12 +54,13 @@ private fun Content.toData() = ContentData(
 private fun Date.toDataString() =
     SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.KOREA).format(this)
 
-private fun DuckFeedCoreInformation.toData() = DuckFeedCoreInformationData(
-    images = images,
-    title = title,
-    price = price,
+private fun DuckFeedCoreInformation.toData() = listOf(
+    image,
+    title,
+    price.toString(),
 )
 
+@OptIn(NewField::class)
 internal fun Chat.toData() = ChatData(
     id = id,
     chatRoomId = chatRoomId,
@@ -62,7 +70,7 @@ internal fun Chat.toData() = ChatData(
     isEdited = isEdited,
     content = content.toData(),
     sentAt = sentAt.toDataString(),
-    duckFeedData = duckFeedData?.toData(),
+    duckFeedDatas = duckFeedData?.toData(),
 )
 
 internal fun ChatRead.toData() = ChatReadData(
@@ -76,6 +84,7 @@ internal fun ChatRoom.toData() = ChatRoomData(
     type = type.index,
     coverImageUrl = coverImageUrl,
     name = name,
+    ownerId = ownerId,
     categories = categories?.map(Category::index),
     tags = tags,
 )
@@ -83,13 +92,14 @@ internal fun ChatRoom.toData() = ChatRoomData(
 internal fun Comment.toDat() = CommentData(
     id = id,
     parentId = parentId,
-    userId = ownerId,
+    ownerId = ownerId,
+    feedId = feedId,
     content = content.toData(),
     createdAt = createdAt.toDataString(),
 )
 
 internal fun ContentStayTime.toData() = ContentStayTimeData(
-    userId = userId,
+    user_id = userId,
     categories = categories,
     search = search,
     dm = dm,
@@ -103,55 +113,63 @@ internal fun DealReview.toData() = DealReviewData(
     feedId = feedId,
     isDirect = isDirect,
     review = review.index,
-    likeReason = likeReason.map(LikeReason::index),
-    dislikeReason = dislikeReason.map(DislikeReason::index),
+    likeReasons = likeReasons.map(LikeReason::index),
+    dislikeReasons = dislikeReasons.map(DislikeReason::index),
     etc = etc,
 )
 
 internal fun Feed.toData() = FeedData(
     id = id,
-    writerId = writerId,
+    writer_id = writerId,
     type = type.index,
-    isDeleted = isDeleted,
-    isHidden = isHidden,
+    is_delete = isDeleted,
+    is_hidden = isHidden,
     content = content.toData(),
     categories = categories.map(Category::index),
-    createdAt = createdAt.toDataString(),
+    create_at = createdAt.toDataString(),
     title = title,
     price = price,
-    pushCount = pushCount,
-    latestPushAt = latestPushAt,
+    push_count = pushCount,
+    lastest_push_at = latestPushAt,
     location = location,
-    isDirectDealing = isDirectDealing,
+    is_direct_dealing = isDirectDealing,
     parcelable = parcelable,
-    dealState = dealState?.index,
+    deal_state = dealState?.index,
 )
 
 internal fun FeedScore.toData() = FeedScoreData(
-    userId = userId,
-    feedId = feedId,
-    stayTime = stayTime,
+    user_id = userId,
+    feed_id = feedId,
+    stay_time = stayTime,
     score = score,
 )
 
 internal fun Follow.toData() = FollowData(
-    accountId = accountId,
+    account_id = userId,
     followings = followings,
     followers = followers,
     blocks = blocks,
 )
 
-internal fun Heart.toData() = HeartData(
-    type = type.index,
-    feedId = feedId,
-    userId = userId,
-)
+@OptIn(NewField::class)
+internal fun Heart.toData(): HeartData {
+    return when (target) {
+        HeartTarget.Feed -> FeedHeartData(
+            user_id = userId,
+            target_id = targetId,
+        )
+        HeartTarget.Comment -> CommentHeartData(
+            user_id = userId,
+            target_id = targetId,
+        )
+    }
+}
 
 internal fun Report.toData() = ReportData(
     id = id,
     reporterId = reporterId,
     targetId = targetId,
-    targetFeedId = targetFeedId,
+    targetFeedId = targetContentId,
     message = message,
     checked = checked,
 )
@@ -165,18 +183,18 @@ internal fun SaleRequest.toData() = SaleRequestData(
 )
 
 internal fun User.toData() = UserData(
-    nickname = nickname,
-    accountAvailable = accountAvailable,
-    profileUrl = profileUrl,
+    nick_name = nickname,
+    account_enabled = accountAvailable,
+    profile_url = profileUrl,
     tier = tier,
     badges = badges?.map(Badge::index),
-    likeCategories = likeCategories.map(Category::index),
-    interestedTags = interestedTags,
-    nonInterestedTags = nonInterestedTags,
-    notificationTags = notificationTags,
-    tradePreferenceTags = tradePreferenceTags,
+    like_categories = likeCategories.map(Category::index),
+    interested_tags = interestedTags,
+    non_interested_tags = nonInterestedTags,
+    notification_tags = notificationTags,
+    trade_preference_tags = tradePreferenceTags,
     collections = collections,
-    createdAt = createdAt.toDataString(),
-    deletedAt = deletedAt?.toDataString(),
-    bannedAt = bannedAt?.toDataString(),
+    create_at = createdAt.toDataString(),
+    delete_at = deletedAt?.toDataString(),
+    banned_at = bannedAt?.toDataString(),
 )

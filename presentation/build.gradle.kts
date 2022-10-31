@@ -14,6 +14,7 @@ plugins {
     id("com.google.android.gms.oss-licenses-plugin")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("name.remal.check-dependency-updates") version Versions.BuildUtil.CheckDependencyUpdates
+    id("kotlin-parcelize")
 }
 
 /*ruler {
@@ -74,7 +75,7 @@ dependencies {
         Dependencies.Analytics,
         Dependencies.Util.Erratum,
         Dependencies.Quack.components,
-        Dependencies.Orbit.Main,
+        Dependencies.Jetpack.Hilt,
     ).dependenciesFlatten()
     dependencies.forEach(::implementation)
 
