@@ -51,9 +51,9 @@ fun Feed.toNormalFeed() = FeedDTO.Normal(
     type = type,
     content = content,
     createdAt = createdAt,
-    isHearted = isHearted,
-    heartCount = heartCount,
-    commentCount = commentCount,
+    isHearted = false, //TODO
+    heartCount = 0,
+    commentCount = 0,
 )
 
 fun Feed.toDuckDealFeed() = FeedDTO.DuckDeal(
@@ -62,9 +62,9 @@ fun Feed.toDuckDealFeed() = FeedDTO.DuckDeal(
     type = type,
     content = content,
     createdAt = createdAt,
-    isHearted = isHearted,
-    heartCount = heartCount,
-    commentCount = commentCount,
+    isHearted = false, //TODO
+    heartCount = 0,
+    commentCount = 0,
     title = title!!,
     dealState = dealState!!,
     price = price!!,

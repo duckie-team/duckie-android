@@ -19,9 +19,6 @@ val dummyFeeds = listOf(
         type = FeedType.Normal,
         isDeleted = false,
         isHidden = false,
-        isHearted = false,
-        heartCount = 11,
-        commentCount = 10000,
         content = Content(
             text = "버즈 라이트이어 개봉 앞둔 기념!\n" +
                     "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
@@ -44,9 +41,6 @@ val dummyFeeds = listOf(
         type = FeedType.DuckDeal,
         isDeleted = false,
         isHidden = false,
-        isHearted = false,
-        heartCount = 12,
-        commentCount = 10000,
         content = Content(
             text = "버즈 라이트이어 개봉 앞둔 기념!\n" +
                     "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
@@ -72,9 +66,6 @@ val dummyFeeds = listOf(
         type = FeedType.DuckDeal,
         isDeleted = false,
         isHidden = false,
-        isHearted = false,
-        heartCount = 13,
-        commentCount = 10000,
         content = Content(
             text = "버즈 라이트이어 개봉 앞둔 기념!\n" +
                     "내 보물들 1일 1자랑 해야지ㅋㅋㅋ 개봉날 무조건\n" +
