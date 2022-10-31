@@ -38,6 +38,7 @@ object Dependencies {
 
     val Compose = listOf(
         "androidx.compose.material:material:${Versions.Compose.Main}",
+        "androidx.compose.runtime:runtime-livedata:${Versions.Compose.Main}",
         "androidx.activity:activity-compose:${Versions.Compose.Activity}",
         "com.github.skydoves:landscapist-coil:${Versions.Compose.Landscapist}",
         "com.google.accompanist:accompanist-placeholder:${Versions.Compose.Accompanist}",
@@ -104,5 +105,12 @@ object Dependencies {
             "androidx.compose.ui:ui-tooling:${Versions.Compose.Main}",
             "androidx.compose.ui:ui-tooling-preview:${Versions.Compose.Main}"
         )
+    }
+
+    object Quack {
+        const val components = "team.duckie.quack:quack-ui-components:${Versions.Quack.quack}"
+        const val lintCore = "team.duckie.quack:quack-lint-core:${Versions.Quack.quack}"
+        const val lintQuack = "team.duckie.quack:quack-lint-quack:${Versions.Quack.quack}"
+        const val lineCompose = "team.duckie.quack:quack-lint-compose:${Versions.Quack.quack}"
     }
 }
