@@ -38,6 +38,7 @@ class UpsertChatRoomUseCase(
                 ownerId = ownerId,
                 categories = null,
                 tags = null,
+                joinUsers = emptyList(),
             ),
         )
     }
