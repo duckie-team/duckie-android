@@ -27,6 +27,7 @@ class UpsertSaleRequestUseCase(
      */
     suspend operator fun invoke(
         @FK feedId: String,
+        @FK ownerId: String,
         @FK requesterId: String,
         result: Boolean,
     ) = runDuckApiCatching {
@@ -34,6 +35,7 @@ class UpsertSaleRequestUseCase(
             saleRequest = SaleRequest(
                 id = tuid(),
                 feedId = feedId,
+                ownerId = ownerId,
                 requesterId = requesterId,
                 result = result,
             ),
