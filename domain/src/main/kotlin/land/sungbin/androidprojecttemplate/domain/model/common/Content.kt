@@ -19,7 +19,7 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireSize
 data class Content(
     val text: String,
     @Size(min = 0, max = 5) val images: List<String>,
-    @Unsupported val video: String? = null,
+    @property:Unsupported val video: String? = null,
 ) {
     init {
         requireSize(

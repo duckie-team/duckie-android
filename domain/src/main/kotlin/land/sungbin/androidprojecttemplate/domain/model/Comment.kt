@@ -20,7 +20,8 @@ import land.sungbin.androidprojecttemplate.domain.model.util.requireInput
  */
 data class Comment(
     @PK val id: String,
-    @Unsupported @FK val parentId: String? = null,
+    @property:Unsupported
+    @FK val parentId: String? = null,
     @FK val ownerId: String,
     @FK val feedId: String,
     val content: Content,
