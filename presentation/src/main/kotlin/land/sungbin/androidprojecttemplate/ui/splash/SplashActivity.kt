@@ -11,6 +11,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
 
+    private val viewModel: SplashViewModel = SplashViewModel()
+
     @Inject
     lateinit var navigator: DuckieNavigator
 
@@ -25,6 +27,7 @@ class SplashActivity : ComponentActivity() {
     private fun initView() {
         setContent {
             SplashScreen(
+                viewModel = viewModel,
                 onCheckSession = {
                     when (userHolder.hasSession()) {
                         true -> navigator.navigateMainScreen(this, withFinish = true)

@@ -28,8 +28,8 @@ private const val SPLASH_DELAY = 1000L
 
 @Composable
 fun SplashScreen(
+    viewModel: SplashViewModel,
     onCheckSession: () -> Unit,
-    viewModel: SplashViewModel = SplashViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
