@@ -1,18 +1,8 @@
 package land.sungbin.androidprojecttemplate.ui.splash
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import land.sungbin.androidprojecttemplate.base.BaseViewModel
 
-@HiltViewModel
-class SplashViewModel @Inject constructor() : ViewModel() {
+class SplashViewModel : BaseViewModel<SplashPage, SplashSideEffect>(SplashPage.First) {
 
-    private val _currentPage: MutableLiveData<Int> = MutableLiveData()
-    val currentPage: LiveData<Int> = _currentPage
-
-    fun navigatePage(page: Int) {
-        _currentPage.value = page
-    }
+    fun navigatePage(page: SplashPage) = updateState { page }
 }
