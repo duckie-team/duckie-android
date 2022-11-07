@@ -4,13 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
 import dagger.hilt.android.AndroidEntryPoint
+import land.sungbin.androidprojecttemplate.constants.ApplicationConstant
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_DATA
 import land.sungbin.androidprojecttemplate.ui.DuckieTheme
 import land.sungbin.androidprojecttemplate.ui.component.gallery.ImageGalleryResponse
 import land.sungbin.androidprojecttemplate.ui.navigator.DuckieNavigator
-import land.sungbin.androidprojecttemplate.util.EventObserver
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -19,31 +19,41 @@ class OnboardActivity : ComponentActivity() {
     @Inject
     lateinit var navigator: DuckieNavigator
 
-    private val viewModel: OnboardViewModel by viewModels()
+    @Inject
+    lateinit var viewModel: OnboardViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
-        observeViewModel()
     }
 
     private fun initView() {
         setContent {
             DuckieTheme {
                 OnboardScreen(
-                    activity = this,
                     viewModel = viewModel,
-                    navigator = navigator,
                 )
             }
-        }
-    }
+            LaunchedEffect(key1 = viewModel.effect) {
+                viewModel.effect.collect { effect ->
+                    when (effect) {
+                        OnboardSideEffect.NavigateToLogin -> {
+                            navigator.navigateLoginScreen(this@OnboardActivity, true)
+                        }
 
-    private fun observeViewModel() {
-        with(viewModel) {
-            onClickComplete.observe(this@OnboardActivity, EventObserver {
-                navigator.navigateMainScreen(this@OnboardActivity, true)
-            })
+                        OnboardSideEffect.NavigateToGalley -> {
+                            navigator.navigateGalleryScreen(
+                                this@OnboardActivity,
+                                ApplicationConstant.IMAGE_SINGLE_TYPE
+                            )
+                        }
+
+                        OnboardSideEffect.NavigateToMain -> {
+                            navigator.navigateMainScreen(this@OnboardActivity, true)
+                        }
+                    }
+                }
+            }
         }
     }
 

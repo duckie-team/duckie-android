@@ -1,0 +1,42 @@
+package land.sungbin.androidprojecttemplate.ui.onboard
+
+import android.net.Uri
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import land.sungbin.androidprojecttemplate.base.ViewSideEffect
+import land.sungbin.androidprojecttemplate.base.ViewState
+import land.sungbin.androidprojecttemplate.data.domain.Category
+import land.sungbin.androidprojecttemplate.data.domain.Tag
+
+data class OnboardState(
+    val onboardState: OnboardPage = OnboardPage.Profile,
+    val profileModel: ProfileModel = ProfileModel(),
+    val categoriesModel: CategoriesModel = CategoriesModel(),
+    val tagModel: TagModel = TagModel(),
+) : ViewState {
+    data class ProfileModel(
+        val profileImage: Uri = Uri.EMPTY,
+        val nickname: String = "",
+    )
+
+    data class CategoriesModel(
+        val categories: PersistentList<Category> = emptyList<Category>().toPersistentList(),
+        val selectedCategories: MutableList<Category> = mutableListOf(),
+    )
+
+    data class TagModel(
+        val selectedTags: List<Tag> = emptyList(),
+    )
+}
+
+enum class OnboardPage {
+    Profile,
+    Categories,
+    Tag
+}
+
+sealed class OnboardSideEffect : ViewSideEffect {
+    object NavigateToLogin : OnboardSideEffect()
+    object NavigateToMain : OnboardSideEffect()
+    object NavigateToGalley : OnboardSideEffect()
+}
