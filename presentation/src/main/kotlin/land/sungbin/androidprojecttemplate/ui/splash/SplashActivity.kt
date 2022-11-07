@@ -26,8 +26,6 @@ class SplashActivity : ComponentActivity() {
 
     private fun initView() {
         setContent {
-            val state by viewModel.state.collectAsState()
-
             LaunchedEffect(Unit) {
                 delay(SPLASH_DELAY)
                 viewModel.navigatePage(SplashPage.Second)
@@ -36,7 +34,7 @@ class SplashActivity : ComponentActivity() {
             }
 
             SplashScreen(
-                state = state
+                viewModel = viewModel
             )
 
             LaunchedEffect(key1 = viewModel.effect) {

@@ -8,9 +8,11 @@ import javax.inject.Singleton
 @Singleton
 class SplashViewModel @Inject constructor(
     private val userHolder: UserHolder,
-) : BaseViewModel<SplashPage, SplashSideEffect>(SplashPage.First) {
+) : BaseViewModel<SplashState, SplashSideEffect>(SplashState()) {
 
-    fun navigatePage(page: SplashPage) = updateState { page }
+    fun navigatePage(page: SplashPage) = updateState {
+        copy(splashViewState = page)
+    }
 
     suspend fun onCheckSession() {
         when (userHolder.hasSession()) {
