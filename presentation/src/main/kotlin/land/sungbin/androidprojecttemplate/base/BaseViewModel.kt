@@ -12,11 +12,11 @@ abstract class BaseViewModel<S : ViewState, A : ViewSideEffect>(
     private val _state: MutableStateFlow<S> = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
-    private val currentState: S
-        get() = _state.value
-
     private val _effect: Channel<A> = Channel()
     val effect = _effect.receiveAsFlow()
+
+    protected val currentState: S
+        get() = _state.value
 
     protected fun updateState(reducer: S.() -> S) {
         val newState = currentState.reducer()
