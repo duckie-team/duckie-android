@@ -23,7 +23,7 @@ abstract class BaseViewModel<S : ViewState, A : ViewSideEffect>(
         _state.value = newState
     }
 
-    protected suspend fun sendEffect(effect: () -> A) {
+    protected suspend fun postSideEffect(effect: () -> A) {
         _effect.send(effect())
     }
 }
