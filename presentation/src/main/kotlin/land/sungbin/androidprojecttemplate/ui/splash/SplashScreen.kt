@@ -9,36 +9,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import land.sungbin.androidprojecttemplate.R
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
 
-private const val SPLASH_DELAY = 1000L
-
 @Composable
 fun SplashScreen(
-    viewModel: SplashViewModel,
-    onCheckSession: () -> Unit,
+    state: SplashPage,
 ) {
-    val state by viewModel.state.collectAsState()
-    LaunchedEffect(Unit) {
-        delay(SPLASH_DELAY)
-        viewModel.navigatePage(SplashPage.Second)
-        delay(SPLASH_DELAY)
-        onCheckSession()
-    }
-
     Crossfade(targetState = state) { page ->
         when (page) {
             SplashPage.First -> FirstSplashScreen()

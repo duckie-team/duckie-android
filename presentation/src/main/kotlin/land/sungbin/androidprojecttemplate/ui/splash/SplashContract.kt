@@ -9,6 +9,6 @@ enum class SplashPage : ViewState {
 }
 
 sealed class SplashSideEffect: ViewSideEffect {
-
+    object NavigateToMain : SplashSideEffect()
+    object NavigateToLogin : SplashSideEffect()
 }
-
