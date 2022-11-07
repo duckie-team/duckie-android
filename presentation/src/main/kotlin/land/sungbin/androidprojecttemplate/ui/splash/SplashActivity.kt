@@ -21,7 +21,6 @@ class SplashActivity : ComponentActivity() {
     lateinit var navigator: DuckieNavigator
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initView()
     }
 
