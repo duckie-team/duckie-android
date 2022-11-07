@@ -2,7 +2,7 @@
   <img src="./assets/duckie-logo.svg" width="20%" alt="duckie" />
 </p>
 <h1 align="center">Duckie</h1>
-<h5 align="center">There is no end to fans. a fan community to meet according to taste.</h5>
+<h5 align="center">덕질에 끝이 없다, 취향따라 만나는 커뮤니티</h5>
 <p align="center">
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-blue"/></a>
   <a href="https://developer.android.com/about/versions/marshmallow"><img alt="API 23+" src="https://img.shields.io/badge/API-23%2B-brightgreen.svg"/></a>
