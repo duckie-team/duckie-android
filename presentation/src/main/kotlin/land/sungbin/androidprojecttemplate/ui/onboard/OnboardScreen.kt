@@ -10,6 +10,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.ui.component.FadeAnimatedVisibility
@@ -17,12 +19,14 @@ import land.sungbin.androidprojecttemplate.ui.component.whiteGradient
 import team.duckie.quackquack.ui.component.QuackLargeButton
 
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun OnboardScreen(
     viewModel: OnboardViewModel,
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
+
     Crossfade(
         targetState = state.onboardState
     ) { pageState ->

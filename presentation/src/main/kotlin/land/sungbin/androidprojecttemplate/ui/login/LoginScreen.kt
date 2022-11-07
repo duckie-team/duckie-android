@@ -18,6 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
@@ -26,11 +28,12 @@ import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackUnderlineBody3
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
 
     when (state) {

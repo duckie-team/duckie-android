@@ -17,16 +17,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import land.sungbin.androidprojecttemplate.R
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun SplashScreen(
     viewModel: SplashViewModel,
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     Crossfade(targetState = state.splashViewState) { page ->
         when (page) {
             SplashPage.First -> FirstSplashScreen()
