@@ -13,6 +13,9 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.jackson.jackson
+import land.sungbin.androidprojecttemplate.data.Constants.BaseUrl
+import land.sungbin.androidprojecttemplate.data.Constants.MaxRetryCount
+import land.sungbin.androidprojecttemplate.data.Constants.MaxTimeoutMillis
 import javax.inject.Singleton
 
 @Suppress("KDocFields")
@@ -20,22 +23,22 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal class NetworkModule {
     @Provides
-    fun provideBaseUrl() = "https://cors-test.appspot.com/test" //TODO BuildConfig.URL
+    fun provideBaseUrl() = BaseUrl//TODO BuildConfig.URL
 
     @Provides
     @Singleton
-    fun provideKtorClient(): HttpClient = HttpClient(CIO){
+    fun provideKtorClient(): HttpClient = HttpClient(CIO) {
         expectSuccess = true
         engine {
             endpoint {
-                connectTimeout = 300
-                connectAttempts = 3
+                connectTimeout = MaxTimeoutMillis
+                connectAttempts = MaxRetryCount
             }
         }
-        install(plugin = ContentNegotiation){
+        install(plugin = ContentNegotiation) {
             jackson()
         }
-        install(plugin = Logging){
+        install(plugin = Logging) {
             logger = Logger.ANDROID
             level = LogLevel.BODY
         }
