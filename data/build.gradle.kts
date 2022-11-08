@@ -18,4 +18,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("team.duckie.quack:quack-lint-core:1.0.1")
     implementation(project(":domain"))
+    Dependencies.Network.forEach(::implementation)
+    implementation(Dependencies.Jetpack.Hilt)
 }

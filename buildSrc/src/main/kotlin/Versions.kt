@@ -46,6 +46,7 @@ object Versions {
     object Network {
         const val OkHttp = "4.9.3"
         const val Retrofit = "2.9.0"
+        const val Ktor = "2.1.3"
     }
 
     object Util {
