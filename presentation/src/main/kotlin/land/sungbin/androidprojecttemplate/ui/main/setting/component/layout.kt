@@ -1,4 +1,4 @@
-package land.sungbin.androidprojecttemplate.ui.main.setting
+package land.sungbin.androidprojecttemplate.ui.main.setting.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

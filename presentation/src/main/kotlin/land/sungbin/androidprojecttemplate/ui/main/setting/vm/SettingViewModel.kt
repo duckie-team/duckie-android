@@ -1,7 +1,8 @@
-package land.sungbin.androidprojecttemplate.ui.main.setting
+package land.sungbin.androidprojecttemplate.ui.main.setting.vm
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import land.sungbin.androidprojecttemplate.ui.main.setting.utils.SettingStep
 import javax.inject.Singleton
 
 @Singleton

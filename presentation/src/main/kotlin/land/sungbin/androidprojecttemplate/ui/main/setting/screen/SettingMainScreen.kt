@@ -1,14 +1,15 @@
-package land.sungbin.androidprojecttemplate.ui.main.setting
+package land.sungbin.androidprojecttemplate.ui.main.setting.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.ui.component.BackArrowTopAppBar
+import land.sungbin.androidprojecttemplate.ui.main.setting.component.BaseAppSettingLayout
+import land.sungbin.androidprojecttemplate.ui.main.setting.component.PaddingQuackTitle2
 
 @Composable
-internal fun AppSettingScreen(
-    vm: AppSettingViewModel,
+internal fun SettingMainScreen(
     onClickBack: () -> Unit,
     onClickAccountInformation: () -> Unit,
     onClickNotification: () -> Unit,
@@ -59,12 +60,12 @@ internal fun AppSettingScreen(
 @Preview
 @Composable
 fun PreviewAppSettingScreen() {
-    AppSettingScreen(
-        vm = AppSettingViewModel(),
+    SettingMainScreen(
         onClickBack = { /*TODO*/ },
         onClickAccountInformation = { /*TODO*/ },
         onClickNotification = { /*TODO*/ },
-        onClickInquiry = { /*TODO*/ }) {
+        onClickInquiry = { /*TODO*/ },
+    ) {
 
     }
 }
