@@ -1,0 +1,81 @@
+package land.sungbin.androidprojecttemplate.ui.main.setting.screen
+
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import land.sungbin.androidprojecttemplate.R
+import land.sungbin.androidprojecttemplate.ui.component.BackArrowTopAppBar
+import land.sungbin.androidprojecttemplate.ui.main.setting.component.BaseAppSettingLayout
+import land.sungbin.androidprojecttemplate.ui.main.setting.component.PaddingQuackBody1
+import land.sungbin.androidprojecttemplate.ui.main.setting.component.PaddingQuackTitle2
+import land.sungbin.androidprojecttemplate.ui.main.setting.component.PaddingTitleAndContentText
+import land.sungbin.androidprojecttemplate.ui.main.setting.utils.AccountType
+import team.duckie.quackquack.ui.component.QuackDivider
+
+@Composable
+internal fun SettingAccountInformationScreen(
+    onClickBack: () -> Unit,
+    onClickLogOut: () -> Unit,
+    onClickSignOut: () -> Unit
+) {
+    BaseAppSettingLayout(
+        topAppBar = {
+            BackArrowTopAppBar(
+                text = stringResource(
+                    id = R.string.account_information,
+                )
+            ) {
+                onClickBack()
+            }
+        },
+        content = {
+            PaddingQuackTitle2(
+                text = AccountType.KAKAO.kor + stringResource(
+                    id = R.string.account,
+                ),
+            )
+
+            PaddingTitleAndContentText(
+                text = stringResource(
+                    id = R.string.email,
+                ),
+                content = "abcd@naver.com",
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            QuackDivider()
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            PaddingQuackBody1(
+                text = stringResource(
+                    id = R.string.log_out,
+                ),
+                onClick = onClickLogOut,
+            )
+
+            PaddingQuackBody1(
+                text = stringResource(
+                    id = R.string.sign_out,
+                ),
+                onClick = onClickSignOut,
+            )
+        }
+    )
+}
+
+@Preview
+@Composable
+fun PreviewSettingAccountInformationScreen() {
+    SettingAccountInformationScreen(
+        onClickBack = { /*TODO*/ },
+        onClickLogOut = { /*TODO*/ },
+    ) {
+
+    }
+}
