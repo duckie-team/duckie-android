@@ -16,7 +16,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:30.4.1"))
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("team.duckie.quack:quack-lint-core:1.0.1")
+    //implementation("team.duckie.quack:quack-lint-core:1.0.1")
     implementation(project(":domain"))
     Dependencies.Network.forEach(::implementation)
     implementation(Dependencies.Jetpack.Hilt)
