@@ -4,15 +4,20 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import land.sungbin.androidprojecttemplate.ui.main.setting.utils.SettingStep
 import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun SettingScreen(
     vm: SettingViewModel,
 ) {
+    val state = vm.state.collectAsStateWithLifecycle().value
+
     Crossfade(
-        targetState = vm.currentStep.collectAsState().value
+        targetState = state.currentStep
     ) { page ->
         when (page) {
             SettingStep.SETTING_MAIN_SCREEN -> {
