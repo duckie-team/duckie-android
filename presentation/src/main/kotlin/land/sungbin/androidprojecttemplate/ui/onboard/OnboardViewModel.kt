@@ -47,6 +47,15 @@ class OnboardViewModel @Inject constructor() :
         )
     }
 
+    suspend fun onClickComplete() {
+        postSideEffect { OnboardSideEffect.NavigateToMain }
+    }
+
+    suspend fun onClickProfile() {
+        postSideEffect { OnboardSideEffect.NavigateToGalley }
+    }
+
+
     fun onClickCategory(checked: Boolean, category: Category) {
         updateState {
             when (checked) {
@@ -93,9 +102,5 @@ class OnboardViewModel @Inject constructor() :
                 navigatePage(OnboardPage.Categories)
             }
         }
-    }
-
-    suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
-        postSideEffect { sideEffect }
     }
 }
