@@ -1,18 +1,18 @@
 package land.sungbin.androidprojecttemplate.ui.splash
 
-import land.sungbin.androidprojecttemplate.base.ViewSideEffect
-import land.sungbin.androidprojecttemplate.base.ViewState
+import land.sungbin.androidprojecttemplate.base.SideEffect
+import land.sungbin.androidprojecttemplate.base.State
 
 data class SplashState(
     val splashViewState: SplashPage = SplashPage.First,
-) : ViewState
+) : State
 
 enum class SplashPage {
     First,
     Second
 }
 
-sealed class SplashSideEffect : ViewSideEffect {
+sealed class SplashSideEffect : SideEffect {
     object NavigateToMain : SplashSideEffect()
     object NavigateToLogin : SplashSideEffect()
 }

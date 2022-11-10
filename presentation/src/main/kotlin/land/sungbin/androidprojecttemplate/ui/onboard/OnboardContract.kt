@@ -3,8 +3,8 @@ package land.sungbin.androidprojecttemplate.ui.onboard
 import android.net.Uri
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
-import land.sungbin.androidprojecttemplate.base.ViewSideEffect
-import land.sungbin.androidprojecttemplate.base.ViewState
+import land.sungbin.androidprojecttemplate.base.SideEffect
+import land.sungbin.androidprojecttemplate.base.State
 import land.sungbin.androidprojecttemplate.data.domain.Category
 import land.sungbin.androidprojecttemplate.data.domain.Tag
 
@@ -13,7 +13,7 @@ data class OnboardState(
     val profileModel: ProfileModel = ProfileModel(),
     val categoriesModel: CategoriesModel = CategoriesModel(),
     val tagModel: TagModel = TagModel(),
-) : ViewState {
+) : State {
     data class ProfileModel(
         val profileImage: Uri = Uri.EMPTY,
         val nickname: String = "",
@@ -35,7 +35,7 @@ enum class OnboardPage {
     Tag
 }
 
-sealed class OnboardSideEffect : ViewSideEffect {
+sealed class OnboardSideEffect : SideEffect {
     object NavigateToLogin : OnboardSideEffect()
     object NavigateToMain : OnboardSideEffect()
     object NavigateToGalley : OnboardSideEffect()

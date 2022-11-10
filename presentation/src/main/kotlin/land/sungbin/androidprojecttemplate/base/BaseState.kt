@@ -1,5 +1,5 @@
 package land.sungbin.androidprojecttemplate.base
 
-interface ViewState
+interface State
 
-interface ViewSideEffect
+interface SideEffect
