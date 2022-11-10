@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import land.sungbin.androidprojecttemplate.ui.navigator.DuckieNavigator
