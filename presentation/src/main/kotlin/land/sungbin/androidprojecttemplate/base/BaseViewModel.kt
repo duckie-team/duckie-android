@@ -1,29 +1,28 @@
 package land.sungbin.androidprojecttemplate.base
 
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-abstract class BaseViewModel<S : State, SE : SideEffect>(
-    initialState: S,
+abstract class BaseViewModel<State, SideEffect>(
+    initialState: State,
 ) {
-    private val _state: MutableStateFlow<S> = MutableStateFlow(initialState)
+    private val _state: MutableStateFlow<State> = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
-    private val _effect: Channel<SE> = Channel()
+    private val _effect: Channel<SideEffect> = Channel()
     val effect = _effect.receiveAsFlow()
 
-    protected val currentState: S
+    protected val currentState: State
         get() = _state.value
 
-    protected fun updateState(reducer: S.() -> S) {
+    protected fun updateState(reducer: State.() -> State) {
         val newState = currentState.reducer()
         _state.value = newState
     }
 
-    protected suspend fun postSideEffect(effect: () -> SE) {
+    protected suspend fun postSideEffect(effect: () -> SideEffect) {
         _effect.send(effect())
     }
 }

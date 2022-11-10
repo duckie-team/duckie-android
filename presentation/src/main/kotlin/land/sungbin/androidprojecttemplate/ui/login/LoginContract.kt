@@ -1,15 +1,12 @@
 package land.sungbin.androidprojecttemplate.ui.login
 
-import land.sungbin.androidprojecttemplate.base.SideEffect
-import land.sungbin.androidprojecttemplate.base.State
-
-sealed class LoginState : State {
+sealed class LoginState {
     object Initial : LoginState()
     data class KakaoLoginFailed(val exception: Throwable) : LoginState()
     data class LoginFailed(val exception: Throwable) : LoginState()
 }
 
-sealed class LoginSideEffect : SideEffect {
+sealed class LoginSideEffect {
     object NavigateToMain : LoginSideEffect()
     object NavigateToOnboard : LoginSideEffect()
 }
