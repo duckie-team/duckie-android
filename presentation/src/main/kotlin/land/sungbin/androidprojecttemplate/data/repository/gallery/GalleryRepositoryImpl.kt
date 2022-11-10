@@ -1,12 +1,9 @@
 package land.sungbin.androidprojecttemplate.data.repository.gallery
 
 import android.annotation.SuppressLint
-import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
 import android.database.ContentObserver
-import android.net.Uri
-import android.os.Handler
 import android.provider.MediaStore
 import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,23 +15,12 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class GalleryRepositoryImpl @Inject constructor(
-    @ApplicationContext val context: Context
+    @ApplicationContext val context: Context,
 ) : GalleryRepository {
 
     private var contentObserver: ContentObserver? = null
 
-    override suspend fun loadImages(onRegisterObserver: () -> Unit): List<MediaStoreImage> {
-        val imageList = queryImages()
-
-        if (contentObserver == null) {
-            contentObserver = Contexts.getApplication(context).contentResolver.registerObserver(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            ) {
-                onRegisterObserver()
-            }
-        }
-        return imageList
-    }
+    override suspend fun loadImages(): List<MediaStoreImage> = queryImages()
 
     private suspend fun queryImages(): List<MediaStoreImage> {
         val images = mutableListOf<MediaStoreImage>()
@@ -91,20 +77,4 @@ class GalleryRepositoryImpl @Inject constructor(
             TimeUnit.MICROSECONDS.toSeconds(formatter.parse("$day.$month.$year")?.time ?: 0)
         }
 
-
-    /**
-     * Convenience extension method to register a [ContentObserver] given a lambda.
-     */
-    private fun ContentResolver.registerObserver(
-        uri: Uri,
-        observer: (selfChange: Boolean) -> Unit
-    ): ContentObserver {
-        val contentObserver = object : ContentObserver(Handler()) {
-            override fun onChange(selfChange: Boolean) {
-                observer(selfChange)
-            }
-        }
-        registerContentObserver(uri, true, contentObserver)
-        return contentObserver
-    }
 }

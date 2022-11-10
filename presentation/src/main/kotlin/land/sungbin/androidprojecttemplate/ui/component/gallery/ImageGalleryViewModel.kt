@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ImageGalleryViewModel @Inject constructor(
-    private val galleryRepository: GalleryRepository
+    private val galleryRepository: GalleryRepository,
 ) : ViewModel() {
 
     private val TAG = ImageGalleryViewModel::class.java.simpleName
@@ -35,11 +35,7 @@ class ImageGalleryViewModel @Inject constructor(
 
     fun loadImages() {
         viewModelScope.launch {
-            _images.value = galleryRepository.loadImages(
-                onRegisterObserver = {
-                    loadImages()
-                }
-            )
+            _images.value = galleryRepository.loadImages()
         }
     }
 
@@ -93,11 +89,11 @@ class ImageGalleryViewModel @Inject constructor(
 
 data class MediaStoreImage(
     val id: Long,
-    val contentUri: Uri
+    val contentUri: Uri,
 )
 
 enum class ImageSelectType(
-    val type: Int
+    val type: Int,
 ) {
     SINGLE(IMAGE_SINGLE_TYPE), MULTI(IMAGE_MULTI_TYPE);
 
@@ -110,5 +106,5 @@ enum class ImageSelectType(
 
 @Parcelize
 data class ImageGalleryResponse(
-    val images: List<Uri>
+    val images: List<Uri>,
 ) : Parcelable

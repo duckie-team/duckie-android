@@ -4,6 +4,6 @@ import land.sungbin.androidprojecttemplate.ui.component.gallery.MediaStoreImage
 
 interface GalleryRepository {
 
-    suspend fun loadImages(onRegisterObserver: () -> Unit): List<MediaStoreImage>
+    suspend fun loadImages(): List<MediaStoreImage>
     fun releaseObserver()
 }
