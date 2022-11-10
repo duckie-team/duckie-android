@@ -1,6 +1,5 @@
 package land.sungbin.androidprojecttemplate.ui.component.gallery
 
-import android.app.Activity
 import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -10,12 +9,13 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.constants.UiConstant.GALLERY_COLUMN_COUNT
 import team.duckie.quackquack.ui.color.QuackColor
@@ -27,23 +27,23 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun ImageGalleryScreen(
-    activity: Activity,
-    onClickCamera: () -> Unit,
     images: List<Uri>,
+    selectedImages: List<Uri>,
     viewModel: ImageGalleryViewModel,
 ) {
-    val selectedImages = viewModel.selectedImages.observeAsState().value ?: listOf()
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
         QuackTopAppBar(
             leadingIcon = QuackIcon.Close,
             onClickLeadingIcon = {
-                activity.finish()
+                coroutineScope.launch { viewModel.onBackPressed() }
             },
             trailingText = stringResource(R.string.add),
             onClickTrailingText = {
-                viewModel.onClickComplete()
+                coroutineScope.launch { viewModel.onClickAddComplete() }
             }
         )
         QuackHeaderGridLayout(
@@ -75,7 +75,9 @@ internal fun ImageGalleryScreen(
                     QuackImage(src = QuackIcon.Camera)
                 }
             },
-            onClickHeader = onClickCamera,
+            onClickHeader = {
+                coroutineScope.launch { viewModel.onClickCamera() }
+            },
         )
     }
 }

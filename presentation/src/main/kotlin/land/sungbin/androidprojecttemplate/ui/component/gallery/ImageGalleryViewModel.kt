@@ -2,53 +2,40 @@ package land.sungbin.androidprojecttemplate.ui.component.gallery
 
 import android.net.Uri
 import android.os.Parcelable
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import land.sungbin.androidprojecttemplate.base.BaseViewModel
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_MULTI_TYPE
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_SINGLE_TYPE
 import land.sungbin.androidprojecttemplate.data.repository.gallery.GalleryRepository
-import land.sungbin.androidprojecttemplate.util.Event
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@HiltViewModel
+@Singleton
 class ImageGalleryViewModel @Inject constructor(
     private val galleryRepository: GalleryRepository,
-) : ViewModel() {
+) : BaseViewModel<ImageGalleryState, ImageGallerySideEffect>(ImageGalleryState()) {
 
     private val TAG = ImageGalleryViewModel::class.java.simpleName
 
-    lateinit var selectType: ImageSelectType
-
-    private val _onClickCompleteEvent = MutableLiveData<Event<Unit>>()
-    val onClickCompleteEvent: LiveData<Event<Unit>> get() = _onClickCompleteEvent
-
-    private val _images = MutableLiveData<List<MediaStoreImage>>()
-    val images: LiveData<List<MediaStoreImage>> get() = _images
-
-    private val _selectedImages = MutableLiveData<List<Uri>>()
-    val selectedImages: LiveData<List<Uri>> get() = _selectedImages
-
-    fun loadImages() {
-        viewModelScope.launch {
-            _images.value = galleryRepository.loadImages()
+    suspend fun loadImages() {
+        val loadedImages = galleryRepository.loadImages()
+        updateState {
+            copy(images = loadedImages)
         }
     }
 
-    fun init(selectType: Int) {
-        this.selectType = ImageSelectType.getByType(selectType)
+    suspend fun init(selectType: Int) {
+        updateState {
+            copy(selectType = ImageSelectType.getByType(selectType))
+        }
         loadImages()
     }
 
 
     fun pick(checked: Boolean, image: Uri) {
-        when (selectType) {
+        when (currentState.selectType) {
             ImageSelectType.SINGLE -> {
-                singleTypePick(checked, image)
+                singleTypePick(image)
             }
 
             ImageSelectType.MULTI -> {
@@ -57,31 +44,47 @@ class ImageGalleryViewModel @Inject constructor(
         }
     }
 
-    private fun singleTypePick(checked: Boolean, image: Uri) {
-        when (checked) {
-            true -> _selectedImages.value = listOf(image)
-            false -> _selectedImages.value = null
+    private fun singleTypePick(image: Uri) {
+        updateState {
+            copy(
+                selectedImages = listOf(image)
+            )
         }
+
     }
 
     private fun multiTypePick(checked: Boolean, image: Uri) {
-        when (checked) {
-            true -> _selectedImages.value = (_selectedImages.value ?: listOf()) + image
-            else -> _selectedImages.value = (_selectedImages.value ?: listOf()) - image
+        updateState {
+            copy(
+                selectedImages = when (checked) {
+                    true -> selectedImages + image
+                    false -> selectedImages - image
+                }
+            )
         }
     }
 
     fun offerImage(image: Uri) {
-        _images.value =
-            listOf(MediaStoreImage(_images.value?.size?.toLong() ?: 0L, image)) + (_images.value
-                ?: listOf())
+        updateState {
+            copy(
+                images = listOf(MediaStoreImage(images.size.toLong(), image)) + images
+            )
+        }
     }
 
-    fun onClickComplete() {
-        _onClickCompleteEvent.value = Event(Unit)
+    suspend fun onClickAddComplete() = postSideEffect {
+        ImageGallerySideEffect.FinishWithData
     }
 
-    override fun onCleared() {
+    suspend fun onClickCamera() = postSideEffect {
+        ImageGallerySideEffect.LaunchCameraScreen
+    }
+
+    suspend fun onBackPressed() = postSideEffect {
+        ImageGallerySideEffect.Finish
+    }
+
+    fun releaseObserver() {
         galleryRepository.releaseObserver()
     }
 }

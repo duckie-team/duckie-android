@@ -8,17 +8,22 @@ import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.GALLERY_IMAGE_TYPE
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_DATA
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_SINGLE_TYPE
-import land.sungbin.androidprojecttemplate.util.EventObserver
 import land.sungbin.androidprojecttemplate.util.ImageUtil
 import land.sungbin.androidprojecttemplate.util.PermissionUtil
 import land.sungbin.androidprojecttemplate.util.PermissionUtil.CAMERA_REQUEST
 import land.sungbin.androidprojecttemplate.util.PermissionUtil.READ_EXTERNAL_STORAGE_REQUEST
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -33,55 +38,76 @@ class ImageGalleryActivity : ComponentActivity() {
             }
         }
 
-    private val viewModel: ImageGalleryViewModel by viewModels()
+    @Inject
+    lateinit var viewModel: ImageGalleryViewModel
 
+    @OptIn(ExperimentalLifecycleComposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
             ImageGalleryScreen(
-                activity = this,
-                onClickCamera = {
-                    PermissionUtil.requestCamera(this) {
-                        launchCameraScreen()
-                    }
-                },
-                images = viewModel.images.observeAsState().value?.map { it.contentUri } ?: listOf(),
+                images = state.images.map { it.contentUri },
+                selectedImages = state.selectedImages,
                 viewModel = viewModel,
             )
+
+            LaunchedEffect(key1 = viewModel.effect) {
+                viewModel.effect.collect { effect ->
+                    when (effect) {
+                        ImageGallerySideEffect.FinishWithData -> {
+                            setResult(
+                                RESULT_OK,
+                                intent.putExtra(
+                                    IMAGE_DATA,
+                                    ImageGalleryResponse(state.selectedImages)
+                                )
+                            )
+                            finish()
+                        }
+
+                        ImageGallerySideEffect.LaunchCameraScreen -> {
+                            PermissionUtil.requestCamera(this@ImageGalleryActivity) {
+                                launchCameraScreen()
+                            }
+                        }
+
+                        ImageGallerySideEffect.Finish -> {
+                            finish()
+                        }
+                    }
+                }
+            }
+            DisposableEffect(key1 = Unit) {
+                onDispose {
+                    viewModel.releaseObserver()
+                }
+            }
         }
 
         init()
         openMediaStore()
-        observeViewModel()
     }
 
     private fun init() {
-        viewModel.init(
-            selectType = intent.getIntExtra(GALLERY_IMAGE_TYPE, IMAGE_SINGLE_TYPE)
-        )
+        lifecycleScope.launch {
+            viewModel.init(
+                selectType = intent.getIntExtra(GALLERY_IMAGE_TYPE, IMAGE_SINGLE_TYPE)
+            )
+        }
+
     }
 
     private fun openMediaStore() {
         PermissionUtil.requestReadExternalStorage(this) {
-            viewModel.loadImages()
+            lifecycleScope.launch {
+                viewModel.loadImages()
+            }
         }
     }
 
-    private fun observeViewModel() {
-        with(viewModel) {
-            onClickCompleteEvent.observe(this@ImageGalleryActivity, EventObserver {
-                setResult(
-                    RESULT_OK,
-                    intent.putExtra(
-                        IMAGE_DATA,
-                        ImageGalleryResponse(selectedImages.value ?: listOf())
-                    )
-                )
-                finish()
-            })
-        }
-    }
 
     private fun launchCameraScreen() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
@@ -92,12 +118,14 @@ class ImageGalleryActivity : ComponentActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         when (requestCode) {
             READ_EXTERNAL_STORAGE_REQUEST -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) {
-                    viewModel.loadImages()
+                    lifecycleScope.launch {
+                        viewModel.loadImages()
+                    }
                 } else {
                     finish()
                 }
