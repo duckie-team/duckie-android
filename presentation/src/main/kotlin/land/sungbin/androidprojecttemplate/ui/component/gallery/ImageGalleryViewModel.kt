@@ -7,6 +7,7 @@ import land.sungbin.androidprojecttemplate.base.BaseViewModel
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_MULTI_TYPE
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_SINGLE_TYPE
 import land.sungbin.androidprojecttemplate.data.repository.gallery.GalleryRepository
+import java.net.URI
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +33,7 @@ class ImageGalleryViewModel @Inject constructor(
     }
 
 
-    fun pick(checked: Boolean, image: Uri) {
+    fun pick(checked: Boolean, image: URI) {
         when (currentState.selectType) {
             ImageSelectType.SINGLE -> {
                 singleTypePick(image)
@@ -44,7 +45,7 @@ class ImageGalleryViewModel @Inject constructor(
         }
     }
 
-    private fun singleTypePick(image: Uri) {
+    private fun singleTypePick(image: URI) {
         updateState {
             copy(
                 selectedImages = listOf(image)
@@ -53,7 +54,7 @@ class ImageGalleryViewModel @Inject constructor(
 
     }
 
-    private fun multiTypePick(checked: Boolean, image: Uri) {
+    private fun multiTypePick(checked: Boolean, image: URI) {
         updateState {
             copy(
                 selectedImages = when (checked) {
@@ -64,7 +65,7 @@ class ImageGalleryViewModel @Inject constructor(
         }
     }
 
-    fun offerImage(image: Uri) {
+    fun offerImage(image: URI) {
         updateState {
             copy(
                 images = listOf(MediaStoreImage(images.size.toLong(), image)) + images
@@ -92,7 +93,7 @@ class ImageGalleryViewModel @Inject constructor(
 
 data class MediaStoreImage(
     val id: Long,
-    val contentUri: Uri,
+    val contentUri: URI,
 )
 
 enum class ImageSelectType(
@@ -109,5 +110,5 @@ enum class ImageSelectType(
 
 @Parcelize
 data class ImageGalleryResponse(
-    val images: List<Uri>,
+    val images: List<URI>,
 ) : Parcelable

@@ -1,11 +1,11 @@
 package land.sungbin.androidprojecttemplate.ui.component.gallery
 
-import android.net.Uri
+import java.net.URI
 
 data class ImageGalleryState(
     val selectType: ImageSelectType = ImageSelectType.SINGLE,
     val images: List<MediaStoreImage> = emptyList(),
-    val selectedImages: List<Uri> = emptyList(),
+    val selectedImages: List<URI> = emptyList(),
 )
 
 sealed class ImageGallerySideEffect {

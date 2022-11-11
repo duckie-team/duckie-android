@@ -21,11 +21,12 @@ import team.duckie.quackquack.ui.component.QuackLargeIconRoundCard
 import team.duckie.quackquack.ui.component.QuackRoundImage
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import java.net.URI
 
 @Composable
 internal fun OnboardProfileScreen(
     nickname: String,
-    profileImage: Uri?,
+    profileImage: URI,
     onNickNameChange: (String) -> Unit,
     onClickBack: () -> Unit,
     onClickNext: () -> Unit,

@@ -5,15 +5,16 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import land.sungbin.androidprojecttemplate.data.domain.Category
 import land.sungbin.androidprojecttemplate.data.domain.Tag
+import java.net.URI
 
 data class OnboardState(
     val onboardState: OnboardPage = OnboardPage.Profile,
     val profileModel: ProfileModel = ProfileModel(),
     val categoriesModel: CategoriesModel = CategoriesModel(),
     val tagModel: TagModel = TagModel(),
-){
+) {
     data class ProfileModel(
-        val profileImage: Uri = Uri.EMPTY,
+        val profileImage: URI = URI(""),
         val nickname: String = "",
     )
 
@@ -33,7 +34,7 @@ enum class OnboardPage {
     Tag
 }
 
-sealed class OnboardSideEffect{
+sealed class OnboardSideEffect {
     object NavigateToLogin : OnboardSideEffect()
     object NavigateToMain : OnboardSideEffect()
     object NavigateToGalley : OnboardSideEffect()

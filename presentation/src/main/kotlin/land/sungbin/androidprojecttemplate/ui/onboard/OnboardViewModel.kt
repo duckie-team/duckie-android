@@ -4,6 +4,7 @@ import android.net.Uri
 import kotlinx.collections.immutable.persistentListOf
 import land.sungbin.androidprojecttemplate.base.BaseViewModel
 import land.sungbin.androidprojecttemplate.data.domain.Category
+import java.net.URI
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -78,11 +79,11 @@ class OnboardViewModel @Inject constructor() :
         }
     }
 
-    fun setProfileImage(image: Uri?) {
+    fun setProfileImage(image: URI) {
         updateState {
             copy(
                 profileModel = profileModel.copy(
-                    profileImage = image ?: Uri.EMPTY
+                    profileImage = image
                 )
             )
         }
