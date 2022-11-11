@@ -21,17 +21,17 @@ import team.duckie.quackquack.ui.component.QuackLargeIconRoundCard
 import team.duckie.quackquack.ui.component.QuackRoundImage
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
-import java.net.URI
 
 @Composable
 internal fun OnboardProfileScreen(
     nickname: String,
-    profileImage: URI,
+    profileImage: String,
     onNickNameChange: (String) -> Unit,
     onClickBack: () -> Unit,
     onClickNext: () -> Unit,
     onClickProfile: () -> Unit,
 ) {
+    val profileImageUri = requireNotNull(Uri.parse(profileImage))
 
     DuckieSimpleLayout(
         topAppBar = {
@@ -54,9 +54,7 @@ internal fun OnboardProfileScreen(
                     icon = QuackIcon.Camera,
                     onClick = onClickProfile,
                 )
-                QuackRoundImage(src = profileImage)
-
-
+                QuackRoundImage(src = profileImageUri)
             }
             Spacer(modifier = Modifier.height(20.dp))
             QuackCountableTextField(

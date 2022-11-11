@@ -91,7 +91,7 @@ private fun GalleryImageItem(
 ) {
     QuackSelectableImage(
         isSelected = isSelected,
-        image = image,
+        image = Uri.parse(image.toString()),
         onClick = {
             onClick(!isSelected, image)
         }

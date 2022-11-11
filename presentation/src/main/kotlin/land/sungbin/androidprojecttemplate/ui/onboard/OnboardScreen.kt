@@ -17,7 +17,6 @@ import land.sungbin.androidprojecttemplate.ui.component.FadeAnimatedVisibility
 import land.sungbin.androidprojecttemplate.ui.component.whiteGradient
 import team.duckie.quackquack.ui.component.QuackLargeButton
 
-
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun OnboardScreen(

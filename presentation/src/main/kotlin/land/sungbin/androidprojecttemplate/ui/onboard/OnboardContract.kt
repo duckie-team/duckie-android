@@ -1,11 +1,9 @@
 package land.sungbin.androidprojecttemplate.ui.onboard
 
-import android.net.Uri
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import land.sungbin.androidprojecttemplate.data.domain.Category
 import land.sungbin.androidprojecttemplate.data.domain.Tag
-import java.net.URI
 
 data class OnboardState(
     val onboardState: OnboardPage = OnboardPage.Profile,
@@ -14,7 +12,7 @@ data class OnboardState(
     val tagModel: TagModel = TagModel(),
 ) {
     data class ProfileModel(
-        val profileImage: URI = URI(""),
+        val profileImage: String = "",
         val nickname: String = "",
     )
 

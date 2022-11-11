@@ -1,10 +1,8 @@
 package land.sungbin.androidprojecttemplate.ui.onboard
 
-import android.net.Uri
 import kotlinx.collections.immutable.persistentListOf
 import land.sungbin.androidprojecttemplate.base.BaseViewModel
 import land.sungbin.androidprojecttemplate.data.domain.Category
-import java.net.URI
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -79,7 +77,7 @@ class OnboardViewModel @Inject constructor() :
         }
     }
 
-    fun setProfileImage(image: URI) {
+    fun setProfileImage(image: String) {
         updateState {
             copy(
                 profileModel = profileModel.copy(
