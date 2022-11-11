@@ -24,12 +24,11 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSelectableImage
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
-import java.net.URI
 
 @Composable
 internal fun ImageGalleryScreen(
-    images: List<URI>,
-    selectedImages: List<URI>,
+    images: List<String>,
+    selectedImages: List<String>,
     viewModel: ImageGalleryViewModel,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -86,12 +85,12 @@ internal fun ImageGalleryScreen(
 @Composable
 private fun GalleryImageItem(
     isSelected: Boolean,
-    image: URI,
-    onClick: (Boolean, URI) -> Unit,
+    image: String,
+    onClick: (Boolean, String) -> Unit,
 ) {
     QuackSelectableImage(
         isSelected = isSelected,
-        image = Uri.parse(image.toString()),
+        image = Uri.parse(image),
         onClick = {
             onClick(!isSelected, image)
         }

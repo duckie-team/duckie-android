@@ -1,13 +1,11 @@
 package land.sungbin.androidprojecttemplate.ui.component.gallery
 
-import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import land.sungbin.androidprojecttemplate.base.BaseViewModel
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_MULTI_TYPE
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_SINGLE_TYPE
 import land.sungbin.androidprojecttemplate.data.repository.gallery.GalleryRepository
-import java.net.URI
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,7 +31,7 @@ class ImageGalleryViewModel @Inject constructor(
     }
 
 
-    fun pick(checked: Boolean, image: URI) {
+    fun pick(checked: Boolean, image: String) {
         when (currentState.selectType) {
             ImageSelectType.SINGLE -> {
                 singleTypePick(image)
@@ -45,7 +43,7 @@ class ImageGalleryViewModel @Inject constructor(
         }
     }
 
-    private fun singleTypePick(image: URI) {
+    private fun singleTypePick(image: String) {
         updateState {
             copy(
                 selectedImages = listOf(image)
@@ -54,7 +52,7 @@ class ImageGalleryViewModel @Inject constructor(
 
     }
 
-    private fun multiTypePick(checked: Boolean, image: URI) {
+    private fun multiTypePick(checked: Boolean, image: String) {
         updateState {
             copy(
                 selectedImages = when (checked) {
@@ -65,7 +63,7 @@ class ImageGalleryViewModel @Inject constructor(
         }
     }
 
-    fun offerImage(image: URI) {
+    fun offerImage(image: String) {
         updateState {
             copy(
                 images = listOf(MediaStoreImage(images.size.toLong(), image)) + images
@@ -93,7 +91,7 @@ class ImageGalleryViewModel @Inject constructor(
 
 data class MediaStoreImage(
     val id: Long,
-    val contentUri: URI,
+    val contentUri: String,
 )
 
 enum class ImageSelectType(
@@ -110,5 +108,5 @@ enum class ImageSelectType(
 
 @Parcelize
 data class ImageGalleryResponse(
-    val images: List<URI>,
+    val images: List<String>,
 ) : Parcelable

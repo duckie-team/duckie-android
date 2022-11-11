@@ -10,7 +10,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import land.sungbin.androidprojecttemplate.ui.component.gallery.MediaStoreImage
-import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -51,9 +50,8 @@ class GalleryRepositoryImpl @Inject constructor(
                     val contentUri = ContentUris.withAppendedId(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         id
-                    )
-                    val uri = URI(contentUri.toString())
-                    val image = MediaStoreImage(id, uri)
+                    ).toString()
+                    val image = MediaStoreImage(id, contentUri)
                     images += image
 
                     /**

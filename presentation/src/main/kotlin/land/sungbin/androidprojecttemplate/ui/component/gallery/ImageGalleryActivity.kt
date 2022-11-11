@@ -25,7 +25,6 @@ import land.sungbin.androidprojecttemplate.util.PermissionUtil.CAMERA_REQUEST
 import land.sungbin.androidprojecttemplate.util.PermissionUtil.READ_EXTERNAL_STORAGE_REQUEST
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class ImageGalleryActivity : ComponentActivity() {
 
@@ -33,7 +32,7 @@ class ImageGalleryActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 val image = it?.data?.extras?.get("data") as Bitmap
-                val path = ImageUtil.saveGalleryImage(this, image)
+                val path = ImageUtil.saveGalleryImage(this, image).toString()
                 viewModel.offerImage(path)
             }
         }
