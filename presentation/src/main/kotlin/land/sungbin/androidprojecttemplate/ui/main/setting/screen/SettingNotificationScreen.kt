@@ -12,12 +12,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import land.sungbin.androidprojecttemplate.R
+import land.sungbin.androidprojecttemplate.shared.android.base.UiState
 import land.sungbin.androidprojecttemplate.ui.component.BackArrowTopAppBar
 import land.sungbin.androidprojecttemplate.ui.main.setting.component.BaseAppSettingLayout
+import land.sungbin.androidprojecttemplate.ui.main.setting.mvi.SettingState
 import team.duckie.quackquack.ui.component.QuackBody1
 
 @Composable
 internal fun SettingNotificationScreen(
+    activityNotifications: Boolean,
+    changeActivityNotifications: (Boolean) -> Unit,
+    messageNotifications: Boolean,
+    changeMessageNotifications: (Boolean) -> Unit,
     onClickBack: () -> Unit,
 ) {
     BaseAppSettingLayout(
@@ -35,16 +41,20 @@ internal fun SettingNotificationScreen(
             text = stringResource(
                 id = R.string.activity_notifications,
             ),
-            checked = true,
-            onCheckedChanged = {}
+            checked = activityNotifications,
+            onCheckedChanged = {
+                changeActivityNotifications(it)
+            },
         )
 
         SettingNotificationLayout(
             text = stringResource(
                 id = R.string.message_notifications,
             ),
-            checked = true,
-            onCheckedChanged = {}
+            checked = messageNotifications,
+            onCheckedChanged = {
+                changeMessageNotifications(it)
+            },
         )
     }
 }
@@ -69,13 +79,5 @@ private fun SettingNotificationLayout(
             checked = checked,
             onCheckedChange = onCheckedChanged,
         )
-    }
-}
-
-@Preview
-@Composable
-fun PreviewSettingNotificationScreen() {
-    SettingNotificationScreen {
-
     }
 }

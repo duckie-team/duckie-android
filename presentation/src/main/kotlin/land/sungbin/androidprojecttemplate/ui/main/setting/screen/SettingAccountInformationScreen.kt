@@ -20,7 +20,9 @@ import team.duckie.quackquack.ui.component.QuackDivider
 internal fun SettingAccountInformationScreen(
     onClickBack: () -> Unit,
     onClickLogOut: () -> Unit,
-    onClickSignOut: () -> Unit
+    onClickSignOut: () -> Unit,
+    accountType: AccountType,
+    email: String,
 ) {
     BaseAppSettingLayout(
         topAppBar = {
@@ -34,7 +36,7 @@ internal fun SettingAccountInformationScreen(
         },
         content = {
             PaddingQuackTitle2(
-                text = AccountType.KAKAO.kor + stringResource(
+                text = accountType.kor + stringResource(
                     id = R.string.account,
                 ),
             )
@@ -43,7 +45,7 @@ internal fun SettingAccountInformationScreen(
                 text = stringResource(
                     id = R.string.email,
                 ),
-                content = "abcd@naver.com",
+                content = email,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -67,15 +69,4 @@ internal fun SettingAccountInformationScreen(
             )
         }
     )
-}
-
-@Preview
-@Composable
-fun PreviewSettingAccountInformationScreen() {
-    SettingAccountInformationScreen(
-        onClickBack = { /*TODO*/ },
-        onClickLogOut = { /*TODO*/ },
-    ) {
-
-    }
 }

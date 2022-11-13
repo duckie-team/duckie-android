@@ -14,6 +14,8 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 @Composable
 fun SettingInquiryScreen(
     onClickBack: () -> Unit,
+    email: String,
+    instagram: String,
 ) {
     BaseAppSettingLayout(
         topAppBar = {
@@ -40,14 +42,14 @@ fun SettingInquiryScreen(
             text = stringResource(
                 id = R.string.email,
             ),
-            content = "sh007100@naver.com",
+            content = email,
         )
 
         PaddingTitleAndContentText(
             text = stringResource(
                 id = R.string.instagram,
             ),
-            content = "limsaehyun",
+            content = instagram,
         )
     }
 }

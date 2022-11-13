@@ -2,10 +2,10 @@ package land.sungbin.androidprojecttemplate.ui.main.setting.screen
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
 import land.sungbin.androidprojecttemplate.ui.main.setting.utils.SettingStep
 import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
 
@@ -13,7 +13,8 @@ import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
 @Composable
 internal fun SettingScreen(
     vm: SettingViewModel,
-) {
+) = CoroutineScopeContent {
+
     val state = vm.state.collectAsStateWithLifecycle().value
 
     Crossfade(
@@ -23,16 +24,16 @@ internal fun SettingScreen(
             SettingStep.SETTING_MAIN_SCREEN -> {
                 SettingMainScreen(
                     onClickBack = {
-                        //처TODO
+
                     },
                     onClickAccountInformation = {
                         vm.navigatePage(
-                            step = SettingStep.SETTING_ACCOUNT_INFORMATION_SCREEN,
+                            step = SettingStep.SETTING_NOTIFICATION_SCREEN
                         )
                     },
                     onClickNotification = {
                         vm.navigatePage(
-                            step = SettingStep.SETTING_NOTIFICATION_SCREEN
+                            step = SettingStep.SETTING_NOTIFICATION_SCREEN,
                         )
                     },
                     onClickInquiry = {
@@ -61,6 +62,8 @@ internal fun SettingScreen(
                     onClickSignOut = {
                         //TODO
                     },
+                    accountType = state.accountType,
+                    email = state.email,
                 )
             }
 
@@ -91,7 +94,9 @@ internal fun SettingScreen(
                         vm.navigatePage(
                             step = SettingStep.SETTING_MAIN_SCREEN,
                         )
-                    }
+                    },
+                    email = state.email,
+                    instagram = state.instagram,
                 )
             }
 
@@ -101,7 +106,15 @@ internal fun SettingScreen(
                         vm.navigatePage(
                             step = SettingStep.SETTING_MAIN_SCREEN,
                         )
-                    }
+                    },
+                    activityNotifications = state.activityNotifications,
+                    changeActivityNotifications = {
+                        vm.changeActivityNotifications(it)
+                    },
+                    messageNotifications = state.messageNotifications,
+                    changeMessageNotifications = {
+                        vm.changeMessageNotifications(it)
+                    },
                 )
             }
 
@@ -111,7 +124,7 @@ internal fun SettingScreen(
                         vm.navigatePage(
                             step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
                         )
-                    }
+                    },
                 )
             }
         }
