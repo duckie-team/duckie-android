@@ -130,7 +130,7 @@ internal fun OnboardTagScreen(
                         },
                         itemsSelection = itemsSelection.subList(
                             categoryIndex * 10,
-                            categoryIndex * 10 + 10
+                            categoryIndex * 10 + 7
                         ),
                     )
                     if (categoryIndex == categories.size - 1) Spacer(
