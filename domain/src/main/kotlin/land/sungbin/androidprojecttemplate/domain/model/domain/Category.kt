@@ -1,6 +1,8 @@
 package land.sungbin.androidprojecttemplate.domain.model.domain
 
-data class Category(
+import land.sungbin.androidprojecttemplate.domain.model.constraint.Tag
+
+data class Categorye(
     val id: Int,
     val title: String,
     val imageUrl: String = "https://picsum.photos/id/237/200/300",
