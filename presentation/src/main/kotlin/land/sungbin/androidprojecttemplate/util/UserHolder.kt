@@ -2,22 +2,23 @@ package land.sungbin.androidprojecttemplate.util
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import land.sungbin.androidprojecttemplate.domain.model.LoginUser
 import land.sungbin.androidprojecttemplate.domain.model.User
 import javax.inject.Inject
 
 class UserHolder @Inject constructor(
     private val prefUtil: PrefUtil
 ) {
-    private var user: User? = null
+    private var user: LoginUser? = null
 
-    fun setUser(user: User?) {
+    fun setUser(user: LoginUser?) {
         if (user != null) {
             val userJsonStr = Gson().toJson(user, User::class.java)
             prefUtil.setString(PrefKeys.Session.FILE_NAME, PrefKeys.Session.KEY_USER, userJsonStr)
         }
     }
 
-    fun getUser(): User? {
+    fun getUser(): LoginUser? {
         var user = this.user
         if (user == null) {
             val userJsonStr =
@@ -25,7 +26,7 @@ class UserHolder @Inject constructor(
             if (userJsonStr != null) {
                 user = GsonBuilder()
                     .create()
-                    .fromJson(userJsonStr, User::class.java)
+                    .fromJson(userJsonStr, LoginUser::class.java)
                 this.user = user
             }
         }
