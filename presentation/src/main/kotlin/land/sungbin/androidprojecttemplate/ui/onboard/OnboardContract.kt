@@ -2,8 +2,7 @@ package land.sungbin.androidprojecttemplate.ui.onboard
 
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
-import land.sungbin.androidprojecttemplate.data.domain.Category
-import land.sungbin.androidprojecttemplate.data.domain.Tag
+import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 
 data class OnboardState(
     val onboardState: OnboardPage = OnboardPage.Profile,
@@ -22,7 +21,7 @@ data class OnboardState(
     )
 
     data class TagModel(
-        val selectedTags: List<Tag> = emptyList(),
+        val selectedTags: List<> = emptyList(),
     )
 }
 

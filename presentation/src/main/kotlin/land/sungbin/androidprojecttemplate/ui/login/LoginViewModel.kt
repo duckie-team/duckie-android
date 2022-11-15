@@ -1,7 +1,7 @@
 package land.sungbin.androidprojecttemplate.ui.login
 
 import land.sungbin.androidprojecttemplate.base.BaseViewModel
-import land.sungbin.androidprojecttemplate.data.repository.auth.AuthRepository
+import land.sungbin.androidprojecttemplate.domain.repository.AuthRepository
 import land.sungbin.androidprojecttemplate.util.UserHolder
 import javax.inject.Inject
 import javax.inject.Singleton

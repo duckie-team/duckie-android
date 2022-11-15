@@ -2,7 +2,7 @@ package land.sungbin.androidprojecttemplate.ui.onboard
 
 import kotlinx.collections.immutable.persistentListOf
 import land.sungbin.androidprojecttemplate.base.BaseViewModel
-import land.sungbin.androidprojecttemplate.data.domain.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,7 +55,7 @@ class OnboardViewModel @Inject constructor() :
     }
 
 
-    fun onClickCategory(checked: Boolean, category: Category) {
+    fun onClickCategory(checked: Boolean, category: land.sungbin.androidprojecttemplate.data.model.auth.Category) {
         updateState {
             when (checked) {
                 true -> {
