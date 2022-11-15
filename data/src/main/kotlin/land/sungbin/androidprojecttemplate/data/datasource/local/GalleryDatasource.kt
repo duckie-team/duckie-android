@@ -12,8 +12,9 @@ import kotlinx.coroutines.withContext
 import land.sungbin.androidprojecttemplate.domain.model.MediaStoreImage
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class GalleryDatasource(
+class GalleryDatasource @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
     private var contentObserver: ContentObserver? = null
