@@ -67,7 +67,7 @@ class OnboardActivity : ComponentActivity() {
             val images =
                 data?.getParcelableExtra<ImageGalleryResponse>(IMAGE_DATA)?.images ?: listOf()
             if (images.isNotEmpty()) {
-                viewModel.setProfileImage(images[0].toString())
+                viewModel.setProfileImage(images[0])
             }
         }
     }

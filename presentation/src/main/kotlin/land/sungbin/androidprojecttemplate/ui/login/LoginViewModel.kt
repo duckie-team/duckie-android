@@ -4,7 +4,7 @@ import land.sungbin.androidprojecttemplate.base.BaseViewModel
 import land.sungbin.androidprojecttemplate.domain.usecase.auth.KakaoLoginUseCase
 import land.sungbin.androidprojecttemplate.domain.usecase.auth.LoginUseCase
 import land.sungbin.androidprojecttemplate.domain.usecase.auth.SignUpUseCase
-import land.sungbin.androidprojecttemplate.util.UserHolder
+import land.sungbin.androidprojecttemplate.domain.usecase.user.SetUserUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,7 +13,7 @@ class LoginViewModel @Inject constructor(
     private val kakaoLoginUseCase: KakaoLoginUseCase,
     private val loginUseCase: LoginUseCase,
     private val signUpUseCase: SignUpUseCase,
-    private val userHolder: UserHolder,
+    private val setUserUseCase: SetUserUseCase,
 ) : BaseViewModel<LoginState, LoginSideEffect>(LoginState.Initial) {
 
     suspend fun kakaoLogin() {
@@ -28,7 +28,11 @@ class LoginViewModel @Inject constructor(
 
     private suspend fun login() {
         loginUseCase().onSuccess { response ->
-            userHolder.setUser(response.user)
+            setUserUseCase(response.user).onSuccess {
+
+            }.onFailure {
+
+            }
         }.onFailure {
             updateState { LoginState.LoginFailed(it) }
         }

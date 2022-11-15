@@ -1,13 +1,13 @@
 package land.sungbin.androidprojecttemplate.ui.splash
 
 import land.sungbin.androidprojecttemplate.base.BaseViewModel
-import land.sungbin.androidprojecttemplate.util.UserHolder
+import land.sungbin.androidprojecttemplate.domain.usecase.user.HasSessionUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SplashViewModel @Inject constructor(
-    private val userHolder: UserHolder,
+    private val hasSessionUseCase: HasSessionUseCase,
 ) : BaseViewModel<SplashState, SplashSideEffect>(SplashState()) {
 
     fun navigatePage(page: SplashPage) = updateState {
@@ -15,9 +15,10 @@ class SplashViewModel @Inject constructor(
     }
 
     suspend fun onCheckSession() {
-        when (userHolder.hasSession()) {
-            true -> postSideEffect { SplashSideEffect.NavigateToMain }
-            else -> postSideEffect { SplashSideEffect.NavigateToLogin }
+        hasSessionUseCase().onSuccess {
+            postSideEffect { SplashSideEffect.NavigateToMain }
+        }.onFailure {
+            postSideEffect { SplashSideEffect.NavigateToLogin }
         }
     }
 }

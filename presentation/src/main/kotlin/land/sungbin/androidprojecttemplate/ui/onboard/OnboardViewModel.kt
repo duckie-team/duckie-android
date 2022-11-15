@@ -3,7 +3,7 @@ package land.sungbin.androidprojecttemplate.ui.onboard
 import kotlinx.collections.immutable.toPersistentList
 import land.sungbin.androidprojecttemplate.base.BaseViewModel
 import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
-import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchCategoriesUseCase
+import land.sungbin.androidprojecttemplate.domain.usecase.user.FetchCategoriesUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
