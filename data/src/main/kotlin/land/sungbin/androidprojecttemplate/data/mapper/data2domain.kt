@@ -143,6 +143,7 @@ internal fun ChatRoomData.toDomain() = ChatRoom(
         Category.values()[categoryIndex]
     },
     tags = tags,
+    joinUsers = emptyList(),
 )
 
 internal fun CommentData.toDomain() = Comment(
