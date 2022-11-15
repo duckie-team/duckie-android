@@ -5,15 +5,13 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import javax.inject.Inject
 
-class KakaoDatasource(
-    @Inject private val client: UserApiClient,
-) {
+class KakaoDatasource @Inject constructor() {
     fun login(
         context: Context,
         onLoginSuccess: (OAuthToken) -> Unit,
         onLoginFailed: (Throwable) -> Unit,
     ) {
-        client.loginWithKakaoTalk(context) { token, error ->
+        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
             if (error != null) {
                 onLoginFailed(error)
             } else if (token != null) {
