@@ -9,7 +9,6 @@ import land.sungbin.androidprojecttemplate.data.Constants.BaseUrl
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import javax.inject.Inject
 
-@Suppress("KDocFields")
 class RemoteDataSource(
    @Inject private val client: HttpClient
 ){
