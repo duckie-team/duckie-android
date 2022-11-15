@@ -2,10 +2,10 @@ package land.sungbin.androidprojecttemplate.domain.usecase.user
 
 import land.sungbin.androidprojecttemplate.domain.repository.UserRepository
 
-class FetchCategoriesUseCase(
+class HasSessionUseCase(
     private val repository: UserRepository,
 ) {
-    suspend operator fun invoke() = runCatching {
-        repository.fetchCategories()
+    operator fun invoke() = runCatching {
+        repository.hasSession()
     }
 }
