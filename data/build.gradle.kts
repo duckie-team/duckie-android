@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -21,4 +22,5 @@ dependencies {
     Dependencies.Network.forEach(::implementation)
     Dependencies.Login.forEach(::implementation)
     implementation(Dependencies.Jetpack.Hilt)
+    add("kapt",Dependencies.Compiler.Hilt)
 }
