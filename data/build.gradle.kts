@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -20,4 +21,5 @@ dependencies {
     implementation(project(":domain"))
     Dependencies.Network.forEach(::implementation)
     implementation(Dependencies.Jetpack.Hilt)
+    Dependencies.Login.forEach(::implementation)
 }

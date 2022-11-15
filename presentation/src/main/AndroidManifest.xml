@@ -50,7 +50,7 @@
         </activity>
 
         <activity
-            android:name=".ui.component.gallery.ImageGalleryActivity"
+            android:name=".ui.common.gallery.ImageGalleryActivity"
             android:exported="false" />
 
         <activity
