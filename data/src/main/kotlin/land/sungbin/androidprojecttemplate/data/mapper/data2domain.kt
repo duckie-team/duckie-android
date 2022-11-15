@@ -18,6 +18,7 @@ import land.sungbin.androidprojecttemplate.data.model.FeedData
 import land.sungbin.androidprojecttemplate.data.model.FeedScoreData
 import land.sungbin.androidprojecttemplate.data.model.FollowData
 import land.sungbin.androidprojecttemplate.data.model.HeartData
+import land.sungbin.androidprojecttemplate.data.model.LikeCategoryData
 import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.UserData
@@ -44,6 +45,7 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.ChatType
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DislikeReason
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
 import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
@@ -381,4 +383,11 @@ internal fun UserData.toDomain() = User(
     ).toDate(),
     deletedAt = delete_at?.toDate(),
     bannedAt = banned_at?.toDate(),
+)
+
+internal fun LikeCategoryData.toDomain() = LikeCategory(
+    id = id,
+    title = title,
+    imageUrl = imageUrl,
+    popularTags = popularTags.toList(),
 )

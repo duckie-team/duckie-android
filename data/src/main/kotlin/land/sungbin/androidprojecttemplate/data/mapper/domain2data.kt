@@ -22,6 +22,7 @@ import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.UserData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
+import land.sungbin.androidprojecttemplate.data.model.constraint.CategoriesData
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
@@ -100,7 +101,7 @@ internal fun Comment.toDat() = CommentData(
 
 internal fun ContentStayTime.toData() = ContentStayTimeData(
     user_id = userId,
-    categories = categories,
+    categories = categories.requireNoNulls(),
     search = search,
     dm = dm,
     notification = notification,
