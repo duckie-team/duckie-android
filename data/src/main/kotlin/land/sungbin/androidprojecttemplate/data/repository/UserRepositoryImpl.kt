@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
-    private val preferenceDataSource: PreferenceDataSource
+    private val preferenceDataSource: PreferenceDataSource,
 ) : UserRepository {
 
     override suspend fun fetchCategories(): List<LikeCategory> {
@@ -19,15 +19,22 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override fun getUser(): LoginUser? {
-        val userJsonStr = preferenceDataSource.getString(PreferenceDataSource.FILE_NAME, PreferenceDataSource.KEY_USER)
+        val userJsonStr = preferenceDataSource.getString(
+            PreferenceDataSource.FILE_NAME,
+            PreferenceDataSource.KEY_USER
+        )
         return userJsonStr?.let {
-            GsonBuilder().create().fromJson(userJsonStr,LoginUser::class.java)
+            GsonBuilder().create().fromJson(userJsonStr, LoginUser::class.java)
         }
     }
 
     override fun setUser(user: LoginUser) {
         val userJsonStr = Gson().toJson(user, LoginUser::class.java)
-        preferenceDataSource.setString(PreferenceDataSource.FILE_NAME, PreferenceDataSource.KEY_USER, userJsonStr)
+        preferenceDataSource.setString(
+            PreferenceDataSource.FILE_NAME,
+            PreferenceDataSource.KEY_USER,
+            userJsonStr
+        )
     }
 
     override fun hasSession(): Boolean {

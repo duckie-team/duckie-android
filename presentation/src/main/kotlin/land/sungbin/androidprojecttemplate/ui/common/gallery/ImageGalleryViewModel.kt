@@ -18,8 +18,6 @@ class ImageGalleryViewModel @Inject constructor(
     private val releaseObserverUseCase: ReleaseObserverUseCase,
 ) : BaseViewModel<ImageGalleryState, ImageGallerySideEffect>(ImageGalleryState()) {
 
-    private val TAG = ImageGalleryViewModel::class.java.simpleName
-
     suspend fun loadImages() {
         loadImagesUseCase().onSuccess { loadedImages: List<MediaStoreImage> ->
             updateState {
@@ -92,7 +90,7 @@ class ImageGalleryViewModel @Inject constructor(
 
     fun releaseObserver() {
         releaseObserverUseCase().onSuccess {
-            Log.d("dispose 성공","")
+            Log.d("dispose 성공", "")
         }
     }
 }

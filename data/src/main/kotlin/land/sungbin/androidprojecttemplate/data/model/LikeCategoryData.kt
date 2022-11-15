@@ -14,8 +14,5 @@ data class LikeCategoryData(
         Tag(id * 10 + 4, "탑건"),
         Tag(id * 10 + 5, "해리포터"),
         Tag(id * 10 + 6, "반지의 제왕"),
-        Tag(id * 10 + 7, "반지의 제왕"),
-        Tag(id * 10 + 8, "반지의 제왕"),
-        Tag(id * 10 + 9, "반지의 제왕")
     ),
 )

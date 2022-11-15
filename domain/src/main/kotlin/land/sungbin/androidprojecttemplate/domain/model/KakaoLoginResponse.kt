@@ -2,7 +2,6 @@ package land.sungbin.androidprojecttemplate.domain.model
 
 import java.util.Date
 
-
 data class KakaoLoginResponse(
     val accessToken: String,
     val accessTokenExpiresAt: Date,

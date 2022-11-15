@@ -7,7 +7,7 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
 import javax.inject.Inject
 
 class UserDataSource @Inject constructor(
-   private val client: HttpClient,
+    private val client: HttpClient,
 ) {
     suspend fun getCategories(): List<LikeCategory> {
         /*val request = client.get {
@@ -24,7 +24,6 @@ class UserDataSource @Inject constructor(
             LikeCategoryData(5, "밀리터리"),
             LikeCategoryData(6, "IT"),
             LikeCategoryData(7, "게임"),
-            LikeCategoryData(8, "밀리터리"),
         ).map { it.toDomain() }
     }
 }

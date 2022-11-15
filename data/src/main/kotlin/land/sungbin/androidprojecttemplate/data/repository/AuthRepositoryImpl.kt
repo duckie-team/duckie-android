@@ -36,6 +36,7 @@ class AuthRepositoryImpl @Inject constructor(
             )
         }
     }
+
     override suspend fun login(): LoginResponse {
         return LoginResponseData(LoginUserData()).toDomain()
     }
