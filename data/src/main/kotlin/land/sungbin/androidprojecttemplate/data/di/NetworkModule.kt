@@ -18,7 +18,6 @@ import land.sungbin.androidprojecttemplate.data.Constants.MaxRetryCount
 import land.sungbin.androidprojecttemplate.data.Constants.MaxTimeoutMillis
 import javax.inject.Singleton
 
-@Suppress("KDocFields")
 @Module
 @InstallIn(SingletonComponent::class)
 internal class NetworkModule {
