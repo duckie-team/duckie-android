@@ -2,7 +2,7 @@
 
 작성자: [Ji Sungbin](https://www.linkedin.com/in/ji-sungbin-4343b7219/)  
 본문 마지막 업데이트: 2022. 10. 30.  
-상태: 검토 중
+상태: 승인
 
 ### 목차
 
