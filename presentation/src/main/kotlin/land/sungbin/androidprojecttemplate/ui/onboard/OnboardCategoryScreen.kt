@@ -13,7 +13,8 @@ import kotlinx.collections.immutable.PersistentList
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.constants.UiConstant.CATEGORY_COLUMN_COUNT
 import land.sungbin.androidprojecttemplate.constants.UiConstant.WHITE_GRADIENT_HEIGHT
-import land.sungbin.androidprojecttemplate.data.model.auth.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
 import land.sungbin.androidprojecttemplate.ui.component.BackArrowTopAppBar
 import land.sungbin.androidprojecttemplate.ui.component.DuckieSimpleLayout
 import land.sungbin.androidprojecttemplate.ui.component.TitleAndDescription
@@ -25,9 +26,9 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 @Composable
 internal fun OnboardCategoryScreen(
     isNextButtonVisible: Boolean,
-    categories: PersistentList<land.sungbin.androidprojecttemplate.data.model.auth.Category>,
-    selectedCategories: PersistentList<land.sungbin.androidprojecttemplate.data.model.auth.Category>,
-    onClickCategory: (Boolean, land.sungbin.androidprojecttemplate.data.model.auth.Category) -> Unit,
+    categories: PersistentList<LikeCategory>,
+    selectedCategories: PersistentList<LikeCategory>,
+    onClickCategory: (Boolean, LikeCategory) -> Unit,
     onClickBack: () -> Unit,
     onClickNext: () -> Unit,
 ) {
@@ -65,8 +66,8 @@ internal fun OnboardCategoryScreen(
 
 @Composable
 private fun CategoryGridLayout(
-    categories: PersistentList<land.sungbin.androidprojecttemplate.data.model.auth.Category>,
-    selectedCategories: PersistentList<land.sungbin.androidprojecttemplate.data.model.auth.Category>,
+    categories: PersistentList<LikeCategory>,
+    selectedCategories: PersistentList<LikeCategory>,
     onClick: (Int, Boolean) -> Unit,
 ) {
     QuackSimpleGridLayout(
@@ -90,7 +91,7 @@ private fun CategoryGridLayout(
 private fun CategoryItem(
     isChecked: Boolean,
     index: Int,
-    category: land.sungbin.androidprojecttemplate.data.model.auth.Category,
+    category: LikeCategory,
     onClick: (Int, Boolean) -> Unit,
 ) {
     Column(

@@ -1,36 +1,35 @@
 package land.sungbin.androidprojecttemplate.ui.onboard
 
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import land.sungbin.androidprojecttemplate.base.BaseViewModel
-import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
+import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchCategoriesUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OnboardViewModel @Inject constructor() :
+class OnboardViewModel @Inject constructor(
+    private val fetchCategoriesUseCase: FetchCategoriesUseCase,
+) :
     BaseViewModel<OnboardState, OnboardSideEffect>(OnboardState()) {
-    init {
-        fetchCategories()
-    }
 
-    private fun fetchCategories() {
-        updateState {
-            copy(
-                categoriesModel = categoriesModel.copy(
-                    categories = persistentListOf(
-                        Category(0, "연예인"),
-                        Category(1, "영화"),
-                        Category(2, "만화/애니"),
-                        Category(3, "웹툰"),
-                        Category(4, "게임"),
-                        Category(5, "밀리터리"),
-                        Category(6, "IT"),
-                        Category(7, "게임"),
-                        Category(8, "밀리터리"),
-                        Category(9, "IT"),
+    suspend fun fetchCategories() {
+        fetchCategoriesUseCase().onSuccess { categories: List<LikeCategory> ->
+            updateState {
+                copy(
+                    categoriesModel = categoriesModel.copy(
+                        categories = categories.toPersistentList()
                     )
                 )
-            )
+            }
+        }.onFailure {
+            updateState {
+                copy(
+                    categoriesModel = categoriesModel.copy(
+                        categories = emptyList<LikeCategory>().toPersistentList()
+                    )
+                )
+            }
         }
     }
 
@@ -55,7 +54,10 @@ class OnboardViewModel @Inject constructor() :
     }
 
 
-    fun onClickCategory(checked: Boolean, category: land.sungbin.androidprojecttemplate.data.model.auth.Category) {
+    fun onClickCategory(
+        checked: Boolean,
+        category: LikeCategory,
+    ) {
         updateState {
             when (checked) {
                 true -> {

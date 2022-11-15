@@ -3,6 +3,8 @@ package land.sungbin.androidprojecttemplate.ui.onboard
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
+import land.sungbin.androidprojecttemplate.domain.model.constraint.Tag
 
 data class OnboardState(
     val onboardState: OnboardPage = OnboardPage.Profile,
@@ -16,12 +18,12 @@ data class OnboardState(
     )
 
     data class CategoriesModel(
-        val categories: PersistentList<Category> = emptyList<Category>().toPersistentList(),
-        val selectedCategories: MutableList<Category> = mutableListOf(),
+        val categories: PersistentList<LikeCategory> = emptyList<LikeCategory>().toPersistentList(),
+        val selectedCategories: MutableList<LikeCategory> = mutableListOf(),
     )
 
     data class TagModel(
-        val selectedTags: List<> = emptyList(),
+        val selectedTags: List<Tag> = emptyList(),
     )
 }
 

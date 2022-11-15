@@ -34,7 +34,10 @@ class OnboardActivity : ComponentActivity() {
                     viewModel = viewModel,
                 )
             }
-            LaunchedEffect(key1 = viewModel.effect) {
+            LaunchedEffect(Unit){
+                viewModel.fetchCategories()
+            }
+            LaunchedEffect(viewModel.effect) {
                 viewModel.effect.collect { effect ->
                     when (effect) {
                         OnboardSideEffect.NavigateToLogin -> {

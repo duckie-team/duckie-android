@@ -20,8 +20,8 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.constants.UiConstant.WHITE_GRADIENT_HEIGHT
-import land.sungbin.androidprojecttemplate.data.model.auth.Category
-import land.sungbin.androidprojecttemplate.data.model.auth.Tag
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
+import land.sungbin.androidprojecttemplate.domain.model.constraint.Tag
 import land.sungbin.androidprojecttemplate.ui.component.DuckieSimpleLayout
 import land.sungbin.androidprojecttemplate.ui.component.TitleAndDescription
 import team.duckie.quackquack.ui.color.QuackColor
@@ -34,7 +34,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun OnboardTagScreen(
-    categories: PersistentList<land.sungbin.androidprojecttemplate.data.model.auth.Category>,
+    categories: PersistentList<LikeCategory>,
     onClickBack: () -> Unit,
     onClickComplete: () -> Unit,
 ) {
@@ -55,7 +55,7 @@ internal fun OnboardTagScreen(
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-    val selectedTags = remember { mutableStateListOf<land.sungbin.androidprojecttemplate.data.model.auth.Tag>() }
+    val selectedTags = remember { mutableStateListOf<Tag>() }
 
     LaunchedEffect(bottomSheetState.isVisible) {
         if (!bottomSheetState.isVisible) {
@@ -153,7 +153,7 @@ internal fun OnboardTagScreen(
 
 @Composable
 private fun CategoryPopularTags(
-    category: land.sungbin.androidprojecttemplate.data.model.auth.Category,
+    category: LikeCategory,
     itemsSelection: List<Boolean>,
     onClickTag: (Int) -> Unit,
 ) {
