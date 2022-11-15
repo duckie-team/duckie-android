@@ -22,6 +22,10 @@ import land.sungbin.androidprojecttemplate.data.model.LikeCategoryData
 import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.UserData
+import land.sungbin.androidprojecttemplate.data.model.auth.KakaoLoginResponseData
+import land.sungbin.androidprojecttemplate.data.model.auth.LoginResponseData
+import land.sungbin.androidprojecttemplate.data.model.auth.LoginUserData
+import land.sungbin.androidprojecttemplate.data.model.auth.SignUpResponseData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
@@ -34,8 +38,12 @@ import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
+import land.sungbin.androidprojecttemplate.domain.model.KakaoLoginResponse
+import land.sungbin.androidprojecttemplate.domain.model.LoginResponse
+import land.sungbin.androidprojecttemplate.domain.model.LoginUser
 import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
+import land.sungbin.androidprojecttemplate.domain.model.SignUpResponse
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badge
@@ -390,4 +398,25 @@ internal fun LikeCategoryData.toDomain() = LikeCategory(
     title = title,
     imageUrl = imageUrl,
     popularTags = popularTags.toList(),
+)
+
+internal fun KakaoLoginResponseData.toDoMain() = KakaoLoginResponse(
+    accessToken = token.accessToken,
+    accessTokenExpiresAt = token.accessTokenExpiresAt,
+    refreshToken = token.refreshToken,
+    refreshTokenExpiresAt = token.refreshTokenExpiresAt,
+    idToken = token.idToken,
+    scopes = token.scopes,
+)
+
+internal fun LoginResponseData.toDomain() = LoginResponse(
+    user = user.toDomain(),
+)
+
+internal fun LoginUserData.toDomain() = LoginUser(
+    username = username,
+)
+
+internal fun SignUpResponseData.toDomain() = SignUpResponse(
+    isSuccess = isSuccess,
 )
