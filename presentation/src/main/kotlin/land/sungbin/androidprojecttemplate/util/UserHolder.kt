@@ -2,7 +2,7 @@ package land.sungbin.androidprojecttemplate.util
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import land.sungbin.androidprojecttemplate.data.domain.User
+import land.sungbin.androidprojecttemplate.domain.model.User
 import javax.inject.Inject
 
 class UserHolder @Inject constructor(
