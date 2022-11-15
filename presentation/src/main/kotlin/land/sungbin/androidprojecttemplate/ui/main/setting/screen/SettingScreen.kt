@@ -80,10 +80,14 @@ internal fun SettingScreen(
                         )
                     },
                     onClickOpenSourceLicense = {
-                        //TODO
+                        vm.navigatePage(
+                            step = SettingStep.SETTING_OPEN_SOURCE_LICENSE_SCREEN,
+                        )
                     },
                     onClickPrivacyPolicy = {
-                        //TODO
+                        vm.navigatePage(
+                            step = SettingStep.SETTING_PRIVACY_POLICY_SCREEN,
+                        )
                     },
                 )
             }
@@ -120,6 +124,26 @@ internal fun SettingScreen(
 
             SettingStep.SETTING_TERMS_SCREEN -> {
                 SettingTermsScreen(
+                    onClickBack = {
+                        vm.navigatePage(
+                            step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
+                        )
+                    },
+                )
+            }
+
+            SettingStep.SETTING_OPEN_SOURCE_LICENSE_SCREEN -> {
+                SettingLicenseScreen(
+                    onClickBack = {
+                        vm.navigatePage(
+                            step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
+                        )
+                    },
+                )
+            }
+
+            SettingStep.SETTING_PRIVACY_POLICY_SCREEN -> {
+                SettingPrivacyPolicy(
                     onClickBack = {
                         vm.navigatePage(
                             step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
