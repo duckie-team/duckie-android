@@ -3,9 +3,6 @@
 
 package land.sungbin.androidprojecttemplate.data.mapper
 
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import land.sungbin.androidprojecttemplate.data.model.ChatData
 import land.sungbin.androidprojecttemplate.data.model.ChatReadData
 import land.sungbin.androidprojecttemplate.data.model.ChatRoomData
@@ -20,6 +17,7 @@ import land.sungbin.androidprojecttemplate.data.model.FollowData
 import land.sungbin.androidprojecttemplate.data.model.HeartData
 import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
+import land.sungbin.androidprojecttemplate.data.model.SettingData
 import land.sungbin.androidprojecttemplate.data.model.UserData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
 import land.sungbin.androidprojecttemplate.domain.model.Chat
@@ -35,6 +33,7 @@ import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
+import land.sungbin.androidprojecttemplate.domain.model.SettingEntity
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badge
@@ -44,6 +43,9 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
 import land.sungbin.androidprojecttemplate.domain.model.util.NewField
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 private fun Content.toData() = ContentData(
     text = text,
@@ -197,4 +199,9 @@ internal fun User.toData() = UserData(
     create_at = createdAt.toDataString(),
     delete_at = deletedAt?.toDataString(),
     banned_at = bannedAt?.toDataString(),
+)
+
+internal fun SettingEntity.toData() = SettingData(
+    activityNotification = activityNotification,
+    messageNotification = messageNotification,
 )

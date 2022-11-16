@@ -5,8 +5,6 @@
 
 package land.sungbin.androidprojecttemplate.data.mapper
 
-import java.text.SimpleDateFormat
-import java.util.Locale
 import land.sungbin.androidprojecttemplate.data.model.ChatData
 import land.sungbin.androidprojecttemplate.data.model.ChatReadData
 import land.sungbin.androidprojecttemplate.data.model.ChatRoomData
@@ -20,6 +18,7 @@ import land.sungbin.androidprojecttemplate.data.model.FollowData
 import land.sungbin.androidprojecttemplate.data.model.HeartData
 import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
+import land.sungbin.androidprojecttemplate.data.model.SettingData
 import land.sungbin.androidprojecttemplate.data.model.UserData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
 import land.sungbin.androidprojecttemplate.domain.model.Chat
@@ -35,6 +34,7 @@ import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
+import land.sungbin.androidprojecttemplate.domain.model.SettingEntity
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badge
@@ -47,6 +47,8 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
 import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 private fun ContentData.toDomain() = Content(
     text = text.unwrap(
@@ -143,6 +145,7 @@ internal fun ChatRoomData.toDomain() = ChatRoom(
         Category.values()[categoryIndex]
     },
     tags = tags,
+    joinUsers = emptyList(),
 )
 
 internal fun CommentData.toDomain() = Comment(
@@ -380,4 +383,9 @@ internal fun UserData.toDomain() = User(
     ).toDate(),
     deletedAt = delete_at?.toDate(),
     bannedAt = banned_at?.toDate(),
+)
+
+internal fun SettingData.toDomain() = SettingEntity(
+    activityNotification = activityNotification,
+    messageNotification = messageNotification,
 )
