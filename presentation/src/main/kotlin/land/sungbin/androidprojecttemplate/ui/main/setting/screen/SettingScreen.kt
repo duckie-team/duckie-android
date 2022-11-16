@@ -1,11 +1,14 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.screen
 
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
+import land.sungbin.androidprojecttemplate.ui.main.setting.mvi.SettingSideEffect
 import land.sungbin.androidprojecttemplate.ui.main.setting.utils.SettingStep
 import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
 
@@ -16,6 +19,22 @@ internal fun SettingScreen(
 ) = CoroutineScopeContent {
 
     val state = vm.state.collectAsStateWithLifecycle().value
+    val effect = vm.effect
+
+    LaunchedEffect(effect) {
+        effect.collect { effect ->
+            when (effect) {
+                SettingSideEffect.FetchSettingFailed -> {
+                }
+                SettingSideEffect.PostSettingFailed -> {
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        vm.fetchSetting()
+    }
 
     Crossfade(
         targetState = state.currentStep
@@ -24,7 +43,6 @@ internal fun SettingScreen(
             SettingStep.SETTING_MAIN_SCREEN -> {
                 SettingMainScreen(
                     onClickBack = {
-
                     },
                     onClickAccountInformation = {
                         vm.navigatePage(
@@ -57,10 +75,10 @@ internal fun SettingScreen(
                         )
                     },
                     onClickLogOut = {
-                        //TODO
+                        // TODO
                     },
                     onClickSignOut = {
-                        //TODO
+                        // TODO
                     },
                     accountType = state.accountType,
                     email = state.email,
@@ -158,5 +176,4 @@ internal fun SettingScreen(
 @Preview
 @Composable
 fun PreviewSettingScreen() {
-    SettingScreen(vm = SettingViewModel())
 }
