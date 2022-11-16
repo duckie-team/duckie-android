@@ -1,5 +1,6 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,11 @@ internal fun SettingNotificationScreen(
     changeMessageNotifications: (Boolean) -> Unit,
     onClickBack: () -> Unit,
 ) {
+
+    BackHandler {
+        onClickBack()
+    }
+
     BaseAppSettingLayout(
         topAppBar = {
             BackArrowTopAppBar(

@@ -1,5 +1,6 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -20,6 +21,11 @@ fun SettingDuckieInformationScreen(
     onClickPrivacyPolicy: () -> Unit,
     onClickOpenSourceLicense: () -> Unit,
 ) {
+
+    BackHandler {
+        onClickBack()
+    }
+
     BaseAppSettingLayout(
         topAppBar = {
             BackArrowTopAppBar(
