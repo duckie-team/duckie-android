@@ -76,6 +76,7 @@ dependencies {
         Dependencies.Util.Erratum,
         Dependencies.Quack.components,
         Dependencies.Jetpack.Hilt,
+        Dependencies.Jetpack.Room,
     ).dependenciesFlatten()
     dependencies.forEach(::implementation)
 
@@ -85,6 +86,10 @@ dependencies {
         orbit = true,
         hilt = true,
         compose = true,
-        test = false
+        test = false,
     )
+
+    implementation(project(":data"))
+
+    add("kapt", Dependencies.Jetpack.Room)
 }
