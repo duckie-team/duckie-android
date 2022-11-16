@@ -1,5 +1,6 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,12 +12,20 @@ import land.sungbin.androidprojecttemplate.ui.main.setting.component.BaseAppSett
 import land.sungbin.androidprojecttemplate.ui.main.setting.component.PaddingTitleAndContentText
 import team.duckie.quackquack.ui.component.QuackTitle2
 
+object DuckieInquiryData {
+
+    const val email = "duckieteam.hi@gmail.com"
+    const val instagram = "@duckie_team"
+}
 @Composable
 fun SettingInquiryScreen(
     onClickBack: () -> Unit,
-    email: String,
-    instagram: String,
 ) {
+
+    BackHandler {
+        onClickBack()
+    }
+
     BaseAppSettingLayout(
         topAppBar = {
             BackArrowTopAppBar(
@@ -42,14 +51,14 @@ fun SettingInquiryScreen(
             text = stringResource(
                 id = R.string.email,
             ),
-            content = email,
+            content = DuckieInquiryData.email,
         )
 
         PaddingTitleAndContentText(
             text = stringResource(
                 id = R.string.instagram,
             ),
-            content = instagram,
+            content = DuckieInquiryData.instagram,
         )
     }
 }

@@ -9,8 +9,6 @@ data class SettingState(
     val currentStep: SettingStep,
     val activityNotifications: Boolean,
     val messageNotifications: Boolean,
-    val email: String,
-    val instagram: String,
     val accountType: AccountType,
 ) : UiState
 

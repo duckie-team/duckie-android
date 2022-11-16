@@ -82,8 +82,6 @@ class SettingViewModel @Inject constructor(
             currentStep = SettingStep.SETTING_MAIN_SCREEN,
             activityNotifications = false,
             messageNotifications = false,
-            email = "sh007100@naver.com",
-            instagram = "limsaehyun",
             accountType = AccountType.KAKAO,
         )
     }

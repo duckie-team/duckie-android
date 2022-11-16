@@ -9,6 +9,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_DATA
 import land.sungbin.androidprojecttemplate.ui.DuckieTheme
 import land.sungbin.androidprojecttemplate.ui.component.gallery.ImageGalleryResponse
+import land.sungbin.androidprojecttemplate.ui.main.setting.screen.SettingScreen
+import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
 import land.sungbin.androidprojecttemplate.ui.navigator.DuckieNavigator
 import land.sungbin.androidprojecttemplate.util.EventObserver
 import javax.inject.Inject
@@ -21,6 +23,9 @@ class OnboardActivity : ComponentActivity() {
 
     private val viewModel: OnboardViewModel by viewModels()
 
+    @Inject
+    lateinit var settingvm: SettingViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
@@ -30,10 +35,13 @@ class OnboardActivity : ComponentActivity() {
     private fun initView() {
         setContent {
             DuckieTheme {
-                OnboardScreen(
-                    activity = this,
-                    viewModel = viewModel,
-                    navigator = navigator,
+//                OnboardScreen(
+//                    activity = this,
+//                    viewModel = viewModel,
+//                    navigator = navigator,
+//                )
+                SettingScreen(
+                    vm = settingvm,
                 )
             }
         }
