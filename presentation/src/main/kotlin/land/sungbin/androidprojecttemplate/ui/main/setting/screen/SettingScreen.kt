@@ -8,6 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
+import land.sungbin.androidprojecttemplate.shared.compose.extension.launch
 import land.sungbin.androidprojecttemplate.ui.main.setting.mvi.SettingSideEffect
 import land.sungbin.androidprojecttemplate.ui.main.setting.utils.SettingStep
 import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
@@ -129,11 +130,15 @@ internal fun SettingScreen(
                     },
                     activityNotifications = state.activityNotifications,
                     changeActivityNotifications = {
-                        vm.changeActivityNotifications(it)
+                        launch {
+                            vm.changeActivityNotifications(it)
+                        }
                     },
                     messageNotifications = state.messageNotifications,
                     changeMessageNotifications = {
-                        vm.changeMessageNotifications(it)
+                        launch {
+                            vm.changeMessageNotifications(it)
+                        }
                     },
                 )
             }

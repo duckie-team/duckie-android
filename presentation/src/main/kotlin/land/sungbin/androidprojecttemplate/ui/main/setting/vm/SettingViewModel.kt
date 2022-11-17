@@ -53,28 +53,24 @@ class SettingViewModel @Inject constructor(
         )
     }
 
-    fun changeActivityNotifications(state: Boolean) {
+    suspend fun changeActivityNotifications(state: Boolean) {
         setState {
             copy(
                 activityNotifications = state
             )
         }
 
-        suspend {
-            postSetting()
-        }
+        postSetting()
     }
 
-    fun changeMessageNotifications(state: Boolean) {
+    suspend fun changeMessageNotifications(state: Boolean) {
         setState {
             copy(
                 messageNotifications = state,
             )
         }
 
-        suspend {
-            postSetting()
-        }
+        postSetting()
     }
 
     override fun createInitialState(): SettingState {
