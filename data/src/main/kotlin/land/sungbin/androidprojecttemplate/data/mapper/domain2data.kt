@@ -102,7 +102,7 @@ internal fun Comment.toDat() = CommentData(
 
 internal fun ContentStayTime.toData() = ContentStayTimeData(
     user_id = userId,
-    categories = categories,
+    categories = categories.requireNoNulls(),
     search = search,
     dm = dm,
     notification = notification,
