@@ -28,5 +28,5 @@ dependencies {
     implementation(Dependencies.Jetpack.Room)
 
     add("kapt", Dependencies.Compiler.Hilt)
-    add("kapt", Dependencies.Jetpack.Room)
+    add("kapt", Dependencies.Compiler.RoomKsp)
 }
