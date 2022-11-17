@@ -10,6 +10,7 @@ data class SettingState(
     val activityNotifications: Boolean,
     val messageNotifications: Boolean,
     val accountType: AccountType,
+    val email: String,
 ) : UiState
 
 sealed class SettingSideEffect : UiEffect {

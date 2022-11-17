@@ -83,6 +83,7 @@ class SettingViewModel @Inject constructor(
             activityNotifications = false,
             messageNotifications = false,
             accountType = AccountType.KAKAO,
+            email = "sh007100@naver.com"
         )
     }
 }

@@ -54,18 +54,21 @@ fun SettingDuckieInformationScreen(
             text = stringResource(
                 id = R.string.terms,
             ),
+            onClick = onClickTerms,
         )
 
         PaddingQuackBody1(
             text = stringResource(
                 id = R.string.privacy_policy,
             ),
+            onClick = onClickPrivacyPolicy,
         )
 
         PaddingQuackBody1(
             text = stringResource(
                 id = R.string.open_source_license,
             ),
+            onClick = onClickOpenSourceLicense,
         )
     }
 }

@@ -46,7 +46,7 @@ internal fun SettingScreen(
                     },
                     onClickAccountInformation = {
                         vm.navigatePage(
-                            step = SettingStep.SETTING_NOTIFICATION_SCREEN
+                            step = SettingStep.SETTING_ACCOUNT_INFORMATION_SCREEN
                         )
                     },
                     onClickNotification = {
@@ -117,8 +117,6 @@ internal fun SettingScreen(
                             step = SettingStep.SETTING_MAIN_SCREEN,
                         )
                     },
-                    email = state.email,
-                    instagram = state.instagram,
                 )
             }
 
