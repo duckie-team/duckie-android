@@ -7,3 +7,9 @@ enum class AccountType(
         kor = "카카오",
     )
 }
+
+internal fun String.toAccountType(): AccountType =
+    when(this) {
+        "KAKAO" -> AccountType.KAKAO
+        else -> throw IllegalArgumentException()
+    }

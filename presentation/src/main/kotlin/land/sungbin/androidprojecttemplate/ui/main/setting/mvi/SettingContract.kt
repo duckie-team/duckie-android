@@ -17,4 +17,6 @@ sealed class SettingSideEffect : UiEffect {
     object FetchSettingFailed : SettingSideEffect()
 
     object PostSettingFailed : SettingSideEffect()
+
+    object FetchAccountInformationFailed : SettingSideEffect()
 }

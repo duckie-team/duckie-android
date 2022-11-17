@@ -1,6 +1,7 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.vm
 
 import land.sungbin.androidprojecttemplate.domain.model.SettingEntity
+import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchAccountInformationUseCase
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchSettingUseCase
 import land.sungbin.androidprojecttemplate.domain.usecase.score.UpdateSettingUseCase
 import land.sungbin.androidprojecttemplate.shared.android.base.BaseViewModel
@@ -8,6 +9,7 @@ import land.sungbin.androidprojecttemplate.ui.main.setting.mvi.SettingSideEffect
 import land.sungbin.androidprojecttemplate.ui.main.setting.mvi.SettingState
 import land.sungbin.androidprojecttemplate.ui.main.setting.utils.AccountType
 import land.sungbin.androidprojecttemplate.ui.main.setting.utils.SettingStep
+import land.sungbin.androidprojecttemplate.ui.main.setting.utils.toAccountType
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,6 +17,7 @@ import javax.inject.Singleton
 class SettingViewModel @Inject constructor(
     private val fetchSettingUseCase: FetchSettingUseCase,
     private val updateSettingUseCase: UpdateSettingUseCase,
+    private val fetchAccountInformationUseCase: FetchAccountInformationUseCase,
 ) : BaseViewModel<SettingState, SettingSideEffect>() {
 
     suspend fun fetchSetting() {
@@ -34,6 +37,24 @@ class SettingViewModel @Inject constructor(
             }
     }
 
+    suspend fun fetchAccountInformation() {
+        fetchAccountInformationUseCase()
+            .onSuccess { response ->
+                setState {
+                    copy(
+                        accountType = response.accountType.toAccountType(),
+                        email = response.email,
+                    )
+                }
+            }
+            .onFailure {
+                setEffect {
+                    SettingSideEffect.FetchAccountInformationFailed
+                }
+            }
+    }
+
+
     private suspend fun postSetting() {
         updateSettingUseCase(
             entity = SettingEntity(
@@ -46,6 +67,7 @@ class SettingViewModel @Inject constructor(
             }
         }
     }
+
 
     fun navigatePage(step: SettingStep) = setState {
         copy(
@@ -79,7 +101,7 @@ class SettingViewModel @Inject constructor(
             activityNotifications = false,
             messageNotifications = false,
             accountType = AccountType.KAKAO,
-            email = "sh007100@naver.com"
+            email = ""
         )
     }
 }

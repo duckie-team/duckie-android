@@ -19,6 +19,7 @@ object RoomModule {
         @ApplicationContext context: Context,
     ): DuckieDataBase = Room
         .databaseBuilder(context, DuckieDataBase::class.java, "DuckieDataBase")
+        .fallbackToDestructiveMigration()
         .build()
 
     @Provides

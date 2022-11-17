@@ -29,12 +29,15 @@ internal fun SettingScreen(
                 }
                 SettingSideEffect.PostSettingFailed -> {
                 }
+                SettingSideEffect.FetchAccountInformationFailed -> {
+                }
             }
         }
     }
 
     LaunchedEffect(key1 = Unit) {
         settingVM.fetchSetting()
+        settingVM.fetchAccountInformation()
     }
 
     Crossfade(
