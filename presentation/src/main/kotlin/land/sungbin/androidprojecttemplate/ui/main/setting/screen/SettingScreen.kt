@@ -1,6 +1,5 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.screen
 
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,13 +15,14 @@ import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun SettingScreen(
-    vm: SettingViewModel,
+    settingVM: SettingViewModel,
 ) = CoroutineScopeContent {
 
-    val state = vm.state.collectAsStateWithLifecycle().value
-    val effect = vm.effect
+    val state = settingVM.state.collectAsStateWithLifecycle().value
+    val effect = settingVM.effect
 
     LaunchedEffect(effect) {
+
         effect.collect { effect ->
             when (effect) {
                 SettingSideEffect.FetchSettingFailed -> {
@@ -34,7 +34,7 @@ internal fun SettingScreen(
     }
 
     LaunchedEffect(key1 = Unit) {
-        vm.fetchSetting()
+        settingVM.fetchSetting()
     }
 
     Crossfade(
@@ -46,22 +46,22 @@ internal fun SettingScreen(
                     onClickBack = {
                     },
                     onClickAccountInformation = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_ACCOUNT_INFORMATION_SCREEN
                         )
                     },
                     onClickNotification = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_NOTIFICATION_SCREEN,
                         )
                     },
                     onClickInquiry = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_INQUIRY_SCREEN,
                         )
                     },
                     onClickDuckieInformation = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
                         )
                     },
@@ -71,7 +71,7 @@ internal fun SettingScreen(
             SettingStep.SETTING_ACCOUNT_INFORMATION_SCREEN -> {
                 SettingAccountInformationScreen(
                     onClickBack = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_MAIN_SCREEN,
                         )
                     },
@@ -89,22 +89,22 @@ internal fun SettingScreen(
             SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN -> {
                 SettingDuckieInformationScreen(
                     onClickBack = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_MAIN_SCREEN,
                         )
                     },
                     onClickTerms = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_TERMS_SCREEN,
                         )
                     },
                     onClickOpenSourceLicense = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_OPEN_SOURCE_LICENSE_SCREEN,
                         )
                     },
                     onClickPrivacyPolicy = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_PRIVACY_POLICY_SCREEN,
                         )
                     },
@@ -114,7 +114,7 @@ internal fun SettingScreen(
             SettingStep.SETTING_INQUIRY_SCREEN -> {
                 SettingInquiryScreen(
                     onClickBack = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_MAIN_SCREEN,
                         )
                     },
@@ -124,20 +124,20 @@ internal fun SettingScreen(
             SettingStep.SETTING_NOTIFICATION_SCREEN -> {
                 SettingNotificationScreen(
                     onClickBack = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_MAIN_SCREEN,
                         )
                     },
                     activityNotifications = state.activityNotifications,
                     changeActivityNotifications = {
                         launch {
-                            vm.changeActivityNotifications(it)
+                            settingVM.changeActivityNotifications(it)
                         }
                     },
                     messageNotifications = state.messageNotifications,
                     changeMessageNotifications = {
                         launch {
-                            vm.changeMessageNotifications(it)
+                            settingVM.changeMessageNotifications(it)
                         }
                     },
                 )
@@ -146,7 +146,7 @@ internal fun SettingScreen(
             SettingStep.SETTING_TERMS_SCREEN -> {
                 SettingTermsScreen(
                     onClickBack = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
                         )
                     },
@@ -156,7 +156,7 @@ internal fun SettingScreen(
             SettingStep.SETTING_OPEN_SOURCE_LICENSE_SCREEN -> {
                 SettingLicenseScreen(
                     onClickBack = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
                         )
                     },
@@ -166,7 +166,7 @@ internal fun SettingScreen(
             SettingStep.SETTING_PRIVACY_POLICY_SCREEN -> {
                 SettingPrivacyPolicy(
                     onClickBack = {
-                        vm.navigatePage(
+                        settingVM.navigatePage(
                             step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
                         )
                     },

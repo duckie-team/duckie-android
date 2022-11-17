@@ -23,9 +23,6 @@ class OnboardActivity : ComponentActivity() {
 
     private val viewModel: OnboardViewModel by viewModels()
 
-    @Inject
-    lateinit var settingvm: SettingViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
@@ -35,13 +32,10 @@ class OnboardActivity : ComponentActivity() {
     private fun initView() {
         setContent {
             DuckieTheme {
-//                OnboardScreen(
-//                    activity = this,
-//                    viewModel = viewModel,
-//                    navigator = navigator,
-//                )
-                SettingScreen(
-                    vm = settingvm,
+                OnboardScreen(
+                    activity = this,
+                    viewModel = viewModel,
+                    navigator = navigator,
                 )
             }
         }

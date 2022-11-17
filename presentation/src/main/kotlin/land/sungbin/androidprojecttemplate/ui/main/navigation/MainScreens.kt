@@ -7,6 +7,8 @@ sealed class MainScreens(
     object Search : MainScreens("SEARCH")
     object Notification : MainScreens("NOTIFICATION")
     object DuckChat : MainScreens("DUCK_CHAT")
+
+    object Setting : MainScreens("SETTING")
 }
 
 internal val homeBottomNavItems = listOf(

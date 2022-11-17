@@ -24,7 +24,9 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-fun DrawerContent() {
+fun DrawerContent(
+    onClickSetting: () -> Unit,
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(
             space = 20.dp,
@@ -99,9 +101,7 @@ fun DrawerContent() {
             ),
             icon = QuackIcon.Setting,
             text = stringResource(id = R.string.app_settings),
-            onClick = {
-
-            }
+            onClick = onClickSetting,
         )
     }
 }
