@@ -3,6 +3,7 @@
 
 package land.sungbin.androidprojecttemplate.data.mapper
 
+import land.sungbin.androidprojecttemplate.data.model.AccountInformationData
 import land.sungbin.androidprojecttemplate.data.model.ChatData
 import land.sungbin.androidprojecttemplate.data.model.ChatReadData
 import land.sungbin.androidprojecttemplate.data.model.ChatRoomData
@@ -20,6 +21,7 @@ import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.SettingData
 import land.sungbin.androidprojecttemplate.data.model.UserData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
+import land.sungbin.androidprojecttemplate.domain.model.AccountInformationEntity
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
@@ -204,4 +206,9 @@ internal fun User.toData() = UserData(
 internal fun SettingEntity.toData() = SettingData(
     activityNotification = activityNotification,
     messageNotification = messageNotification,
+)
+
+internal fun AccountInformationEntity.toData() = AccountInformationData(
+    accountType = accountType,
+    email = email,
 )

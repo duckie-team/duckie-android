@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import land.sungbin.androidprojecttemplate.domain.repository.SettingRepository
+import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchAccountInformationUseCase
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchSettingUseCase
 import land.sungbin.androidprojecttemplate.domain.usecase.score.UpdateSettingUseCase
 
@@ -26,6 +27,15 @@ internal object ProvideUseCase {
         repository: SettingRepository,
     ): UpdateSettingUseCase {
         return UpdateSettingUseCase(
+            repository = repository,
+        )
+    }
+
+    @Provides
+    fun provideFetchAccountInformationUseCase(
+        repository: SettingRepository,
+    ): FetchAccountInformationUseCase {
+        return FetchAccountInformationUseCase(
             repository = repository,
         )
     }

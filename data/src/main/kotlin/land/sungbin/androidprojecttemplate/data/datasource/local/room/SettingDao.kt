@@ -6,6 +6,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import land.sungbin.androidprojecttemplate.data.model.AccountInformationData
 import land.sungbin.androidprojecttemplate.data.model.SettingData
 
 @Dao
@@ -15,4 +16,10 @@ interface SettingDao {
 
     @Query("SELECT * FROM SettingData")
     suspend fun fetchSetting(): SettingData
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAccountInformation(accountInformation: AccountInformationData)
+
+    @Query("SELECT * FROM AccountInformationData")
+    suspend fun fetchAccountInformation(): AccountInformationData
 }

@@ -5,12 +5,11 @@ import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @Entity
-data class SettingData(
+data class AccountInformationData(
 
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
 
-    val activityNotification: Boolean,
-
-    val messageNotification: Boolean,
+    val accountType: String,
+    val email: String,
 )
