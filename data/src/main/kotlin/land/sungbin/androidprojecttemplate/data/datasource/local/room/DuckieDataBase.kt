@@ -12,7 +12,7 @@ import land.sungbin.androidprojecttemplate.data.model.SettingData
         SettingData::class,
         AccountInformationData::class,
     ],
-    version = 2,
+    version = 1,
     exportSchema = false,
 )
 abstract class DuckieDataBase : RoomDatabase() {
