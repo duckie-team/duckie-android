@@ -53,10 +53,6 @@ class GalleryDatasource @Inject constructor(
                     /**
                      * TODO Paging 처리 하기전에는 최근 100개의 사진만 불러옴
                      */
-
-                    /**
-                     * TODO Paging 처리 하기전에는 최근 100개의 사진만 불러옴
-                     */
                     if (images.size > 100) break
                 }
             }
