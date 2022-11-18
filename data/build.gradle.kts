@@ -15,18 +15,23 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:30.4.1"))
-    implementation("com.google.firebase:firebase-database-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
+
 //    implementation("team.duckie.quack:quack-lint-core:1.0.1")
-    implementation(project(":domain"))
+
+    val dependencies = listOf(
+        Dependencies.FirebaseEachKtx.DataBase,
+        Dependencies.FirebaseEachKtx.FireStore,
+        Dependencies.Jetpack.Hilt,
+        Dependencies.Jetpack.Room,
+        platform(Dependencies.FirebaseBom),
+    )
+    dependencies.forEach(::implementation)
 
     Dependencies.Network.forEach(::implementation)
     Dependencies.Login.forEach(::implementation)
 
-    implementation(Dependencies.Jetpack.Hilt)
-    implementation(Dependencies.Jetpack.Room)
+    kapt(Dependencies.Compiler.Hilt)
+    kapt(Dependencies.Compiler.RoomKsp)
 
-    add("kapt", Dependencies.Compiler.Hilt)
-    add("kapt", Dependencies.Compiler.RoomKsp)
+    implementation(project(":domain"))
 }

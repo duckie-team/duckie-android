@@ -91,5 +91,5 @@ dependencies {
 
     implementation(project(":data"))
 
-    add("kapt", Dependencies.Compiler.RoomKsp)
+    kapt(Dependencies.Compiler.RoomKsp)
 }
