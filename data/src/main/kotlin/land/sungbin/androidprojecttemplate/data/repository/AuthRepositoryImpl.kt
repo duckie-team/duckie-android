@@ -2,6 +2,7 @@ package land.sungbin.androidprojecttemplate.data.repository
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.suspendCancellableCoroutine
 import land.sungbin.androidprojecttemplate.data.datasource.remote.KakaoDatasource
 import land.sungbin.androidprojecttemplate.data.mapper.toDoMain
 import land.sungbin.androidprojecttemplate.data.mapper.toDomain
@@ -16,7 +17,6 @@ import land.sungbin.androidprojecttemplate.domain.repository.AuthRepository
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class AuthRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -24,7 +24,7 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override suspend fun kakaoLogin(): KakaoLoginResponse {
-        return suspendCoroutine { coroutine ->
+        return suspendCancellableCoroutine { coroutine ->
             kaKaoDatasource.login(
                 context = context,
                 onLoginSuccess = {
