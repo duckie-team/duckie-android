@@ -13,7 +13,6 @@ import kotlinx.collections.immutable.PersistentList
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.constants.UiConstant.CATEGORY_COLUMN_COUNT
 import land.sungbin.androidprojecttemplate.constants.UiConstant.WHITE_GRADIENT_HEIGHT
-import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
 import land.sungbin.androidprojecttemplate.ui.component.BackArrowTopAppBar
 import land.sungbin.androidprojecttemplate.ui.component.DuckieSimpleLayout
@@ -81,7 +80,9 @@ private fun CategoryGridLayout(
                 index = index,
                 category = item,
                 onClick = onClick,
-                isChecked = selectedCategories.find { it.id == item.id } != null
+                isChecked = selectedCategories.find { selectedCategory: LikeCategory ->
+                    selectedCategory.id == item.id
+                } != null
             )
         },
     )

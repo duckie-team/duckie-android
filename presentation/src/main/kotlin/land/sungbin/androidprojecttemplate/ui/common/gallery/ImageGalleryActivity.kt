@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.GALLERY_IMAGE_TYPE
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_DATA
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_SINGLE_TYPE
+import land.sungbin.androidprojecttemplate.domain.model.MediaStoreImage
 import land.sungbin.androidprojecttemplate.util.ImageUtil
 import land.sungbin.androidprojecttemplate.util.PermissionUtil
 import land.sungbin.androidprojecttemplate.util.PermissionUtil.CAMERA_REQUEST
@@ -48,7 +49,9 @@ class ImageGalleryActivity : ComponentActivity() {
             val state by viewModel.state.collectAsStateWithLifecycle()
 
             ImageGalleryScreen(
-                images = state.images.map { it.contentUri },
+                images = state.images.map { mediaStoreImage: MediaStoreImage ->
+                    mediaStoreImage.contentUri
+                },
                 selectedImages = state.selectedImages,
                 viewModel = viewModel,
             )

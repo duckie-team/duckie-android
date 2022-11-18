@@ -102,7 +102,9 @@ enum class ImageSelectType(
 
     companion object {
         fun getByType(value: Int): ImageSelectType {
-            return values().find { it.type == value } ?: SINGLE
+            return values().find { selectType: ImageSelectType ->
+                selectType.type == value
+            } ?: SINGLE
         }
     }
 }

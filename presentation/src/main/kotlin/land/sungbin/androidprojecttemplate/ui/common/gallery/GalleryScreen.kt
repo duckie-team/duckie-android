@@ -52,13 +52,15 @@ internal fun ImageGalleryScreen(
             horizontalSpace = 1.5.dp,
             verticalSpace = 1.5.dp,
             contentPadding = PaddingValues(0.dp),
-            itemContent = { index, item ->
+            itemContent = { _, item ->
                 GalleryImageItem(
                     image = item,
                     onClick = { checked, image ->
                         viewModel.pick(checked, image)
                     },
-                    isSelected = selectedImages.find { it == item } != null,
+                    isSelected = selectedImages.find { image: String ->
+                        image == item
+                    } != null,
                 )
             },
             header = {

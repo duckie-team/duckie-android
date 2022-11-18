@@ -33,8 +33,8 @@ class LoginViewModel @Inject constructor(
             }.onFailure {
 
             }
-        }.onFailure {
-            updateState { LoginState.LoginFailed(it) }
+        }.onFailure { t: Throwable ->
+            updateState { LoginState.LoginFailed(t) }
         }
     }
 
