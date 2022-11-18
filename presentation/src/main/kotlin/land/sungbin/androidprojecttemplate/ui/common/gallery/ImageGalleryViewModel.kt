@@ -36,7 +36,10 @@ class ImageGalleryViewModel @Inject constructor(
     }
 
 
-    fun pick(checked: Boolean, image: String) {
+    fun pick(
+        checked: Boolean,
+        image: String,
+    ) {
         when (currentState.selectType) {
             ImageSelectType.SINGLE -> {
                 singleTypePick(image)
@@ -57,7 +60,10 @@ class ImageGalleryViewModel @Inject constructor(
 
     }
 
-    private fun multiTypePick(checked: Boolean, image: String) {
+    private fun multiTypePick(
+        checked: Boolean,
+        image: String,
+    ) {
         updateState {
             copy(
                 selectedImages = when (checked) {

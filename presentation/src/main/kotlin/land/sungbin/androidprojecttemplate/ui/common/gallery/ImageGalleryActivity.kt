@@ -64,7 +64,7 @@ class ImageGalleryActivity : ComponentActivity() {
                                 RESULT_OK,
                                 intent.putExtra(
                                     IMAGE_DATA,
-                                    ImageGalleryResponse(state.selectedImages)
+                                    ImageGalleryResponse(state.selectedImages),
                                 )
                             )
                             finish()
