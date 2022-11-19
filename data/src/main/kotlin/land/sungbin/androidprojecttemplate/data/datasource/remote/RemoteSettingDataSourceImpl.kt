@@ -9,29 +9,35 @@ import land.sungbin.androidprojecttemplate.domain.model.AccountInformationEntity
 import land.sungbin.androidprojecttemplate.domain.model.SettingEntity
 import javax.inject.Inject
 
-private var dummySetting = SettingData(
-    activityNotification = false,
-    messageNotification = true,
-)
+/**
+ * Setting에 사용되는 Fake Data 입니다.
+ * [TODO] 추후에 실제 데이터를 받는 형식으로 교체되어야 합니다.
+ */
+object SettingFakeData {
+    var dummySetting = SettingData(
+        activityNotification = false,
+        messageNotification = true,
+    )
 
-private var dummyAccountInformationData = AccountInformationData(
-    accountType = AccountType.KAKAO,
-    email = "sh007100@naver.com"
-)
+    var dummyAccountInformationData = AccountInformationData(
+        accountType = AccountType.KAKAO,
+        email = "sh007100@naver.com"
+    )
+}
 
 class RemoteSettingDataSourceImpl @Inject constructor() : RemoteSettingDataSource {
 
     override fun fetchSetting(): SettingEntity {
-        return dummySetting.toDomain()
+        return SettingFakeData.dummySetting.toDomain()
     }
 
     override fun updateSetting(
         entity: SettingEntity,
     ) {
-        dummySetting = entity.toData()
+        SettingFakeData.dummySetting = entity.toData()
     }
 
     override fun fetchAccountInformation(): AccountInformationEntity {
-        return dummyAccountInformationData.toDomain()
+        return SettingFakeData.dummyAccountInformationData.toDomain()
     }
 }

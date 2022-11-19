@@ -25,11 +25,11 @@ internal fun SettingScreen(
 
         effect.collect { effect ->
             when (effect) {
-                SettingSideEffect.FetchSettingFailed -> {
+                SettingSideEffect.FetchSetting -> {
                 }
-                SettingSideEffect.PostSettingFailed -> {
+                SettingSideEffect.PostSetting -> {
                 }
-                SettingSideEffect.FetchAccountInformationFailed -> {
+                SettingSideEffect.FetchAccountInformation -> {
                 }
             }
         }
@@ -44,137 +44,121 @@ internal fun SettingScreen(
         targetState = state.currentStep
     ) { page ->
         when (page) {
-            SettingStep.SETTING_MAIN_SCREEN -> {
-                SettingMainScreen(
-                    onClickBack = {
-                    },
-                    onClickAccountInformation = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_ACCOUNT_INFORMATION_SCREEN
-                        )
-                    },
-                    onClickNotification = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_NOTIFICATION_SCREEN,
-                        )
-                    },
-                    onClickInquiry = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_INQUIRY_SCREEN,
-                        )
-                    },
-                    onClickDuckieInformation = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
-                        )
-                    },
-                )
-            }
+            SettingStep.SettingMainScreen -> SettingMainScreen(
+                onClickBack = {
+                },
+                onClickAccountInformation = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingAccountInformationScreen
+                    )
+                },
+                onClickNotification = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingNotificationScreen,
+                    )
+                },
+                onClickInquiry = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingInquiryScreen,
+                    )
+                },
+                onClickDuckieInformation = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingDuckieInformationScreen,
+                    )
+                },
+            )
 
-            SettingStep.SETTING_ACCOUNT_INFORMATION_SCREEN -> {
-                SettingAccountInformationScreen(
-                    onClickBack = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_MAIN_SCREEN,
-                        )
-                    },
-                    onClickLogOut = {
-                        // TODO
-                    },
-                    onClickSignOut = {
-                        // TODO
-                    },
-                    accountType = state.accountType,
-                    email = state.email,
-                )
-            }
+            SettingStep.SettingAccountInformationScreen -> SettingAccountInformationScreen(
+                onClickBack = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingMainScreen,
+                    )
+                },
+                onClickLogOut = {
+                    // TODO
+                },
+                onClickSignOut = {
+                    // TODO
+                },
+                accountType = state.accountType,
+                email = state.email,
+            )
 
-            SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN -> {
-                SettingDuckieInformationScreen(
-                    onClickBack = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_MAIN_SCREEN,
-                        )
-                    },
-                    onClickTerms = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_TERMS_SCREEN,
-                        )
-                    },
-                    onClickOpenSourceLicense = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_OPEN_SOURCE_LICENSE_SCREEN,
-                        )
-                    },
-                    onClickPrivacyPolicy = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_PRIVACY_POLICY_SCREEN,
-                        )
-                    },
-                )
-            }
+            SettingStep.SettingDuckieInformationScreen -> SettingDuckieInformationScreen(
+                onClickBack = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingMainScreen,
+                    )
+                },
+                onClickTerms = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingTermsScreen,
+                    )
+                },
+                onClickOpenSourceLicense = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingOpenSourceLicenseScreen,
+                    )
+                },
+                onClickPrivacyPolicy = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingPrivacyPolicyScreen,
+                    )
+                },
+            )
 
-            SettingStep.SETTING_INQUIRY_SCREEN -> {
-                SettingInquiryScreen(
-                    onClickBack = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_MAIN_SCREEN,
-                        )
-                    },
-                )
-            }
+            SettingStep.SettingInquiryScreen -> SettingInquiryScreen(
+                onClickBack = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingMainScreen,
+                    )
+                },
+            )
 
-            SettingStep.SETTING_NOTIFICATION_SCREEN -> {
-                SettingNotificationScreen(
-                    onClickBack = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_MAIN_SCREEN,
-                        )
-                    },
-                    activityNotifications = state.activityNotifications,
-                    changeActivityNotifications = {
-                        launch {
-                            settingVM.changeActivityNotifications(it)
-                        }
-                    },
-                    messageNotifications = state.messageNotifications,
-                    changeMessageNotifications = {
-                        launch {
-                            settingVM.changeMessageNotifications(it)
-                        }
-                    },
-                )
-            }
+            SettingStep.SettingNotificationScreen -> SettingNotificationScreen(
+                onClickBack = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingMainScreen,
+                    )
+                },
+                activityNotifications = state.activityNotifications,
+                changeActivityNotifications = {
+                    launch {
+                        settingVM.changeActivityNotifications(it)
+                    }
+                },
+                messageNotifications = state.messageNotifications,
+                changeMessageNotifications = {
+                    launch {
+                        settingVM.changeMessageNotifications(it)
+                    }
+                },
+            )
 
-            SettingStep.SETTING_TERMS_SCREEN -> {
-                SettingTermsScreen(
-                    onClickBack = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
-                        )
-                    },
-                )
-            }
+            SettingStep.SettingTermsScreen -> SettingTermsScreen(
+                onClickBack = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingDuckieInformationScreen,
+                    )
+                },
+            )
 
-            SettingStep.SETTING_OPEN_SOURCE_LICENSE_SCREEN -> {
-                SettingLicenseScreen(
-                    onClickBack = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
-                        )
-                    },
-                )
-            }
+            SettingStep.SettingOpenSourceLicenseScreen -> SettingLicenseScreen(
+                onClickBack = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingDuckieInformationScreen,
+                    )
+                },
+            )
 
-            SettingStep.SETTING_PRIVACY_POLICY_SCREEN -> {
-                SettingPrivacyPolicy(
-                    onClickBack = {
-                        settingVM.navigatePage(
-                            step = SettingStep.SETTING_DUCKIE_INFORMATION_SCREEN,
-                        )
-                    },
-                )
-            }
+            SettingStep.SettingPrivacyPolicyScreen -> SettingPrivacyPolicy(
+                onClickBack = {
+                    settingVM.navigatePage(
+                        step = SettingStep.SettingDuckieInformationScreen,
+                    )
+                },
+            )
         }
     }
 }

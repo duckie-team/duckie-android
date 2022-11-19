@@ -6,15 +6,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import land.sungbin.androidprojecttemplate.R
+import land.sungbin.androidprojecttemplate.domain.constants.AccountType
 import land.sungbin.androidprojecttemplate.ui.component.BackArrowTopAppBar
 import land.sungbin.androidprojecttemplate.ui.main.setting.component.BaseAppSettingLayout
 import land.sungbin.androidprojecttemplate.ui.main.setting.component.PaddingQuackBody1
 import land.sungbin.androidprojecttemplate.ui.main.setting.component.PaddingQuackTitle2
 import land.sungbin.androidprojecttemplate.ui.main.setting.component.PaddingTitleAndContentText
-import land.sungbin.androidprojecttemplate.ui.main.setting.utils.AccountType
 import team.duckie.quackquack.ui.component.QuackDivider
 
 @Composable

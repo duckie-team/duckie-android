@@ -10,13 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import land.sungbin.androidprojecttemplate.R
-import land.sungbin.androidprojecttemplate.shared.android.base.UiState
 import land.sungbin.androidprojecttemplate.ui.component.BackArrowTopAppBar
 import land.sungbin.androidprojecttemplate.ui.main.setting.component.BaseAppSettingLayout
-import land.sungbin.androidprojecttemplate.ui.main.setting.mvi.SettingState
 import team.duckie.quackquack.ui.component.QuackBody1
 
 @Composable

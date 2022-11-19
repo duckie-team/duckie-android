@@ -12,8 +12,7 @@ import land.sungbin.androidprojecttemplate.ui.component.BackArrowTopAppBar
 import land.sungbin.androidprojecttemplate.ui.main.setting.component.BaseAppSettingLayout
 import team.duckie.quackquack.ui.component.QuackBody1
 
-private const val dummyPrivacyPolicy =
-    "이용약관입니다"
+private const val dummyPrivacyPolicy = "이용약관입니다"
 
 @Composable
 fun SettingPrivacyPolicy(
