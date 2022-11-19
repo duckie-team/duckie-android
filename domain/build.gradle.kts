@@ -12,4 +12,6 @@ dependencies {
     implementation("androidx.annotation:annotation:1.5.0")
 //    implementation("team.duckie.quack:quack-lint-core:1.0.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
+    implementation("com.google.code.gson:gson:2.9.0")
 }
