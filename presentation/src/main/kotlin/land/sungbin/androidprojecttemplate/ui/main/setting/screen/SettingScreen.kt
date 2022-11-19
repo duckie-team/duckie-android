@@ -1,13 +1,18 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.screen
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
 import land.sungbin.androidprojecttemplate.shared.compose.extension.launch
+import land.sungbin.androidprojecttemplate.ui.component.startActivityWithAnimation
 import land.sungbin.androidprojecttemplate.ui.main.setting.mvi.SettingSideEffect
 import land.sungbin.androidprojecttemplate.ui.main.setting.utils.SettingStep
 import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
@@ -20,6 +25,7 @@ internal fun SettingScreen(
 
     val state = settingVM.state.collectAsStateWithLifecycle().value
     val effect = settingVM.effect
+    val currentActivity = LocalContext.current as Activity
 
     LaunchedEffect(effect) {
 
@@ -144,13 +150,14 @@ internal fun SettingScreen(
                 },
             )
 
-            SettingStep.SettingOpenSourceLicenseScreen -> SettingLicenseScreen(
-                onClickBack = {
-                    settingVM.navigatePage(
-                        step = SettingStep.SettingDuckieInformationScreen,
+            SettingStep.SettingOpenSourceLicenseScreen -> {
+                currentActivity.startActivityWithAnimation {
+                    Intent(
+                        currentActivity,
+                        OssLicensesMenuActivity::class.java,
                     )
-                },
-            )
+                }
+            }
 
             SettingStep.SettingPrivacyPolicyScreen -> SettingPrivacyPolicy(
                 onClickBack = {

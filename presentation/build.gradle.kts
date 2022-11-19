@@ -78,6 +78,7 @@ dependencies {
         Dependencies.Quack.components,
         Dependencies.Jetpack.Hilt,
         Dependencies.Jetpack.Room,
+        Dependencies.Util.OssLicense,
     ).dependenciesFlatten()
     dependencies.forEach(::implementation)
 
