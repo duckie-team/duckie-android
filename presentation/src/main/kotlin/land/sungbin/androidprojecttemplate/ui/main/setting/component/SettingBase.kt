@@ -27,7 +27,7 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 private val SimpleLayoutContentPadding = PaddingValues(
     horizontal = 16.dp,
 )
-private val DP_MAX = 1000.dp
+private val DpMax = 1000.dp
 
 @Composable
 internal fun BaseAppSettingLayout(
@@ -47,7 +47,7 @@ internal fun BaseAppSettingLayout(
                 modifier = Modifier
                     .padding(SimpleLayoutContentPadding)
                     .verticalScroll(scrollState)
-                    .heightIn(min = 0.dp, max = DP_MAX)
+                    .heightIn(min = 0.dp, max = DpMax)
             ) {
                 content()
             }

@@ -1,12 +1,12 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.utils
 
 enum class SettingStep {
-    SETTING_MAIN_SCREEN,
-    SETTING_TERMS_SCREEN,
-    SETTING_ACCOUNT_INFORMATION_SCREEN,
-    SETTING_DUCKIE_INFORMATION_SCREEN,
-    SETTING_INQUIRY_SCREEN,
-    SETTING_NOTIFICATION_SCREEN,
-    SETTING_OPEN_SOURCE_LICENSE_SCREEN,
-    SETTING_PRIVACY_POLICY_SCREEN,
+    SettingMainScreen,
+    SettingTermsScreen,
+    SettingAccountInformationScreen,
+    SettingDuckieInformationScreen,
+    SettingInquiryScreen,
+    SettingNotificationScreen,
+    SettingOpenSourceLicenseScreen,
+    SettingPrivacyPolicyScreen,
 }
