@@ -17,10 +17,15 @@ import land.sungbin.androidprojecttemplate.data.model.FeedData
 import land.sungbin.androidprojecttemplate.data.model.FeedScoreData
 import land.sungbin.androidprojecttemplate.data.model.FollowData
 import land.sungbin.androidprojecttemplate.data.model.HeartData
+import land.sungbin.androidprojecttemplate.data.model.LikeCategoryData
 import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.SettingData
 import land.sungbin.androidprojecttemplate.data.model.UserData
+import land.sungbin.androidprojecttemplate.data.model.auth.KakaoLoginResponseData
+import land.sungbin.androidprojecttemplate.data.model.auth.LoginResponseData
+import land.sungbin.androidprojecttemplate.data.model.auth.LoginUserData
+import land.sungbin.androidprojecttemplate.data.model.auth.SignUpResponseData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
 import land.sungbin.androidprojecttemplate.domain.model.AccountInformationEntity
 import land.sungbin.androidprojecttemplate.domain.model.Chat
@@ -34,9 +39,13 @@ import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
+import land.sungbin.androidprojecttemplate.domain.model.KakaoLoginResponse
+import land.sungbin.androidprojecttemplate.domain.model.LoginResponse
+import land.sungbin.androidprojecttemplate.domain.model.LoginUser
 import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.SettingEntity
+import land.sungbin.androidprojecttemplate.domain.model.SignUpResponse
 import land.sungbin.androidprojecttemplate.domain.model.User
 import land.sungbin.androidprojecttemplate.domain.model.common.Content
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Badge
@@ -46,6 +55,7 @@ import land.sungbin.androidprojecttemplate.domain.model.constraint.ChatType
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DealState
 import land.sungbin.androidprojecttemplate.domain.model.constraint.DislikeReason
 import land.sungbin.androidprojecttemplate.domain.model.constraint.FeedType
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
 import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeReason
 import land.sungbin.androidprojecttemplate.domain.model.constraint.Review
 import land.sungbin.androidprojecttemplate.domain.model.util.Unsupported
@@ -395,4 +405,32 @@ internal fun SettingData.toDomain() = SettingEntity(
 internal fun AccountInformationData.toDomain() = AccountInformationEntity(
     accountType = accountType,
     email = email,
+)
+
+internal fun LikeCategoryData.toDomain() = LikeCategory(
+    id = id,
+    title = title,
+    imageUrl = imageUrl,
+    popularTags = popularTags.toList(),
+)
+
+internal fun KakaoLoginResponseData.toDoMain() = KakaoLoginResponse(
+    accessToken = token.accessToken,
+    accessTokenExpiresAt = token.accessTokenExpiresAt,
+    refreshToken = token.refreshToken,
+    refreshTokenExpiresAt = token.refreshTokenExpiresAt,
+    idToken = token.idToken,
+    scopes = token.scopes,
+)
+
+internal fun LoginResponseData.toDomain() = LoginResponse(
+    user = user.toDomain(),
+)
+
+internal fun LoginUserData.toDomain() = LoginUser(
+    username = username,
+)
+
+internal fun SignUpResponseData.toDomain() = SignUpResponse(
+    isSuccess = isSuccess,
 )

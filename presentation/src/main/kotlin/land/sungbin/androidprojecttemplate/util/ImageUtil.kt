@@ -5,10 +5,11 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
+import java.net.URI
 
 object ImageUtil {
 
-    fun saveGalleryImage(context: Context, image: Bitmap): Uri {
+    fun saveGalleryImage(context: Context, image: Bitmap): URI {
         val bytes = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(
@@ -17,6 +18,7 @@ object ImageUtil {
             "ImageFromDuckie",
             null
         )
-        return Uri.parse(path)
+        checkNotNull(path)
+        return URI.create(path)
     }
 }

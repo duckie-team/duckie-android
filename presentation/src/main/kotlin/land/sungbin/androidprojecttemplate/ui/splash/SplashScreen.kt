@@ -9,43 +9,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.delay
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import land.sungbin.androidprojecttemplate.R
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
 
-private const val FIRST_SPLASH_PAGE = 0
-private const val SECOND_SPLASH_PAGE = 1
-private const val SPLASH_DELAY = 1000L
-
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun SplashScreen(
-    onCheckSession: () -> Unit,
-    viewModel: SplashViewModel = viewModel()
+    viewModel: SplashViewModel,
 ) {
-
-    val currentPage = viewModel.currentPage.observeAsState().value ?: FIRST_SPLASH_PAGE
-    LaunchedEffect(Unit) {
-        delay(SPLASH_DELAY)
-        viewModel.navigatePage(SECOND_SPLASH_PAGE)
-        delay(SPLASH_DELAY)
-        onCheckSession()
-    }
-
-    Crossfade(targetState = currentPage) { page ->
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    Crossfade(targetState = state.splashViewState) { page ->
         when (page) {
-            FIRST_SPLASH_PAGE -> FirstSplashScreen()
-            SECOND_SPLASH_PAGE -> SecondSplashScreen()
+            SplashPage.First -> FirstSplashScreen()
+            SplashPage.Second -> SecondSplashScreen()
         }
     }
 }

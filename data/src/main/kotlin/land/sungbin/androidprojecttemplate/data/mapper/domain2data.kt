@@ -22,6 +22,7 @@ import land.sungbin.androidprojecttemplate.data.model.SettingData
 import land.sungbin.androidprojecttemplate.data.model.UserData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
 import land.sungbin.androidprojecttemplate.domain.model.AccountInformationEntity
+import land.sungbin.androidprojecttemplate.data.model.constraint.CategoriesData
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
 import land.sungbin.androidprojecttemplate.domain.model.ChatRoom
