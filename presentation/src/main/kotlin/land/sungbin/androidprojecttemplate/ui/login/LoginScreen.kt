@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -15,15 +17,40 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
 import land.sungbin.androidprojecttemplate.R
+import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
+import land.sungbin.androidprojecttemplate.shared.compose.extension.launch
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackUnderlineBody3
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun LoginScreen(
+    viewModel: LoginViewModel,
+) = CoroutineScopeContent {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    when (state) {
+        LoginState.Initial -> {
+            LoginContent(
+                onClickLogin = {
+                    launch { viewModel.kakaoLogin() }
+                }
+            )
+        }
+
+        is LoginState.LoginFailed -> {}
+        is LoginState.KakaoLoginFailed -> {}
+    }
+}
+
+@Composable
+fun LoginContent(
     onClickLogin: () -> Unit,
 ) {
     Box(

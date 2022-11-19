@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.GALLERY_SCREEN_REQUEST
-import land.sungbin.androidprojecttemplate.ui.component.gallery.ImageGalleryActivity
+import land.sungbin.androidprojecttemplate.ui.common.gallery.ImageGalleryActivity
 import land.sungbin.androidprojecttemplate.ui.component.startActivityForResultWithAnimation
 import land.sungbin.androidprojecttemplate.ui.component.startActivityWithAnimation
 import land.sungbin.androidprojecttemplate.ui.login.LoginActivity

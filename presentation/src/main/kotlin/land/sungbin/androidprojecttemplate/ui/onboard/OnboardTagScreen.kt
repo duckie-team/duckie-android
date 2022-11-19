@@ -20,8 +20,8 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.constants.UiConstant.WHITE_GRADIENT_HEIGHT
-import land.sungbin.androidprojecttemplate.data.domain.Category
-import land.sungbin.androidprojecttemplate.data.domain.Tag
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
+import land.sungbin.androidprojecttemplate.domain.model.constraint.Tag
 import land.sungbin.androidprojecttemplate.ui.component.DuckieSimpleLayout
 import land.sungbin.androidprojecttemplate.ui.component.TitleAndDescription
 import team.duckie.quackquack.ui.color.QuackColor
@@ -34,7 +34,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun OnboardTagScreen(
-    categories: PersistentList<Category>,
+    categories: PersistentList<LikeCategory>,
     onClickBack: () -> Unit,
     onClickComplete: () -> Unit,
 ) {
@@ -130,7 +130,7 @@ internal fun OnboardTagScreen(
                         },
                         itemsSelection = itemsSelection.subList(
                             categoryIndex * 10,
-                            categoryIndex * 10 + 10
+                            categoryIndex * 10 + 7
                         ),
                     )
                     if (categoryIndex == categories.size - 1) Spacer(
@@ -153,7 +153,7 @@ internal fun OnboardTagScreen(
 
 @Composable
 private fun CategoryPopularTags(
-    category: Category,
+    category: LikeCategory,
     itemsSelection: List<Boolean>,
     onClickTag: (Int) -> Unit,
 ) {

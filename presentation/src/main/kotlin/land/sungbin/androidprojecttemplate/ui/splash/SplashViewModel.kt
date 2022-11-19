@@ -1,18 +1,24 @@
 package land.sungbin.androidprojecttemplate.ui.splash
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import land.sungbin.androidprojecttemplate.base.BaseViewModel
+import land.sungbin.androidprojecttemplate.domain.usecase.user.HasSessionUseCase
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@HiltViewModel
-class SplashViewModel @Inject constructor() : ViewModel() {
+@Singleton
+class SplashViewModel @Inject constructor(
+    private val hasSessionUseCase: HasSessionUseCase,
+) : BaseViewModel<SplashState, SplashSideEffect>(SplashState()) {
 
-    private val _currentPage: MutableLiveData<Int> = MutableLiveData()
-    val currentPage: LiveData<Int> = _currentPage
+    fun navigatePage(page: SplashPage) = updateState {
+        copy(splashViewState = page)
+    }
 
-    fun navigatePage(page: Int) {
-        _currentPage.value = page
+    suspend fun onCheckSession() {
+        hasSessionUseCase().onSuccess {
+            postSideEffect { SplashSideEffect.NavigateToMain }
+        }.onFailure {
+            postSideEffect { SplashSideEffect.NavigateToLogin }
+        }
     }
 }
