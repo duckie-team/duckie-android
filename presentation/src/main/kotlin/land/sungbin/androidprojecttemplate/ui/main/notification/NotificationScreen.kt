@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.collections.immutable.persistentListOf
@@ -28,6 +29,7 @@ import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.shared.android.extension.toast
 import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
 import land.sungbin.androidprojecttemplate.ui.main.home.component.DrawerContent
+import land.sungbin.androidprojecttemplate.ui.main.navigation.MainScreens
 import land.sungbin.androidprojecttemplate.util.DateUtil
 import team.duckie.quackquack.ui.component.QuackAnnotatedBody2
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -40,6 +42,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun NotificationScreen(
+    navController: NavController,
     notificationViewModel: NotificationViewModel
 ) = CoroutineScopeContent {
     val drawerState = rememberQuackDrawerState()
@@ -86,7 +89,13 @@ internal fun NotificationScreen(
     QuackModalDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerContent()
+            DrawerContent(
+                onClickSetting = {
+                    navController.navigate(
+                        route = MainScreens.Setting.route,
+                    )
+                }
+            )
         }
     ) {
         Column(modifier = Modifier.fillMaxSize()) {

@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import land.sungbin.androidprojecttemplate.ui.main.navigation.MainNavigation
 import land.sungbin.androidprojecttemplate.ui.main.navigation.homeBottomNavItems
 import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
+import land.sungbin.androidprojecttemplate.ui.main.notification.NotificationViewModel
 import team.duckie.quackquack.ui.component.QuackBottomNavigation
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
@@ -25,6 +26,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var settingVM: SettingViewModel
+
+    @Inject
+    lateinit var notificationVM: NotificationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -39,6 +43,7 @@ class MainActivity : ComponentActivity() {
                         MainNavigation(
                             settingVM = settingVM,
                             navController = navController,
+                            notificationVM = notificationVM,
                         )
                     }
                     QuackBottomNavigation(
