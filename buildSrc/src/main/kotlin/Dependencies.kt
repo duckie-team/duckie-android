@@ -65,7 +65,13 @@ object Dependencies {
     val Network = listOf(
         "com.squareup.retrofit2:retrofit:${Versions.Network.Retrofit}",
         "com.squareup.okhttp3:logging-interceptor:${Versions.Network.OkHttp}",
-        "com.squareup.retrofit2:converter-jackson:${Versions.Network.Retrofit}"
+        "com.squareup.retrofit2:converter-jackson:${Versions.Network.Retrofit}",
+        "io.ktor:ktor-client-core:${Versions.Network.Ktor}",
+        "io.ktor:ktor-client-cio:${Versions.Network.Ktor}",
+        "io.ktor:ktor-client-logging:${Versions.Network.Ktor}",
+        "io.ktor:ktor-serialization-jackson:${Versions.Network.Ktor}",
+        "io.ktor:ktor-client-content-negotiation:${Versions.Network.Ktor}",
+
     )
 
     val Login = listOf(

@@ -14,6 +14,7 @@ dependencies {
         Dependencies.EachKtx.Core,
         Dependencies.Jetpack.DataStore,
         project(ProjectConstants.Domain),
+        project(ProjectConstants.Data),
         project(ProjectConstants.SharedDomain)
     ).dependenciesFlatten()
     apis.forEach(::api)
