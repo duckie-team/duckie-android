@@ -1,5 +1,6 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.vm
 
+import land.sungbin.androidprojecttemplate.domain.constants.AccountType
 import land.sungbin.androidprojecttemplate.domain.model.SettingEntity
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchAccountInformationUseCase
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchSettingUseCase
@@ -7,9 +8,7 @@ import land.sungbin.androidprojecttemplate.domain.usecase.score.UpdateSettingUse
 import land.sungbin.androidprojecttemplate.shared.android.base.BaseViewModel
 import land.sungbin.androidprojecttemplate.ui.main.setting.mvi.SettingSideEffect
 import land.sungbin.androidprojecttemplate.ui.main.setting.mvi.SettingState
-import land.sungbin.androidprojecttemplate.ui.main.setting.utils.AccountType
 import land.sungbin.androidprojecttemplate.ui.main.setting.utils.SettingStep
-import land.sungbin.androidprojecttemplate.ui.main.setting.utils.toAccountType
 import javax.inject.Inject
 import javax.inject.Singleton
 

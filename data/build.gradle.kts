@@ -33,5 +33,5 @@ dependencies {
     kapt(Dependencies.Compiler.Hilt)
     kapt(Dependencies.Compiler.RoomKsp)
 
-    implementation(project(":domain"))
+    implementation(projects.domain)
 }

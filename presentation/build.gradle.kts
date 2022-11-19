@@ -90,7 +90,7 @@ dependencies {
         test = false,
     )
 
-    implementation(project(":data"))
+    implementation(projects.data)
 
     kapt(Dependencies.Compiler.RoomKsp)
 }
