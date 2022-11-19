@@ -1,6 +1,5 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.vm
 
-import land.sungbin.androidprojecttemplate.domain.constants.AccountType
 import land.sungbin.androidprojecttemplate.domain.model.SettingEntity
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchAccountInformationUseCase
 import land.sungbin.androidprojecttemplate.domain.usecase.fetch.FetchSettingUseCase
@@ -17,12 +16,12 @@ class SettingViewModel @Inject constructor(
     private val fetchSettingUseCase: FetchSettingUseCase,
     private val updateSettingUseCase: UpdateSettingUseCase,
     private val fetchAccountInformationUseCase: FetchAccountInformationUseCase,
-) : BaseViewModel<SettingState, SettingSideEffect>() {
+) : BaseViewModel<SettingState, SettingSideEffect>(SettingState()) {
 
     suspend fun fetchSetting() {
         fetchSettingUseCase()
             .onSuccess { response ->
-                setState {
+                updateState {
                     copy(
                         activityNotifications = response.activityNotification,
                         messageNotifications = response.messageNotification,
@@ -30,8 +29,8 @@ class SettingViewModel @Inject constructor(
                 }
             }
             .onFailure {
-                setEffect {
-                    SettingSideEffect.FetchSettingFailed
+                postSideEffect {
+                    SettingSideEffect.FetchSetting
                 }
             }
     }
@@ -39,7 +38,7 @@ class SettingViewModel @Inject constructor(
     suspend fun fetchAccountInformation() {
         fetchAccountInformationUseCase()
             .onSuccess { response ->
-                setState {
+                updateState {
                     copy(
                         accountType = response.accountType,
                         email = response.email,
@@ -47,8 +46,8 @@ class SettingViewModel @Inject constructor(
                 }
             }
             .onFailure {
-                setEffect {
-                    SettingSideEffect.FetchAccountInformationFailed
+                postSideEffect {
+                    SettingSideEffect.FetchAccountInformation
                 }
             }
     }
@@ -61,21 +60,21 @@ class SettingViewModel @Inject constructor(
                 messageNotification = state.value.messageNotifications,
             )
         ).onFailure {
-            setEffect {
-                SettingSideEffect.PostSettingFailed
+            postSideEffect {
+                SettingSideEffect.PostSetting
             }
         }
     }
 
 
-    fun navigatePage(step: SettingStep) = setState {
+    fun navigatePage(step: SettingStep) = updateState {
         copy(
             currentStep = step,
         )
     }
 
     suspend fun changeActivityNotifications(state: Boolean) {
-        setState {
+        updateState {
             copy(
                 activityNotifications = state
             )
@@ -85,22 +84,12 @@ class SettingViewModel @Inject constructor(
     }
 
     suspend fun changeMessageNotifications(state: Boolean) {
-        setState {
+        updateState {
             copy(
                 messageNotifications = state,
             )
         }
 
         postSetting()
-    }
-
-    override fun createInitialState(): SettingState {
-        return SettingState(
-            currentStep = SettingStep.SETTING_MAIN_SCREEN,
-            activityNotifications = false,
-            messageNotifications = false,
-            accountType = AccountType.KAKAO,
-            email = ""
-        )
     }
 }

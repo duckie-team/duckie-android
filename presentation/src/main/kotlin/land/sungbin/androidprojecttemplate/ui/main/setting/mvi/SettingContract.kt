@@ -1,22 +1,20 @@
 package land.sungbin.androidprojecttemplate.ui.main.setting.mvi
 
-import land.sungbin.androidprojecttemplate.shared.android.base.UiEffect
-import land.sungbin.androidprojecttemplate.shared.android.base.UiState
-import land.sungbin.androidprojecttemplate.ui.main.setting.utils.AccountType
+import land.sungbin.androidprojecttemplate.domain.constants.AccountType
 import land.sungbin.androidprojecttemplate.ui.main.setting.utils.SettingStep
 
 data class SettingState(
-    val currentStep: SettingStep,
-    val activityNotifications: Boolean,
-    val messageNotifications: Boolean,
-    val accountType: AccountType,
-    val email: String,
-) : UiState
+    val currentStep: SettingStep = SettingStep.SettingMainScreen,
+    val activityNotifications: Boolean = false,
+    val messageNotifications: Boolean = false,
+    val accountType: AccountType = AccountType.DEFAULT,
+    val email: String = "",
+)
 
-sealed class SettingSideEffect : UiEffect {
-    object FetchSettingFailed : SettingSideEffect()
+sealed class SettingSideEffect {
+    object FetchSetting : SettingSideEffect()
 
-    object PostSettingFailed : SettingSideEffect()
+    object PostSetting : SettingSideEffect()
 
-    object FetchAccountInformationFailed : SettingSideEffect()
+    object FetchAccountInformation : SettingSideEffect()
 }

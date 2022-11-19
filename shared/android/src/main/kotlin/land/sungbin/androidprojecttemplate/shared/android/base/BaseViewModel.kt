@@ -6,26 +6,24 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 
-abstract class BaseViewModel<S : UiState, A : UiEffect> {
-
-    private val initialState : S by lazy { createInitialState() }
-    abstract fun createInitialState() : S
-
-    private val _state : MutableStateFlow<S> = MutableStateFlow(initialState)
+abstract class BaseViewModel<State, SideEffect>(
+    initialState: State,
+) {
+    private val _state: MutableStateFlow<State> = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
-    private val _effect : Channel<A> = Channel()
+    private val _effect: Channel<SideEffect> = Channel()
     val effect = _effect.receiveAsFlow()
 
-    private val currentState: S
+    private val currentState: State
         get() = _state.value
 
-    protected fun setState(reducer: S.() -> S) {
+    protected fun updateState(reducer: State.() -> State) {
         val newState = currentState.reducer()
         _state.value = newState
     }
 
-    protected suspend fun setEffect(effect: () -> A) {
+    protected suspend fun postSideEffect(effect: () -> SideEffect) {
         _effect.send(effect())
     }
 }
