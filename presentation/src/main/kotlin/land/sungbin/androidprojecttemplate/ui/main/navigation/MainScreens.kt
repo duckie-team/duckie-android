@@ -1,14 +1,13 @@
 package land.sungbin.androidprojecttemplate.ui.main.navigation
 
-sealed class MainScreens(
+enum class MainScreens(
     val route: String,
 ) {
-    object Home : MainScreens("LIST")
-    object Search : MainScreens("SEARCH")
-    object Notification : MainScreens("NOTIFICATION")
-    object DuckChat : MainScreens("DUCK_CHAT")
-
-    object Setting : MainScreens("SETTING")
+    Home("LIST"),
+    Search("SEARCH"),
+    Notification("SEARCH"),
+    DuckChat("DUCK_CHAT"),
+    Setting("SETTING"),
 }
 
 internal val homeBottomNavItems = listOf(
