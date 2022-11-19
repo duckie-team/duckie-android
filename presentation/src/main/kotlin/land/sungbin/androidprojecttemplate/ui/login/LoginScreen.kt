@@ -20,8 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
+import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
+import land.sungbin.androidprojecttemplate.shared.compose.extension.launch
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
@@ -31,17 +32,14 @@ import team.duckie.quackquack.ui.component.QuackUnderlineBody3
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-) {
+) = CoroutineScopeContent {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val coroutineScope = rememberCoroutineScope()
 
     when (state) {
         LoginState.Initial -> {
             LoginContent(
                 onClickLogin = {
-                    coroutineScope.launch {
-                        viewModel.kakaoLogin()
-                    }
+                    launch { viewModel.kakaoLogin() }
                 }
             )
         }

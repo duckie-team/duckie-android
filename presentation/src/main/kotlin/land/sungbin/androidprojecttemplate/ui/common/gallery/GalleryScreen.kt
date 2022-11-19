@@ -9,15 +9,15 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.constants.UiConstant.GALLERY_COLUMN_COUNT
+import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
+import land.sungbin.androidprojecttemplate.shared.compose.extension.launch
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeaderGridLayout
 import team.duckie.quackquack.ui.component.QuackImage
@@ -30,8 +30,7 @@ internal fun ImageGalleryScreen(
     images: List<String>,
     selectedImages: List<String>,
     viewModel: ImageGalleryViewModel,
-) {
-    val coroutineScope = rememberCoroutineScope()
+)  = CoroutineScopeContent {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -39,11 +38,11 @@ internal fun ImageGalleryScreen(
         QuackTopAppBar(
             leadingIcon = QuackIcon.Close,
             onClickLeadingIcon = {
-                coroutineScope.launch { viewModel.onBackPressed() }
+                launch { viewModel.onBackPressed() }
             },
             trailingText = stringResource(R.string.add),
             onClickTrailingText = {
-                coroutineScope.launch { viewModel.onClickAddComplete() }
+                launch { viewModel.onClickAddComplete() }
             }
         )
         QuackHeaderGridLayout(
@@ -78,7 +77,7 @@ internal fun ImageGalleryScreen(
                 }
             },
             onClickHeader = {
-                coroutineScope.launch { viewModel.onClickCamera() }
+                launch { viewModel.onClickCamera() }
             },
         )
     }

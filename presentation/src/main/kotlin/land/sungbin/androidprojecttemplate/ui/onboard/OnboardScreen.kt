@@ -5,14 +5,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.launch
+import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
+import land.sungbin.androidprojecttemplate.shared.compose.extension.launch
 import land.sungbin.androidprojecttemplate.ui.component.FadeAnimatedVisibility
 import land.sungbin.androidprojecttemplate.ui.component.whiteGradient
 import team.duckie.quackquack.ui.component.QuackLargeButton
@@ -21,9 +21,8 @@ import team.duckie.quackquack.ui.component.QuackLargeButton
 @Composable
 fun OnboardScreen(
     viewModel: OnboardViewModel,
-) {
+) = CoroutineScopeContent {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val coroutineScope = rememberCoroutineScope()
 
     Crossfade(
         targetState = state.onboardState
@@ -33,9 +32,7 @@ fun OnboardScreen(
                 nickname = state.profileModel.nickname,
                 profileImage = state.profileModel.profileImage,
                 onClickBack = {
-                    coroutineScope.launch {
-                        viewModel.handleBackPressed()
-                    }
+                    launch { viewModel.handleBackPressed() }
                 },
                 onNickNameChange = { nickname ->
                     viewModel.setNickName(nickname)
@@ -44,9 +41,7 @@ fun OnboardScreen(
                     viewModel.navigatePage(OnboardPage.Categories)
                 },
                 onClickProfile = {
-                    coroutineScope.launch {
-                        viewModel.onClickProfile()
-                    }
+                    launch { viewModel.onClickProfile() }
                 },
             )
 
@@ -58,9 +53,7 @@ fun OnboardScreen(
                     viewModel.onClickCategory(checked, category)
                 },
                 onClickBack = {
-                    coroutineScope.launch {
-                        viewModel.handleBackPressed()
-                    }
+                    launch { viewModel.handleBackPressed() }
                 },
                 onClickNext = {
                     viewModel.navigatePage(OnboardPage.Tag)
@@ -70,14 +63,10 @@ fun OnboardScreen(
             OnboardPage.Tag -> OnboardTagScreen(
                 categories = state.categoriesModel.selectedCategories.toPersistentList(),
                 onClickBack = {
-                    coroutineScope.launch {
-                        viewModel.handleBackPressed()
-                    }
+                    launch { viewModel.handleBackPressed() }
                 },
                 onClickComplete = {
-                    coroutineScope.launch {
-                        viewModel.onClickComplete()
-                    }
+                    launch { viewModel.onClickComplete() }
                 }
             )
         }
