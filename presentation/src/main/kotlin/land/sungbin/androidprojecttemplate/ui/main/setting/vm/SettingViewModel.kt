@@ -42,7 +42,7 @@ class SettingViewModel @Inject constructor(
             .onSuccess { response ->
                 setState {
                     copy(
-                        accountType = response.accountType.toAccountType(),
+                        accountType = response.accountType,
                         email = response.email,
                     )
                 }

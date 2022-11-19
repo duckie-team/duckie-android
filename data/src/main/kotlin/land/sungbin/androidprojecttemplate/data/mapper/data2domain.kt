@@ -22,6 +22,7 @@ import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.SettingData
 import land.sungbin.androidprojecttemplate.data.model.UserData
 import land.sungbin.androidprojecttemplate.data.model.common.ContentData
+import land.sungbin.androidprojecttemplate.domain.constants.toAccountType
 import land.sungbin.androidprojecttemplate.domain.model.AccountInformationEntity
 import land.sungbin.androidprojecttemplate.domain.model.Chat
 import land.sungbin.androidprojecttemplate.domain.model.ChatRead
@@ -393,6 +394,6 @@ internal fun SettingData.toDomain() = SettingEntity(
 )
 
 internal fun AccountInformationData.toDomain() = AccountInformationEntity(
-    accountType = accountType,
+    accountType = accountType.toAccountType(),
     email = email,
 )

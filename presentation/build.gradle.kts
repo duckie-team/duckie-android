@@ -64,6 +64,7 @@ android {
 }
 
 dependencies {
+
     val features = listOf(
         ProjectConstants.SharedAndroid,
     )
