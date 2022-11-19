@@ -22,6 +22,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import land.sungbin.androidprojecttemplate.R
+import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
 import land.sungbin.androidprojecttemplate.ui.main.home.component.DrawerContent
 import land.sungbin.androidprojecttemplate.ui.main.home.component.dummyDate
 import land.sungbin.androidprojecttemplate.util.DateUtil
@@ -117,9 +118,8 @@ val notificationItems = listOf(
 )
 
 @Composable
-internal fun NotificationScreen() {
+internal fun NotificationScreen() = CoroutineScopeContent {
     val drawerState = rememberQuackDrawerState()
-    val coroutineScope = rememberCoroutineScope()
     val swipeRefreshState = rememberSwipeRefreshState(false)
 
     QuackModalDrawer(
@@ -204,7 +204,9 @@ private fun getVerticalAlignment(
 }
 
 @Composable
-private fun NewCommentItemScreen(itemType: NotificationItemType.NewComment) {
+private fun NewCommentItemScreen(
+    itemType: NotificationItemType.NewComment
+) = CoroutineScopeContent {
     // 프로필 이미지
     QuackRoundImage(
         src = R.drawable.ic_launcher_background, size = DpSize(36.dp, 36.dp)
@@ -242,7 +244,7 @@ private fun NewCommentItemScreen(itemType: NotificationItemType.NewComment) {
 }
 
 @Composable
-private fun NewHeartItemScreen(itemType: NotificationItemType.NewHeart) {
+private fun NewHeartItemScreen(itemType: NotificationItemType.NewHeart) = CoroutineScopeContent {
     // 프로필 이미지
     QuackRoundImage(
         src = R.drawable.ic_launcher_background, size = DpSize(36.dp, 36.dp)
@@ -280,7 +282,9 @@ private fun NewHeartItemScreen(itemType: NotificationItemType.NewHeart) {
 }
 
 @Composable
-private fun RowScope.NewFollowerItemScreen(itemType: NotificationItemType.NewFollower) {
+private fun RowScope.NewFollowerItemScreen(
+    itemType: NotificationItemType.NewFollower
+) = CoroutineScopeContent {
     // 프로필 이미지
     QuackRoundImage(
         src = R.drawable.ic_launcher_background, size = DpSize(36.dp, 36.dp)
@@ -325,7 +329,7 @@ private fun RowScope.NewFollowerItemScreen(itemType: NotificationItemType.NewFol
 @Composable
 private fun RowScope.RequireWriteReviewItemScreen(
     itemType: NotificationItemType.RequireWriteReview
-) {
+) = CoroutineScopeContent {
     // 프로필 이미지
     QuackRoundImage(
         src = R.drawable.ic_launcher_background, size = DpSize(36.dp, 36.dp)
@@ -364,7 +368,7 @@ private fun RowScope.RequireWriteReviewItemScreen(
 @Composable
 private fun RowScope.RequireChangeDealStateItemScreen(
     itemType: NotificationItemType.RequireChangeDealState
-) {
+) = CoroutineScopeContent {
     // 프로필 이미지
     QuackRoundImage(
         src = R.drawable.ic_launcher_background, size = DpSize(36.dp, 36.dp)
@@ -403,7 +407,7 @@ private fun RowScope.RequireChangeDealStateItemScreen(
 @Composable
 private fun RowScope.RequireUpToDuckDealItemScreen(
     itemType: NotificationItemType.RequireUpToDuckDeal
-) {
+) = CoroutineScopeContent {
     // 프로필 이미지
     QuackRoundImage(
         src = R.drawable.ic_launcher_background, size = DpSize(36.dp, 36.dp)
