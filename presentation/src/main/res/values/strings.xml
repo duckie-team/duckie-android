@@ -78,4 +78,19 @@
     <string name="setting_up_areas_interest">관심 분야 설정</string>
     <string name="edit_interest_tags">관심 태그 편집</string>
     <string name="app_settings">앱 설정</string>
+
+    <!-- home-Notification -->
+    <string name="notification_title_new_comment">%s님이 내 글에 새 댓글을 달았어요.</string>
+    <string name="notification_title_new_heart">%s님이 내 글에 좋아요을 눌렀어요."</string>
+    <string name="notification_title_new_follower">%s님이 나를 팔로우 했어요."</string>
+    <string name="notification_title_require_write_review">\"%s\" 어떠셨나요? 구매 후기를 남겨보세요.</string>
+    <string name="notification_title_require_change_deal_state">\"%s\"를 하셨나요? 거래가 끝났다면 거래완료로 변경해주세요.</string>
+    <string name="notification_title_require_up_to_duck_deal">%s님이 내 피드에 판매요청을 했어요.</string>
+
+    <string name="notification_new_comment">새 댓글</string>
+    <string name="notification_heart">좋아요</string>
+    <string name="notification_follower">팔로우</string>
+    <string name="notification_review">구매 후기</string>
+    <string name="notification_deal_finish">거래완료</string>
+    <string name="notification_sale_request">거래완료</string>
 </resources>
