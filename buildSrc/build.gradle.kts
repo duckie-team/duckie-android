@@ -13,4 +13,7 @@ dependencies {
     // Unresolved reference: implementations
     implementation(libs.kotlin.core)
     implementation(libs.build.gradle.agp)
+    implementation("com.squareup:javapoet:1.13.0") {
+        because("https://github.com/google/dagger/issues/3068#issuecomment-999118496")
+    }
 }
