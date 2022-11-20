@@ -9,9 +9,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant
 import land.sungbin.androidprojecttemplate.constants.ApplicationConstant.IMAGE_DATA
 import land.sungbin.androidprojecttemplate.ui.DuckieTheme
-import land.sungbin.androidprojecttemplate.ui.component.gallery.ImageGalleryResponse
-import land.sungbin.androidprojecttemplate.ui.main.setting.screen.SettingScreen
-import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
 import land.sungbin.androidprojecttemplate.ui.common.gallery.ImageGalleryResponse
 import land.sungbin.androidprojecttemplate.ui.navigator.DuckieNavigator
 import javax.inject.Inject

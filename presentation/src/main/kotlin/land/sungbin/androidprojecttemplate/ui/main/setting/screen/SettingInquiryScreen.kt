@@ -14,8 +14,8 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 
 object DuckieInquiryData {
 
-    const val email = "duckieteam.hi@gmail.com"
-    const val instagram = "hi@duckie.team"
+    const val email = "hi@duckie.team"
+    const val instagram = "@duckie_team"
 }
 @Composable
 fun SettingInquiryScreen(
