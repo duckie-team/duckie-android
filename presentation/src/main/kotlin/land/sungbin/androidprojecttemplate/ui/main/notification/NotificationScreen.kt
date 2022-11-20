@@ -55,30 +55,6 @@ internal fun NotificationScreen(
     LaunchedEffect(notificationViewModel.effect) {
         notificationViewModel.effect.collect { effect ->
             when (effect) {
-                is NotificationSideEffect.ClickNewComment -> {
-                    toast(context, "${effect.item.type} 항목 클릭")
-                }
-
-                is NotificationSideEffect.ClickNewHeart -> {
-                    toast(context, "${effect.item.type} 항목 클릭")
-                }
-
-                is NotificationSideEffect.ClickNewFollower -> {
-                    toast(context, "${effect.item.type} 항목 클릭")
-                }
-
-                is NotificationSideEffect.ClickRequireWriteReview -> {
-                    toast(context, "${effect.item.type} 항목 클릭")
-                }
-
-                is NotificationSideEffect.ClickRequireChangeDealState -> {
-                    toast(context, "${effect.item.type} 항목 클릭")
-                }
-
-                is NotificationSideEffect.ClickRequireUpToDuckDeal -> {
-                    toast(context, "${effect.item.type} 항목 클릭")
-                }
-
                 is NotificationSideEffect.ShowToast -> {
                     toast(context, effect.message, Toast.LENGTH_SHORT)
                 }

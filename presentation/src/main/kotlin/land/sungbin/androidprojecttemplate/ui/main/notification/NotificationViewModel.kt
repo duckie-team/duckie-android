@@ -44,28 +44,31 @@ class NotificationViewModel @Inject constructor(
         NotificationSideEffect.ShowToast(message)
     }
 
-    suspend fun onClickItem(item: NotificationItem) = postSideEffect {
-        when (item) {
-            is NotificationItem.NewComment ->
-                NotificationSideEffect.ClickNewComment(item)
+    suspend fun onClickItem(item: NotificationItem) = when (item) {
+        is NotificationItem.NewComment -> {
+            showToast("${item.type} 항목 클릭")
+        }
 
-            is NotificationItem.NewHeart ->
-                NotificationSideEffect.ClickNewHeart(item)
+        is NotificationItem.NewHeart -> {
+            showToast("${item.type} 항목 클릭")
+        }
 
-            is NotificationItem.NewFollower ->
-                NotificationSideEffect.ClickNewFollower(item)
+        is NotificationItem.NewFollower -> {
+            showToast("${item.type} 항목 클릭")
+        }
 
-            is NotificationItem.RequireWriteReview ->
-                NotificationSideEffect.ClickRequireWriteReview(item)
+        is NotificationItem.RequireWriteReview -> {
+            showToast("${item.type} 항목 클릭")
+        }
 
-            is NotificationItem.RequireChangeDealState ->
-                NotificationSideEffect.ClickRequireChangeDealState(item)
+        is NotificationItem.RequireChangeDealState -> {
+            showToast("${item.type} 항목 클릭")
+        }
 
-            is NotificationItem.RequireUpToDuckDeal ->
-                NotificationSideEffect.ClickRequireUpToDuckDeal(item)
+        is NotificationItem.RequireUpToDuckDeal -> {
+            showToast("${item.type} 항목 클릭")
         }
     }
-
     suspend fun onClickItemTargetUser(item: NotificationItem) = when (item) {
         is NotificationItem.NewComment -> showToast("${item.targetUserId} 클릭")
         is NotificationItem.NewHeart -> showToast("${item.targetUserId} 클릭")
@@ -80,8 +83,9 @@ class NotificationViewModel @Inject constructor(
         else -> {}
     }
 
-    suspend fun onClickItemNewComment(item: NotificationItem.NewComment) =
-        showToast("${item.type} 새 댓글 클릭")
+    suspend fun onClickItemNewComment(item: NotificationItem.NewComment) {
+        postSideEffect { NotificationSideEffect.ShowToast("$item") }
+    }
 
     suspend fun onClickItemHeart(item: NotificationItem.NewHeart) =
         showToast("${item.type} 좋아요 클릭")
