@@ -28,13 +28,14 @@ internal fun SettingScreen(
     val currentActivity = LocalContext.current as Activity
 
     LaunchedEffect(effect) {
-
         effect.collect { effect ->
             when (effect) {
                 SettingSideEffect.FetchSetting -> {
                 }
+
                 SettingSideEffect.PostSetting -> {
                 }
+
                 SettingSideEffect.FetchAccountInformation -> {
                 }
             }
@@ -103,9 +104,12 @@ internal fun SettingScreen(
                     )
                 },
                 onClickOpenSourceLicense = {
-                    settingVM.navigatePage(
-                        step = SettingStep.SettingOpenSourceLicenseScreen,
-                    )
+                    currentActivity.startActivityWithAnimation {
+                        Intent(
+                            currentActivity,
+                            OssLicensesMenuActivity::class.java,
+                        )
+                    }
                 },
                 onClickPrivacyPolicy = {
                     settingVM.navigatePage(
@@ -149,15 +153,6 @@ internal fun SettingScreen(
                     )
                 },
             )
-
-            SettingStep.SettingOpenSourceLicenseScreen -> {
-                currentActivity.startActivityWithAnimation {
-                    Intent(
-                        currentActivity,
-                        OssLicensesMenuActivity::class.java,
-                    )
-                }
-            }
 
             SettingStep.SettingPrivacyPolicyScreen -> SettingPrivacyPolicy(
                 onClickBack = {
