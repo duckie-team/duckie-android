@@ -70,7 +70,7 @@ allprojects {
         }
     }
 
-    if (pluginManager.hasPlugin(rootProject.libs.plugins.dokka.get().pluginId)) {
+    if (pluginManager.hasPlugin(rootProject.libs.plugins.kotlin.dokka.get().pluginId)) {
         tasks.dokkaHtmlMultiModule.configure {
             moduleName.set("DUCKIE")
             outputDirectory.set(file("$rootDir/documents/dokka"))

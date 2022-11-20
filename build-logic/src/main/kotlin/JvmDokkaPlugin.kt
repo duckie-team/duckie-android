@@ -7,6 +7,7 @@ import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import team.duckie.app.android.convention.applyPlugins
 import team.duckie.app.android.convention.libs
+import team.duckie.app.android.convention.ApplicationConstants
 
 /**
  * Android 프레임워크에 의존적이지 않은 순수한 Dokka 모듈을 구성합니다.
@@ -19,7 +20,7 @@ internal class JvmDokkaPlugin : Plugin<Project> {
             receiver = target,
         ) {
             applyPlugins(
-                libs.findPlugin("dokka").get().get().pluginId,
+                libs.findPlugin("kotlin-dokka").get().get().pluginId,
             )
 
             tasks.withType<DokkaTaskPartial> {

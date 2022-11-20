@@ -100,7 +100,7 @@ di-hilt = { id = "com.google.dagger.hilt.android", version.ref = "di-hilt" }
 [libraries]
 build-gradle-agp = { module = "com.android.tools.build:gradle", version.ref = "plugin-build-gradle-android" }
 build-google-service = { module = "com.google.gms:google-services", version.ref = "plugin-build-google-service" }
-build-ui-oss-license = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "ui-oss-license" }
+build-ui-oss-license = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "ui-oss-license" }
 
 kotlin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }
 kotlin-dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "kotlin-dokka" }
