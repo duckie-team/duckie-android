@@ -17,7 +17,7 @@ include(
     ":data",
     ":domain",
     ":presentation",
-    ":feature-setting",
-    ":feature-onboard",
-    ":feature-notification-screen",
+    ":feature-ui-setting",
+    ":feature-ui-onboard",
+    ":feature-ui-notification",
 )
