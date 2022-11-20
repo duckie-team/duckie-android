@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import land.sungbin.androidprojecttemplate.ui.main.duckchat.DuckChatScreen
 import land.sungbin.androidprojecttemplate.ui.main.home.HomeScreen
 import land.sungbin.androidprojecttemplate.ui.main.notification.NotificationScreen
+import land.sungbin.androidprojecttemplate.ui.main.notification.NotificationViewModel
 import land.sungbin.androidprojecttemplate.ui.main.search.SearchScreen
 import land.sungbin.androidprojecttemplate.ui.main.setting.screen.SettingScreen
 import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
@@ -14,6 +15,7 @@ import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
 @Composable
 internal fun MainNavigation(
     settingVM: SettingViewModel,
+    notificationVM: NotificationViewModel,
     navController: NavHostController,
 ) {
     NavHost(
@@ -35,7 +37,10 @@ internal fun MainNavigation(
         composable(
             route = MainScreens.Notification.route,
         ) {
-            NotificationScreen()
+            NotificationScreen(
+                navController = navController,
+                notificationViewModel = notificationVM,
+            )
         }
         composable(
             route = MainScreens.DuckChat.route,

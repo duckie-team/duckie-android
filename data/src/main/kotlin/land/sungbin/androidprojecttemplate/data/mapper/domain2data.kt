@@ -16,6 +16,7 @@ import land.sungbin.androidprojecttemplate.data.model.FeedHeartData
 import land.sungbin.androidprojecttemplate.data.model.FeedScoreData
 import land.sungbin.androidprojecttemplate.data.model.FollowData
 import land.sungbin.androidprojecttemplate.data.model.HeartData
+import land.sungbin.androidprojecttemplate.data.model.NotificationData
 import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.SettingData
@@ -34,6 +35,7 @@ import land.sungbin.androidprojecttemplate.domain.model.Feed
 import land.sungbin.androidprojecttemplate.domain.model.FeedScore
 import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
+import land.sungbin.androidprojecttemplate.domain.model.NotificationItem
 import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.SettingEntity
@@ -213,3 +215,56 @@ internal fun AccountInformationEntity.toData() = AccountInformationData(
     accountType = accountType,
     email = email,
 )
+
+internal fun NotificationItem.toData(): NotificationData = when(this) {
+    is NotificationItem.NewComment -> NotificationData(
+        type = this.type.key,
+        id = this.id,
+        profileUrl = "${this.profileUrl}",
+        createdAt = this.createdAt,
+        description = this.description,
+        targetUserId = this.targetUserId,
+        feedId = this.feedId,
+    )
+    is NotificationItem.NewHeart -> NotificationData(
+        type = this.type.key,
+        id = this.id,
+        profileUrl = "${this.profileUrl}",
+        createdAt = this.createdAt,
+        description = this.description,
+        targetUserId = this.targetUserId,
+        feedId = this.feedId,
+    )
+    is NotificationItem.NewFollower -> NotificationData(
+        type = this.type.key,
+        id = this.id,
+        profileUrl = "${this.profileUrl}",
+        createdAt = this.createdAt,
+        targetUserId = this.targetUserId,
+        isFollowed = this.isFollowed,
+    )
+    is NotificationItem.RequireWriteReview -> NotificationData(
+        type = this.type.key,
+        id = this.id,
+        profileUrl = "${this.profileUrl}",
+        createdAt = this.createdAt,
+        duckDealTitle = this.duckDealTitle,
+        duckDealUrl = this.duckDealUrl,
+    )
+    is NotificationItem.RequireChangeDealState -> NotificationData(
+        type = this.type.key,
+        id = this.id,
+        profileUrl = "${this.profileUrl}",
+        createdAt = this.createdAt,
+        duckDealTitle = this.duckDealTitle,
+        duckDealUrl = this.duckDealUrl,
+    )
+    is NotificationItem.RequireUpToDuckDeal -> NotificationData(
+        type = this.type.key,
+        id = this.id,
+        profileUrl = "${this.profileUrl}",
+        createdAt = this.createdAt,
+        targetUserId = this.targetUserId,
+        duckDealUrl = this.duckDealUrl,
+    )
+}

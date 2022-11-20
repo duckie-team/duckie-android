@@ -10,7 +10,6 @@ import land.sungbin.androidprojecttemplate.domain.model.Follow
 import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.User
-import land.sungbin.androidprojecttemplate.domain.model.constraint.Category
 import land.sungbin.androidprojecttemplate.domain.model.constraint.HeartTarget
 import land.sungbin.androidprojecttemplate.domain.model.util.FK
 import land.sungbin.androidprojecttemplate.domain.model.util.PK

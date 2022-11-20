@@ -18,4 +18,5 @@ internal object CollectionNames {
     const val Report = "report"
     const val FeedScore = "feed-score"
     const val ContentStayTime = "content-stay-time"
+    const val Notification = "notification"
 }

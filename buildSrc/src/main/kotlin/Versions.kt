@@ -89,6 +89,6 @@ object Versions {
     }
 
     object Quack {
-        const val quack = "1.2.5"
+        const val quack = "1.3.0-SNAPSHOT"
     }
 }

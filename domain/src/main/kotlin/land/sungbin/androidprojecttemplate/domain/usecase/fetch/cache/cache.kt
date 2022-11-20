@@ -13,6 +13,7 @@ internal enum class CacheType {
     Review,
     SaleRequest,
     User,
+    Notification,
 }
 
 private typealias PK = String
