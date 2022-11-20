@@ -2,7 +2,7 @@
 
 plugins {
     `kotlin-dsl`
-    alias(libs.plugins.dokka)
+    alias(libs.plugins.kotlin.dokka)
 }
 
 group = "team.duckie.app.android.convention"
@@ -15,10 +15,9 @@ repositories {
 
 dependencies {
     // Unresolved reference: implementations
-    implementation(libs.build.kotlin)
-    implementation(libs.build.kover)
-    implementation(libs.build.dokka.base)
-    implementation(libs.build.dokka.plugin)
+    implementation(libs.kotlin.core)
+    implementation(libs.kotlin.dokka.base)
+    implementation(libs.kotlin.dokka.plugin)
     implementation(libs.build.gradle.agp)
 }
 

@@ -6,10 +6,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
-    alias(libs.plugins.detekt)
-    alias(libs.plugins.ktlint)
-    alias(libs.plugins.dokka)
-    alias(libs.plugins.kover)
+    alias(libs.plugins.code.ktlint)
+    alias(libs.plugins.code.detekt)
+    alias(libs.plugins.kotlin.dokka)
+    alias(libs.plugins.kotlin.kover)
     id(ConventionEnum.JvmDependencyGraph)
 }
 
@@ -30,10 +30,11 @@ buildscript {
     }
 
     dependencies {
-        classpath(libs.build.kotlin)
-        classpath(libs.build.dokka.base)
-        classpath(libs.build.oss.license)
+        classpath(libs.kotlin.core)
+        classpath(libs.kotlin.dokka.base)
         classpath(libs.build.gradle.agp)
+        classpath(libs.build.google.service)
+        classpath(libs.build.ui.oss.license)
     }
 }
 
@@ -47,7 +48,7 @@ allprojects {
         detekt {
             parallel = true
             buildUponDefaultConfig = true
-            toolVersion = libs.versions.detekt.get()
+            toolVersion = libs.versions.plugin.code.detekt.get()
             config.setFrom(files("$rootDir/detekt-config.yml"))
         }
 
@@ -69,10 +70,10 @@ allprojects {
         }
     }
 
-    if (pluginManager.hasPlugin(rootProject.libs.plugins.dokka.get().pluginId)) {
+    if (pluginManager.hasPlugin(rootProject.libs.plugins.kotlin.dokka.get().pluginId)) {
         tasks.dokkaHtmlMultiModule.configure {
             moduleName.set("DUCKIE")
-            outputDirectory.set(file("$rootDir/documents/api"))
+            outputDirectory.set(file("$rootDir/documents/dokka"))
 
             pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
                 footerMessage = """
@@ -84,9 +85,9 @@ allprojects {
     }
 
     apply {
-        plugin(rootProject.libs.plugins.kover.get().pluginId)
-        plugin(rootProject.libs.plugins.detekt.get().pluginId)
-        plugin(rootProject.libs.plugins.ktlint.get().pluginId)
+        plugin(rootProject.libs.plugins.kotlin.kover.get().pluginId)
+        plugin(rootProject.libs.plugins.code.ktlint.get().pluginId)
+        plugin(rootProject.libs.plugins.code.detekt.get().pluginId)
     }
 }
 
@@ -108,7 +109,7 @@ subprojects {
     }
 
     configure<KtlintExtension> {
-        version.set(rootProject.libs.versions.ktlint.source.get())
+        version.set(rootProject.libs.versions.plugin.code.ktlint.source.get())
         android.set(true)
         outputToConsole.set(true)
         additionalEditorconfigFile.set(file("$rootDir/.editorconfig"))

@@ -4,6 +4,6 @@ plugins {
 
 dependencies {
     // Unresolved reference: implementations
-    implementation(libs.build.kotlin)
+    implementation(libs.kotlin.core)
     implementation(libs.build.gradle.agp)
 }
