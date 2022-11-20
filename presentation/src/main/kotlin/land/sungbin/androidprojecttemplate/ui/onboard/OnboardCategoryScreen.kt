@@ -13,7 +13,7 @@ import kotlinx.collections.immutable.PersistentList
 import land.sungbin.androidprojecttemplate.R
 import land.sungbin.androidprojecttemplate.constants.UiConstant.CATEGORY_COLUMN_COUNT
 import land.sungbin.androidprojecttemplate.constants.UiConstant.WHITE_GRADIENT_HEIGHT
-import land.sungbin.androidprojecttemplate.data.domain.Category
+import land.sungbin.androidprojecttemplate.domain.model.constraint.LikeCategory
 import land.sungbin.androidprojecttemplate.ui.component.BackArrowTopAppBar
 import land.sungbin.androidprojecttemplate.ui.component.DuckieSimpleLayout
 import land.sungbin.androidprojecttemplate.ui.component.TitleAndDescription
@@ -25,9 +25,9 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 @Composable
 internal fun OnboardCategoryScreen(
     isNextButtonVisible: Boolean,
-    categories: PersistentList<Category>,
-    selectedCategories: PersistentList<Category>,
-    onClickCategory: (Boolean, Category) -> Unit,
+    categories: PersistentList<LikeCategory>,
+    selectedCategories: PersistentList<LikeCategory>,
+    onClickCategory: (Boolean, LikeCategory) -> Unit,
     onClickBack: () -> Unit,
     onClickNext: () -> Unit,
 ) {
@@ -65,8 +65,8 @@ internal fun OnboardCategoryScreen(
 
 @Composable
 private fun CategoryGridLayout(
-    categories: PersistentList<Category>,
-    selectedCategories: PersistentList<Category>,
+    categories: PersistentList<LikeCategory>,
+    selectedCategories: PersistentList<LikeCategory>,
     onClick: (Int, Boolean) -> Unit,
 ) {
     QuackSimpleGridLayout(
@@ -80,7 +80,9 @@ private fun CategoryGridLayout(
                 index = index,
                 category = item,
                 onClick = onClick,
-                isChecked = selectedCategories.find { it.id == item.id } != null
+                isChecked = selectedCategories.find { selectedCategory: LikeCategory ->
+                    selectedCategory.id == item.id
+                } != null
             )
         },
     )
@@ -90,7 +92,7 @@ private fun CategoryGridLayout(
 private fun CategoryItem(
     isChecked: Boolean,
     index: Int,
-    category: Category,
+    category: LikeCategory,
     onClick: (Int, Boolean) -> Unit,
 ) {
     Column(

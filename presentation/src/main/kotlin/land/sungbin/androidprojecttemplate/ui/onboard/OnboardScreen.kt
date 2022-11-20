@@ -1,82 +1,72 @@
 package land.sungbin.androidprojecttemplate.ui.onboard
 
-import android.app.Activity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.persistentListOf
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.toPersistentList
-import land.sungbin.androidprojecttemplate.constants.ApplicationConstant
+import land.sungbin.androidprojecttemplate.shared.compose.extension.CoroutineScopeContent
+import land.sungbin.androidprojecttemplate.shared.compose.extension.launch
 import land.sungbin.androidprojecttemplate.ui.component.FadeAnimatedVisibility
 import land.sungbin.androidprojecttemplate.ui.component.whiteGradient
-import land.sungbin.androidprojecttemplate.ui.navigator.DuckieNavigator
 import team.duckie.quackquack.ui.component.QuackLargeButton
 
-private const val ONBOARD_PROFILE_PAGE = 0
-private const val ONBOARD_CATEGORY_PAGE = 1
-private const val ONBOARD_TAG_PAGE = 2
-
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun OnboardScreen(
-    activity: Activity,
-    navigator: DuckieNavigator,
     viewModel: OnboardViewModel,
-) {
-    Crossfade(
-        targetState = viewModel.currentPage.observeAsState().value ?: ONBOARD_PROFILE_PAGE
-    ) { page ->
+) = CoroutineScopeContent {
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-        when (page) {
-            ONBOARD_PROFILE_PAGE -> OnboardProfileScreen(
-                nickname = viewModel.nickname.observeAsState().value.orEmpty(),
-                profileImage = viewModel.profileImage.observeAsState().value,
+    Crossfade(
+        targetState = state.onboardState
+    ) { pageState ->
+        when (pageState) {
+            OnboardPage.Profile -> OnboardProfileScreen(
+                nickname = state.profileModel.nickname,
+                profileImage = state.profileModel.profileImage,
+                onClickBack = {
+                    launch { viewModel.handleBackPressed() }
+                },
                 onNickNameChange = { nickname ->
                     viewModel.setNickName(nickname)
                 },
-                onClickBack = {
-                    activity.finish()
-                },
                 onClickNext = {
-                    viewModel.navigatePage(ONBOARD_CATEGORY_PAGE)
+                    viewModel.navigatePage(OnboardPage.Categories)
                 },
                 onClickProfile = {
-                    navigator.navigateGalleryScreen(
-                        activity = activity,
-                        imageSelectType = ApplicationConstant.IMAGE_SINGLE_TYPE,
-                    )
+                    launch { viewModel.onClickProfile() }
                 },
             )
 
-            ONBOARD_CATEGORY_PAGE -> OnboardCategoryScreen(
-                isNextButtonVisible = viewModel.selectedCategories.observeAsState().value?.isNotEmpty()
-                    ?: false,
-                categories = viewModel.categories.observeAsState().value ?: persistentListOf(),
-                selectedCategories = viewModel.selectedCategories.observeAsState().value?.toPersistentList()
-                    ?: persistentListOf(),
+            OnboardPage.Categories -> OnboardCategoryScreen(
+                isNextButtonVisible = state.categoriesModel.categories.isNotEmpty(),
+                categories = state.categoriesModel.categories,
+                selectedCategories = state.categoriesModel.selectedCategories.toPersistentList(),
                 onClickCategory = { checked, category ->
                     viewModel.onClickCategory(checked, category)
                 },
                 onClickBack = {
-                    viewModel.navigatePage(ONBOARD_PROFILE_PAGE)
+                    launch { viewModel.handleBackPressed() }
                 },
                 onClickNext = {
-                    viewModel.navigatePage(ONBOARD_TAG_PAGE)
+                    viewModel.navigatePage(OnboardPage.Tag)
                 }
             )
 
-            ONBOARD_TAG_PAGE -> OnboardTagScreen(
-                categories = viewModel.selectedCategories.observeAsState().value?.toPersistentList()
-                    ?: persistentListOf(),
+            OnboardPage.Tag -> OnboardTagScreen(
+                categories = state.categoriesModel.selectedCategories.toPersistentList(),
                 onClickBack = {
-                    viewModel.navigatePage(ONBOARD_CATEGORY_PAGE)
+                    launch { viewModel.handleBackPressed() }
                 },
                 onClickComplete = {
-                    viewModel.complete()
+                    launch { viewModel.onClickComplete() }
                 }
             )
         }
