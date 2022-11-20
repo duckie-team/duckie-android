@@ -16,8 +16,13 @@
     <string name="start_duckie">덕키 시작하기</string>
     <string name="complete">완료</string>
     <string name="add">추가</string>
+    <string name="terms">이용약관</string>
     <string name="required_terms">필수 이용 약관</string>
     <string name="privacy_utilization">개인정보 수집 및 이용</string>
+    <string name="privacy_policy">개인정보처리방침</string>
+    <string name="open_source_license">오픈소스 라이선스</string>
+    
+    <string name="email">이메일</string>
 
     <string name="adding_tag">추가한 태그</string>
     <string name="adding_tag_self">+ 직접 태그 추가하기</string>
@@ -37,6 +42,24 @@
     <string name="feed">피드</string>
     <string name="center_period_between_text">%s · %s</string>
     <string name="price_with_won">%s 원</string>
+
+    <!-- app setting -->
+    <string name="app_setting">앱 설정</string>
+    <string name="account_information">계정 정보</string>
+    <string name="notification">알림</string>
+    <string name="inquiry">문의</string>
+    <string name="duckie_information">덕키 정보</string>
+    <string name="version_information">버전정보</string>
+    
+    <string name="log_out">로그아웃</string>
+    <string name="sign_out">탈퇴하기</string>
+    <string name="contact_us">문의처</string>
+    <string name="instagram">인스타그램</string>
+
+    <string name="activity_notifications">활동 알림</string>
+    <string name="message_notifications">메시지 알림</string>
+    
+    <string name="account">계정</string>
 
     <!-- BottomSheet -->
     <string name="feed_filtering_title">홈에서 피드와 덕딜을 모두 보고 있어요</string>

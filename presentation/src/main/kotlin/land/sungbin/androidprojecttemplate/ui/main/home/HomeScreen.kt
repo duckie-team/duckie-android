@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.collections.immutable.toPersistentList
@@ -41,6 +42,7 @@ import land.sungbin.androidprojecttemplate.ui.main.home.component.FeedHeader
 import land.sungbin.androidprojecttemplate.ui.main.home.component.NormalFeed
 import land.sungbin.androidprojecttemplate.ui.main.home.dto.toDuckDealFeed
 import land.sungbin.androidprojecttemplate.ui.main.home.dto.toNormalFeed
+import land.sungbin.androidprojecttemplate.ui.main.navigation.MainScreens
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.quackquack.ui.component.QuackBottomSheetItem
 import team.duckie.quackquack.ui.component.QuackHeadlineBottomSheet
@@ -57,6 +59,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 )
 @Composable
 internal fun HomeScreen(
+    navController: NavController,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     var homeState by remember { mutableStateOf(HomeState()) }
@@ -89,7 +92,13 @@ internal fun HomeScreen(
     QuackModalDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerContent()
+            DrawerContent(
+                onClickSetting = {
+                    navController.navigate(
+                        route = MainScreens.Setting.route,
+                    )
+                }
+            )
         }
     ) {
         QuackHeadlineBottomSheet(

@@ -15,12 +15,19 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import land.sungbin.androidprojecttemplate.ui.main.navigation.MainNavigation
 import land.sungbin.androidprojecttemplate.ui.main.navigation.homeBottomNavItems
+import land.sungbin.androidprojecttemplate.ui.main.setting.vm.SettingViewModel
 import team.duckie.quackquack.ui.component.QuackBottomNavigation
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var settingVM: SettingViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
             QuackTheme {
@@ -30,6 +37,7 @@ class MainActivity : ComponentActivity() {
                 Column(modifier = Modifier.fillMaxSize()) {
                     Box(modifier = Modifier.weight(1f)) {
                         MainNavigation(
+                            settingVM = settingVM,
                             navController = navController,
                         )
                     }

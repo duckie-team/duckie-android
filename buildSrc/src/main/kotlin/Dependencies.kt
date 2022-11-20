@@ -15,6 +15,8 @@ object Dependencies {
         const val Analytics = "com.google.firebase:firebase-analytics-ktx"
         const val RemoteConfig = "com.google.firebase:firebase-config-ktx"
         const val Crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
+        const val DataBase = "com.google.firebase:firebase-database-ktx"
+        const val FireStore = "com.google.firebase:firebase-firestore-ktx"
     }
 
     object EachKtx {
@@ -71,7 +73,6 @@ object Dependencies {
         "io.ktor:ktor-client-logging:${Versions.Network.Ktor}",
         "io.ktor:ktor-serialization-jackson:${Versions.Network.Ktor}",
         "io.ktor:ktor-client-content-negotiation:${Versions.Network.Ktor}",
-
     )
 
     val Login = listOf(
@@ -81,6 +82,7 @@ object Dependencies {
     object Util { // Erratum 은 :presentation 에서만 쓰임
         const val Erratum = "land.sungbin:erratum:${Versions.Util.Erratum}"
         const val Logeukes = "land.sungbin:logeukes:${Versions.Util.Logeukes}"
+        const val OssLicense = "com.google.android.gms:play-services-oss-licenses:${Versions.Util.OssLicense}"
     }
 
     val Analytics = listOf(
