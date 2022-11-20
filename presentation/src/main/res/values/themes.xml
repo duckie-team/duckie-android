@@ -8,4 +8,13 @@
 <resources>
 
     <style name="Theme.Duckie" parent="android:Theme.Material.NoActionBar" />
+
+    <style name="Theme.Duckie.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/duckie_orange</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/bg_splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.Duckie</item>
+
+        <item name="android:statusBarColor">@color/duckie_orange</item>
+        <item name="android:navigationBarColor">@color/duckie_orange</item>
+    </style>
 </resources>
