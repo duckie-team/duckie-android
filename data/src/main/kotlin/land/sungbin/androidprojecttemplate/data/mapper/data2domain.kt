@@ -18,6 +18,7 @@ import land.sungbin.androidprojecttemplate.data.model.FeedScoreData
 import land.sungbin.androidprojecttemplate.data.model.FollowData
 import land.sungbin.androidprojecttemplate.data.model.HeartData
 import land.sungbin.androidprojecttemplate.data.model.LikeCategoryData
+import land.sungbin.androidprojecttemplate.data.model.NotificationData
 import land.sungbin.androidprojecttemplate.data.model.ReportData
 import land.sungbin.androidprojecttemplate.data.model.SaleRequestData
 import land.sungbin.androidprojecttemplate.data.model.SettingData
@@ -42,6 +43,8 @@ import land.sungbin.androidprojecttemplate.domain.model.Heart
 import land.sungbin.androidprojecttemplate.domain.model.KakaoLoginResponse
 import land.sungbin.androidprojecttemplate.domain.model.LoginResponse
 import land.sungbin.androidprojecttemplate.domain.model.LoginUser
+import land.sungbin.androidprojecttemplate.domain.model.NotificationItem
+import land.sungbin.androidprojecttemplate.domain.model.NotificationType
 import land.sungbin.androidprojecttemplate.domain.model.Report
 import land.sungbin.androidprojecttemplate.domain.model.SaleRequest
 import land.sungbin.androidprojecttemplate.domain.model.SettingEntity
@@ -434,3 +437,55 @@ internal fun LoginUserData.toDomain() = LoginUser(
 internal fun SignUpResponseData.toDomain() = SignUpResponse(
     isSuccess = isSuccess,
 )
+
+internal fun NotificationData.toDomain() = when (type) {
+    NotificationType.NewComment.key -> NotificationItem.NewComment(
+        id = id,
+        profileUrl = profileUrl,
+        createdAt = createdAt,
+        description = description,
+        targetUserId = targetUserId,
+        feedId = feedId,
+    )
+
+    NotificationType.NewHeart.key -> NotificationItem.NewHeart(
+        id = id,
+        profileUrl = profileUrl,
+        createdAt = createdAt,
+        description = description,
+        targetUserId = targetUserId,
+        feedId = feedId,
+    )
+
+    NotificationType.NewFollower.key -> NotificationItem.NewFollower(
+        id = id,
+        profileUrl = profileUrl,
+        createdAt = createdAt,
+        targetUserId = targetUserId,
+        isFollowed = isFollowed,
+    )
+
+    NotificationType.RequireWriteReview.key -> NotificationItem.RequireWriteReview(
+        id = id,
+        profileUrl = profileUrl,
+        createdAt = createdAt,
+        duckDealTitle = duckDealTitle,
+        duckDealUrl = duckDealUrl,
+    )
+
+    NotificationType.RequireChangeDealState.key -> NotificationItem.RequireChangeDealState(
+        id = id,
+        profileUrl = profileUrl,
+        createdAt = createdAt,
+        duckDealTitle = duckDealTitle,
+        duckDealUrl = duckDealUrl,
+    )
+
+    else -> NotificationItem.RequireUpToDuckDeal(
+        id = id,
+        profileUrl = profileUrl,
+        createdAt = createdAt,
+        targetUserId = targetUserId,
+        duckDealUrl = duckDealUrl,
+    )
+}
