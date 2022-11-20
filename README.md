@@ -6,7 +6,7 @@
 <p align="center">
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-blue"/></a>
   <a href="https://developer.android.com/about/versions/marshmallow"><img alt="API 23+" src="https://img.shields.io/badge/API-23%2B-brightgreen.svg"/></a>
-  <a href="./documents/codestyle.md"><img alt="codestyle" src="./assets/codestyle-duckie.svg"/></a>
+  <a href="./documents/codestyle.md"><img alt="codestyle" src="./assets/badge/codestyle-duckie.svg"/></a>
 </p>
 
 ---
