@@ -27,6 +27,7 @@ buildCache {
 }
 
 include(
+    ":app",
     ":data",
     ":domain",
     ":presentation",
