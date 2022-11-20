@@ -6,7 +6,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.register
-import team.duckie.quackquack.convention.PluginEnum
+import team.duckie.app.android.convention.PluginEnum
 
 class DependencyGraphPlugin : Plugin<Project> {
     override fun apply(
@@ -77,12 +77,10 @@ abstract class DependencyGraphTask : DefaultTask() {
                     hasPlugin(PluginEnum.AndroidLibrary) -> androidLibraryProjects.add(
                         element = project,
                     )
-                    hasPlugin(PluginEnum.AndroidLint) -> androidLintProjects.add(
-                        element = project,
-                    )
-                    hasPlugin(PluginEnum.JavaLibrary) -> jvmLibraryProjecst.add(
-                        element = project,
-                    )
+                    // TODO: DFM Support
+                    // hasPlugin(PluginEnum.AndroidLint) -> androidLintProjects.add(
+                    //     element = project,
+                    // )
                     else -> Unit // Do nothing
                 }
             }

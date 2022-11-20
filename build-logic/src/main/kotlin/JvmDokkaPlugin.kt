@@ -5,8 +5,8 @@ import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
-import team.duckie.quackquack.convention.applyPlugins
-import team.duckie.quackquack.convention.libs
+import team.duckie.app.android.convention.applyPlugins
+import team.duckie.app.android.convention.libs
 
 /**
  * Android 프레임워크에 의존적이지 않은 순수한 Dokka 모듈을 구성합니다.

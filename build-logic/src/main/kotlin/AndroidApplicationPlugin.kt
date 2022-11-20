@@ -6,11 +6,10 @@ import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import team.duckie.quackquack.convention.ApplicationConstants
-import team.duckie.quackquack.convention.PluginEnum
-import team.duckie.quackquack.convention.applyPlugins
-import team.duckie.quackquack.convention.configureApplication
-import team.duckie.quackquack.convention.getPlaygroundVersion
+import team.duckie.app.android.convention.ApplicationConstants
+import team.duckie.app.android.convention.PluginEnum
+import team.duckie.app.android.convention.applyPlugins
+import team.duckie.app.android.convention.configureApplication
 
 /**
  * Android 프레임워크의 Application 환경을 구성합니다.
