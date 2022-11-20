@@ -16,3 +16,9 @@ plugins {
 android {
     namespace = "team.duckie.app.android.presentation"
 }
+
+dependencies {
+    implementations(
+        libs.androidx.splash,
+    )
+}

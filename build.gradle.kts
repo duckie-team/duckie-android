@@ -89,7 +89,7 @@ allprojects {
                 footerMessage = """
                                 |made with <span style="color: #ff8300;">❤</span> by <a href="https://duckie.team/">Duckie Team</a>
                                 """.trimMargin()
-                customAssets = listOf(file("assets/logo-icon.svg"))
+                customAssets = listOf(file("assets/icon/logo-icon.svg"))
             }
         }
     }
