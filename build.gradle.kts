@@ -26,6 +26,7 @@ buildscript {
         // classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.Analytics.FirebaseCrashlytics}")
         // classpath("com.vanniktech:gradle-dependency-graph-generator-plugin:${Versions.BuildUtil.DependencyGraphGenerator}")
         classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:${Versions.Util.SecretsGradlePlugin}")
+        classpath("com.google.android.gms:oss-licenses-plugin:0.10.5")
     }
 }
 

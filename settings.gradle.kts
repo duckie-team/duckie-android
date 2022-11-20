@@ -7,3 +7,5 @@ include(
     ":shared:compose",
     ":shared:android",
 )
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
