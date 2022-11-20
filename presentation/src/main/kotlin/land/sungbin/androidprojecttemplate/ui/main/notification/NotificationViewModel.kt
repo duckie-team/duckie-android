@@ -19,7 +19,6 @@ class NotificationViewModel @Inject constructor(
         // TODO(riflockle7) 추후 유저 아이디 설정 필요
         val userId = "userId"
 
-        // TODO(riflockle7) 이런 식으로 작성해도 동기 실행을 유지하는지 확인 필요
         updateState {
             copy(uiStatus = UiStatus.Loading)
         }
@@ -91,7 +90,6 @@ class NotificationViewModel @Inject constructor(
         showToast("${item.type} 팔로우 클릭")
 
     suspend fun onClickItemFollowToggle(item: NotificationItem.NewFollower) {
-        // TODO(riflockle7) 이런 식으로 작성해도 동기 실행을 유지하는지 확인 필요
         updateState {
             val newNotifications = notifications.toMutableList()
             val index = notifications.indexOf(item)
