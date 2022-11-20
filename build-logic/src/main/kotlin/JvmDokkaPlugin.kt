@@ -27,12 +27,12 @@ internal class JvmDokkaPlugin : Plugin<Project> {
 
                 dokkaSourceSets.configureEach {
                     documentedVisibilities.set(DokkaConfiguration.Visibility.values().toList())
-                    jdkVersion.set(11)
+                    jdkVersion.set(ApplicationConstants.javaVersion.toString().toInt())
                 }
 
                 pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
                     footerMessage = """
-                                    |made with <span style="color: #ff8300;">❤</span> by <a href="https://duckie.team/">Duckie</a>
+                                    |made with <span style="color: #ff8300;">❤</span> by <a href="https://duckie.team/">Duckie Team</a>
                                     """.trimMargin()
                 }
             }
