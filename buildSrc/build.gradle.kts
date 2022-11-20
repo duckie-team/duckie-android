@@ -2,6 +2,8 @@ plugins {
     `kotlin-dsl`
 }
 
-repositories {
-    gradlePluginPortal()
+dependencies {
+    // Unresolved reference: implementations
+    implementation(libs.build.kotlin)
+    implementation(libs.build.gradle.agp)
 }

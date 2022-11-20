@@ -1,101 +1,88 @@
-import org.gradle.api.artifacts.ProjectDependency
-import org.gradle.api.artifacts.dsl.DependencyHandler
-import org.gradle.plugin.use.PluginDependenciesSpec
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/quack-quack-android/blob/master/LICENSE
+ */
 
-@Suppress("ControlFlowWithEmptyBody") // empty if block
-fun PluginDependenciesSpec.installPlugins(
-    isPresentation: Boolean = false,
-    isDFM: Boolean = false,
-    scabbard: Boolean = false,
-    test: Boolean = false,
-    hilt: Boolean = false,
+import org.gradle.api.artifacts.dsl.DependencyHandler as DependencyScope
+import java.io.File
+import org.gradle.api.Project
+
+private const val Api = "api"
+private const val BundleInside = "bundleInside"
+private const val Implementation = "implementation"
+private const val TestImplementation = "testImplementation"
+
+// bundleInside 는 하나의 아티팩트만 가능함
+fun DependencyScope.bundleInside(
+    path: Any,
 ) {
-    if (!isPresentation && !isDFM) {
-        id("com.android.library")
-    }
-    if (isDFM) {
-        id("com.android.dynamic-feature")
-    }
-    id("kotlin-android")
-    id("kotlin-kapt")
-    if (!isDFM && hilt) {
-        id("dagger.hilt.android.plugin")
-    }
-    if (test) {
-        id("de.mannodermaus.android-junit5")
-    }
-    if (scabbard) {
-//        id("scabbard.gradle") version Versions.Util.Scabbard
-    }
+    delegate(
+        method = BundleInside,
+        paths = arrayOf(path),
+    )
 }
 
-fun DependencyHandler.installDependencies(
-    isSharedModule: Boolean = false,
-    orbit: Boolean = false,
-    hilt: Boolean = false,
-    compose: Boolean = false,
-    test: Boolean = false,
+fun DependencyScope.implementations(
+    vararg paths: Any,
 ) {
-    if (orbit) {
-        implementation(Dependencies.Orbit.Main)
-    }
-    if (!isSharedModule) {
-        projectImplementation(ProjectConstants.SharedAndroid)
-    }
-    if (hilt) {
-        implementation(Dependencies.Jetpack.Hilt)
-        kapt(Dependencies.Compiler.Hilt)
-    }
-    if (compose) {
-        Dependencies.Compose.forEach(::implementation)
-        Dependencies.Debug.Compose.forEach(::debugImplementation)
-        projectImplementation(ProjectConstants.SharedCompose)
-    }
-    if (test) {
-        testImplementation(Dependencies.Orbit.Test)
-        Dependencies.Test.forEach { testDependency ->
-            testImplementation(testDependency)
+    delegate(
+        method = Implementation,
+        paths = paths,
+    )
+}
+
+fun DependencyScope.testImplementations(
+    vararg paths: Any,
+) {
+    delegate(
+        method = TestImplementation,
+        paths = paths,
+    )
+}
+
+fun DependencyScope.apis(
+    vararg paths: Any,
+) {
+    delegate(
+        method = Api,
+        paths = paths,
+    )
+}
+
+val Project.keystoreSigningAvailable: Boolean
+    get() {
+        val keystoreFolder = File("$rootDir/keystore")
+        return keystoreFolder.exists().also { available ->
+            println("keystoreSigningAvailable: $available")
         }
     }
-}
 
-fun DependencyHandler.projectImplementation(path: String) {
-    implementation(project(path))
-}
-
-@Suppress(
-    "OPT_IN_IS_NOT_ENABLED", // OptIn usage
-    "UNCHECKED_CAST" // Collection<*> as Collection<Any>
+data class KeystoreSecrets(
+    val storePath: String,
+    val storePassword: String,
+    val keyAlias: String,
+    val keyPassword: String,
 )
-@OptIn(ExperimentalStdlibApi::class) // buildList
-// only List or String or platform enters.
-fun List<*>.dependenciesFlatten() = buildList {
-    this@dependenciesFlatten.forEach { dependency ->
-        checkNotNull(dependency) {
-            "dependency $dependency is null."
-        }
-        when (dependency) {
-            is Collection<*> -> addAll(dependency as Collection<Any>)
-            else -> add(dependency)
-        }
+
+val Project.keystoreSecrets: KeystoreSecrets
+    get() {
+        val content = File("$rootDir/keystore/secrets.txt")
+        val lines = content.readLines()
+        return KeystoreSecrets(
+            storePath = "$rootDir/keystore/quack.pepk",
+            storePassword = lines[0],
+            keyAlias = lines[1],
+            keyPassword = lines[0],
+        )
+    }
+
+private fun DependencyScope.delegate(
+    method: String,
+    vararg paths: Any,
+) {
+    paths.forEach { path ->
+        add(method, path)
     }
 }
-
-private fun DependencyHandler.implementation(dependency: Any) {
-    add("implementation", dependency)
-}
-
-private fun DependencyHandler.debugImplementation(dependency: Any) {
-    add("debugImplementation", dependency)
-}
-
-private fun DependencyHandler.testImplementation(dependency: Any) {
-    add("testImplementation", dependency)
-}
-
-private fun DependencyHandler.kapt(dependency: Any) {
-    add("kapt", dependency)
-}
-
-private fun DependencyHandler.project(path: String) =
-    project(mapOf(Pair("path", path))) as ProjectDependency

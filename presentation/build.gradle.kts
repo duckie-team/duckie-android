@@ -65,33 +65,4 @@ android {
 
 dependencies {
 
-    val features = listOf(
-        ProjectConstants.SharedAndroid,
-    )
-    features.forEach(::projectImplementation)
-
-    val dependencies = listOf(
-        Dependencies.Ui,
-        Dependencies.Login,
-        Dependencies.Analytics,
-        Dependencies.Util.Erratum,
-        Dependencies.Quack.components,
-        Dependencies.Jetpack.Hilt,
-        Dependencies.Jetpack.Room,
-        Dependencies.Util.OssLicense,
-    ).dependenciesFlatten()
-    dependencies.forEach(::implementation)
-
-    debugImplementation(Dependencies.Debug.LeakCanary)
-    installDependencies(
-        isSharedModule = false,
-        orbit = true,
-        hilt = true,
-        compose = true,
-        test = false,
-    )
-
-    implementation(projects.data)
-
-    kapt(Dependencies.Compiler.RoomKsp)
 }
