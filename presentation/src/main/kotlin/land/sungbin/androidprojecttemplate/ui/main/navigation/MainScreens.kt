@@ -5,7 +5,7 @@ enum class MainScreens(
 ) {
     Home("LIST"),
     Search("SEARCH"),
-    Notification("SEARCH"),
+    Notification("NOTIFICATION"),
     DuckChat("DUCK_CHAT"),
     Setting("SETTING"),
 }
