@@ -19,6 +19,8 @@ android {
 
 dependencies {
     implementations(
+        libs.compose.ui.activity,
+        libs.compose.ui.foundation,
         libs.androidx.splash,
     )
 }
