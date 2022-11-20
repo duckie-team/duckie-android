@@ -42,6 +42,7 @@ buildscript {
         classpath(libs.build.gradle.agp)
         classpath(libs.build.google.service)
         classpath(libs.build.ui.oss.license)
+        classpath(libs.build.di.hilt)
     }
 }
 

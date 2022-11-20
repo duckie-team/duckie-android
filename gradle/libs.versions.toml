@@ -101,6 +101,7 @@ di-hilt = { id = "com.google.dagger.hilt.android", version.ref = "di-hilt" }
 build-gradle-agp = { module = "com.android.tools.build:gradle", version.ref = "plugin-build-gradle-android" }
 build-google-service = { module = "com.google.gms:google-services", version.ref = "plugin-build-google-service" }
 build-ui-oss-license = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "ui-oss-license" }
+build-di-hilt = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "di-hilt" }
 
 kotlin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }
 kotlin-dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "kotlin-dokka" }
@@ -143,7 +144,7 @@ firebase-performance = { module = "com.google.firebase:firebase-perf-ktx" }
 
 login-kakao = { module = "com.kakao.sdk:v2-user", version.ref = "login-kakao" }
 
-di-hilt-core = { module = "om.google.dagger:hilt-android", version.ref = "di-hilt" }
+di-hilt-core = { module = "com.google.dagger:hilt-android", version.ref = "di-hilt" }
 di-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "di-hilt" }
 di-inject = { module = "javax.inject:javax.inject", version.ref = "di-inject" }
 
