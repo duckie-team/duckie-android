@@ -21,7 +21,7 @@ dependencies {
     implementations(
         projects.utilUi,
         projects.featureUiOnboard,
-        libs.compose.ui.foundation,
         libs.androidx.splash,
+        libs.quack.ui.components,
     )
 }
