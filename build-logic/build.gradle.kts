@@ -55,6 +55,10 @@ gradlePlugin {
             id = "$prefix.android.library.compose.uitest"
             implementationClass = "AndroidLibraryComposeUiTestPlugin"
         }
+        register("jvmLibraryPlugin") {
+            id = "$prefix.jvm.library"
+            implementationClass = "JvmLibraryPlugin"
+        }
         register("jvmJunit4Plugin") {
             id = "$prefix.jvm.junit4"
             implementationClass = "JvmJUnit4Plugin"

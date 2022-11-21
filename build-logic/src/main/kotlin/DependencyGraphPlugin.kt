@@ -51,6 +51,7 @@ abstract class DependencyGraphTask : DefaultTask() {
         val dependencies = LinkedHashMap<Pair<Project, Project>, MutableList<String>>()
         val appModules = mutableListOf<Project>()
         val dfmModules = mutableListOf<Project>()
+        val jvmLibraryModules = mutableListOf<Project>()
         val utilModules = mutableListOf<Project>()
         val featureModules = mutableListOf<Project>()
         val uiFeatureModules = mutableListOf<Project>()
@@ -63,6 +64,7 @@ abstract class DependencyGraphTask : DefaultTask() {
                 when {
                     hasPlugin(PluginEnum.AndroidLibrary) -> appModules.add(project)
                     hasPlugin(PluginEnum.AndroidDfm) -> dfmModules.add(project)
+                    hasPlugin(PluginEnum.JavaLibrary) -> jvmLibraryModules.add(project)
                     else -> Unit // Do nothing
                 }
             }
@@ -115,7 +117,8 @@ abstract class DependencyGraphTask : DefaultTask() {
                     traits.add("shape=box")
                     traits.add("fillcolor=\"#baffc9\"") // 형광 연두색
                 }
-                in dfmModules -> traits.add("fillcolor=\"#c9baff\"") // 연두색
+                in dfmModules -> traits.add("fillcolor=\"#c9baff\"") // 연한 보라색
+                in jvmLibraryModules -> traits.add("fillcolor=\"#ffc9ba\"") // 연한 분홍색
                 in utilModules -> traits.add("fillcolor=\"#ffebba\"") // 연한 레몬색
                 in featureModules -> traits.add("fillcolor=\"#81D4FA\"") // 하늘색
                 in uiFeatureModules -> traits.add("fillcolor=\"#00aeff\"") // 파란색
