@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Duckie.Splash">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".IntroActivity"
             android:exported="true">
 
             <intent-filter>
