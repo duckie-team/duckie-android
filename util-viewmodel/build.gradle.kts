@@ -7,8 +7,14 @@
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
+    id(ConventionEnum.JvmDokka)
+    id(ConventionEnum.JvmJUnit4)
 }
 
 android {
     namespace = "team.duckie.app.android.util.viewmodel"
+}
+
+dependencies {
+    implementation(libs.kotlin.coroutines)
 }
