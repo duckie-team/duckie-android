@@ -130,7 +130,6 @@ compose-ui-activity = { module = "androidx.activity:activity-compose", version.r
 # TODO: Remove me when QuackQuack ui-components is ready
 compose-ui-material = { module = "androidx.compose.material:material", version.ref = "compose-core" }
 compose-ui-lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "compose-lottie" }
-compose-util-ui = { module = "androidx.compose.ui:ui-util", version.ref = "compose-core" }
 compose-util-tooling-core = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-core" } # debugImplementation
 compose-util-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-core" }
 compose-util-customview-pooling-container = { module = "androidx.customview:customview-poolingcontainer", version.ref = "compose-customview-pooling-container" } # debugImplementation
@@ -182,7 +181,7 @@ test-ktor-client = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-co
 
 [bundles]
 ktx = ["ktx-core", "ktx-activiy", "ktx-lifecycle"]
-compose-core = ["compose-ui-foundation", "compose-ui-activity", "compose-util-ui", "compose-util-tooling-preview"]
+compose-core = ["compose-ui-foundation", "compose-ui-activity", "compose-util-tooling-preview"]
 compose-debug = ["compose-util-tooling-core", "compose-util-customview-pooling-container"] # debugImplementation
 ktor = ["ktor-client", "ktor-content-negotiation", "ktor-jackson", "ktor-logging", "ktor-engine"]
 quack-lint = ["quack-lint-core", "quack-lint-quack", "quack-lint-compose"]
