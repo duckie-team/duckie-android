@@ -5,28 +5,63 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("MemberVisibilityCanBePrivate", "unused")
+
 package team.duckie.app.android.util.viewmodel
 
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
+/**
+ * 모든 ViewModel 의 기본적인 ViewModel 입니다.
+ *
+ * @param State ViewModel 의 상태
+ * @param SideEffect ViewModel 에서 발생할 수 있는 부수 효과
+ * @param initialState ViewModel 의 초기 상태
+ */
 abstract class BaseViewModel<State, SideEffect>(initialState: State) {
-    private val _state: MutableStateFlow<State> = MutableStateFlow(initialState)
-    val state = _state.asStateFlow()
+    private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
+    private val stateUpdaterScope = StateUpdaterScope(sourceState = mutableState)
 
-    private val _effect: Channel<SideEffect> = Channel()
-    val effect = _effect.receiveAsFlow()
+    /**
+     * 실시간 상태 업데이트를 [Flow] 로 구독합니다.
+     */
+    val state = mutableState.asStateFlow()
 
-    val currentState: State get() = _state.value
+    private val mutableEffect: Channel<SideEffect> = Channel()
 
-    fun updateState(reducer: State.() -> State) {
-        val newState = currentState.reducer()
-        _state.value = newState
+    /**
+     * 실시간 부수 효과를 [Channel] 로 구독합니다.
+     */
+    val effect = mutableEffect.receiveAsFlow()
+
+    /**
+     * 현재 상태를 조회합니다.
+     */
+    val currentState: State get() = state.value
+
+    /**
+     * 상태를 업데이트합니다.
+     *
+     * @param stateUpdater 상태를 업데이트하는 Reducer.
+     */
+    fun reduce(stateUpdater: StateUpdater<State>.() -> Unit) {
+        try {
+            stateUpdaterScope.stateUpdater()
+        } catch (ignore: StateUpdaterSkipException) {
+            // Skip state update
+        }
     }
 
+    /**
+     * 부수 효과를 발생시킵니다.
+     *
+     * @param effect 새로운 부수 효과
+     */
     suspend fun postSideEffect(effect: () -> SideEffect) {
-        _effect.send(effect())
+        mutableEffect.send(effect())
     }
 }
