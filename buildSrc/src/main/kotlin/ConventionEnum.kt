@@ -17,6 +17,7 @@ object ConventionEnum {
 
     const val AndroidHilt = "$prefix.android.hilt"
 
+    const val JvmLibrary = "$prefix.jvm.library"
     const val JvmJUnit4 = "$prefix.jvm.junit4"
     const val JvmDokka = "$prefix.jvm.dokka"
     const val JvmDependencyGraph = "$prefix.jvm.dependency.graph"

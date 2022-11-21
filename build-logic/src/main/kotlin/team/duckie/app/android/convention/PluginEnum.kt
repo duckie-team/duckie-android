@@ -11,8 +11,11 @@ package team.duckie.app.android.convention
  * 플러그인 오타 방지를 위한 상수 값들 모음
  */
 internal object PluginEnum {
-    const val KotlinAndroid = "kotlin-android"
+    const val KotlinCore = "kotlin"
     const val KotlinKapt = "kotlin-kapt"
+    const val KotlinAndroid = "kotlin-android"
+
+    const val JavaLibrary = "java-library"
 
     const val AndroidApplication = "com.android.application"
     const val AndroidLibrary = "com.android.library"
