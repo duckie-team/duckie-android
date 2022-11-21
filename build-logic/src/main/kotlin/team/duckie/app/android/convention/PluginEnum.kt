@@ -16,4 +16,5 @@ internal object PluginEnum {
 
     const val AndroidApplication = "com.android.application"
     const val AndroidLibrary = "com.android.library"
+    const val AndroidDfm = "com.android.dynamic-feature"
 }

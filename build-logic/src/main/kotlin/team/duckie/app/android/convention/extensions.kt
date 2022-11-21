@@ -56,18 +56,14 @@ internal fun CommonExtension<*, *, *, *>.kotlinOptions(block: KotlinJvmOptions.(
     (this as ExtensionAware).extensions.configure("kotlinOptions", block)
 }
 
-internal fun DependencyScope.apis(
-    vararg paths: Any,
-) {
+internal fun DependencyScope.apis(vararg paths: Any) {
     delegate(
         method = Api,
         paths = paths,
     )
 }
 
-internal fun DependencyScope.kapts(
-    vararg paths: Any,
-) {
+internal fun DependencyScope.kapts(vararg paths: Any) {
     delegate(
         method = Kapt,
         paths = paths,
@@ -75,45 +71,35 @@ internal fun DependencyScope.kapts(
 }
 
 
-internal fun DependencyScope.compileOnlys(
-    vararg paths: Any,
-) {
+internal fun DependencyScope.compileOnlys(vararg paths: Any) {
     delegate(
         method = CompileOnly,
         paths = paths,
     )
 }
 
-internal fun DependencyScope.implementations(
-    vararg paths: Any,
-) {
+internal fun DependencyScope.implementations(vararg paths: Any) {
     delegate(
         method = Implementation,
         paths = paths,
     )
 }
 
-internal fun DependencyScope.testImplementations(
-    vararg paths: Any,
-) {
+internal fun DependencyScope.testImplementations(vararg paths: Any) {
     delegate(
         method = TestImplementation,
         paths = paths,
     )
 }
 
-internal fun DependencyScope.androidTestImplementations(
-    vararg paths: Any,
-) {
+internal fun DependencyScope.androidTestImplementations(vararg paths: Any) {
     delegate(
         method = AndroidTestImplementation,
         paths = paths,
     )
 }
 
-internal fun DependencyScope.debugImplementations(
-    vararg paths: Any,
-) {
+internal fun DependencyScope.debugImplementations(vararg paths: Any) {
     delegate(
         method = DebugImplementation,
         paths = paths,

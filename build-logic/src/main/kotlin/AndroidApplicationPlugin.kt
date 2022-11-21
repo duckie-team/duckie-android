@@ -22,21 +22,15 @@ import team.duckie.app.android.convention.configureApplication
  * Android 프레임워크의 Application 환경을 구성합니다.
  */
 internal class AndroidApplicationPlugin : Plugin<Project> {
-    override fun apply(
-        target: Project,
-    ) {
-        with(
-            receiver = target,
-        ) {
+    override fun apply(target: Project) {
+        with(target) {
             applyPlugins(
                 PluginEnum.AndroidApplication,
                 PluginEnum.KotlinAndroid,
             )
 
             extensions.configure<BaseAppModuleExtension> {
-                configureApplication(
-                    extension = this,
-                )
+                configureApplication(this)
 
                 defaultConfig {
                     targetSdk = ApplicationConstants.targetSdk

@@ -18,13 +18,10 @@ import team.duckie.app.android.convention.libs
  * Android 프레임워크의 Library 환경에서 Jetpack Compose 의 UI 테스트를 진행할 준비를 합니다.
  */
 internal class AndroidLibraryComposeUiTestPlugin : Plugin<Project> {
-    override fun apply(
-        target: Project,
-    ) {
-        with(
-            receiver = target,
-        ) {
+    override fun apply(target: Project) {
+        with(target) {
             val extension = extensions.getByType<LibraryExtension>()
+
             extension.apply {
                 defaultConfig {
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -32,12 +29,8 @@ internal class AndroidLibraryComposeUiTestPlugin : Plugin<Project> {
             }
 
             dependencies {
-                debugImplementations(
-                    libs.findLibrary("test-compose-manifest").get(),
-                )
-                androidTestImplementations(
-                    libs.findLibrary("test-compose-junit").get(),
-                )
+                debugImplementations(libs.findLibrary("test-compose-manifest").get())
+                androidTestImplementations(libs.findLibrary("test-compose-junit").get())
             }
         }
     }

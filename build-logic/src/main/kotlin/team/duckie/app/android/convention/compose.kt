@@ -18,9 +18,7 @@ import org.gradle.kotlin.dsl.dependencies
  *
  * @param extension 설정할 그레이들의 [CommonExtension]
  */
-internal fun Project.configureCompose(
-    extension: CommonExtension<*, *, *, *>,
-) {
+internal fun Project.configureCompose(extension: CommonExtension<*, *, *, *>) {
     extension.apply {
         buildFeatures {
             compose = true
