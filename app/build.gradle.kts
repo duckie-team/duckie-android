@@ -9,11 +9,10 @@
 
 plugins {
     id(ConventionEnum.AndroidApplication)
-    id(libs.plugins.di.hilt.get().pluginId)
+    id(ConventionEnum.AndroidHilt)
     id(libs.plugins.gms.google.service.get().pluginId)
     id(libs.plugins.firebase.crashlytics.get().pluginId)
     id(libs.plugins.firebase.performance.get().pluginId)
-    `kotlin-kapt`
 }
 
 android {
@@ -26,8 +25,6 @@ dependencies {
         libs.firebase.performance,
         libs.firebase.analytics,
         libs.firebase.crashlytics,
-        libs.di.hilt.core,
         projects.presentation,
     )
-    kapt(libs.di.hilt.compiler)
 }
