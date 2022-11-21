@@ -20,6 +20,7 @@ android {
 dependencies {
     implementations(
         projects.utilUi,
+        projects.utilKotlin,
         projects.featureUiOnboard,
         libs.androidx.splash,
         libs.quack.ui.components,
