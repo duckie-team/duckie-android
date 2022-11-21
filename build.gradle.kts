@@ -68,14 +68,14 @@ allprojects {
                     "-opt-in=kotlin.OptIn",
                     "-opt-in=kotlin.RequiresOptIn",
                 )
-                freeCompilerArgs = freeCompilerArgs + listOf(
-                    "-P",
-                    "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$rootDir/report/compose-metrics",
-                )
-                freeCompilerArgs = freeCompilerArgs + listOf(
-                    "-P",
-                    "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$rootDir/report/compose-reports",
-                )
+                // freeCompilerArgs = freeCompilerArgs + listOf(
+                //     "-P",
+                //     "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$rootDir/report/compose-metrics",
+                // )
+                // freeCompilerArgs = freeCompilerArgs + listOf(
+                //     "-P",
+                //     "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$rootDir/report/compose-reports",
+                // )
             }
         }
     }
