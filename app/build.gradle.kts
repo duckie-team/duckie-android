@@ -22,9 +22,11 @@ android {
 dependencies {
     implementations(
         platform(libs.firebase.bom),
+        libs.analytics.anrwatchdog,
         libs.firebase.performance,
         libs.firebase.analytics,
         libs.firebase.crashlytics,
         projects.presentation,
     )
+    debugImplementation(libs.analytics.leakcanary)
 }
