@@ -20,9 +20,7 @@ import org.gradle.api.Project
  *
  * @param extension 설정할 그레이들의 [CommonExtension]
  */
-internal fun Project.configureApplication(
-    extension: CommonExtension<*, *, *, *>,
-) {
+internal fun Project.configureApplication(extension: CommonExtension<*, *, *, *>) {
     extension.apply {
         compileSdk = ApplicationConstants.compileSdk
 
@@ -45,9 +43,6 @@ internal fun Project.configureApplication(
 
         lint {
             checkTestSources = true
-            disable.add(
-                "NotificationPermission",
-            )
         }
     }
 }
