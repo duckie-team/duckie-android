@@ -39,14 +39,10 @@ class BaseViewModelTest {
         val vm = buildViewModel()
         expectThat(vm.currentState).isEqualTo(State.Waiting)
 
-        vm.reduce {
-            state = State.Join
-        }
+        vm.updateState { State.Join }
         expectThat(vm.currentState).isEqualTo(State.Join)
 
-        vm.reduce {
-            state = State.Leave
-        }
+        vm.updateState { State.Leave }
         expectThat(vm.currentState).isEqualTo(State.Leave)
     }
 
@@ -56,15 +52,13 @@ class BaseViewModelTest {
         val vm = buildViewModel()
         expectThat(vm.currentState).isEqualTo(State.Waiting)
 
-        vm.reduce {
+        vm.updateState {
             skip()
-            state = State.Join
+            State.Join
         }
         expectThat(vm.currentState).isEqualTo(State.Waiting)
 
-        vm.reduce {
-            state = State.JoinRejected
-        }
+        vm.updateState { State.JoinRejected }
         expectThat(vm.currentState).isEqualTo(State.JoinRejected)
     }
 

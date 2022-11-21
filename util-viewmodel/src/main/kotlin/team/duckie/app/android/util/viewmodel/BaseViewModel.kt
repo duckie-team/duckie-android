@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * 모든 ViewModel 의 기본적인 ViewModel 입니다.
@@ -24,7 +25,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
  */
 abstract class BaseViewModel<State, SideEffect>(initialState: State) {
     private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
-    private val stateUpdaterScope = StateUpdaterScope(sourceState = mutableState)
 
     /**
      * 실시간 상태 업데이트를 [Flow] 로 구독합니다.
@@ -46,11 +46,14 @@ abstract class BaseViewModel<State, SideEffect>(initialState: State) {
     /**
      * 상태를 업데이트합니다.
      *
-     * @param stateUpdater 상태를 업데이트하는 Reducer.
+     * @param updater 상태를 업데이트하는 람다.
+     * 새로운 상태를 반환하거나 skip 돼야 합니다.
      */
-    fun reduce(stateUpdater: StateUpdater<State>.() -> Unit) {
+    fun updateState(updater: StateUpdater.(currentState: State) -> State) {
         try {
-            stateUpdaterScope.stateUpdater()
+            mutableState.update { currentState ->
+                StateUpdaterScope.updater(currentState)
+            }
         } catch (ignore: StateUpdaterSkipException) {
             // Skip state update
         }
