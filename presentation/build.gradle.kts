@@ -19,7 +19,8 @@ android {
 
 dependencies {
     implementations(
-        libs.compose.ui.activity,
+        projects.utilUi,
+        projects.featureUiOnboard,
         libs.compose.ui.foundation,
         libs.androidx.splash,
     )

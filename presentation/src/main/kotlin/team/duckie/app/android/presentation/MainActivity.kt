@@ -12,17 +12,15 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnticipateInterpolator
-import androidx.activity.ComponentActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
+import team.duckie.app.android.util.ui.BaseActivity
 
 private const val DefaultSplashScreenExitAnimationDurationMillis = 200L
 
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

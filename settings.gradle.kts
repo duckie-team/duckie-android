@@ -7,6 +7,9 @@
 
 @file:Suppress("UnstableApiUsage")
 
+include(":util-viewmodel")
+
+
 rootProject.name = "duckie"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
@@ -31,7 +34,9 @@ include(
     ":data",
     ":domain",
     ":presentation",
+    ":feature-datastore",
     ":feature-ui-setting",
     ":feature-ui-onboard",
     ":feature-ui-notification",
+    ":util-ui",
 )

@@ -19,5 +19,12 @@ plugins {
 }
 
 android {
-    namespace = "team.duckie.app.android.feature.onboard"
+    namespace = "team.duckie.app.android.feature.ui.onboard"
+}
+
+dependencies {
+    implementations(
+        projects.utilUi,
+        projects.utilViewmodel,
+    )
 }
