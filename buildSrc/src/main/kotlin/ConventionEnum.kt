@@ -15,6 +15,8 @@ object ConventionEnum {
     const val AndroidLibraryCompose = "$prefix.android.library.compose"
     const val AndroidLibraryComposeUiTest = "$prefix.android.library.compose.uitest"
 
+    const val AndroidHilt = "$prefix.android.hilt"
+
     const val JvmJUnit4 = "$prefix.jvm.junit4"
     const val JvmDokka = "$prefix.jvm.dokka"
     const val JvmDependencyGraph = "$prefix.jvm.dependency.graph"

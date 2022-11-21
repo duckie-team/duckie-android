@@ -30,7 +30,7 @@ internal class AndroidApplicationPlugin : Plugin<Project> {
         ) {
             applyPlugins(
                 PluginEnum.AndroidApplication,
-                PluginEnum.AndroidKotlin,
+                PluginEnum.KotlinAndroid,
             )
 
             extensions.configure<BaseAppModuleExtension> {

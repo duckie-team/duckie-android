@@ -31,6 +31,10 @@ dependencies {
 gradlePlugin {
     val prefix = "duckie"
     plugins {
+        register("androidHiltPlugin") {
+            id = "$prefix.android.hilt"
+            implementationClass = "AndroidHiltPlugin"
+        }
         register("androidApplicationPlugin") {
             id = "$prefix.android.application"
             implementationClass = "AndroidApplicationPlugin"
