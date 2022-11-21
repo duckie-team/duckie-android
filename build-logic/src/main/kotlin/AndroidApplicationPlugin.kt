@@ -34,8 +34,8 @@ internal class AndroidApplicationPlugin : Plugin<Project> {
 
                 defaultConfig {
                     targetSdk = ApplicationConstants.targetSdk
-                    this.versionName = ApplicationConstants.versionName
-                    this.versionCode = ApplicationConstants.versionCode
+                    versionName = ApplicationConstants.versionName
+                    versionCode = ApplicationConstants.versionCode
                 }
             }
         }

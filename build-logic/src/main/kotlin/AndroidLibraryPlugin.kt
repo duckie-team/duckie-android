@@ -36,7 +36,9 @@ internal class AndroidLibraryPlugin : Plugin<Project> {
                     buildConfig = false
                 }
 
-                defaultConfig.targetSdk = ApplicationConstants.targetSdk
+                defaultConfig.apply {
+                    targetSdk = ApplicationConstants.targetSdk
+                }
             }
         }
     }

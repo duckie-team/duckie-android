@@ -21,7 +21,6 @@ dependencies {
         projects.utilKotlin,
     )
     testImplementations(
-        libs.test.strikt,
         libs.test.turbine,
         libs.test.coroutines,
     )
