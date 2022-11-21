@@ -32,6 +32,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import kotlinx.coroutines.delay
 import team.duckie.app.android.feature.ui.onboard.OnboardActivity
+import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.changeActivityWithAnimation
 import team.duckie.app.android.util.ui.systemBarPaddings
@@ -39,7 +40,7 @@ import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
 
-private const val DefaultSplashScreenExitAnimationDurationMillis = 200L
+private val SplashScreenExitAnimationDurationMillis = 0.2.seconds
 
 class IntroActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +65,7 @@ class IntroActivity : BaseActivity() {
                     0f,
                 ).run {
                     interpolator = AnticipateInterpolator()
-                    duration = DefaultSplashScreenExitAnimationDurationMillis
+                    duration = SplashScreenExitAnimationDurationMillis
                     doOnEnd {
                         splashScreenView.remove()
                     }
