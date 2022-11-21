@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +23,8 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
-import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
@@ -32,16 +32,14 @@ import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackUnderlineBody3
 
-private const val KakaoLoginScreenWelcomeLayoutId = "KakaoLoginScreenWelcome"
-private const val KakaoLoginScreenLoginLayoutId = "KakaoLoginScreenLogin"
+private const val KakaoLoginWelcomeLayoutId = "KakaoLoginScreenWelcome"
+private const val KakaoLoginLoginLayoutId = "KakaoLoginScreenLogin"
 
 @Composable
 internal fun KakaoLoginScreen() {
     Layout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = QuackColor.White.composeColor)
-            .padding(systemBarPaddings)
             .padding(
                 vertical = 20.dp,
                 horizontal = 24.dp,
@@ -52,10 +50,10 @@ internal fun KakaoLoginScreen() {
         },
     ) { measurables, constraints ->
         val welcomeMeasurable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == KakaoLoginScreenWelcomeLayoutId
+            measurable.layoutId == KakaoLoginWelcomeLayoutId
         } ?: npe()
         val loginMeasurable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == KakaoLoginScreenLoginLayoutId
+            measurable.layoutId == KakaoLoginLoginLayoutId
         } ?: npe()
 
         val looseConstraints = constraints.copy(
@@ -94,7 +92,7 @@ private fun KakaoLoginScreenWelcome() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .layoutId(KakaoLoginScreenWelcomeLayoutId),
+            .layoutId(KakaoLoginWelcomeLayoutId),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
             space = 16.dp,
@@ -102,7 +100,7 @@ private fun KakaoLoginScreenWelcome() {
         ),
     ) {
         QuackImage(
-            src = R.drawable.bg_duckie_talk,
+            src = R.drawable.img_duckie_talk,
             size = DpSize(
                 width = 180.dp,
                 height = 248.dp,
@@ -117,20 +115,25 @@ private fun KakaoLoginScreenWelcome() {
 
 @Composable
 private fun KakaoLoginScreenLogin() {
+    val vm = LocalViewModel.current as OnboardViewModel
+
     Column(
         modifier = Modifier
             .wrapContentSize()
-            .layoutId(KakaoLoginScreenLoginLayoutId),
+            .layoutId(KakaoLoginLoginLayoutId),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         QuackImage(
-            src = R.drawable.bg_login_kakao,
+            src = R.drawable.img_login_kakao,
             size = DpSize(
                 width = 320.dp,
                 height = 46.dp,
             ),
-            onClick = {},
+            onClick = {
+                // TODO: 카카오 로그인
+                vm.updateStep(vm.currentStep + 1)
+            },
         )
         // TODO: 밑줄 색상 변경 인자 오픈
         QuackUnderlineBody3(

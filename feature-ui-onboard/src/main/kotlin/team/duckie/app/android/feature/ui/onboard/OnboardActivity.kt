@@ -5,18 +5,68 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalLifecycleComposeApi::class)
+
 package team.duckie.app.android.feature.ui.onboard
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
+import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
 import team.duckie.app.android.feature.ui.onboard.screen.KakaoLoginScreen
+import team.duckie.app.android.feature.ui.onboard.screen.ProfileScreen
+import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.quackquack.ui.animation.QuackAnimatedContent
+import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackHeadLine2
+import team.duckie.quackquack.ui.theme.QuackTheme
 
 class OnboardActivity : BaseActivity() {
+    private val vm = OnboardViewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            KakaoLoginScreen()
+            val onboardStepState by vm.step.collectAsStateWithLifecycle()
+
+            QuackTheme {
+                CompositionLocalProvider(LocalViewModel provides vm) {
+                    QuackAnimatedContent(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = QuackColor.White.composeColor)
+                            .padding(systemBarPaddings),
+                        targetState = onboardStepState,
+                    ) { onboardStep ->
+                        if (onboardStep == OnboardStep.Login) {
+                            KakaoLoginScreen()
+                        } else {
+                            Column(modifier = Modifier.fillMaxSize()) {
+                                OnboardTopAppBar()
+                                when (onboardStep) {
+                                    OnboardStep.Profile -> ProfileScreen()
+                                    OnboardStep.Category -> CategoryScreen()
+                                    OnboardStep.Tag -> QuackHeadLine2(text = "TODO")
+                                    else -> Unit // unreached
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

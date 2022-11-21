@@ -113,7 +113,7 @@ private fun IntroScreen() {
         // TODO: SVG 필요
         QuackImage(
             modifier = Modifier.offset(x = 125.dp),
-            src = R.drawable.bg_duckie_intro,
+            src = R.drawable.img_duckie_intro,
             size = DpSize(
                 width = 276.dp,
                 height = 255.dp,
