@@ -16,5 +16,13 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlin.coroutines)
+    implementations(
+        libs.kotlin.coroutines,
+        projects.utilKotlin,
+    )
+    testImplementations(
+        libs.test.strikt,
+        libs.test.turbine,
+        libs.test.coroutines,
+    )
 }
