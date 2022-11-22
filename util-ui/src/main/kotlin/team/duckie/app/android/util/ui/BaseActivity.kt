@@ -46,5 +46,6 @@ open class BaseActivity(
             darkIcons = useDarkNavigationBarIcons,
         )
         super.onCreate(savedInstanceState)
+        actionBar?.hide()
     }
 }

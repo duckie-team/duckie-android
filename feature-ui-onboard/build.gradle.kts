@@ -14,6 +14,7 @@ plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
     id(ConventionEnum.AndroidLibraryComposeUiTest)
+    id(ConventionEnum.AndroidHilt)
     id(ConventionEnum.JvmJUnit4)
     id(ConventionEnum.JvmDokka)
 }
@@ -25,6 +26,11 @@ android {
 dependencies {
     implementations(
         projects.utilUi,
+        projects.utilKotlin,
+        projects.utilCompose,
         projects.utilViewmodel,
+        libs.compose.ui.material, // needs for ModalBottomSheet
+        libs.compose.ktx.lifecycle,
+        libs.quack.ui.components,
     )
 }

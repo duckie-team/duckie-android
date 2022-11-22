@@ -38,4 +38,5 @@ include(
     ":util-ui",
     ":util-viewmodel",
     ":util-kotlin",
+    ":util-compose",
 )

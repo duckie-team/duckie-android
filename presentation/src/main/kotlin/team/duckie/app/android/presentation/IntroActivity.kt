@@ -35,12 +35,13 @@ import team.duckie.app.android.feature.ui.onboard.OnboardActivity
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.changeActivityWithAnimation
-import team.duckie.app.android.util.ui.systemBarPaddings
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
 
 private val SplashScreenExitAnimationDurationMillis = 0.2.seconds
+private val SplashScreenFinishDurationMillis = 2.seconds
 
 class IntroActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +52,7 @@ class IntroActivity : BaseActivity() {
             IntroScreen()
 
             LaunchedEffect(Unit) {
-                delay(2000)
+                delay(SplashScreenFinishDurationMillis)
                 changeActivityWithAnimation<OnboardActivity>()
             }
         }
@@ -94,7 +95,7 @@ private fun IntroScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(start = 20.dp),
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             QuackImage(
@@ -106,13 +107,13 @@ private fun IntroScreen() {
             )
             // TODO: 누락된 typography 컴포넌트 추가
             QuackHeadLine1(
-                text = stringResource(R.string.activity_intro_slogan),
+                text = stringResource(R.string.intro_slogan),
             )
         }
         // TODO: SVG 필요
         QuackImage(
             modifier = Modifier.offset(x = 125.dp),
-            src = R.drawable.bg_duckie_intro,
+            src = R.drawable.img_duckie_intro,
             size = DpSize(
                 width = 276.dp,
                 height = 255.dp,

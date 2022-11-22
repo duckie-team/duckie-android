@@ -7,7 +7,7 @@
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
-    id(ConventionEnum.AndroidLibraryCompose)
+    id(ConventionEnum.JvmJUnit4)
 }
 
 android {
@@ -15,5 +15,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.ui.system.controller)
+    implementations(
+        libs.compose.ui.activity,
+        libs.ui.system.controller,
+    )
 }
