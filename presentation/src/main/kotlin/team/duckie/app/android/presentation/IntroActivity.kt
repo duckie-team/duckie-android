@@ -107,7 +107,7 @@ private fun IntroScreen() {
             )
             // TODO: 누락된 typography 컴포넌트 추가
             QuackHeadLine1(
-                text = stringResource(R.string.activity_intro_slogan),
+                text = stringResource(R.string.intro_slogan),
             )
         }
         // TODO: SVG 필요

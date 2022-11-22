@@ -77,8 +77,8 @@ internal fun CategoryScreen() {
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         TitleAndDescription(
-            titleRes = R.string.onboard_activity_composable_category_title,
-            descriptionRes = R.string.onboard_activity_composable_category_description,
+            titleRes = R.string.category_title,
+            descriptionRes = R.string.category_description,
         )
         Box(
             modifier = Modifier
@@ -101,6 +101,7 @@ internal fun CategoryScreen() {
                     },
                 )
             }
+            // TODO: QuackAnimatedVisibility
             this@Column.AnimatedVisibility(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -113,7 +114,7 @@ internal fun CategoryScreen() {
                 QuackLargeButton(
                     type = QuackLargeButtonType.Fill,
                     enabled = true,
-                    text = stringResource(R.string.onboard_activity_composable_button_next),
+                    text = stringResource(R.string.button_next),
                 ) {
                     vm.updateStep(vm.currentStep + 1)
                 }

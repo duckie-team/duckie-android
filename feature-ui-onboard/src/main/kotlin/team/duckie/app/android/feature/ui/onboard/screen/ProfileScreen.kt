@@ -81,8 +81,8 @@ internal fun ProfileScreen() {
         ) {
             ProfilePhoto()
             TitleAndDescription(
-                titleRes = R.string.onboard_activity_composable_profile_title,
-                descriptionRes = R.string.onboard_activity_composable_profile_description,
+                titleRes = R.string.profile_title,
+                descriptionRes = R.string.profile_description,
             )
             // TODO: onCleared 인자 선택적으로 변경
             // TODO: 닉네임 중복 검사 결과에 따른 에러 메시지 결정
@@ -91,9 +91,9 @@ internal fun ProfileScreen() {
             QuackProfileTextField(
                 text = nickname,
                 onTextChanged = { nickname = it },
-                placeholderText = stringResource(R.string.onboard_activity_composable_profile_nickname_placeholder),
+                placeholderText = stringResource(R.string.profile_nickname_placeholder),
                 maxLength = MaxNicknameLength,
-                errorText = stringResource(R.string.onboard_activity_composable_profile_nickname_error),
+                errorText = stringResource(R.string.profile_nickname_error),
                 onCleared = { nickname = "" },
                 keyboardActions = KeyboardActions {
                     navigationNextStepIfOk(
@@ -106,7 +106,7 @@ internal fun ProfileScreen() {
             )
         }
         QuackLargeButton(
-            text = stringResource(R.string.onboard_activity_composable_button_next),
+            text = stringResource(R.string.button_next),
             type = QuackLargeButtonType.Fill,
             enabled = nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable,
         ) {

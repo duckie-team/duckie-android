@@ -22,8 +22,9 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
-import team.duckie.app.android.feature.ui.onboard.screen.KakaoLoginScreen
+import team.duckie.app.android.feature.ui.onboard.screen.LoginScreen
 import team.duckie.app.android.feature.ui.onboard.screen.ProfileScreen
+import team.duckie.app.android.feature.ui.onboard.screen.TagScreen
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
@@ -31,7 +32,6 @@ import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 class OnboardActivity : BaseActivity() {
@@ -52,14 +52,14 @@ class OnboardActivity : BaseActivity() {
                         targetState = onboardStepState,
                     ) { onboardStep ->
                         if (onboardStep == OnboardStep.Login) {
-                            KakaoLoginScreen()
+                            LoginScreen()
                         } else {
                             Column(modifier = Modifier.fillMaxSize()) {
-                                OnboardTopAppBar()
+                                OnboardTopAppBar(showSkipTrailingText = onboardStep == OnboardStep.Tag)
                                 when (onboardStep) {
                                     OnboardStep.Profile -> ProfileScreen()
                                     OnboardStep.Category -> CategoryScreen()
-                                    OnboardStep.Tag -> QuackHeadLine2(text = "TODO")
+                                    OnboardStep.Tag -> TagScreen()
                                     else -> Unit // unreached
                                 }
                             }

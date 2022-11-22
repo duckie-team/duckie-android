@@ -32,11 +32,11 @@ import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackUnderlineBody3
 
-private const val KakaoLoginWelcomeLayoutId = "KakaoLoginScreenWelcome"
-private const val KakaoLoginLoginLayoutId = "KakaoLoginScreenLogin"
+private const val LoginScreenWelcomeLayoutId = "LoginScreenWelcome"
+private const val LoginScreenLoginAreaLayoutId = "LoginScreenLoginArea"
 
 @Composable
-internal fun KakaoLoginScreen() {
+internal fun LoginScreen() {
     Layout(
         modifier = Modifier
             .fillMaxSize()
@@ -45,20 +45,18 @@ internal fun KakaoLoginScreen() {
                 horizontal = 24.dp,
             ),
         content = {
-            KakaoLoginScreenWelcome()
-            KakaoLoginScreenLogin()
+            LoginScreenWelcome()
+            LoginScreenLoginArea()
         },
     ) { measurables, constraints ->
         val welcomeMeasurable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == KakaoLoginWelcomeLayoutId
+            measurable.layoutId == LoginScreenWelcomeLayoutId
         } ?: npe()
         val loginMeasurable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == KakaoLoginLoginLayoutId
+            measurable.layoutId == LoginScreenLoginAreaLayoutId
         } ?: npe()
 
-        val looseConstraints = constraints.copy(
-            minHeight = 0,
-        )
+        val looseConstraints = constraints.copy(minHeight = 0)
         val loginPlaceable = loginMeasurable.measure(looseConstraints)
         val loginAreaHeight = loginPlaceable.height
 
@@ -88,11 +86,11 @@ internal fun KakaoLoginScreen() {
 }
 
 @Composable
-private fun KakaoLoginScreenWelcome() {
+private fun LoginScreenWelcome() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .layoutId(KakaoLoginWelcomeLayoutId),
+            .layoutId(LoginScreenWelcomeLayoutId),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
             space = 16.dp,
@@ -107,20 +105,20 @@ private fun KakaoLoginScreenWelcome() {
             ),
         )
         QuackHeadLine2(
-            text = stringResource(R.string.onboard_composable_kakaologin_welcome_message),
+            text = stringResource(R.string.kakaologin_welcome_message),
             align = TextAlign.Center,
         )
     }
 }
 
 @Composable
-private fun KakaoLoginScreenLogin() {
+private fun LoginScreenLoginArea() {
     val vm = LocalViewModel.current as OnboardViewModel
 
     Column(
         modifier = Modifier
             .wrapContentSize()
-            .layoutId(KakaoLoginLoginLayoutId),
+            .layoutId(LoginScreenLoginAreaLayoutId),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -137,10 +135,10 @@ private fun KakaoLoginScreenLogin() {
         )
         // TODO: 밑줄 색상 변경 인자 오픈
         QuackUnderlineBody3(
-            text = stringResource(R.string.onboard_composable_kakaologin_login_terms),
+            text = stringResource(R.string.kakaologin_login_terms),
             underlineTexts = persistentListOf(
-                stringResource(R.string.onboard_composable_kakaologin_hightlight_terms),
-                stringResource(R.string.onboard_composable_kakaologin_hightlight_privacy),
+                stringResource(R.string.kakaologin_hightlight_terms),
+                stringResource(R.string.kakaologin_hightlight_privacy),
             ),
             color = QuackColor.Gray2,
             align = TextAlign.Center,
