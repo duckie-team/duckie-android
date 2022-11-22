@@ -1,37 +1,16 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
-    id("com.google.gms.google-services")
-    id("kotlin-parcelize")
-    id("kotlin-kapt")
+    id(ConventionEnum.AndroidLibrary)
+    id(ConventionEnum.JvmJUnit4)
+    id(ConventionEnum.JvmDokka)
 }
 
 android {
-    namespace = "land.sungbin.androidprojecttemplate.data"
-
-    lint {
-        disable.add("ListNaming")
-    }
-}
-
-dependencies {
-
-//    implementation("team.duckie.quack:quack-lint-core:1.0.1")
-
-    val dependencies = listOf(
-        Dependencies.FirebaseEachKtx.DataBase,
-        Dependencies.FirebaseEachKtx.FireStore,
-        Dependencies.Jetpack.Hilt,
-        Dependencies.Jetpack.Room,
-        platform(Dependencies.FirebaseBom),
-    )
-    dependencies.forEach(::implementation)
-
-    Dependencies.Network.forEach(::implementation)
-    Dependencies.Login.forEach(::implementation)
-
-    kapt(Dependencies.Compiler.Hilt)
-    kapt(Dependencies.Compiler.RoomKsp)
-
-    implementation(projects.domain)
+    namespace = "team.duckie.app.android.data"
 }

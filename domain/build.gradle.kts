@@ -1,19 +1,16 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
+    id(ConventionEnum.AndroidLibrary)
+    id(ConventionEnum.JvmJUnit4)
+    id(ConventionEnum.JvmDokka)
 }
 
 android {
-    namespace = "land.sungbin.androidprojecttemplate.domain"
-}
-
-dependencies {
-    implementation("com.github.toss:tuid:v0.2.1")
-    implementation("androidx.annotation:annotation:1.5.0")
-
-    //implementation("team.duckie.quack:quack-lint-core:1.0.1")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-
-    implementation("com.google.code.gson:gson:2.9.0")
+    namespace = "team.duckie.app.android.domain"
 }
