@@ -15,6 +15,11 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.register
 import team.duckie.app.android.convention.PluginEnum
 
+private const val UtilModulePrefix = "util-"
+private const val FeatureModulePrefix = "feature-"
+private const val UiFeatureModulePrefix = "feature-ui-"
+private const val OnlyUiFeatureModulePrefix = "-ui-"
+
 class DependencyGraphPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.tasks.register<DependencyGraphTask>("dependencyGraph")
@@ -35,7 +40,7 @@ abstract class DependencyGraphTask : DefaultTask() {
              |  node [style=filled, fillcolor="#bbbbbb"];
              |  rankdir=TB;
              |
-            """.trimMargin(),
+            """.trimMargin()
         )
 
         val rootProjects = mutableListOf<Project>()
@@ -50,6 +55,7 @@ abstract class DependencyGraphTask : DefaultTask() {
         val dependencyProjects = LinkedHashSet<Project>()
         val dependencies = LinkedHashMap<Pair<Project, Project>, MutableList<String>>()
         val appModules = mutableListOf<Project>()
+        val libraryModules = mutableListOf<Project>()
         val dfmModules = mutableListOf<Project>()
         val jvmLibraryModules = mutableListOf<Project>()
         val utilModules = mutableListOf<Project>()
@@ -60,20 +66,17 @@ abstract class DependencyGraphTask : DefaultTask() {
             val project = queue.removeAt(0)
             queue.addAll(project.childProjects.values)
 
-            with(project.plugins) {
+            with(project) {
                 when {
-                    hasPlugin(PluginEnum.AndroidLibrary) -> appModules.add(project)
-                    hasPlugin(PluginEnum.AndroidDfm) -> dfmModules.add(project)
-                    hasPlugin(PluginEnum.JavaLibrary) -> jvmLibraryModules.add(project)
-                    else -> Unit // Do nothing
-                }
-            }
-
-            with(project.name) {
-                when {
-                    startsWith("feature-") && !contains("-ui-") -> featureModules.add(project)
-                    startsWith("feature-ui-") -> uiFeatureModules.add(project)
-                    startsWith("util-") -> utilModules.add(project)
+                    plugins.hasPlugin(PluginEnum.AndroidApplication) -> appModules.add(project)
+                    plugins.hasPlugin(PluginEnum.AndroidDfm) -> dfmModules.add(project)
+                    plugins.hasPlugin(PluginEnum.JavaLibrary) -> jvmLibraryModules.add(project)
+                    name.startsWith(UtilModulePrefix) -> utilModules.add(project)
+                    name.startsWith(FeatureModulePrefix) && !name.contains(OnlyUiFeatureModulePrefix) -> {
+                        featureModules.add(project)
+                    }
+                    name.startsWith(UiFeatureModulePrefix) -> uiFeatureModules.add(project)
+                    plugins.hasPlugin(PluginEnum.AndroidLibrary) -> libraryModules.add(project)
                     else -> Unit // Do nothing
                 }
             }
@@ -117,10 +120,11 @@ abstract class DependencyGraphTask : DefaultTask() {
                     traits.add("shape=box")
                     traits.add("fillcolor=\"#baffc9\"") // 형광 연두색
                 }
+                in libraryModules -> traits.add("fillcolor=\"#fcb96a\"") // 주황색
                 in dfmModules -> traits.add("fillcolor=\"#c9baff\"") // 연한 보라색
                 in jvmLibraryModules -> traits.add("fillcolor=\"#ffc9ba\"") // 연한 분홍색
                 in utilModules -> traits.add("fillcolor=\"#ffebba\"") // 연한 레몬색
-                in featureModules -> traits.add("fillcolor=\"#81D4FA\"") // 하늘색
+                in featureModules -> traits.add("fillcolor=\"#81d4fa\"") // 하늘색
                 in uiFeatureModules -> traits.add("fillcolor=\"#00aeff\"") // 파란색
                 else -> traits.add("fillcolor=\"#eeeeee\"") // 연한 회색
             }
