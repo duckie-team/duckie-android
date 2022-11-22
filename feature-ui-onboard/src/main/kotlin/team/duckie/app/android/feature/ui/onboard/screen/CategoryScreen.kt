@@ -9,13 +9,10 @@ package team.duckie.app.android.feature.ui.onboard.screen
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
@@ -32,7 +31,10 @@ import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.util.kotlin.fastFirstOrNull
+import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackGridLayout
 import team.duckie.quackquack.ui.component.QuackLargeButton
@@ -40,6 +42,10 @@ import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSelectableImage
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.util.DpSize
+
+private const val CategoryScreenTitleAndDescriptionLayoutId = "CategoryScreenTitleAndDescription"
+private const val CategoryScreenCategoriesGridLayoutId = "CategoryScreenQuackGridLayout"
+private const val CategoryScreenNextButtonLayoutId = "CategoryScreenQuackAnimatedVisibility"
 
 // TODO: 카테고리 가져오는 방식이 바뀔 수 있어서 임시 하드코딩
 private val categories = persistentListOf(
@@ -57,7 +63,7 @@ internal fun CategoryScreen() {
     val vm = LocalViewModel.current as OnboardViewModel
     var categorySelectedIndex by remember { mutableStateOf<Int?>(null) }
 
-    Column(
+    Layout(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = systemBarPaddings.calculateBottomPadding())
@@ -65,23 +71,20 @@ internal fun CategoryScreen() {
                 top = 12.dp,
                 start = 20.dp,
                 end = 20.dp,
-                bottom = 28.dp,
+                bottom = 16.dp,
             ),
-        verticalArrangement = Arrangement.SpaceBetween,
-    ) {
-        TitleAndDescription(
-            titleRes = R.string.category_title,
-            descriptionRes = R.string.category_description,
-        )
-        Box(
-            modifier = Modifier
-                .padding(top = 24.dp)
-                .fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
+        content = {
+            TitleAndDescription(
+                modifier = Modifier.layoutId(CategoryScreenTitleAndDescriptionLayoutId),
+                titleRes = R.string.category_title,
+                descriptionRes = R.string.category_description,
+            )
             // TODO: 사이 간격 조정
             QuackGridLayout(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .layoutId(CategoryScreenCategoriesGridLayoutId)
+                    .padding(top = 24.dp)
+                    .fillMaxSize(),
                 items = categories,
                 key = { _, (name, _) -> name },
             ) { index, (name, imageRes) ->
@@ -96,8 +99,8 @@ internal fun CategoryScreen() {
             }
             QuackAnimatedVisibility(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
+                    .layoutId(CategoryScreenNextButtonLayoutId)
+                    .fillMaxWidth(),
                 visible = categorySelectedIndex != null,
             ) {
                 // TODO: fading edge support
@@ -111,10 +114,43 @@ internal fun CategoryScreen() {
                 }
             }
         }
+    ) { measurables, constraints ->
+        val looseConstraints = constraints.asLoose()
+
+        val titileAndDescriptionPlaceable = measurables.fastFirstOrNull { measurable ->
+            measurable.layoutId == CategoryScreenTitleAndDescriptionLayoutId
+        }?.measure(looseConstraints) ?: npe()
+
+        val categoriesGridPlaceable = measurables.fastFirstOrNull { measurable ->
+            measurable.layoutId == CategoryScreenCategoriesGridLayoutId
+        }?.measure(looseConstraints) ?: npe()
+
+        val goneableNextButtonPlaceable = measurables.fastFirstOrNull { measurable ->
+            measurable.layoutId == CategoryScreenNextButtonLayoutId
+        }?.measure(looseConstraints)
+
+        layout(
+            width = constraints.maxWidth,
+            height = constraints.maxHeight,
+        ) {
+            titileAndDescriptionPlaceable.place(
+                x = 0,
+                y = 0,
+            )
+            categoriesGridPlaceable.place(
+                x = 0,
+                y = titileAndDescriptionPlaceable.height,
+            )
+            goneableNextButtonPlaceable?.place(
+                x = 0,
+                y = constraints.maxHeight - goneableNextButtonPlaceable.height,
+            )
+        }
     }
 }
 
 private val CategoryImageSize = DpSize(all = 100.dp)
+
 private val CategoryItemShape = RoundedCornerShape(size = 12.dp)
 
 @Composable
@@ -124,9 +160,7 @@ private fun CategoryItem(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    println(isSelected)
     Column(
-        modifier = Modifier.wrapContentSize(),
         verticalArrangement = Arrangement.spacedBy(
             space = 8.dp,
             alignment = Alignment.CenterVertically,

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +24,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
@@ -51,19 +51,18 @@ internal fun LoginScreen() {
             LoginScreenLoginArea()
         },
     ) { measurables, constraints ->
+        val looseConstraints = constraints.asLoose()
+
         val welcomeMeasurable = measurables.fastFirstOrNull { measurable ->
             measurable.layoutId == LoginScreenWelcomeLayoutId
         } ?: npe()
-        val loginMeasurable = measurables.fastFirstOrNull { measurable ->
+
+        val loginPlaceable = measurables.fastFirstOrNull { measurable ->
             measurable.layoutId == LoginScreenLoginAreaLayoutId
-        } ?: npe()
+        }?.measure(looseConstraints) ?: npe()
 
-        val looseConstraints = constraints.copy(minHeight = 0)
-        val loginPlaceable = loginMeasurable.measure(looseConstraints)
         val loginAreaHeight = loginPlaceable.height
-
-        val maxHeight = constraints.maxHeight
-        val welcomeHeight = maxHeight - loginAreaHeight
+        val welcomeHeight = constraints.maxHeight - loginAreaHeight
 
         val welcomeConstraints = constraints.copy(
             minHeight = welcomeHeight,
@@ -118,9 +117,7 @@ private fun LoginScreenLoginArea() {
     val vm = LocalViewModel.current as OnboardViewModel
 
     Column(
-        modifier = Modifier
-            .wrapContentSize()
-            .layoutId(LoginScreenLoginAreaLayoutId),
+        modifier = Modifier.layoutId(LoginScreenLoginAreaLayoutId),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

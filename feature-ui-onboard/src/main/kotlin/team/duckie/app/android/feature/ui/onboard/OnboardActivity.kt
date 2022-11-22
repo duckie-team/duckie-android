@@ -10,6 +10,7 @@
 package team.duckie.app.android.feature.ui.onboard
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.modifier.QuackAlwaysShowRipple
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 class OnboardActivity : BaseActivity() {
@@ -37,6 +39,22 @@ class OnboardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // for Debug
+        QuackAlwaysShowRipple = true
+
+        onBackPressedDispatcher.addCallback(owner = this) {
+            if (vm.step.value == OnboardStep.Login) {
+                finish()
+                overridePendingTransition(
+                    android.R.anim.fade_in,
+                    android.R.anim.fade_out,
+                )
+            } else {
+                vm.updateStep(vm.currentStep - 1)
+            }
+        }
+
         setContent {
             val onboardStepState by vm.step.collectAsStateWithLifecycle()
 
