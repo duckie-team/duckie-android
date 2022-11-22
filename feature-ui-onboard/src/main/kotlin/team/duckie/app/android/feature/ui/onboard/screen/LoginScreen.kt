@@ -25,6 +25,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
@@ -40,6 +41,7 @@ internal fun LoginScreen() {
     Layout(
         modifier = Modifier
             .fillMaxSize()
+            .padding(systemBarPaddings)
             .padding(
                 vertical = 20.dp,
                 horizontal = 24.dp,

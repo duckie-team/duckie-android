@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
 
@@ -26,7 +27,9 @@ internal fun OnboardTopAppBar(showSkipTrailingText: Boolean) {
     // TODO: center content 인자들 assertion 선택적으로 변경
     // TODO: trailing content 인자들 assertion 선택적으로 변경
     QuackTopAppBar(
-        modifier = Modifier.padding(horizontal = 12.dp), // 내부에서 8.dp 가 들어감
+        modifier = Modifier
+            .padding(top = systemBarPaddings.calculateTopPadding())
+            .padding(horizontal = 12.dp), // 내부에서 8.dp 가 들어감
         leadingIcon = QuackIcon.ArrowBack,
         onLeadingIconClick = {
             vm.updateStep(vm.currentStep - 1)

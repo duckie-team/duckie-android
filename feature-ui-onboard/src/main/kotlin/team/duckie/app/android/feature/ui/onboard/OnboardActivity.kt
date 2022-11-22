@@ -14,7 +14,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -28,7 +27,6 @@ import team.duckie.app.android.feature.ui.onboard.screen.TagScreen
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
-import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
@@ -47,15 +45,18 @@ class OnboardActivity : BaseActivity() {
                     QuackAnimatedContent(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(color = QuackColor.White.composeColor)
-                            .padding(systemBarPaddings),
+                            .background(color = QuackColor.White.composeColor),
                         targetState = onboardStepState,
                     ) { onboardStep ->
                         if (onboardStep == OnboardStep.Login) {
                             LoginScreen()
                         } else {
                             Column(modifier = Modifier.fillMaxSize()) {
-                                OnboardTopAppBar(showSkipTrailingText = onboardStep == OnboardStep.Tag)
+                                // Tag 단계일 때는 WindowInsets 에 대한 별도 처리가 필요함
+                                // (ModalBottomSheet 의 dimmed 가 status bar 까지 적용돼야 함)
+                                if (onboardStep != OnboardStep.Tag) {
+                                    OnboardTopAppBar(showSkipTrailingText = false)
+                                }
                                 when (onboardStep) {
                                     OnboardStep.Profile -> ProfileScreen()
                                     OnboardStep.Category -> CategoryScreen()

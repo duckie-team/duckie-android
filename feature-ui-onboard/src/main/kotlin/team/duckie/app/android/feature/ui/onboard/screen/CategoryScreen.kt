@@ -8,9 +8,6 @@
 package team.duckie.app.android.feature.ui.onboard.screen
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,8 +18,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,9 +32,8 @@ import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
-import team.duckie.app.android.util.kotlin.fastAny
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.animation.QuackAnimationSpec
 import team.duckie.quackquack.ui.component.QuackGridLayout
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
@@ -57,18 +55,12 @@ private val categories = persistentListOf(
 @Composable
 internal fun CategoryScreen() {
     val vm = LocalViewModel.current as OnboardViewModel
-    val categoriesSelection = remember {
-        mutableStateListOf(
-            elements = Array(
-                size = categories.size,
-                init = { false },
-            )
-        )
-    }
+    var categorySelectedIndex by remember { mutableStateOf<Int?>(null) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(bottom = systemBarPaddings.calculateBottomPadding())
             .padding(
                 top = 12.dp,
                 start = 20.dp,
@@ -96,9 +88,9 @@ internal fun CategoryScreen() {
                 CategoryItem(
                     imageRes = imageRes,
                     name = name,
-                    isSelected = categoriesSelection[index],
+                    isSelected = categorySelectedIndex == index,
                     onClick = {
-                        categoriesSelection[index] = !categoriesSelection[index]
+                        categorySelectedIndex = index.takeIf { it != categorySelectedIndex }
                     },
                 )
             }
@@ -106,7 +98,7 @@ internal fun CategoryScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                visible = categoriesSelection.fastAny { it },
+                visible = categorySelectedIndex != null,
             ) {
                 // TODO: fading edge support
                 QuackLargeButton(
@@ -114,6 +106,7 @@ internal fun CategoryScreen() {
                     enabled = true,
                     text = stringResource(R.string.button_next),
                 ) {
+                    vm.selectedCatagory = categories[categorySelectedIndex!!].first
                     vm.updateStep(vm.currentStep + 1)
                 }
             }

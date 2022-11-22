@@ -13,7 +13,6 @@ import team.duckie.app.android.util.viewmodel.BaseViewModel
 
 internal class OnboardViewModel : BaseViewModel<Unit, Unit>(Unit) {
     private val nicknameFilter = Regex("[^가-힣a-zA-Z0-9_.]")
-
     private val mutableStep = MutableStateFlow(OnboardStep.Login)
 
     /**
@@ -21,6 +20,11 @@ internal class OnboardViewModel : BaseViewModel<Unit, Unit>(Unit) {
      */
     val step = mutableStep.asStateFlow()
     val currentStep get() = step.value
+
+    /**
+     * [OnboardStep.Category] 에서 선택한 카테고리를 나타냅니다.
+     */
+    lateinit var selectedCatagory: String
 
     /**
      * 온보딩 단계를 업데이트합니다.

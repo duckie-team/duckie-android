@@ -34,6 +34,7 @@ import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
@@ -65,6 +66,7 @@ internal fun ProfileScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(bottom = systemBarPaddings.calculateBottomPadding())
             .padding(
                 top = 12.dp,
                 start = 20.dp,
