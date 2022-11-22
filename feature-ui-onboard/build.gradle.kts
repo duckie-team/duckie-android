@@ -29,6 +29,7 @@ dependencies {
         projects.utilKotlin,
         projects.utilCompose,
         projects.utilViewmodel,
+        projects.featureDatastore,
         libs.compose.ui.material, // needs for ModalBottomSheet
         libs.compose.ktx.lifecycle,
         libs.quack.ui.components,
