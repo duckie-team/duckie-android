@@ -1,1 +1,3 @@
-## Code style
+## Duckie Code Convention
+
+TODO
