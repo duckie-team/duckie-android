@@ -52,6 +52,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
     }
 
     afterEvaluate {
