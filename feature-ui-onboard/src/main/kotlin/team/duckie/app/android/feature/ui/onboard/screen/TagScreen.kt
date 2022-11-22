@@ -19,6 +19,7 @@ import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.animation.QuackAnimationSpec
 import team.duckie.quackquack.ui.component.QuackTitle2
 
@@ -58,12 +59,7 @@ private fun TagSelection() {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             QuackTitle2(text = stringResource(R.string.tag_added_tag))
-            // TODO: QuackAnimatedVisibility
-            AnimatedVisibility(
-                visible = selectedTags.isNotEmpty(),
-                enter = fadeIn(animationSpec = QuackAnimationSpec()),
-                exit = fadeOut(animationSpec = QuackAnimationSpec()),
-            ) {
+            QuackAnimatedVisibility(visible = selectedTags.isNotEmpty()) {
 
             }
         }

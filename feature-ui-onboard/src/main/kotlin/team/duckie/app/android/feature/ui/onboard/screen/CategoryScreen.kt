@@ -34,6 +34,7 @@ import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.kotlin.fastAny
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.animation.QuackAnimationSpec
 import team.duckie.quackquack.ui.component.QuackGridLayout
 import team.duckie.quackquack.ui.component.QuackLargeButton
@@ -101,14 +102,11 @@ internal fun CategoryScreen() {
                     },
                 )
             }
-            // TODO: QuackAnimatedVisibility
-            this@Column.AnimatedVisibility(
+            QuackAnimatedVisibility(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 visible = categoriesSelection.fastAny { it },
-                enter = fadeIn(animationSpec = QuackAnimationSpec()),
-                exit = fadeOut(animationSpec = QuackAnimationSpec()),
             ) {
                 // TODO: fading edge support
                 QuackLargeButton(
