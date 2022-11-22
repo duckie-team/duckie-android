@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
+@Suppress("MagicNumber")
 internal enum class OnboardStep(private val index: Int) {
     Login(0),
     Profile(1),
