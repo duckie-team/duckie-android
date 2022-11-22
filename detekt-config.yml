@@ -1,23 +1,44 @@
 complexity:
-  LongParameterList:
-    active: false # for rest api call function
   LongMethod:
-    excludes: [ '**/mapper/**' ]
+    threshold: 100
     ignoreAnnotated: [ 'Composable' ]
   ComplexMethod:
-    excludes: [ '**/mapper/**' ]
+    ignoreAnnotated: [ 'Composable' ]
+  LongParameterList:
+    active: false
+  TooManyFunctions:
+    active: false
+
+performance:
+  SpreadOperator:
+    active: false
 
 style:
   MagicNumber:
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
+    ignoreAnnotated: [ 'AllowMagicNumber' ]
+  ForbiddenComment:
+    active: false
   UnusedPrivateMember:
     ignoreAnnotated: [ 'preview' ]
+  ThrowsCount:
+    active: false
+  ReturnCount:
+    active: false
+  LoopWithTooManyJumpStatements:
+    active: false
+  DestructuringDeclarationWithTooManyEntries:
+    active: false
+  MaxLineLength:
+    excludeCommentStatements: true
 
 naming:
   TopLevelPropertyNaming:
-    constantPattern: '[A-Z][A-Za-z0-9]*'
+    constantPattern: '[A-Z][A-Za-z0-9_]*'
   FunctionNaming:
     ignoreAnnotated: [ 'Composable' ]
   MatchingDeclarationName:
+    active: false
+  VariableNaming:
     active: false

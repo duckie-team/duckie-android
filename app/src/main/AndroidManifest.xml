@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <!--
+    [ android:largeHeap="true" ]
+    https://stackoverflow.com/a/18034671/14299073
+
+    추후 OOM 의 진짜 원인을 파악해야 함
+    -->
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:configChanges="colorMode|uiMode|orientation|screenSize|screenLayout|keyboardHidden|locale|layoutDirection"
+        android:fullBackupOnly="true"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        tools:ignore="MissingApplicationIcon">
+
+        <!--
+        https://firebase.google.com/docs/perf-mon/get-started-android#view-log-messages
+        -->
+        <meta-data
+            android:name="firebase_performance_logcat_enabled"
+            android:value="true" />
+
+    </application>
+
+</manifest>

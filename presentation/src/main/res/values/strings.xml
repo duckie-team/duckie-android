@@ -1,96 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
 <resources>
-    <string name="app_name">Duckie</string>
-    <string name="kakao_native_app_key">d54d824913122d6bb02988a2fd472ac5</string>
+    <string name="app_name">DUCKIE</string>
 
-    <string name="splash_introduction_message">덕질엔 끝이 없다,\n취향따라 만나는 커뮤니티 덕키!</string>
-    <string name="onboard_profile_title">프로필을 설정해주세요!</string>
-    <string name="onboard_profile_description">언제든 변경할 수 있어요. 나만의 이름을 지어봐요 :)</string>
-    <string name="onboard_username_placeholder">닉네임 입력</string>
-    <string name="onboard_tag_title">좋아요!\n더 자세한 관심 태그를 추가해보세요</string>
-    <string name="onboard_tag_description">태그 할수록 더키의 추천이 정확해져요!</string>
-    <string name="onboard_category_title">어떤 분야를 좋아하나요?</string>
-    <string name="onboard_category_description">1개 이상 골라보세요. 취향에 맞춰 피드를 추천해드려요 :)</string>
-
-    <string name="next">다음</string>
-    <string name="skip">건너뛰기</string>
-    <string name="start_duckie">덕키 시작하기</string>
-    <string name="complete">완료</string>
-    <string name="add">추가</string>
-    <string name="terms">이용약관</string>
-    <string name="required_terms">필수 이용 약관</string>
-    <string name="privacy_utilization">개인정보 수집 및 이용</string>
-    <string name="privacy_policy">개인정보처리방침</string>
-    <string name="open_source_license">오픈소스 라이선스</string>
-    
-    <string name="email">이메일</string>
-
-    <string name="adding_tag">추가한 태그</string>
-    <string name="adding_tag_self">+ 직접 태그 추가하기</string>
-    <string name="category_popular_tag">%s 분야 인기 태그</string>
-    <string name="adding_tag_placeholder">태그 입력하기</string>
-
-    <string name="login_introduction_message">덕키에서 같이 덕질하면서 소통하고\n굿즈 거래까지 한 번에 즐겨요!</string>
-
-    <string name="terms_and_privacy_message">가입 시, 덕키의 필수 이용 약관과\n개인정보 수집 및 이용에 동의하게 됩니다.</string>
-
-    <!-- home -->
-    <string name="duckie_name">더키</string>
-    <string name="duckie_introduce">덕키즈 무지개 양말, 만나서 반갑덕!\n관심 태그를 추가 하면 피드를 추천해 주겠덕</string>
-    <string name="both_direct_dealing_parcelable">택배, 직거래</string>
-    <string name="direct_dealing">직거래</string>
-    <string name="parcelable">택배</string>
-    <string name="feed">피드</string>
-    <string name="center_period_between_text">%s · %s</string>
-    <string name="price_with_won">%s 원</string>
-
-    <!-- app setting -->
-    <string name="app_setting">앱 설정</string>
-    <string name="account_information">계정 정보</string>
-    <string name="notification">알림</string>
-    <string name="inquiry">문의</string>
-    <string name="duckie_information">덕키 정보</string>
-    <string name="version_information">버전정보</string>
-    
-    <string name="log_out">로그아웃</string>
-    <string name="sign_out">탈퇴하기</string>
-    <string name="contact_us">문의처</string>
-    <string name="instagram">인스타그램</string>
-
-    <string name="activity_notifications">활동 알림</string>
-    <string name="message_notifications">메시지 알림</string>
-    
-    <string name="account">계정</string>
-
-    <!-- BottomSheet -->
-    <string name="feed_filtering_title">홈에서 피드와 덕딜을 모두 보고 있어요</string>
-    <string name="follow_other">%s님 팔로우</string>
-    <string name="blocking_other_feed">%s님 피드 차단</string>
-    <string name="report">신고 하기</string>
-
-    <!-- ModalDrawer -->
-    <string name="follower">팔로워</string>
-    <string name="following">팔로잉</string>
-    <string name="trading_activity">거래 활동</string>
-    <string name="list_of_interests">관심 목록</string>
-    <string name="sales_history">판매 내역</string>
-    <string name="purchase_history">구매 내역</string>
-    <string name="my_activity">나의 활동</string>
-    <string name="setting_up_areas_interest">관심 분야 설정</string>
-    <string name="edit_interest_tags">관심 태그 편집</string>
-    <string name="app_settings">앱 설정</string>
-
-    <!-- home-Notification -->
-    <string name="notification_title_new_comment">%s님이 내 글에 새 댓글을 달았어요.</string>
-    <string name="notification_title_new_heart">%s님이 내 글에 좋아요을 눌렀어요."</string>
-    <string name="notification_title_new_follower">%s님이 나를 팔로우 했어요."</string>
-    <string name="notification_title_require_write_review">\"%s\" 어떠셨나요? 구매 후기를 남겨보세요.</string>
-    <string name="notification_title_require_change_deal_state">\"%s\"를 하셨나요? 거래가 끝났다면 거래완료로 변경해주세요.</string>
-    <string name="notification_title_require_up_to_duck_deal">%s님이 내 피드에 판매요청을 했어요.</string>
-
-    <string name="notification_new_comment">새 댓글</string>
-    <string name="notification_heart">좋아요</string>
-    <string name="notification_follower">팔로우</string>
-    <string name="notification_review">구매 후기</string>
-    <string name="notification_deal_finish">거래완료</string>
-    <string name="notification_sale_request">거래완료</string>
+    <string name="intro_slogan">덕질엔 끝이 없다,\n취향따라 만나는 커뮤니티 덕키!</string>
 </resources>
