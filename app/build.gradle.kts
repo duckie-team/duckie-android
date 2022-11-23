@@ -7,6 +7,8 @@
 
 @file:Suppress("DSL_SCOPE_VIOLATION")
 
+import DependencyHandlerExtensions.Companion.implementations
+
 plugins {
     id(ConventionEnum.AndroidApplication)
     id(ConventionEnum.AndroidHilt)

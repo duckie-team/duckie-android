@@ -5,6 +5,9 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+import DependencyHandlerExtensions.Companion.implementations
+import DependencyHandlerExtensions.Companion.testImplementations
+
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.JvmDokka)
