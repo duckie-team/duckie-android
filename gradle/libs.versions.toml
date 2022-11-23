@@ -19,6 +19,9 @@ plugin-compose-paparazzi = "1.1.0"
 # plugin - ui
 plugin-ui-oss-license = "0.10.5"
 
+# plugin-util
+plugin-dependency-handler-extensions = "1.0.1"
+
 # kotlin
 kotlin-core = "1.7.20"
 kotlin-dokka = "1.7.20"
@@ -105,6 +108,8 @@ kotlin-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlin-kover
 compose-paparazzi = { id = "app.cash.paparazzi", version.ref = "plugin-compose-paparazzi" }
 
 di-hilt = { id = "com.google.dagger.hilt.android", version.ref = "di-hilt" }
+
+dependency-handler-extensions = { id = "land.sungbin.dependency.handler.extensions", version.ref = "plugin-dependency-handler-extensions" }
 
 [libraries]
 build-gradle-agp = { module = "com.android.tools.build:gradle", version.ref = "plugin-build-gradle-android" }
