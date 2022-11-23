@@ -5,10 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress(
-    "UnstableApiUsage",
-    "DSL_SCOPE_VIOLATION",
-)
+import DependencyHandlerExtensions.Companion.implementations
 
 plugins {
     id(ConventionEnum.AndroidLibrary)

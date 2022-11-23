@@ -7,9 +7,12 @@
 
 @file:Suppress("DSL_SCOPE_VIOLATION")
 
+import DependencyHandlerExtensions.Companion.implementations
+
 plugins {
     `kotlin-dsl`
     alias(libs.plugins.kotlin.dokka)
+    alias(libs.plugins.dependency.handler.extensions)
 }
 
 group = "team.duckie.app.android.convention"
@@ -21,11 +24,12 @@ repositories {
 }
 
 dependencies {
-    // Unresolved reference: implementations
-    implementation(libs.kotlin.core)
-    implementation(libs.kotlin.dokka.base)
-    implementation(libs.kotlin.dokka.plugin)
-    implementation(libs.build.gradle.agp)
+    implementations(
+        libs.kotlin.core,
+        libs.kotlin.dokka.base,
+        libs.kotlin.dokka.plugin,
+        libs.build.gradle.agp,
+    )
 }
 
 gradlePlugin {

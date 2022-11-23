@@ -17,6 +17,7 @@ plugins {
     alias(libs.plugins.code.detekt)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.kotlin.kover)
+    alias(libs.plugins.dependency.handler.extensions)
     id(ConventionEnum.JvmDependencyGraph)
 }
 
@@ -37,6 +38,7 @@ buildscript {
     }
 
     dependencies {
+        // Unresolved reference: classpaths
         classpath(libs.kotlin.core)
         classpath(libs.kotlin.dokka.base)
         classpath(libs.build.gradle.agp)
@@ -99,6 +101,7 @@ allprojects {
         plugin(rootProject.libs.plugins.kotlin.kover.get().pluginId)
         plugin(rootProject.libs.plugins.code.ktlint.get().pluginId)
         plugin(rootProject.libs.plugins.code.detekt.get().pluginId)
+        plugin(rootProject.libs.plugins.dependency.handler.extensions.get().pluginId)
     }
 }
 
