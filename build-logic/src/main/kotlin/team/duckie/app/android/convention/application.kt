@@ -5,10 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress(
-    "UnstableApiUsage",
-    "UnusedReceiverParameter",
-)
+@file:Suppress("UnstableApiUsage", "UnusedReceiverParameter")
 
 package team.duckie.app.android.convention
 
@@ -22,6 +19,8 @@ import org.gradle.api.Project
  */
 internal fun Project.configureApplication(extension: CommonExtension<*, *, *, *>) {
     extension.apply {
+        // applyPlugins(PluginEnum.ConventionEnum)
+
         compileSdk = ApplicationConstants.compileSdk
 
         defaultConfig {
@@ -35,10 +34,6 @@ internal fun Project.configureApplication(extension: CommonExtension<*, *, *, *>
         compileOptions {
             sourceCompatibility = ApplicationConstants.javaVersion
             targetCompatibility = ApplicationConstants.javaVersion
-        }
-
-        kotlinOptions {
-            jvmTarget = ApplicationConstants.jvmTarget
         }
 
         lint {

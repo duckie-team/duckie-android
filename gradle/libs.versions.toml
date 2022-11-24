@@ -19,8 +19,11 @@ plugin-compose-paparazzi = "1.1.0"
 # plugin - ui
 plugin-ui-oss-license = "0.10.5"
 
-# plugin-util
-plugin-dependency-handler-extensions = "1.0.1"
+# plugin - util
+plugin-util-dependency-handler-extensions = "1.0.3"
+
+# plugin - local
+plugin-local-convention-enum = "master"
 
 # kotlin
 kotlin-core = "1.7.20"
@@ -109,7 +112,9 @@ compose-paparazzi = { id = "app.cash.paparazzi", version.ref = "plugin-compose-p
 
 di-hilt = { id = "com.google.dagger.hilt.android", version.ref = "di-hilt" }
 
-dependency-handler-extensions = { id = "land.sungbin.dependency.handler.extensions", version.ref = "plugin-dependency-handler-extensions" }
+util-dependency-handler-extensions = { id = "land.sungbin.dependency.handler.extensions", version.ref = "plugin-util-dependency-handler-extensions" }
+
+local-convention-enum = { id = "team.duckie.app.android.local.convention.enum", version.ref = "plugin-local-convention-enum" }
 
 [libraries]
 build-gradle-agp = { module = "com.android.tools.build:gradle", version.ref = "plugin-build-gradle-android" }
@@ -118,6 +123,7 @@ build-ui-oss-license = { module = "com.google.android.gms:play-services-oss-lice
 build-di-hilt = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "di-hilt" }
 build-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebase-plugin-crashlytics" }
 build-firebase-performance = { module = "com.google.firebase:perf-plugin", version.ref = "firebase-plugin-performance" }
+build-dependency-handler-extensions = { module = "land.sungbin.dependency.handler.extensions:dependency-handler-extensions-plugin", version.ref = "plugin-util-dependency-handler-extensions" }
 
 kotlin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }
 kotlin-dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "kotlin-dokka" }
