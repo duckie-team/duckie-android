@@ -20,6 +20,8 @@ import org.gradle.kotlin.dsl.dependencies
  */
 internal fun Project.configureCompose(extension: CommonExtension<*, *, *, *>) {
     extension.apply {
+        // applyPlugins(PluginEnum.ConventionEnum)
+
         buildFeatures {
             compose = true
         }

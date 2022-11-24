@@ -26,7 +26,7 @@ class DependencyGraphPlugin : Plugin<Project> {
     }
 }
 
-abstract class DependencyGraphTask : DefaultTask() {
+private abstract class DependencyGraphTask : DefaultTask() {
     @TaskAction
     fun run() {
         val dot = File(project.rootProject.rootDir, "assets/project-dependency-graph/graph.dot")

@@ -17,8 +17,8 @@ plugins {
     alias(libs.plugins.code.detekt)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.kotlin.kover)
-    alias(libs.plugins.dependency.handler.extensions)
-    id(ConventionEnum.JvmDependencyGraph)
+    alias(libs.plugins.local.convention.enum)
+    alias(libs.plugins.util.dependency.handler.extensions)
 }
 
 koverMerged {
@@ -34,11 +34,12 @@ koverMerged {
 buildscript {
     repositories {
         google()
+        mavenLocal()
         mavenCentral()
+        gradlePluginPortal()
     }
 
     dependencies {
-        // Unresolved reference: classpaths
         classpath(libs.kotlin.core)
         classpath(libs.kotlin.dokka.base)
         classpath(libs.build.gradle.agp)
@@ -51,6 +52,14 @@ buildscript {
 }
 
 allprojects {
+    apply {
+        plugin(rootProject.libs.plugins.kotlin.kover.get().pluginId)
+        plugin(rootProject.libs.plugins.code.ktlint.get().pluginId)
+        plugin(rootProject.libs.plugins.code.detekt.get().pluginId)
+        plugin(rootProject.libs.plugins.local.convention.enum.get().pluginId)
+        plugin(rootProject.libs.plugins.util.dependency.handler.extensions.get().pluginId)
+    }
+
     repositories {
         google()
         mavenCentral()
@@ -67,6 +76,7 @@ allprojects {
 
         tasks.withType<KotlinCompile> {
             kotlinOptions {
+                jvmTarget = "11"
                 freeCompilerArgs = freeCompilerArgs + listOf(
                     "-opt-in=kotlin.OptIn",
                     "-opt-in=kotlin.RequiresOptIn",
@@ -95,13 +105,6 @@ allprojects {
                 customAssets = listOf(file("assets/icon/logo-icon.svg"))
             }
         }
-    }
-
-    apply {
-        plugin(rootProject.libs.plugins.kotlin.kover.get().pluginId)
-        plugin(rootProject.libs.plugins.code.ktlint.get().pluginId)
-        plugin(rootProject.libs.plugins.code.detekt.get().pluginId)
-        plugin(rootProject.libs.plugins.dependency.handler.extensions.get().pluginId)
     }
 }
 

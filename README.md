@@ -48,6 +48,10 @@ Edit Configurations -> Set `Launch Options` like this:
 
 ![](assets/art/duckie-launch-options.png)
 
+### Build prerequisites
+
+1. This project is uses MavenLocal. Please run: `./gradlew :local-convention-enum:publishToMavenLocal`.
+
 ## Project Dependencies Graph
 
 ![dependencies](assets/project-dependency-graph/graph.dot.png)
