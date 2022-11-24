@@ -7,11 +7,11 @@
 
 @file:Suppress("DSL_SCOPE_VIOLATION")
 
-import DependencyHandlerExtensions.Companion.implementations
+import DependencyHandler.Extensions.implementations
 
 plugins {
     `kotlin-dsl`
-    alias(libs.plugins.dependency.handler.extensions)
+    alias(libs.plugins.util.dependency.handler.extensions)
 }
 
 dependencies {

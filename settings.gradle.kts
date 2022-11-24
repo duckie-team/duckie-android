@@ -12,12 +12,17 @@ rootProject.name = "duckie"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
-    includeBuild("build-logic")
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
+    pluginManagement {
+        repositories {
+            google()
+            mavenLocal()
+            mavenCentral()
+            gradlePluginPortal()
+        }
     }
+
+    includeBuild("build-logic")
+    includeBuild("build-logic/local-convention-enum")
 }
 
 buildCache {

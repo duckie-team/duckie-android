@@ -5,13 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+import DependencyHandler.Extensions.androidTestImplementations
+import DependencyHandler.Extensions.debugImplementations
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
-import team.duckie.app.android.convention.androidTestImplementations
-import team.duckie.app.android.convention.debugImplementations
 import team.duckie.app.android.convention.libs
 
 /**

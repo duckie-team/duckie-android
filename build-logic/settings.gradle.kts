@@ -9,13 +9,19 @@
 
 rootProject.name = "build-logic"
 
-// Why do not working?
-// enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
+    }
+
+    pluginManagement {
+        repositories {
+            mavenLocal()
+            mavenCentral()
+            gradlePluginPortal()
+        }
     }
 
     versionCatalogs {

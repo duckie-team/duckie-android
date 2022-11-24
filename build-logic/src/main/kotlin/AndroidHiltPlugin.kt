@@ -5,13 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+import DependencyHandler.Extensions.implementations
+import DependencyHandler.Extensions.kapts
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 import team.duckie.app.android.convention.PluginEnum
 import team.duckie.app.android.convention.applyPlugins
-import team.duckie.app.android.convention.implementations
-import team.duckie.app.android.convention.kapts
 import team.duckie.app.android.convention.libs
 
 /**

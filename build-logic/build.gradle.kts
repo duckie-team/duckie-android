@@ -7,21 +7,16 @@
 
 @file:Suppress("DSL_SCOPE_VIOLATION")
 
-import DependencyHandlerExtensions.Companion.implementations
+import DependencyHandler.Extensions.implementations
 
 plugins {
     `kotlin-dsl`
     alias(libs.plugins.kotlin.dokka)
-    alias(libs.plugins.dependency.handler.extensions)
+    alias(libs.plugins.util.dependency.handler.extensions)
+    alias(libs.plugins.local.convention.enum)
 }
 
-group = "team.duckie.app.android.convention"
-
-repositories {
-    google()
-    mavenCentral()
-    gradlePluginPortal()
-}
+group = "team.duckie.app.android.local"
 
 dependencies {
     implementations(
@@ -29,50 +24,50 @@ dependencies {
         libs.kotlin.dokka.base,
         libs.kotlin.dokka.plugin,
         libs.build.gradle.agp,
+        libs.build.dependency.handler.extensions,
     )
 }
 
 gradlePlugin {
-    val prefix = "duckie"
     plugins {
         register("androidHiltPlugin") {
-            id = "$prefix.android.hilt"
+            id = ConventionEnum.AndroidHilt
             implementationClass = "AndroidHiltPlugin"
         }
         register("androidApplicationPlugin") {
-            id = "$prefix.android.application"
+            id = ConventionEnum.AndroidApplication
             implementationClass = "AndroidApplicationPlugin"
         }
         register("androidApplicationComposePlugin") {
-            id = "$prefix.android.application.compose"
+            id = ConventionEnum.AndroidApplicationCompose
             implementationClass = "AndroidApplicationComposePlugin"
         }
         register("androidLibraryPlugin") {
-            id = "$prefix.android.library"
+            id = ConventionEnum.AndroidLibrary
             implementationClass = "AndroidLibraryPlugin"
         }
         register("androidLibraryComposePlugin") {
-            id = "$prefix.android.library.compose"
+            id = ConventionEnum.AndroidLibraryCompose
             implementationClass = "AndroidLibraryComposePlugin"
         }
         register("androidLibraryComposeUiTestPlugin") {
-            id = "$prefix.android.library.compose.uitest"
+            id = ConventionEnum.AndroidLibraryComposeUiTest
             implementationClass = "AndroidLibraryComposeUiTestPlugin"
         }
         register("jvmLibraryPlugin") {
-            id = "$prefix.jvm.library"
+            id = ConventionEnum.JvmLibrary
             implementationClass = "JvmLibraryPlugin"
         }
         register("jvmJunit4Plugin") {
-            id = "$prefix.jvm.junit4"
+            id = ConventionEnum.JvmJUnit4
             implementationClass = "JvmJUnit4Plugin"
         }
         register("jvmDokkaPlugin") {
-            id = "$prefix.jvm.dokka"
+            id = ConventionEnum.JvmDokka
             implementationClass = "JvmDokkaPlugin"
         }
         register("dependencyGraphPlugin") {
-            id = "$prefix.jvm.dependency.graph"
+            id = ConventionEnum.JvmDependencyGraph
             implementationClass = "DependencyGraphPlugin"
         }
     }
