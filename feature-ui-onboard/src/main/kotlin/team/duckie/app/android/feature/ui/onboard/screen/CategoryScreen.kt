@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
@@ -40,6 +39,7 @@ import team.duckie.quackquack.ui.component.QuackGridLayout
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSelectableImage
+import team.duckie.quackquack.ui.component.QuackSelectableImageType
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -103,7 +103,6 @@ internal fun CategoryScreen() {
                     .fillMaxWidth(),
                 visible = categorySelectedIndex != null,
             ) {
-                // TODO: fading edge support
                 QuackLargeButton(
                     type = QuackLargeButtonType.Fill,
                     enabled = true,
@@ -166,13 +165,11 @@ private fun CategoryItem(
             alignment = Alignment.CenterVertically,
         ),
     ) {
-        // TODO: selection 방식 변경 (이미지 위에 체크 오버레이 타입 추가)
-        // TODO: shape 인자 추가
-        // FIXME: isSelected 가 작동하지 않음
         QuackSelectableImage(
-            modifier = Modifier.clip(CategoryItemShape),
             src = imageRes,
             size = CategoryImageSize,
+            shape = CategoryItemShape,
+            selectableType = QuackSelectableImageType.CheckOverlay,
             isSelected = isSelected,
             onClick = onClick,
         )
