@@ -39,10 +39,10 @@ import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackErrorableTextField
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackProfileTextField
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -62,7 +62,7 @@ internal fun ProfileScreen() {
     val vm = LocalViewModel.current as OnboardViewModel
     val layoutDirection = LocalLayoutDirection.current
     var nickname by remember { mutableStateOf("") }
-    val nicknameRuleError by remember {
+    val nicknameRuleError by remember(vm) {
         derivedStateOf {
             vm.checkNicknameRuleError(nickname)
         }
@@ -87,24 +87,28 @@ internal fun ProfileScreen() {
                 descriptionRes = R.string.profile_description,
             )
             ProfilePhoto()
-            // TODO: onCleared 인자 선택적으로 변경
-            // TODO: 닉네임 중복 검사 결과에 따른 에러 메시지 결정
-            // TODO: 네이밍을 QuackErrorableTextField 으로 변경 후, error state 를 인자로 받게 변경
-            // TODO: 애니메이션 제거 (퍼포먼스를 너무 저하시킴)
-            QuackProfileTextField(
+            QuackErrorableTextField(
                 modifier = Modifier.layoutId(ProfileScreenNicknameTextFieldLayoutId),
                 text = nickname,
-                onTextChanged = { nickname = it },
+                onTextChanged = { text ->
+                    if (text.length <= MaxNicknameLength) {
+                        nickname = text
+                    }
+                },
                 placeholderText = stringResource(R.string.profile_nickname_placeholder),
+                isError = nicknameRuleError,
                 maxLength = MaxNicknameLength,
-                errorText = stringResource(R.string.profile_nickname_error),
-                onCleared = { nickname = "" },
+                errorText = when {
+                    nicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
+                    !nicknameIsUseable -> stringResource(R.string.profile_nickname_duplicate_error)
+                    else -> "" // no error
+                },
                 keyboardActions = KeyboardActions {
                     navigationNextStepIfOk(
+                        vm = vm,
                         nickname = nickname,
                         nicknameRuleError = nicknameRuleError,
                         nicknameIsUseable = nicknameIsUseable,
-                        vm = vm,
                     )
                 },
             )
@@ -115,13 +119,13 @@ internal fun ProfileScreen() {
                 enabled = nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable,
             ) {
                 navigationNextStepIfOk(
+                    vm = vm,
                     nickname = nickname,
                     nicknameRuleError = nicknameRuleError,
                     nicknameIsUseable = nicknameIsUseable,
-                    vm = vm,
                 )
             }
-        }
+        },
     ) { measurables, constraints ->
         val looseConstraints = constraints.asLoose()
         val extraLooseConstraints = constraints.asLoose(width = true)
@@ -175,10 +179,10 @@ internal fun ProfileScreen() {
 }
 
 private fun navigationNextStepIfOk(
+    vm: OnboardViewModel,
     nickname: String,
     nicknameRuleError: Boolean,
     nicknameIsUseable: Boolean,
-    vm: OnboardViewModel,
 ) {
     if (nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
         vm.updateStep(vm.currentStep + 1)
@@ -189,7 +193,6 @@ private fun navigationNextStepIfOk(
 private fun ProfilePhoto() {
     var profilePhoto by remember { mutableStateOf<Any?>(null) }
 
-    // TODO: 길게 눌러서 설정한 프로필 사진 제거
     QuackAnimatedContent(
         modifier = Modifier
             .layoutId(ProfileScreenProfileImageLayoutId)
@@ -224,6 +227,9 @@ private fun ProfilePhoto() {
                 QuackImage(
                     src = photo,
                     size = ProfilePhotoSize,
+                    onLongClick = {
+                        profilePhoto = null
+                    },
                 )
             }
         }
