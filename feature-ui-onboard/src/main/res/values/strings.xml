@@ -20,7 +20,8 @@
     <string name="profile_title">프로필을 설정해주세요!</string>
     <string name="profile_description">언제든 변경할 수 있어요. 나만의 이름을 지어봐요 :)</string>
     <string name="profile_nickname_placeholder">닉네임 입력</string>
-    <string name="profile_nickname_error">이름에는 문자, 숫자, 밑줄, 마침표만 사용할 수 있어요.</string>
+    <string name="profile_nickname_rule_error">이름에는 문자, 숫자, 밑줄, 마침표만 사용할 수 있어요.</string>
+    <string name="profile_nickname_duplicate_error">이미 있는 이름이에요</string>
 
     <string name="category_title">어떤 분야를 좋아하나요?</string>
     <string name="category_description">1개 이상 골라보세요.\n취향에 맞춰 피드를 추천해드려요 :)</string>
