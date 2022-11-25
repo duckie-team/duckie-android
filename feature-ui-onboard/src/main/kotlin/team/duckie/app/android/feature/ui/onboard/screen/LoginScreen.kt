@@ -132,13 +132,13 @@ private fun LoginScreenLoginArea() {
                 vm.updateStep(vm.currentStep + 1)
             },
         )
-        // TODO: 밑줄 색상 변경 인자 오픈
         QuackUnderlineBody3(
             text = stringResource(R.string.kakaologin_login_terms),
             underlineTexts = persistentListOf(
                 stringResource(R.string.kakaologin_hightlight_terms),
                 stringResource(R.string.kakaologin_hightlight_privacy),
             ),
+            underlineColor = QuackColor.Gray2,
             color = QuackColor.Gray2,
             align = TextAlign.Center,
         )
