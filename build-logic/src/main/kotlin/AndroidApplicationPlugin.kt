@@ -37,6 +37,15 @@ internal class AndroidApplicationPlugin : Plugin<Project> {
                     versionName = ApplicationConstants.versionName
                     versionCode = ApplicationConstants.versionCode
                 }
+
+                // TODO: proguard rules
+                // https://sungbinland.slack.com/archives/C043MKB4TJN/p1669416198868889?thread_ts=1669416143.303869&cid=C043MKB4TJN
+                // buildTypes {
+                //     release {
+                //         isShrinkResources = true
+                //         isMinifyEnabled = true
+                //     }
+                // }
             }
         }
     }
