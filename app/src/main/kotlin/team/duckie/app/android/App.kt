@@ -9,6 +9,11 @@ package team.duckie.app.android
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import team.duckie.quackquack.ui.modifier.QuackAlwaysShowRipple
 
 @HiltAndroidApp
-class App : Application()
+class App : Application() {
+    init {
+        QuackAlwaysShowRipple = BuildConfig.ALWAYS_RIPPLE
+    }
+}
