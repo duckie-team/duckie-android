@@ -31,7 +31,6 @@ import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.modifier.QuackAlwaysShowRipple
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 class OnboardActivity : BaseActivity() {
@@ -39,9 +38,6 @@ class OnboardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // for Debug
-        QuackAlwaysShowRipple = true
 
         onBackPressedDispatcher.addCallback(owner = this) {
             if (vm.step.value == OnboardStep.Login) {
