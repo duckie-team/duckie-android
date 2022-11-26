@@ -178,7 +178,7 @@ private fun LoginScreenLoginArea() {
                 BasicText(
                     modifier = Modifier.layoutId(LoginScreenLoginAreaKakaoLoginLabelLayoutId),
                     text = stringResource(R.string.kakaologin_button_label),
-                    style = QuackTextStyle.HeadLine1.asComposeStyle().copy(
+                    style = QuackTextStyle.HeadLine2.asComposeStyle().copy(
                         color = Color(
                             ContextCompat.getColor(
                                 context,
