@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.onboard.R
@@ -60,7 +59,6 @@ private val ProfilePhotoSize = DpSize(all = 80.dp)
 @Composable
 internal fun ProfileScreen() {
     val vm = LocalViewModel.current as OnboardViewModel
-    val layoutDirection = LocalLayoutDirection.current
     var nickname by remember { mutableStateOf("") }
     val nicknameRuleError by remember(vm) {
         derivedStateOf {
