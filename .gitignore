@@ -11,7 +11,7 @@ build
 release
 local.properties
 google-services.json
-keystore
+secrets
 /documents/dokka/
 /report
 snapshots
