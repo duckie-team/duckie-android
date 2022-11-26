@@ -47,6 +47,7 @@ dependencies {
         libs.firebase.crashlytics,
         libs.quack.ui.components, // for debug setting
         projects.presentation, // for launch IntroActivity
+        projects.utilKotlin,
     )
     debugImplementation(libs.analytics.leakcanary)
 }
