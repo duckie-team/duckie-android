@@ -31,12 +31,15 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -64,6 +67,9 @@ private val ProfilePhotoShape = RoundedCornerShape(size = 30.dp)
 private val ProfilePhotoSize = DpSize(all = 80.dp)
 
 private const val NicknameInputDebounceSecond = 0.3
+
+private val currentStep = OnboardStep.Profile
+internal val galleryImages = mutableStateOf<ImmutableList<String>>(persistentListOf())
 
 @Composable
 internal fun ProfileScreen() {
@@ -207,7 +213,7 @@ private fun navigateNextStepIfOk(
     nicknameIsUseable: Boolean,
 ) {
     if (debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
-        vm.updateStep(vm.currentStep + 1)
+        vm.updateStep(currentStep + 1)
     }
 }
 
@@ -261,4 +267,9 @@ private fun ProfilePhoto() {
             }
         }
     }
+}
+
+@Composable
+private fun PhotoPicker() {
+
 }
