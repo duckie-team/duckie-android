@@ -29,6 +29,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -42,6 +43,8 @@ import team.duckie.quackquack.ui.component.QuackSelectableImage
 import team.duckie.quackquack.ui.component.QuackSelectableImageType
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.util.DpSize
+
+private val currentStep = OnboardStep.Category
 
 private const val CategoryScreenTitleAndDescriptionLayoutId = "CategoryScreenTitleAndDescription"
 private const val CategoryScreenCategoriesGridLayoutId = "CategoryScreenQuackGridLayout"
@@ -110,7 +113,7 @@ internal fun CategoryScreen() {
                     text = stringResource(R.string.button_next),
                 ) {
                     vm.selectedCatagory = categories[categorySelectedIndex!!].first
-                    vm.updateStep(vm.currentStep + 1)
+                    vm.updateStep(currentStep + 1)
                 }
             }
         }

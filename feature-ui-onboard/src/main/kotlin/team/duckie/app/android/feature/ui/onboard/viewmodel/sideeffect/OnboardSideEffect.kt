@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect
 
 import team.duckie.app.android.domain.user.model.KakaoUser
 
-sealed class KakaoUserSideEffect {
-    class Save(val user: KakaoUser) : KakaoUserSideEffect()
+internal sealed class OnboardSideEffect {
+    class SaveUser(val user: KakaoUser) : OnboardSideEffect()
+    class ReportError(val exception: Throwable) : OnboardSideEffect()
 }

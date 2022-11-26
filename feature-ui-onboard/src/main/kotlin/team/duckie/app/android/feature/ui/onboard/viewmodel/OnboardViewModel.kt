@@ -7,13 +7,13 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.domain.user.usecase.KakaoLoginUseCase
-import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.KakaoUserSideEffect
-import team.duckie.app.android.feature.ui.onboard.viewmodel.state.KakaoLoginState
+import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
+import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
@@ -22,29 +22,17 @@ import team.duckie.app.android.util.viewmodel.BaseViewModel
  */
 private val NextStepNavigateThrottle = 1.seconds
 
-class OnboardViewModel(
+internal class OnboardViewModel(
     private val kakaoLoginUseCase: KakaoLoginUseCase,
-) : BaseViewModel<Unit, Unit>(Unit) {
+    private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
+) : BaseViewModel<OnboardState, OnboardSideEffect>(OnboardState.Initial) {
     private val nicknameFilter = Regex("[^가-힣a-zA-Z0-9_.]")
-    private val mutableStep = MutableStateFlow(OnboardStep.Login)
     private var lastestUpdateStepMillis = System.currentTimeMillis()
-
-    private val mutableLoginState = MutableStateFlow<KakaoLoginState>(KakaoLoginState.Initial)
-    private val mutableKakaoUserSideEffect = Channel<KakaoUserSideEffect>()
 
     /**
      * [OnboardStep.Category] 에서 선택한 카테고리를 나타냅니다.
      */
     lateinit var selectedCatagory: String
-
-    /**
-     * 현재 온보딩이 어느 단계에 있는지 나타냅니다.
-     */
-    val step = mutableStep.asStateFlow()
-    val currentStep get() = step.value
-
-    val loginState = mutableLoginState.asStateFlow()
-    val kakaoUserSideEffect = mutableKakaoUserSideEffect.receiveAsFlow()
 
     /**
      * 온보딩 단계를 업데이트합니다.
@@ -58,7 +46,9 @@ class OnboardViewModel(
             return
         }
         lastestUpdateStepMillis = System.currentTimeMillis()
-        mutableStep.value = step
+        updateState {
+            OnboardState.NavigateStep(step)
+        }
     }
 
     /**
@@ -72,14 +62,58 @@ class OnboardViewModel(
         return nicknameFilter.containsMatchIn(nickname)
     }
 
-    suspend fun kakaoLogin() {
+    /**
+     * 카카오 로그인을 요청합니다.
+     *
+     * 요청에 성공할시 [nextStep] 으로 온보딩 단계를 업데이트합니다.
+     *
+     * @param nextStep 카카오 로그인 다음에 진행할 온보딩 단계
+     */
+    suspend fun kakaoLogin(nextStep: OnboardStep) {
         kakaoLoginUseCase()
             .onSuccess { user ->
-                mutableLoginState.value = KakaoLoginState.Success(user)
-                mutableKakaoUserSideEffect.send(KakaoUserSideEffect.Save(user))
+                updateState {
+                    OnboardState.NavigateStep(nextStep)
+                }
+                postSideEffect {
+                    OnboardSideEffect.SaveUser(user)
+                }
             }
             .onFailure { expection ->
-                mutableLoginState.value = KakaoLoginState.Error(expection)
+                updateState {
+                    OnboardState.Error(expection)
+                }
+                postSideEffect {
+                    OnboardSideEffect.ReportError(expection)
+                }
             }
+    }
+
+    /**
+     * 갤러리에서 이미지 목록을 조회합니다.
+     */
+    suspend fun loadGalleryImages() {
+        loadGalleryImagesUseCase()
+            .onSuccess { images ->
+                updateState {
+                    OnboardState.GalleryImageLoaded(images)
+                }
+            }
+            .onFailure { expection ->
+                updateState {
+                    OnboardState.Error(expection)
+                }
+                postSideEffect {
+                    OnboardSideEffect.ReportError(expection)
+                }
+            }
+    }
+
+    /**
+     * 사용자 카테고리에 맞는 추천 태그들을 조회합니다.
+     * 현재는 구현이 불가능하여 고정된 더미 값을 리턴합니다.
+     */
+    fun getRecommendationTags(): ImmutableList<String> {
+        return persistentListOf("덕키", "이끔", "던던")
     }
 }
