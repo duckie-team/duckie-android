@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(FlowPreview::class)
+
 package team.duckie.app.android.feature.ui.onboard.screen
 
 import androidx.compose.foundation.background
@@ -16,11 +18,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +31,9 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.onEach
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
@@ -36,6 +42,7 @@ import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackErrorableTextField
@@ -52,21 +59,33 @@ private const val ProfileScreenNextButtonLayoutId = "ProfileScreenNextButton"
 
 private const val MaxNicknameLength = 10
 
-// TODO: 정확한 radius 사이즈 필요 (제플린에서 안보임)
+// FIXME: 정확한 radius 사이즈 필요 (제플린에서 안보임)
 private val ProfilePhotoShape = RoundedCornerShape(size = 30.dp)
 private val ProfilePhotoSize = DpSize(all = 80.dp)
+
+private const val NicknameInputDebounceSecond = 0.3
 
 @Composable
 internal fun ProfileScreen() {
     val vm = LocalViewModel.current as OnboardViewModel
     var nickname by remember { mutableStateOf("") }
-    val nicknameRuleError by remember(vm) {
-        derivedStateOf {
-            vm.checkNicknameRuleError(nickname)
-        }
-    }
-    // TODO: 중복 닉네임 검사
+    var lastErrorText by remember { mutableStateOf("") }
+    var nicknameRuleError by remember { mutableStateOf(false) }
+    var debounceFinish by remember { mutableStateOf(false) }
+
+    @Suppress("CanBeVal") // TODO: 중복 닉네임 검사
     var nicknameIsUseable by remember { mutableStateOf(true) }
+
+    LaunchedEffect(vm) {
+        val nicknameInputFlow = snapshotFlow { nickname }
+        nicknameInputFlow
+            .onEach { debounceFinish = false }
+            .debounce(NicknameInputDebounceSecond.seconds)
+            .collect {
+                debounceFinish = true
+                nicknameRuleError = vm.checkNicknameRuleError(nickname)
+            }
+    }
 
     Layout(
         modifier = Modifier
@@ -99,11 +118,14 @@ internal fun ProfileScreen() {
                 errorText = when {
                     nicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
                     !nicknameIsUseable -> stringResource(R.string.profile_nickname_duplicate_error)
-                    else -> "" // no error
+                    else -> lastErrorText
+                }.also { errorText ->
+                    lastErrorText = errorText
                 },
                 keyboardActions = KeyboardActions {
-                    navigationNextStepIfOk(
+                    navigateNextStepIfOk(
                         vm = vm,
+                        debounceFinish = debounceFinish,
                         nickname = nickname,
                         nicknameRuleError = nicknameRuleError,
                         nicknameIsUseable = nicknameIsUseable,
@@ -114,10 +136,11 @@ internal fun ProfileScreen() {
                 modifier = Modifier.layoutId(ProfileScreenNextButtonLayoutId),
                 text = stringResource(R.string.button_next),
                 type = QuackLargeButtonType.Fill,
-                enabled = nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable,
+                enabled = debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable,
             ) {
-                navigationNextStepIfOk(
+                navigateNextStepIfOk(
                     vm = vm,
+                    debounceFinish = debounceFinish,
                     nickname = nickname,
                     nicknameRuleError = nicknameRuleError,
                     nicknameIsUseable = nicknameIsUseable,
@@ -176,13 +199,14 @@ internal fun ProfileScreen() {
     }
 }
 
-private fun navigationNextStepIfOk(
+private fun navigateNextStepIfOk(
     vm: OnboardViewModel,
+    debounceFinish: Boolean,
     nickname: String,
     nicknameRuleError: Boolean,
     nicknameIsUseable: Boolean,
 ) {
-    if (nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
+    if (debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
         vm.updateStep(vm.currentStep + 1)
     }
 }
@@ -190,6 +214,13 @@ private fun navigationNextStepIfOk(
 @Composable
 private fun ProfilePhoto() {
     var profilePhoto by remember { mutableStateOf<Any?>(null) }
+
+    val openPhotoPicker: () -> Unit = remember {
+        {
+            // TODO: photo picker
+            profilePhoto = QuackIcon.Profile
+        }
+    }
 
     QuackAnimatedContent(
         modifier = Modifier
@@ -200,10 +231,7 @@ private fun ProfilePhoto() {
             )
             .size(ProfilePhotoSize)
             .clip(ProfilePhotoShape)
-            .clickable {
-                // TODO: photo picker
-                profilePhoto = QuackIcon.Profile
-            },
+            .clickable(onClick = openPhotoPicker),
         targetState = profilePhoto,
     ) { photo ->
         when (photo) {
@@ -225,6 +253,7 @@ private fun ProfilePhoto() {
                 QuackImage(
                     src = photo,
                     size = ProfilePhotoSize,
+                    onClick = openPhotoPicker, // required when onLongClick is used
                     onLongClick = {
                         profilePhoto = null
                     },
