@@ -20,6 +20,7 @@ android {
 dependencies {
     implementations(
         libs.compose.runtime, // needs for Stability
+        libs.kotlin.collections.immutable,
         projects.utilKotlin,
     )
 }
