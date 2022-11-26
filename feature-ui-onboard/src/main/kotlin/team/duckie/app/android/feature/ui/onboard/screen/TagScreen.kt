@@ -1,13 +1,17 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(
-    ExperimentalAnimationApi::class,
-    ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class,
 )
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,7 +70,6 @@ import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.animation.QuackAnimationSpec
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasic2TextField
 import team.duckie.quackquack.ui.component.QuackCircleTag
@@ -251,8 +254,6 @@ private fun TagSelection(
             QuackAnimatedVisibility(
                 modifier = Modifier.fillMaxWidth(),
                 visible = addedTags.isNotEmpty(),
-                otherEnterAnimation = scaleIn(animationSpec = QuackAnimationSpec()),
-                otherExitAnimation = scaleOut(animationSpec = QuackAnimationSpec()),
             ) {
                 QuackSingeLazyRowTag(
                     // AnimatedVisibility 에 내장된 패딩? 이 있는거 같아서 패딩 조정
@@ -268,11 +269,14 @@ private fun TagSelection(
                     },
                 )
             }
+            // FIXME: QuackSingeLazyRowTag visibility 가 변경될 때 애니메이션이 잘못됨
             QuackHeadLine2(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 text = stringResource(R.string.tag_add_manual),
                 padding = PaddingValues(
-                    top = 6.dp.runIf(addedTags.isEmpty()) { plus(6.dp) },
+                    top = 6.dp.runIf(addedTags.isEmpty()) {
+                        plus(6.dp)
+                    },
                     bottom = 12.dp,
                 ),
                 color = QuackColor.DuckieOrange,
