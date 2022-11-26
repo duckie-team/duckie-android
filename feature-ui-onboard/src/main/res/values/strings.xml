@@ -21,7 +21,7 @@
     <string name="profile_title">프로필을 설정해주세요!</string>
     <string name="profile_description">언제든 변경할 수 있어요. 나만의 이름을 지어봐요 :)</string>
     <string name="profile_nickname_placeholder">닉네임 입력</string>
-    <string name="profile_nickname_rule_error">이름에는 문자, 숫자, 밑줄, 마침표만 사용할 수 있어요.</string>
+    <string name="profile_nickname_rule_error">이름에는 문자, 숫자, 밑줄, 마침표만\n사용할 수 있어요.</string>
     <string name="profile_nickname_duplicate_error">이미 있는 이름이에요</string>
 
     <string name="category_title">어떤 분야를 좋아하나요?</string>
@@ -33,4 +33,5 @@
     <string name="tag_add_manual">+ 직접 태그 추가하기</string>
     <string name="tag_add_manual_placeholder">태그 입력하기</string>
     <string name="tag_hottest_tag">%s 분야 인기 태그</string>
+    <string name="tag_toast_already_added">이미 추가한 태그예요.</string>
 </resources>
