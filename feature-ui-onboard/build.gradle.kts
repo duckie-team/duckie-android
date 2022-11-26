@@ -22,11 +22,14 @@ android {
 
 dependencies {
     implementations(
+        projects.di,
+        projects.domain,
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
         projects.utilViewmodel,
         projects.featureDatastore,
+        libs.ktx.lifecycle,
         libs.compose.ui.material, // needs for ModalBottomSheet
         libs.compose.ktx.lifecycle,
         libs.quack.ui.components,

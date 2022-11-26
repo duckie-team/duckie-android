@@ -6,17 +6,18 @@
   -->
 
 <resources>
-    <string name="kakaologin_button_label">카카오로 시작하기</string>
-    <string name="kakaologin_login_terms">가입 시, 덕키의 필수 이용 약관과\n개인정보 수집 및 이용에 동의하게 됩니다.</string>
-    <string name="kakaologin_hightlight_terms">필수 이용 약관</string>
-    <string name="kakaologin_hightlight_privacy">개인정보 수집 및 이용</string>
-    <string name="kakaologin_welcome_message">덕키에서 같이 덕질하면서 소통하고\n굿즈 거래까지 한 번에 즐겨요!</string>
-
     <string name="topappbar_trailing_skip">건너뛰기</string>
 
     <string name="button_done">완료</string>
     <string name="button_next">다음</string>
     <string name="button_start_duckie">덕키 시작하기</string>
+
+    <string name="kakaologin_button_label">카카오로 시작하기</string>
+    <string name="kakaologin_hightlight_terms">필수 이용 약관</string>
+    <string name="kakaologin_hightlight_privacy">개인정보 수집 및 이용</string>
+    <string name="kakaologin_welcome_message">덕키에서 같이 덕질하면서 소통하고\n굿즈 거래까지 한 번에 즐겨요!</string>
+    <string name="kakaologin_login_terms">가입 시, 덕키의 필수 이용 약관과\n개인정보 수집 및 이용에 동의하게 됩니다.</string>
+    <string name="kakaologin_fail">카카오 로그인중에 문제가 발생했어요. 잠시 후 다시 시도해 주세요.</string>
 
     <string name="profile_title">프로필을 설정해주세요!</string>
     <string name="profile_description">언제든 변경할 수 있어요. 나만의 이름을 지어봐요 :)</string>

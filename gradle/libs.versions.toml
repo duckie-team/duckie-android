@@ -21,6 +21,7 @@ plugin-ui-oss-license = "0.10.5"
 
 # plugin - util
 plugin-util-dependency-handler-extensions = "1.0.3"
+plugin-util-secrets = "2.0.1"
 
 # plugin - local
 plugin-local-convention-enum = "master"
@@ -113,6 +114,7 @@ compose-paparazzi = { id = "app.cash.paparazzi", version.ref = "plugin-compose-p
 di-hilt = { id = "com.google.dagger.hilt.android", version.ref = "di-hilt" }
 
 util-dependency-handler-extensions = { id = "land.sungbin.dependency.handler.extensions", version.ref = "plugin-util-dependency-handler-extensions" }
+util-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "plugin-util-secrets" }
 
 local-convention-enum = { id = "team.duckie.app.android.local.convention.enum", version.ref = "plugin-local-convention-enum" }
 

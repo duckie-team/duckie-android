@@ -24,6 +24,7 @@ dependencies {
         projects.utilUi,
         projects.utilCompose,
         projects.utilKotlin,
+        projects.featureDatastore,
         projects.featureUiOnboard,
         libs.androidx.splash,
         libs.quack.ui.components,

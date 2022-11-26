@@ -52,8 +52,10 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.datastore.preferences.core.edit
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.combine
+import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
@@ -65,6 +67,7 @@ import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.launch
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.fastAny
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
@@ -91,9 +94,7 @@ internal fun TagScreen() = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
     val context = LocalContext.current.applicationContext
     val keyboard = LocalSoftwareKeyboardController.current
-
-    @Suppress("UNUSED_VARIABLE") // TODO: 온보딩 마감 상태 저장
-    val datastore = context.dataStore
+    val toast = rememberToast()
 
     val category = vm.selectedCatagory
     var isStartable by remember { mutableStateOf(false) }
@@ -161,7 +162,12 @@ internal fun TagScreen() = CoroutineScopeContent {
                     type = QuackLargeButtonType.Fill,
                     enabled = isStartable,
                 ) {
-                    // TODO: 온보딩 완료
+                    launch {
+                        context.dataStore.edit { preference ->
+                            preference[PreferenceKey.Onboard.Finish] = true
+                        }
+                        toast("온보딩 끝")
+                    }
                 }
             }
         ) { measurables, constraints ->
@@ -287,6 +293,7 @@ private fun TagSelection(
                 },
             )
         }
+        @AllowMagicNumber
         QuackSingeLazyRowTag(
             modifier = Modifier.padding(top = (28 - 12).dp),
             title = stringResource(R.string.tag_hottest_tag, category),

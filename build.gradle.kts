@@ -18,6 +18,7 @@ plugins {
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.kotlin.kover)
     alias(libs.plugins.local.convention.enum)
+    alias(libs.plugins.util.secrets) apply false
     alias(libs.plugins.util.dependency.handler.extensions)
 }
 
@@ -63,6 +64,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven(url = uri("https://devrepo.kakao.com/nexus/content/groups/public/"))
         maven(url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
     }
 
@@ -81,14 +83,6 @@ allprojects {
                     "-opt-in=kotlin.OptIn",
                     "-opt-in=kotlin.RequiresOptIn",
                 )
-                // freeCompilerArgs = freeCompilerArgs + listOf(
-                //     "-P",
-                //     "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$rootDir/report/compose-metrics",
-                // )
-                // freeCompilerArgs = freeCompilerArgs + listOf(
-                //     "-P",
-                //     "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$rootDir/report/compose-reports",
-                // )
             }
         }
     }

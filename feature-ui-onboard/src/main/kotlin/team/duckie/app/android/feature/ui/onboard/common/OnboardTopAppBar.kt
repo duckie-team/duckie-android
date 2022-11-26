@@ -10,12 +10,19 @@ package team.duckie.app.android.feature.ui.onboard.common
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.edit
+import team.duckie.app.android.feature.datastore.PreferenceKey
+import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.launch
+import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -25,8 +32,10 @@ internal fun OnboardTopAppBar(
     modifier: Modifier = Modifier,
     showSkipTrailingText: Boolean,
     horizontalPadding: Dp = 20.dp,
-) {
+) = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
+    val context = LocalContext.current
+    val toast = rememberToast()
 
     QuackTopAppBar(
         modifier = modifier
@@ -37,9 +46,19 @@ internal fun OnboardTopAppBar(
             vm.updateStep(vm.currentStep - 1)
         },
         trailingText = stringResource(R.string.topappbar_trailing_skip)
-            .takeIf { showSkipTrailingText },
+            .takeIf {
+                showSkipTrailingText
+            },
         onTrailingTextClick = {
-            vm.updateStep(vm.currentStep + 1)
-        }.takeIf { showSkipTrailingText },
+            launch {
+                context.dataStore.edit { preference ->
+                    preference[PreferenceKey.Onboard.Finish] = true
+                }
+                toast("온보딩 끝")
+            }
+            Unit
+        }.takeIf {
+            showSkipTrailingText
+        },
     )
 }

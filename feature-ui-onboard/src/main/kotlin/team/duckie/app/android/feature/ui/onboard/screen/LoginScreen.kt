@@ -9,7 +9,6 @@ package team.duckie.app.android.feature.ui.onboard.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,6 +36,7 @@ import androidx.core.content.ContextCompat
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -131,7 +131,7 @@ private const val LoginScreenLoginAreaKakaoSymbolLayoutId = "LoginScreenLoginAre
 private const val LoginScreenLoginAreaKakaoLoginLabelLayoutId = "LoginScreenLoginAreaKakaoLoginLabel"
 
 @Composable
-private fun LoginScreenLoginArea() {
+private fun LoginScreenLoginArea() = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
     val context = LocalContext.current
 
@@ -155,9 +155,8 @@ private fun LoginScreenLoginArea() {
                         )
                     )
                 )
-                .clickable {
-                    // TODO: 카카오 로그인
-                    vm.updateStep(vm.currentStep + 1)
+                .suspendClickable {
+                    vm.kakaoLogin()
                 },
             content = {
                 Image(
