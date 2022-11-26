@@ -7,22 +7,37 @@
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
+import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -32,6 +47,9 @@ import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackUnderlineBody3
+import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+
+private val currentStep = OnboardStep.Login
 
 private const val LoginScreenWelcomeLayoutId = "LoginScreenWelcome"
 private const val LoginScreenLoginAreaLayoutId = "LoginScreenLoginArea"
@@ -43,8 +61,8 @@ internal fun LoginScreen() {
             .fillMaxSize()
             .padding(systemBarPaddings)
             .padding(
-                vertical = 20.dp,
-                horizontal = 24.dp,
+                horizontal = 20.dp,
+                vertical = 24.dp,
             ),
         content = {
             LoginScreenWelcome()
@@ -112,33 +130,108 @@ private fun LoginScreenWelcome() {
     }
 }
 
+private const val LoginScreenLoginAreaKakaoSymbolLayoutId = "LoginScreenLoginAreaKakaoSymbol"
+private const val LoginScreenLoginAreaKakaoLoginLabelLayoutId = "LoginScreenLoginAreaKakaoLoginLabel"
+
 @Composable
-private fun LoginScreenLoginArea() {
+private fun LoginScreenLoginArea() = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.layoutId(LoginScreenLoginAreaLayoutId),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        QuackImage(
-            src = R.drawable.img_login_kakao,
-            size = DpSize(
-                width = 320.dp,
-                height = 46.dp,
-            ),
-            onClick = {
-                // TODO: 카카오 로그인
-                vm.updateStep(vm.currentStep + 1)
+        // 카카오 로그인 버튼
+        // https://developers.kakao.com/docs/latest/ko/kakaologin/design-guide
+        Layout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(55.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(
+                    color = Color(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.kakao_login_button_container_background,
+                        )
+                    )
+                )
+                .suspendClickable {
+                    vm.kakaoLogin(currentStep + 1)
+                },
+            content = {
+                Image(
+                    modifier = Modifier
+                        .layoutId(LoginScreenLoginAreaKakaoSymbolLayoutId)
+                        .size(24.dp),
+                    painter = painterResource(R.drawable.ic_kakao_symbol),
+                    colorFilter = ColorFilter.tint(
+                        Color(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.kakao_login_button_symbol_tint,
+                            )
+                        )
+                    ),
+                    contentDescription = null,
+                )
+                BasicText(
+                    modifier = Modifier.layoutId(LoginScreenLoginAreaKakaoLoginLabelLayoutId),
+                    text = stringResource(R.string.kakaologin_button_label),
+                    style = QuackTextStyle.HeadLine2.asComposeStyle().copy(
+                        color = Color(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.kakao_login_button_label,
+                            )
+                        ),
+                    )
+                )
             },
-        )
-        // TODO: 밑줄 색상 변경 인자 오픈
+        ) { measurables, constraints ->
+            val extraLooseConstraints = constraints.asLoose(width = true)
+
+            val symbolPlaceable = measurables.fastFirstOrNull { measurable ->
+                measurable.layoutId == LoginScreenLoginAreaKakaoSymbolLayoutId
+            }?.measure(extraLooseConstraints) ?: npe()
+
+            val labelPlaceable = measurables.fastFirstOrNull { measurable ->
+                measurable.layoutId == LoginScreenLoginAreaKakaoLoginLabelLayoutId
+            }?.measure(extraLooseConstraints) ?: npe()
+
+            layout(
+                width = constraints.maxWidth,
+                height = constraints.maxHeight,
+            ) {
+                symbolPlaceable.place(
+                    x = 30.dp.roundToPx(),
+                    y = Alignment.CenterVertically.align(
+                        size = symbolPlaceable.height,
+                        space = constraints.maxHeight,
+                    ),
+                )
+                labelPlaceable.place(
+                    x = Alignment.CenterHorizontally.align(
+                        size = labelPlaceable.width,
+                        space = constraints.maxWidth,
+                        layoutDirection = layoutDirection,
+                    ),
+                    y = Alignment.CenterVertically.align(
+                        size = labelPlaceable.height,
+                        space = constraints.maxHeight,
+                    ),
+                )
+            }
+        }
         QuackUnderlineBody3(
             text = stringResource(R.string.kakaologin_login_terms),
             underlineTexts = persistentListOf(
                 stringResource(R.string.kakaologin_hightlight_terms),
                 stringResource(R.string.kakaologin_hightlight_privacy),
             ),
+            underlineColor = QuackColor.Gray2,
             color = QuackColor.Gray2,
             align = TextAlign.Center,
         )

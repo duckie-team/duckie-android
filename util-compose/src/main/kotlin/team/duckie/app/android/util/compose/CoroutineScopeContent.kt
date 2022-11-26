@@ -7,8 +7,10 @@
 
 package team.duckie.app.android.util.compose
 
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -21,6 +23,16 @@ interface CoroutineScopeContent {
      * 제공될 [CoroutineScope]
      */
     val coroutineScope: CoroutineScope
+
+    /**
+     * [Modifier] 의 [Modifier.clickable] 에 suspend 와 [CoroutineScope] 를
+     * 더한 확장 함수를 추가합니다.
+     *
+     * @param action 클릭 시 실행할 액션
+     *
+     * @return [Modifier.clickable] 의 반환값
+     */
+    fun Modifier.suspendClickable(action: suspend CoroutineScope.() -> Unit): Modifier
 }
 
 /**
@@ -44,5 +56,10 @@ inline fun CoroutineScopeContent(
 ) {
     object : CoroutineScopeContent {
         override val coroutineScope = rememberCoroutineScope()
+        override fun Modifier.suspendClickable(
+            action: suspend CoroutineScope.() -> Unit
+        ) = clickable {
+            launch(action = action)
+        }
     }.content()
 }

@@ -15,5 +15,5 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.datastore)
+    api(libs.androidx.datastore)
 }

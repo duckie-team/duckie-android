@@ -22,11 +22,16 @@ android {
 
 dependencies {
     implementations(
+        platform(libs.firebase.bom),
+        projects.di,
+        projects.domain,
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
         projects.utilViewmodel,
         projects.featureDatastore,
+        libs.ktx.lifecycle,
+        libs.firebase.crashlytics,
         libs.compose.ui.material, // needs for ModalBottomSheet
         libs.compose.ktx.lifecycle,
         libs.quack.ui.components,

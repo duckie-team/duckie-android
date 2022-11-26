@@ -13,47 +13,50 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AnticipateInterpolator
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import team.duckie.app.android.feature.datastore.PreferenceKey
+import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.OnboardActivity
+import team.duckie.app.android.presentation.screen.IntroScreen
+import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.changeActivityWithAnimation
-import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackImage
 
 private val SplashScreenExitAnimationDurationMillis = 0.2.seconds
 private val SplashScreenFinishDurationMillis = 2.seconds
 
 class IntroActivity : BaseActivity() {
+    private val toast by lazy { ToastWrapper(applicationContext) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
         setContent {
-            IntroScreen()
+            var isOnboardFinished by remember { mutableStateOf<Boolean?>(null) }
 
             LaunchedEffect(Unit) {
                 delay(SplashScreenFinishDurationMillis)
-                changeActivityWithAnimation<OnboardActivity>()
+                applicationContext.dataStore.data.first().let { preference ->
+                    isOnboardFinished = preference[PreferenceKey.Onboard.Finish] ?: false
+                }
+            }
+
+            IntroScreen()
+
+            when (isOnboardFinished) {
+                true -> toast("온보딩 끝냄")
+                false -> changeActivityWithAnimation<OnboardActivity>()
+                else -> Unit // null
             }
         }
 
@@ -74,50 +77,5 @@ class IntroActivity : BaseActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun IntroScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = QuackColor.White.composeColor)
-            .padding(systemBarPaddings)
-            .padding(
-                top = 78.dp,
-                bottom = 34.dp,
-            ),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.End,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(horizontal = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            QuackImage(
-                src = team.duckie.quackquack.ui.R.drawable.quack_duckie_text_logo,
-                size = DpSize(
-                    width = 110.dp,
-                    height = 32.dp,
-                ),
-            )
-            // TODO: 누락된 typography 컴포넌트 추가
-            QuackHeadLine1(
-                text = stringResource(R.string.intro_slogan),
-            )
-        }
-        // TODO: SVG 필요
-        QuackImage(
-            modifier = Modifier.offset(x = 125.dp),
-            src = R.drawable.img_duckie_intro,
-            size = DpSize(
-                width = 276.dp,
-                height = 255.dp,
-            ),
-        )
     }
 }
