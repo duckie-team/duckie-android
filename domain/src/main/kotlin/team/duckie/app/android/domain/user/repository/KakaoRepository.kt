@@ -10,7 +10,17 @@ package team.duckie.app.android.domain.user.repository
 import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.user.model.KakaoUser
 
+/**
+ * 카카오 관련 작업을 진행하는 repository 입니다.
+ */
 @Immutable
-interface KakaoLoginRepository {
+interface KakaoRepository {
+    /**
+     * 카카오 로그인을 요청합니다.
+     *
+     * @return 카카오 로그인에 성공하면 [KakaoUser] 객체를 반환합니다.
+     *
+     * @throws IllegalStateException 카카오 로그인에 실패한 경우
+     */
     suspend fun login(): KakaoUser
 }

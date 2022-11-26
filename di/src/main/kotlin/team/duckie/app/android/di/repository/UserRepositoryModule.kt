@@ -12,14 +12,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
-import team.duckie.app.android.data.user.repository.KakaoLoginRepositoryImpl
-import team.duckie.app.android.domain.user.repository.KakaoLoginRepository
+import team.duckie.app.android.data.user.repository.KakaoRepositoryImpl
+import team.duckie.app.android.domain.user.repository.KakaoRepository
 
 @Module
 @InstallIn(ActivityComponent::class)
 object UserRepositoryModule {
     @Provides
-    fun provideKakaoLoginRepository(activityContext: Activity): KakaoLoginRepository {
-        return KakaoLoginRepositoryImpl(activityContext)
+    fun provideKakaoLoginRepository(activityContext: Activity): KakaoRepository {
+        return KakaoRepositoryImpl(activityContext)
     }
 }

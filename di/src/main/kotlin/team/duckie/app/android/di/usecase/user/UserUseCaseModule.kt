@@ -11,14 +11,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
-import team.duckie.app.android.domain.user.repository.KakaoLoginRepository
+import team.duckie.app.android.domain.user.repository.KakaoRepository
 import team.duckie.app.android.domain.user.usecase.KakaoLoginUseCase
 
 @Module
 @InstallIn(ActivityComponent::class)
 object UserUseCaseModule {
     @Provides
-    fun provideKakaoLoginUseCase(repository: KakaoLoginRepository): KakaoLoginUseCase {
+    fun provideKakaoLoginUseCase(repository: KakaoRepository): KakaoLoginUseCase {
         return KakaoLoginUseCase(repository)
     }
 }

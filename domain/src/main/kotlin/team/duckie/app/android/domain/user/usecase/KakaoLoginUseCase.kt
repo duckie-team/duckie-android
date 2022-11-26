@@ -8,11 +8,11 @@
 package team.duckie.app.android.domain.user.usecase
 
 import androidx.compose.runtime.Immutable
-import team.duckie.app.android.domain.user.repository.KakaoLoginRepository
+import team.duckie.app.android.domain.user.repository.KakaoRepository
 
 @Immutable
 class KakaoLoginUseCase(
-    private val repository: KakaoLoginRepository,
+    private val repository: KakaoRepository,
 ) {
     suspend operator fun invoke() = runCatching {
         repository.login()

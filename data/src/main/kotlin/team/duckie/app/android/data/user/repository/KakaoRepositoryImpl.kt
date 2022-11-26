@@ -19,7 +19,7 @@ import kotlin.random.Random
 import kotlinx.coroutines.suspendCancellableCoroutine
 import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.domain.user.model.KakaoUser
-import team.duckie.app.android.domain.user.repository.KakaoLoginRepository
+import team.duckie.app.android.domain.user.repository.KakaoRepository
 
 private val KakaoLoginException = IllegalStateException("Kakao API response is nothing.")
 private const val DefaultUserProfilePhotoUrl =
@@ -28,7 +28,7 @@ private val DefaultUserNickname = "익명의 덕키즈 #${Random.nextInt(10_000)
 
 // Calling startActivity() from outside of an Activity.
 // Activity Context 필요.
-class KakaoLoginRepositoryImpl(activityContext: Activity) : KakaoLoginRepository {
+class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
     private val _activity = WeakReference(activityContext)
     private val activity get() = _activity.get()!!
 
