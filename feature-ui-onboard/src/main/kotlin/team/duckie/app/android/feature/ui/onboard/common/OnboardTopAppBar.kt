@@ -10,12 +10,19 @@ package team.duckie.app.android.feature.ui.onboard.common
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.edit
+import team.duckie.app.android.feature.datastore.PreferenceKey
+import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.launch
+import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -25,12 +32,11 @@ internal fun OnboardTopAppBar(
     modifier: Modifier = Modifier,
     showSkipTrailingText: Boolean,
     horizontalPadding: Dp = 20.dp,
-) {
+) = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
+    val context = LocalContext.current
+    val toast = rememberToast()
 
-    // TODO: center text 에 v 아이콘 표시 여부 인자로 받게 변경
-    // TODO: center content 인자들 assertion 선택적으로 변경
-    // TODO: trailing content 인자들 assertion 선택적으로 변경
     QuackTopAppBar(
         modifier = modifier
             .padding(top = systemBarPaddings.calculateTopPadding())
@@ -39,12 +45,20 @@ internal fun OnboardTopAppBar(
         onLeadingIconClick = {
             vm.updateStep(vm.currentStep - 1)
         },
-        centerText = "",
         trailingText = stringResource(R.string.topappbar_trailing_skip)
-            .takeIf { showSkipTrailingText }
-            .orEmpty(),
+            .takeIf {
+                showSkipTrailingText
+            },
         onTrailingTextClick = {
-            vm.updateStep(vm.currentStep + 1)
-        }
+            launch {
+                context.dataStore.edit { preference ->
+                    preference[PreferenceKey.Onboard.Finish] = true
+                }
+                toast("온보딩 끝")
+            }
+            Unit
+        }.takeIf {
+            showSkipTrailingText
+        },
     )
 }

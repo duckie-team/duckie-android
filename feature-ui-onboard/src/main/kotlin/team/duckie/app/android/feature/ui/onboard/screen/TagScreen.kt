@@ -1,18 +1,28 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(
-    ExperimentalAnimationApi::class,
     ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class,
 )
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -29,14 +39,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.persistentListOf
+import androidx.compose.ui.zIndex
+import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.combine
+import team.duckie.app.android.feature.datastore.PreferenceKey
+import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
@@ -45,18 +64,21 @@ import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.launch
+import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.fastAny
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.animation.QuackAnimationSpec
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasic2TextField
+import team.duckie.quackquack.ui.component.QuackCircleTag
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
+import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.QuackTitle2
@@ -69,27 +91,40 @@ private const val TagScreenQuackLargeButtonLayoutId = "TagScreenQuackLargeButton
 @Composable
 internal fun TagScreen() = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
+    val context = LocalContext.current.applicationContext
+    val keyboard = LocalSoftwareKeyboardController.current
+    val toast = rememberToast()
+
     val category = vm.selectedCatagory
     var isStartable by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val addedTags = remember { mutableStateListOf<String>() }
 
+    LaunchedEffect(Unit) {
+        val sheetStateFlow = snapshotFlow { sheetState.currentValue }
+        sheetStateFlow.collect { state ->
+            if (state == ModalBottomSheetValue.Hidden) {
+                keyboard?.hide()
+            }
+        }
+    }
+
     ModalBottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetState = sheetState,
         sheetBackgroundColor = QuackColor.White.composeColor,
-        // TODO: QuackColor.Dimmed 추가
-        scrimColor = QuackColor.Black.change(alpha = 0.6f).composeColor,
+        scrimColor = QuackColor.Dimmed.composeColor,
         sheetShape = RoundedCornerShape(
             topStart = 16.dp,
             topEnd = 16.dp,
         ),
         sheetContent = {
             TagScreenModalBottomSheetContent(
-                onDismissRequest = { newAddedTags ->
+                onDismissRequest = { newAddedTags, clearAction ->
                     launch {
-                        sheetState.hide()
                         addedTags.addAll(newAddedTags)
+                        clearAction()
+                        sheetState.hide()
                     }
                 }
             )
@@ -98,8 +133,7 @@ internal fun TagScreen() = CoroutineScopeContent {
         Layout(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = systemBarPaddings.calculateBottomPadding())
-                .padding(bottom = 16.dp),
+                .padding(bottom = systemBarPaddings.calculateBottomPadding() + 16.dp),
             content = {
                 OnboardTopAppBar(
                     modifier = Modifier.layoutId(TagScreenTopAppBarLayoutId),
@@ -108,14 +142,10 @@ internal fun TagScreen() = CoroutineScopeContent {
                 TagSelection(
                     modifier = Modifier
                         .layoutId(TagScreenTagSelectionLayoutId)
-                        .padding(
-                            top = 12.dp,
-                            start = 20.dp,
-                            end = 20.dp,
-                        ),
+                        .padding(top = 12.dp),
                     category = category,
                     sheetState = sheetState,
-                    addedTags = addedTags.toList(),
+                    addedTags = addedTags,
                     requestRemoveAddedTag = { index ->
                         addedTags.remove(addedTags[index])
                     },
@@ -131,7 +161,12 @@ internal fun TagScreen() = CoroutineScopeContent {
                     type = QuackLargeButtonType.Fill,
                     enabled = isStartable,
                 ) {
-                    // TODO: 온보딩 완료
+                    launch {
+                        context.dataStore.edit { preference ->
+                            preference[PreferenceKey.Onboard.Finish] = true
+                        }
+                        toast("온보딩 끝")
+                    }
                 }
             }
         ) { measurables, constraints ->
@@ -175,15 +210,13 @@ private fun TagSelection(
     modifier: Modifier,
     category: String,
     sheetState: ModalBottomSheetState,
-    addedTags: List<String>,
+    addedTags: SnapshotStateList<String>,
     requestRemoveAddedTag: (index: Int) -> Unit,
     startableUpdate: (startable: Boolean) -> Unit,
 ) = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
-    val hottestTags = remember {
-        // TODO: 인기 태그 조회
-        persistentListOf("덕키", "이끔", "던던")
-    }
+
+    val hottestTags = remember(vm) { vm.getRecommendationTags() }
     val hottestTagSelections = remember(hottestTags.size) {
         mutableStateListOf(
             elements = Array(
@@ -206,36 +239,49 @@ private fun TagSelection(
         }
     }
 
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(28.dp),
-    ) {
+    Column(modifier = modifier.fillMaxWidth()) {
         TitleAndDescription(
+            modifier = Modifier.padding(horizontal = 20.dp),
             titleRes = R.string.tag_title,
             descriptionRes = R.string.tag_description,
         )
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 28.dp),
         ) {
-            QuackTitle2(text = stringResource(R.string.tag_added_tag))
+            QuackTitle2(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                text = stringResource(R.string.tag_added_tag),
+            )
             QuackAnimatedVisibility(
                 modifier = Modifier.fillMaxWidth(),
                 visible = addedTags.isNotEmpty(),
-                otherEnterAnimation = scaleIn(animationSpec = QuackAnimationSpec()),
-                otherExitAnimation = scaleOut(animationSpec = QuackAnimationSpec()),
             ) {
-                QuackLazyVerticalGridTag(
-                    modifier = Modifier.fillMaxWidth(),
+                QuackSingeLazyRowTag(
+                    // AnimatedVisibility 에 내장된 패딩? 이 있는거 같아서 패딩 조정
+                    modifier = Modifier.padding(
+                        top = 8.dp,
+                        bottom = 4.dp,
+                    ),
                     items = addedTags,
                     tagType = QuackTagType.Circle(trailingIcon = QuackIcon.Close),
+                    contentPadding = PaddingValues(horizontal = 20.dp),
                     onClick = { index ->
                         requestRemoveAddedTag(index)
                     },
                 )
             }
+            // FIXME: QuackSingeLazyRowTag visibility 가 변경될 때 애니메이션이 잘못됨
             QuackHeadLine2(
+                modifier = Modifier.padding(horizontal = 20.dp),
                 text = stringResource(R.string.tag_add_manual),
+                padding = PaddingValues(
+                    top = 6.dp.runIf(addedTags.isEmpty()) {
+                        plus(6.dp)
+                    },
+                    bottom = 12.dp,
+                ),
                 color = QuackColor.DuckieOrange,
                 onClick = {
                     launch {
@@ -244,34 +290,40 @@ private fun TagSelection(
                 },
             )
         }
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            QuackTitle2(text = stringResource(R.string.tag_hottest_tag, category))
-            // TODO: chunkedItems 기준 인자로 추가
-            QuackLazyVerticalGridTag(
-                items = hottestTags,
-                itemSelections = hottestTagSelections,
-                tagType = QuackTagType.Round,
-                onClick = { index ->
-                    hottestTagSelections[index] = !hottestTagSelections[index]
-                },
-            )
-        }
+        @AllowMagicNumber
+        QuackSingeLazyRowTag(
+            modifier = Modifier.padding(top = (28 - 12).dp),
+            title = stringResource(R.string.tag_hottest_tag, category),
+            items = hottestTags,
+            itemSelections = hottestTagSelections,
+            tagType = QuackTagType.Circle(),
+            contentPadding = PaddingValues(horizontal = 20.dp),
+            onClick = { index ->
+                hottestTagSelections[index] = !hottestTagSelections[index]
+            },
+        )
     }
 }
 
 @Composable
 private fun TagScreenModalBottomSheetContent(
-    onDismissRequest: (addedTags: List<String>) -> Unit,
+    onDismissRequest: (addedTags: List<String>, clearAction: () -> Unit) -> Unit,
 ) {
+    val toast = rememberToast()
+    val context = LocalContext.current
+    val imeInsets = WindowInsets.ime
+    val navigationBarInsets = WindowInsets.navigationBars
+
     val inputtedTags = remember { mutableStateListOf<String>() }
     var tagInput by remember { mutableStateOf("") }
 
     fun updateTagInput() {
         if (tagInput.isNotBlank()) {
-            inputtedTags.add(tagInput)
+            if (inputtedTags.contains(tagInput)) {
+                toast(context.getString(R.string.tag_toast_already_added))
+                return
+            }
+            inputtedTags.add(index = 0, element = tagInput)
             tagInput = ""
         }
     }
@@ -282,7 +334,9 @@ private fun TagScreenModalBottomSheetContent(
             .padding(bottom = systemBarPaddings.calculateBottomPadding()),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -291,48 +345,70 @@ private fun TagScreenModalBottomSheetContent(
                 text = stringResource(R.string.tag_added_tag),
             )
             QuackSubtitle(
-                modifier = Modifier.padding(
-                    vertical = 18.dp,
-                    horizontal = 16.dp,
-                ),
                 text = stringResource(R.string.button_done),
                 color = QuackColor.DuckieOrange,
+                padding = PaddingValues(
+                    horizontal = 20.dp,
+                    vertical = 10.dp,
+                ),
                 onClick = {
-                    onDismissRequest(inputtedTags)
-                    inputtedTags.clear()
+                    onDismissRequest(inputtedTags) {
+                        inputtedTags.clear()
+                    }
                 },
             )
         }
-        QuackAnimatedVisibility(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 20.dp),
-            visible = inputtedTags.isNotEmpty(),
-        ) {
-            // TODO: chunkedItems 기준 인자로 추가
-            // TODO: 컨텐츠 사이 간격 인자로 추가
-            // TODO: contentPadding 추가
-            QuackLazyVerticalGridTag(
-                modifier = Modifier.fillMaxWidth(),
+        Box {
+            QuackCircleTag(
+                modifier = Modifier
+                    .zIndex(0f)
+                    .drawWithContent { }, // invisible
+                text = "",
+                isSelected = false,
+            )
+            QuackSingeLazyRowTag(
+                modifier = Modifier.zIndex(1f),
                 items = inputtedTags,
                 tagType = QuackTagType.Circle(trailingIcon = QuackIcon.Close),
+                contentPadding = PaddingValues(horizontal = 20.dp),
                 onClick = { index ->
                     inputtedTags.remove(inputtedTags[index])
                 },
             )
         }
-        // TODO: underline 엔 영향을 미치지 않는 padding 추가
         QuackBasic2TextField(
-            modifier = Modifier.padding(
-                start = 16.dp,
-                top = 16.dp,
-            ),
+            modifier = Modifier.padding(top = 16.dp),
             text = tagInput,
             onTextChanged = { tagInput = it },
             placeholderText = stringResource(R.string.tag_add_manual_placeholder),
+            leadingStartPadding = 16.dp,
+            trailingEndPadding = 10.dp,
             trailingIcon = QuackIcon.ArrowSend,
             trailingIconOnClick = ::updateTagInput,
             keyboardActions = KeyboardActions { updateTagInput() },
+        )
+        Spacer(
+            modifier = Modifier.layout { measurable, _constraints ->
+                val imeHeight = imeInsets.getBottom(this)
+                val nagivationBarHeight = navigationBarInsets.getBottom(this)
+                // ime height 에 navigation height 가 포함되는 것으로 추측됨
+                val height = imeHeight
+                    .minus(nagivationBarHeight)
+                    .coerceAtLeast(0)
+
+                val constraints = _constraints.copy(
+                    minHeight = height,
+                    maxHeight = height,
+                )
+                val placeable = measurable.measure(constraints)
+
+                layout(
+                    width = constraints.maxWidth,
+                    height = height,
+                ) {
+                    placeable.place(x = 0, y = 0)
+                }
+            },
         )
     }
 }

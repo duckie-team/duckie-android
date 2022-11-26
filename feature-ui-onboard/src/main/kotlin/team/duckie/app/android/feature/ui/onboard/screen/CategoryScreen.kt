@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
@@ -30,6 +29,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -40,14 +40,17 @@ import team.duckie.quackquack.ui.component.QuackGridLayout
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSelectableImage
+import team.duckie.quackquack.ui.component.QuackSelectableImageType
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.util.DpSize
+
+private val currentStep = OnboardStep.Category
 
 private const val CategoryScreenTitleAndDescriptionLayoutId = "CategoryScreenTitleAndDescription"
 private const val CategoryScreenCategoriesGridLayoutId = "CategoryScreenQuackGridLayout"
 private const val CategoryScreenNextButtonLayoutId = "CategoryScreenQuackAnimatedVisibility"
 
-// TODO: 카테고리 가져오는 방식이 바뀔 수 있어서 임시 하드코딩
+// FIXME: 카테고리 가져오는 방식이 바뀔 수 있어서 임시 하드코딩
 private val categories = persistentListOf(
     "연예인" to R.drawable.img_category_celebrity,
     "영화" to R.drawable.img_category_movie,
@@ -79,12 +82,13 @@ internal fun CategoryScreen() {
                 titleRes = R.string.category_title,
                 descriptionRes = R.string.category_description,
             )
-            // TODO: 사이 간격 조정
             QuackGridLayout(
                 modifier = Modifier
                     .layoutId(CategoryScreenCategoriesGridLayoutId)
                     .padding(top = 24.dp)
                     .fillMaxSize(),
+                verticalSpacing = 24.dp,
+                horizontalSpacing = 10.dp,
                 items = categories,
                 key = { _, (name, _) -> name },
             ) { index, (name, imageRes) ->
@@ -103,14 +107,13 @@ internal fun CategoryScreen() {
                     .fillMaxWidth(),
                 visible = categorySelectedIndex != null,
             ) {
-                // TODO: fading edge support
                 QuackLargeButton(
                     type = QuackLargeButtonType.Fill,
                     enabled = true,
                     text = stringResource(R.string.button_next),
                 ) {
                     vm.selectedCatagory = categories[categorySelectedIndex!!].first
-                    vm.updateStep(vm.currentStep + 1)
+                    vm.updateStep(currentStep + 1)
                 }
             }
         }
@@ -149,8 +152,8 @@ internal fun CategoryScreen() {
     }
 }
 
-private val CategoryImageSize = DpSize(all = 100.dp)
-
+// FIXME: 디자인상 100.dp 가 맞는데, 100 을 주면 디바이스 너비에 압축됨
+private val CategoryImageSize = DpSize(all = 80.dp)
 private val CategoryItemShape = RoundedCornerShape(size = 12.dp)
 
 @Composable
@@ -165,14 +168,13 @@ private fun CategoryItem(
             space = 8.dp,
             alignment = Alignment.CenterVertically,
         ),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        // TODO: selection 방식 변경 (이미지 위에 체크 오버레이 타입 추가)
-        // TODO: shape 인자 추가
-        // FIXME: isSelected 가 작동하지 않음
         QuackSelectableImage(
-            modifier = Modifier.clip(CategoryItemShape),
             src = imageRes,
             size = CategoryImageSize,
+            shape = CategoryItemShape,
+            selectableType = QuackSelectableImageType.CheckOverlay,
             isSelected = isSelected,
             onClick = onClick,
         )

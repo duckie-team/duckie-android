@@ -67,7 +67,7 @@ class BaseViewModelTest {
         val vm = buildViewModel()
 
         launch {
-            vm.effect.test {
+            vm.sideEffect.test {
                 expectThat(awaitItem()).isEqualTo(SideEffect.Greeting)
             }
         }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
+<resources>
+    <color name="kakao_login_button_container_background">#FEE500</color>
+    <color name="kakao_login_button_symbol_tint">#000000</color>
+    <color name="kakao_login_button_label">#D9000000</color>
+</resources>

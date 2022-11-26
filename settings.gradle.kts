@@ -32,6 +32,7 @@ buildCache {
 }
 
 include(
+    ":di",
     ":app",
     ":data",
     ":domain",

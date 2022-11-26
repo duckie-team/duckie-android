@@ -37,7 +37,7 @@ abstract class BaseViewModel<State, SideEffect>(initialState: State) {
     /**
      * 실시간 부수 효과를 [Channel] 로 구독합니다.
      */
-    val effect = mutableEffect.receiveAsFlow()
+    val sideEffect = mutableEffect.receiveAsFlow()
 
     /**
      * 현재 상태를 조회합니다.

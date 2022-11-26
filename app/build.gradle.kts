@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("DSL_SCOPE_VIOLATION")
+@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import DependencyHandler.Extensions.implementations
 
@@ -19,6 +19,23 @@ plugins {
 
 android {
     namespace = "team.duckie.app.android"
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    // TODO: flavorDimensions 가 정확히 뭘까?
+    flavorDimensions.add("mode")
+    productFlavors {
+        create("alwaysRipple") {
+            versionNameSuffix = "-AlwaysRipple"
+            buildConfigField("boolean", "ALWAYS_RIPPLE", "true")
+        }
+
+        create("standard") {
+            buildConfigField("boolean", "ALWAYS_RIPPLE", "false")
+        }
+    }
 }
 
 dependencies {
@@ -28,7 +45,9 @@ dependencies {
         libs.firebase.performance,
         libs.firebase.analytics,
         libs.firebase.crashlytics,
-        projects.presentation,
+        libs.quack.ui.components, // for debug setting
+        projects.presentation, // for launch IntroActivity
+        projects.utilKotlin,
     )
     debugImplementation(libs.analytics.leakcanary)
 }

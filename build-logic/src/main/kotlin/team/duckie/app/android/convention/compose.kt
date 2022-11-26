@@ -20,14 +20,27 @@ import org.gradle.kotlin.dsl.dependencies
  */
 internal fun Project.configureCompose(extension: CommonExtension<*, *, *, *>) {
     extension.apply {
-        // applyPlugins(PluginEnum.ConventionEnum)
-
         buildFeatures {
             compose = true
         }
 
         composeOptions {
             kotlinCompilerExtensionVersion = libs.findVersion("compose-compiler").get().toString()
+        }
+
+        kotlinOptions {
+            freeCompilerArgs = freeCompilerArgs + listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$rootDir/report/compose-metrics",
+            )
+            freeCompilerArgs = freeCompilerArgs + listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$rootDir/report/compose-reports",
+            )
+            freeCompilerArgs = freeCompilerArgs + listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:liveLiteralsEnabled=false",
+            )
         }
 
         dependencies {

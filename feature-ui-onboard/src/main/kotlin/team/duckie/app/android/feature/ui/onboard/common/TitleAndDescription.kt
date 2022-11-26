@@ -28,9 +28,7 @@ internal fun TitleAndDescription(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        // TODO: 타이포그래피 텍스트 내부 구현에 modifier.wrapContentSize() 제거
         QuackHeadLine1(text = stringResource(titleRes))
-        // TODO: 타이포그래피 텍스트 내부 구현에 modifier.wrapContentSize() 제거
         QuackBody1(text = stringResource(descriptionRes))
     }
 }
