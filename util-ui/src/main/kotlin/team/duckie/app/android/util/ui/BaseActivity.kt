@@ -23,10 +23,14 @@ import land.sungbin.systemuicontroller.SystemUiController
  * @param useDarkStatusBarIcons 상태바에 다크모드 아이콘을 사용할지 여부
  * @param useDarkNavigationBarIcons 네비게이션바에 다크모드 아이콘을 사용할지 여부
  */
+//  The base class, 'team.duckie.app.android.util.ui.BaseActivity' contains a constructor with default parameters.
+//  This is currently not supported by the Gradle plugin.
 open class BaseActivity(
-    private val useDarkStatusBarIcons: Boolean = true,
-    private val useDarkNavigationBarIcons: Boolean = true,
+    private val useDarkStatusBarIcons: Boolean,
+    private val useDarkNavigationBarIcons: Boolean,
 ) : ComponentActivity() {
+
+    constructor() : this(useDarkStatusBarIcons = true, useDarkNavigationBarIcons = true)
 
     private val systemUiController by lazy {
         SystemUiController(window)
