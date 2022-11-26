@@ -47,7 +47,7 @@ private const val CategoryScreenTitleAndDescriptionLayoutId = "CategoryScreenTit
 private const val CategoryScreenCategoriesGridLayoutId = "CategoryScreenQuackGridLayout"
 private const val CategoryScreenNextButtonLayoutId = "CategoryScreenQuackAnimatedVisibility"
 
-// TODO: 카테고리 가져오는 방식이 바뀔 수 있어서 임시 하드코딩
+// FIXME: 카테고리 가져오는 방식이 바뀔 수 있어서 임시 하드코딩
 private val categories = persistentListOf(
     "연예인" to R.drawable.img_category_celebrity,
     "영화" to R.drawable.img_category_movie,
@@ -79,12 +79,13 @@ internal fun CategoryScreen() {
                 titleRes = R.string.category_title,
                 descriptionRes = R.string.category_description,
             )
-            // TODO: 사이 간격 조정
             QuackGridLayout(
                 modifier = Modifier
                     .layoutId(CategoryScreenCategoriesGridLayoutId)
                     .padding(top = 24.dp)
                     .fillMaxSize(),
+                verticalSpacing = 24.dp,
+                horizontalSpacing = 10.dp,
                 items = categories,
                 key = { _, (name, _) -> name },
             ) { index, (name, imageRes) ->
@@ -148,8 +149,8 @@ internal fun CategoryScreen() {
     }
 }
 
-private val CategoryImageSize = DpSize(all = 100.dp)
-
+// FIXME: 디자인상 100.dp 가 맞는데, 100 을 주면 디바이스 너비에 압축됨
+private val CategoryImageSize = DpSize(all = 80.dp)
 private val CategoryItemShape = RoundedCornerShape(size = 12.dp)
 
 @Composable
@@ -164,6 +165,7 @@ private fun CategoryItem(
             space = 8.dp,
             alignment = Alignment.CenterVertically,
         ),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         QuackSelectableImage(
             src = imageRes,
