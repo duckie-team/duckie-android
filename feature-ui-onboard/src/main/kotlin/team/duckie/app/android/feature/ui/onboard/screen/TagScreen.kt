@@ -53,7 +53,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.datastore.preferences.core.edit
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.combine
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
@@ -215,11 +214,9 @@ private fun TagSelection(
     requestRemoveAddedTag: (index: Int) -> Unit,
     startableUpdate: (startable: Boolean) -> Unit,
 ) = CoroutineScopeContent {
-    @Suppress("UNUSED_VARIABLE") // TODO: 인기 태그 조회
     val vm = LocalViewModel.current as OnboardViewModel
-    val hottestTags = remember {
-        persistentListOf("덕키", "이끔", "던던")
-    }
+
+    val hottestTags = remember(vm) { vm.getRecommendationTags() }
     val hottestTagSelections = remember(hottestTags.size) {
         mutableStateListOf(
             elements = Array(
