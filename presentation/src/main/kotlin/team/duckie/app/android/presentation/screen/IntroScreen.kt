@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.presentation.R
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSplashSlogan
 
 @Composable
 internal fun IntroScreen() {
@@ -55,7 +55,8 @@ internal fun IntroScreen() {
                     height = 32.dp,
                 ),
             )
-            QuackSplashSlogan(text = stringResource(R.string.intro_slogan))
+            // FIXME: QuackSplashSlogan 는 글자가 너무 커서 3줄이 됨
+            QuackHeadLine1(text = stringResource(R.string.intro_slogan))
         }
         // TODO: SVG 필요
         QuackImage(
