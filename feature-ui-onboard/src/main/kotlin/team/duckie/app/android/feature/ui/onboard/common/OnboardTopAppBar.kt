@@ -19,6 +19,7 @@ import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.launch
@@ -30,6 +31,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 @Composable
 internal fun OnboardTopAppBar(
     modifier: Modifier = Modifier,
+    currentStep: OnboardStep,
     showSkipTrailingText: Boolean,
     horizontalPadding: Dp = 20.dp,
 ) = CoroutineScopeContent {
@@ -43,7 +45,7 @@ internal fun OnboardTopAppBar(
             .padding(horizontal = horizontalPadding - 8.dp), // 내부에서 8.dp 가 들어감
         leadingIcon = QuackIcon.ArrowBack,
         onLeadingIconClick = {
-            vm.updateStep(vm.currentStep - 1)
+            vm.updateStep(currentStep - 1)
         },
         trailingText = stringResource(R.string.topappbar_trailing_skip)
             .takeIf {
