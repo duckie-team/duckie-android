@@ -14,7 +14,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import team.duckie.app.android.convention.ApplicationConstants
-import team.duckie.app.android.convention.PluginEnum
 import team.duckie.app.android.convention.applyPlugins
 import team.duckie.app.android.convention.configureApplication
 

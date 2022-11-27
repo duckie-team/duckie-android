@@ -3,7 +3,7 @@
 ### How?
 
 1. DO NOT EDIT VERSION CONSTANT.
-2. JUST `./gradlew :local-convention-enum:publishToMavenLocal`.
+2. JUST `./gradlew :local-enums:publishToMavenLocal`.
 
 ### Usage
 

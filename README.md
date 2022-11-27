@@ -54,7 +54,7 @@ Edit Configurations -> Set `Launch Options` like this:
 
 ## Project Dependencies Graph
 
-![dependencies](assets/project-dependency-graph/graph.dot.png)
+![dependencies](assets/dependency-graph/project.dot.png)
 
 <p align="center" >
   <img src="https://img.shields.io/badge/Module-AndroidApplication-%23baffc9" />

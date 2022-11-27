@@ -21,6 +21,10 @@ gradlePlugin {
             id = "team.duckie.app.android.local.convention.enum"
             implementationClass = "ConventionEnum"
         }
+        create("pluginEnumPlugin") {
+            id = "team.duckie.app.android.local.plugin.enum"
+            implementationClass = "PluginEnum"
+        }
     }
 }
 

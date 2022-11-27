@@ -23,7 +23,7 @@ import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 
 @Module
 @InstallIn(ActivityComponent::class)
-object GalleryUseCaseModule  {
+object GalleryUseCaseModule {
     @Provides
     fun provideGalleryUseCase(repository: GalleryRepository): LoadGalleryImagesUseCase {
         return LoadGalleryImagesUseCase(repository)

@@ -92,27 +92,7 @@ class OnboardActivity : BaseActivity() {
                         lifecycle = lifecycle,
                         minActiveState = Lifecycle.State.CREATED,
                     )
-                    .collect { state ->
-                        when (state) {
-                            OnboardState.Initial -> {
-                                vm.updateStep(
-                                    step = OnboardStep.Login,
-                                    ignoreThrottle = true,
-                                )
-                            }
-                            is OnboardState.NavigateStep -> {
-                                vm.updateStep(state.step)
-                                onboardStepState = state.step
-                            }
-                            is OnboardState.GalleryImageLoaded -> {
-                                galleryImages.value = state.images
-                            }
-                            is OnboardState.Error -> {
-                                toast(getString(R.string.internal_error))
-                                state.exception.printStackTrace()
-                            }
-                        }
-                    }
+                    .collect(::handleState)
             }
 
             launch {
@@ -121,21 +101,7 @@ class OnboardActivity : BaseActivity() {
                         lifecycle = lifecycle,
                         minActiveState = Lifecycle.State.CREATED,
                     )
-                    .collect { sideEffect ->
-                        when (sideEffect) {
-                            is OnboardSideEffect.SaveUser -> {
-                                dataStore.edit { preference ->
-                                    val (nickname, profileImage, email) = sideEffect.user
-                                    preference[PreferenceKey.User.Nickname] = nickname
-                                    preference[PreferenceKey.User.ProfilePhoto] = profileImage
-                                    email?.let { preference[PreferenceKey.User.Email] = email }
-                                }
-                            }
-                            is OnboardSideEffect.ReportError -> {
-                                Firebase.crashlytics.recordException(sideEffect.exception)
-                            }
-                        }
-                    }
+                    .collect(::handleSideEffect)
             }
         }
 
@@ -171,6 +137,44 @@ class OnboardActivity : BaseActivity() {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun handleState(state: OnboardState) {
+        when (state) {
+            OnboardState.Initial -> {
+                vm.updateStep(
+                    step = OnboardStep.Login,
+                    ignoreThrottle = true,
+                )
+            }
+            is OnboardState.NavigateStep -> {
+                vm.updateStep(state.step)
+                onboardStepState = state.step
+            }
+            is OnboardState.GalleryImageLoaded -> {
+                galleryImages.value = state.images
+            }
+            is OnboardState.Error -> {
+                toast(getString(R.string.internal_error))
+                state.exception.printStackTrace()
+            }
+        }
+    }
+
+    private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
+        when (sideEffect) {
+            is OnboardSideEffect.SaveUser -> {
+                dataStore.edit { preference ->
+                    val (nickname, profileImage, email) = sideEffect.user
+                    preference[PreferenceKey.User.Nickname] = nickname
+                    preference[PreferenceKey.User.ProfilePhoto] = profileImage
+                    email?.let { preference[PreferenceKey.User.Email] = email }
+                }
+            }
+            is OnboardSideEffect.ReportError -> {
+                Firebase.crashlytics.recordException(sideEffect.exception)
             }
         }
     }

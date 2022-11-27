@@ -24,6 +24,7 @@ dependencies {
         libs.kotlin.dokka.base,
         libs.kotlin.dokka.plugin,
         libs.build.gradle.agp,
+        libs.build.local.plugin.enum,
         libs.build.dependency.handler.extensions,
     )
 }
@@ -65,10 +66,6 @@ gradlePlugin {
         register("jvmDokkaPlugin") {
             id = ConventionEnum.JvmDokka
             implementationClass = "JvmDokkaPlugin"
-        }
-        register("dependencyGraphPlugin") {
-            id = ConventionEnum.JvmDependencyGraph
-            implementationClass = "DependencyGraphPlugin"
         }
     }
 }

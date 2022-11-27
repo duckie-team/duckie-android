@@ -5,8 +5,9 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("DSL_SCOPE_VIOLATION")
+@file:Suppress("DSL_SCOPE_VIOLATION", "PropertyName")
 
+import land.sungbin.dependency.graph.DependencyInfo
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -17,9 +18,40 @@ plugins {
     alias(libs.plugins.code.detekt)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.kotlin.kover)
+    alias(libs.plugins.local.plugin.enum)
     alias(libs.plugins.local.convention.enum)
     alias(libs.plugins.util.secrets) apply false
     alias(libs.plugins.util.dependency.handler.extensions)
+    alias(libs.plugins.util.dependency.graph)
+}
+
+val UtilModulePrefix = "util-"
+val FeatureModulePrefix = "feature-"
+val UiFeatureModulePrefix = "feature-ui-"
+val OnlyUiFeatureModulePrefix = "-ui-"
+
+dependencyGraphConfigs {
+    dotFilePath = "$rootDir/assets/dependency-graph/project.dot"
+
+    dependencyBuilder { project ->
+        with(project) {
+            when {
+                plugins.hasPlugin(PluginEnum.AndroidApplication) -> DependencyInfo(
+                    color = "#baffc9",
+                    isBoxShape = true,
+                )
+                plugins.hasPlugin(PluginEnum.AndroidDfm) -> DependencyInfo("#c9baff")
+                plugins.hasPlugin(PluginEnum.JavaLibrary) -> DependencyInfo("#ffc9ba")
+                name.startsWith(UtilModulePrefix) -> DependencyInfo("#ffebba")
+                name.startsWith(FeatureModulePrefix) && !name.contains(OnlyUiFeatureModulePrefix) -> {
+                    DependencyInfo("#81d4fa")
+                }
+                name.startsWith(UiFeatureModulePrefix) -> DependencyInfo("#00aeff")
+                plugins.hasPlugin(PluginEnum.AndroidLibrary) -> DependencyInfo("#fcb96a")
+                else -> null
+            }
+        }
+    }
 }
 
 koverMerged {

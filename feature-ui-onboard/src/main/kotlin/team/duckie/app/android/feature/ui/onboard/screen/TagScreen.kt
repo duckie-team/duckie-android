@@ -93,6 +93,7 @@ private val currentStep = OnboardStep.Tag
 
 @Composable
 internal fun TagScreen() = CoroutineScopeContent {
+    @Suppress("UNUSED_VARIABLE") // TODO: 태그 처리 로직
     val vm = LocalViewModel.current as OnboardViewModel
     val context = LocalContext.current.applicationContext
     val keyboard = LocalSoftwareKeyboardController.current
