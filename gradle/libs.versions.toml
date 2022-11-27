@@ -20,11 +20,12 @@ plugin-compose-paparazzi = "1.1.0"
 plugin-ui-oss-license = "0.10.5"
 
 # plugin - util
+plugin-util-dependency-graph = "1.0.0"
 plugin-util-dependency-handler-extensions = "1.0.3"
 plugin-util-secrets = "2.0.1"
 
 # plugin - local
-plugin-local-convention-enum = "master"
+plugin-local-master = "master"
 
 # kotlin
 kotlin-core = "1.7.20"
@@ -113,10 +114,12 @@ compose-paparazzi = { id = "app.cash.paparazzi", version.ref = "plugin-compose-p
 
 di-hilt = { id = "com.google.dagger.hilt.android", version.ref = "di-hilt" }
 
+util-dependency-graph = { id = "land.sungbin.dependency.graph.plugin", version.ref = "plugin-util-dependency-graph" }
 util-dependency-handler-extensions = { id = "land.sungbin.dependency.handler.extensions", version.ref = "plugin-util-dependency-handler-extensions" }
 util-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "plugin-util-secrets" }
 
-local-convention-enum = { id = "team.duckie.app.android.local.convention.enum", version.ref = "plugin-local-convention-enum" }
+local-convention-enum = { id = "team.duckie.app.android.local.convention.enum", version.ref = "plugin-local-master" }
+local-plugin-enum = { id = "team.duckie.app.android.local.plugin.enum", version.ref = "plugin-local-master" }
 
 [libraries]
 build-gradle-agp = { module = "com.android.tools.build:gradle", version.ref = "plugin-build-gradle-android" }
@@ -126,6 +129,7 @@ build-di-hilt = { module = "com.google.dagger:hilt-android-gradle-plugin", versi
 build-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebase-plugin-crashlytics" }
 build-firebase-performance = { module = "com.google.firebase:perf-plugin", version.ref = "firebase-plugin-performance" }
 build-dependency-handler-extensions = { module = "land.sungbin.dependency.handler.extensions:dependency-handler-extensions-plugin", version.ref = "plugin-util-dependency-handler-extensions" }
+build-local-plugin-enum = {  module = "team.duckie.app.android.local:local-enums", version.ref = "plugin-local-master" }
 
 kotlin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }
 kotlin-dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "kotlin-dokka" }
