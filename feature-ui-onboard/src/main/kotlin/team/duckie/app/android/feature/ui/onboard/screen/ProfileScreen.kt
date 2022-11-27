@@ -109,6 +109,7 @@ internal fun ProfileScreen() {
                 titleRes = R.string.profile_title,
                 descriptionRes = R.string.profile_description,
             )
+            // TODO: 사용자 카카오 계정 정보를 토대로 기본 값 매칭 [프로필 사진, 닉네임]
             ProfilePhoto()
             QuackErrorableTextField(
                 modifier = Modifier.layoutId(ProfileScreenNicknameTextFieldLayoutId),
@@ -269,7 +270,8 @@ private fun ProfilePhoto() {
     }
 }
 
+@Suppress("UnusedPrivateMember")
 @Composable
 private fun PhotoPicker() {
-
+    // TODO
 }
