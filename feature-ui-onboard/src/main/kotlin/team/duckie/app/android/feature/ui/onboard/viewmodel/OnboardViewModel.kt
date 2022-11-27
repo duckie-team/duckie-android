@@ -30,9 +30,9 @@ internal class OnboardViewModel(
     private var lastestUpdateStepMillis = System.currentTimeMillis()
 
     /**
-     * [OnboardStep.Category] 에서 선택한 카테고리를 나타냅니다.
+     * [OnboardStep.Category] 에서 선택한 카테고리들을 나타냅니다.
      */
-    lateinit var selectedCatagory: String
+    val selectedCatagories = mutableListOf<String>()
 
     /**
      * 온보딩 단계를 업데이트합니다.
@@ -40,9 +40,12 @@ internal class OnboardViewModel(
      * 1000 ms 이내에는 업데이트가 되지 않습니다.
      *
      * @param step 새로운 온보딩 단계
+     * @param ignoreThrottle 단계 업데이트 요청 Throttle 을 무시할지 여부
      */
-    fun updateStep(step: OnboardStep) {
-        if (System.currentTimeMillis() - lastestUpdateStepMillis < NextStepNavigateThrottle) {
+    fun updateStep(step: OnboardStep, ignoreThrottle: Boolean = false) {
+        if (!ignoreThrottle &&
+            System.currentTimeMillis() - lastestUpdateStepMillis < NextStepNavigateThrottle
+        ) {
             return
         }
         lastestUpdateStepMillis = System.currentTimeMillis()

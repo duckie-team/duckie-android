@@ -15,10 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -33,6 +31,7 @@ import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardSte
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.util.kotlin.fastAny
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
@@ -64,7 +63,14 @@ private val categories = persistentListOf(
 @Composable
 internal fun CategoryScreen() {
     val vm = LocalViewModel.current as OnboardViewModel
-    var categorySelectedIndex by remember { mutableStateOf<Int?>(null) }
+    val categoriesSelectedIndex = remember {
+        mutableStateListOf(
+            elements = Array(
+                size = categories.size,
+                init = { false },
+            )
+        )
+    }
 
     Layout(
         modifier = Modifier
@@ -95,9 +101,9 @@ internal fun CategoryScreen() {
                 CategoryItem(
                     imageRes = imageRes,
                     name = name,
-                    isSelected = categorySelectedIndex == index,
+                    isSelected = categoriesSelectedIndex[index],
                     onClick = {
-                        categorySelectedIndex = index.takeIf { it != categorySelectedIndex }
+                        categoriesSelectedIndex[index] = !categoriesSelectedIndex[index]
                     },
                 )
             }
@@ -105,14 +111,18 @@ internal fun CategoryScreen() {
                 modifier = Modifier
                     .layoutId(CategoryScreenNextButtonLayoutId)
                     .fillMaxWidth(),
-                visible = categorySelectedIndex != null,
+                visible = categoriesSelectedIndex.fastAny { true },
             ) {
                 QuackLargeButton(
                     type = QuackLargeButtonType.Fill,
                     enabled = true,
                     text = stringResource(R.string.button_next),
                 ) {
-                    vm.selectedCatagory = categories[categorySelectedIndex!!].first
+                    vm.selectedCatagories.addAll(
+                        categoriesSelectedIndex.mapIndexedNotNull { index, value ->
+                            index.takeIf { value }?.let { categories[index].first }
+                        },
+                    )
                     vm.updateStep(currentStep + 1)
                 }
             }
