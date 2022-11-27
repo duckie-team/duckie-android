@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("unused")
-
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -28,6 +26,5 @@ class ConventionEnum : Plugin<Project> {
         const val JvmLibrary = "$prefix.jvm.library"
         const val JvmJUnit4 = "$prefix.jvm.junit4"
         const val JvmDokka = "$prefix.jvm.dokka"
-        const val JvmDependencyGraph = "$prefix.jvm.dependency.graph"
     }
 }

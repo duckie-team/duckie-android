@@ -22,7 +22,7 @@ pluginManagement {
     }
 
     includeBuild("build-logic")
-    includeBuild("build-logic/local-convention-enum")
+    includeBuild("build-logic/local-enums")
 }
 
 buildCache {

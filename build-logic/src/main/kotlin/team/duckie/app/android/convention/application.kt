@@ -19,8 +19,6 @@ import org.gradle.api.Project
  */
 internal fun Project.configureApplication(extension: CommonExtension<*, *, *, *>) {
     extension.apply {
-        // applyPlugins(PluginEnum.ConventionEnum)
-
         compileSdk = ApplicationConstants.compileSdk
 
         defaultConfig {
