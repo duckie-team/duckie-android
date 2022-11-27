@@ -14,7 +14,7 @@
 
 # ‼️ WIP ‼️
 
-## Introduce
+## Introduction
 
 We are creating a new fan community that didn't exist in the world to make the world a better place.
 
