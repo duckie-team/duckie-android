@@ -94,7 +94,12 @@ class OnboardActivity : BaseActivity() {
                     )
                     .collect { state ->
                         when (state) {
-                            OnboardState.Initial -> Unit
+                            OnboardState.Initial -> {
+                                vm.updateStep(
+                                    step = OnboardStep.Login,
+                                    ignoreThrottle = true,
+                                )
+                            }
                             is OnboardState.NavigateStep -> {
                                 vm.updateStep(state.step)
                                 onboardStepState = state.step
@@ -149,8 +154,12 @@ class OnboardActivity : BaseActivity() {
                             Column(modifier = Modifier.fillMaxSize()) {
                                 // Tag 단계일 때는 WindowInsets 에 대한 별도 처리가 필요함
                                 // (ModalBottomSheet 의 dimmed 가 status bar 까지 적용돼야 함)
-                                if (onboardStep != OnboardStep.Tag) {
-                                    OnboardTopAppBar(showSkipTrailingText = false)
+                                val onboardStepState = onboardStepState
+                                if (onboardStep != OnboardStep.Tag && onboardStepState != null) {
+                                    OnboardTopAppBar(
+                                        currentStep = onboardStepState,
+                                        showSkipTrailingText = false,
+                                    )
                                 }
                                 when (onboardStep) {
                                     OnboardStep.Profile -> ProfileScreen()
