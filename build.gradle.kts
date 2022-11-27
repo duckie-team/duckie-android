@@ -31,7 +31,7 @@ val UiFeatureModulePrefix = "feature-ui-"
 val OnlyUiFeatureModulePrefix = "-ui-"
 
 dependencyGraphConfigs {
-    dotFilePath = "$rootDir/assets/dependency-graph/project.dot"
+    dotFilePath = "assets/dependency-graph/project.dot"
 
     dependencyBuilder { project ->
         with(project) {
