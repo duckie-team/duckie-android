@@ -60,6 +60,7 @@ import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
@@ -88,6 +89,8 @@ private const val TagScreenTopAppBarLayoutId = "TagScreenTopAppBar"
 private const val TagScreenTagSelectionLayoutId = "TagScreenTagSelection"
 private const val TagScreenQuackLargeButtonLayoutId = "TagScreenQuackLargeButton"
 
+private val currentStep = OnboardStep.Tag
+
 @Composable
 internal fun TagScreen() = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
@@ -95,7 +98,6 @@ internal fun TagScreen() = CoroutineScopeContent {
     val keyboard = LocalSoftwareKeyboardController.current
     val toast = rememberToast()
 
-    val category = vm.selectedCatagory
     var isStartable by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val addedTags = remember { mutableStateListOf<String>() }
@@ -137,13 +139,13 @@ internal fun TagScreen() = CoroutineScopeContent {
             content = {
                 OnboardTopAppBar(
                     modifier = Modifier.layoutId(TagScreenTopAppBarLayoutId),
+                    currentStep = currentStep,
                     showSkipTrailingText = true,
                 )
                 TagSelection(
                     modifier = Modifier
                         .layoutId(TagScreenTagSelectionLayoutId)
                         .padding(top = 12.dp),
-                    category = category,
                     sheetState = sheetState,
                     addedTags = addedTags,
                     requestRemoveAddedTag = { index ->
@@ -208,7 +210,6 @@ internal fun TagScreen() = CoroutineScopeContent {
 @Composable
 private fun TagSelection(
     modifier: Modifier,
-    category: String,
     sheetState: ModalBottomSheetState,
     addedTags: SnapshotStateList<String>,
     requestRemoveAddedTag: (index: Int) -> Unit,
@@ -290,10 +291,11 @@ private fun TagSelection(
                 },
             )
         }
+        // FIXME: 멀티 라인으로 변경
         @AllowMagicNumber
         QuackSingeLazyRowTag(
             modifier = Modifier.padding(top = (28 - 12).dp),
-            title = stringResource(R.string.tag_hottest_tag, category),
+            title = stringResource(R.string.tag_hottest_tag, vm.selectedCatagories.joinToString(", ")),
             items = hottestTags,
             itemSelections = hottestTagSelections,
             tagType = QuackTagType.Circle(),
