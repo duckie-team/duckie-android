@@ -7,7 +7,7 @@
 
 @file:Suppress("UnstableApiUsage")
 
-rootProject.name = "local-convention-enum"
+rootProject.name = "local-enums"
 
 dependencyResolutionManagement {
     repositories {
