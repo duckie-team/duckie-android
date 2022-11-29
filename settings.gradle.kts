@@ -11,6 +11,9 @@ rootProject.name = "duckie"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
+// Plugin 'com.google.gms.google-services': registration of listener on 'Gradle.addListener' is unsupported
+// enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
+
 pluginManagement {
     pluginManagement {
         repositories {
