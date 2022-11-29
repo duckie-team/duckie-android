@@ -107,6 +107,22 @@ inline fun <T> List<T>.fastSumBy(selector: (T) -> Int): Int {
 }
 
 /**
+ * `List<T>.flatten` 의 random access 버전을 구현합니다.
+ *
+ * @param transform flatten 할 List 를 변형하는 람다
+ */
+@Suppress("BanInlineOptIn")
+@OptIn(ExperimentalContracts::class)
+inline fun <T> List<List<T>>.fastFlatten(transform: (List<T>) -> List<T> = { it }): List<T> {
+    contract { callsInPlace(transform) }
+    return buildList {
+        this@fastFlatten.fastForEach { values ->
+            addAll(transform(values))
+        }
+    }
+}
+
+/**
  * Returns a list containing the results of applying the given [transform] function
  * to each element in the original collection.
  *
