@@ -7,13 +7,16 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
+import kotlin.properties.Delegates
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
+import team.duckie.app.android.domain.user.model.KakaoUser
 import team.duckie.app.android.domain.user.usecase.KakaoLoginUseCase
-import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
@@ -30,9 +33,35 @@ internal class OnboardViewModel(
     private var lastestUpdateStepMillis = System.currentTimeMillis()
 
     /**
+     * [selectedCategories] 의 mutable 한 객체를 나타냅니다.
+     *
+     * @see selectedCategories
+     */
+    private var mutableSelectedCategories = persistentListOf<String>()
+
+    /**
      * [OnboardStep.Category] 에서 선택한 카테고리들을 나타냅니다.
      */
-    val selectedCatagories = mutableListOf<String>()
+    val selectedCategories: ImmutableList<String> get() = mutableSelectedCategories
+
+    /**
+     * [KakaoLoginUseCase] 를 통해 얻어온 [KakaoUser] 객체를 나타냅니다.
+     * `ProfileScreen` 에서 내 정보를 [KakaoUser] 값에 맞게 미리 채워넣기 위해 사용됩니다.
+     */
+    var me by Delegates.notNull<KakaoUser>()
+
+    /**
+     * [galleryImages] 의 mutable 한 객체를 나타냅니다.
+     *
+     * @see galleryImages
+     */
+    private var mutableGalleryImages = persistentListOf<String>()
+
+    /**
+     * [LoadGalleryImagesUseCase] 를 통해 얻어온 이미지 목록을 저장합니다.
+     * `ProfileScreen` 에서 `PhotoPicker` 에 사용할 이미지 목록을 불러오기 위해 사용됩니다.
+     */
+    val galleryImages: ImmutableList<String> get() = mutableGalleryImages
 
     /**
      * 온보딩 단계를 업데이트합니다.
@@ -42,7 +71,7 @@ internal class OnboardViewModel(
      * @param step 새로운 온보딩 단계
      * @param ignoreThrottle 단계 업데이트 요청 Throttle 을 무시할지 여부
      */
-    fun updateStep(step: OnboardStep, ignoreThrottle: Boolean = false) {
+    fun navigateStep(step: OnboardStep, ignoreThrottle: Boolean = false) {
         if (!ignoreThrottle &&
             System.currentTimeMillis() - lastestUpdateStepMillis < NextStepNavigateThrottle
         ) {
@@ -75,11 +104,11 @@ internal class OnboardViewModel(
     suspend fun kakaoLogin(nextStep: OnboardStep) {
         kakaoLoginUseCase()
             .onSuccess { user ->
-                updateState {
-                    OnboardState.NavigateStep(nextStep)
-                }
                 postSideEffect {
                     OnboardSideEffect.SaveUser(user)
+                }
+                updateState {
+                    OnboardState.NavigateStep(nextStep)
                 }
             }
             .onFailure { expection ->
@@ -98,8 +127,8 @@ internal class OnboardViewModel(
     suspend fun loadGalleryImages() {
         loadGalleryImagesUseCase()
             .onSuccess { images ->
-                updateState {
-                    OnboardState.GalleryImageLoaded(images)
+                postSideEffect {
+                    OnboardSideEffect.UpdateGalleryImages(images)
                 }
             }
             .onFailure { expection ->
@@ -115,8 +144,27 @@ internal class OnboardViewModel(
     /**
      * 사용자 카테고리에 맞는 추천 태그들을 조회합니다.
      * 현재는 구현이 불가능하여 고정된 더미 값을 리턴합니다.
+     *
+     * @param category 태그를 추천받을 카테고리
      */
-    fun getRecommendationTags(): ImmutableList<String> {
-        return persistentListOf("덕키", "이끔", "던던")
+    // TODO: 서버 연동
+    @Suppress("UNUSED_PARAMETER")
+    fun getRecommendationTags(category: String): ImmutableList<String> {
+        @AllowMagicNumber(because = "0..10")
+        return persistentListOf(*((0..10).map { "태그 #$it" }).toTypedArray())
+    }
+
+    /**
+     * `CategoryScreen` 에서 선택한 카테고리 목록을 저장합니다.
+     */
+    fun addSelectedCategories(categories: List<String>) {
+        mutableSelectedCategories = mutableSelectedCategories.addAll(categories)
+    }
+
+    /**
+     * `PhotoPicker` 에서 표시할 이미지 목록을 업데이트합니다.
+     */
+    fun addGalleryImages(images: List<String>) {
+        mutableGalleryImages = mutableGalleryImages.addAll(images)
     }
 }

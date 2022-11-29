@@ -18,8 +18,8 @@ import androidx.datastore.preferences.core.edit
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
+import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.launch
@@ -45,7 +45,7 @@ internal fun OnboardTopAppBar(
             .padding(horizontal = horizontalPadding - 8.dp), // 내부에서 8.dp 가 들어감
         leadingIcon = QuackIcon.ArrowBack,
         onLeadingIconClick = {
-            vm.updateStep(currentStep - 1)
+            vm.navigateStep(currentStep - 1)
         },
         trailingText = stringResource(R.string.topappbar_trailing_skip)
             .takeIf {

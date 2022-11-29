@@ -28,14 +28,19 @@
     <!--
     [ android:largeHeap="true" ]
     https://stackoverflow.com/a/18034671/14299073
-
     추후 OOM 의 진짜 원인을 파악해야 함
+
+    [ android:hardwareAccelerated="true" ]
+    하드웨어 가속에 대해 공부해 보고, 정말 필요한지 고민해야 함
+    - 추가한 이유: Layout Inspector 의 Live Update 를 사용하기 위해선 하드웨어 가속이
+                   필요하다는 에러를 받음
     -->
     <application
         android:name=".App"
         android:allowBackup="true"
         android:configChanges="colorMode|uiMode|orientation|screenSize|screenLayout|keyboardHidden|locale|layoutDirection"
         android:fullBackupOnly="true"
+        android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:supportsRtl="true"
         tools:ignore="MissingApplicationIcon">

@@ -24,8 +24,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
@@ -59,8 +61,8 @@ import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
+import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
@@ -70,6 +72,8 @@ import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.fastAny
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
+import team.duckie.app.android.util.kotlin.fastFlatten
+import team.duckie.app.android.util.kotlin.fastForEachIndexed
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
@@ -146,7 +150,7 @@ internal fun TagScreen() = CoroutineScopeContent {
                 TagSelection(
                     modifier = Modifier
                         .layoutId(TagScreenTagSelectionLayoutId)
-                        .padding(top = 12.dp),
+                        .padding(vertical = 12.dp),
                     sheetState = sheetState,
                     addedTags = addedTags,
                     requestRemoveAddedTag = { index ->
@@ -179,13 +183,17 @@ internal fun TagScreen() = CoroutineScopeContent {
                 measurable.layoutId == TagScreenTopAppBarLayoutId
             }?.measure(looseConstraints) ?: npe()
 
-            val tagSelectionPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == TagScreenTagSelectionLayoutId
-            }?.measure(looseConstraints) ?: npe()
-
             val quackLargeButtonPlaceable = measurables.fastFirstOrNull { measurable ->
                 measurable.layoutId == TagScreenQuackLargeButtonLayoutId
             }?.measure(looseConstraints) ?: npe()
+
+            // TagSelection content 에는 vertical scroll 이 있음 (최대 높이 지정 필요)
+            val tagSelectionConstraints = looseConstraints.copy(
+                maxHeight = constraints.maxHeight - topAppBarPlaceable.height - quackLargeButtonPlaceable.height
+            )
+            val tagSelectionPlaceable = measurables.fastFirstOrNull { measurable ->
+                measurable.layoutId == TagScreenTagSelectionLayoutId
+            }?.measure(tagSelectionConstraints) ?: npe()
 
             layout(
                 width = constraints.maxWidth,
@@ -208,6 +216,7 @@ internal fun TagScreen() = CoroutineScopeContent {
     }
 }
 
+// TODO: ViewModel 로 태그 상태 이전
 @Composable
 private fun TagSelection(
     modifier: Modifier,
@@ -218,19 +227,35 @@ private fun TagSelection(
 ) = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
 
-    val hottestTags = remember(vm) { vm.getRecommendationTags() }
-    val hottestTagSelections = remember(hottestTags.size) {
-        mutableStateListOf(
-            elements = Array(
-                size = hottestTags.size,
-                init = { false },
-            )
+    val hottestTags = remember(vm.selectedCategories.size, vm) {
+        List(
+            size = vm.selectedCategories.size,
+            init = { index ->
+                vm.getRecommendationTags(vm.selectedCategories[index])
+            },
+        )
+    }
+    val hottestTagSelections = remember(vm.selectedCategories.size, hottestTags.size) {
+        List(
+            size = vm.selectedCategories.size,
+            init = { index ->
+                mutableStateListOf(
+                    elements = Array(
+                        size = hottestTags[index].size,
+                        init = { false },
+                    ),
+                )
+            },
         )
     }
 
     LaunchedEffect(hottestTagSelections, addedTags) {
         // https://stackoverflow.com/a/70429284/14299073
-        val hottestTagSelectionsFlow = snapshotFlow { hottestTagSelections.toList() }
+        val hottestTagSelectionsFlow = snapshotFlow {
+            hottestTagSelections.fastFlatten { hottestTagSelection ->
+                (hottestTagSelection as SnapshotStateList<Boolean>).toList()
+            }
+        }
         val addedTagsFlow = snapshotFlow { addedTags.toList() }
 
         // hottest tag 에 최소 1개가 선택됐거나, 사용자가 최소 1개의 태그를 추가했을 때
@@ -241,7 +266,7 @@ private fun TagSelection(
         }
     }
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxSize()) {
         TitleAndDescription(
             modifier = Modifier.padding(horizontal = 20.dp),
             titleRes = R.string.tag_title,
@@ -292,19 +317,27 @@ private fun TagSelection(
                 },
             )
         }
-        // FIXME: 멀티 라인으로 변경
-        @AllowMagicNumber
-        QuackSingeLazyRowTag(
-            modifier = Modifier.padding(top = (28 - 12).dp),
-            title = stringResource(R.string.tag_hottest_tag, vm.selectedCatagories.joinToString(", ")),
-            items = hottestTags,
-            itemSelections = hottestTagSelections,
-            tagType = QuackTagType.Circle(),
-            contentPadding = PaddingValues(horizontal = 20.dp),
-            onClick = { index ->
-                hottestTagSelections[index] = !hottestTagSelections[index]
-            },
-        )
+        @AllowMagicNumber(because = "(28 - 12).dp")
+        Column(
+            modifier = Modifier
+                .padding(top = (28 - 12).dp)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            vm.selectedCategories.fastForEachIndexed { categoryIndex, category ->
+                QuackSingeLazyRowTag(
+                    title = stringResource(R.string.tag_hottest_tag, category),
+                    items = hottestTags[categoryIndex],
+                    itemSelections = hottestTagSelections[categoryIndex],
+                    tagType = QuackTagType.Circle(),
+                    contentPadding = PaddingValues(horizontal = 20.dp),
+                    onClick = { tagIndex ->
+                        hottestTagSelections[categoryIndex][tagIndex] = !hottestTagSelections[categoryIndex][tagIndex]
+                    },
+                )
+            }
+        }
     }
 }
 
