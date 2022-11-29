@@ -30,6 +30,7 @@ dependencies {
         projects.utilCompose,
         projects.utilViewmodel,
         projects.featureDatastore,
+        projects.featurePhotopicker,
         libs.ktx.lifecycle,
         libs.firebase.crashlytics,
         libs.compose.ui.material, // needs for ModalBottomSheet
