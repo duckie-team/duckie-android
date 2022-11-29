@@ -49,6 +49,7 @@ compose-compiler = "1.3.2"
 compose-activity = "1.6.1"
 compose-accompanist = "0.27.0"
 compose-lottie = "5.2.0"
+compose-camposer = "0.1.0"
 compose-customview-pooling-container = "1.0.0"
 
 # ktx
@@ -129,7 +130,7 @@ build-di-hilt = { module = "com.google.dagger:hilt-android-gradle-plugin", versi
 build-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebase-plugin-crashlytics" }
 build-firebase-performance = { module = "com.google.firebase:perf-plugin", version.ref = "firebase-plugin-performance" }
 build-dependency-handler-extensions = { module = "land.sungbin.dependency.handler.extensions:dependency-handler-extensions-plugin", version.ref = "plugin-util-dependency-handler-extensions" }
-build-local-plugin-enum = {  module = "team.duckie.app.android.local:local-enums", version.ref = "plugin-local-master" }
+build-local-plugin-enum = { module = "team.duckie.app.android.local:local-enums", version.ref = "plugin-local-master" }
 
 kotlin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }
 kotlin-dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "kotlin-dokka" }
@@ -149,6 +150,7 @@ compose-ui-foundation = { module = "androidx.compose.foundation:foundation", ver
 compose-ui-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity" }
 compose-ui-material = { module = "androidx.compose.material:material", version.ref = "compose-core" }
 compose-ui-lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "compose-lottie" }
+compose-ui-camposer = { module = "io.github.ujizin:camposer", version.ref = "compose-camposer" }
 compose-util-tooling-core = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-core" } # debugImplementation
 compose-util-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-core" }
 compose-util-customview-pooling-container = { module = "androidx.customview:customview-poolingcontainer", version.ref = "compose-customview-pooling-container" } # debugImplementation
