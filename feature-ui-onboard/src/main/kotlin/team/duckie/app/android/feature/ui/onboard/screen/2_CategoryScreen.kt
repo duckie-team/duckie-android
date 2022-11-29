@@ -25,9 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
+import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
+import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -45,6 +46,7 @@ import team.duckie.quackquack.ui.util.DpSize
 
 private val currentStep = OnboardStep.Category
 
+private const val CategoryScreenTopAppBarLayoutId = "CategoryScreenTopAppBar"
 private const val CategoryScreenTitleAndDescriptionLayoutId = "CategoryScreenTitleAndDescription"
 private const val CategoryScreenCategoriesGridLayoutId = "CategoryScreenQuackGridLayout"
 private const val CategoryScreenNextButtonLayoutId = "CategoryScreenQuackAnimatedVisibility"
@@ -63,11 +65,15 @@ private val categories = persistentListOf(
 @Composable
 internal fun CategoryScreen() {
     val vm = LocalViewModel.current as OnboardViewModel
-    val categoriesSelectedIndex = remember {
+    val categoriesSelectedIndex = remember(categories, vm.selectedCategories) {
         mutableStateListOf(
             elements = Array(
                 size = categories.size,
-                init = { false },
+                init = { index ->
+                    vm.selectedCategories.fastAny { selectedCategory ->
+                        categories[index].first == selectedCategory
+                    }
+                },
             )
         )
     }
@@ -75,23 +81,32 @@ internal fun CategoryScreen() {
     Layout(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = systemBarPaddings.calculateBottomPadding())
-            .padding(
-                top = 12.dp,
-                start = 20.dp,
-                end = 20.dp,
-                bottom = 16.dp,
-            ),
+            .padding(bottom = systemBarPaddings.calculateBottomPadding() + 16.dp),
         content = {
+            OnboardTopAppBar(
+                modifier = Modifier.layoutId(CategoryScreenTopAppBarLayoutId),
+                currentStep = currentStep,
+                showSkipTrailingText = false,
+            )
             TitleAndDescription(
-                modifier = Modifier.layoutId(CategoryScreenTitleAndDescriptionLayoutId),
+                modifier = Modifier
+                    .layoutId(CategoryScreenTitleAndDescriptionLayoutId)
+                    .padding(
+                        top = 12.dp,
+                        start = 20.dp,
+                        end = 20.dp,
+                    ),
                 titleRes = R.string.category_title,
                 descriptionRes = R.string.category_description,
             )
             QuackGridLayout(
                 modifier = Modifier
                     .layoutId(CategoryScreenCategoriesGridLayoutId)
-                    .padding(top = 24.dp)
+                    .padding(
+                        top = 24.dp,
+                        start = 20.dp,
+                        end = 20.dp,
+                    )
                     .fillMaxSize(),
                 verticalSpacing = 24.dp,
                 horizontalSpacing = 10.dp,
@@ -110,6 +125,7 @@ internal fun CategoryScreen() {
             QuackAnimatedVisibility(
                 modifier = Modifier
                     .layoutId(CategoryScreenNextButtonLayoutId)
+                    .padding(horizontal = 20.dp)
                     .fillMaxWidth(),
                 visible = categoriesSelectedIndex.fastAny { true },
             ) {
@@ -118,17 +134,21 @@ internal fun CategoryScreen() {
                     enabled = true,
                     text = stringResource(R.string.button_next),
                 ) {
-                    vm.selectedCatagories.addAll(
-                        categoriesSelectedIndex.mapIndexedNotNull { index, value ->
+                    vm.addSelectedCategories(
+                        categories = categoriesSelectedIndex.mapIndexedNotNull { index, value ->
                             index.takeIf { value }?.let { categories[index].first }
                         },
                     )
-                    vm.updateStep(currentStep + 1)
+                    vm.navigateStep(currentStep + 1)
                 }
             }
         }
     ) { measurables, constraints ->
         val looseConstraints = constraints.asLoose()
+
+        val topAppBarPlaceable = measurables.fastFirstOrNull { measurable ->
+            measurable.layoutId == CategoryScreenTopAppBarLayoutId
+        }?.measure(looseConstraints) ?: npe()
 
         val titileAndDescriptionPlaceable = measurables.fastFirstOrNull { measurable ->
             measurable.layoutId == CategoryScreenTitleAndDescriptionLayoutId
@@ -146,13 +166,17 @@ internal fun CategoryScreen() {
             width = constraints.maxWidth,
             height = constraints.maxHeight,
         ) {
-            titileAndDescriptionPlaceable.place(
+            topAppBarPlaceable.place(
                 x = 0,
                 y = 0,
             )
+            titileAndDescriptionPlaceable.place(
+                x = 0,
+                y = topAppBarPlaceable.height,
+            )
             categoriesGridPlaceable.place(
                 x = 0,
-                y = titileAndDescriptionPlaceable.height,
+                y = topAppBarPlaceable.height + titileAndDescriptionPlaceable.height,
             )
             goneableNextButtonPlaceable?.place(
                 x = 0,
