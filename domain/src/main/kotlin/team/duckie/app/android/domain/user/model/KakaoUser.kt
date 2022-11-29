@@ -22,4 +22,13 @@ data class KakaoUser(
     val name: String,
     val profilePhotoUrl: String,
     val accountEmail: String?,
-)
+) {
+    companion object
+}
+
+val KakaoUser.Companion.DefaultProfilePhoto
+    get() = "https://github.com/duckie-team/duckie-android/blob/develop/assets/inapp/default_profile_photo.png?raw=true"
+
+fun KakaoUser.isDefaultProfilePhoto(): Boolean {
+    return profilePhotoUrl == KakaoUser.DefaultProfilePhoto
+}
