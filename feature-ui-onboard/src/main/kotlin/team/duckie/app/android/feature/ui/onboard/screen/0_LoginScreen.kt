@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
+import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.feature.ui.onboard.viewmodel.constaint.OnboardStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
@@ -162,6 +162,7 @@ private fun LoginScreenLoginArea() = CoroutineScopeContent {
                     vm.kakaoLogin(currentStep + 1)
                 },
             content = {
+                // TODO: 로딩중 인디케이터
                 Image(
                     modifier = Modifier
                         .layoutId(LoginScreenLoginAreaKakaoSymbolLayoutId)

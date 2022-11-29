@@ -18,12 +18,11 @@ import kotlin.coroutines.resume
 import kotlin.random.Random
 import kotlinx.coroutines.suspendCancellableCoroutine
 import team.duckie.app.android.data.BuildConfig
+import team.duckie.app.android.domain.user.model.DefaultProfilePhoto
 import team.duckie.app.android.domain.user.model.KakaoUser
 import team.duckie.app.android.domain.user.repository.KakaoRepository
 
 private val KakaoLoginException = IllegalStateException("Kakao API response is nothing.")
-private const val DefaultUserProfilePhotoUrl =
-    "https://github.com/duckie-team/duckie-android/blob/develop/assets/inapp/default_profile_photo.png?raw=true"
 private val DefaultUserNickname = "익명의 덕키즈 #${Random.nextInt(10_000)}"
 
 // Calling startActivity() from outside of an Activity.
@@ -89,7 +88,7 @@ class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
 
     private fun User.toKakaoUser() = KakaoUser(
         name = kakaoAccount?.profile?.nickname ?: DefaultUserNickname,
-        profilePhotoUrl = kakaoAccount?.profile?.profileImageUrl ?: DefaultUserProfilePhotoUrl,
+        profilePhotoUrl = kakaoAccount?.profile?.profileImageUrl ?: KakaoUser.DefaultProfilePhoto,
         accountEmail = kakaoAccount?.email.orEmpty(),
     )
 }
