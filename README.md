@@ -50,7 +50,7 @@ Edit Configurations -> Set `Launch Options` like this:
 
 ### Build prerequisites
 
-1. This project is uses MavenLocal. Please run: `./gradlew :local-convention-enum:publishToMavenLocal`.
+1. This project is uses MavenLocal. Please run: `./gradlew :local-enums:publishToMavenLocal`.
 
 ## Project Dependencies Graph
 
