@@ -17,7 +17,7 @@ plugins {
 }
 
 android {
-    namespace = "team.duckie.app.android.feature.home.screen"
+    namespace = "team.duckie.app.android.feature.detail.screen"
 }
 
 dependencies {
