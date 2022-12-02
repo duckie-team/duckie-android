@@ -15,5 +15,5 @@ plugins {
 }
 
 android {
-    namespace = "team.duckie.app.android.feature.ui.solving.problem"
+    namespace = "team.duckie.app.android.feature.ui.solve.problem"
 }
