@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-import DependencyHandler.Extensions.implementations
-
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
@@ -17,22 +15,5 @@ plugins {
 }
 
 android {
-    namespace = "team.duckie.app.android.feature.detail.screen"
-}
-
-dependencies {
-    implementations(
-        platform(libs.firebase.bom),
-        projects.di,
-        projects.domain,
-        projects.utilUi,
-        projects.utilKotlin,
-        projects.utilCompose,
-        projects.utilViewmodel,
-        libs.ktx.lifecycle,
-        libs.firebase.crashlytics,
-        libs.compose.ui.material, // needs for ModalBottomSheet
-        libs.compose.ktx.lifecycle,
-        libs.quack.ui.components,
-    )
+    namespace = "team.duckie.app.android.feature.ui.detail"
 }
