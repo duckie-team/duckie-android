@@ -26,14 +26,14 @@ class ExamDataSource @Inject constructor(
     private val client: HttpClient
 ) {
     suspend fun postExams(examRequest: ExamRequest): ExamResponse {
-        val request = client
+       /* val request = client
             .post {
                 url("/exams")
                 setBody(examRequest)
                 header("authorization", "AT") //TODO [Evergreen] access token 자동화 방안 마련 필요
             }
         val body: ExamResponse = request.body()
-        //return body
+        return body*/
         return dummyResponse
     }
 }
