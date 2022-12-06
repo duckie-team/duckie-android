@@ -12,10 +12,11 @@ data class ExamParam(
     val description: String,
     val mainTag: Tag,
     val subTag: List<Tag>?,
+    val userId: Int,
     val certifyingStatement: String,
     val thumbnailImageUrl: String?,
     val thumbnailType: String,
     val problems: ProblemItem,
     val isPublic: Boolean?,
-    val buttonText: String?,
+    val buttonTitle: String?,
 )

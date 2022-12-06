@@ -30,12 +30,13 @@ fun ExamParam.toData() = ExamRequest(
     description = description,
     mainTag = mainTag.toData(),
     subTag = subTag?.map { it.toData() },
+    userId = userId,
     certifyingStatement = certifyingStatement,
     thumbnailImageUrl = thumbnailImageUrl,
     thumbnailType = thumbnailType,
     problems = problems.toData(),
     isPublic = isPublic,
-    buttonText = buttonText
+    buttonText = buttonText,
 )
 
 fun ProblemItem.toData() = ProblemItemData(

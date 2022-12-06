@@ -18,6 +18,8 @@ data class ExamRequest(
     val mainTag: TagData,
     @field:JsonProperty("subTags")
     val subTag: List<TagData>?,
+    @field:JsonProperty("userId")
+    val userId: Int,
     @field:JsonProperty("certifyingStatement")
     val certifyingStatement: String,
     @field:JsonProperty("thumbnailImageUrl")
@@ -29,5 +31,5 @@ data class ExamRequest(
     @field:JsonProperty("isPublic")
     val isPublic: Boolean?,
     @field:JsonProperty("buttonText")
-    val buttonText: String?,
+    val buttonTitle: String?,
 )
