@@ -9,8 +9,9 @@ package team.duckie.app.android.domain.exam.usecase
 
 import team.duckie.app.android.domain.exam.model.ExamParam
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import javax.inject.Inject
 
-class MakeExamUseCase(
+class MakeExamUseCase @Inject constructor(
     private val examRepository: ExamRepository,
 ) {
     suspend operator fun invoke(examParam: ExamParam) = runCatching {
