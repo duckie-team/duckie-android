@@ -1,7 +1,7 @@
 [versions]
 # plugin - build
 plugin-build-gradle-android = "8.0.0-alpha09"
-plugin-build-google-service = "4.3.10"
+plugin-build-google-service = "4.3.14"
 
 # plugin - code
 plugin-code-ktlint-core = "11.0.0"
