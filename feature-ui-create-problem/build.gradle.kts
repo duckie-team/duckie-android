@@ -1,3 +1,5 @@
+import DependencyHandler.Extensions.implementations
+
 /*
  * Designed and developed by Duckie Team, 2022
  *
@@ -16,4 +18,18 @@ plugins {
 
 android {
     namespace = "team.duckie.app.android.feature.ui.create.problem"
+}
+
+dependencies {
+    implementations(
+        projects.di,
+        projects.domain,
+        projects.utilUi,
+        projects.utilKotlin,
+        projects.utilCompose,
+        projects.utilViewmodel,
+        libs.ktx.lifecycle,
+        libs.compose.ktx.lifecycle,
+        libs.quack.ui.components,
+    )
 }
