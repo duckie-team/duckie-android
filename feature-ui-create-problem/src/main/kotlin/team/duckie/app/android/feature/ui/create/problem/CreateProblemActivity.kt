@@ -9,11 +9,13 @@ package team.duckie.app.android.feature.ui.create.problem
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import dagger.hilt.android.AndroidEntryPoint
 import team.duckie.app.android.feature.ui.create.problem.screen.CreateProblemScreen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.util.ui.BaseActivity
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CreateProblemActivity : BaseActivity() {
 
     @Inject

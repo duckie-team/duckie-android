@@ -8,8 +8,6 @@
 package team.duckie.app.android.data.exam.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import team.duckie.app.android.data.exam.model.QuestionData.Text.text
-import team.duckie.app.android.data.exam.model.QuestionData.Text.type
 
 data class ProblemItemData(
     @field:JsonProperty("question")
@@ -26,25 +24,34 @@ data class ProblemItemData(
 
 sealed class QuestionData(
     @field:JsonProperty("type")
-    val type: String,
+    open val type: String,
     @field:JsonProperty("text")
-    val text: String,
+    open val text: String,
 ) {
-    object Text : QuestionData(type, text)
+    data class Text(
+        override val type: String,
+        override val text: String,
+    ) : QuestionData(type, text)
 
     data class Image(
         @field:JsonProperty("imageUrl")
-        val imageUrl: String
+        val imageUrl: String,
+        override val type: String,
+        override val text: String,
     ) : QuestionData(type, text)
 
     data class Audio(
         @field:JsonProperty("audioUrl")
-        val audioUrl: String
+        val audioUrl: String,
+        override val type: String,
+        override val text: String,
     ) : QuestionData(type, text)
 
     data class Video(
         @field:JsonProperty("videoUrl")
-        val videoUrl: String
+        val videoUrl: String,
+        override val type: String,
+        override val text: String,
     ) : QuestionData(type, text)
 }
 
@@ -57,21 +64,24 @@ data class TagData(
 
 sealed class AnswerData(
     @field:JsonProperty("type")
-    val type: String
+    open val type: String
 ) {
     data class ShortAnswer(
         @field:JsonProperty("shortAnswer")
-        val shortAnswer: String
+        val shortAnswer: String,
+        override val type: String,
     ) : AnswerData(type)
 
     data class Choice(
         @field:JsonProperty("choice")
-        val choices: List<ChoiceData>
+        val choices: List<ChoiceData>,
+        override val type: String,
     ) : AnswerData(type)
 
     data class ImageChoice(
         @field:JsonProperty("imageChoice")
-        val imageChoice: List<ImageChoiceData>
+        val imageChoice: List<ImageChoiceData>,
+        override val type: String,
     ) : AnswerData(type)
 }
 

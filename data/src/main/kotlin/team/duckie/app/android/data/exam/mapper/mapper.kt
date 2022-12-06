@@ -41,23 +41,48 @@ fun ExamParam.toData() = ExamRequest(
 
 fun ProblemItem.toData() = ProblemItemData(
     questionObject = when (questionObject) {
-        Question.Text -> QuestionData.Text
-        is Question.Video -> QuestionData.Video(videoUrl = (questionObject as Question.Video).videoUrl)
-        is Question.Image -> QuestionData.Image(imageUrl = (questionObject as Question.Image).imageUrl)
-        is Question.Audio -> QuestionData.Audio(audioUrl = (questionObject as Question.Audio).audioUrl)
+        is Question.Text -> QuestionData.Text(
+            type = questionObject.type,
+            text = questionObject.text
+        )
+
+        is Question.Video -> QuestionData.Video(
+            videoUrl = (questionObject as Question.Video).videoUrl,
+            type = questionObject.type,
+            text = questionObject.text
+        )
+
+        is Question.Image -> QuestionData.Image(
+            imageUrl = (questionObject as Question.Image).imageUrl,
+            type = questionObject.type,
+            text = questionObject.text
+        )
+
+        is Question.Audio -> QuestionData.Audio(
+            audioUrl = (questionObject as Question.Audio).audioUrl,
+            type = questionObject.type,
+            text = questionObject.text
+        )
     },
     answerObject = when (answerObject) {
-        is Answer.ShortAnswer -> AnswerData.ShortAnswer(shortAnswer = (answerObject as Answer.ShortAnswer).shortAnswer)
+        is Answer.ShortAnswer -> AnswerData.ShortAnswer(
+            shortAnswer = (answerObject as Answer.ShortAnswer).shortAnswer,
+            type = answerObject.type,
+        )
+
         is Answer.Choice -> AnswerData.Choice(
             choices = (answerObject as Answer.Choice).choices.map {
                 it.toData()
-            }
+            },
+            type = answerObject.type,
         )
+
 
         is Answer.ImageChoice -> AnswerData.ImageChoice(
             imageChoice = (answerObject as Answer.ImageChoice).imageChoice.map {
                 it.toData()
-            }
+            },
+            type = answerObject.type,
         )
     },
     correctAnswer = correctAnswer,

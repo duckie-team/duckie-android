@@ -7,9 +7,6 @@
 
 package team.duckie.app.android.domain.exam.model
 
-import team.duckie.app.android.domain.exam.model.Question.Text.text
-import team.duckie.app.android.domain.exam.model.Question.Text.type
-
 data class ProblemItem(
     val questionObject: Question,
     val answerObject: Answer,
@@ -19,35 +16,48 @@ data class ProblemItem(
 )
 
 sealed class Question(
-    val type: String,
-    val text: String,
+    open val type: String,
+    open val text: String,
 ) {
-    object Text : Question(type, text)
+    data class Text(
+        override val text: String,
+        override val type: String,
+    ) : Question(type, text)
+
     data class Image(
+        override val text: String,
+        override val type: String,
         val imageUrl: String,
     ) : Question(type, text)
 
     data class Audio(
+        override val text: String,
+        override val type: String,
         val audioUrl: String,
     ) : Question(type, text)
 
     data class Video(
+        override val text: String,
+        override val type: String,
         val videoUrl: String,
     ) : Question(type, text)
 }
 
 sealed class Answer(
-    val type: String,
+    open val type: String,
 ) {
     data class ShortAnswer(
+        override val type: String,
         val shortAnswer: String,
     ) : Answer(type)
 
     data class Choice(
+        override val type: String,
         val choices: List<ChoiceModel>,
     ) : Answer(type)
 
     data class ImageChoice(
+        override val type: String,
         val imageChoice: List<ImageChoiceModel>,
     ) : Answer(type)
 }
