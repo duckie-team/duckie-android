@@ -28,6 +28,7 @@ dependencies {
     implementations(
         libs.login.kakao,
         libs.kotlin.coroutines,
+        libs.bundles.ktor,
         projects.domain,
         projects.utilKotlin,
     )
