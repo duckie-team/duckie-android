@@ -36,7 +36,7 @@ fun ExamParam.toData() = ExamRequest(
     thumbnailType = thumbnailType,
     problems = problems.toData(),
     isPublic = isPublic,
-    buttonText = buttonText,
+    buttonTitle = buttonTitle,
 )
 
 fun ProblemItem.toData() = ProblemItemData(
