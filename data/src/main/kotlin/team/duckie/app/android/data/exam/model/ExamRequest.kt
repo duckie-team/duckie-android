@@ -7,34 +7,27 @@
 
 package team.duckie.app.android.data.exam.model
 
-import team.duckie.app.android.data.exam.model.QuestionRequest.Text.text
-import team.duckie.app.android.data.exam.model.QuestionRequest.Text.type
+import com.fasterxml.jackson.annotation.JsonProperty
 
 data class ExamRequest(
+    @field:JsonProperty("title")
     val title: String,
+    @field:JsonProperty("description")
     val description: String,
-    val mainTag: Tag,
-    val subTag: List<Tag>,
+    @field:JsonProperty("mainTag")
+    val mainTag: TagData,
+    @field:JsonProperty("subTags")
+    val subTag: List<TagData>?,
+    @field:JsonProperty("certifyingStatement")
     val certifyingStatement: String,
-    val thumbnailImageUrl: String,
-    //val problems
-)
-
-sealed class QuestionRequest(
-    val type: String,
-    val text: String,
-){
-    object Text: QuestionRequest(type, text)
-    data class Image(val imageUrl: String) : QuestionRequest(type,text)
-    data class Audio(val audioUrl: String) : QuestionRequest(type,text)
-    data class Video(val videoUrl: String) : QuestionRequest(type,text)
-}
-
-data class Tag(
-    val tag: Int,
-    val name: String
-)
-
-data class ProblemItem(
-    val type: String
+    @field:JsonProperty("thumbnailImageUrl")
+    val thumbnailImageUrl: String?,
+    @field:JsonProperty("thumbnailType")
+    val thumbnailType: String,
+    @field:JsonProperty("problems")
+    val problems: ProblemItemData,
+    @field:JsonProperty("isPublic")
+    val isPublic: Boolean?,
+    @field:JsonProperty("buttonText")
+    val buttonText: String?,
 )
