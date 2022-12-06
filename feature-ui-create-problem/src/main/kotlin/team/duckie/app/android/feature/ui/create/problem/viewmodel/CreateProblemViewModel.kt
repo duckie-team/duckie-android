@@ -14,17 +14,18 @@ import team.duckie.app.android.domain.exam.model.ProblemItem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.Tag
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CreateProblemViewModel(
+class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase
 ) {
     private val TAG = CreateProblemViewModel::class.simpleName
 
     suspend fun makeExam() {
         makeExamUseCase(dummyParmam).onSuccess { exam ->
-            Log.d(TAG, exam.toString())
+            Log.d(TAG, exam.toString()+"성공")
         }
     }
 }
@@ -49,9 +50,13 @@ val dummyParmam = ExamParam(
     buttonTitle = "Test Button Title 1",
     isPublic = true,
     problems = ProblemItem(
-        questionObject = Question.Text,
+        questionObject = Question.Text(
+            text = "",
+            type = "",
+        ),
         answerObject = Answer.ShortAnswer(
-            shortAnswer = "바보"
+            shortAnswer = "바보",
+            type = "",
         ),
         memo = "test memo 1",
         hint = "test hint 1",
