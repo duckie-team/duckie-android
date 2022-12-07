@@ -38,7 +38,7 @@ class ExamDataSource @Inject constructor(
     }
 }
 
-val dummyResponse = ExamResponse(
+private val dummyResponse = ExamResponse(
     title = "Test Title 2",
     description = "Test Description 2",
     thumbnailUrl = "Test Image Url",

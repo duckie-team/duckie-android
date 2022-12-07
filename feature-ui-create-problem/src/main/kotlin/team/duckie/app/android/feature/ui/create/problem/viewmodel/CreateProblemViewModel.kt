@@ -30,7 +30,7 @@ class CreateProblemViewModel @Inject constructor(
     }
 }
 
-val dummyParmam = ExamParam(
+private val dummyParmam = ExamParam(
     title = "Test Title 2",
     description = "Test Description 2",
     mainTag = Tag(

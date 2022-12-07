@@ -17,7 +17,7 @@ package team.duckie.app.android.data.user.mapper
 import team.duckie.app.android.data.user.model.UserData
 import team.duckie.app.android.domain.user.model.User
 
-fun UserData.toDomain() = User(
+internal fun UserData.toDomain() = User(
     id = id,
     nickName = nickName,
     accountEnabled = accountEnabled,

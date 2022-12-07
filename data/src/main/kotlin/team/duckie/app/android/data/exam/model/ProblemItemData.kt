@@ -9,7 +9,7 @@ package team.duckie.app.android.data.exam.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class ProblemItemData(
+internal data class ProblemItemData(
     @field:JsonProperty("question")
     val questionObject: QuestionData,
     @field:JsonProperty("answer")
@@ -22,7 +22,7 @@ data class ProblemItemData(
     val memo: String?
 )
 
-sealed class QuestionData(
+internal sealed class QuestionData(
     @field:JsonProperty("type")
     open val type: String,
     @field:JsonProperty("text")
@@ -55,14 +55,14 @@ sealed class QuestionData(
     ) : QuestionData(type, text)
 }
 
-data class TagData(
+internal data class TagData(
     @field:JsonProperty("id")
     val id: Int,
     @field:JsonProperty("name")
     val name: String
 )
 
-sealed class AnswerData(
+internal sealed class AnswerData(
     @field:JsonProperty("type")
     open val type: String
 ) {
@@ -86,12 +86,12 @@ sealed class AnswerData(
 }
 
 @JvmInline
-value class ChoiceData(
+internal value class ChoiceData(
     @field:JsonProperty("text")
     val text: String
 )
 
-data class ImageChoiceData(
+internal data class ImageChoiceData(
     @field:JsonProperty("text")
     val text: String,
     @field:JsonProperty("imageUrl")

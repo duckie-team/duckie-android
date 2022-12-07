@@ -25,7 +25,7 @@ import team.duckie.app.android.domain.exam.model.ProblemItem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.Tag
 
-fun ExamParam.toData() = ExamRequest(
+internal fun ExamParam.toData() = ExamRequest(
     title = title,
     description = description,
     mainTag = mainTag.toData(),
@@ -39,7 +39,7 @@ fun ExamParam.toData() = ExamRequest(
     buttonTitle = buttonTitle,
 )
 
-fun ProblemItem.toData() = ProblemItemData(
+internal fun ProblemItem.toData() = ProblemItemData(
     questionObject = when (questionObject) {
         is Question.Text -> QuestionData.Text(
             type = questionObject.type,
@@ -90,26 +90,26 @@ fun ProblemItem.toData() = ProblemItemData(
     memo = memo
 )
 
-fun ChoiceModel.toData() = ChoiceData(
+internal fun ChoiceModel.toData() = ChoiceData(
     text = text
 )
 
-fun ImageChoiceModel.toData() = ImageChoiceData(
+internal fun ImageChoiceModel.toData() = ImageChoiceData(
     text = text,
     imageUrl = imageUrl
 )
 
-fun Tag.toData() = TagData(
+internal fun Tag.toData() = TagData(
     id = id,
     name = name
 )
 
-fun TagData.toDomain() = Tag(
+internal fun TagData.toDomain() = Tag(
     id = id,
     name = name,
 )
 
-fun ExamResponse.toDomain() = Exam(
+internal fun ExamResponse.toDomain() = Exam(
     title = title,
     description = description,
     thumbnailUrl = thumbnailUrl,

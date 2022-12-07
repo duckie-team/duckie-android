@@ -10,7 +10,7 @@ package team.duckie.app.android.data.user.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Date
 
-data class UserData(
+internal data class UserData(
     @field:JsonProperty("id")
     val id: Int,
     @field:JsonProperty("nickName")
