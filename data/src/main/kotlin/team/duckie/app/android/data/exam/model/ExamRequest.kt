@@ -9,7 +9,7 @@ package team.duckie.app.android.data.exam.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-internal data class ExamRequest(
+data class ExamRequest(
     @field:JsonProperty("title")
     val title: String,
     @field:JsonProperty("description")
