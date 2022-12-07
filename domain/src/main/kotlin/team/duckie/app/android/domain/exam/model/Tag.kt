@@ -5,5 +5,12 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.create.problem
+package team.duckie.app.android.domain.exam.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
+data class Tag(
+    val id: Int,
+    val name: String,
+)
