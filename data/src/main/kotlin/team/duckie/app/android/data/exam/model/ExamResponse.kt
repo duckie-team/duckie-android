@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.user.model.UserData
 import java.util.Date
 
-internal data class ExamResponse(
+data class ExamResponse(
     @field:JsonProperty("title")
     val title: String,
     @field:JsonProperty("description")
