@@ -23,10 +23,9 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import team.duckie.app.android.di.repository.GalleryRepositoryModule
 import team.duckie.app.android.di.repository.UserRepositoryModule
-import team.duckie.app.android.di.usecase.gallery.GalleryUseCaseModule
 import team.duckie.app.android.di.usecase.user.UserUseCaseModule
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
@@ -45,28 +44,33 @@ import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class OnboardActivity : BaseActivity() {
-    // FIXME: hilt 가 작동을 안함... 성빈의 hilt 숙련도가 다 죽은걸로 ㅠ
-    private val userRepository by lazy { UserRepositoryModule.provideKakaoLoginRepository(activityContext = this) }
-    private val kakaoLoginUseCase by lazy { UserUseCaseModule.provideKakaoLoginUseCase(userRepository) }
 
-    private val galleryRepository by lazy { GalleryRepositoryModule.provideGalleryRepository(applicationContext) }
-    private val loadGalleryImagesUseCase by lazy { GalleryUseCaseModule.provideGalleryUseCase(galleryRepository) }
+    @Inject
+    lateinit var viewModelFactory: OnboardViewModel.ViewModelFactory
 
-    private val vm by lazy {
-        OnboardViewModel(
-            kakaoLoginUseCase = kakaoLoginUseCase,
-            loadGalleryImagesUseCase = loadGalleryImagesUseCase,
-        )
+    private lateinit var vm: OnboardViewModel
+
+    private val userRepository by lazy {
+        UserRepositoryModule.provideKakaoLoginRepository(activityContext = this)
+    }
+    private val kakaoLoginUseCase by lazy {
+        UserUseCaseModule.provideKakaoLoginUseCase(repository = userRepository)
     }
 
     private val toast by lazy { ToastWrapper(applicationContext) }
     private var onboardStepState by mutableStateOf<OnboardStep?>(null)
 
+    private fun setupViewModel() {
+        vm = viewModelFactory.create(kakaoLoginUseCase)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setupViewModel()
         onBackPressedDispatcher.addCallback(owner = this) {
             if (onboardStepState == OnboardStep.Login || onboardStepState == OnboardStep.Tag) {
                 finishWithAnimation()

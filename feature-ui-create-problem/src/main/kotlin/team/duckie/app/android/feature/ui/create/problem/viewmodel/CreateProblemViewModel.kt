@@ -26,7 +26,7 @@ class CreateProblemViewModel @Inject constructor(
 
     suspend fun makeExam() {
         makeExamUseCase(dummyParam).onSuccess { exam ->
-            Log.d(TAG, exam.toString()+"성공")
+            Log.d(TAG, exam.toString() + "성공")
         }
     }
 }
