@@ -13,6 +13,7 @@ plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.JvmJUnit4)
     id(ConventionEnum.JvmDokka)
+    id(ConventionEnum.AndroidHilt)
     id(libs.plugins.util.secrets.get().pluginId)
 }
 
@@ -28,6 +29,8 @@ dependencies {
     implementations(
         libs.login.kakao,
         libs.kotlin.coroutines,
+        libs.kotlin.collections.immutable,
+        libs.bundles.ktor,
         projects.domain,
         projects.utilKotlin,
     )
