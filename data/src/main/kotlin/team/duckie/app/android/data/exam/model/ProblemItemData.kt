@@ -19,7 +19,7 @@ data class ProblemItemData(
     @field:JsonProperty("hint")
     val hint: String?,
     @field:JsonProperty("memo")
-    val memo: String?
+    val memo: String?,
 )
 
 sealed class QuestionData(
@@ -59,12 +59,12 @@ data class TagData(
     @field:JsonProperty("id")
     val id: Int,
     @field:JsonProperty("name")
-    val name: String
+    val name: String,
 )
 
 sealed class AnswerData(
     @field:JsonProperty("type")
-    open val type: String
+    open val type: String,
 ) {
     data class ShortAnswer(
         @field:JsonProperty("shortAnswer")
@@ -88,12 +88,12 @@ sealed class AnswerData(
 @JvmInline
 value class ChoiceData(
     @field:JsonProperty("text")
-    val text: String
+    val text: String,
 )
 
 data class ImageChoiceData(
     @field:JsonProperty("text")
     val text: String,
     @field:JsonProperty("imageUrl")
-    val imageUrl: String
+    val imageUrl: String,
 )

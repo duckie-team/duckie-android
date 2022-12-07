@@ -26,5 +26,5 @@ internal fun UserData.toDomain() = User(
     createdAt = createdAt,
     updatedAt = updatedAt,
     deletedAt = deletedAt,
-    bannedAt = bannedAt
+    bannedAt = bannedAt,
 )

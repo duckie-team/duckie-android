@@ -66,5 +66,5 @@ private val dummyResponse = ExamResponse(
     updatedAt = Date(),
     solvedCount = 0,
     answerRate = 0.0f,
-    canRetry = true
+    canRetry = true,
 )

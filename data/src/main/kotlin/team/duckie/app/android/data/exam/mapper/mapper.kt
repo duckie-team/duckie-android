@@ -44,25 +44,25 @@ internal fun ProblemItem.toData() = ProblemItemData(
     questionObject = when (questionObject) {
         is Question.Text -> QuestionData.Text(
             type = questionObject.type,
-            text = questionObject.text
+            text = questionObject.text,
         )
 
         is Question.Video -> QuestionData.Video(
             videoUrl = (questionObject as Question.Video).videoUrl,
             type = questionObject.type,
-            text = questionObject.text
+            text = questionObject.text,
         )
 
         is Question.Image -> QuestionData.Image(
             imageUrl = (questionObject as Question.Image).imageUrl,
             type = questionObject.type,
-            text = questionObject.text
+            text = questionObject.text,
         )
 
         is Question.Audio -> QuestionData.Audio(
             audioUrl = (questionObject as Question.Audio).audioUrl,
             type = questionObject.type,
-            text = questionObject.text
+            text = questionObject.text,
         )
     },
     answerObject = when (answerObject) {
@@ -88,21 +88,21 @@ internal fun ProblemItem.toData() = ProblemItemData(
     },
     correctAnswer = correctAnswer,
     hint = hint,
-    memo = memo
+    memo = memo,
 )
 
 internal fun ChoiceModel.toData() = ChoiceData(
-    text = text
+    text = text,
 )
 
 internal fun ImageChoiceModel.toData() = ImageChoiceData(
     text = text,
-    imageUrl = imageUrl
+    imageUrl = imageUrl,
 )
 
 internal fun Tag.toData() = TagData(
     id = id,
-    name = name
+    name = name,
 )
 
 internal fun TagData.toDomain() = Tag(
