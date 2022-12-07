@@ -21,6 +21,7 @@ dependencies {
     implementations(
         libs.compose.runtime, // needs for Stability
         libs.kotlin.collections.immutable,
+        libs.di.inject,
         projects.utilKotlin,
     )
 }
