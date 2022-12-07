@@ -3,7 +3,7 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false"
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ develop ]
 
 jobs:
   ci-build:
