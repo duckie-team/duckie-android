@@ -8,6 +8,7 @@
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
 import android.util.Log
+import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ExamParam
 import team.duckie.app.android.domain.exam.model.ProblemItem
@@ -37,7 +38,7 @@ private val dummyParam = ExamParam(
         id = 1,
         "1"
     ),
-    subTag = listOf(
+    subTag = persistentListOf(
         Tag(
             2,
             "2",
