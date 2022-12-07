@@ -18,7 +18,7 @@ import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 /**
  * [OnboardViewModel] 에서 사용되는 SideEffect 모음
  */
-internal sealed class OnboardSideEffect {
+sealed class OnboardSideEffect {
     /**
      * [KakaoLoginUseCase] 를 통해 얻은 [KakaoUser] 정보를 [DataStore] 및
      * [OnboardViewModel.me] 에 저장합니다.

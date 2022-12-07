@@ -7,6 +7,9 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlin.properties.Delegates
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -25,9 +28,9 @@ import team.duckie.app.android.util.viewmodel.BaseViewModel
  */
 private val NextStepNavigateThrottle = 1.seconds
 
-internal class OnboardViewModel(
-    private val kakaoLoginUseCase: KakaoLoginUseCase,
+class OnboardViewModel @AssistedInject constructor(
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
+    @Assisted private val kakaoLoginUseCase: KakaoLoginUseCase,
 ) : BaseViewModel<OnboardState, OnboardSideEffect>(OnboardState.Initial) {
     private val nicknameFilter = Regex("[^가-힣a-zA-Z0-9_.]")
     private var lastestUpdateStepMillis = System.currentTimeMillis()
@@ -166,5 +169,10 @@ internal class OnboardViewModel(
      */
     fun addGalleryImages(images: List<String>) {
         mutableGalleryImages = mutableGalleryImages.addAll(images)
+    }
+
+    @AssistedFactory
+    interface ViewModelFactory {
+        fun create(kakaoLoginUseCase: KakaoLoginUseCase): OnboardViewModel
     }
 }

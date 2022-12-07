@@ -17,12 +17,12 @@ package team.duckie.app.android.di.usecase.gallery
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(SingletonComponent::class)
 object GalleryUseCaseModule {
     @Provides
     fun provideGalleryUseCase(repository: GalleryRepository): LoadGalleryImagesUseCase {

@@ -8,13 +8,6 @@
 package team.duckie.app.android.data.exam.datasource.remote
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.client.request.request
-import io.ktor.client.request.setBody
-import io.ktor.client.request.url
-import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamRequest
 import team.duckie.app.android.data.exam.model.ExamResponse
 import team.duckie.app.android.data.exam.model.TagData
@@ -26,14 +19,15 @@ class ExamDataSource @Inject constructor(
     private val client: HttpClient
 ) {
     suspend fun postExams(examRequest: ExamRequest): ExamResponse {
-       /* val request = client
-            .post {
-                url("/exams")
-                setBody(examRequest)
-                header("authorization", "AT") //TODO [Evergreen] access token 자동화 방안 마련 필요
-            }
-        val body: ExamResponse = request.body()
-        return body*/
+        /* val request = client
+             .post {
+                 url("/exams")
+                 setBody(examRequest)
+                 header("authorization", "AT") //TODO [Evergreen] access token 자동화 방안 마련 필요
+             }
+         val body: ExamResponse = request.body()
+         return body*/
+        println(examRequest.toString())
         return dummyResponse
     }
 }

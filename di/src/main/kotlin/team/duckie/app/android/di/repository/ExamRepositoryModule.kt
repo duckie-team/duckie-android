@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("UnnecessaryAbstractClass")
+
 package team.duckie.app.android.di.repository
 
 import dagger.Binds
@@ -22,5 +24,4 @@ abstract class ExamRepositoryModule {
     abstract fun provideExamRepository(
         examRepositoryImpl: ExamRepositoryImpl,
     ): ExamRepository
-
 }

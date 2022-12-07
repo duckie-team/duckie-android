@@ -14,8 +14,8 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblem
 @Composable
 internal fun CreateProblemScreen(
     viewModel: CreateProblemViewModel,
-){
-    LaunchedEffect(Unit){
+) {
+    LaunchedEffect(Unit) {
         viewModel.makeExam()
     }
 }
