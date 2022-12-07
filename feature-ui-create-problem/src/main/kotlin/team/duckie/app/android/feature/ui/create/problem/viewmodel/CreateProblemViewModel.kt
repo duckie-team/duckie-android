@@ -24,13 +24,13 @@ class CreateProblemViewModel @Inject constructor(
     private val TAG = CreateProblemViewModel::class.simpleName
 
     suspend fun makeExam() {
-        makeExamUseCase(dummyParmam).onSuccess { exam ->
+        makeExamUseCase(dummyParam).onSuccess { exam ->
             Log.d(TAG, exam.toString()+"성공")
         }
     }
 }
 
-private val dummyParmam = ExamParam(
+private val dummyParam = ExamParam(
     title = "Test Title 2",
     description = "Test Description 2",
     mainTag = Tag(
