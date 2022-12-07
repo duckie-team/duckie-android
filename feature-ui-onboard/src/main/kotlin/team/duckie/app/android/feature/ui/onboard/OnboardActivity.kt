@@ -55,14 +55,10 @@ class OnboardActivity : BaseActivity() {
     private lateinit var vm: OnboardViewModel
 
     private val userRepository by lazy {
-        UserRepositoryModule.provideKakaoLoginRepository(
-            activityContext = this
-        )
+        UserRepositoryModule.provideKakaoLoginRepository(activityContext = this)
     }
     private val kakaoLoginUseCase by lazy {
-        UserUseCaseModule.provideKakaoLoginUseCase(
-            userRepository
-        )
+        UserUseCaseModule.provideKakaoLoginUseCase(repository = userRepository)
     }
 
     private val toast by lazy { ToastWrapper(applicationContext) }
