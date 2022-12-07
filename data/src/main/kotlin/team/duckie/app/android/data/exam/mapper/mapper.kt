@@ -46,19 +46,16 @@ internal fun ProblemItem.toData() = ProblemItemData(
             type = questionObject.type,
             text = questionObject.text,
         )
-
         is Question.Video -> QuestionData.Video(
             videoUrl = (questionObject as Question.Video).videoUrl,
             type = questionObject.type,
             text = questionObject.text,
         )
-
         is Question.Image -> QuestionData.Image(
             imageUrl = (questionObject as Question.Image).imageUrl,
             type = questionObject.type,
             text = questionObject.text,
         )
-
         is Question.Audio -> QuestionData.Audio(
             audioUrl = (questionObject as Question.Audio).audioUrl,
             type = questionObject.type,
@@ -70,14 +67,12 @@ internal fun ProblemItem.toData() = ProblemItemData(
             shortAnswer = (answerObject as Answer.ShortAnswer).shortAnswer,
             type = answerObject.type,
         )
-
         is Answer.Choice -> AnswerData.Choice(
             choices = (answerObject as Answer.Choice).choices.map {
                 it.toData()
             }.toImmutableList(),
             type = answerObject.type,
         )
-
         is Answer.ImageChoice -> AnswerData.ImageChoice(
             imageChoice = (answerObject as Answer.ImageChoice).imageChoice.map {
                 it.toData()

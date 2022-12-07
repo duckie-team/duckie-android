@@ -141,12 +141,10 @@ class OnboardActivity : BaseActivity() {
                     ignoreThrottle = true,
                 )
             }
-
             is OnboardState.NavigateStep -> {
                 vm.navigateStep(state.step)
                 onboardStepState = state.step
             }
-
             is OnboardState.Error -> {
                 toast(getString(R.string.internal_error))
                 state.exception.printStackTrace()
@@ -165,11 +163,9 @@ class OnboardActivity : BaseActivity() {
                     email?.let { preference[PreferenceKey.User.Email] = email }
                 }
             }
-
             is OnboardSideEffect.UpdateGalleryImages -> {
                 vm.addGalleryImages(sideEffect.images)
             }
-
             is OnboardSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
