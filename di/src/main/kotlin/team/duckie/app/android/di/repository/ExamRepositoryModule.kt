@@ -4,6 +4,7 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+
 @file:Suppress("UnnecessaryAbstractClass")
 
 package team.duckie.app.android.di.repository
