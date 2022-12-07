@@ -176,4 +176,3 @@ class OnboardViewModel @AssistedInject constructor(
         fun create(kakaoLoginUseCase: KakaoLoginUseCase): OnboardViewModel
     }
 }
-

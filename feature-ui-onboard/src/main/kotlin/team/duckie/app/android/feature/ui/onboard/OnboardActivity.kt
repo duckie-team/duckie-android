@@ -23,12 +23,10 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
-import dagger.assisted.AssistedFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import team.duckie.app.android.di.repository.UserRepositoryModule
 import team.duckie.app.android.di.usecase.user.UserUseCaseModule
-import team.duckie.app.android.domain.user.usecase.KakaoLoginUseCase
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
@@ -177,6 +175,4 @@ class OnboardActivity : BaseActivity() {
             }
         }
     }
-
-
 }
