@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.data.exam.mapper
 
+import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
 import team.duckie.app.android.data.exam.model.ExamRequest
@@ -29,7 +30,7 @@ internal fun ExamParam.toData() = ExamRequest(
     title = title,
     description = description,
     mainTag = mainTag.toData(),
-    subTag = subTag?.map { it.toData() },
+    subTag = subTag.map { it.toData() },
     userId = userId,
     certifyingStatement = certifyingStatement,
     thumbnailImageUrl = thumbnailImageUrl,
@@ -73,7 +74,7 @@ internal fun ProblemItem.toData() = ProblemItemData(
         is Answer.Choice -> AnswerData.Choice(
             choices = (answerObject as Answer.Choice).choices.map {
                 it.toData()
-            },
+            }.toImmutableList(),
             type = answerObject.type,
         )
 
@@ -81,7 +82,7 @@ internal fun ProblemItem.toData() = ProblemItemData(
         is Answer.ImageChoice -> AnswerData.ImageChoice(
             imageChoice = (answerObject as Answer.ImageChoice).imageChoice.map {
                 it.toData()
-            },
+            }.toImmutableList(),
             type = answerObject.type,
         )
     },
@@ -116,7 +117,7 @@ internal fun ExamResponse.toDomain() = Exam(
     certifyingStatement = certifyingStatement,
     buttonTitle = buttonTitle,
     isPublic = isPublic,
-    tags = tags.map { it.toDomain() },
+    tags = tags.map { it.toDomain() }.toImmutableList(),
     user = user.toDomain(),
     deletedAt = deletedAt,
     id = id,
