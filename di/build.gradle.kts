@@ -20,6 +20,5 @@ dependencies {
     implementations(
         projects.data,
         projects.domain,
-        libs.bundles.ktor
     )
 }
