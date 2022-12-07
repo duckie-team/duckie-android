@@ -9,8 +9,9 @@ package team.duckie.app.android.domain.gallery.usecase
 
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
+import javax.inject.Inject
 
-class LoadGalleryImagesUseCase(
+class LoadGalleryImagesUseCase @Inject constructor(
     private val repository: GalleryRepository,
 ) {
     operator fun invoke() = runCatching {
