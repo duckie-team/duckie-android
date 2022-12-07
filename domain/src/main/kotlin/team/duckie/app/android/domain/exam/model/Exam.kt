@@ -8,6 +8,7 @@
 package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.user.model.User
 import java.util.Date
 
@@ -19,7 +20,7 @@ data class Exam(
     val certifyingStatement: String,
     val buttonTitle: String,
     val isPublic: Boolean,
-    val tags: List<Tag>,
+    val tags: ImmutableList<Tag>,
     val user: User,
     val deletedAt: Date? = null,
     val id: Int,

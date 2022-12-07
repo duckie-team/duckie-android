@@ -8,13 +8,15 @@
 package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Immutable
 data class ExamParam(
     val title: String,
     val description: String,
     val mainTag: Tag,
-    val subTag: List<Tag>?,
+    val subTag: ImmutableList<Tag> = emptyList<Tag>().toImmutableList(),
     val userId: Int,
     val certifyingStatement: String,
     val thumbnailImageUrl: String?,

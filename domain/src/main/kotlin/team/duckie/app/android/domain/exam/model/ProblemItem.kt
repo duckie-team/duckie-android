@@ -8,6 +8,7 @@
 package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
 data class ProblemItem(
@@ -64,13 +65,13 @@ sealed class Answer(
     @Immutable
     data class Choice(
         override val type: String,
-        val choices: List<ChoiceModel>,
+        val choices: ImmutableList<ChoiceModel>,
     ) : Answer(type)
 
     @Immutable
     data class ImageChoice(
         override val type: String,
-        val imageChoice: List<ImageChoiceModel>,
+        val imageChoice: ImmutableList<ImageChoiceModel>,
     ) : Answer(type)
 }
 
