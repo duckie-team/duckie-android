@@ -78,7 +78,6 @@ internal fun ProblemItem.toData() = ProblemItemData(
             type = answerObject.type,
         )
 
-
         is Answer.ImageChoice -> AnswerData.ImageChoice(
             imageChoice = (answerObject as Answer.ImageChoice).imageChoice.map {
                 it.toData()

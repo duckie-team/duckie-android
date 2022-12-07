@@ -6,4 +6,3 @@
  */
 
 package team.duckie.app.android.feature.ui.home
-

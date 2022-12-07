@@ -7,14 +7,8 @@
 
 package team.duckie.app.android.data.exam.datasource.remote
 
+import android.util.Log
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.client.request.request
-import io.ktor.client.request.setBody
-import io.ktor.client.request.url
-import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamRequest
 import team.duckie.app.android.data.exam.model.ExamResponse
 import team.duckie.app.android.data.exam.model.TagData
@@ -34,6 +28,7 @@ class ExamDataSource @Inject constructor(
             }
         val body: ExamResponse = request.body()
         return body*/
+        Log.d("exampleRequest", examRequest.toString())
         return dummyResponse
     }
 }

@@ -22,5 +22,4 @@ abstract class ExamRepositoryModule {
     abstract fun provideExamRepository(
         examRepositoryImpl: ExamRepositoryImpl,
     ): ExamRepository
-
 }
