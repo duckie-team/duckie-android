@@ -33,6 +33,9 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-home-cache-cleanup: true
+          
+      - name: Setup MavenLocal
+        run: ./gradlew :local-enums:publishToMavenLocal
 
       - name: Run build (includes ktlint/detekt/test/binary-compatibility check)
         run: ./gradlew build
