@@ -7,6 +7,9 @@
 
 package team.duckie.app.android.domain.exam.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class Tag(
     val id: Int,
     val name: String,

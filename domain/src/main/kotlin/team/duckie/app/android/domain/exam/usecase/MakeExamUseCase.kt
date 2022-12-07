@@ -7,10 +7,11 @@
 
 package team.duckie.app.android.domain.exam.usecase
 
+import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.exam.model.ExamParam
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import javax.inject.Inject
-
+@Immutable
 class MakeExamUseCase @Inject constructor(
     private val examRepository: ExamRepository,
 ) {

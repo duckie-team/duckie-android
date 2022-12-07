@@ -7,8 +7,10 @@
 
 package team.duckie.app.android.domain.user.model
 
+import androidx.compose.runtime.Immutable
 import java.util.Date
 
+@Immutable
 data class User(
     val id: Int,
     val nickName: String,

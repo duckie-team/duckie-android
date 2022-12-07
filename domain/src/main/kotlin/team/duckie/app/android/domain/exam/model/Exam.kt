@@ -7,9 +7,11 @@
 
 package team.duckie.app.android.domain.exam.model
 
+import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.user.model.User
 import java.util.Date
 
+@Immutable
 data class Exam(
     val title: String,
     val description: String,
