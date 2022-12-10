@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +38,10 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
+import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.util.compose.CoroutineScopeContent
+import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -58,6 +62,19 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 internal fun DetailScreen(vm: DetailViewModel) = CoroutineScopeContent {
     val activity = LocalContext.current as Activity
     val navigationBarHeight = WindowInsets.navigationBars.getBottom(LocalDensity.current)
+    val toast = rememberToast()
+
+    LaunchedEffect(Unit) {
+        coroutineScope.launch { vm.sendToast("상세 화면 진입") }
+    }
+
+    LaunchedEffect(vm.sideEffect) {
+        vm.sideEffect.collect { effect ->
+            when (effect) {
+                is DetailSideEffect.SendToast -> toast(effect.message)
+            }
+        }
+    }
 
     Scaffold(
         topBar = {

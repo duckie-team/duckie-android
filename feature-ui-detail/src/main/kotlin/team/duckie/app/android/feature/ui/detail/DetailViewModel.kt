@@ -11,10 +11,13 @@ import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSide
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
-internal class DetailViewModel(
-) : BaseViewModel<DetailState, DetailSideEffect>(DetailState.Initial) {
+internal class DetailViewModel : BaseViewModel<DetailState, DetailSideEffect>(DetailState.Initial) {
+    suspend fun sendToast(message: String) {
+        postSideEffect {
+            DetailSideEffect.SendToast(message)
+        }
+    }
 }
 
 /** 상세 화면에서 사용되는 클릭 이벤트 모음 */
-sealed class DetailClickEvent {
-}
+sealed class DetailClickEvent
