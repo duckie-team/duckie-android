@@ -8,10 +8,14 @@ import team.duckie.app.android.util.ui.BaseActivity
 /** 상세 화면 */
 @AndroidEntryPoint
 class DetailActivity : BaseActivity() {
+    private val vm by lazy {
+        DetailViewModel()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DetailScreen()
+            DetailScreen(vm)
         }
     }
 }

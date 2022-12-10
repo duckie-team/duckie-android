@@ -55,7 +55,7 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 /** 상세 화면 Screen */
 @Composable
-internal fun DetailScreen() = CoroutineScopeContent {
+internal fun DetailScreen(vm: DetailViewModel) = CoroutineScopeContent {
     val activity = LocalContext.current as Activity
     val navigationBarHeight = WindowInsets.navigationBars.getBottom(LocalDensity.current)
 
