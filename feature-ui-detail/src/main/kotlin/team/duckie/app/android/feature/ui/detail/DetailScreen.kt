@@ -302,3 +302,76 @@ fun DetailBottomLayout(
         }
     }
 }
+
+/**
+ * LazyList 내에 gridList 를 넣을 시 활용하는 그리드 목록 빌더 1
+ * TODO(riflockle7) 추후 활용 가능성이 있어 놔둠
+ * (https://stackoverflow.com/questions/69336555/fixed-grid-inside-lazycolumn-in-jetpack-compose)
+ *
+ * @param count 전체 아이템 개수
+ * @param nColumns 한 행의 개수
+ * @param paddingValues 그리드 목록 패딩
+ * @param horizontalArrangement 정렬 방향
+ * @param itemContent index 기반으로 만들어지는 아이템 컨텐츠 빌더
+ */
+fun LazyListScope.gridItems(
+    count: Int,
+    nColumns: Int,
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    itemContent: @Composable BoxScope.(Int) -> Unit,
+) {
+    gridItems(
+        data = List(count) { it },
+        nColumns = nColumns,
+        paddingValues = paddingValues,
+        horizontalArrangement = horizontalArrangement,
+        itemContent = itemContent,
+    )
+}
+
+/**
+ * LazyList 내에 gridList 를 넣을 시 활용하는 그리드 목록 빌더 2
+ * TODO(riflockle7) 추후 활용 가능성이 있어 놔둠
+ * (https://stackoverflow.com/questions/69336555/fixed-grid-inside-lazycolumn-in-jetpack-compose)
+ *
+ * @param data 전체 아이템
+ * @param nColumns 한 행의 개수
+ * @param paddingValues 그리드 목록 패딩
+ * @param horizontalArrangement 정렬 방향
+ * @param key 사전 실행 로직 함수?
+ * @param itemContent data[`index`] 기반으로 만들어지는 아이템 컨텐츠 빌더
+ */
+fun <T> LazyListScope.gridItems(
+    data: List<T>,
+    nColumns: Int,
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    key: ((item: T) -> Any)? = null,
+    itemContent: @Composable BoxScope.(T) -> Unit,
+) {
+    val rows = if (data.isEmpty()) 0 else 1 + (data.count() - 1) / nColumns
+    items(rows) { rowIndex ->
+        Row(
+            modifier = Modifier.padding(paddingValues),
+            horizontalArrangement = horizontalArrangement
+        ) {
+            for (columnIndex in 0 until nColumns) {
+                val itemIndex = rowIndex * nColumns + columnIndex
+                if (itemIndex < data.count()) {
+                    val item = data[itemIndex]
+                    androidx.compose.runtime.key(key?.invoke(item)) {
+                        Box(
+                            modifier = Modifier.weight(1f, fill = true),
+                            propagateMinConstraints = true
+                        ) {
+                            itemContent.invoke(this, item)
+                        }
+                    }
+                } else {
+                    Spacer(Modifier.weight(1f, fill = true))
+                }
+            }
+        }
+    }
+}
