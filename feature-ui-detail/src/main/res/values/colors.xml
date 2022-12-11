@@ -5,6 +5,4 @@
   ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
   -->
 
-<resources>
-    <color name="detail_background">#FFFFFFFF</color>
-</resources>
+<resources/>
