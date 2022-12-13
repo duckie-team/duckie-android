@@ -9,11 +9,12 @@ package team.duckie.app.android.feature.ui.create.problem
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.CompositionLocalProvider
 import dagger.hilt.android.AndroidEntryPoint
 import team.duckie.app.android.feature.ui.create.problem.screen.CreateProblemScreen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
+import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -25,7 +26,9 @@ class CreateProblemActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CreateProblemScreen(viewModel = viewModel)
+            CompositionLocalProvider(LocalViewModel provides viewModel) {
+                CreateProblemScreen()
+            }
         }
     }
 }
