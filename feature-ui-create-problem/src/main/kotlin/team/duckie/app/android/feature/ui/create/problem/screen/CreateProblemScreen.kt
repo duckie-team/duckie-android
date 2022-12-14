@@ -49,7 +49,7 @@ internal fun CreateProblemScreen() {
             CreateProblemTopAppBar(
                 onLeadingIconClick = {},
                 onTrailingTextClick = {},
-                trailingTextEnabled = viewModel.isAllFieldsNotEmpty()
+                trailingTextEnabled = viewModel.isAllFieldsNotEmpty(),
             )
         }
     ) { contentPadding ->
