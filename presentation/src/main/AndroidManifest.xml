@@ -21,9 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity" />
-
     </application>
 
 </manifest>
