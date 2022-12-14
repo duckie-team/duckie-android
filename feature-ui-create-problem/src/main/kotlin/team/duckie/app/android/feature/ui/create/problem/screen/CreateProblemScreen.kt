@@ -16,19 +16,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemTopAppBar
+import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
+import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
+import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.component.DuckieGridLayout
+import team.duckie.app.android.util.compose.launch
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextArea
 import team.duckie.quackquack.ui.component.QuackBasicTextField
@@ -37,9 +45,11 @@ import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-internal fun CreateProblemScreen() {
+internal fun CreateProblemScreen() = CoroutineScopeContent {
     val viewModel = LocalViewModel.current as CreateProblemViewModel
     val state = viewModel.state.collectAsStateWithLifecycle().value.examInformation
+    val focusManager = LocalFocusManager.current
+    val lazyListState = rememberLazyListState()
 
     Scaffold(
         modifier = Modifier
@@ -57,6 +67,7 @@ internal fun CreateProblemScreen() {
             modifier = Modifier
                 .padding(contentPadding)
                 .padding(16.dp),
+            state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),
         ) {
             TitleAndComponent(stringResource = R.string.create_problem_category_title) {
@@ -83,12 +94,13 @@ internal fun CreateProblemScreen() {
                     placeholderText = stringResource(id = R.string.create_problem_find_exam_area),
                 )
             }
-
             TitleAndComponent(stringResource = R.string.create_problem_exam_title) {
                 QuackBasicTextField(
                     text = state.examTitle,
                     onTextChanged = viewModel::setExamTitle,
                     placeholderText = stringResource(id = R.string.create_problem_input_exam_title),
+                    keyboardOptions = ImeActionNext,
+                    keyboardActions = moveDownFocus(focusManager),
                 )
             }
 
@@ -98,6 +110,8 @@ internal fun CreateProblemScreen() {
                     text = state.examDescription,
                     onTextChanged = viewModel::setExamDescription,
                     placeholderText = stringResource(id = R.string.create_problem_input_exam_description),
+                    imeAction = ImeAction.Next,
+                    keyboardActions = moveDownFocus(focusManager),
                 )
             }
             TitleAndComponent(stringResource = R.string.create_problem_certifying_statement) {
@@ -106,6 +120,14 @@ internal fun CreateProblemScreen() {
                     text = state.certifyingStatement,
                     onTextChanged = viewModel::setCertifyingStatement,
                     placeholderText = stringResource(id = R.string.create_problem_input_certifying_statement),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            launch {
+                                lazyListState.animateScrollToItem(lazyListState.firstVisibleItemIndex)
+                                focusManager.clearFocus()
+                            }
+                        },
+                    ),
                 )
             }
         }
