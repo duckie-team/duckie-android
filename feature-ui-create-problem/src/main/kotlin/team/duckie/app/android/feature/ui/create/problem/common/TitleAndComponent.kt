@@ -28,7 +28,9 @@ internal fun LazyListScope.TitleAndComponent(
             modifier = modifier,
             verticalArrangement = Arrangement.spacedBy(space = 8.dp),
         ) {
-            QuackHeadLine2(text = stringResource(id = stringResource))
+            QuackHeadLine2(
+                text = stringResource(id = stringResource)
+            )
             component()
         }
     }
