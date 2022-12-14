@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
+<resources>
+    <string name="home_volume_control_message">본 고사는 듣기 평가가 포함되어 있습니다. 미리 음량을 조절해주세요!</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="following">팔로잉</string>
+    <string name="follow">팔로우</string>
+
+    <string name="recommend">추천</string>
+</resources>
