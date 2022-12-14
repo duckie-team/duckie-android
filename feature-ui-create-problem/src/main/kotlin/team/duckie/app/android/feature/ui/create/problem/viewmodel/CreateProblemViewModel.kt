@@ -19,6 +19,7 @@ import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.util.kotlin.copy
+import team.duckie.app.android.util.kotlin.fastAny
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -63,7 +64,7 @@ class CreateProblemViewModel @Inject constructor(
         updateState {
             CreateProblemState(
                 examInformation = CreateProblemState.ExamInformation(
-                    examArea = examTitle,
+                    examTitle = examTitle,
                 ),
             )
         }
@@ -79,13 +80,19 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun setCertifyingStatement(certifyingStatement: String){
+    fun setCertifyingStatement(certifyingStatement: String) {
         updateState {
             CreateProblemState(
                 examInformation = CreateProblemState.ExamInformation(
                     certifyingStatement = certifyingStatement,
                 ),
             )
+        }
+    }
+
+    fun isAllFieldsNotEmpty(): Boolean {
+        return with(currentState.examInformation) {
+            categoriesSelection.fastAny { true } && examArea.isNotEmpty() && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
     }
 }

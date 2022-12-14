@@ -17,13 +17,18 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 internal fun CreateProblemTopAppBar(
     onLeadingIconClick: () -> Unit,
     onTrailingTextClick: () -> Unit,
+    trailingTextEnabled: Boolean = true,
 ) {
+    //TODO [EvergreenTree97] enabled 속성 필요
     QuackTopAppBar(
         leadingIcon = QuackIcon.ArrowBack,
         leadingText = stringResource(id = R.string.create_problem),
         onLeadingIconClick = onLeadingIconClick,
         trailingText = stringResource(id = R.string.create_problem_next),
-        onTrailingTextClick = onTrailingTextClick
+        onTrailingTextClick = when (trailingTextEnabled) {
+            true -> onTrailingTextClick
+            else -> null
+        }
     )
 }
 

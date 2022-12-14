@@ -48,7 +48,8 @@ internal fun CreateProblemScreen() {
         topBar = {
             CreateProblemTopAppBar(
                 onLeadingIconClick = {},
-                onTrailingTextClick = {}
+                onTrailingTextClick = {},
+                trailingTextEnabled = viewModel.isAllFieldsNotEmpty()
             )
         }
     ) { contentPadding ->
