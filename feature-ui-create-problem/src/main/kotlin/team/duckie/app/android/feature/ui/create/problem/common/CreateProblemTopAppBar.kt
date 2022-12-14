@@ -8,6 +8,8 @@
 package team.duckie.app.android.feature.ui.create.problem.common
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
 
@@ -18,9 +20,9 @@ internal fun CreateProblemTopAppBar(
 ) {
     QuackTopAppBar(
         leadingIcon = QuackIcon.ArrowBack,
-        leadingText = "문제 만들기",
+        leadingText = stringResource(id = R.string.create_problem),
         onLeadingIconClick = onLeadingIconClick,
-        trailingText = "다음",
+        trailingText = stringResource(id = R.string.create_problem_next),
         onTrailingTextClick = onTrailingTextClick
     )
 }

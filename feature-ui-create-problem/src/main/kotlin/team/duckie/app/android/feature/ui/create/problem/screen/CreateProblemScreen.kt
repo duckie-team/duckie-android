@@ -19,9 +19,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
@@ -56,7 +58,7 @@ internal fun CreateProblemScreen() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),
         ) {
-            TitleAndComponent(title = "카테고리") {
+            TitleAndComponent(stringResource = R.string.create_problem_category_title) {
                 DuckieGridLayout(items = state.categories) { index, item ->
                     //TODO [EvergreenTree97] 컴포넌트 필요
                     QuackMediumToggleButton(
@@ -72,37 +74,37 @@ internal fun CreateProblemScreen() {
                     )
                 }
             }
-            TitleAndComponent(title = "시험 영역") {
+            TitleAndComponent(stringResource = R.string.create_problem_exam_area) {
                 QuackBasicTextField(
                     leadingIcon = QuackIcon.Search,
                     text = state.examArea,
                     onTextChanged = viewModel::setExamArea,
-                    placeholderText = "시험 영역 찾기",
+                    placeholderText = stringResource(id = R.string.create_problem_find_exam_area),
                 )
             }
 
-            TitleAndComponent(title = "시험 제목") {
+            TitleAndComponent(stringResource = R.string.create_problem_exam_title) {
                 QuackBasicTextField(
                     text = state.examTitle,
                     onTextChanged = viewModel::setExamTitle,
-                    placeholderText = "시험 제목을 입력해 주세요",
+                    placeholderText = stringResource(id = R.string.create_problem_input_exam_title),
                 )
             }
 
-            TitleAndComponent(title = "설명") {
+            TitleAndComponent(stringResource = R.string.create_problem_examination) {
                 QuackReviewTextArea(
                     modifier = Modifier.heightIn(140.dp),
                     text = state.examDescription,
                     onTextChanged = viewModel::setExamDescription,
-                    placeholderText = "시험에 대한 설명을 입력해 주세요",
+                    placeholderText = stringResource(id = R.string.create_problem_input_examination),
                 )
             }
-            TitleAndComponent(title = "필적 확인 문구") {
+            TitleAndComponent(stringResource = R.string.create_problem_certifying_statement) {
                 //TODO [EvergreenTree97] 컴포넌트 필요
                 QuackBasicTextArea(
                     text = state.certifyingStatement,
                     onTextChanged = viewModel::setCertifyingStatement,
-                    placeholderText = "필적확인 문구를 입력해 주세요"
+                    placeholderText = stringResource(id = R.string.create_problem_input_certifying_statement),
                 )
             }
         }
