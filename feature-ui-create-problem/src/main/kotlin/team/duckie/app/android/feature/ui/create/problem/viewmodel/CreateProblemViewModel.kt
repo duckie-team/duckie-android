@@ -40,20 +40,20 @@ class CreateProblemViewModel @Inject constructor(
         index: Int,
     ) {
         updateState { prevState ->
-            CreateProblemState(
-                examInformation = CreateProblemState.ExamInformation(
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
                     categoriesSelection = prevState.examInformation.categoriesSelection.copy {
                         this[index] = !this[index]
                     }.toImmutableList()
-                ),
+                )
             )
         }
     }
 
     fun setExamArea(examArea: String) {
-        updateState {
-            CreateProblemState(
-                examInformation = CreateProblemState.ExamInformation(
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
                     examArea = examArea,
                 ),
             )
@@ -61,9 +61,9 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     fun setExamTitle(examTitle: String) {
-        updateState {
-            CreateProblemState(
-                examInformation = CreateProblemState.ExamInformation(
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
                     examTitle = examTitle,
                 ),
             )
@@ -71,9 +71,9 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     fun setExamDescription(examDescription: String) {
-        updateState {
-            CreateProblemState(
-                examInformation = CreateProblemState.ExamInformation(
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
                     examDescription = examDescription,
                 ),
             )
@@ -81,9 +81,9 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     fun setCertifyingStatement(certifyingStatement: String) {
-        updateState {
-            CreateProblemState(
-                examInformation = CreateProblemState.ExamInformation(
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
                     certifyingStatement = certifyingStatement,
                 ),
             )
