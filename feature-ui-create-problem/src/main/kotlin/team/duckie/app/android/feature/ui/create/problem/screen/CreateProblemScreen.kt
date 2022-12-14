@@ -91,12 +91,12 @@ internal fun CreateProblemScreen() {
                 )
             }
 
-            TitleAndComponent(stringResource = R.string.create_problem_examination) {
+            TitleAndComponent(stringResource = R.string.create_problem_exam_description) {
                 QuackReviewTextArea(
                     modifier = Modifier.heightIn(140.dp),
                     text = state.examDescription,
                     onTextChanged = viewModel::setExamDescription,
-                    placeholderText = stringResource(id = R.string.create_problem_input_examination),
+                    placeholderText = stringResource(id = R.string.create_problem_input_exam_description),
                 )
             }
             TitleAndComponent(stringResource = R.string.create_problem_certifying_statement) {
