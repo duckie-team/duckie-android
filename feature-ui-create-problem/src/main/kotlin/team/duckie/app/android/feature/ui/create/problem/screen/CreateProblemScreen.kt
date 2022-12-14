@@ -70,7 +70,7 @@ internal fun CreateProblemScreen() = CoroutineScopeContent {
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),
         ) {
-            TitleAndComponent(stringResource = R.string.create_problem_category_title) {
+            TitleAndComponent(stringResource = R.string.category_title) {
                 DuckieGridLayout(items = state.categories) { index, item ->
                     //TODO [EvergreenTree97] 컴포넌트 필요
                     QuackMediumToggleButton(
@@ -86,40 +86,40 @@ internal fun CreateProblemScreen() = CoroutineScopeContent {
                     )
                 }
             }
-            TitleAndComponent(stringResource = R.string.create_problem_exam_area) {
+            TitleAndComponent(stringResource = R.string.exam_area) {
                 QuackBasicTextField(
                     leadingIcon = QuackIcon.Search,
                     text = state.examArea,
                     onTextChanged = viewModel::setExamArea,
-                    placeholderText = stringResource(id = R.string.create_problem_find_exam_area),
+                    placeholderText = stringResource(id = R.string.find_exam_area),
                 )
             }
-            TitleAndComponent(stringResource = R.string.create_problem_exam_title) {
+            TitleAndComponent(stringResource = R.string.exam_title) {
                 QuackBasicTextField(
                     text = state.examTitle,
                     onTextChanged = viewModel::setExamTitle,
-                    placeholderText = stringResource(id = R.string.create_problem_input_exam_title),
+                    placeholderText = stringResource(id = R.string.input_exam_title),
                     keyboardOptions = ImeActionNext,
                     keyboardActions = moveDownFocus(focusManager),
                 )
             }
 
-            TitleAndComponent(stringResource = R.string.create_problem_exam_description) {
+            TitleAndComponent(stringResource = R.string.exam_description) {
                 QuackReviewTextArea(
                     modifier = Modifier.heightIn(140.dp),
                     text = state.examDescription,
                     onTextChanged = viewModel::setExamDescription,
-                    placeholderText = stringResource(id = R.string.create_problem_input_exam_description),
+                    placeholderText = stringResource(id = R.string.input_exam_description),
                     imeAction = ImeAction.Next,
                     keyboardActions = moveDownFocus(focusManager),
                 )
             }
-            TitleAndComponent(stringResource = R.string.create_problem_certifying_statement) {
+            TitleAndComponent(stringResource = R.string.certifying_statement) {
                 //TODO [EvergreenTree97] 컴포넌트 필요
                 QuackBasicTextArea(
                     text = state.certifyingStatement,
                     onTextChanged = viewModel::setCertifyingStatement,
-                    placeholderText = stringResource(id = R.string.create_problem_input_certifying_statement),
+                    placeholderText = stringResource(id = R.string.input_certifying_statement),
                     keyboardActions = KeyboardActions(
                         onDone = {
                             launch {

@@ -24,7 +24,7 @@ internal fun CreateProblemTopAppBar(
         leadingIcon = QuackIcon.ArrowBack,
         leadingText = stringResource(id = R.string.create_problem),
         onLeadingIconClick = onLeadingIconClick,
-        trailingText = stringResource(id = R.string.create_problem_next),
+        trailingText = stringResource(id = R.string.next),
         onTrailingTextClick = when (trailingTextEnabled) {
             true -> onTrailingTextClick
             else -> null
