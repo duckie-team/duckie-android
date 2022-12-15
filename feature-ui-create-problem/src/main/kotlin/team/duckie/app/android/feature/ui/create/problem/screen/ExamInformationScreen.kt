@@ -66,7 +66,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                 .padding(16.dp),
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),
-        ) { // TODO [EvergreenTree97] 컴포넌트 필요
+        ) { // TODO(EvergreenTree97) 컴포넌트 필요
             TitleAndComponent(stringResource = R.string.category_title) {
                 DuckieGridLayout(items = state.categories) { index, item ->
                     QuackMediumToggleButton(

@@ -16,7 +16,7 @@ data class CreateProblemState(
     val examInformation: ExamInformation = ExamInformation(),
 ) {
     data class ExamInformation(
-        val categories: ImmutableList<String> = persistentListOf( // TODO [EvergreenTree97] Server Request
+        val categories: ImmutableList<String> = persistentListOf( // TODO(EvergreenTree97) Server Request
             "연예인",
             "영화",
             "만화/애니",
