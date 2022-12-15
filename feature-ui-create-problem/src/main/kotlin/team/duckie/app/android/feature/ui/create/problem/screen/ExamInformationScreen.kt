@@ -66,7 +66,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                 .padding(16.dp),
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),
-        ) { // TODO(EvergreenTree97) 컴포넌트 필요
+        ) { // TODO(EvergreenTree97): 컴포넌트 필요
             TitleAndComponent(stringResource = R.string.category_title) {
                 DuckieGridLayout(items = state.categories) { index, item ->
                     QuackMediumToggleButton(
@@ -88,7 +88,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                     text = state.examArea,
                     onTextChanged = {
                         /*
-                        * TODO [EvergreenTree97] Box로도 해당 영역 Clickable이 잡히지 않음
+                        * TODO(EvergreenTree97): Box로도 해당 영역 Clickable이 잡히지 않음
                         * 시험 영역 찾기 Screen으로 넘어가는 UX 개선사항 필요
                         * */
                         viewModel.navigateStep(CreateProblemStep.FindExamArea)
@@ -115,7 +115,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                     imeAction = ImeAction.Next,
                     keyboardActions = moveDownFocus(focusManager),
                 )
-            } // TODO [EvergreenTree97] 컴포넌트 필요
+            } // TODO(EvergreenTree97): 컴포넌트 필요
             TitleAndComponent(stringResource = R.string.certifying_statement) {
                 QuackBasicTextArea(
                     text = state.certifyingStatement,
