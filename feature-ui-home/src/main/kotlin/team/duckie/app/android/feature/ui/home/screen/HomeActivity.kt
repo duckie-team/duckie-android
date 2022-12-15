@@ -71,6 +71,7 @@ class HomeActivity : BaseActivity() {
                             }
                         }
 
+                        // TODO(limsaehyun): 추후에 QuackDivider 로 교체 필요
                         Divider(
                             modifier = Modifier.layoutId(HomeBottomNavigationDividerLayoutId),
                             color = QuackColor.Gray3.composeColor,
@@ -92,16 +93,18 @@ class HomeActivity : BaseActivity() {
                         measurable.layoutId == HomeCrossFacadeLayoutId
                     }?.measure(looseConstraints) ?: npe()
 
-                    val homeBottomNavigationDividerPlaceable = measurables.fastFirstOrNull { measurable ->
-                        measurable.layoutId == HomeBottomNavigationDividerLayoutId
-                    }?.measure(looseConstraints) ?: npe()
+                    val homeBottomNavigationDividerPlaceable =
+                        measurables.fastFirstOrNull { measurable ->
+                            measurable.layoutId == HomeBottomNavigationDividerLayoutId
+                        }?.measure(looseConstraints) ?: npe()
 
                     val homeBottomNavigationPlaceable = measurables.fastFirstOrNull { measurable ->
                         measurable.layoutId == HomeBottomNavigationViewLayoutId
                     }?.measure(looseConstraints) ?: npe()
 
                     val homeBottomNavigationHeight = homeBottomNavigationPlaceable.height
-                    val homeBottomNavigationDividerHeight = homeBottomNavigationDividerPlaceable.height
+                    val homeBottomNavigationDividerHeight =
+                        homeBottomNavigationDividerPlaceable.height
 
                     layout(
                         width = constraints.maxWidth,
