@@ -15,12 +15,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
@@ -31,7 +31,7 @@ import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.quackquack.ui.component.QuackDivider
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 private const val HomeScreen: Int = 0
@@ -40,6 +40,7 @@ private const val RankingScreen: Int = 2
 private const val MyPageScreen: Int = 3
 
 private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
+private const val HomeBottomNavigationDividerLayoutId = "HomeBottomNavigationDivider"
 private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
 
 @AndroidEntryPoint
@@ -70,18 +71,18 @@ class HomeActivity : BaseActivity() {
                             }
                         }
 
-                        Column(
-                            modifier = Modifier.layoutId(HomeBottomNavigationViewLayoutId),
-                        ) {
-                            QuackDivider()
+                        Divider(
+                            modifier = Modifier.layoutId(HomeBottomNavigationDividerLayoutId),
+                            color = QuackColor.Gray3.composeColor,
+                        )
 
-                            DuckTestBottomNavigation(
-                                selectedIndex = selectedIndexed,
-                                onClick = {
-                                    selectedIndexed = it
-                                },
-                            )
-                        }
+                        DuckTestBottomNavigation(
+                            modifier = Modifier.layoutId(HomeBottomNavigationViewLayoutId),
+                            selectedIndex = selectedIndexed,
+                            onClick = {
+                                selectedIndexed = it
+                            },
+                        )
                     },
                 ) { measurables, constraints ->
 
@@ -91,9 +92,16 @@ class HomeActivity : BaseActivity() {
                         measurable.layoutId == HomeCrossFacadeLayoutId
                     }?.measure(looseConstraints) ?: npe()
 
+                    val homeBottomNavigationDividerPlaceable = measurables.fastFirstOrNull { measurable ->
+                        measurable.layoutId == HomeBottomNavigationDividerLayoutId
+                    }?.measure(looseConstraints) ?: npe()
+
                     val homeBottomNavigationPlaceable = measurables.fastFirstOrNull { measurable ->
                         measurable.layoutId == HomeBottomNavigationViewLayoutId
                     }?.measure(looseConstraints) ?: npe()
+
+                    val homeBottomNavigationHeight = homeBottomNavigationPlaceable.height
+                    val homeBottomNavigationDividerHeight = homeBottomNavigationDividerPlaceable.height
 
                     layout(
                         width = constraints.maxWidth,
@@ -104,9 +112,14 @@ class HomeActivity : BaseActivity() {
                             y = 0,
                         )
 
+                        homeBottomNavigationDividerPlaceable.place(
+                            x = 0,
+                            y = constraints.maxHeight - homeBottomNavigationHeight - homeBottomNavigationDividerHeight
+                        )
+
                         homeBottomNavigationPlaceable.place(
                             x = 0,
-                            y = constraints.maxHeight - homeBottomNavigationPlaceable.height
+                            y = constraints.maxHeight - homeBottomNavigationHeight
                         )
                     }
                 }
