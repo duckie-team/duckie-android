@@ -23,7 +23,7 @@ internal fun LazyListScope.TitleAndComponent(
     @StringRes stringResource: Int,
     component: @Composable () -> Unit,
 ) {
-    this.item {
+    item {
         Column(
             modifier = modifier,
             verticalArrangement = Arrangement.spacedBy(space = 8.dp),
