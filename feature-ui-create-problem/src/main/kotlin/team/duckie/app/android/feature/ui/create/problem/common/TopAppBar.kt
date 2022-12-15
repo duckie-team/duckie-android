@@ -37,7 +37,7 @@ internal fun PrevAndNextTopAppBar(
         onTrailingTextClick = when (trailingTextEnabled) {
             true -> onTrailingTextClick
             else -> null
-        }
+        },
     )
 }
 

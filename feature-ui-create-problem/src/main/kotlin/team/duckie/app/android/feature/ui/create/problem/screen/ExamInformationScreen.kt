@@ -9,7 +9,6 @@
 
 package team.duckie.app.android.feature.ui.create.problem.screen
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding

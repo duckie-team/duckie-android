@@ -27,7 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateProblemViewModel @Inject constructor(
-    private val makeExamUseCase: MakeExamUseCase
+    private val makeExamUseCase: MakeExamUseCase,
 ) : BaseViewModel<CreateProblemState, CreateProblemSideEffect>(CreateProblemState()) {
     private val TAG = CreateProblemViewModel::class.simpleName
 
@@ -45,8 +45,8 @@ class CreateProblemViewModel @Inject constructor(
                 examInformation = prevState.examInformation.copy(
                     categoriesSelection = prevState.examInformation.categoriesSelection.copy {
                         this[index] = !this[index]
-                    }.toImmutableList()
-                )
+                    }.toImmutableList(),
+                ),
             )
         }
     }
@@ -94,7 +94,7 @@ class CreateProblemViewModel @Inject constructor(
             prevState.copy(
                 examInformation = prevState.examInformation.copy(
                     foundExamArea = prevState.examInformation.foundExamArea.copy(
-                        examArea = examArea
+                        examArea = examArea,
                     )
                 ),
             )
@@ -111,7 +111,7 @@ class CreateProblemViewModel @Inject constructor(
                             examArea = foundExamArea.searchResults[index]
                         )
                     )
-                }
+                },
             )
         }
     }
