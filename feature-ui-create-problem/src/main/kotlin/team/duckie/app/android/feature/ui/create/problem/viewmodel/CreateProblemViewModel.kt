@@ -5,17 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("MaxLineLength")
+
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
-import android.util.Log
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import team.duckie.app.android.domain.exam.model.Answer
-import team.duckie.app.android.domain.exam.model.ExamParam
-import team.duckie.app.android.domain.exam.model.ProblemItem
-import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.domain.exam.model.Tag
-import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
@@ -27,9 +21,8 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateProblemViewModel @Inject constructor(
-    private val makeExamUseCase: MakeExamUseCase,
+    //private val makeExamUseCase: MakeExamUseCase,
 ) : BaseViewModel<CreateProblemState, CreateProblemSideEffect>(CreateProblemState()) {
-    private val TAG = CreateProblemViewModel::class.simpleName
 
     /*suspend fun makeExam() {
         makeExamUseCase(dummyParam).onSuccess { exam ->

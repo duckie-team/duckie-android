@@ -66,10 +66,9 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                 .padding(16.dp),
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),
-        ) {
+        ) { // TODO [EvergreenTree97] 컴포넌트 필요
             TitleAndComponent(stringResource = R.string.category_title) {
                 DuckieGridLayout(items = state.categories) { index, item ->
-                    //TODO [EvergreenTree97] 컴포넌트 필요
                     QuackMediumToggleButton(
                         modifier = Modifier.size(
                             width = 102.dp,
@@ -116,9 +115,8 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                     imeAction = ImeAction.Next,
                     keyboardActions = moveDownFocus(focusManager),
                 )
-            }
+            } // TODO [EvergreenTree97] 컴포넌트 필요
             TitleAndComponent(stringResource = R.string.certifying_statement) {
-                //TODO [EvergreenTree97] 컴포넌트 필요
                 QuackBasicTextArea(
                     text = state.certifyingStatement,
                     onTextChanged = viewModel::setCertifyingStatement,

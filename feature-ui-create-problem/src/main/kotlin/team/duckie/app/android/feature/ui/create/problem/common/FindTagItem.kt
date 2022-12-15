@@ -21,4 +21,3 @@ internal fun SearchResultText(
     text = text,
     onClick = onClick,
 )
-

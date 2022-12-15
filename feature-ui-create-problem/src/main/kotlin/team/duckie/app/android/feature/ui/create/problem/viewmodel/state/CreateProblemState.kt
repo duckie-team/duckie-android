@@ -16,7 +16,7 @@ data class CreateProblemState(
     val examInformation: ExamInformation = ExamInformation(),
 ) {
     data class ExamInformation(
-        val categories: ImmutableList<String> = persistentListOf( //TODO [EvergreenTree97] Server Request
+        val categories: ImmutableList<String> = persistentListOf( // TODO [EvergreenTree97] Server Request
             "연예인",
             "영화",
             "만화/애니",
@@ -34,8 +34,7 @@ data class CreateProblemState(
             get() = foundExamArea.examArea
 
         data class FoundExamArea(
-            val searchResults: ImmutableList<String> = persistentListOf(
-                //TODO [EvergreenTree97] Server Request
+            val searchResults: ImmutableList<String> = persistentListOf( // TODO [EvergreenTree97] Server Request
                 "도로",
                 "도로 주행",
                 "도로 셀카",
@@ -45,5 +44,3 @@ data class CreateProblemState(
         )
     }
 }
-
-

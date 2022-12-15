@@ -27,8 +27,7 @@ internal fun PrevAndNextTopAppBar(
     onLeadingIconClick: () -> Unit,
     onTrailingTextClick: () -> Unit,
     trailingTextEnabled: Boolean = true,
-) {
-    //TODO [EvergreenTree97] enabled 속성 필요
+) { // TODO [EvergreenTree97] enabled 속성 필요
     QuackTopAppBar(
         leadingIcon = QuackIcon.ArrowBack,
         leadingText = stringResource(id = R.string.create_problem),
@@ -40,8 +39,7 @@ internal fun PrevAndNextTopAppBar(
         },
     )
 }
-
-//TODO [EvergreenTree] QuackTopAppBar에 leadingIcon이 nullable로 변경됨이 필요
+// TODO [EvergreenTree] QuackTopAppBar에 leadingIcon이 nullable로 변경됨이 필요
 @Composable
 internal fun ExitAppBar(
     modifier: Modifier = Modifier,
