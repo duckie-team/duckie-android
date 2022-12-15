@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.create.problem.R
-import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
+import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
 import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
@@ -56,7 +56,7 @@ internal fun CreateProblemScreen() = CoroutineScopeContent {
             .statusBarsPadding()
             .background(color = QuackColor.White.composeColor),
         topBar = {
-            CreateProblemTopAppBar(
+            PrevAndNextTopAppBar(
                 onLeadingIconClick = {},
                 onTrailingTextClick = {},
                 trailingTextEnabled = viewModel.isAllFieldsNotEmpty(),

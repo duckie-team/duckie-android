@@ -14,7 +14,7 @@ import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-internal fun CreateProblemTopAppBar(
+internal fun PrevAndNextTopAppBar(
     onLeadingIconClick: () -> Unit,
     onTrailingTextClick: () -> Unit,
     trailingTextEnabled: Boolean = true,
