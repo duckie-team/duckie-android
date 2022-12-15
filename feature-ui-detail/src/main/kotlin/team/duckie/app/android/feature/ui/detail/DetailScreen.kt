@@ -10,8 +10,6 @@ package team.duckie.app.android.feature.ui.detail
 import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,11 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import team.duckie.quackquack.ui.R.drawable
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -115,15 +111,6 @@ internal fun DetailScreen() = CoroutineScopeContent {
                         }
 
                         item {
-                            // 그림
-                            QuackImage(
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                src = R.drawable.img_duckie_detail_image_dummy,
-                                size = DpSize(328.dp, 240.dp)
-                            )
-                        }
-
-                        item {
                             // 공백
                             Spacer(modifier = Modifier.height(12.dp))
                         }
@@ -154,15 +141,17 @@ internal fun DetailScreen() = CoroutineScopeContent {
                         }
 
                         item {
-                            // 태그 목록
                             QuackSingeLazyRowTag(
                                 modifier = Modifier.padding(horizontal = 16.dp),
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                                horizontalSpace = 4.dp,
                                 items = persistentListOf(
                                     "도로", "패션", "도로패션", "도로로", "Doro Driven Design"
                                 ),
-                                tagType = QuackTagType.Round,
+                                tagType = QuackTagType.Grayscale(""),
                                 onClick = {},
                             )
+                            // 태그 목록
                         }
                         item {
                             // 공백
@@ -220,12 +209,16 @@ internal fun DetailScreen() = CoroutineScopeContent {
                                 // 공백
                                 Spacer(modifier = Modifier.weight(1f))
 
-                                // TODO(riflockle7): 단순 텍스트로만 이루어진 버튼 있는지 확인 필요
-                                QuackSmallButton(
+                                // TODO(riflockle7): 추후 팔로우 완료 시에 대한 처리 필요
+                                // 팔로우 버튼
+                                QuackBody2(
+                                    padding = PaddingValues(
+                                        top = 8.dp,
+                                        bottom = 8.dp,
+                                    ),
                                     text = activity.getString(R.string.detail_follow),
-                                    type = QuackSmallButtonType.Border,
-                                    enabled = true,
-                                    onClick = {},
+                                    color = QuackColor.DuckieOrange,
+                                    onClick = { },
                                 )
                             }
                         }
