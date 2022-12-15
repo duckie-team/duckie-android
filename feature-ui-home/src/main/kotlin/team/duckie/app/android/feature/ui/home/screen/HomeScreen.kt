@@ -14,9 +14,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.PersistentList
@@ -24,7 +22,6 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTextTab
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -196,7 +193,7 @@ fun DuckieHomeScreen() {
                 selectedTabIndex.value = it
             },
             onClickedEdit = {
-                //TODO
+                // TODO
             },
         )
 
@@ -213,7 +210,7 @@ fun DuckieHomeScreen() {
                 }
 
                 HomeFollowingScreen -> {
-                    if(fakeFollowingTest.isEmpty()) {
+                    if (fakeFollowingTest.isEmpty()) {
                         HomeFollowingScreen(
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )

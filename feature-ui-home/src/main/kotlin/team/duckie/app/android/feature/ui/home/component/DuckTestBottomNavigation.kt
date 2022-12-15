@@ -7,11 +7,9 @@
 
 package team.duckie.app.android.feature.ui.home.component
 
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +25,6 @@ import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
 

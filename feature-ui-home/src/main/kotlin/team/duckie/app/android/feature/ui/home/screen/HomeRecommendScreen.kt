@@ -101,7 +101,6 @@ internal fun HomeRecommendScreen(
                 onClicked = { }
             )
         }
-
     }
 }
 
@@ -152,7 +151,6 @@ private fun HomeRecommendContentScreen(
         )
     }
 }
-
 
 @Composable
 private fun HomeTopicRecommend(
