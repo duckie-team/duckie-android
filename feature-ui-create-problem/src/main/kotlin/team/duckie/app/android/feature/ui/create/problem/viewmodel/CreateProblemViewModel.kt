@@ -18,6 +18,7 @@ import team.duckie.app.android.domain.exam.model.Tag
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastAny
 import team.duckie.app.android.util.viewmodel.BaseViewModel
@@ -50,12 +51,10 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun setExamArea(examArea: String) {
+    fun navigateStep(step: CreateProblemStep) {
         updateState { prevState ->
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    examArea = examArea,
-                ),
+                createProblemStep = step,
             )
         }
     }
@@ -90,9 +89,36 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    fun setExamArea(examArea: String) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    foundExamArea = prevState.examInformation.foundExamArea.copy(
+                        examArea = examArea
+                    )
+                ),
+            )
+        }
+    }
+
+    fun clickSearchList(index: Int) {
+        updateState { prevState ->
+            prevState.copy(
+                createProblemStep = CreateProblemStep.ExamInformation,
+                examInformation = prevState.examInformation.run {
+                    copy(
+                        foundExamArea = foundExamArea.copy(
+                            examArea = foundExamArea.searchResults[index]
+                        )
+                    )
+                }
+            )
+        }
+    }
+
     fun isAllFieldsNotEmpty(): Boolean {
         return with(currentState.examInformation) {
-            categoriesSelection.fastAny { true } && examArea.isNotEmpty() && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+            categoriesSelection.fastAny { it } && examArea.isNotEmpty() && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
     }
 }
