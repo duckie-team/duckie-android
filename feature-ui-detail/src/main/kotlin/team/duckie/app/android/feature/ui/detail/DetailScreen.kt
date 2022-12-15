@@ -21,10 +21,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import team.duckie.quackquack.ui.R.drawable
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,9 +38,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.util.compose.CoroutineScopeContent
+import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -57,17 +59,19 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 /** 상세 화면 Screen */
 @Composable
-internal fun DetailScreen(vm: DetailViewModel) = CoroutineScopeContent {
+internal fun DetailScreen() = CoroutineScopeContent {
     val activity = LocalContext.current as Activity
+    val viewModel = LocalViewModel.current as DetailViewModel
     val navigationBarHeight = WindowInsets.navigationBars.getBottom(LocalDensity.current)
+
     val toast = rememberToast()
 
     LaunchedEffect(Unit) {
-        coroutineScope.launch { vm.sendToast("상세 화면 진입") }
+        viewModel.sendToast("상세 화면 진입")
     }
 
-    LaunchedEffect(vm.sideEffect) {
-        vm.sideEffect.collect { effect ->
+    LaunchedEffect(viewModel.sideEffect) {
+        viewModel.sideEffect.collect { effect ->
             when (effect) {
                 is DetailSideEffect.SendToast -> toast(effect.message)
             }
@@ -75,10 +79,12 @@ internal fun DetailScreen(vm: DetailViewModel) = CoroutineScopeContent {
     }
 
     Scaffold(
-        modifier = Modifier.navigationBarsPadding(),
+        modifier = Modifier
+            .background(color = QuackColor.White.composeColor)
+            .navigationBarsPadding(),
         topBar = {
             // 상단 탭바
-            // TODO(riflockle7) trailingIcon 의 경우, 추후 커스텀 composable 을 넣을 수 있게 하면 어떨지...?
+            // TODO(riflockle7): trailingIcon 의 경우, 추후 커스텀 composable 을 넣을 수 있게 하면 어떨지...?
             QuackTopAppBar(
                 modifier = Modifier.statusBarsPadding(),
                 leadingIcon = QuackIcon.ArrowBack,
@@ -93,177 +99,187 @@ internal fun DetailScreen(vm: DetailViewModel) = CoroutineScopeContent {
                 .padding(contentPadding)
                 .background(color = QuackColor.White.composeColor),
             content = {
-                LazyColumn(content = {
-                    item {
-                        // 공백
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-
-                    item {
-                        // 그림
-                        QuackImage(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            src = R.drawable.img_duckie_detail_image_dummy,
-                            size = DpSize(328.dp, 240.dp)
-                        )
-                    }
-
-                    item {
-                        // 공백
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-                    item {
-                        // 제목
-                        QuackHeadLine2(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            text = "제 1회 도로 패션영역"
-                        )
-                    }
-
-                    item {
-                        // 공백
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-
-                    item {
-                        // 내용
-                        QuackBody2(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            text = "아 저 근데 너무 재밌을거 같아요 내 시험 최고"
-                        )
-                    }
-
-                    item {
-                        // 공백
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-
-                    item {
-                        // 태그 목록
-                        QuackSingeLazyRowTag(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            items = persistentListOf(
-                                "도로", "패션", "도로패션", "도로로", "Doro Driven Design"
-                            ),
-                            tagType = QuackTagType.Round,
-                            onClick = {},
-                        )
-                    }
-                    item {
-                        // 공백
-                        Spacer(modifier = Modifier.height(24.dp))
-                    }
-
-                    item {
-                        // 구분선
-                        QuackDivider()
-                    }
-
-                    item {
-                        // 프로필 Layout
-                        Row(
-                            modifier = Modifier.padding(
-                                horizontal = 16.dp,
-                                vertical = 12.dp,
-                            ),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            // 작성자 프로필 이미지
+                LazyColumn(
+                    content = {
+                        item {
+                            // 그림
                             QuackImage(
-                                src = team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
-                                size = DpSize(32.dp, 32.dp)
+                                modifier = Modifier.padding(
+                                    top = 16.dp,
+                                    start = 16.dp,
+                                    end = 16.dp
+                                ),
+                                src = R.drawable.img_duckie_detail_image_dummy,
+                                size = DpSize(328.dp, 240.dp)
                             )
+                        }
 
+                        item {
+                            // 그림
+                            QuackImage(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                src = R.drawable.img_duckie_detail_image_dummy,
+                                size = DpSize(328.dp, 240.dp)
+                            )
+                        }
+
+                        item {
                             // 공백
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
+                        item {
+                            // 제목
+                            QuackHeadLine2(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                text = "제 1회 도로 패션영역"
+                            )
+                        }
 
-                            Column {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    // 댓글 작성자 닉네임
-                                    QuackBody3(
-                                        text = "닉네임",
-                                        onClick = {},
-                                        color = QuackColor.Black,
-                                    )
-
-                                    // 공백
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                }
-
-                                // 공백
-                                Spacer(modifier = Modifier.height(2.dp))
-
-                                // 응시자, 일자
-                                QuackBody3(
-                                    text = activity.getString(
-                                        R.string.detail_num_date, "20", "1일 전"
-                                    ),
-                                    color = QuackColor.Gray2
-                                )
-                            }
-
+                        item {
                             // 공백
-                            Spacer(modifier = Modifier.weight(1f))
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
 
-                            // TODO(riflockle7) 단순 텍스트로만 이루어진 버튼 있는지 확인 필요
-                            QuackSmallButton(
-                                text = activity.getString(R.string.detail_follow),
-                                type = QuackSmallButtonType.Border,
-                                enabled = true,
+                        item {
+                            // 내용
+                            QuackBody2(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                text = "아 저 근데 너무 재밌을거 같아요 내 시험 최고"
+                            )
+                        }
+
+                        item {
+                            // 공백
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
+
+                        item {
+                            // 태그 목록
+                            QuackSingeLazyRowTag(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                items = persistentListOf(
+                                    "도로", "패션", "도로패션", "도로로", "Doro Driven Design"
+                                ),
+                                tagType = QuackTagType.Round,
                                 onClick = {},
                             )
                         }
-                    }
-
-                    item {
-                        // 구분선
-                        QuackDivider()
-                    }
-
-                    item {
-                        // 공백
-                        Spacer(modifier = Modifier.height(24.dp))
-                    }
-
-                    item {
-                        // 점수 분포도 제목 Layout
-                        Row(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            // 제목
-                            QuackText(text = "점수 분포도", style = QuackTextStyle.Title2)
-
+                        item {
                             // 공백
-                            Spacer(modifier = Modifier.weight(1f))
+                            Spacer(modifier = Modifier.height(24.dp))
+                        }
 
-                            // 정답률 텍스트
+                        item {
+                            // 구분선
+                            QuackDivider()
+                        }
+
+                        item {
+                            // 프로필 Layout
+                            Row(
+                                modifier = Modifier.padding(
+                                    horizontal = 16.dp,
+                                    vertical = 12.dp,
+                                ),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                // 작성자 프로필 이미지
+                                QuackImage(
+                                    src = drawable.quack_ic_profile_24,
+                                    size = DpSize(32.dp, 32.dp)
+                                )
+
+                                // 공백
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Column {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        // 댓글 작성자 닉네임
+                                        QuackBody3(
+                                            text = "닉네임",
+                                            onClick = {},
+                                            color = QuackColor.Black,
+                                        )
+
+                                        // 공백
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                    }
+
+                                    // 공백
+                                    Spacer(modifier = Modifier.height(2.dp))
+
+                                    // 응시자, 일자
+                                    QuackBody3(
+                                        text = activity.getString(
+                                            R.string.detail_num_date, "20", "1일 전"
+                                        ),
+                                        color = QuackColor.Gray2
+                                    )
+                                }
+
+                                // 공백
+                                Spacer(modifier = Modifier.weight(1f))
+
+                                // TODO(riflockle7): 단순 텍스트로만 이루어진 버튼 있는지 확인 필요
+                                QuackSmallButton(
+                                    text = activity.getString(R.string.detail_follow),
+                                    type = QuackSmallButtonType.Border,
+                                    enabled = true,
+                                    onClick = {},
+                                )
+                            }
+                        }
+
+                        item {
+                            // 구분선
+                            QuackDivider()
+                        }
+
+                        item {
+                            // 공백
+                            Spacer(modifier = Modifier.height(24.dp))
+                        }
+
+                        item {
+                            // 점수 분포도 제목 Layout
+                            Row(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                // 제목
+                                QuackText(text = "점수 분포도", style = QuackTextStyle.Title2)
+
+                                // 공백
+                                Spacer(modifier = Modifier.weight(1f))
+
+                                // 정답률 텍스트
+                                QuackText(
+                                    text = activity.getString(R.string.detail_right_percent, "80%"),
+                                    style = QuackTextStyle.Body2
+                                )
+                            }
+                        }
+
+                        item {
+                            // 공백
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+
+                        item {
+                            // 분포도 레퍼
                             QuackText(
-                                text = activity.getString(R.string.detail_right_percent, "80%"),
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                text = "분포도 레퍼 필요",
                                 style = QuackTextStyle.Body2
                             )
                         }
-                    }
 
-                    item {
-                        // 공백
-                        Spacer(modifier = Modifier.height(8.dp))
+                        item {
+                            // 하단 공백
+                            Spacer(modifier = Modifier.height(53.dp))
+                        }
                     }
-
-                    item {
-                        // 분포도 레퍼
-                        QuackText(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            text = "분포도 레퍼 필요",
-                            style = QuackTextStyle.Body2
-                        )
-                    }
-
-                    item {
-                        // 하단 공백
-                        Spacer(modifier = Modifier.height(53.dp))
-                    }
-                })
+                )
 
                 DetailBottomLayout(
                     modifier = Modifier
@@ -280,6 +296,11 @@ internal fun DetailScreen(vm: DetailViewModel) = CoroutineScopeContent {
 
                 var yPosition = 0
 
+                // TODO(riflockle7): 위험성이 었어 추후 개선 필요
+                //  리컴포지션이 진행될 때마다 배치 정책으로 O(N) 이 요구됨 (random-access 적용되지 않음)
+                //  layoutId 가 지정되지 않아 컴포저블 배치에 변동이 생길 경우 의도하지 않은 레이아웃으로 배치될 수 있음
+                //  min 값이 변경된 constraints 를 적용하지 않아 항상 match_parent 로 배치됨
+                //  https://github.com/duckie-team/duckie-android/pull/110#discussion_r1045267790
                 // constraints 범위 내에 각 composable 들을 배치함
                 layout(constraints.maxWidth, constraints.maxHeight) {
                     for (index in 0..placeableItems.size - 2) {
@@ -301,7 +322,7 @@ internal fun DetailScreen(vm: DetailViewModel) = CoroutineScopeContent {
 
 /** 상세 화면 최하단 Layout */
 @Composable
-fun DetailBottomLayout(
+private fun DetailBottomLayout(
     modifier: Modifier,
     onHeartClick: () -> Unit,
     onChallengeClick: () -> Unit,
@@ -310,15 +331,17 @@ fun DetailBottomLayout(
         // 구분선
         QuackDivider()
 
+        // TODO(riflockle7): 추후 Layout 을 활용해 처리하기
         Row(
             modifier = Modifier
                 .height(52.dp)
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             // 좋아요 버튼
             QuackImage(
-                src = team.duckie.quackquack.ui.R.drawable.quack_ic_heart_24,
+                src = drawable.quack_ic_heart_24,
                 size = DpSize(24.dp, 24.dp),
                 onClick = onHeartClick,
             )

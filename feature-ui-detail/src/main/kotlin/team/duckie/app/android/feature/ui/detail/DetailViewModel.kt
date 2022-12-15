@@ -10,14 +10,15 @@ package team.duckie.app.android.feature.ui.detail
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.viewmodel.BaseViewModel
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal class DetailViewModel : BaseViewModel<DetailState, DetailSideEffect>(DetailState.Initial) {
+@Singleton
+class DetailViewModel @Inject constructor() :
+    BaseViewModel<DetailState, DetailSideEffect>(DetailState.Initial) {
     suspend fun sendToast(message: String) {
         postSideEffect {
             DetailSideEffect.SendToast(message)
         }
     }
 }
-
-/** 상세 화면에서 사용되는 클릭 이벤트 모음 */
-sealed class DetailClickEvent

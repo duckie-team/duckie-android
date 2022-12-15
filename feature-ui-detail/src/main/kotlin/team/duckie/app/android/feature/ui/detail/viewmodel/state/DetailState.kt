@@ -11,7 +11,7 @@ import team.duckie.app.android.feature.ui.detail.DetailViewModel
 /**
  * [DetailViewModel] 의 상태를 나타냅니다.
  */
-internal sealed class DetailState {
+sealed class DetailState {
     /** [DetailViewModel] 의 초기 상태를 나타냅니다. */
     object Initial : DetailState()
 

@@ -10,6 +10,6 @@ package team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect
 import team.duckie.app.android.feature.ui.detail.DetailViewModel
 
 /** [DetailViewModel] 에서 사용되는 SideEffect 모음 */
-internal sealed class DetailSideEffect {
+sealed class DetailSideEffect {
     class SendToast(val message: String) : DetailSideEffect()
 }

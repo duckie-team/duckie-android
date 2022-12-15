@@ -12,7 +12,6 @@
         <activity
             android:name=".DetailActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
     </application>
