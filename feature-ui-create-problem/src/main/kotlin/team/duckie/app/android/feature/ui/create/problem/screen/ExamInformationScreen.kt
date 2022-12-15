@@ -9,7 +9,7 @@
 
 package team.duckie.app.android.feature.ui.create.problem.screen
 
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -33,11 +33,11 @@ import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAp
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
 import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.component.DuckieGridLayout
 import team.duckie.app.android.util.compose.launch
-import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextArea
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackMediumToggleButton
@@ -45,20 +45,18 @@ import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-internal fun CreateProblemScreen() = CoroutineScopeContent {
+internal fun ExamInformationScreen() = CoroutineScopeContent {
     val viewModel = LocalViewModel.current as CreateProblemViewModel
     val state = viewModel.state.collectAsStateWithLifecycle().value.examInformation
     val focusManager = LocalFocusManager.current
     val lazyListState = rememberLazyListState()
 
     Scaffold(
-        modifier = Modifier
-            .statusBarsPadding()
-            .background(color = QuackColor.White.composeColor),
+        modifier = Modifier.statusBarsPadding(),
         topBar = {
             PrevAndNextTopAppBar(
                 onLeadingIconClick = {},
-                onTrailingTextClick = {},
+                onTrailingTextClick = { viewModel.navigateStep(CreateProblemStep.CreateProblem) },
                 trailingTextEnabled = viewModel.isAllFieldsNotEmpty(),
             )
         }
@@ -90,7 +88,13 @@ internal fun CreateProblemScreen() = CoroutineScopeContent {
                 QuackBasicTextField(
                     leadingIcon = QuackIcon.Search,
                     text = state.examArea,
-                    onTextChanged = viewModel::setExamArea,
+                    onTextChanged = {
+                        /*
+                        * TODO [EvergreenTree97] Box로도 해당 영역 Clickable이 잡히지 않음
+                        * 시험 영역 찾기 Screen으로 넘어가는 UX 개선사항 필요
+                        * */
+                        viewModel.navigateStep(CreateProblemStep.FindExamArea)
+                    },
                     placeholderText = stringResource(id = R.string.find_exam_area),
                 )
             }
