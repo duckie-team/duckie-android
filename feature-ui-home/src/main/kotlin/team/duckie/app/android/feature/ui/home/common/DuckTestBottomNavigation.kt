@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.component
+package team.duckie.app.android.feature.ui.home.common
 
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.background

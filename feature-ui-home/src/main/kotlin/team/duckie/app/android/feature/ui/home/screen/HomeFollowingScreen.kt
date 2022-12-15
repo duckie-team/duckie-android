@@ -28,7 +28,7 @@ import coil.compose.AsyncImage
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.component.RecommendUserProfile
+import team.duckie.app.android.feature.ui.home.common.RecommendUserProfile
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackDivider

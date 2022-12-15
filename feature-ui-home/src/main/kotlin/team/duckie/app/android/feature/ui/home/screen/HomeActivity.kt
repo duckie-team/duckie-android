@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import dagger.hilt.android.AndroidEntryPoint
-import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
+import team.duckie.app.android.feature.ui.home.common.DuckTestBottomNavigation
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
