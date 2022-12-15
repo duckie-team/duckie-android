@@ -105,6 +105,67 @@ private val FakeHomeTopicRecommendItem =
         )
     )
 
+private val FakeHomeInitRecommendCategories = persistentListOf(
+    RecommendCategories(
+        topic = "연예인",
+        users = persistentListOf(
+            RecommendUser(
+                profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+                name = "닉네임",
+                taker = 20,
+                createAt = "1일 전",
+            ),
+            RecommendUser(
+                profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+                name = "닉네임",
+                taker = 20,
+                createAt = "1일 전",
+            ),
+            RecommendUser(
+                profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+                name = "닉네임",
+                taker = 20,
+                createAt = "1일 전",
+            ),
+            RecommendUser(
+                profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+                name = "닉네임",
+                taker = 20,
+                createAt = "1일 전",
+            ),
+        ),
+    ),
+    RecommendCategories(
+        topic = "영화",
+        users = persistentListOf(
+            RecommendUser(
+                profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+                name = "닉네임",
+                taker = 20,
+                createAt = "1일 전",
+            ),
+            RecommendUser(
+                profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+                name = "닉네임",
+                taker = 20,
+                createAt = "1일 전",
+            ),
+            RecommendUser(
+                profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+                name = "닉네임",
+                taker = 20,
+                createAt = "1일 전",
+            ),
+            RecommendUser(
+                profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+                name = "닉네임",
+                taker = 20,
+                createAt = "1일 전",
+            ),
+        ),
+    )
+)
+
 private const val HomeRecommendScreen = 0
 private const val HomeFollowingScreen = 1
 
@@ -121,10 +182,11 @@ fun DuckieHomeScreen() {
         stringResource(id = R.string.following),
     )
 
+    val nestedScroll = rememberNestedScrollInteropConnection()
     Column(
         modifier = Modifier
             .padding(systemBarPaddings)
-            .nestedScroll(rememberNestedScrollInteropConnection()),
+            .nestedScroll(nestedScroll),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         HomeTopAppBar(
@@ -137,8 +199,6 @@ fun DuckieHomeScreen() {
                 //TODO
             },
         )
-
-        QuackDivider()
 
         Crossfade(
             targetState = selectedTabIndex.value,
@@ -158,7 +218,10 @@ fun DuckieHomeScreen() {
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     } else {
-                        HomeFollowingInitialScreen()
+                        HomeFollowingInitialScreen(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            recommendCategories = FakeHomeInitRecommendCategories,
+                        )
                     }
                 }
             }

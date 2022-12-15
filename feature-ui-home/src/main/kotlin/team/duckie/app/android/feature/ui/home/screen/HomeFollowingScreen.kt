@@ -3,6 +3,7 @@ package team.duckie.app.android.feature.ui.home.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -19,10 +22,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -68,48 +75,28 @@ internal val fakeFollowingTest = persistentListOf(
     ),
 )
 
-internal val fakeRecommendUser = persistentListOf(
-    RecommendUser(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-        name = "닉네임",
-        taker = 20,
-        createAt = "1일 전",
-    ),
-    RecommendUser(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-        name = "닉네임",
-        taker = 20,
-        createAt = "1일 전",
-    ),
-    RecommendUser(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-        name = "닉네임",
-        taker = 20,
-        createAt = "1일 전",
-    ),
-    RecommendUser(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-        name = "닉네임",
-        taker = 20,
-        createAt = "1일 전",
-    ),
+data class RecommendCategories(
+    val topic: String,
+    val users: PersistentList<RecommendUser>,
 )
 
 data class RecommendUser(
+    val userId: Int = 0,
     val profile: String,
     val name: String,
     val taker: Int,
     val createAt: String,
 )
 
+private val HomeFollowingPadding: Dp = 24.dp
+
 @Composable
 internal fun HomeFollowingScreen(
     modifier: Modifier = Modifier,
-
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(32.dp)
+        verticalArrangement = Arrangement.spacedBy(HomeFollowingPadding)
     ) {
         itemsIndexed(fakeFollowingTest) { index, maker ->
             TestCoverWithMaker(
@@ -124,7 +111,7 @@ internal fun HomeFollowingScreen(
             )
 
             if (index == fakeFollowingTest.size - 1) {
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(HomeFollowingPadding))
             }
         }
     }
@@ -133,71 +120,86 @@ internal fun HomeFollowingScreen(
 @Composable
 internal fun HomeFollowingInitialScreen(
     modifier: Modifier = Modifier,
+    recommendCategories: PersistentList<RecommendCategories>,
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier,
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(164.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            QuackHeadLine2(
-                text = "마음에 드는 출제자를 팔로우하면\n최신 문제지를 빠르게 풀어볼 수 있어요!"
-            )
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(164.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                QuackHeadLine2(
+                    text = "마음에 드는 출제자를 팔로우하면\n최신 문제지를 빠르게 풀어볼 수 있어요!",
+                    align = TextAlign.Center,
+                )
+            }
         }
 
-        HomeRecommendUsers(
-            recommendUser = fakeRecommendUser,
-            title = "연예인",
-        )
-        HomeRecommendUsers(
-            recommendUser = fakeRecommendUser,
-            title = "영화",
-        )
+        items(recommendCategories) { categories ->
+            HomeRecommendUsers(
+                topic = categories.topic,
+                recommendUser = categories.users,
+                onClickFollowing = {
+
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }
 
 @Composable
-fun HomeRecommendUsers(
+private fun HomeRecommendUsers(
+    topic: String,
     recommendUser: List<RecommendUser>,
-    title: String,
+    onClickFollowing: (Int) -> Unit,
 ) {
     QuackDivider()
 
     Spacer(modifier = Modifier.height(24.dp))
 
     QuackTitle2(
-        text = title,
+        text = topic,
     )
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    LazyColumn {
-        itemsIndexed(recommendUser) { index, user ->
-            var following by remember { mutableStateOf(false) }
+    recommendUser.map { user ->
+        var following by remember { mutableStateOf(false) }
 
-            RecommendUserProfile(
-                index = index,
-                profile = user.profile,
-                name = user.name,
-                takers = user.taker,
-                createAt = user.createAt,
-                isFollowing = following,
-                onClickFollowing = {
-                    following = !following
-                },
-            )
-        }
+        RecommendUserProfile(
+            profile = user.profile,
+            name = user.name,
+            takers = user.taker,
+            createAt = user.createAt,
+            isFollowing = following,
+            onClickFollowing = {
+                following = !following
+                onClickFollowing(user.userId)
+            },
+        )
     }
 
     Spacer(modifier = Modifier.height(16.dp))
 }
 
+private val HomeProfileSize: DpSize = DpSize(
+    all = 24.dp,
+)
+
+// TODO("임의의 값, figma에 명시 X")
+private val HomeProfileShape: RoundedCornerShape = RoundedCornerShape(
+    size = 16.dp
+)
+
+
 @Composable
 private fun RecommendUserProfile(
-    index: Int,
     profile: String,
     name: String,
     takers: Int,
@@ -206,7 +208,6 @@ private fun RecommendUserProfile(
     isFollowing: Boolean,
     onClickFollowing: (Boolean) -> Unit,
 ) {
-
     Row(
         modifier = Modifier.padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -259,12 +260,13 @@ private fun RecommendUserProfile(
             text = if (isFollowing) "팔로우" else "팔로잉",
             color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
             onClick = { onClickFollowing(!isFollowing) },
+            rippleEnabled = false,
         )
     }
 }
 
 @Composable
-fun TestCoverWithMaker(
+private fun TestCoverWithMaker(
     cover: String,
     profile: String,
     title: String,
@@ -297,25 +299,4 @@ fun TestCoverWithMaker(
             onClickUserProfile = onClickUserProfile,
         )
     }
-}
-
-private val HomeProfileSize: DpSize = DpSize(
-    all = 24.dp,
-)
-
-// TODO("임의의 값, figma에 명시 X")
-private val HomeProfileShape: RoundedCornerShape = RoundedCornerShape(
-    size = 16.dp
-)
-
-@Preview
-@Composable
-fun PreviewRecommendUser() {
-    val list = Maker(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-        title = "제 1회 도로 패션영역",
-        name = "닉네임",
-        takers = 30,
-        createAt = "1일 전",
-    )
 }
