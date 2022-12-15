@@ -201,7 +201,7 @@ private fun HomeTopicRecommend(
 
                     QuackBody2(
                         modifier = Modifier.padding(top = 8.dp),
-                        text = "응시자 ${item.takers}",
+                        text = "${stringResource(id = R.string.taker)} ${item.takers}",
                     )
                 }
             }
