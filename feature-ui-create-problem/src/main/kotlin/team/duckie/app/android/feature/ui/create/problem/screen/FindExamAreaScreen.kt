@@ -17,7 +17,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -36,6 +40,11 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 internal fun FindExamAreaScreen() {
     val viewModel = LocalViewModel.current as CreateProblemViewModel
     val state = viewModel.state.collectAsStateWithLifecycle().value.examInformation.foundExamArea
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 
     Scaffold(
         modifier = Modifier.statusBarsPadding(),
@@ -55,6 +64,7 @@ internal fun FindExamAreaScreen() {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             QuackBasicTextField(
+                modifier = Modifier.focusRequester(focusRequester),
                 leadingIcon = QuackIcon.Search,
                 text = state.examArea,
                 onTextChanged = viewModel::setExamArea,
@@ -64,7 +74,10 @@ internal fun FindExamAreaScreen() {
                 LazyColumn {
                     item {
                         SearchResultText(
-                            text = "+${state.examArea} 추가하기",
+                            text = stringResource(
+                                id = R.string.add_also,
+                                state.examArea,
+                            ),
                             onClick = {
                                 viewModel.navigateStep(CreateProblemStep.ExamInformation)
                             },
