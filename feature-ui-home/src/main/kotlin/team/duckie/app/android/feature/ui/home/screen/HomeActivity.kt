@@ -9,14 +9,11 @@ package team.duckie.app.android.feature.ui.home.screen
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
@@ -30,6 +27,7 @@ import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
@@ -47,34 +45,31 @@ private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
 class HomeActivity : BaseActivity() {
 
     @Inject
-    lateinit var vm: HomeViewModel
+    lateinit var homeViewModel: HomeViewModel
 
     @OptIn(ExperimentalLifecycleComposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val state = vm.state.collectAsStateWithLifecycle().value
+            val state = homeViewModel.state.collectAsStateWithLifecycle().value
 
             QuackTheme {
-
                 Layout(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = MaterialTheme.colors.background)
                         .padding(bottom = systemBarPaddings.calculateBottomPadding()),
                     content = {
-                        Crossfade(
+                        QuackAnimatedContent(
                             modifier = Modifier.layoutId(HomeCrossFacadeLayoutId),
                             targetState = state.step,
                         ) { page ->
                             when (page) {
-                                HomeScreen -> DuckieHomeScreen(
-                                    vm = vm,
-                                )
-                                SearchScreen -> TODO()
-                                RankingScreen -> TODO()
-                                MyPageScreen -> TODO()
+                                HomeScreen -> DuckieHomeScreen(vm = homeViewModel,)
+                                SearchScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
+                                RankingScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
+                                MyPageScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
                             }
                         }
 
@@ -88,7 +83,7 @@ class HomeActivity : BaseActivity() {
                             modifier = Modifier.layoutId(HomeBottomNavigationViewLayoutId),
                             selectedIndex = state.step,
                             onClick = {
-                                vm.navigationPage(it)
+                                homeViewModel.navigationPage(it)
                             },
                         )
                     },
