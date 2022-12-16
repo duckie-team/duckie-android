@@ -35,14 +35,14 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 import team.duckie.quackquack.ui.modifier.quackClickable
 
-data class HomeRecommendItem(
+internal data class HomeRecommendItem(
     val image: String,
     val title: String,
     val content: String,
     val buttonContent: String,
 )
 
-data class TopicRecommendItem(
+internal data class TopicRecommendItem(
     val title: String,
     val tag: String,
     val items: PersistentList<DuckTest>

@@ -38,7 +38,7 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
 
-data class Maker(
+internal data class Maker(
     val cover: String,
     val profile: String,
     val title: String,
@@ -47,12 +47,12 @@ data class Maker(
     val createAt: String,
 )
 
-data class RecommendCategories(
+internal data class RecommendCategories(
     val topic: String,
     val users: PersistentList<RecommendUser>,
 )
 
-data class RecommendUser(
+internal data class RecommendUser(
     val userId: Int = 0,
     val profile: String,
     val name: String,
