@@ -1,3 +1,6 @@
+// TODO(limsaehyun): 더미 데이터 때문에 MaxLineHeight 발생 추후에 제거 필요
+@file:Suppress("MaxLineLength")
+
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.animation.Crossfade
@@ -7,8 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,16 +31,19 @@ import team.duckie.quackquack.ui.util.DpSize
 private val FakeHomeRecommendItem =
     persistentListOf(
         HomeRecommendItem(
+            image = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
             title = "제 1회 도로 패션영역",
             content = "아 저 근데 너무 재미있을 것 같아요\n내 시험 최고",
             buttonContent = "하기싫음 하지마세요",
         ),
         HomeRecommendItem(
+            image = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
             title = "제 2회 도로 패션영역",
             content = "아 저 근데 너무 재미있을 것 같아요\n내 시험 최고",
             buttonContent = "하기싫음 하지마세요",
         ),
         HomeRecommendItem(
+            image = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
             title = "제 3회 도로 패션영역",
             content = "아 저 근데 너무 재미있을 것 같아요\n내 시험 최고",
             buttonContent = "하기싫음 하지마세요",
@@ -172,6 +176,7 @@ private val FakeFollowingTest = persistentListOf(
         name = "닉네임",
         takers = 30,
         createAt = "1일 전",
+        cover = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
     ),
     Maker(
         profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
@@ -179,6 +184,7 @@ private val FakeFollowingTest = persistentListOf(
         name = "닉네임",
         takers = 30,
         createAt = "1일 전",
+        cover = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
     ),
     Maker(
         profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
@@ -186,6 +192,7 @@ private val FakeFollowingTest = persistentListOf(
         name = "닉네임",
         takers = 30,
         createAt = "1일 전",
+        cover = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
     ),
 )
 

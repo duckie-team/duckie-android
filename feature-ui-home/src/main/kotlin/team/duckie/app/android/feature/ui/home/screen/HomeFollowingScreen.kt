@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.common.RecommendUserProfile
 import team.duckie.quackquack.ui.color.QuackColor
@@ -40,7 +39,7 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
 
 data class Maker(
-    val cover: String = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+    val cover: String,
     val profile: String,
     val title: String,
     val name: String,

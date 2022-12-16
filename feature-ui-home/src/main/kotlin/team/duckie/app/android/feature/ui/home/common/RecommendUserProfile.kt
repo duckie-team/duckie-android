@@ -99,7 +99,8 @@ internal fun RecommendUserProfile(
             QuackBody2(
                 modifier = Modifier
                     .layoutId(UserInfoBlockFollowingButtonLayoutId),
-                text = if (isFollowing) stringResource(id = R.string.follow) else stringResource(id = R.string.following),
+                text = if (isFollowing) stringResource(id = R.string.follow)
+                else stringResource(id = R.string.following),
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                 onClick = { onClickFollowing(!isFollowing) },
                 rippleEnabled = false,

@@ -36,7 +36,7 @@ import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 import team.duckie.quackquack.ui.modifier.quackClickable
 
 data class HomeRecommendItem(
-    val image: String = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+    val image: String,
     val title: String,
     val content: String,
     val buttonContent: String,

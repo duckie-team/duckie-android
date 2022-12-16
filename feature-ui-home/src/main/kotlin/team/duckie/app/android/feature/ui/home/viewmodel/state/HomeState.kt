@@ -7,7 +7,7 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel.state
 
-data class HomeState (
+data class HomeState(
     val step: Int = 0,
     val selectedTabIndex: Int = 0,
 )
