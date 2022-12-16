@@ -16,10 +16,13 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.common.HomeTextTab
+import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize
@@ -162,16 +165,44 @@ private val FakeHomeInitRecommendCategories = persistentListOf(
     )
 )
 
+private val FakeFollowingTest = persistentListOf(
+    Maker(
+        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+        title = "제 1회 도로 패션영역",
+        name = "닉네임",
+        takers = 30,
+        createAt = "1일 전",
+    ),
+    Maker(
+        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+        title = "제 1회 도로 패션영역",
+        name = "닉네임",
+        takers = 30,
+        createAt = "1일 전",
+    ),
+    Maker(
+        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+        title = "제 1회 도로 패션영역",
+        name = "닉네임",
+        takers = 30,
+        createAt = "1일 전",
+    ),
+)
+
 private const val HomeRecommendScreen = 0
 private const val HomeFollowingScreen = 1
 
 private val HomeIconSize = DpSize(24.dp)
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalComposeUiApi::class,
+    ExperimentalLifecycleComposeApi::class,
+)
 @Composable
-fun DuckieHomeScreen() {
-
-    val selectedTabIndex = remember { mutableStateOf(HomeRecommendScreen) }
+fun DuckieHomeScreen(
+    vm: HomeViewModel,
+) {
+    val state = vm.state.collectAsStateWithLifecycle().value
 
     val homeTextTabTitles = persistentListOf(
         stringResource(id = R.string.recommend),
@@ -179,6 +210,7 @@ fun DuckieHomeScreen() {
     )
 
     val nestedScroll = rememberNestedScrollInteropConnection()
+
     Column(
         modifier = Modifier
             .padding(systemBarPaddings)
@@ -187,9 +219,9 @@ fun DuckieHomeScreen() {
     ) {
         HomeTopAppBar(
             titles = homeTextTabTitles,
-            selectedTabIndex = selectedTabIndex.value,
+            selectedTabIndex = state.selectedTabIndex,
             onTabSelected = {
-                selectedTabIndex.value = it
+                vm.changedSelectedTab(it)
             },
             onClickedEdit = {
                 // TODO
@@ -197,7 +229,7 @@ fun DuckieHomeScreen() {
         )
 
         Crossfade(
-            targetState = selectedTabIndex.value,
+            targetState = state.selectedTabIndex,
         ) { page ->
             when (page) {
                 HomeRecommendScreen -> {
@@ -209,9 +241,10 @@ fun DuckieHomeScreen() {
                 }
 
                 HomeFollowingScreen -> {
-                    if (fakeFollowingTest.isEmpty()) {
+                    if (FakeFollowingTest.isEmpty()) {
                         HomeFollowingScreen(
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            followingTest = FakeFollowingTest,
                         )
                     } else {
                         HomeFollowingInitialScreen(
@@ -238,7 +271,7 @@ private fun HomeTopAppBar(
             .fillMaxWidth()
             .padding(
                 horizontal = 16.dp,
-                vertical = 12.dp
+                vertical = 12.dp,
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {

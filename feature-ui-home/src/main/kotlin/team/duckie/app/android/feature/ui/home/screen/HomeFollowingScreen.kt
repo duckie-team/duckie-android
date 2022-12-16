@@ -48,30 +48,6 @@ data class Maker(
     val createAt: String,
 )
 
-internal val fakeFollowingTest = persistentListOf(
-    Maker(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-        title = "제 1회 도로 패션영역",
-        name = "닉네임",
-        takers = 30,
-        createAt = "1일 전",
-    ),
-    Maker(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-        title = "제 1회 도로 패션영역",
-        name = "닉네임",
-        takers = 30,
-        createAt = "1일 전",
-    ),
-    Maker(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-        title = "제 1회 도로 패션영역",
-        name = "닉네임",
-        takers = 30,
-        createAt = "1일 전",
-    ),
-)
-
 data class RecommendCategories(
     val topic: String,
     val users: PersistentList<RecommendUser>,
@@ -90,12 +66,13 @@ private val HomeFollowingPadding: Dp = 24.dp
 @Composable
 internal fun HomeFollowingScreen(
     modifier: Modifier = Modifier,
+    followingTest: PersistentList<Maker>,
 ) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(HomeFollowingPadding)
     ) {
-        itemsIndexed(fakeFollowingTest) { index, maker ->
+        itemsIndexed(followingTest) { index, maker ->
             TestCoverWithMaker(
                 profile = maker.profile,
                 title = maker.title,
@@ -107,7 +84,7 @@ internal fun HomeFollowingScreen(
                 cover = maker.cover,
             )
 
-            if (index == fakeFollowingTest.size - 1) {
+            if (index == followingTest.size - 1) {
                 Spacer(modifier = Modifier.height(HomeFollowingPadding))
             }
         }
