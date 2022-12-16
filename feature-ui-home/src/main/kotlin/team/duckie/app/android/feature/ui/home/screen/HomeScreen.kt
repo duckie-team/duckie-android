@@ -241,7 +241,10 @@ fun DuckieHomeScreen(
             when (page) {
                 HomeRecommendScreen -> {
                     HomeRecommendScreen(
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(
+                            horizontal = 16.dp,
+                            vertical = 12.dp
+                        ),
                         homeRecommendItems = FakeHomeRecommendItem,
                         topicRecommendItems = FakeHomeTopicRecommendItem,
                     )

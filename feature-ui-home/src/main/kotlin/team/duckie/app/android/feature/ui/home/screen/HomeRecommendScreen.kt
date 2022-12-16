@@ -3,6 +3,7 @@ package team.duckie.app.android.feature.ui.home.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +28,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -69,7 +72,7 @@ internal fun HomeRecommendScreen(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(),
+            .padding(bottom = systemBarPaddings.calculateBottomPadding()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
@@ -87,7 +90,7 @@ internal fun HomeRecommendScreen(
         item {
             HorizontalPagerIndicator(
                 modifier = Modifier
-                    .padding(top = 24.dp),
+                    .padding(top = 24.dp, bottom = 60.dp),
                 pagerState = pageState,
             )
         }
@@ -95,7 +98,7 @@ internal fun HomeRecommendScreen(
         items(topicRecommendItems) { item ->
             HomeTopicRecommend(
                 modifier = Modifier
-                    .padding(top = 60.dp, bottom = 32.dp),
+                    .padding(bottom = 60.dp),
                 title = item.title,
                 tag = item.tag,
                 recommendItems = item.items,
