@@ -10,6 +10,7 @@
 package team.duckie.app.android.feature.ui.create.problem
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblem
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import javax.inject.Inject
@@ -37,9 +39,17 @@ class CreateProblemActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CompositionLocalProvider(LocalViewModel provides viewModel) {
-                val createProblemStep = viewModel.state.collectAsStateWithLifecycle().value.createProblemStep
+            val createProblemStep = viewModel.state.collectAsStateWithLifecycle().value.createProblemStep
 
+            BackHandler {
+                when (createProblemStep) {
+                    CreateProblemStep.ExamInformation -> finishWithAnimation()
+                    CreateProblemStep.FindExamArea -> viewModel.navigateStep(CreateProblemStep.ExamInformation)
+                    else -> viewModel.navigateStep(createProblemStep.minus(1))
+                }
+            }
+
+            CompositionLocalProvider(LocalViewModel provides viewModel) {
                 QuackAnimatedContent(
                     modifier = Modifier
                         .fillMaxSize()
