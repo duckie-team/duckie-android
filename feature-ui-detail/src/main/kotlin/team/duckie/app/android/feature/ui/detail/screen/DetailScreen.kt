@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -92,7 +94,8 @@ internal fun DetailScreen(modifier: Modifier = Modifier) = CoroutineScopeContent
             Column(
                 modifier = Modifier
                     .layoutId(DetailScreenContentLayoutId)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
             ) {
                 // 그림
                 QuackImage(
@@ -121,8 +124,7 @@ internal fun DetailScreen(modifier: Modifier = Modifier) = CoroutineScopeContent
                 // 공백
                 Spacer(modifier = Modifier.height(12.dp))
                 QuackSingeLazyRowTag(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
                     horizontalSpace = 4.dp,
                     items = persistentListOf(
                         "도로", "패션", "도로패션", "도로로", "Doro Driven Design"
