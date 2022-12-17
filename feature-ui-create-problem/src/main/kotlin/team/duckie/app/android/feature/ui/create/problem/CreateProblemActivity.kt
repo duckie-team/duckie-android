@@ -15,13 +15,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import team.duckie.app.android.feature.ui.create.problem.screen.ExamInformationScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.FindExamAreaScreen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.ui.BaseActivity
@@ -49,6 +53,12 @@ class CreateProblemActivity : BaseActivity() {
                 }
             }
 
+            LaunchedEffect(viewModel.sideEffect) {
+                viewModel.sideEffect
+                    .onEach(::handleSideEffect)
+                    .launchIn(this)
+            }
+
             CompositionLocalProvider(LocalViewModel provides viewModel) {
                 QuackAnimatedContent(
                     modifier = Modifier
@@ -63,6 +73,14 @@ class CreateProblemActivity : BaseActivity() {
                         CreateProblemStep.AdditionalInformation -> {}
                     }
                 }
+            }
+        }
+    }
+
+    private fun handleSideEffect(sideEffect: CreateProblemSideEffect) {
+        when (sideEffect) {
+            CreateProblemSideEffect.FinishActivity -> {
+                finishWithAnimation()
             }
         }
     }

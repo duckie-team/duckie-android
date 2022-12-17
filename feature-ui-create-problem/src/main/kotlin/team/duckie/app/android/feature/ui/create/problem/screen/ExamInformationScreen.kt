@@ -54,7 +54,9 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
         modifier = Modifier.statusBarsPadding(),
         topBar = {
             PrevAndNextTopAppBar(
-                onLeadingIconClick = {},
+                onLeadingIconClick = {
+                    launch { viewModel.onClickArrowBack() }
+                },
                 onTrailingTextClick = { viewModel.navigateStep(CreateProblemStep.CreateProblem) },
                 trailingTextEnabled = viewModel.isAllFieldsNotEmpty(),
             )
