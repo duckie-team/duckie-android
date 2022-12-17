@@ -11,7 +11,7 @@
 
         <activity
             android:name=".CreateProblemActivity"
-            android:exported="true" />
+            android:exported="false" />
 
     </application>
 </manifest>
