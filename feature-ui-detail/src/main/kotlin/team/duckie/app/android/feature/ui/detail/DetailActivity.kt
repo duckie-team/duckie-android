@@ -2,7 +2,9 @@ package team.duckie.app.android.feature.ui.detail
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import team.duckie.app.android.feature.ui.detail.screen.DetailScreen
@@ -21,7 +23,7 @@ class DetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CompositionLocalProvider(LocalViewModel provides viewModel) {
-                DetailScreen()
+                DetailScreen(modifier = Modifier.systemBarsPadding())
             }
         }
     }
