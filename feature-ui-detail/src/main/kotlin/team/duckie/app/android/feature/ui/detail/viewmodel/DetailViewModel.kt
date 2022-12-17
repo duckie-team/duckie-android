@@ -5,17 +5,14 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.detail
+package team.duckie.app.android.feature.ui.detail.viewmodel
 
+import javax.inject.Inject
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.viewmodel.BaseViewModel
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class DetailViewModel @Inject constructor() :
-    BaseViewModel<DetailState, DetailSideEffect>(DetailState.Initial) {
+class DetailViewModel @Inject constructor() : BaseViewModel<DetailState, DetailSideEffect>(DetailState.Initial) {
     suspend fun sendToast(message: String) {
         postSideEffect {
             DetailSideEffect.SendToast(message)
