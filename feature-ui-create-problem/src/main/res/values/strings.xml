@@ -17,5 +17,5 @@
     <string name="input_exam_description">"시험에 대한 설명을 입력해 주세요"</string>
     <string name="certifying_statement">"필적 확인 문구</string>
     <string name="input_certifying_statement">"필적확인 문구를 입력해 주세요"</string>
-    <string name="add_also">%s+도 추가하기</string>
+    <string name="add_also">+%s 추가하기</string>
 </resources>

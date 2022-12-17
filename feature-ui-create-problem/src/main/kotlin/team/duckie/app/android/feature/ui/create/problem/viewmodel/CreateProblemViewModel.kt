@@ -30,6 +30,12 @@ class CreateProblemViewModel @Inject constructor(
         }
     }*/
 
+    suspend fun onClickArrowBack() {
+        postSideEffect {
+            CreateProblemSideEffect.FinishActivity
+        }
+    }
+
     fun onClickCategory(
         index: Int,
     ) {
