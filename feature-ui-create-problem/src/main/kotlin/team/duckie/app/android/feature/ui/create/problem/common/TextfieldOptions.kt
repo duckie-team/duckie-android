@@ -17,7 +17,6 @@ import androidx.compose.ui.text.input.ImeAction
 @Stable
 internal val ImeActionNext = KeyboardOptions(imeAction = ImeAction.Next)
 
-@Stable
 internal fun moveDownFocus(
     focusManager: FocusManager,
 ) = KeyboardActions(
