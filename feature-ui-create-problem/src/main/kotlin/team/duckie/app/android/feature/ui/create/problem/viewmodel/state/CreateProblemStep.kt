@@ -8,8 +8,8 @@
 package team.duckie.app.android.feature.ui.create.problem.viewmodel.state
 
 enum class CreateProblemStep(private val index: Int) {
+    FindExamArea(0),
     ExamInformation(1),
-    FindExamArea(100),
     CreateProblem(2),
     AdditionalInformation(3);
 
