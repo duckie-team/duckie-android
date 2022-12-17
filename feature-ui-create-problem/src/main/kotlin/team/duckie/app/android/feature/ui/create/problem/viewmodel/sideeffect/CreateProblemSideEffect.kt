@@ -7,5 +7,6 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect
 
-@Suppress("EmptyClassBlock") // TODO(EvergreenTree97): SideEffect 생기면 제거
-sealed class CreateProblemSideEffect
+sealed class CreateProblemSideEffect {
+    object FinishActivity : CreateProblemSideEffect()
+}
