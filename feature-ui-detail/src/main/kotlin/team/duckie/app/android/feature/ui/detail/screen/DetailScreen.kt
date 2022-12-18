@@ -232,41 +232,44 @@ internal fun DetailScreen(modifier: Modifier = Modifier) = CoroutineScopeContent
                 onChallengeClick = { },
             )
         }
-    ) { measurables, constraints ->
+    ) { measurableItems, constraints ->
+        // 1. topAppBar, bottomBar 높이값 측정
         val looseConstraints = constraints.asLoose()
 
-        val topAppBarMeasureable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == DetailScreenTopAppBarLayoutId
+        val topAppBarMeasurable = measurableItems.fastFirstOrNull { measureItem ->
+            measureItem.layoutId == DetailScreenTopAppBarLayoutId
         }?.measure(looseConstraints) ?: npe()
+        val topAppBarHeight = topAppBarMeasurable.height
 
-        val bottomBarMeasureable = measurables.fastFirstOrNull { measurable ->
+        val bottomBarMeasurable = measurableItems.fastFirstOrNull { measurable ->
             measurable.layoutId == DetailScreenBottomBarLayoutId
         }?.measure(looseConstraints) ?: npe()
+        val bottomBarHeight = bottomBarMeasurable.height
 
-        val topAppBarHeight = topAppBarMeasureable.height
-        val bottomBarHeight = bottomBarMeasureable.height
+        // 2. content 제약 설정 및 content 높이값 측정
         val contentHeight = constraints.maxHeight - topAppBarHeight - bottomBarHeight
         val contentConstraints = constraints.copy(
             minHeight = contentHeight,
             maxHeight = contentHeight,
         )
-        val contentMeasureable = measurables.fastFirstOrNull { measurable ->
+        val contentMeasurable = measurableItems.fastFirstOrNull { measurable ->
             measurable.layoutId == DetailScreenContentLayoutId
         }?.measure(contentConstraints) ?: npe()
 
+        // 3. 위에서 추출한 값들을 활용해 레이아웃 위치 처리
         layout(
             width = constraints.maxWidth,
             height = constraints.maxHeight,
         ) {
-            topAppBarMeasureable.place(
+            topAppBarMeasurable.place(
                 x = 0,
                 y = 0,
             )
-            contentMeasureable.place(
+            contentMeasurable.place(
                 x = 0,
                 y = topAppBarHeight,
             )
-            bottomBarMeasureable.place(
+            bottomBarMeasurable.place(
                 x = 0,
                 y = topAppBarHeight + contentHeight,
             )
