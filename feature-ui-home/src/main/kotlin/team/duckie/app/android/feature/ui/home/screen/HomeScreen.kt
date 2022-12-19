@@ -1,3 +1,10 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 // TODO(limsaehyun): 더미 데이터 때문에 MaxLineHeight 발생 추후에 제거 필요
 @file:Suppress("MaxLineLength")
 
@@ -24,7 +31,6 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.common.HomeTextTab
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
-import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -117,24 +123,28 @@ private val FakeHomeInitRecommendCategories = persistentListOf(
                 name = "닉네임",
                 taker = 20,
                 createAt = "1일 전",
+                userId = 0,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
                 taker = 20,
                 createAt = "1일 전",
+                userId = 1,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
                 taker = 20,
                 createAt = "1일 전",
+                userId = 2,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
                 taker = 20,
                 createAt = "1일 전",
+                userId = 3,
             ),
         ),
     ),
@@ -146,24 +156,28 @@ private val FakeHomeInitRecommendCategories = persistentListOf(
                 name = "닉네임",
                 taker = 20,
                 createAt = "1일 전",
+                userId = 3,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
                 taker = 20,
                 createAt = "1일 전",
+                userId = 3,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
                 taker = 20,
                 createAt = "1일 전",
+                userId = 3,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
                 taker = 20,
                 createAt = "1일 전",
+                userId = 3,
             ),
         ),
     )
@@ -171,33 +185,52 @@ private val FakeHomeInitRecommendCategories = persistentListOf(
 
 private val FakeFollowingTest = persistentListOf(
     Maker(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
         title = "제 1회 도로 패션영역",
-        name = "닉네임",
-        takers = 30,
+        takerNumber = 30,
         createAt = "1일 전",
-        cover = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+        coverUrl = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+        owner = Maker.User(
+            profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+            name = "닉네임",
+        )
     ),
     Maker(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
         title = "제 1회 도로 패션영역",
-        name = "닉네임",
-        takers = 30,
+        takerNumber = 30,
         createAt = "1일 전",
-        cover = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+        coverUrl = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+        owner = Maker.User(
+            profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+            name = "닉네임",
+        )
     ),
     Maker(
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
         title = "제 1회 도로 패션영역",
-        name = "닉네임",
-        takers = 30,
+        takerNumber = 30,
         createAt = "1일 전",
-        cover = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+        coverUrl = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+        owner = Maker.User(
+            profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+            name = "닉네임",
+        )
     ),
 )
 
-private const val HomeRecommendScreen = 0
-private const val HomeFollowingScreen = 1
+enum class HomeStep(
+    val index: Int,
+){
+    HomeRecommendScreen(
+        index = 0,
+    ),
+
+    HomeFollowingScreen(
+        index = 1,
+    );
+
+    companion object {
+        fun toStep(value: Int) = HomeStep.values().first { it.index == value }
+    }
+}
 
 private val HomeIconSize = DpSize(24.dp)
 
@@ -220,15 +253,16 @@ fun DuckieHomeScreen(
 
     Column(
         modifier = Modifier
-            .padding(systemBarPaddings)
             .nestedScroll(nestedScroll),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         HomeTopAppBar(
             titles = homeTextTabTitles,
-            selectedTabIndex = state.selectedTabIndex,
-            onTabSelected = {
-                vm.changedSelectedTab(it)
+            selectedTabIndex = state.selectedTabIndex.index,
+            onTabSelected = { step ->
+                vm.changedSelectedTab(
+                    HomeStep.toStep(step)
+                )
             },
             onClickedEdit = {
                 // TODO
@@ -239,18 +273,18 @@ fun DuckieHomeScreen(
             targetState = state.selectedTabIndex,
         ) { page ->
             when (page) {
-                HomeRecommendScreen -> {
+                HomeStep.HomeRecommendScreen -> {
                     HomeRecommendScreen(
                         modifier = Modifier.padding(
                             horizontal = 16.dp,
-                            vertical = 12.dp
+                            vertical = 12.dp,
                         ),
                         homeRecommendItems = FakeHomeRecommendItem,
                         topicRecommendItems = FakeHomeTopicRecommendItem,
                     )
                 }
 
-                HomeFollowingScreen -> {
+                HomeStep.HomeFollowingScreen -> {
                     if (FakeFollowingTest.isEmpty()) {
                         HomeFollowingScreen(
                             modifier = Modifier.padding(horizontal = 16.dp),
@@ -290,9 +324,7 @@ private fun HomeTopAppBar(
             selectedTabIndex = selectedTabIndex,
             onTabSelected = onTabSelected,
         )
-
         Spacer(modifier = Modifier.weight(1f))
-
         QuackImage(
             src = R.drawable.home_ic_create_24,
             onClick = onClickedEdit,

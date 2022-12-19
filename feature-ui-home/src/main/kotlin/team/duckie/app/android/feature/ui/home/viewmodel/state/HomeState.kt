@@ -7,7 +7,10 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel.state
 
+import team.duckie.app.android.feature.ui.home.screen.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.HomeStep
+
 data class HomeState(
-    val step: Int = 0,
-    val selectedTabIndex: Int = 0,
+    val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,
+    val selectedTabIndex: HomeStep = HomeStep.HomeRecommendScreen,
 )

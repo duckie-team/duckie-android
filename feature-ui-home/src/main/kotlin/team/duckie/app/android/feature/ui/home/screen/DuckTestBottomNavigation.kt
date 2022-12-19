@@ -35,9 +35,7 @@ private object DuckTestBottomNavigationDefaults {
     val Height = 52.dp
     val BackgroundColor = QuackColor.White
 
-    val IconSize = DpSize(
-        all = 24.dp,
-    )
+    val IconSize = DpSize(all = 24.dp)
 }
 
 /**

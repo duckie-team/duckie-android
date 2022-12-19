@@ -1,3 +1,10 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,9 +33,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.common.RecommendUserProfile
+import team.duckie.app.android.feature.ui.home.common.RecommendUserFollowingBlock
+import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackDivider
@@ -39,28 +49,30 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
 
 internal data class Maker(
-    val cover: String,
-    val profile: String,
+    val coverUrl: String,
     val title: String,
-    val name: String,
-    val takers: Int,
+    val takerNumber: Int,
     val createAt: String,
-)
+    val owner: User,
+) {
+    data class User(
+        val name: String,
+        val profile: String,
+    )
+}
 
 internal data class RecommendCategories(
     val topic: String,
-    val users: PersistentList<RecommendUser>,
+    val users: ImmutableList<RecommendUser>,
 )
 
 internal data class RecommendUser(
-    val userId: Int = 0,
+    val userId: Int,
     val profile: String,
     val name: String,
     val taker: Int,
     val createAt: String,
 )
-
-private val HomeFollowingPadding: Dp = 24.dp
 
 @Composable
 internal fun HomeFollowingScreen(
@@ -69,24 +81,28 @@ internal fun HomeFollowingScreen(
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(HomeFollowingPadding)
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        itemsIndexed(followingTest) { index, maker ->
+        itemsIndexed(
+            items = followingTest,
+        ) { _, maker ->
             TestCoverWithMaker(
-                profile = maker.profile,
+                profile = maker.owner.profile,
+                name = maker.owner.name,
                 title = maker.title,
-                name = maker.name,
-                takers = maker.takers,
+                takers = maker.takerNumber,
                 createAt = maker.createAt,
-                onClickUserProfile = {},
-                onClickTestCover = {},
-                cover = maker.cover,
-            )
+                onClickUserProfile = {
 
-            if (index == followingTest.size - 1) {
-                Spacer(modifier = Modifier.height(HomeFollowingPadding))
-            }
+                },
+                onClickTestCover = {
+
+                },
+                cover = maker.coverUrl,
+            )
         }
+
+        item { }
     }
 }
 
@@ -113,51 +129,48 @@ internal fun HomeFollowingInitialScreen(
         }
 
         items(recommendCategories) { categories ->
-            HomeRecommendUsers(
+            HomeFollowingInitialRecommendUsers(
+                modifier = Modifier.padding(bottom = 16.dp),
                 topic = categories.topic,
                 recommendUser = categories.users,
                 onClickFollowing = {
                 }
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-private fun HomeRecommendUsers(
+private fun HomeFollowingInitialRecommendUsers(
+    modifier: Modifier = Modifier,
     topic: String,
     recommendUser: List<RecommendUser>,
     onClickFollowing: (Int) -> Unit,
 ) {
-    QuackDivider()
-
-    Spacer(modifier = Modifier.height(24.dp))
-
-    QuackTitle2(
-        text = topic,
-    )
-
-    Spacer(modifier = Modifier.height(12.dp))
-
-    recommendUser.map { user ->
-        var following by remember { mutableStateOf(false) }
-
-        RecommendUserProfile(
-            profile = user.profile,
-            name = user.name,
-            takers = user.taker,
-            createAt = user.createAt,
-            isFollowing = following,
-            onClickFollowing = {
-                following = !following
-                onClickFollowing(user.userId)
-            },
+    Column(
+        modifier = modifier,
+    ) {
+        QuackDivider()
+        QuackTitle2(
+            modifier = Modifier.padding(
+                top = 24.dp,
+                bottom = 12.dp,
+            ),
+            text = topic,
         )
-    }
+        recommendUser.fastForEach { user ->
+            var following by remember { mutableStateOf(false) }
 
-    Spacer(modifier = Modifier.height(16.dp))
+            RecommendUserFollowingBlock(
+                user = user,
+                isFollowing = following,
+                onClickFollowing = {
+                    following = !following
+                    onClickFollowing(user.userId)
+                },
+            )
+        }
+    }
 }
 
 @Composable
@@ -182,10 +195,8 @@ private fun TestCoverWithMaker(
             model = cover,
             contentDescription = null,
         )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
         TestMakerContent(
+            modifier = Modifier.padding(top = 12.dp),
             profile = profile,
             title = title,
             name = name,
@@ -207,6 +218,7 @@ private val HomeProfileShape: RoundedCornerShape = RoundedCornerShape(
 
 @Composable
 private fun TestMakerContent(
+    modifier: Modifier = Modifier,
     profile: String,
     title: String,
     name: String,
@@ -215,6 +227,7 @@ private fun TestMakerContent(
     onClickUserProfile: (() -> Unit)? = null,
 ) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         QuackImage(
@@ -227,21 +240,17 @@ private fun TestMakerContent(
                 }
             },
         )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Column {
+        Column(
+            modifier = Modifier.padding(top = 8.dp)
+        ) {
             QuackSubtitle2(
                 text = title,
             )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Row {
+            Row(
+                modifier = Modifier.padding(top = 4.dp)
+            ) {
                 QuackBody3(text = name)
-
                 Spacer(modifier = Modifier.width(8.dp))
-
                 QuackBody3(
                     text = "${stringResource(id = R.string.taker)} $takers  ·  $createAt",
                     color = QuackColor.Gray2,

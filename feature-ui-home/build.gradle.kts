@@ -28,11 +28,10 @@ dependencies {
         projects.utilKotlin,
         projects.utilCompose,
         projects.utilViewmodel,
-        libs.ktx.lifecycle,
-        libs.compose.ktx.lifecycle,
         libs.quack.ui.components,
+        libs.compose.ktx.lifecycle,
         libs.compose.coil,
-        libs.ui.pager,
+        libs.ui.pager.asProvider(),
         libs.ui.pager.indicators,
     )
 }

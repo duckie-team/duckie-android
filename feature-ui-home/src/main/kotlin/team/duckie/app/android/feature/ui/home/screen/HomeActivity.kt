@@ -9,14 +9,17 @@ package team.duckie.app.android.feature.ui.home.screen
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.unit.Constraints
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,11 +34,6 @@ import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
-
-private const val HomeScreen: Int = 0
-private const val SearchScreen: Int = 1
-private const val RankingScreen: Int = 2
-private const val MyPageScreen: Int = 3
 
 private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
 private const val HomeBottomNavigationDividerLayoutId = "HomeBottomNavigationDivider"
@@ -52,48 +50,44 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val state = homeViewModel.state.collectAsStateWithLifecycle().value
+            val state by homeViewModel.state.collectAsStateWithLifecycle()
 
             QuackTheme {
                 Layout(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = MaterialTheme.colors.background)
-                        .padding(bottom = systemBarPaddings.calculateBottomPadding()),
+                        .padding(systemBarPaddings),
                     content = {
-                        QuackAnimatedContent(
+                        // TODO(limsaehyun): 추후에 QuackCrossfade 로 교체 필요
+                        Crossfade(
                             modifier = Modifier.layoutId(HomeCrossFacadeLayoutId),
                             targetState = state.step,
                         ) { page ->
                             when (page) {
-                                HomeScreen -> DuckieHomeScreen(vm = homeViewModel,)
-                                SearchScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
-                                RankingScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
-                                MyPageScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
+                                BottomNavigationStep.HomeScreen -> DuckieHomeScreen(vm = homeViewModel)
+                                BottomNavigationStep.SearchScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
+                                BottomNavigationStep.RankingScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
+                                BottomNavigationStep.MyPageScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
                             }
                         }
-
                         // TODO(limsaehyun): 추후에 QuackDivider 로 교체 필요
                         Divider(
                             modifier = Modifier.layoutId(HomeBottomNavigationDividerLayoutId),
                             color = QuackColor.Gray3.composeColor,
                         )
-
                         DuckTestBottomNavigation(
                             modifier = Modifier.layoutId(HomeBottomNavigationViewLayoutId),
-                            selectedIndex = state.step,
+                            selectedIndex = state.step.index,
                             onClick = {
-                                homeViewModel.navigationPage(it)
+                                homeViewModel.navigationPage(
+                                    BottomNavigationStep.toStep(state.step.index)
+                                )
                             },
                         )
                     },
                 ) { measurables, constraints ->
-
-                    val looseConstraints = constraints.asLoose(width = true)
-
-                    val homeCrossFacadePlaceable = measurables.fastFirstOrNull { measurable ->
-                        measurable.layoutId == HomeCrossFacadeLayoutId
-                    }?.measure(looseConstraints) ?: npe()
+                    val looseConstraints = constraints.asLoose()
 
                     val homeBottomNavigationDividerPlaceable =
                         measurables.fastFirstOrNull { measurable ->
@@ -105,8 +99,17 @@ class HomeActivity : BaseActivity() {
                     }?.measure(looseConstraints) ?: npe()
 
                     val homeBottomNavigationHeight = homeBottomNavigationPlaceable.height
+
                     val homeBottomNavigationDividerHeight =
                         homeBottomNavigationDividerPlaceable.height
+
+                    val homeCrossFadeConstraints = constraints.copy(
+                        minHeight = 0,
+                        maxHeight = constraints.maxHeight - homeBottomNavigationHeight
+                    )
+                    val homeCrossFacadePlaceable = measurables.fastFirstOrNull { measurable ->
+                        measurable.layoutId == HomeCrossFacadeLayoutId
+                    }?.measure(homeCrossFadeConstraints) ?: npe()
 
                     layout(
                         width = constraints.maxWidth,

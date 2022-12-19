@@ -1,3 +1,10 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.foundation.layout.Arrangement
@@ -71,8 +78,7 @@ internal fun HomeRecommendScreen(
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
-            .padding(bottom = systemBarPaddings.calculateBottomPadding()),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
@@ -123,31 +129,23 @@ private fun HomeRecommendContentScreen(
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
         )
-
         Spacer(modifier = Modifier.height(24.dp))
-
         QuackSplashSlogan(
             text = recommendItem.title,
         )
-
         Spacer(modifier = Modifier.height(12.dp))
-
         QuackBody1(
             text = recommendItem.content,
             align = TextAlign.Center,
         )
-
         Spacer(modifier = Modifier.height(24.dp))
-
         QuackLargeButton(
             type = QuackLargeButtonType.Fill,
             text = recommendItem.buttonContent,
             onClick = onStartClicked,
             enabled = true,
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         QuackBody3(
             text = stringResource(
                 id = R.string.home_volume_control_message,
@@ -171,9 +169,7 @@ private fun HomeTopicRecommend(
             text = title,
             underlineTexts = persistentListOf(tag),
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -190,17 +186,14 @@ private fun HomeTopicRecommend(
                         model = item.coverImg,
                         contentDescription = null,
                     )
-
                     QuackBody2(
                         modifier = Modifier.padding(top = 8.dp),
                         text = item.nickname,
                     )
-
                     QuackTitle2(
                         modifier = Modifier.padding(top = 4.dp),
                         text = item.title,
                     )
-
                     QuackBody2(
                         modifier = Modifier.padding(top = 8.dp),
                         text = "${stringResource(id = R.string.taker)} ${item.takers}",

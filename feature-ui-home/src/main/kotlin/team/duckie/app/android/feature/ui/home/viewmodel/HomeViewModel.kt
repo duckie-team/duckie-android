@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel
 
+import team.duckie.app.android.feature.ui.home.screen.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.viewmodel.BaseViewModel
@@ -17,7 +19,7 @@ import javax.inject.Singleton
 class HomeViewModel @Inject constructor() : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
 
     fun navigationPage(
-        step: Int,
+        step: BottomNavigationStep,
     ) {
         updateState { state ->
             state.copy(
@@ -27,7 +29,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeState, HomeSideEff
     }
 
     fun changedSelectedTab(
-        step: Int,
+        step: HomeStep,
     ) {
         updateState { state ->
             state.copy(

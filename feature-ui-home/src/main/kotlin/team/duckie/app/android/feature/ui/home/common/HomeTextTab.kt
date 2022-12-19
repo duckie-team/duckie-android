@@ -24,13 +24,11 @@ internal fun HomeTextTab(
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
 ) {
-
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         itemsIndexed(titles) { index, text ->
-
             if (index == selectedTabIndex) {
                 QuackHeadLine2(
                     text = text,
