@@ -9,7 +9,14 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import android.util.Log
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.ExamParam
+import team.duckie.app.android.domain.exam.model.Problem
+import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
@@ -21,19 +28,22 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateProblemViewModel @Inject constructor(
-    //private val makeExamUseCase: MakeExamUseCase,
+    private val makeExamUseCase: MakeExamUseCase,
 ) : BaseViewModel<CreateProblemState, CreateProblemSideEffect>(CreateProblemState()) {
 
-    /*suspend fun makeExam() {
-        makeExamUseCase(dummyParam).onSuccess { exam ->
-            Log.d(TAG, exam.toString() + "성공")
+    suspend fun makeExam() {
+        makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
+            Log.d("뷰모델", isSuccess.toString())
+        }.onFailure {
+            Log.d("뷰모델", it.localizedMessage)
         }
-    }*/
+    }
 
     suspend fun onClickArrowBack() {
-        postSideEffect {
+        makeExam()
+        /*postSideEffect {
             CreateProblemSideEffect.FinishActivity
-        }
+        }*/
     }
 
     fun onClickCategory(
@@ -121,3 +131,32 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 }
+
+private val dummyParam = ExamParam(
+    title = "Test Title 2",
+    description = "Test Description 2",
+    mainTagId = 1,
+    subTagIds = persistentListOf(5, 15, 2, 3, 4),
+    categoryId = 3,
+    thumbnailImageUrl = "Test Image Url",
+    certifyingStatement = "Test 필적 확인 문구1",
+    thumbnailType = "image",
+    buttonText = "Test Button Title 1",
+    isPublic = true,
+    problems = persistentListOf(
+        Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        )
+    ),
+    userId = 1,
+)
