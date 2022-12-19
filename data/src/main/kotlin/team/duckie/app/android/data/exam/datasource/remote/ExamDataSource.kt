@@ -13,6 +13,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import team.duckie.app.android.data.exam.model.ExamRequest
+import team.duckie.app.android.data.exam.model.PostResponse
 import javax.inject.Inject
 
 class ExamDataSource @Inject constructor(
@@ -25,6 +26,7 @@ class ExamDataSource @Inject constructor(
                 setBody(examRequest)
                 //header("authorization", "AT") //TODO(Evergreen): access token 자동화 방안 마련 필요
             }
-        return request.body()
+        val body: PostResponse = request.body()
+        return body.success?: false
     }
 }
