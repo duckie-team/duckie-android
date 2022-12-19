@@ -31,5 +31,5 @@ data class ExamRequest(
     @field:JsonProperty("buttonText")
     val buttonText: String? = null,
     @field:JsonProperty("userId")
-    val userId: Int,
+    val userId: Int? = null,
 )
