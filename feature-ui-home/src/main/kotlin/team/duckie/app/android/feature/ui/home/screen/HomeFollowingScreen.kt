@@ -92,10 +92,10 @@ internal fun HomeFollowingScreen(
                 takers = maker.examineeNumber,
                 createAt = maker.createAt,
                 onClickUserProfile = {
-
+                    // TODO ("limsaehyun"): 추후에 유저의 profile로 이동 필요할 것 같음
                 },
                 onClickTestCover = {
-
+                    // TODO ("limsaehyun"): 상세보기로 이동
                 },
                 cover = maker.coverUrl,
             )
@@ -138,6 +138,7 @@ internal fun HomeFollowingInitialScreen(
                 topic = categories.topic,
                 recommendUser = categories.users,
                 onClickFollowing = {
+                    // TODO ("limsaehyun"): viewModel에서 Following 필요
                 }
             )
         }

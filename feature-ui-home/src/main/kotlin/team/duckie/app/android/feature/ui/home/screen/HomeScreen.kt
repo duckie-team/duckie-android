@@ -11,6 +11,7 @@
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -218,7 +219,7 @@ private val FakeFollowingTest = persistentListOf(
 
 enum class HomeStep(
     val index: Int,
-){
+) {
     HomeRecommendScreen(
         index = 0,
     ),
@@ -265,7 +266,7 @@ fun DuckieHomeScreen(
                 )
             },
             onClickedEdit = {
-                // TODO
+                // TODO("limsaehyun"): 수정 페이지로 이동 필요
             },
         )
 
@@ -318,13 +319,13 @@ private fun HomeTopAppBar(
                 vertical = 12.dp,
             ),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         TextTabLayout(
             titles = titles,
             selectedTabIndex = selectedTabIndex,
             onTabSelected = onTabSelected,
         )
-        Spacer(modifier = Modifier.weight(1f))
         QuackImage(
             src = R.drawable.home_ic_create_24,
             onClick = onClickedEdit,

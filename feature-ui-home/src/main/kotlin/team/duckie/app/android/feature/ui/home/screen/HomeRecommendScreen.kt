@@ -85,7 +85,9 @@ internal fun HomeRecommendScreen(
             ) { page ->
                 HomeRecommendContentScreen(
                     recommendItem = homeRecommendItems[page],
-                    onStartClicked = { }
+                    onStartClicked = {
+                        // TODO ("limsaehyun"): 상세보기로 이동 필요
+                    }
                 )
             }
         }

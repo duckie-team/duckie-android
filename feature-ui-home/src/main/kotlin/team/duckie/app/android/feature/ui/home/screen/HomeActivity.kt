@@ -65,7 +65,7 @@ class HomeActivity : BaseActivity() {
                         ) { page ->
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen(vm = homeViewModel)
-                                BottomNavigationStep.SearchScreen -> TestA()
+                                BottomNavigationStep.SearchScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
                                 BottomNavigationStep.RankingScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
                                 BottomNavigationStep.MyPageScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
                             }
@@ -133,9 +133,4 @@ class HomeActivity : BaseActivity() {
             }
         }
     }
-}
-
-@Composable
-fun TestA() {
-
 }
