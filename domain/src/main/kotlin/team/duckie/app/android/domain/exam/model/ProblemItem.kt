@@ -11,9 +11,9 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
-data class ProblemItem(
-    val questionObject: Question,
-    val answerObject: Answer,
+data class Problem(
+    val question: Question,
+    val answer: Answer,
     val correctAnswer: String,
     val hint: String?,
     val memo: String?,

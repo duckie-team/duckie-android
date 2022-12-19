@@ -11,25 +11,25 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class ExamRequest(
     @field:JsonProperty("title")
-    val title: String,
+    val title: String? = null,
     @field:JsonProperty("description")
-    val description: String,
-    @field:JsonProperty("mainTag")
-    val mainTag: TagData,
-    @field:JsonProperty("subTags")
-    val subTag: List<TagData>?,
+    val description: String? = null,
+    @field:JsonProperty("mainTagId")
+    val mainTagId: Int? = null,
+    @field:JsonProperty("subTagIds")
+    val subTagIds: List<Int>? = null,
+    @field:JsonProperty("certifyingStatement")
+    val certifyingStatement: String? = null,
+    @field:JsonProperty("thumbnailImageUrl")
+    val thumbnailImageUrl: String? = null,
+    @field:JsonProperty("thumbnailType")
+    val thumbnailType: String? = null,
+    @field:JsonProperty("problems")
+    val problems: List<ProblemData>? = null,
+    @field:JsonProperty("isPublic")
+    val isPublic: Boolean? = null,
+    @field:JsonProperty("buttonText")
+    val buttonText: String? = null,
     @field:JsonProperty("userId")
     val userId: Int,
-    @field:JsonProperty("certifyingStatement")
-    val certifyingStatement: String,
-    @field:JsonProperty("thumbnailImageUrl")
-    val thumbnailImageUrl: String?,
-    @field:JsonProperty("thumbnailType")
-    val thumbnailType: String,
-    @field:JsonProperty("problems")
-    val problems: ProblemItemData,
-    @field:JsonProperty("isPublic")
-    val isPublic: Boolean?,
-    @field:JsonProperty("buttonText")
-    val buttonTitle: String?,
 )

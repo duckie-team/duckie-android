@@ -9,11 +9,11 @@ package team.duckie.app.android.data.exam.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class ProblemItemData(
+data class ProblemData(
     @field:JsonProperty("question")
-    val questionObject: QuestionData,
+    val question: QuestionData,
     @field:JsonProperty("answer")
-    val answerObject: AnswerData,
+    val answer: AnswerData,
     @field:JsonProperty("correctAnswer")
     val correctAnswer: String,
     @field:JsonProperty("hint")
@@ -54,13 +54,6 @@ sealed class QuestionData(
         override val text: String,
     ) : QuestionData(type, text)
 }
-
-data class TagData(
-    @field:JsonProperty("id")
-    val id: Int,
-    @field:JsonProperty("name")
-    val name: String,
-)
 
 sealed class AnswerData(
     @field:JsonProperty("type")
