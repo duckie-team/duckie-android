@@ -29,14 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.common.RecommendUserFollowingBlock
+import team.duckie.app.android.feature.ui.home.component.RecommendUserFollowingBlock
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -51,7 +50,7 @@ import team.duckie.quackquack.ui.util.DpSize
 internal data class Maker(
     val coverUrl: String,
     val title: String,
-    val takerNumber: Int,
+    val examineeNumber: Int,
     val createAt: String,
     val owner: User,
 ) {
@@ -70,7 +69,7 @@ internal data class RecommendUser(
     val userId: Int,
     val profile: String,
     val name: String,
-    val taker: Int,
+    val examineeNumber: Int,
     val createAt: String,
 )
 
@@ -90,7 +89,7 @@ internal fun HomeFollowingScreen(
                 profile = maker.owner.profile,
                 name = maker.owner.name,
                 title = maker.title,
-                takers = maker.takerNumber,
+                takers = maker.examineeNumber,
                 createAt = maker.createAt,
                 onClickUserProfile = {
 
@@ -128,7 +127,12 @@ internal fun HomeFollowingInitialScreen(
             }
         }
 
-        items(recommendCategories) { categories ->
+        items(
+            items = recommendCategories,
+            key = { categories ->
+                categories.topic
+            }
+        ) { categories ->
             HomeFollowingInitialRecommendUsers(
                 modifier = Modifier.padding(bottom = 16.dp),
                 topic = categories.topic,

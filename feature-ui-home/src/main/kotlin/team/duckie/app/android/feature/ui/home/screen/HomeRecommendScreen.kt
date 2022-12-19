@@ -10,7 +10,6 @@ package team.duckie.app.android.feature.ui.home.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,7 +33,6 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -62,7 +59,7 @@ internal data class TopicRecommendItem(
         val coverImg: String,
         val nickname: String,
         val title: String,
-        val takers: Int,
+        val examineeNumber: Int,
         val recommendId: Int,
     )
 }
@@ -101,7 +98,7 @@ internal fun HomeRecommendScreen(
             )
         }
 
-        items(topicRecommendItems) { item ->
+        items(items = topicRecommendItems) { item ->
             HomeTopicRecommend(
                 modifier = Modifier
                     .padding(bottom = 60.dp),
@@ -173,7 +170,7 @@ private fun HomeTopicRecommend(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(recommendItems) { item ->
+            items(items = recommendItems) { item ->
                 Column(
                     modifier = Modifier.quackClickable(
                         rippleEnabled = false,
@@ -196,7 +193,7 @@ private fun HomeTopicRecommend(
                     )
                     QuackBody2(
                         modifier = Modifier.padding(top = 8.dp),
-                        text = "${stringResource(id = R.string.taker)} ${item.takers}",
+                        text = "${stringResource(id = R.string.taker)} ${item.examineeNumber}",
                     )
                 }
             }

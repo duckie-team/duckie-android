@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.common
+package team.duckie.app.android.feature.ui.home.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -82,7 +82,7 @@ internal fun RecommendUserFollowingBlock(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserDescriptionLayoutId)
                     .padding(start = 8.dp),
-                text = "${stringResource(id = R.string.taker)} $user.takers  ·  $user.createAt",
+                text = "${stringResource(id = R.string.taker)} ${user.examineeNumber}  ·  ${user.createAt}" ,
             )
             QuackBody2(
                 modifier = Modifier

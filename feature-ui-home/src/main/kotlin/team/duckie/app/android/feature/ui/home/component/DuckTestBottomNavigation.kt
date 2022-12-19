@@ -5,9 +5,10 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.common
+package team.duckie.app.android.feature.ui.home.component
 
 import android.graphics.drawable.Icon
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -102,7 +103,7 @@ internal fun DuckTestBottomNavigation(
  * @return [BottomNavigationIcon] 의 모음
  */
 @Composable
-private fun rememberBottomNavigationIcons() = remember {
+private fun rememberBottomNavigationIcons() =
     immutableListOf(
         BottomNavigationIcon(
             defaultIcon = R.drawable.home_ic_home_24,
@@ -121,7 +122,6 @@ private fun rememberBottomNavigationIcons() = remember {
             selectedIcon = R.drawable.home_ic_profile_filled_24,
         ),
     )
-}
 
 /**
  * [DuckTestBottomNavigation] 에서 표시할 아이콘들을 정의합니다.
@@ -130,7 +130,9 @@ private fun rememberBottomNavigationIcons() = remember {
  * @property selectedIcon 선택 상태의 아이콘
  */
 private data class BottomNavigationIcon(
+    @DrawableRes
     val defaultIcon: Int,
+    @DrawableRes
     val selectedIcon: Int,
 ) {
     /**

@@ -29,7 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.common.HomeTextTab
+import team.duckie.app.android.feature.ui.home.component.TextTabLayout
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize
@@ -66,21 +66,21 @@ private val FakeHomeTopicRecommendItem =
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     nickname = "세현",
                     title = "외모지상주의 잘 알아?",
-                    takers = 20,
+                    examineeNumber = 20,
                     recommendId = 1,
                 ),
                 TopicRecommendItem.DuckTest(
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     nickname = "세현",
                     title = "안 아프게 맞는법!",
-                    takers = 20,
+                    examineeNumber = 20,
                     recommendId = 1,
                 ),
                 TopicRecommendItem.DuckTest(
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     nickname = "세현",
                     title = "안 아프게 맞는법!",
-                    takers = 20,
+                    examineeNumber = 20,
                     recommendId = 1,
                 )
             )
@@ -93,21 +93,21 @@ private val FakeHomeTopicRecommendItem =
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     nickname = "세현",
                     title = "외모지상주의 잘 알아?",
-                    takers = 20,
+                    examineeNumber = 20,
                     recommendId = 1,
                 ),
                 TopicRecommendItem.DuckTest(
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     nickname = "세현",
                     title = "안 아프게 맞는법!",
-                    takers = 20,
+                    examineeNumber = 20,
                     recommendId = 1,
                 ),
                 TopicRecommendItem.DuckTest(
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     nickname = "세현",
                     title = "안 아프게 맞는법!",
-                    takers = 20,
+                    examineeNumber = 20,
                     recommendId = 1,
                 )
             )
@@ -121,28 +121,28 @@ private val FakeHomeInitRecommendCategories = persistentListOf(
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
-                taker = 20,
+                examineeNumber = 20,
                 createAt = "1일 전",
                 userId = 0,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
-                taker = 20,
+                examineeNumber = 20,
                 createAt = "1일 전",
                 userId = 1,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
-                taker = 20,
+                examineeNumber = 20,
                 createAt = "1일 전",
                 userId = 2,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
-                taker = 20,
+                examineeNumber = 20,
                 createAt = "1일 전",
                 userId = 3,
             ),
@@ -154,28 +154,28 @@ private val FakeHomeInitRecommendCategories = persistentListOf(
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
-                taker = 20,
+                examineeNumber = 20,
                 createAt = "1일 전",
                 userId = 3,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
-                taker = 20,
+                examineeNumber = 20,
                 createAt = "1일 전",
                 userId = 3,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
-                taker = 20,
+                examineeNumber = 20,
                 createAt = "1일 전",
                 userId = 3,
             ),
             RecommendUser(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
-                taker = 20,
+                examineeNumber = 20,
                 createAt = "1일 전",
                 userId = 3,
             ),
@@ -186,7 +186,7 @@ private val FakeHomeInitRecommendCategories = persistentListOf(
 private val FakeFollowingTest = persistentListOf(
     Maker(
         title = "제 1회 도로 패션영역",
-        takerNumber = 30,
+        examineeNumber = 30,
         createAt = "1일 전",
         coverUrl = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
         owner = Maker.User(
@@ -196,7 +196,7 @@ private val FakeFollowingTest = persistentListOf(
     ),
     Maker(
         title = "제 1회 도로 패션영역",
-        takerNumber = 30,
+        examineeNumber = 30,
         createAt = "1일 전",
         coverUrl = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
         owner = Maker.User(
@@ -206,7 +206,7 @@ private val FakeFollowingTest = persistentListOf(
     ),
     Maker(
         title = "제 1회 도로 패션영역",
-        takerNumber = 30,
+        examineeNumber = 30,
         createAt = "1일 전",
         coverUrl = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
         owner = Maker.User(
@@ -319,7 +319,7 @@ private fun HomeTopAppBar(
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        HomeTextTab(
+        TextTabLayout(
             titles = titles,
             selectedTabIndex = selectedTabIndex,
             onTabSelected = onTabSelected,
