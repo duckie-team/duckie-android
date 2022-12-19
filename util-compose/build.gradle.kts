@@ -1,3 +1,5 @@
+import DependencyHandler.Extensions.implementations
+
 /*
  * Designed and developed by Duckie Team, 2022
  *
@@ -17,5 +19,9 @@ android {
 }
 
 dependencies {
-    implementation(projects.utilViewmodel)
+    implementations(
+        projects.utilViewmodel,
+        projects.utilKotlin,
+        libs.kotlin.collections.immutable,
+    )
 }
