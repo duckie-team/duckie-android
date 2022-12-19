@@ -195,7 +195,7 @@ private fun HomeTopicRecommend(
                     )
                     QuackBody2(
                         modifier = Modifier.padding(top = 8.dp),
-                        text = "${stringResource(id = R.string.taker)} ${item.examineeNumber}",
+                        text = "${stringResource(id = R.string.examinee)} ${item.examineeNumber}",
                     )
                 }
             }

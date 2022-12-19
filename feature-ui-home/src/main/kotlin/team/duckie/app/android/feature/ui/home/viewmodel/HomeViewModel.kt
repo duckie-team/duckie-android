@@ -16,7 +16,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class HomeViewModel @Inject constructor() : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
+class HomeViewModel @Inject constructor() :
+    BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
 
     fun navigationPage(
         step: BottomNavigationStep,

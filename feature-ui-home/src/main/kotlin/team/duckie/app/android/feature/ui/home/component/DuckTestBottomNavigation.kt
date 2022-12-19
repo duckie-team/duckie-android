@@ -103,7 +103,7 @@ internal fun DuckTestBottomNavigation(
  * @return [BottomNavigationIcon] 의 모음
  */
 @Composable
-private fun rememberBottomNavigationIcons() =
+private fun rememberBottomNavigationIcons() = remember {
     immutableListOf(
         BottomNavigationIcon(
             defaultIcon = R.drawable.home_ic_home_24,
@@ -122,6 +122,7 @@ private fun rememberBottomNavigationIcons() =
             selectedIcon = R.drawable.home_ic_profile_filled_24,
         ),
     )
+}
 
 /**
  * [DuckTestBottomNavigation] 에서 표시할 아이콘들을 정의합니다.

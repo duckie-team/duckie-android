@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
@@ -35,7 +36,7 @@ import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.component.RecommendUserFollowingBlock
+import team.duckie.app.android.feature.ui.home.component.UserFollowingLayout
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -166,7 +167,7 @@ private fun HomeFollowingInitialRecommendUsers(
         recommendUser.fastForEach { user ->
             var following by remember { mutableStateOf(false) }
 
-            RecommendUserFollowingBlock(
+            UserFollowingLayout(
                 user = user,
                 isFollowing = following,
                 onClickFollowing = {
@@ -193,14 +194,14 @@ private fun TestCoverWithMaker(
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(240.dp)
                 .quackClickable {
                     onClickTestCover()
                 },
             model = cover,
             contentDescription = null,
+            contentScale = ContentScale.FillWidth,
         )
-        TestMakerContent(
+        TestMakerLayout(
             modifier = Modifier.padding(top = 12.dp),
             profile = profile,
             title = title,
@@ -222,7 +223,7 @@ private val HomeProfileShape: RoundedCornerShape = RoundedCornerShape(
 )
 
 @Composable
-private fun TestMakerContent(
+private fun TestMakerLayout(
     modifier: Modifier = Modifier,
     profile: String,
     title: String,
@@ -246,7 +247,7 @@ private fun TestMakerContent(
             },
         )
         Column(
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(start = 8.dp)
         ) {
             QuackSubtitle2(
                 text = title,
@@ -257,7 +258,7 @@ private fun TestMakerContent(
                 QuackBody3(text = name)
                 Spacer(modifier = Modifier.width(8.dp))
                 QuackBody3(
-                    text = "${stringResource(id = R.string.taker)} $takers  ·  $createAt",
+                    text = "${stringResource(id = R.string.examinee)} $takers  ·  $createAt",
                     color = QuackColor.Gray2,
                 )
             }

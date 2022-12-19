@@ -46,7 +46,7 @@ private const val UserInfoBlockUserDescriptionLayoutId = "UserInfoBlockUserDescr
 private const val UserInfoBlockFollowingButtonLayoutId = "UserInfoBlockFollowingButton"
 
 @Composable
-internal fun RecommendUserFollowingBlock(
+internal fun UserFollowingLayout(
     modifier: Modifier = Modifier,
     user: RecommendUser,
     onClickUserProfile: (() -> Unit)? = null,
@@ -82,7 +82,7 @@ internal fun RecommendUserFollowingBlock(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserDescriptionLayoutId)
                     .padding(start = 8.dp),
-                text = "${stringResource(id = R.string.taker)} ${user.examineeNumber}  ·  ${user.createAt}" ,
+                text = "${stringResource(id = R.string.examinee)} ${user.examineeNumber}  ·  ${user.createAt}",
             )
             QuackBody2(
                 modifier = Modifier

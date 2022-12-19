@@ -13,6 +13,6 @@
 
     <string name="following">팔로잉</string>
     <string name="follow">팔로우</string>
-    <string name="taker">응시자</string>
+    <string name="examinee">응시자</string>
     <string name="recommend">추천</string>
 </resources>

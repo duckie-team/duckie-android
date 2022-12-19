@@ -14,7 +14,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -32,6 +31,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.TextTabLayout
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
+import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -240,9 +240,9 @@ private val HomeIconSize = DpSize(24.dp)
     ExperimentalLifecycleComposeApi::class,
 )
 @Composable
-fun DuckieHomeScreen(
-    vm: HomeViewModel,
-) {
+internal fun DuckieHomeScreen() {
+    val vm = LocalViewModel.current as HomeViewModel
+
     val state = vm.state.collectAsStateWithLifecycle().value
 
     val homeTextTabTitles = persistentListOf(
@@ -286,7 +286,7 @@ fun DuckieHomeScreen(
                 }
 
                 HomeStep.HomeFollowingScreen -> {
-                    if (FakeFollowingTest.isEmpty()) {
+                    if (FakeFollowingTest.isNotEmpty()) {
                         HomeFollowingScreen(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             followingTest = FakeFollowingTest,
