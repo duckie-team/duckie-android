@@ -5,62 +5,119 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("MaxLineLength")
+
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
-import android.util.Log
-import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.domain.exam.model.Answer
-import team.duckie.app.android.domain.exam.model.ExamParam
-import team.duckie.app.android.domain.exam.model.ProblemItem
-import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.domain.exam.model.Tag
-import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
+import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
+import team.duckie.app.android.util.kotlin.copy
+import team.duckie.app.android.util.kotlin.fastAny
+import team.duckie.app.android.util.viewmodel.BaseViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CreateProblemViewModel @Inject constructor(
-    private val makeExamUseCase: MakeExamUseCase
-) {
-    private val TAG = CreateProblemViewModel::class.simpleName
+    //private val makeExamUseCase: MakeExamUseCase,
+) : BaseViewModel<CreateProblemState, CreateProblemSideEffect>(CreateProblemState()) {
 
-    suspend fun makeExam() {
+    /*suspend fun makeExam() {
         makeExamUseCase(dummyParam).onSuccess { exam ->
             Log.d(TAG, exam.toString() + "성공")
         }
+    }*/
+
+    suspend fun onClickArrowBack() {
+        postSideEffect {
+            CreateProblemSideEffect.FinishActivity
+        }
+    }
+
+    fun onClickCategory(
+        index: Int,
+    ) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    categoriesSelection = prevState.examInformation.categoriesSelection.copy {
+                        this[index] = !this[index]
+                    }.toImmutableList(),
+                ),
+            )
+        }
+    }
+
+    fun navigateStep(step: CreateProblemStep) {
+        updateState { prevState ->
+            prevState.copy(
+                createProblemStep = step,
+            )
+        }
+    }
+
+    fun setExamTitle(examTitle: String) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    examTitle = examTitle,
+                ),
+            )
+        }
+    }
+
+    fun setExamDescription(examDescription: String) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    examDescription = examDescription,
+                ),
+            )
+        }
+    }
+
+    fun setCertifyingStatement(certifyingStatement: String) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    certifyingStatement = certifyingStatement,
+                ),
+            )
+        }
+    }
+
+    fun setExamArea(examArea: String) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    foundExamArea = prevState.examInformation.foundExamArea.copy(
+                        examArea = examArea,
+                    )
+                ),
+            )
+        }
+    }
+
+    fun clickSearchList(index: Int) {
+        updateState { prevState ->
+            prevState.copy(
+                createProblemStep = CreateProblemStep.ExamInformation,
+                examInformation = prevState.examInformation.run {
+                    copy(
+                        foundExamArea = foundExamArea.copy(
+                            examArea = foundExamArea.searchResults[index]
+                        )
+                    )
+                },
+            )
+        }
+    }
+
+    fun isAllFieldsNotEmpty(): Boolean {
+        return with(currentState.examInformation) {
+            categoriesSelection.fastAny { it } && examArea.isNotEmpty() && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+        }
     }
 }
-
-private val dummyParam = ExamParam(
-    title = "Test Title 2",
-    description = "Test Description 2",
-    mainTag = Tag(
-        id = 1,
-        "1"
-    ),
-    subTag = persistentListOf(
-        Tag(
-            2,
-            "2",
-        )
-    ),
-    thumbnailImageUrl = "Test Image Url",
-    userId = 1,
-    certifyingStatement = "Test 필적 확인 문구1",
-    thumbnailType = "image",
-    buttonTitle = "Test Button Title 1",
-    isPublic = true,
-    problems = ProblemItem(
-        questionObject = Question.Text(
-            text = "",
-            type = "",
-        ),
-        answerObject = Answer.ShortAnswer(
-            shortAnswer = "바보",
-            type = "",
-        ),
-        memo = "test memo 1",
-        hint = "test hint 1",
-        correctAnswer = "3",
-    )
-)
