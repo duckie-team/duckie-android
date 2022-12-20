@@ -28,6 +28,7 @@ dependencies {
         projects.utilKotlin,
         projects.utilCompose,
         projects.utilViewmodel,
+        projects.sharedUiCompose,
         libs.quack.ui.components,
         libs.compose.ktx.lifecycle,
         libs.compose.coil,
