@@ -9,7 +9,6 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
-import android.util.Log
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.exam.model.Answer
@@ -33,17 +32,16 @@ class CreateProblemViewModel @Inject constructor(
 
     suspend fun makeExam() {
         makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
-            Log.d("뷰모델", isSuccess.toString())
+            print(isSuccess) //TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
         }.onFailure {
-            Log.d("뷰모델", it.localizedMessage)
+            it.printStackTrace()
         }
     }
 
     suspend fun onClickArrowBack() {
-        makeExam()
-        /*postSideEffect {
+        postSideEffect {
             CreateProblemSideEffect.FinishActivity
-        }*/
+        }
     }
 
     fun onClickCategory(
@@ -132,7 +130,7 @@ class CreateProblemViewModel @Inject constructor(
     }
 }
 
-private val dummyParam = ExamParam(
+private val dummyParam = ExamParam( //TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
     title = "제 1회 도로 패션영역",
     description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
     mainTagId = 3,
