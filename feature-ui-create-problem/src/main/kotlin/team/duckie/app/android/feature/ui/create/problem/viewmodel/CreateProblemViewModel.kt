@@ -146,7 +146,7 @@ class CreateProblemViewModel @Inject constructor(
 
     fun isAllFieldsNotEmpty(): Boolean {
         return with(currentState.examInformation) {
-            categorySelection >= 0 && examArea.isNotEmpty() && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+            categorySelection >= 0 && isExamAreaSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
     }
 }
