@@ -50,9 +50,7 @@ class CreateProblemViewModel @Inject constructor(
         updateState { prevState ->
             prevState.copy(
                 examInformation = prevState.examInformation.copy(
-                    categoriesSelection = prevState.examInformation.categoriesSelection.copy {
-                        this[index] = !this[index]
-                    }.toImmutableList(),
+                    categorySelection = index
                 ),
             )
         }
@@ -125,12 +123,13 @@ class CreateProblemViewModel @Inject constructor(
 
     fun isAllFieldsNotEmpty(): Boolean {
         return with(currentState.examInformation) {
-            categoriesSelection.fastAny { it } && examArea.isNotEmpty() && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+            categorySelection >= 0 && examArea.isNotEmpty() && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
     }
 }
 
-private val dummyParam = ExamParam( //TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
+private val dummyParam = ExamParam(
+    //TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
     title = "제 1회 도로 패션영역",
     description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
     mainTagId = 3,

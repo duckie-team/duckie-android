@@ -24,7 +24,7 @@ data class CreateProblemState(
             "게임",
             "밀리터리"
         ),
-        val categoriesSelection: ImmutableList<Boolean> = List(categories.size) { false }.toImmutableList(),
+        val categorySelection: Int = -1,
         val examTitle: String = "",
         val examDescription: String = "",
         val certifyingStatement: String = "",
