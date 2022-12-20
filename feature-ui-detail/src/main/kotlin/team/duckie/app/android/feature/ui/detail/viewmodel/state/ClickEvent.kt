@@ -5,4 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.detail
+package team.duckie.app.android.feature.ui.detail.viewmodel.state
+
+enum class ClickEvent

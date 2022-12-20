@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+import DependencyHandler.Extensions.implementations
+
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
@@ -16,4 +18,19 @@ plugins {
 
 android {
     namespace = "team.duckie.app.android.feature.ui.detail"
+}
+
+dependencies {
+    implementations(
+        platform(libs.firebase.bom),
+        projects.di,
+        projects.utilUi,
+        projects.utilKotlin,
+        projects.utilCompose,
+        projects.utilViewmodel,
+        libs.ktx.lifecycle,
+        libs.compose.ui.material, // needs for Scaffold
+        libs.compose.ktx.lifecycle,
+        libs.quack.ui.components,
+    )
 }
