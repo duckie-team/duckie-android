@@ -5,7 +5,14 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.component
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
+package team.duckie.app.android.shared.ui.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,7 +26,7 @@ import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackTitle2
 
 @Composable
-internal fun TextTabLayout(
+fun TextTabLayout(
     titles: PersistentList<String>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,

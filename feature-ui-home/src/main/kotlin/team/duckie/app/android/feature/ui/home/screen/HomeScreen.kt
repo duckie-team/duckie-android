@@ -29,8 +29,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.component.TextTabLayout
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
+import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize

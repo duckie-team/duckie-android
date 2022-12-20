@@ -36,7 +36,7 @@ import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.component.UserFollowingLayout
+import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -168,7 +168,11 @@ private fun HomeFollowingInitialRecommendUsers(
             var following by remember { mutableStateOf(false) }
 
             UserFollowingLayout(
-                user = user,
+                userId = user.userId,
+                profile = user.profile,
+                examineeNumber = user.examineeNumber,
+                name = user.name,
+                createAt = user.createAt,
                 isFollowing = following,
                 onClickFollowing = {
                     following = !following

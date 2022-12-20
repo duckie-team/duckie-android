@@ -5,7 +5,14 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.component
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
+package team.duckie.app.android.shared.ui.compose
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,8 +26,6 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.screen.RecommendUser
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
@@ -46,10 +51,14 @@ private const val UserInfoBlockUserDescriptionLayoutId = "UserInfoBlockUserDescr
 private const val UserInfoBlockFollowingButtonLayoutId = "UserInfoBlockFollowingButton"
 
 @Composable
-internal fun UserFollowingLayout(
+fun UserFollowingLayout(
     modifier: Modifier = Modifier,
-    user: RecommendUser,
-    onClickUserProfile: (() -> Unit)? = null,
+    userId: Int,
+    profile: String,
+    name: String,
+    examineeNumber: Int,
+    createAt: String,
+    onClickUserProfile: ((Int) -> Unit)? = null,
     isFollowing: Boolean,
     onClickFollowing: (Boolean) -> Unit,
 ) {
@@ -63,12 +72,12 @@ internal fun UserFollowingLayout(
         content = {
             QuackImage(
                 modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
-                src = user.profile,
+                src = profile,
                 size = HomeProfileSize,
                 shape = HomeProfileShape,
                 onClick = {
                     if (onClickUserProfile != null) {
-                        onClickUserProfile()
+                        onClickUserProfile(userId)
                     }
                 },
             )
@@ -76,13 +85,13 @@ internal fun UserFollowingLayout(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserNameLayoutId)
                     .padding(start = 8.dp, top = 2.dp),
-                text = user.name,
+                text = name,
             )
             QuackBody3(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserDescriptionLayoutId)
                     .padding(start = 8.dp),
-                text = "${stringResource(id = R.string.examinee)} ${user.examineeNumber}  ·  ${user.createAt}",
+                text = "${stringResource(id = R.string.examinee)} $examineeNumber  ·  $createAt",
             )
             QuackBody2(
                 modifier = Modifier
