@@ -12,6 +12,7 @@ release
 local.properties
 google-services.json
 secrets
+secrets.tar
 /documents/dokka/
 /report
 snapshots
