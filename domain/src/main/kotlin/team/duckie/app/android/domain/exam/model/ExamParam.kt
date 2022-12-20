@@ -23,6 +23,6 @@ data class ExamParam(
     val thumbnailType: String,
     val problems: ImmutableList<Problem>,
     val isPublic: Boolean?,
-    val buttonText: String?,
+    val buttonTitle: String?,
     val userId: Int,
 )

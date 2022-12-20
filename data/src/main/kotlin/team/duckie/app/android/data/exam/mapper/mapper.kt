@@ -26,13 +26,14 @@ internal fun ExamParam.toData() = ExamRequest(
     description = description,
     mainTagId = mainTagId,
     subTagIds = subTagIds.toImmutableList(),
-    userId = userId,
+    categoryId = categoryId,
     certifyingStatement = certifyingStatement,
     thumbnailImageUrl = thumbnailImageUrl,
     thumbnailType = thumbnailType,
     problems = problems.map { it.toData() },
     isPublic = isPublic,
-    buttonText = buttonText,
+    buttonTitle = buttonTitle,
+    userId = userId,
 )
 
 internal fun Problem.toData() = ProblemData(

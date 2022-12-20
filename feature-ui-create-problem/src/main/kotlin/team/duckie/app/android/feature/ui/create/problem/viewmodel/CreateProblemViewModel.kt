@@ -133,15 +133,15 @@ class CreateProblemViewModel @Inject constructor(
 }
 
 private val dummyParam = ExamParam(
-    title = "Test Title 2",
-    description = "Test Description 2",
-    mainTagId = 1,
+    title = "제 1회 도로 패션영역",
+    description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
+    mainTagId = 3,
     subTagIds = persistentListOf(5, 15, 2, 3, 4),
     categoryId = 3,
-    thumbnailImageUrl = "Test Image Url",
-    certifyingStatement = "Test 필적 확인 문구1",
+    thumbnailImageUrl = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1669793968813",
+    certifyingStatement = "열심히 살지 말라고 하셨다",
     thumbnailType = "image",
-    buttonText = "Test Button Title 1",
+    buttonTitle = "TestText",
     isPublic = true,
     problems = persistentListOf(
         Problem(
@@ -156,7 +156,59 @@ private val dummyParam = ExamParam(
             memo = "test memo 1",
             hint = "test hint 1",
             correctAnswer = "3",
+        ), Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        ),
+        Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        ),
+        Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        ),
+        Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
         )
+
     ),
     userId = 1,
 )
