@@ -106,17 +106,40 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    fun onClickSearchListHeader() {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    isExamAreaSelected = true,
+                ),
+            )
+        }
+        navigateStep(CreateProblemStep.ExamInformation)
+    }
+
+
     fun clickSearchList(index: Int) {
         updateState { prevState ->
             prevState.copy(
                 createProblemStep = CreateProblemStep.ExamInformation,
                 examInformation = prevState.examInformation.run {
                     copy(
+                        isExamAreaSelected = true,
                         foundExamArea = foundExamArea.copy(
                             examArea = foundExamArea.searchResults[index]
                         )
                     )
                 },
+            )
+        }
+    }
+
+    fun onClickCloseTag(isExamAreaSelected: Boolean) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    isExamAreaSelected = isExamAreaSelected
+                )
             )
         }
     }

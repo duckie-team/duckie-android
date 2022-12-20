@@ -78,9 +78,7 @@ internal fun FindExamAreaScreen() {
                                 id = R.string.add_also,
                                 state.examArea,
                             ),
-                            onClick = {
-                                viewModel.navigateStep(CreateProblemStep.ExamInformation)
-                            },
+                            onClick = viewModel::onClickSearchListHeader,
                         )
                     }
                     itemsIndexed(

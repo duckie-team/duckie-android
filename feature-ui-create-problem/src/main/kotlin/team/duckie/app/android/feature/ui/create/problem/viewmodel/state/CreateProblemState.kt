@@ -25,6 +25,7 @@ data class CreateProblemState(
             "밀리터리"
         ),
         val categorySelection: Int = -1,
+        val isExamAreaSelected: Boolean = false,
         val examTitle: String = "",
         val examDescription: String = "",
         val certifyingStatement: String = "",

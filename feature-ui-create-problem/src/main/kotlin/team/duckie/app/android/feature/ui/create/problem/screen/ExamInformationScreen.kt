@@ -38,10 +38,13 @@ import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.component.DuckieGridLayout
 import team.duckie.app.android.util.compose.launch
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackBasicTextArea
 import team.duckie.quackquack.ui.component.QuackBasicTextField
+import team.duckie.quackquack.ui.component.QuackCircleTag
 import team.duckie.quackquack.ui.component.QuackMediumToggleButton
 import team.duckie.quackquack.ui.component.QuackReviewTextArea
+import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
@@ -88,18 +91,27 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                 }
             }
             TitleAndComponent(stringResource = R.string.exam_area) {
-                QuackBasicTextField(
-                    leadingIcon = QuackIcon.Search,
-                    text = state.examArea,
-                    onTextChanged = {
-                        /*
-                        * TODO(EvergreenTree97): Box로도 해당 영역 Clickable이 잡히지 않음
-                        * 시험 영역 찾기 Screen으로 넘어가는 UX 개선사항 필요
-                        * */
-                        viewModel.navigateStep(CreateProblemStep.FindExamArea)
-                    },
-                    placeholderText = stringResource(id = R.string.find_exam_area),
-                )
+                if (state.isExamAreaSelected) {
+                    QuackCircleTag(
+                        text = state.examArea,
+                        trailingIcon = QuackIcon.Close,
+                        isSelected = false,
+                        onClick = { viewModel.onClickCloseTag(false) },
+                    )
+                } else {
+                    QuackBasicTextField(
+                        leadingIcon = QuackIcon.Search,
+                        text = state.examArea,
+                        onTextChanged = {
+                            /*
+                            * TODO(EvergreenTree97): Box로도 해당 영역 Clickable이 잡히지 않음
+                            * 시험 영역 찾기 Screen으로 넘어가는 UX 개선사항 필요
+                            * */
+                            viewModel.navigateStep(CreateProblemStep.FindExamArea)
+                        },
+                        placeholderText = stringResource(id = R.string.find_exam_area),
+                    )
+                }
             }
             TitleAndComponent(stringResource = R.string.exam_title) {
                 QuackBasicTextField(
