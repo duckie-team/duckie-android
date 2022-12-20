@@ -12,23 +12,16 @@ plugins {
     id(ConventionEnum.AndroidLibraryCompose)
     id(ConventionEnum.AndroidLibraryComposeUiTest)
     id(ConventionEnum.JvmJUnit4)
-    id(ConventionEnum.JvmDokka)
 }
 
 android {
-    namespace = "team.duckie.app.android.presentation"
+    namespace = "team.duckie.app.android.shared.ui.compose"
 }
 
 dependencies {
     implementations(
-        projects.utilUi,
+        libs.quack.ui.components,
         projects.utilCompose,
         projects.utilKotlin,
-        projects.featureDatastore,
-        projects.featureUiOnboard,
-        projects.featureUiCreateProblem,
-        projects.featureUiHome,
-        libs.androidx.splash,
-        libs.quack.ui.components,
     )
 }
