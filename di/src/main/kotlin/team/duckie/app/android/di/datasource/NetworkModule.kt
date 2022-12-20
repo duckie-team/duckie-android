@@ -52,6 +52,6 @@ internal class NetworkModule {
     private companion object {
         const val MaxTimeoutMillis = 3000L
         const val MaxRetryCount = 3
-        const val BaseUrl = "" // TODO [Evergreen] add base url
+        const val BaseUrl = "" // TODO[Evergreen] add base url
     }
 }

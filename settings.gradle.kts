@@ -7,6 +7,8 @@
 
 @file:Suppress("UnstableApiUsage")
 
+include(":shared-ui-compose")
+
 rootProject.name = "duckie"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

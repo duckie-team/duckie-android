@@ -51,6 +51,7 @@ compose-accompanist = "0.27.0"
 compose-lottie = "5.2.0"
 compose-camposer = "0.1.0"
 compose-customview-pooling-container = "1.0.0"
+compose-coil = "2.2.2"
 
 # ktx
 ktx-core = "1.9.0"
@@ -60,6 +61,7 @@ ktx-lifecycle = "2.4.1"
 # ui
 ui-oss-license = "17.0.0"
 ui-system-controller = "1.0.1"
+ui-pager = "0.20.1"
 
 # analytics
 analytics-leakcanary = "2.9.1"
@@ -155,6 +157,7 @@ compose-util-tooling-core = { module = "androidx.compose.ui:ui-tooling", version
 compose-util-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-core" }
 compose-util-customview-pooling-container = { module = "androidx.customview:customview-poolingcontainer", version.ref = "compose-customview-pooling-container" } # debugImplementation
 compose-ktx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
+compose-coil = { module = "io.coil-kt:coil-compose", version.ref = "compose-coil"}
 
 ktx-core = { module = "androidx.core:core-ktx", version.ref = "ktx-core" }
 ktx-activiy = { module = "androidx.activity:activity-ktx", version.ref = "ktx-activity" }
@@ -162,6 +165,8 @@ ktx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.r
 
 ui-oss-license = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "ui-oss-license" }
 ui-system-controller = { module = "land.sungbin:systemuicontroller", version.ref = "ui-system-controller" }
+ui-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "ui-pager" }
+ui-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "ui-pager" }
 
 analytics-leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "analytics-leakcanary" }
 analytics-anrwatchdog = { module = "com.github.anrwatchdog:anrwatchdog", version.ref = "analytics-anrwatchdog" }

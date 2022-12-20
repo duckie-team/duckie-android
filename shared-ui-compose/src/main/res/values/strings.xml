@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
+<resources>
+    <string name="following">팔로잉</string>
+    <string name="follow">팔로우</string>
+    <string name="examinee">응시자</string>
+    <string name="recommend">추천</string>
+</resources>

@@ -28,6 +28,7 @@ dependencies {
         projects.featureUiOnboard,
         projects.featureUiDetail,
         projects.featureUiCreateProblem,
+        projects.featureUiHome,
         libs.androidx.splash,
         libs.quack.ui.components,
     )
