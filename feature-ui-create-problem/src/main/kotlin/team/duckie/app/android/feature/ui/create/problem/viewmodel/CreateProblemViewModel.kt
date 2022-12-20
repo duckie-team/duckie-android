@@ -9,7 +9,13 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.ExamParam
+import team.duckie.app.android.domain.exam.model.Problem
+import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
@@ -21,14 +27,16 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateProblemViewModel @Inject constructor(
-    //private val makeExamUseCase: MakeExamUseCase,
+    private val makeExamUseCase: MakeExamUseCase,
 ) : BaseViewModel<CreateProblemState, CreateProblemSideEffect>(CreateProblemState()) {
 
-    /*suspend fun makeExam() {
-        makeExamUseCase(dummyParam).onSuccess { exam ->
-            Log.d(TAG, exam.toString() + "성공")
+    suspend fun makeExam() {
+        makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
+            print(isSuccess) //TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
+        }.onFailure {
+            it.printStackTrace()
         }
-    }*/
+    }
 
     suspend fun onClickArrowBack() {
         postSideEffect {
@@ -121,3 +129,84 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 }
+
+private val dummyParam = ExamParam( //TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
+    title = "제 1회 도로 패션영역",
+    description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
+    mainTagId = 3,
+    subTagIds = persistentListOf(5, 15, 2, 3, 4),
+    categoryId = 3,
+    thumbnailImageUrl = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1669793968813",
+    certifyingStatement = "열심히 살지 말라고 하셨다",
+    thumbnailType = "image",
+    buttonTitle = "TestText",
+    isPublic = true,
+    problems = persistentListOf(
+        Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        ), Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        ),
+        Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        ),
+        Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        ),
+        Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        )
+
+    ),
+    userId = 1,
+)

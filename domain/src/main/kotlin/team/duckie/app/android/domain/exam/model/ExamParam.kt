@@ -15,13 +15,14 @@ import kotlinx.collections.immutable.toImmutableList
 data class ExamParam(
     val title: String,
     val description: String,
-    val mainTag: Tag,
-    val subTag: ImmutableList<Tag> = emptyList<Tag>().toImmutableList(),
-    val userId: Int,
+    val mainTagId: Int,
+    val subTagIds: ImmutableList<Int> = emptyList<Int>().toImmutableList(),
+    val categoryId: Int,
     val certifyingStatement: String,
     val thumbnailImageUrl: String?,
     val thumbnailType: String,
-    val problems: ProblemItem,
+    val problems: ImmutableList<Problem>,
     val isPublic: Boolean?,
     val buttonTitle: String?,
+    val userId: Int,
 )

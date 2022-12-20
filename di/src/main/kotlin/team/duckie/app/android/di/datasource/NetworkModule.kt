@@ -17,9 +17,11 @@ import io.ktor.client.engine.cio.endpoint
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.ANDROID
+import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.jackson.jackson
 import javax.inject.Singleton
 
@@ -29,7 +31,7 @@ internal class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideKtorClient(): HttpClient = HttpClient(CIO) {
+    fun provideKtorClient(): HttpClient = HttpClient(engineFactory = CIO) {
         expectSuccess = true
         engine {
             endpoint {
@@ -38,7 +40,11 @@ internal class NetworkModule {
             }
         }
         defaultRequest {
-            url(BaseUrl)
+            url(urlString = BaseUrl)
+            headers.append(
+                name = HttpHeaders.ContentType,
+                value = ApplicationJson
+            )
         }
         install(plugin = ContentNegotiation) {
             jackson()
@@ -52,6 +58,7 @@ internal class NetworkModule {
     private companion object {
         const val MaxTimeoutMillis = 3000L
         const val MaxRetryCount = 3
-        const val BaseUrl = "" // TODO[Evergreen] add base url
+        const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
+        const val ApplicationJson = "application/json"
     }
 }
