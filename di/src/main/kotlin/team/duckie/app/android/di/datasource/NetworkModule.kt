@@ -21,6 +21,7 @@ import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.jackson.jackson
 import javax.inject.Singleton
 
@@ -40,6 +41,10 @@ internal class NetworkModule {
         }
         defaultRequest {
             url(urlString = BaseUrl)
+            headers.append(
+                name = HttpHeaders.ContentType,
+                value = "application/json"
+            )
         }
         install(plugin = ContentNegotiation) {
             jackson()
