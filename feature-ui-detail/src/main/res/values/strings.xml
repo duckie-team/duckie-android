@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
+<resources>
+    <string name="detail_num_date">응시자 %s · %s</string>
+    <string name="detail_follow">팔로우</string>
+    <string name="detail_right_percent">정답률 : %s</string>
+</resources>

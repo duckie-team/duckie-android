@@ -26,6 +26,7 @@ dependencies {
         projects.utilKotlin,
         projects.featureDatastore,
         projects.featureUiOnboard,
+        projects.featureUiDetail,
         projects.featureUiCreateProblem,
         projects.featureUiHome,
         libs.androidx.splash,
