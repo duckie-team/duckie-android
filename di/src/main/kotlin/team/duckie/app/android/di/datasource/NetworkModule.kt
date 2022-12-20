@@ -43,7 +43,7 @@ internal class NetworkModule {
             url(urlString = BaseUrl)
             headers.append(
                 name = HttpHeaders.ContentType,
-                value = "application/json"
+                value = ApplicationJson
             )
         }
         install(plugin = ContentNegotiation) {
@@ -59,5 +59,6 @@ internal class NetworkModule {
         const val MaxTimeoutMillis = 3000L
         const val MaxRetryCount = 3
         const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
+        const val ApplicationJson = "application/json"
     }
 }
