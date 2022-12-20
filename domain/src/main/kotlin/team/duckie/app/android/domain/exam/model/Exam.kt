@@ -9,24 +9,16 @@ package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
-import team.duckie.app.android.domain.user.model.User
-import java.util.Date
 
 @Immutable
 data class Exam(
     val title: String,
     val description: String,
     val thumbnailUrl: String?,
-    val certifyingStatement: String,
     val buttonTitle: String,
-    val isPublic: Boolean,
-    val tags: ImmutableList<Tag>,
-    val user: User,
-    val deletedAt: Date? = null,
-    val id: Int,
-    val createdAt: Date,
-    val updatedAt: Date,
+    val certifyingStatement: String,
     val solvedCount: Int,
-    val answerRate: Float,
-    val canRetry: Boolean,
+    val isPublic: Boolean,
+    val mainTag: Int,
+    val subTags: ImmutableList<Int>,
 )

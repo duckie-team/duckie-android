@@ -13,5 +13,5 @@ import team.duckie.app.android.domain.exam.model.ExamParam
 
 @Immutable
 interface ExamRepository {
-    suspend fun makeExam(examParam: ExamParam): Exam
+    suspend fun makeExam(examParam: ExamParam): Boolean
 }

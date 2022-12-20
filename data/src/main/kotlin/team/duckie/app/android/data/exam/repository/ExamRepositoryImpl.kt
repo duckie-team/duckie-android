@@ -9,7 +9,6 @@ package team.duckie.app.android.data.exam.repository
 
 import team.duckie.app.android.data.exam.datasource.remote.ExamDataSource
 import team.duckie.app.android.data.exam.mapper.toData
-import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamParam
 import team.duckie.app.android.domain.exam.repository.ExamRepository
@@ -18,7 +17,7 @@ import javax.inject.Inject
 class ExamRepositoryImpl @Inject constructor(
     private val examDataSource: ExamDataSource,
 ) : ExamRepository {
-    override suspend fun makeExam(examParam: ExamParam): Exam {
-        return examDataSource.postExams(examParam.toData()).toDomain()
+    override suspend fun makeExam(examParam: ExamParam): Boolean{
+        return examDataSource.postExams(examParam.toData())
     }
 }

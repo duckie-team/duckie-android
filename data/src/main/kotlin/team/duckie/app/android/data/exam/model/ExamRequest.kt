@@ -11,25 +11,27 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class ExamRequest(
     @field:JsonProperty("title")
-    val title: String,
+    val title: String? = null,
     @field:JsonProperty("description")
-    val description: String,
-    @field:JsonProperty("mainTag")
-    val mainTag: TagData,
-    @field:JsonProperty("subTags")
-    val subTag: List<TagData>?,
-    @field:JsonProperty("userId")
-    val userId: Int,
+    val description: String? = null,
+    @field:JsonProperty("mainTagId")
+    val mainTagId: Int? = null,
+    @field:JsonProperty("subTagIds")
+    val subTagIds: List<Int>? = null,
+    @field:JsonProperty("categoryId")
+    val categoryId: Int? = null,
     @field:JsonProperty("certifyingStatement")
-    val certifyingStatement: String,
+    val certifyingStatement: String? = null,
     @field:JsonProperty("thumbnailImageUrl")
-    val thumbnailImageUrl: String?,
+    val thumbnailImageUrl: String? = null,
     @field:JsonProperty("thumbnailType")
-    val thumbnailType: String,
+    val thumbnailType: String? = null,
     @field:JsonProperty("problems")
-    val problems: ProblemItemData,
+    val problems: List<ProblemData>? = null,
     @field:JsonProperty("isPublic")
-    val isPublic: Boolean?,
-    @field:JsonProperty("buttonText")
-    val buttonTitle: String?,
+    val isPublic: Boolean? = null,
+    @field:JsonProperty("buttonTitle")
+    val buttonTitle: String? = null,
+    @field:JsonProperty("userId")
+    val userId: Int? = null,
 )
