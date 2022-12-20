@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+import DependencyHandler.Extensions.implementations
+
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
@@ -16,4 +18,21 @@ plugins {
 
 android {
     namespace = "team.duckie.app.android.feature.ui.home"
+}
+
+dependencies {
+    implementations(
+        projects.di,
+        projects.domain,
+        projects.utilUi,
+        projects.utilKotlin,
+        projects.utilCompose,
+        projects.utilViewmodel,
+        projects.sharedUiCompose,
+        libs.quack.ui.components,
+        libs.compose.ktx.lifecycle,
+        libs.compose.coil,
+        libs.ui.pager.asProvider(),
+        libs.ui.pager.indicators,
+    )
 }
