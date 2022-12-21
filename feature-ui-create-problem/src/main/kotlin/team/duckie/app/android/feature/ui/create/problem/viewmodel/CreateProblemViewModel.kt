@@ -56,10 +56,10 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onClickExamArea(scrollPosition: Int){
+    fun onClickExamArea(scrollPosition: Int) {
         updateState { prevState ->
             prevState.copy(
-                examInformation =  prevState.examInformation.copy(
+                examInformation = prevState.examInformation.copy(
                     scrollPosition = scrollPosition,
                 )
             )
@@ -148,9 +148,14 @@ class CreateProblemViewModel @Inject constructor(
     fun onClickCloseTag(isExamAreaSelected: Boolean) {
         updateState { prevState ->
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    isExamAreaSelected = isExamAreaSelected
-                )
+                examInformation = prevState.examInformation.run {
+                    copy(
+                        isExamAreaSelected = isExamAreaSelected,
+                        foundExamArea = foundExamArea.copy(
+                            examArea = ""
+                        ),
+                    )
+                }
             )
         }
     }
