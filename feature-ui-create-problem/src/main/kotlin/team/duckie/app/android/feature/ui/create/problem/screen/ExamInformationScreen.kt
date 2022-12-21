@@ -59,8 +59,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
 
     Scaffold(
         modifier = Modifier
-            .statusBarsPadding()
-            .navigationBarsPadding(),
+            .statusBarsPadding(),
         topBar = {
             PrevAndNextTopAppBar(
                 onLeadingIconClick = {
@@ -143,6 +142,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
             } // TODO(EvergreenTree97): 컴포넌트 필요
             TitleAndComponent(stringResource = R.string.certifying_statement) {
                 QuackBasicTextArea(
+                    modifier = Modifier.padding(bottom = 16.dp),
                     text = state.certifyingStatement,
                     onTextChanged = viewModel::setCertifyingStatement,
                     placeholderText = stringResource(id = R.string.input_certifying_statement),
