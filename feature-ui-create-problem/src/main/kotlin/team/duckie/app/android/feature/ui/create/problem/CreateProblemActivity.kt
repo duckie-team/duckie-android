@@ -48,8 +48,7 @@ class CreateProblemActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val createProblemStep =
-                viewModel.state.collectAsStateWithLifecycle().value.createProblemStep
+            val createProblemStep = viewModel.state.collectAsStateWithLifecycle().value.createProblemStep
 
             BackHandler {
                 when (createProblemStep) {
