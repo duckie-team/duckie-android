@@ -53,7 +53,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
     val focusManager = LocalFocusManager.current
     val lazyListState = rememberLazyListState()
 
-    LaunchedEffect(key1 = state.scrollPosition){
+    LaunchedEffect(key1 = state.scrollPosition) {
         lazyListState.scrollToItem(index = state.scrollPosition)
     }
 
