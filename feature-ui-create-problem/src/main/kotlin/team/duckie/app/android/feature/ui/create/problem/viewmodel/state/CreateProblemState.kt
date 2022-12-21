@@ -9,7 +9,6 @@ package team.duckie.app.android.feature.ui.create.problem.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 
 data class CreateProblemState(
     val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
