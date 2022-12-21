@@ -56,6 +56,17 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    fun onClickExamArea(scrollPosition: Int){
+        updateState { prevState ->
+            prevState.copy(
+                examInformation =  prevState.examInformation.copy(
+                    scrollPosition = scrollPosition,
+                )
+            )
+        }
+        navigateStep(CreateProblemStep.FindExamArea)
+    }
+
     fun navigateStep(step: CreateProblemStep) {
         updateState { prevState ->
             prevState.copy(
