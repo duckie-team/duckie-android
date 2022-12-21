@@ -68,7 +68,7 @@ internal fun FindExamAreaScreen() {
                 leadingIcon = QuackIcon.Search,
                 text = state.examArea,
                 onTextChanged = viewModel::setExamArea,
-                placeholderText = stringResource(id = R.string.find_exam_area),
+                placeholderText = stringResource(id = R.string.search_exam_area_tag),
             )
             QuackAnimatedVisibility(visible = state.examArea.isNotEmpty()) {
                 LazyColumn {

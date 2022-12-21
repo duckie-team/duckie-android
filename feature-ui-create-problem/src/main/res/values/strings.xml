@@ -18,4 +18,5 @@
     <string name="certifying_statement">"필적 확인 문구</string>
     <string name="input_certifying_statement">"필적확인 문구를 입력해 주세요"</string>
     <string name="add_also">+%s 추가하기</string>
+    <string name="search_exam_area_tag">"시험 영역으로 설정할 태그를 검색해 주세요."</string>
 </resources>
