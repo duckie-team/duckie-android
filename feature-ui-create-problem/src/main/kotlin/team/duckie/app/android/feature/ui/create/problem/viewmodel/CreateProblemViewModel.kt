@@ -22,6 +22,10 @@ import team.duckie.app.android.util.viewmodel.BaseViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val ExamTitleMaxLength = 12
+private const val ExamDescriptionMaxLength = 30
+private const val CertifyingStatementMaxLength = 16
+
 @Singleton
 class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
@@ -73,32 +77,38 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     fun setExamTitle(examTitle: String) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    examTitle = examTitle,
-                ),
-            )
+        if (examTitle.length <= ExamTitleMaxLength) {
+            updateState { prevState ->
+                prevState.copy(
+                    examInformation = prevState.examInformation.copy(
+                        examTitle = examTitle,
+                    ),
+                )
+            }
         }
     }
 
     fun setExamDescription(examDescription: String) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    examDescription = examDescription,
-                ),
-            )
+        if (examDescription.length <= ExamDescriptionMaxLength) {
+            updateState { prevState ->
+                prevState.copy(
+                    examInformation = prevState.examInformation.copy(
+                        examDescription = examDescription,
+                    ),
+                )
+            }
         }
     }
 
     fun setCertifyingStatement(certifyingStatement: String) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    certifyingStatement = certifyingStatement,
-                ),
-            )
+        if (certifyingStatement.length <= CertifyingStatementMaxLength) {
+            updateState { prevState ->
+                prevState.copy(
+                    examInformation = prevState.examInformation.copy(
+                        certifyingStatement = certifyingStatement,
+                    ),
+                )
+            }
         }
     }
 
