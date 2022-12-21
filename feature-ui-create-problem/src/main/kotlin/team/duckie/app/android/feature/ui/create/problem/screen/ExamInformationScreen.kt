@@ -98,7 +98,12 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                         isSelected = false,
                         onClick = { viewModel.onClickCloseTag(false) },
                     )
-                } else {
+                }
+                AnimatedVisibility(
+                    visible = !state.isExamAreaSelected,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
                     QuackBasicTextField(
                         leadingIcon = QuackIcon.Search,
                         text = state.examArea,
