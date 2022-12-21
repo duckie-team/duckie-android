@@ -5,13 +5,18 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalLifecycleComposeApi::class)
+@file:OptIn(
+    ExperimentalLifecycleComposeApi::class,
+    ExperimentalFoundationApi::class,
+)
 
 package team.duckie.app.android.feature.ui.create.problem
 
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
@@ -43,7 +48,8 @@ class CreateProblemActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val createProblemStep = viewModel.state.collectAsStateWithLifecycle().value.createProblemStep
+            val createProblemStep =
+                viewModel.state.collectAsStateWithLifecycle().value.createProblemStep
 
             BackHandler {
                 when (createProblemStep) {
@@ -59,7 +65,10 @@ class CreateProblemActivity : BaseActivity() {
                     .launchIn(this)
             }
 
-            CompositionLocalProvider(LocalViewModel provides viewModel) {
+            CompositionLocalProvider(
+                LocalViewModel provides viewModel,
+                LocalOverscrollConfiguration provides null,
+            ) {
                 QuackAnimatedContent(
                     modifier = Modifier
                         .fillMaxSize()
