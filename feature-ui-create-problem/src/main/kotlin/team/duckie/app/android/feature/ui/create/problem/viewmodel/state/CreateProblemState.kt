@@ -30,12 +30,14 @@ data class CreateProblemState(
         val examDescription: String = "",
         val certifyingStatement: String = "",
         val foundExamArea: FoundExamArea = FoundExamArea(),
+        val scrollPosition: Int = 0,
     ) {
         val examArea: String
             get() = foundExamArea.examArea
 
         data class FoundExamArea(
-            val searchResults: ImmutableList<String> = persistentListOf( // TODO(EvergreenTree97): Server Request
+            val searchResults: ImmutableList<String> = persistentListOf(
+                // TODO(EvergreenTree97): Server Request
                 "도로",
                 "도로 주행",
                 "도로 셀카",
