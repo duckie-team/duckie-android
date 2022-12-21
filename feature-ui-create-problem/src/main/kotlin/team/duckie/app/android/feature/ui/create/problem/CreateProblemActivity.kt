@@ -37,6 +37,7 @@ import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -64,21 +65,22 @@ class CreateProblemActivity : BaseActivity() {
                     .launchIn(this)
             }
 
-            CompositionLocalProvider(
-                LocalViewModel provides viewModel,
-                LocalOverscrollConfiguration provides null,
-            ) {
-                QuackAnimatedContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor),
-                    targetState = createProblemStep,
-                ) { step: CreateProblemStep ->
-                    when (step) {
-                        CreateProblemStep.ExamInformation -> ExamInformationScreen()
-                        CreateProblemStep.FindExamArea -> FindExamAreaScreen()
-                        CreateProblemStep.CreateProblem -> {}
-                        CreateProblemStep.AdditionalInformation -> {}
+            QuackTheme {
+                CompositionLocalProvider(
+                    LocalViewModel provides viewModel,
+                ) {
+                    QuackAnimatedContent(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = QuackColor.White.composeColor),
+                        targetState = createProblemStep,
+                    ) { step: CreateProblemStep ->
+                        when (step) {
+                            CreateProblemStep.ExamInformation -> ExamInformationScreen()
+                            CreateProblemStep.FindExamArea -> FindExamAreaScreen()
+                            CreateProblemStep.CreateProblem -> {}
+                            CreateProblemStep.AdditionalInformation -> {}
+                        }
                     }
                 }
             }
