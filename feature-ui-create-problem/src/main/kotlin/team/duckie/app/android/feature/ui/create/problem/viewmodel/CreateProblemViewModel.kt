@@ -129,7 +129,7 @@ class CreateProblemViewModel @Inject constructor(
     }
 
 
-    fun clickSearchList(index: Int) {
+    fun onClickSearchList(index: Int) {
         updateState { prevState ->
             prevState.copy(
                 createProblemStep = CreateProblemStep.ExamInformation,
