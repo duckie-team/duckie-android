@@ -88,7 +88,7 @@ internal fun FindExamAreaScreen() {
                         SearchResultText(
                             text = item,
                             onClick = {
-                                viewModel.clickSearchList(index)
+                                viewModel.onClickSearchList(index)
                             }
                         )
                     }
