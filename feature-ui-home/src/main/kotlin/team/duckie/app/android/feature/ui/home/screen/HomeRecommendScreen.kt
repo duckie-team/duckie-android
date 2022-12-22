@@ -9,21 +9,31 @@ package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -41,6 +51,7 @@ import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSplashSlogan
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
+import team.duckie.quackquack.ui.modifier.QuackDefaultAlwaysShowRipple
 import team.duckie.quackquack.ui.modifier.quackClickable
 
 internal data class HomeRecommendItem(
@@ -53,7 +64,7 @@ internal data class HomeRecommendItem(
 internal data class TopicRecommendItem(
     val title: String,
     val tag: String,
-    val items: PersistentList<DuckTest>
+    val items: PersistentList<DuckTest>,
 ) {
     data class DuckTest(
         val coverImg: String,
@@ -64,7 +75,11 @@ internal data class TopicRecommendItem(
     )
 }
 
-@OptIn(ExperimentalPagerApi::class)
+private val HomeHorizontalPadding = PaddingValues(
+    horizontal = 16.dp,
+)
+
+@OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
@@ -84,6 +99,7 @@ internal fun HomeRecommendScreen(
                 state = pageState,
             ) { page ->
                 HomeRecommendContentScreen(
+                    modifier = Modifier.padding(HomeHorizontalPadding),
                     recommendItem = homeRecommendItems[page],
                     onStartClicked = {
                         // TODO ("limsaehyun"): 상세보기로 이동 필요
@@ -103,7 +119,9 @@ internal fun HomeRecommendScreen(
         items(items = topicRecommendItems) { item ->
             HomeTopicRecommend(
                 modifier = Modifier
-                    .padding(bottom = 60.dp),
+                    .padding(
+                        bottom = 60.dp,
+                    ),
                 title = item.title,
                 tag = item.tag,
                 recommendItems = item.items,
@@ -115,10 +133,12 @@ internal fun HomeRecommendScreen(
 
 @Composable
 private fun HomeRecommendContentScreen(
+    modifier: Modifier = Modifier,
     recommendItem: HomeRecommendItem,
     onStartClicked: () -> Unit,
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AsyncImage(
@@ -155,30 +175,37 @@ private fun HomeRecommendContentScreen(
 
 @Composable
 private fun HomeTopicRecommend(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     title: String,
     tag: String,
     recommendItems: PersistentList<TopicRecommendItem.DuckTest>,
     onClicked: (Int) -> Unit,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         QuackUnderlineHeadLine2(
+            modifier = Modifier.padding(HomeHorizontalPadding),
             text = title,
             underlineTexts = persistentListOf(tag),
         )
         Spacer(modifier = Modifier.height(16.dp))
+
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            item {
+                Spacer(modifier = Modifier.width(12.dp))
+            }
+
             items(items = recommendItems) { item ->
                 Column(
-                    modifier = Modifier.quackClickable(
-                        rippleEnabled = false,
-                    ) {
-                        onClicked(item.recommendId)
-                    }
+                    modifier = Modifier
+                        .quackClickable(
+                            rippleEnabled = false,
+                        ) {
+                            onClicked(item.recommendId)
+                        }
                 ) {
                     AsyncImage(
                         modifier = Modifier.size(158.dp, 116.dp),
