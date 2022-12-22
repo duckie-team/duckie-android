@@ -14,6 +14,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import team.duckie.app.android.feature.ui.create.problem.screen.AdditionalInformationScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.ExamInformationScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.FindExamAreaScreen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
@@ -70,7 +72,11 @@ class CreateProblemActivity : BaseActivity() {
                         CreateProblemStep.ExamInformation -> ExamInformationScreen()
                         CreateProblemStep.FindExamArea -> FindExamAreaScreen()
                         CreateProblemStep.CreateProblem -> {}
-                        CreateProblemStep.AdditionalInformation -> {}
+                        CreateProblemStep.AdditionalInformation -> AdditionalInformationScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .statusBarsPadding()
+                        )
                     }
                 }
             }

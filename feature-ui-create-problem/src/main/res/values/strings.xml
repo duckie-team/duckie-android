@@ -18,4 +18,12 @@
     <string name="certifying_statement">"필적 확인 문구</string>
     <string name="input_certifying_statement">"필적확인 문구를 입력해 주세요"</string>
     <string name="add_also">+%s 추가하기</string>
+
+    <string name="additional_information_next">문제출제</string>
+    <string name="additional_information_thumbnail_title">시험 썸네일</string>
+    <string name="additional_information_thumbnail_select">썸네일 종류 선택</string>
+    <string name="additional_information_take_title">시험 응시하기 버튼</string>
+    <string name="additional_information_take_input_hint">응시버튼 커스텀을 해보세요</string>
+    <string name="additional_information_tag_title">태그 추가</string>
+    <string name="additional_information_tag_input_hint"># 태그입력</string>
 </resources>
