@@ -93,7 +93,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                             width = 102.dp,
                             height = 40.dp,
                         ),
-                        text = item,
+                        text = item.name,
                         selected = state.categorySelection == index,
                         onClick = {
                             viewModel.onClickCategory(index)

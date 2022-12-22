@@ -12,10 +12,12 @@ package team.duckie.app.android.feature.ui.create.problem.viewmodel
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ExamParam
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.exam.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
@@ -29,6 +31,7 @@ private const val CertifyingStatementMaxLength = 16
 @Singleton
 class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : BaseViewModel<CreateProblemState, CreateProblemSideEffect>(CreateProblemState()) {
 
     suspend fun makeExam() {
@@ -36,6 +39,21 @@ class CreateProblemViewModel @Inject constructor(
             print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
         }.onFailure {
             it.printStackTrace()
+        }
+    }
+
+    suspend fun getCategories() {
+        getCategoriesUseCase(false).onSuccess { categories ->
+            Log.d("성공",categories.toString())
+            updateState { prevState ->
+                prevState.copy(
+                    examInformation = prevState.examInformation.copy(
+                        categories = categories.toImmutableList()
+                    )
+                )
+            }
+        }.onFailure{
+            Log.d("실패", it.localizedMessage)
         }
     }
 
