@@ -12,6 +12,8 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.exam.datasource.remote.ExamDataSource
 import team.duckie.app.android.data.exam.mapper.toData
+import team.duckie.app.android.data.exam.mapper.toDomain
+import team.duckie.app.android.domain.exam.model.Category
 import team.duckie.app.android.domain.exam.model.ExamParam
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.util.kotlin.fastMap

@@ -22,6 +22,7 @@ import team.duckie.app.android.data.exam.model.CategoryData
 import team.duckie.app.android.data.exam.model.CategoryResponse
 import team.duckie.app.android.data.exam.model.ExamRequest
 import team.duckie.app.android.data.exam.model.PostResponse
+import javax.inject.Inject
 
 class ExamDataSource @Inject constructor(
     private val client: HttpClient,
