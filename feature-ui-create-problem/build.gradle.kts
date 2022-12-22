@@ -22,15 +22,18 @@ android {
 
 dependencies {
     implementations(
+        platform(libs.firebase.bom),
         projects.di,
         projects.domain,
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
         projects.utilViewmodel,
+        projects.featurePhotopicker,
         libs.ktx.lifecycle,
         libs.compose.ktx.lifecycle,
         libs.compose.ui.material, // needs for Scaffold
         libs.quack.ui.components,
+        libs.firebase.crashlytics,
     )
 }

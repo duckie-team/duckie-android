@@ -20,6 +20,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -87,6 +89,12 @@ class CreateProblemActivity : BaseActivity() {
         when (sideEffect) {
             CreateProblemSideEffect.FinishActivity -> {
                 finishWithAnimation()
+            }
+            is CreateProblemSideEffect.ReportError -> {
+                Firebase.crashlytics.recordException(sideEffect.exception)
+            }
+            is CreateProblemSideEffect.UpdateGalleryImages -> {
+                viewModel.addGalleryImages(sideEffect.images)
             }
         }
     }
