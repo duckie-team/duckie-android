@@ -7,19 +7,25 @@
 
 package team.duckie.app.android.data.exam.mapper
 
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.exam.model.AnswerData
+import team.duckie.app.android.data.exam.model.CategoryData
+import team.duckie.app.android.data.exam.model.CategoryModelData
 import team.duckie.app.android.data.exam.model.ChoiceData
 import team.duckie.app.android.data.exam.model.ExamRequest
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.Category
+import team.duckie.app.android.domain.exam.model.CategoryModel
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.ExamParam
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.util.kotlin.fastMap
 
 internal fun ExamParam.toData() = ExamRequest(
     title = title,
@@ -88,4 +94,17 @@ internal fun ChoiceModel.toData() = ChoiceData(
 internal fun ImageChoiceModel.toData() = ImageChoiceData(
     text = text,
     imageUrl = imageUrl,
+)
+
+internal fun CategoryModelData.toDomain() = CategoryModel(
+    id = id ?: 0,
+    name = name ?: ""
+)
+
+internal fun CategoryData.toDomain() = Category(
+    id = id ?: 0,
+    name = name ?: "",
+    popularTags = popularTags?.fastMap { it.toDomain() }
+        ?.toImmutableList()
+        ?: persistentListOf()
 )
