@@ -56,7 +56,7 @@ class IntroActivity : BaseActivity() {
 
             when (isOnboardFinished) {
                 true -> toast("온보딩 끝냄")
-                false -> changeActivityWithAnimation<CreateProblemActivity>()
+                false -> changeActivityWithAnimation<OnboardActivity>()
                 else -> Unit // null
             }
         }

@@ -12,7 +12,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 data class CreateProblemState(
-    val createProblemStep: CreateProblemStep = CreateProblemStep.AdditionalInformation,
+    val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
     val examInformation: ExamInformation = ExamInformation(),
     val error: ExamInformation.Error? = null,
 ) {
