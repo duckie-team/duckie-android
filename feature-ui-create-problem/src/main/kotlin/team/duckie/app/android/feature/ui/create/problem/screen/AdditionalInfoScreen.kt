@@ -16,6 +16,7 @@ package team.duckie.app.android.feature.ui.create.problem.screen
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -124,6 +125,17 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
             }
         } else {
             toast("권한이 없습니다,")
+        }
+    }
+
+    BackHandler {
+        if (photoPickerVisible) {
+            launch {
+                photoPickerVisible = false
+                sheetState.hide()
+            }
+        } else {
+            vm.navigateStep(CreateProblemStep.CreateProblem)
         }
     }
 
