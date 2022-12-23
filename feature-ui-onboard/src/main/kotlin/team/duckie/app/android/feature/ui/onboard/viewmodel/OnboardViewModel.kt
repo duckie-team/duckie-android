@@ -13,10 +13,12 @@ import dagger.assisted.AssistedInject
 import kotlin.properties.Delegates
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.domain.user.model.KakaoUser
 import team.duckie.app.android.domain.user.usecase.KakaoLoginUseCase
-import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.viewmodel.impl.PermissionViewModelInstance
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
@@ -28,24 +30,19 @@ import team.duckie.app.android.util.viewmodel.BaseViewModel
  */
 private val NextStepNavigateThrottle = 1.seconds
 
-class OnboardViewModel @AssistedInject constructor(
+internal class OnboardViewModel @AssistedInject constructor(
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     @Assisted private val kakaoLoginUseCase: KakaoLoginUseCase,
-) : BaseViewModel<OnboardState, OnboardSideEffect>(OnboardState.Initial) {
+) : BaseViewModel<OnboardState, OnboardSideEffect>(OnboardState.Initial),
+    PermissionViewModel by PermissionViewModelInstance {
+
     private val nicknameFilter = Regex("[^가-힣a-zA-Z0-9_.]")
     private var lastestUpdateStepMillis = System.currentTimeMillis()
 
     /**
-     * [selectedCategories] 의 mutable 한 객체를 나타냅니다.
-     *
-     * @see selectedCategories
-     */
-    private var mutableSelectedCategories = persistentListOf<String>()
-
-    /**
      * [OnboardStep.Category] 에서 선택한 카테고리들을 나타냅니다.
      */
-    val selectedCategories: ImmutableList<String> get() = mutableSelectedCategories
+    var selectedCategories: ImmutableList<String> = persistentListOf()
 
     /**
      * [KakaoLoginUseCase] 를 통해 얻어온 [KakaoUser] 객체를 나타냅니다.
@@ -160,8 +157,8 @@ class OnboardViewModel @AssistedInject constructor(
     /**
      * `CategoryScreen` 에서 선택한 카테고리 목록을 저장합니다.
      */
-    fun addSelectedCategories(categories: List<String>) {
-        mutableSelectedCategories = mutableSelectedCategories.addAll(categories)
+    fun setSelectedCategories(categories: List<String>) {
+        selectedCategories = categories.toImmutableList()
     }
 
     /**
