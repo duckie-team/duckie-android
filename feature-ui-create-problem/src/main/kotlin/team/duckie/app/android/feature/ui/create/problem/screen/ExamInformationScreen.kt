@@ -49,6 +49,7 @@ import team.duckie.quackquack.ui.component.QuackCircleTag
 import team.duckie.quackquack.ui.component.QuackMediumToggleButton
 import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.modifier.quackClickable
 
 @Composable
 internal fun ExamInformationScreen() = CoroutineScopeContent {
@@ -111,16 +112,14 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                 }
                 FadeAnimatedVisibility(visible = !state.isExamAreaSelected) {
                     QuackBasicTextField(
-                        leadingIcon = QuackIcon.Search,
-                        text = state.examArea,
-                        onTextChanged = {
-                            /*
-                            * TODO(EvergreenTree97): Box로도 해당 영역 Clickable이 잡히지 않음
-                            * 시험 영역 찾기 Screen으로 넘어가는 UX 개선사항 필요
-                            * */
+                        modifier = Modifier.quackClickable {
                             viewModel.onClickExamArea(lazyListState.firstVisibleItemIndex)
                         },
+                        leadingIcon = QuackIcon.Search,
+                        text = state.examArea,
+                        onTextChanged = {},
                         placeholderText = stringResource(id = R.string.find_exam_area),
+                        enabled = false,
                     )
                 }
             }
