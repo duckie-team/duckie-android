@@ -9,6 +9,8 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.exam.model.Answer
@@ -22,8 +24,6 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastAny
 import team.duckie.app.android.util.viewmodel.BaseViewModel
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class CreateProblemViewModel @Inject constructor(
@@ -32,7 +32,7 @@ class CreateProblemViewModel @Inject constructor(
 
     suspend fun makeExam() {
         makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
-            print(isSuccess) //TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
+            print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
         }.onFailure {
             it.printStackTrace()
         }
@@ -130,7 +130,8 @@ class CreateProblemViewModel @Inject constructor(
     }
 }
 
-private val dummyParam = ExamParam( //TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
+private val dummyParam = ExamParam(
+    // TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
     title = "제 1회 도로 패션영역",
     description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
     mainTagId = 3,
@@ -154,18 +155,6 @@ private val dummyParam = ExamParam( //TODO(EvergreenTree97): 문제 만들기 3�
             memo = "test memo 1",
             hint = "test hint 1",
             correctAnswer = "3",
-        ), Problem(
-            question = Question.Text(
-                text = "",
-                type = "",
-            ),
-            answer = Answer.ShortAnswer(
-                shortAnswer = "바보",
-                type = "",
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
         ),
         Problem(
             question = Question.Text(
@@ -205,8 +194,20 @@ private val dummyParam = ExamParam( //TODO(EvergreenTree97): 문제 만들기 3�
             memo = "test memo 1",
             hint = "test hint 1",
             correctAnswer = "3",
-        )
-
+        ),
+        Problem(
+            question = Question.Text(
+                text = "",
+                type = "",
+            ),
+            answer = Answer.ShortAnswer(
+                shortAnswer = "바보",
+                type = "",
+            ),
+            memo = "test memo 1",
+            hint = "test hint 1",
+            correctAnswer = "3",
+        ),
     ),
     userId = 1,
 )

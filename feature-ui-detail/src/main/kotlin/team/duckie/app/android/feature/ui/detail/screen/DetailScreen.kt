@@ -150,6 +150,7 @@ internal fun DetailScreen(modifier: Modifier = Modifier) = CoroutineScopeContent
 }
 
 /** 상세 화면 컨텐츠 Layout */
+@Suppress("MagicNumber")
 @Composable
 private fun DetailContentLayout() {
     val configuration = LocalConfiguration.current

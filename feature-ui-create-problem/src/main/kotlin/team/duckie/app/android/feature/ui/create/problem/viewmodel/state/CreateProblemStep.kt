@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel.state
 
+@Suppress("MagicNumber")
 enum class CreateProblemStep(private val index: Int) {
     FindExamArea(0),
     ExamInformation(1),
