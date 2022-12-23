@@ -36,9 +36,9 @@ import team.duckie.app.android.feature.ui.home.R
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
+import team.duckie.quackquack.ui.component.QuackLarge1
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackSplashSlogan
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 import team.duckie.quackquack.ui.modifier.quackClickable
@@ -129,7 +129,7 @@ private fun HomeRecommendContentScreen(
             contentScale = ContentScale.FillWidth,
         )
         Spacer(modifier = Modifier.height(24.dp))
-        QuackSplashSlogan(
+        QuackLarge1(
             text = recommendItem.title,
         )
         Spacer(modifier = Modifier.height(12.dp))
