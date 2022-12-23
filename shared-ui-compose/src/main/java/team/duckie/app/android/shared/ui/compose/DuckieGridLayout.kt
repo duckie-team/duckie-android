@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
-import team.duckie.quackquack.ui.component.QuackGridLayout
 
 @Composable
 fun <T> DuckieGridLayout(
@@ -41,20 +39,17 @@ fun <T> DuckieGridLayout(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(space = verticalPadding),
     ) {
-        var index = 0
         items.chunked(columns)
-            .fastForEachIndexed { ii, chunkedList ->
-                Log.d("index", ii.toString())
+            .fastForEachIndexed { index, chunkedList ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    chunkedList.fastForEach { item ->
+                    chunkedList.fastForEachIndexed { chunkedIndex, item ->
                         Box(
                             modifier = Modifier.weight(1f),
-                            contentAlignment = Alignment.Center,
                         ) {
-                            content(index++, item)
+                            content(chunkedIndex + columns * index, item)
                         }
                     }
                     if (chunkedList.size < columns) {
