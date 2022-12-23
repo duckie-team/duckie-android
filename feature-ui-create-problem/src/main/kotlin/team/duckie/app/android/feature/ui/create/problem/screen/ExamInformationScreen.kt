@@ -142,7 +142,6 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                         },
                     text = state.examDescription,
                     onTextChanged = viewModel::setExamDescription,
-                    focused = true,
                     placeholderText = stringResource(id = R.string.input_exam_description),
                     imeAction = ImeAction.Next,
                     keyboardActions = moveDownFocus(focusManager),
