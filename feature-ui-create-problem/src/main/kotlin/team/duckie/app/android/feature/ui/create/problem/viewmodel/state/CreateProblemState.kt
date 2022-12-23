@@ -9,7 +9,6 @@ package team.duckie.app.android.feature.ui.create.problem.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 
 data class CreateProblemState(
     val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
@@ -24,17 +23,21 @@ data class CreateProblemState(
             "게임",
             "밀리터리"
         ),
-        val categoriesSelection: ImmutableList<Boolean> = List(categories.size) { false }.toImmutableList(),
+        val categorySelection: Int = -1,
+        val isExamAreaSelected: Boolean = false,
         val examTitle: String = "",
         val examDescription: String = "",
         val certifyingStatement: String = "",
         val foundExamArea: FoundExamArea = FoundExamArea(),
+        val scrollPosition: Int = 0,
+        val examDescriptionFocused: Boolean = false,
     ) {
         val examArea: String
             get() = foundExamArea.examArea
 
         data class FoundExamArea(
-            val searchResults: ImmutableList<String> = persistentListOf( // TODO(EvergreenTree97): Server Request
+            val searchResults: ImmutableList<String> = persistentListOf(
+                // TODO(EvergreenTree97): Server Request
                 "도로",
                 "도로 주행",
                 "도로 셀카",

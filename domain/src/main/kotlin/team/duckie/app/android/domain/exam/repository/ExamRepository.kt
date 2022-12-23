@@ -8,7 +8,6 @@
 package team.duckie.app.android.domain.exam.repository
 
 import androidx.compose.runtime.Immutable
-import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamParam
 
 @Immutable
