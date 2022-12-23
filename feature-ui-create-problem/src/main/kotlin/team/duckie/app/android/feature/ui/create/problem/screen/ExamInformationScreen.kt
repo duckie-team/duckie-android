@@ -20,7 +20,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -52,6 +56,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
     val state = viewModel.state.collectAsStateWithLifecycle().value.examInformation
     val focusManager = LocalFocusManager.current
     val lazyListState = rememberLazyListState()
+    val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(key1 = state.scrollPosition) {
         lazyListState.scrollToItem(index = state.scrollPosition)
@@ -130,12 +135,18 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
             }
             TitleAndComponent(stringResource = R.string.exam_description) {
                 QuackReviewTextArea(
-                    modifier = Modifier.heightIn(140.dp),
+                    modifier = Modifier
+                        .heightIn(140.dp)
+                        .focusRequester(focusRequester = focusRequester)
+                        .onFocusChanged { state ->
+                            viewModel.onExamAreaFocusChanged(state.isFocused)
+                        },
                     text = state.examDescription,
                     onTextChanged = viewModel::setExamDescription,
                     placeholderText = stringResource(id = R.string.input_exam_description),
                     imeAction = ImeAction.Next,
                     keyboardActions = moveDownFocus(focusManager),
+                    focused = state.examDescriptionFocused,
                 )
             } // TODO(EvergreenTree97): 컴포넌트 필요
             TitleAndComponent(stringResource = R.string.certifying_statement) {

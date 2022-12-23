@@ -30,6 +30,7 @@ data class CreateProblemState(
         val certifyingStatement: String = "",
         val foundExamArea: FoundExamArea = FoundExamArea(),
         val scrollPosition: Int = 0,
+        val examDescriptionFocused: Boolean = false,
     ) {
         val examArea: String
             get() = foundExamArea.examArea

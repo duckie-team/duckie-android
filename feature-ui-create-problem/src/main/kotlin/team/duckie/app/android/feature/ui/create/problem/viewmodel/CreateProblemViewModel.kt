@@ -166,6 +166,16 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    fun onExamAreaFocusChanged(isFocused: Boolean) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    examDescriptionFocused = isFocused,
+                )
+            )
+        }
+    }
+
     fun isAllFieldsNotEmpty(): Boolean {
         return with(currentState.examInformation) {
             categorySelection >= 0 && isExamAreaSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
