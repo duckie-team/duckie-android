@@ -7,7 +7,9 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel.state
 
-@Suppress("MagicNumber")
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
+
+@AllowMagicNumber
 enum class CreateProblemStep(private val index: Int) {
     FindExamArea(0),
     ExamInformation(1),

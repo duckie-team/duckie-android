@@ -49,6 +49,7 @@ include(
     ":feature-ui-solve-problem",
     ":feature-ui-create-problem",
     ":feature-ui-detail",
+    ":shared-ui-compose",
     ":util-ui",
     ":util-viewmodel",
     ":util-kotlin",
