@@ -39,9 +39,9 @@ import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponen
 import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
+import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
-import team.duckie.app.android.util.compose.component.DuckieGridLayout
 import team.duckie.app.android.util.compose.launch
 import team.duckie.quackquack.ui.component.QuackBasicTextArea
 import team.duckie.quackquack.ui.component.QuackBasicTextField
