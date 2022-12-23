@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -35,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
-import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
@@ -54,6 +55,41 @@ private val currentStep = OnboardStep.Login
 private const val LoginScreenWelcomeLayoutId = "LoginScreenWelcome"
 private const val LoginScreenLoginAreaLayoutId = "LoginScreenLoginArea"
 
+private val LoginScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
+    val looseConstraints = constraints.asLoose()
+
+    val welcomeMeasurable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == LoginScreenWelcomeLayoutId
+    } ?: npe()
+
+    val loginPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == LoginScreenLoginAreaLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    val loginAreaHeight = loginPlaceable.height
+    val welcomeHeight = constraints.maxHeight - loginAreaHeight
+
+    val welcomeConstraints = constraints.copy(
+        minHeight = welcomeHeight,
+        maxHeight = welcomeHeight,
+    )
+    val welcomePlaceable = welcomeMeasurable.measure(welcomeConstraints)
+
+    layout(
+        width = constraints.maxWidth,
+        height = constraints.maxHeight,
+    ) {
+        welcomePlaceable.place(
+            x = 0,
+            y = 0,
+        )
+        loginPlaceable.place(
+            x = 0,
+            y = welcomeHeight,
+        )
+    }
+}
+
 @Composable
 internal fun LoginScreen() {
     Layout(
@@ -68,40 +104,8 @@ internal fun LoginScreen() {
             LoginScreenWelcome()
             LoginScreenLoginArea()
         },
-    ) { measurables, constraints ->
-        val looseConstraints = constraints.asLoose()
-
-        val welcomeMeasurable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == LoginScreenWelcomeLayoutId
-        } ?: npe()
-
-        val loginPlaceable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == LoginScreenLoginAreaLayoutId
-        }?.measure(looseConstraints) ?: npe()
-
-        val loginAreaHeight = loginPlaceable.height
-        val welcomeHeight = constraints.maxHeight - loginAreaHeight
-
-        val welcomeConstraints = constraints.copy(
-            minHeight = welcomeHeight,
-            maxHeight = welcomeHeight,
-        )
-        val welcomePlaceable = welcomeMeasurable.measure(welcomeConstraints)
-
-        layout(
-            width = constraints.maxWidth,
-            height = constraints.maxHeight,
-        ) {
-            welcomePlaceable.place(
-                x = 0,
-                y = 0,
-            )
-            loginPlaceable.place(
-                x = 0,
-                y = welcomeHeight,
-            )
-        }
-    }
+        measurePolicy = LoginScreenMeasurePolicy,
+    )
 }
 
 @Composable
@@ -132,6 +136,42 @@ private fun LoginScreenWelcome() {
 
 private const val LoginScreenLoginAreaKakaoSymbolLayoutId = "LoginScreenLoginAreaKakaoSymbol"
 private const val LoginScreenLoginAreaKakaoLoginLabelLayoutId = "LoginScreenLoginAreaKakaoLoginLabel"
+
+private val LoginScreenLoginAreaMeasurePolicy = MeasurePolicy { measurables, constraints ->
+    val extraLooseConstraints = constraints.asLoose(width = true)
+
+    val symbolPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == LoginScreenLoginAreaKakaoSymbolLayoutId
+    }?.measure(extraLooseConstraints) ?: npe()
+
+    val labelPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == LoginScreenLoginAreaKakaoLoginLabelLayoutId
+    }?.measure(extraLooseConstraints) ?: npe()
+
+    layout(
+        width = constraints.maxWidth,
+        height = constraints.maxHeight,
+    ) {
+        symbolPlaceable.place(
+            x = 30.dp.roundToPx(),
+            y = Alignment.CenterVertically.align(
+                size = symbolPlaceable.height,
+                space = constraints.maxHeight,
+            ),
+        )
+        labelPlaceable.place(
+            x = Alignment.CenterHorizontally.align(
+                size = labelPlaceable.width,
+                space = constraints.maxWidth,
+                layoutDirection = layoutDirection,
+            ),
+            y = Alignment.CenterVertically.align(
+                size = labelPlaceable.height,
+                space = constraints.maxHeight,
+            ),
+        )
+    }
+}
 
 @Composable
 private fun LoginScreenLoginArea() = CoroutineScopeContent {
@@ -191,41 +231,8 @@ private fun LoginScreenLoginArea() = CoroutineScopeContent {
                     )
                 )
             },
-        ) { measurables, constraints ->
-            val extraLooseConstraints = constraints.asLoose(width = true)
-
-            val symbolPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == LoginScreenLoginAreaKakaoSymbolLayoutId
-            }?.measure(extraLooseConstraints) ?: npe()
-
-            val labelPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == LoginScreenLoginAreaKakaoLoginLabelLayoutId
-            }?.measure(extraLooseConstraints) ?: npe()
-
-            layout(
-                width = constraints.maxWidth,
-                height = constraints.maxHeight,
-            ) {
-                symbolPlaceable.place(
-                    x = 30.dp.roundToPx(),
-                    y = Alignment.CenterVertically.align(
-                        size = symbolPlaceable.height,
-                        space = constraints.maxHeight,
-                    ),
-                )
-                labelPlaceable.place(
-                    x = Alignment.CenterHorizontally.align(
-                        size = labelPlaceable.width,
-                        space = constraints.maxWidth,
-                        layoutDirection = layoutDirection,
-                    ),
-                    y = Alignment.CenterVertically.align(
-                        size = labelPlaceable.height,
-                        space = constraints.maxHeight,
-                    ),
-                )
-            }
-        }
+            measurePolicy = LoginScreenLoginAreaMeasurePolicy,
+        )
         QuackUnderlineBody3(
             text = stringResource(R.string.kakaologin_login_terms),
             underlineTexts = persistentListOf(

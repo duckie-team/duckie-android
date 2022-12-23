@@ -9,13 +9,14 @@
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,29 +24,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.net.toUri
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
-import team.duckie.app.android.domain.user.model.isDefaultProfilePhoto
+import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.photopicker.PhotoPickerConstants
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
-import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
@@ -53,6 +58,7 @@ import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
@@ -61,7 +67,11 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
+
+private val currentStep = OnboardStep.Profile
 
 private const val ProfileScreenTopAppBarLayoutId = "ProfileScreenTopAppBar"
 private const val ProfileScreenTitleAndDescriptionLayoutId = "ProfileScreenTitleAndDescription"
@@ -69,27 +79,91 @@ private const val ProfileScreenProfileImageLayoutId = "ProfileScreenProfileImage
 private const val ProfileScreenNicknameTextFieldLayoutId = "ProfileScreenNicknameTextField"
 private const val ProfileScreenNextButtonLayoutId = "ProfileScreenNextButton"
 
-private const val MaxNicknameLength = 10
-private const val NicknameInputDebounceSecond = 0.3
+private val ProfileScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
+    val looseConstraints = constraints.asLoose()
+    val extraLooseConstraints = constraints.asLoose(width = true)
 
-private val currentStep = OnboardStep.Profile
+    val topAppBarPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == ProfileScreenTopAppBarLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    val titileAndDescriptionPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == ProfileScreenTitleAndDescriptionLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    val profileImagePlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == ProfileScreenProfileImageLayoutId
+    }?.measure(extraLooseConstraints) ?: npe()
+
+    val nicknameTextFieldPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == ProfileScreenNicknameTextFieldLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    val nextButtonPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == ProfileScreenNextButtonLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    val topAppBarHeight = topAppBarPlaceable.height
+    val titleAndDescriptionHeight = titileAndDescriptionPlaceable.height
+    val profileImageHeight = profileImagePlaceable.height
+    val nextButtonHeight = nextButtonPlaceable.height
+
+    layout(
+        width = constraints.maxWidth,
+        height = constraints.maxHeight,
+    ) {
+        topAppBarPlaceable.place(
+            x = 0,
+            y = 0,
+        )
+        titileAndDescriptionPlaceable.place(
+            x = 0,
+            y = topAppBarHeight,
+        )
+        profileImagePlaceable.place(
+            x = Alignment.CenterHorizontally.align(
+                size = profileImagePlaceable.width,
+                space = constraints.maxWidth,
+                layoutDirection = layoutDirection,
+            ),
+            y = topAppBarHeight + titleAndDescriptionHeight,
+        )
+        nicknameTextFieldPlaceable.place(
+            x = 0,
+            y = topAppBarHeight + titleAndDescriptionHeight + profileImageHeight,
+        )
+        nextButtonPlaceable.place(
+            x = 0,
+            y = constraints.maxHeight - nextButtonHeight,
+        )
+    }
+}
+
+private const val MaxNicknameLength = 10
+private val NicknameInputDebounceSecond = 0.3.seconds
 
 @Composable
 internal fun ProfileScreen() {
     val toast = rememberToast()
+    val context = LocalContext.current
     val vm = LocalViewModel.current as OnboardViewModel
-    val galleryImages = remember<ImmutableList<String>>(vm.galleryImages) {
-        vm.galleryImages.toPersistentList().add(0, PhotoPickerConstants.Camera)
+    val coroutineScope = rememberCoroutineScope()
+
+    val galleryImages = remember<ImmutableList<String>>(vm.isImagePermissionGranted, vm.galleryImages) {
+        if (vm.isImagePermissionGranted == true) {
+            vm.galleryImages
+                .toPersistentList()
+                .runIf(vm.isCameraPermissionGranted) {
+                    add(0, PhotoPickerConstants.Camera)
+                }
+        } else {
+            persistentListOf()
+        }
     }
 
     var photoPickerVisible by remember { mutableStateOf(false) }
-    var profilePhoto by remember {
-        mutableStateOf(
-            vm.me.isDefaultProfilePhoto().let { isDefault ->
-                if (isDefault) QuackIcon.Profile else vm.me.profilePhotoUrl
-            }
-        )
-    }
+    var profilePhoto by remember { mutableStateOf<Any>(vm.me.profilePhotoUrl) }
+
     var profilePhotoLastSelectionIndex by remember { mutableStateOf(0) }
     val profilePhotoSelections = remember {
         mutableStateListOf(
@@ -98,6 +172,16 @@ internal fun ProfileScreen() {
                 init = { false },
             )
         )
+    }
+    val takePhotoFromCameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview(),
+    ) { takenPhoto ->
+        photoPickerVisible = false
+        if (takenPhoto != null) {
+            profilePhoto = takenPhoto
+        } else {
+            toast(context.getString(R.string.profile_fail_load_photo))
+        }
     }
 
     var nickname by remember { mutableStateOf(vm.me.name) }
@@ -113,7 +197,7 @@ internal fun ProfileScreen() {
         val nicknameInputFlow = snapshotFlow { nickname }
         nicknameInputFlow
             .onEach { debounceFinish = false }
-            .debounce(NicknameInputDebounceSecond.seconds)
+            .debounce(NicknameInputDebounceSecond)
             .collect {
                 debounceFinish = true
                 nicknameRuleError = vm.checkNicknameRuleError(nickname)
@@ -155,7 +239,7 @@ internal fun ProfileScreen() {
                     updateProfilePhoto = { photo ->
                         profilePhoto = photo
                     },
-                    openPhotoPicker = { photoPickerVisible = true },
+                    openPhotoPicker = { photoPickerVisible = true }.takeIf { vm.isImagePermissionGranted == true },
                 )
                 QuackErrorableTextField(
                     modifier = Modifier
@@ -205,65 +289,8 @@ internal fun ProfileScreen() {
                     )
                 }
             },
-        ) { measurables, constraints ->
-            val looseConstraints = constraints.asLoose()
-            val extraLooseConstraints = constraints.asLoose(width = true)
-
-            val topAppBarPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == ProfileScreenTopAppBarLayoutId
-            }?.measure(looseConstraints) ?: npe()
-
-            val titileAndDescriptionPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == ProfileScreenTitleAndDescriptionLayoutId
-            }?.measure(looseConstraints) ?: npe()
-
-            val profileImagePlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == ProfileScreenProfileImageLayoutId
-            }?.measure(extraLooseConstraints) ?: npe()
-
-            val nicknameTextFieldPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == ProfileScreenNicknameTextFieldLayoutId
-            }?.measure(looseConstraints) ?: npe()
-
-            val nextButtonPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == ProfileScreenNextButtonLayoutId
-            }?.measure(looseConstraints) ?: npe()
-
-            val topAppBarHeight = topAppBarPlaceable.height
-            val titleAndDescriptionHeight = titileAndDescriptionPlaceable.height
-            val profileImageHeight = profileImagePlaceable.height
-            val nextButtonHeight = nextButtonPlaceable.height
-
-            layout(
-                width = constraints.maxWidth,
-                height = constraints.maxHeight,
-            ) {
-                topAppBarPlaceable.place(
-                    x = 0,
-                    y = 0,
-                )
-                titileAndDescriptionPlaceable.place(
-                    x = 0,
-                    y = topAppBarHeight,
-                )
-                profileImagePlaceable.place(
-                    x = Alignment.CenterHorizontally.align(
-                        size = profileImagePlaceable.width,
-                        space = constraints.maxWidth,
-                        layoutDirection = layoutDirection,
-                    ),
-                    y = topAppBarHeight + titleAndDescriptionHeight,
-                )
-                nicknameTextFieldPlaceable.place(
-                    x = 0,
-                    y = topAppBarHeight + titleAndDescriptionHeight + profileImageHeight,
-                )
-                nextButtonPlaceable.place(
-                    x = 0,
-                    y = constraints.maxHeight - nextButtonHeight,
-                )
-            }
-        }
+            measurePolicy = ProfileScreenMeasurePolicy,
+        )
 
         // TODO: 효율적인 애니메이션 (카메라가 로드되면서 생기는 프라임드랍 때문에 애니메이션 제거)
         if (photoPickerVisible) {
@@ -275,7 +302,9 @@ internal fun ProfileScreen() {
                 imageUris = galleryImages,
                 imageSelections = profilePhotoSelections,
                 onCameraClick = {
-                    toast("Camera clicked")
+                    coroutineScope.launch {
+                        takePhotoFromCameraLauncher.launch()
+                    }
                 },
                 onImageClick = { index, _ ->
                     profilePhotoSelections[index] = !profilePhotoSelections[index]
@@ -308,8 +337,7 @@ private fun navigateNextStepIfOk(
     }
 }
 
-// FIXME: 정확한 radius 사이즈 필요 (제플린에서 안보임)
-private val ProfilePhotoShape = RoundedCornerShape(size = 30.dp)
+private val ProfilePhotoShape = SquircleShape
 private val ProfilePhotoSize = DpSize(all = 80.dp)
 
 @Composable
@@ -317,19 +345,19 @@ private fun ProfilePhoto(
     modifier: Modifier = Modifier,
     profilePhoto: Any,
     updateProfilePhoto: (value: Any) -> Unit,
-    openPhotoPicker: () -> Unit,
+    openPhotoPicker: (() -> Unit)?,
 ) {
     QuackAnimatedContent(
         modifier = modifier
             .size(ProfilePhotoSize)
             .clip(ProfilePhotoShape)
-            .clickable(onClick = openPhotoPicker),
+            .quackClickable(onClick = openPhotoPicker),
         targetState = profilePhoto,
     ) { photo ->
         QuackImage(
             src = photo,
             size = ProfilePhotoSize,
-            onClick = openPhotoPicker, // required when onLongClick is used
+            onClick = openPhotoPicker ?: {}, // required when onLongClick is used
             onLongClick = { updateProfilePhoto(QuackIcon.Profile) },
         )
     }
