@@ -7,8 +7,6 @@
 
 @file:Suppress("UnstableApiUsage")
 
-include(":shared-ui-compose")
-
 rootProject.name = "duckie"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
@@ -55,4 +53,5 @@ include(
     ":util-viewmodel",
     ":util-kotlin",
     ":util-compose",
+    ":shared-ui-compose",
 )
