@@ -5,21 +5,16 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
+package team.duckie.app.android.shared.ui.compose
 
-package team.duckie.app.android.util.compose.component
-
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +22,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.util.kotlin.fastForEach
+import team.duckie.app.android.util.kotlin.fastForEachIndexed
+import team.duckie.quackquack.ui.component.QuackGridLayout
 
 @Composable
 fun <T> DuckieGridLayout(
@@ -46,7 +43,8 @@ fun <T> DuckieGridLayout(
     ) {
         var index = 0
         items.chunked(columns)
-            .fastForEach { chunkedList ->
+            .fastForEachIndexed { ii, chunkedList ->
+                Log.d("index", ii.toString())
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
