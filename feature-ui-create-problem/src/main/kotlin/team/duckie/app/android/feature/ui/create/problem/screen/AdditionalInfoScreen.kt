@@ -83,6 +83,7 @@ import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.modifier.quackClickable
 import kotlin.coroutines.resume
 
 /** 문제 만들기 3단계 (추가정보 입력) Screen */
@@ -374,7 +375,12 @@ private fun AdditionalBottomSheetThumbnailLayout(
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
     val thumbnailWidthDp = (screenWidthDp - 40.dp) / 2
-    Column {
+    Column(
+        modifier = Modifier.quackClickable(
+            rippleEnabled = true,
+            onClick = onClick,
+        )
+    ) {
         QuackImage(
             size = DpSize(
                 thumbnailWidthDp,
@@ -382,7 +388,6 @@ private fun AdditionalBottomSheetThumbnailLayout(
             ),
             contentScale = ContentScale.FillWidth,
             src = src,
-            onClick = onClick,
         )
 
         QuackSubtitle(
