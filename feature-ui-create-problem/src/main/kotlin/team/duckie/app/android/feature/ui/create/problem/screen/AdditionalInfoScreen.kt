@@ -60,7 +60,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -69,6 +68,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.suspendCancellableCoroutine
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
+import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
@@ -323,18 +323,7 @@ private fun AdditionalThumbnailLayout(
         // 썸네일 종류 선택 버튼
         // TODO(riflockle7): trailingIcon 추가 필요
         QuackLargeButton(
-            modifier = Modifier
-                .padding(top = 4.dp)
-                // TODO(riflockle7): QuackLargeButton offset 추가되는 것 제거 필요
-                .offset {
-                    val imeHeight = imeInsets.getBottom(this)
-                    val nagivationBarHeight = navigationBarInsets.getBottom(this)
-                    // ime height 에 navigation height 가 포함되는 것으로 추측됨
-                    val yOffset = imeHeight
-                        .minus(nagivationBarHeight)
-                        .coerceAtLeast(0)
-                    IntOffset(x = 0, y = yOffset)
-                },
+            modifier = Modifier.padding(top = 4.dp),
             type = QuackLargeButtonType.Border,
             text = stringResource(id = R.string.additional_information_thumbnail_select),
             leadingIcon = QuackIcon.ArrowRight,
@@ -357,6 +346,7 @@ private fun AdditionalTakeLayout() {
             text = state.additionalInfoArea.takeTitle,
             onTextChanged = vm::setButtonTitle,
             placeholderText = stringResource(id = R.string.additional_information_take_input_hint),
+            keyboardOptions = ImeActionNext,
         )
     }
 }
