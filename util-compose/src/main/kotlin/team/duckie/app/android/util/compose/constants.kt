@@ -8,4 +8,4 @@
 package team.duckie.app.android.util.compose
 
 /** 상수 모음 */
-const val HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16 = 240 / 328
+const val HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16 = 240.toFloat() / 328
