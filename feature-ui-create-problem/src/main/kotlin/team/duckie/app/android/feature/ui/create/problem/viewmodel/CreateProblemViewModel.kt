@@ -21,6 +21,7 @@ import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
+import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -230,10 +231,9 @@ class CreateProblemViewModel @Inject constructor(
 
     fun addTag(tag: String) {
         updateState { prevState ->
-            val newTags = mutableListOf<String>().apply {
-                addAll(prevState.examInformation.additionalInfoArea.tags)
-                add(tag)
-            }.toImmutableList()
+            val newTags = prevState.examInformation.additionalInfoArea.tags
+                .copy { add(tag) }
+                .toImmutableList()
             prevState.copy(
                 examInformation = prevState.examInformation.copy(
                     additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
