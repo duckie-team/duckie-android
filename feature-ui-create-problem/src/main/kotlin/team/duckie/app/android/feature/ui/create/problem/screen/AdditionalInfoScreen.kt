@@ -96,6 +96,8 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
     val keyboard = LocalSoftwareKeyboardController.current
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val toast = rememberToast()
+    val permissionErrorMessage =
+        stringResource(id = R.string.create_problem_permission_toast_message)
 
     // Gallery 관련
     val selectedGalleryImage = remember(state.thumbnail) { state.thumbnail }
@@ -111,20 +113,34 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
     var photoPickerVisible by remember { mutableStateOf(false) }
     var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
 
-    // 권한 관련
-    // TODO(riflockle7): 추후 공용 권한 가이드 나올 시 제거 필요
+    // 단일 권한 설정 launcher
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
             launch {
                 vm.loadGalleryImages()
-                photoPickerVisible = true // 추후 삭제될 코드여서 변수 위치에 따라 오류나는 케이스는 고려하지 않음
+                photoPickerVisible = true // 안고 가야하는건가.. ViewModel 에는 두기 싫어서 일단 이렇게 둠
             }
         } else {
-            toast("권한이 없습니다,")
+            toast(permissionErrorMessage)
         }
     }
+
+//    // 여러 개 권한 설정 launcher
+//    val launchers = rememberLauncherForActivityResult(
+//        ActivityResultContracts.RequestMultiplePermissions()
+//    ) { areGranted: Map<String, Boolean> ->
+//        val isGranted = areGranted.values.reduce { acc, next -> acc && next }
+//        if (isGranted) {
+//            launch {
+//                vm.loadGalleryImages()
+//                photoPickerVisible = true // 추후 삭제될 코드여서 변수 위치에 따라 오류나는 케이스는 고려하지 않음
+//            }
+//        } else {
+//            toast(permissionErrorMessage)
+//        }
+//    }
 
     BackHandler {
         if (photoPickerVisible) {
@@ -203,13 +219,11 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
                         src = team.duckie.quackquack.ui.R.drawable.quack_ic_area_24,
                         onClick = {
                             launch {
-                                // TODO(riflockle7): 추후 공용 권한 가이드 나올 시 제거 필요
-                                val permissionCheckResult = checkPermission(context, launcher)
-
-                                if (permissionCheckResult) {
+                                val result = imagePermission.check(context, launcher)
+                                if (result) {
                                     vm.loadGalleryImages()
                                 }
-                                photoPickerVisible = permissionCheckResult
+                                photoPickerVisible = result
                             }
                         }
                     )
@@ -397,21 +411,40 @@ private fun AdditionalBottomSheetThumbnailLayout(
     }
 }
 
-/**
- * 권한을 체크한다.
- * TODO(riflockle7): 추후 공용 권한 가이드 나올 시 제거 필요
- */
-private suspend fun checkPermission(
-    context: Context,
-    launcher: ManagedActivityResultLauncher<String, Boolean>
-) = suspendCancellableCoroutine {
-    val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+/** 이미지 권한 체크시 사용해야하는 permission */
+private val imagePermission
+    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         Manifest.permission.READ_MEDIA_IMAGES
     } else {
         Manifest.permission.READ_EXTERNAL_STORAGE
     }
-    when (PackageManager.PERMISSION_GRANTED) {
-        ContextCompat.checkSelfPermission(context, permission) -> it.resume(true)
-        else -> launcher.launch(permission)
+
+/** 한 개의 권한을 체크한다. */
+private suspend fun String.check(
+    context: Context,
+    launcher: ManagedActivityResultLauncher<String, Boolean>
+) = suspendCancellableCoroutine {
+    val isGranted =
+        ContextCompat.checkSelfPermission(context, this) == PackageManager.PERMISSION_GRANTED
+    if (isGranted) {
+        it.resume(true)
+    } else {
+        launcher.launch(this)
     }
 }
+
+// /** 여러 개의 권한을 체크한다. */
+// private suspend fun Array<String>.check(
+//     context: Context,
+//     launcher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>
+// ) = suspendCancellableCoroutine {
+//     this.all { permission ->
+//         ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+//     }.let { isAllGranted ->
+//         if (isAllGranted) {
+//             it.resume(true)
+//         } else {
+//             launcher.launch(this)
+//         }
+//     }
+// }
