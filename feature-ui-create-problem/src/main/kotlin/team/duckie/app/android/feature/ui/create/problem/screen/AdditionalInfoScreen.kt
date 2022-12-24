@@ -16,6 +16,7 @@ package team.duckie.app.android.feature.ui.create.problem.screen
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -399,12 +400,13 @@ private suspend fun checkPermission(
     context: Context,
     launcher: ManagedActivityResultLauncher<String, Boolean>
 ) = suspendCancellableCoroutine {
+    val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    }
     when (PackageManager.PERMISSION_GRANTED) {
-        ContextCompat.checkSelfPermission(
-            context, Manifest.permission.READ_EXTERNAL_STORAGE
-        ) -> it.resume(true)
-
-        // Asking for permission
-        else -> launcher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        ContextCompat.checkSelfPermission(context, permission) -> it.resume(true)
+        else -> launcher.launch(permission)
     }
 }
