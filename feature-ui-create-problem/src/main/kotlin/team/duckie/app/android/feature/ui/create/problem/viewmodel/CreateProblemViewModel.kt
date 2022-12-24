@@ -47,7 +47,7 @@ class CreateProblemViewModel @Inject constructor(
 
     suspend fun makeExam() {
         makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
-            print(isSuccess) //TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
+            print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
         }.onFailure {
             it.printStackTrace()
         }
@@ -220,7 +220,7 @@ class CreateProblemViewModel @Inject constructor(
     }
 }
 
-private val dummyParam = ExamParam( //TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
+private val dummyParam = ExamParam( // TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
     title = "제 1회 도로 패션영역",
     description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
     mainTagId = 3,
@@ -244,7 +244,8 @@ private val dummyParam = ExamParam( //TODO(EvergreenTree97): 문제 만들기 3�
             memo = "test memo 1",
             hint = "test hint 1",
             correctAnswer = "3",
-        ), Problem(
+        ),
+        Problem(
             question = Question.Text(
                 text = "",
                 type = "",

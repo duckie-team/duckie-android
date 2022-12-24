@@ -54,7 +54,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -75,6 +74,7 @@ import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
+import team.duckie.app.android.util.compose.HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.launch
 import team.duckie.app.android.util.compose.rememberToast
@@ -121,7 +121,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
         if (isGranted) {
             launch {
                 vm.loadGalleryImages()
-                photoPickerVisible = true   // 추후 삭제될 코드여서 변수 위치에 따라 오류나는 케이스는 고려하지 않음
+                photoPickerVisible = true // 추후 삭제될 코드여서 변수 위치에 따라 오류나는 케이스는 고려하지 않음
             }
         } else {
             toast("권한이 없습니다,")
@@ -221,8 +221,8 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
     ) {
         Column(
             modifier = Modifier
-            .fillMaxSize()
-            .navigationBarsPadding()
+                .fillMaxSize()
+                .navigationBarsPadding()
         ) {
             // 상단 탭바
             PrevAndNextTopAppBar(
@@ -312,7 +312,10 @@ private fun AdditionalThumbnailLayout(
         stringResource = R.string.category_title
     ) {
         QuackImage(
-            size = DpSize(thumbnailWidthDp, thumbnailWidthDp * 240 / 328),
+            size = DpSize(
+                thumbnailWidthDp,
+                thumbnailWidthDp * HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16
+            ),
             contentScale = ContentScale.FillWidth,
             src = thumbnail,
         )
@@ -388,7 +391,10 @@ private fun AdditionalBottomSheetThumbnailLayout(
     val thumbnailWidthDp = (screenWidthDp - 40.dp) / 2
     Column {
         QuackImage(
-            size = DpSize(thumbnailWidthDp, thumbnailWidthDp * 240 / 328),
+            size = DpSize(
+                thumbnailWidthDp,
+                thumbnailWidthDp * HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16
+            ),
             contentScale = ContentScale.FillWidth,
             src = src,
             onClick = onClick,
