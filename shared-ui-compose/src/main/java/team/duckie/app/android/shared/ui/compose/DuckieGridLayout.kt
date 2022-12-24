@@ -5,14 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
-package team.duckie.app.android.util.compose.component
+package team.duckie.app.android.shared.ui.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import team.duckie.app.android.util.kotlin.fastForEach
+import team.duckie.app.android.util.kotlin.fastForEachIndexed
 
 @Composable
 fun <T> DuckieGridLayout(
@@ -44,19 +37,17 @@ fun <T> DuckieGridLayout(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(space = verticalPadding),
     ) {
-        var index = 0
         items.chunked(columns)
-            .fastForEach { chunkedList ->
+            .fastForEachIndexed { index, chunkedList ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    chunkedList.fastForEach { item ->
+                    chunkedList.fastForEachIndexed { chunkedIndex, item ->
                         Box(
                             modifier = Modifier.weight(1f),
-                            contentAlignment = Alignment.Center,
                         ) {
-                            content(index++, item)
+                            content(chunkedIndex + columns * index, item)
                         }
                     }
                     if (chunkedList.size < columns) {

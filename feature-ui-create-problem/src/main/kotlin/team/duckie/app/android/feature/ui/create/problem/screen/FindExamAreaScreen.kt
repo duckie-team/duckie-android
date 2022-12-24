@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -68,7 +69,10 @@ internal fun FindExamAreaScreen() {
                 leadingIcon = QuackIcon.Search,
                 text = state.examArea,
                 onTextChanged = viewModel::setExamArea,
-                placeholderText = stringResource(id = R.string.find_exam_area),
+                placeholderText = stringResource(id = R.string.search_exam_area_tag),
+                keyboardActions = KeyboardActions(
+                    onDone = { viewModel.onClickSearchListHeader() }
+                )
             )
             QuackAnimatedVisibility(visible = state.examArea.isNotEmpty()) {
                 LazyColumn {
@@ -78,9 +82,7 @@ internal fun FindExamAreaScreen() {
                                 id = R.string.add_also,
                                 state.examArea,
                             ),
-                            onClick = {
-                                viewModel.navigateStep(CreateProblemStep.ExamInformation)
-                            },
+                            onClick = viewModel::onClickSearchListHeader,
                         )
                     }
                     itemsIndexed(
@@ -90,7 +92,7 @@ internal fun FindExamAreaScreen() {
                         SearchResultText(
                             text = item,
                             onClick = {
-                                viewModel.clickSearchList(index)
+                                viewModel.onClickSearchList(index)
                             }
                         )
                     }

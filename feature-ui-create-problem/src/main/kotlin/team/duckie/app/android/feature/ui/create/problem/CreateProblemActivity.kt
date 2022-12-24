@@ -5,13 +5,17 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalLifecycleComposeApi::class)
+@file:OptIn(
+    ExperimentalLifecycleComposeApi::class,
+    ExperimentalFoundationApi::class,
+)
 
 package team.duckie.app.android.feature.ui.create.problem
 
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -37,6 +41,7 @@ import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -64,26 +69,30 @@ class CreateProblemActivity : BaseActivity() {
                     .launchIn(this)
             }
 
-            CompositionLocalProvider(LocalViewModel provides viewModel) {
-                QuackAnimatedContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor),
-                    targetState = createProblemStep,
-                ) { step: CreateProblemStep ->
-                    when (step) {
-                        CreateProblemStep.ExamInformation -> ExamInformationScreen()
-                        CreateProblemStep.FindExamArea -> FindExamAreaScreen()
-                        CreateProblemStep.CreateProblem -> CreateProblemScreen(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .statusBarsPadding()
-                        )
-                        CreateProblemStep.AdditionalInformation -> AdditionalInformationScreen(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .statusBarsPadding()
-                        )
+            QuackTheme {
+                CompositionLocalProvider(
+                    LocalViewModel provides viewModel,
+                ) {
+                    QuackAnimatedContent(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = QuackColor.White.composeColor),
+                        targetState = createProblemStep,
+                    ) { step: CreateProblemStep ->
+                        when (step) {
+                            CreateProblemStep.ExamInformation -> ExamInformationScreen()
+                            CreateProblemStep.FindExamArea -> FindExamAreaScreen()
+                            CreateProblemStep.CreateProblem -> CreateProblemScreen(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .statusBarsPadding()
+                            )
+                            CreateProblemStep.AdditionalInformation -> AdditionalInformationScreen(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .statusBarsPadding()
+                            )
+                        }
                     }
                 }
             }

@@ -30,6 +30,7 @@ dependencies {
         projects.utilCompose,
         projects.utilViewmodel,
         projects.featurePhotopicker,
+        projects.sharedUiCompose,
         libs.ktx.lifecycle,
         libs.compose.ktx.lifecycle,
         libs.compose.ui.material, // needs for Scaffold

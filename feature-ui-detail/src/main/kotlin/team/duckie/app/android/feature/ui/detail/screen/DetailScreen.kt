@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:AllowMagicNumber
+
 package team.duckie.app.android.feature.ui.detail.screen
 
 import android.app.Activity
@@ -41,6 +43,7 @@ import team.duckie.app.android.util.compose.HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
