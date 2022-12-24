@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
@@ -206,6 +207,10 @@ internal fun ProfileScreen() {
                 debounceFinish = true
                 nicknameRuleError = vm.checkNicknameRuleError(nickname)
             }
+    }
+
+    BackHandler(photoPickerVisible) {
+        photoPickerVisible = false
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
