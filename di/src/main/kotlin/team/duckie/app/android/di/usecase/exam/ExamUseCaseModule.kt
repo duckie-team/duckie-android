@@ -25,7 +25,7 @@ object ExamUseCaseModule {
     }
 
     @Provides
-    fun provideGetCategoriesUseCase(repository: ExamRepository): GetCategoriesUseCase{
+    fun provideGetCategoriesUseCase(repository: ExamRepository): GetCategoriesUseCase {
         return GetCategoriesUseCase(repository)
     }
 }

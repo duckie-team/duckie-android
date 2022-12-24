@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CategoryResponse(
     @field:JsonProperty("categories")
-    val categories: List<CategoryData>? = null
+    val categories: List<CategoryData>? = null,
 )
 
 data class CategoryData(

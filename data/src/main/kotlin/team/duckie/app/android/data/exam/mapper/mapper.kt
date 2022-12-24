@@ -98,7 +98,7 @@ internal fun ImageChoiceModel.toData() = ImageChoiceData(
 
 internal fun CategoryModelData.toDomain() = CategoryModel(
     id = id ?: 0,
-    name = name ?: ""
+    name = name ?: "",
 )
 
 internal fun CategoryData.toDomain() = Category(
@@ -106,5 +106,5 @@ internal fun CategoryData.toDomain() = Category(
     name = name ?: "",
     popularTags = popularTags?.fastMap { it.toDomain() }
         ?.toImmutableList()
-        ?: persistentListOf()
+        ?: persistentListOf(),
 )
