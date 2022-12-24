@@ -28,12 +28,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -142,11 +144,13 @@ private val ProfileScreenMeasurePolicy = MeasurePolicy { measurables, constraint
 private const val MaxNicknameLength = 10
 private val NicknameInputDebounceSecond = 0.3.seconds
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun ProfileScreen() {
     val toast = rememberToast()
     val context = LocalContext.current
     val vm = LocalViewModel.current as OnboardViewModel
+    val keyboard = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 
     val galleryImages = remember<ImmutableList<String>>(vm.isImagePermissionGranted, vm.galleryImages) {
@@ -263,13 +267,7 @@ internal fun ProfileScreen() {
                         lastErrorText = errorText
                     },
                     keyboardActions = KeyboardActions {
-                        navigateNextStepIfOk(
-                            vm = vm,
-                            debounceFinish = debounceFinish,
-                            nickname = nickname,
-                            nicknameRuleError = nicknameRuleError,
-                            nicknameIsUseable = nicknameIsUseable,
-                        )
+                        keyboard?.hide()
                     },
                 )
                 QuackLargeButton(
