@@ -171,7 +171,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
                         .width(40.dp)
                         .height(4.dp)
                         .clip(RoundedCornerShape(2.dp))
-                        .background(Color(0xffd9d9d9))
+                        .background(QuackColor.Gray2.composeColor)
                 )
 
                 // 선택 목록
@@ -219,7 +219,11 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
             }
         }
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
+        ) {
             // 상단 탭바
             PrevAndNextTopAppBar(
                 onLeadingIconClick = {
