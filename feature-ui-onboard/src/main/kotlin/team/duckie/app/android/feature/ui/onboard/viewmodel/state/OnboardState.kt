@@ -8,13 +8,13 @@
 package team.duckie.app.android.feature.ui.onboard.viewmodel.state
 
 import team.duckie.app.android.feature.ui.onboard.OnboardActivity
+import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
 
 /**
  * [OnboardViewModel] 의 상태를 나타냅니다.
  */
-sealed class OnboardState {
+internal sealed class OnboardState {
     /**
      * [OnboardViewModel] 의 초기 상태를 나타냅니다. 이 상태를 받으면
      * [OnboardStep.Login] 으로 [NavigateStep] 를 진행합니다.

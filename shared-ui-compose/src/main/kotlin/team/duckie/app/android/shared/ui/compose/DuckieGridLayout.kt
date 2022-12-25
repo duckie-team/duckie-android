@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -27,36 +28,34 @@ fun <T> DuckieGridLayout(
     columns: Int = 3,
     verticalPadding: Dp = 12.dp,
     items: ImmutableList<T>,
-    content: @Composable (
-        index: Int,
-        item: T,
-    ) -> Unit,
+    content: @Composable (index: Int, item: T) -> Unit,
 ) {
+    val chunkedItems = remember(items, columns) { items.chunked(columns) }
+
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(space = verticalPadding),
     ) {
-        items.chunked(columns)
-            .fastForEachIndexed { index, chunkedList ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    chunkedList.fastForEachIndexed { chunkedIndex, item ->
-                        Box(
-                            modifier = Modifier.weight(1f),
-                        ) {
-                            content(chunkedIndex + columns * index, item)
-                        }
+        chunkedItems.fastForEachIndexed { index, chunkedList ->
+            val chuckedSize = remember(chunkedList) { chunkedList.size }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                chunkedList.fastForEachIndexed { chunkedIndex, item ->
+                    Box(modifier = Modifier.weight(1f)) {
+                        content(chunkedIndex + columns * index, item)
                     }
-                    if (chunkedList.size < columns) {
-                        val spacerCount = columns - chunkedList.size
-                        repeat(spacerCount) {
-                            Spacer(modifier = Modifier.weight(1f / (spacerCount)))
-                        }
+                }
+                if (chuckedSize < columns) {
+                    val spacerCount = columns - chuckedSize
+                    repeat(spacerCount) {
+                        Spacer(modifier = Modifier.weight(1f / spacerCount))
                     }
                 }
             }
+        }
     }
 }

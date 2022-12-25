@@ -20,6 +20,7 @@ android {
 
 dependencies {
     implementations(
+        projects.utilKotlin,
         libs.quack.ui.components,
         libs.compose.ui.camposer,
     )
