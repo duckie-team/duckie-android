@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.feature.ui.create.problem.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -87,18 +88,20 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),
         ) { // TODO(EvergreenTree97): 컴포넌트 필요
             TitleAndComponent(stringResource = R.string.category_title) {
-                DuckieGridLayout(items = state.categories) { index, item ->
-                    QuackMediumToggleButton(
-                        modifier = Modifier.size(
-                            width = 102.dp,
-                            height = 40.dp,
-                        ),
-                        text = item.name,
-                        selected = state.categorySelection == index,
-                        onClick = {
-                            viewModel.onClickCategory(index)
-                        },
-                    )
+                AnimatedVisibility(visible = state.isCategoryLoading) {
+                    DuckieGridLayout(items = state.categories) { index, item ->
+                        QuackMediumToggleButton(
+                            modifier = Modifier.size(
+                                width = 102.dp,
+                                height = 40.dp,
+                            ),
+                            text = item.name,
+                            selected = state.categorySelection == index,
+                            onClick = {
+                                viewModel.onClickCategory(index)
+                            },
+                        )
+                    }
                 }
             }
             TitleAndComponent(stringResource = R.string.exam_area) {
