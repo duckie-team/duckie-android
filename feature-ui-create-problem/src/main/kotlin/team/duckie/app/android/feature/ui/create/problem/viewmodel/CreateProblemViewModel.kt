@@ -44,16 +44,16 @@ class CreateProblemViewModel @Inject constructor(
 
     suspend fun getCategories() {
         getCategoriesUseCase(false).onSuccess { categories ->
-            Log.d("성공",categories.toString())
             updateState { prevState ->
                 prevState.copy(
                     examInformation = prevState.examInformation.copy(
+                        isCategoryLoading = false,
                         categories = categories.toImmutableList()
                     )
                 )
             }
-        }.onFailure{
-            Log.d("실패", it.localizedMessage)
+        }.onFailure {
+            print("실패")
         }
     }
 

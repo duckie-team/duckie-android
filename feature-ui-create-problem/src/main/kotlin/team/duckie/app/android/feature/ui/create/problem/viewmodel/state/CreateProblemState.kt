@@ -16,7 +16,7 @@ data class CreateProblemState(
     val examInformation: ExamInformation = ExamInformation(),
 ) {
     data class ExamInformation(
-        val isCategoryLoading: Boolean = false,
+        val isCategoryLoading: Boolean = true,
         val categories: ImmutableList<Category> = persistentListOf(),
         val categorySelection: Int = -1,
         val isExamAreaSelected: Boolean = false,

@@ -60,6 +60,10 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
     val lazyListState = rememberLazyListState()
     val focusRequester = remember { FocusRequester() }
 
+    LaunchedEffect(Unit) {
+        viewModel.getCategories()
+    }
+
     LaunchedEffect(key1 = state.scrollPosition) {
         lazyListState.scrollToItem(index = state.scrollPosition)
     }
@@ -88,7 +92,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),
         ) { // TODO(EvergreenTree97): 컴포넌트 필요
             TitleAndComponent(stringResource = R.string.category_title) {
-                AnimatedVisibility(visible = state.isCategoryLoading) {
+                AnimatedVisibility(visible = state.isCategoryLoading.not()) {
                     DuckieGridLayout(items = state.categories) { index, item ->
                         QuackMediumToggleButton(
                             modifier = Modifier.size(
