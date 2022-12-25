@@ -23,9 +23,9 @@ sealed class DuckieException(code: String) : IllegalStateException("DuckieExcept
  *
  * 백엔드의 [에러 처리 규칙](https://www.notion.so/jisungbin/6487a9d604e14375bc02df6fd8397f15) 을 따릅니다.
  *
- * @param message 예외 메시지. 선택적으로 값을 받습니다.
- * @param code 예외 코드. 필수적으로 값을 받습니다.
- * @param errors 발생한 에러 목록. 선택적으로 값을 받습니다
+ * @param message 예외 메시지. 선택으로 값을 받습니다.
+ * @param code 예외 코드. 필수로 값을 받습니다.
+ * @param errors 발생한 에러 목록. 선택\\\\\\으로 값을 받습니다
  */
 class DuckieResponseException(
     message: String? = null,
