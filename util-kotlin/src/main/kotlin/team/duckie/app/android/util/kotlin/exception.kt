@@ -25,7 +25,7 @@ sealed class DuckieException(code: String) : IllegalStateException("DuckieExcept
  *
  * @param message 예외 메시지. 선택으로 값을 받습니다.
  * @param code 예외 코드. 필수로 값을 받습니다.
- * @param errors 발생한 에러 목록. 선택\\\\\\으로 값을 받습니다
+ * @param errors 발생한 에러 목록. 선택으로 값을 받습니다
  */
 class DuckieResponseException(
     message: String? = null,
