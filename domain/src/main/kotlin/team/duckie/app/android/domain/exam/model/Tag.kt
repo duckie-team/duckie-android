@@ -8,11 +8,9 @@
 package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
-import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
-data class Category(
+data class Tag(
     val id: Int,
-    val name: String,
-    val popularTags: ImmutableList<Tag>?,
+    val name: String
 )

@@ -20,10 +20,10 @@ data class CategoryData(
     @field:JsonProperty("name")
     val name: String? = null,
     @field:JsonProperty("popularTags")
-    val popularTags: List<CategoryModelData>? = null,
+    val popularTags: List<TagData>? = null,
 )
 
-data class CategoryModelData(
+data class TagData(
     @field:JsonProperty("id")
     val id: Int? = null,
     @field:JsonProperty("name")
