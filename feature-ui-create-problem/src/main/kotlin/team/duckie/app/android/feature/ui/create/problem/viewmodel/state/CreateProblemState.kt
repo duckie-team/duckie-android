@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.ui.create.problem.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.domain.exam.model.Category
 
 data class CreateProblemState(
     val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
@@ -16,14 +17,8 @@ data class CreateProblemState(
     val error: ExamInformation.Error? = null,
 ) {
     data class ExamInformation(
-        val categories: ImmutableList<String> = persistentListOf( // TODO(EvergreenTree97): Server Request
-            "연예인",
-            "영화",
-            "만화/애니",
-            "웹툰",
-            "게임",
-            "밀리터리"
-        ),
+        val isCategoryLoading: Boolean = true,
+        val categories: ImmutableList<Category> = persistentListOf(),
         val categorySelection: Int = -1,
         val isExamAreaSelected: Boolean = false,
         val examTitle: String = "",

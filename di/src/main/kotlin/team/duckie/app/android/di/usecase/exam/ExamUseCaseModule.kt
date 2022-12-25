@@ -12,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.domain.exam.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 
 @Module
@@ -21,5 +22,10 @@ object ExamUseCaseModule {
     @Provides
     fun provideMakeExamUseCase(repository: ExamRepository): MakeExamUseCase {
         return MakeExamUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetCategoriesUseCase(repository: ExamRepository): GetCategoriesUseCase {
+        return GetCategoriesUseCase(repository)
     }
 }
