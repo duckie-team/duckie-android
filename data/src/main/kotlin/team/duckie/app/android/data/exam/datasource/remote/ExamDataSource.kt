@@ -35,7 +35,7 @@ class ExamDataSource @Inject constructor(
                 // header("authorization", "AT") // TODO(Evergreen): access token 자동화 방안 마련 필요
             }
         val body: PostResponse = request.body()
-        return body.success ?: false
+        return requireNotNull(body.success)
     }
 
     suspend fun getCategories(withPopularTags: Boolean): ImmutableList<CategoryData> {
@@ -44,6 +44,6 @@ class ExamDataSource @Inject constructor(
             parameter("withPopularTags", withPopularTags)
         }
         val body: CategoryResponse = request.body()
-        return body.categories?.toImmutableList() ?: persistentListOf()
+        return requireNotNull(body.categories?.toImmutableList())
     }
 }
