@@ -24,7 +24,7 @@ import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.Tag
-import team.duckie.app.android.util.kotlin.DuckieResponseNPE
+import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
 import team.duckie.app.android.util.kotlin.fastMap
 
 internal fun ExamParam.toData() = ExamRequest(
@@ -97,13 +97,13 @@ internal fun ImageChoiceModel.toData() = ImageChoiceData(
 )
 
 internal fun TagData.toDomain() = Tag(
-    id = id ?: throw DuckieResponseNPE("id"),
-    name = name ?: throw DuckieResponseNPE("name"),
+    id = id ?: throw DuckieResponseFieldNPE("id"),
+    name = name ?: throw DuckieResponseFieldNPE("name"),
 )
 
 internal fun CategoryData.toDomain() = Category(
-    id = id ?: throw DuckieResponseNPE("id"),
-    name = name ?: throw DuckieResponseNPE("name"),
+    id = id ?: throw DuckieResponseFieldNPE("id"),
+    name = name ?: throw DuckieResponseFieldNPE("name"),
     popularTags = popularTags?.fastMap { it.toDomain() }
         ?.toImmutableList(),
 )

@@ -21,7 +21,7 @@ import team.duckie.app.android.data.exam.model.CategoryData
 import team.duckie.app.android.data.exam.model.CategoryResponse
 import team.duckie.app.android.data.exam.model.ExamRequest
 import team.duckie.app.android.data.exam.model.PostResponse
-import team.duckie.app.android.util.kotlin.DuckieApiException
+import team.duckie.app.android.util.kotlin.DuckieResponseException
 
 class ExamDataSource @Inject constructor(
     private val client: HttpClient,
@@ -34,7 +34,7 @@ class ExamDataSource @Inject constructor(
                 // header("authorization", "AT") // TODO(Evergreen): access token 자동화 방안 마련 필요
             }
         val body: PostResponse = request.body()
-        return body.success ?: throw DuckieApiException(
+        return body.success ?: throw DuckieResponseException(
             code = "에러 코드",
             message = "각 에러에 대한 개발자용 메세지",
         )
@@ -46,7 +46,7 @@ class ExamDataSource @Inject constructor(
             parameter("withPopularTags", withPopularTags)
         }
         val body: CategoryResponse = request.body()
-        return body.categories?.toImmutableList() ?: throw DuckieApiException(
+        return body.categories?.toImmutableList() ?: throw DuckieResponseException(
             code = "에러 코드",
             message = "각 에러에 대한 개발자용 메세지",
         )
