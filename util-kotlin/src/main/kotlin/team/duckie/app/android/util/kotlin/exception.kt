@@ -7,8 +7,15 @@
 
 package team.duckie.app.android.util.kotlin
 
-class DuckieApiException(
+open class DuckieApiException(
     override val message: String,
     val code: String? = null,
     val errors: List<String>? = null,
 ) : Exception(message)
+
+class DuckieResponseNPE(
+    requiredFieldName: String
+) : DuckieApiException(
+    code = "400",
+    message = "필수 필드가 response에 누락되었습니다. 누락된 필드명: $requiredFieldName"
+)
