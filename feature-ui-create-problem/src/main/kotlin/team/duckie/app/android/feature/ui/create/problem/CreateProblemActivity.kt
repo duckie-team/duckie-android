@@ -18,14 +18,19 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import team.duckie.app.android.feature.ui.create.problem.screen.AdditionalInformationScreen
+import team.duckie.app.android.feature.ui.create.problem.screen.CreateProblemScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.ExamInformationScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.FindExamAreaScreen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
@@ -77,8 +82,16 @@ class CreateProblemActivity : BaseActivity() {
                         when (step) {
                             CreateProblemStep.ExamInformation -> ExamInformationScreen()
                             CreateProblemStep.FindExamArea -> FindExamAreaScreen()
-                            CreateProblemStep.CreateProblem -> {}
-                            CreateProblemStep.AdditionalInformation -> {}
+                            CreateProblemStep.CreateProblem -> CreateProblemScreen(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .statusBarsPadding()
+                            )
+                            CreateProblemStep.AdditionalInformation -> AdditionalInformationScreen(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .statusBarsPadding()
+                            )
                         }
                     }
                 }
@@ -90,6 +103,12 @@ class CreateProblemActivity : BaseActivity() {
         when (sideEffect) {
             CreateProblemSideEffect.FinishActivity -> {
                 finishWithAnimation()
+            }
+            is CreateProblemSideEffect.ReportError -> {
+                Firebase.crashlytics.recordException(sideEffect.exception)
+            }
+            is CreateProblemSideEffect.UpdateGalleryImages -> {
+                viewModel.addGalleryImages(sideEffect.images)
             }
         }
     }

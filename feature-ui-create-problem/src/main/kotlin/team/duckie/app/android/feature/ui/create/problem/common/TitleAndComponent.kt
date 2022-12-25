@@ -35,3 +35,21 @@ internal fun LazyListScope.TitleAndComponent(
         }
     }
 }
+
+@Suppress("FunctionName")
+@Composable
+internal fun TitleAndComponent(
+    modifier: Modifier = Modifier,
+    @StringRes stringResource: Int,
+    component: @Composable () -> Unit,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(space = 8.dp),
+    ) {
+        QuackHeadLine2(
+            text = stringResource(id = stringResource),
+        )
+        component()
+    }
+}

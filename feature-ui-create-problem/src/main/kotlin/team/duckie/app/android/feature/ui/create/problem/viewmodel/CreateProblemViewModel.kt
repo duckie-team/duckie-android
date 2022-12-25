@@ -19,9 +19,13 @@ import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
+import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
 private const val ExamTitleMaxLength = 12
@@ -32,7 +36,20 @@ private const val CertifyingStatementMaxLength = 16
 class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase
+    private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
 ) : BaseViewModel<CreateProblemState, CreateProblemSideEffect>(CreateProblemState()) {
+    /**
+     * [galleryImages] 의 mutable 한 객체를 나타냅니다.
+     *
+     * @see galleryImages
+     */
+    private var mutableGalleryImages = persistentListOf<String>()
+
+    /**
+     * [LoadGalleryImagesUseCase] 를 통해 얻어온 이미지 목록을 저장합니다.
+     * `ProfileScreen` 에서 `PhotoPicker` 에 사용할 이미지 목록을 불러오기 위해 사용됩니다.
+     */
+    val galleryImages: ImmutableList<String> get() = mutableGalleryImages
 
     suspend fun makeExam() {
         makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
@@ -192,6 +209,80 @@ class CreateProblemViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    fun setThumbnail(thumbnail: Any?) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
+                        thumbnail = thumbnail,
+                    )
+                ),
+            )
+        }
+    }
+
+    fun setButtonTitle(buttonTitle: String) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
+                        takeTitle = buttonTitle,
+                    )
+                ),
+            )
+        }
+    }
+
+    fun setTempTag(tempTag: String) {
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
+                        tempTag = tempTag,
+                    )
+                ),
+            )
+        }
+    }
+
+    fun addTag(tag: String) {
+        updateState { prevState ->
+            val newTags = prevState.examInformation.additionalInfoArea.tags
+                .copy { add(tag) }
+                .toImmutableList()
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
+                        tags = newTags,
+                    )
+                ),
+            )
+        }
+    }
+
+    /** 갤러리에서 이미지 목록을 조회합니다. */
+    suspend fun loadGalleryImages() {
+        loadGalleryImagesUseCase()
+            .onSuccess { images ->
+                postSideEffect {
+                    CreateProblemSideEffect.UpdateGalleryImages(images)
+                }
+            }
+            .onFailure { exception ->
+                updateState { prevState ->
+                    prevState.copy(error = CreateProblemState.ExamInformation.Error(exception))
+                }
+                postSideEffect {
+                    CreateProblemSideEffect.ReportError(exception)
+                }
+            }
+    }
+
+    /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트합니다. */
+    internal fun addGalleryImages(images: List<String>) {
+        mutableGalleryImages = mutableGalleryImages.addAll(images)
     }
 
     fun isAllFieldsNotEmpty(): Boolean {
