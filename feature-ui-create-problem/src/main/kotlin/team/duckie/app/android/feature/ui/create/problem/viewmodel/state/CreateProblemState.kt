@@ -12,7 +12,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.category.model.Category
 
 data class CreateProblemState(
-    val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
+    val createProblemStep: CreateProblemStep = CreateProblemStep.CreateProblem,
     val examInformation: ExamInformation = ExamInformation(),
     val error: ExamInformation.Error? = null,
 ) {

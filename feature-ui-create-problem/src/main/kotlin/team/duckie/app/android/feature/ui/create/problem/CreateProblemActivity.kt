@@ -7,7 +7,6 @@
 
 @file:OptIn(
     ExperimentalLifecycleComposeApi::class,
-    ExperimentalFoundationApi::class,
 )
 
 package team.duckie.app.android.feature.ui.create.problem
@@ -15,7 +14,6 @@ package team.duckie.app.android.feature.ui.create.problem
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding

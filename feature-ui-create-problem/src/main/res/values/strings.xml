@@ -22,6 +22,12 @@
     <string name="add_also">+%s 추가하기</string>
     <string name="search_exam_area_tag">"시험 영역으로 설정할 태그를 검색해 주세요."</string>
 
+    <string name="create_problem_bottom_sheet_title_choice_text">객관식/글</string>
+    <string name="create_problem_bottom_sheet_title_choice_media">객관식/사진</string>
+    <string name="create_problem_bottom_sheet_title_short_form">주관식</string>
+    <string name="create_problem_add_problem_button">문제 추가</string>
+    <string name="create_problem_temp_save_button">임시저장</string>
+
     <string name="additional_information_next">문제출제</string>
     <string name="additional_information_thumbnail_title">시험 썸네일</string>
     <string name="additional_information_thumbnail_select">썸네일 종류 선택</string>
