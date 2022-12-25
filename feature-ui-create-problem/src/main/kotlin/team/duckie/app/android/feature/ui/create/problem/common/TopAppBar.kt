@@ -24,15 +24,18 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun PrevAndNextTopAppBar(
+    modifier: Modifier = Modifier,
     onLeadingIconClick: () -> Unit,
+    trailingText: String = stringResource(id = R.string.next),
     onTrailingTextClick: () -> Unit,
     trailingTextEnabled: Boolean = true,
 ) { // TODO(EvergreenTree97): enabled 속성 필요
     QuackTopAppBar(
+        modifier = modifier,
         leadingIcon = QuackIcon.ArrowBack,
         leadingText = stringResource(id = R.string.create_problem),
         onLeadingIconClick = onLeadingIconClick,
-        trailingText = stringResource(id = R.string.next),
+        trailingText = trailingText,
         onTrailingTextClick = when (trailingTextEnabled) {
             true -> onTrailingTextClick
             else -> null

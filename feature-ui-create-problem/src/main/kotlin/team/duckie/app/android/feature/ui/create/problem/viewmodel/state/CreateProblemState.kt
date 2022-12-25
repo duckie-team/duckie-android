@@ -13,6 +13,7 @@ import kotlinx.collections.immutable.persistentListOf
 data class CreateProblemState(
     val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
     val examInformation: ExamInformation = ExamInformation(),
+    val error: ExamInformation.Error? = null,
 ) {
     data class ExamInformation(
         val categories: ImmutableList<String> = persistentListOf( // TODO(EvergreenTree97): Server Request
@@ -31,6 +32,7 @@ data class CreateProblemState(
         val foundExamArea: FoundExamArea = FoundExamArea(),
         val scrollPosition: Int = 0,
         val examDescriptionFocused: Boolean = false,
+        val additionalInfoArea: AdditionInfoArea = AdditionInfoArea(),
     ) {
         val examArea: String
             get() = foundExamArea.examArea
@@ -45,5 +47,12 @@ data class CreateProblemState(
             ),
             val examArea: String = "",
         )
+        data class AdditionInfoArea(
+            val thumbnail: Any? = null,
+            val takeTitle: String = "",
+            val tempTag: String = "",
+            val tags: ImmutableList<String> = persistentListOf(),
+        )
+        data class Error(val throwable: Throwable?)
     }
 }
