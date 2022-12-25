@@ -11,6 +11,7 @@ package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.exam.model.Answer
@@ -19,8 +20,6 @@ import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
@@ -35,7 +34,7 @@ private const val CertifyingStatementMaxLength = 16
 @Singleton
 class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
 ) : BaseViewModel<CreateProblemState, CreateProblemSideEffect>(CreateProblemState()) {
     /**
