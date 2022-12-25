@@ -13,7 +13,7 @@ open class DuckieApiException(
     override val message: String,
     val code: String? = null,
     val errors: List<String>? = null,
-) : Exception(message) {
+) : Exception() {
     override fun toString(): String {
         return "DuckieApiException(message=$message, code=$code, errors=$errors)"
     }
