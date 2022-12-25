@@ -12,6 +12,6 @@ package team.duckie.app.android.util.kotlin
  * one simple solution is to copy the list to a changeable list, update the desired element,
  * and use Kotlin's "Read-Only Access" list interface to save only references to the list of results.
  */
-inline fun <T> List<T>.copy(mutatorBlock: MutableList<T>.() -> Unit): List<T> {
-    return toMutableList().apply(mutatorBlock)
+inline fun <T> List<T>.copy(mutator: MutableList<T>.() -> Unit): List<T> {
+    return toMutableList().apply(mutator)
 }
