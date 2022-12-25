@@ -18,7 +18,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -62,7 +61,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.suspendCancellableCoroutine
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
@@ -71,7 +69,7 @@ import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
-import team.duckie.app.android.util.compose.HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16
+import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.launch
 import team.duckie.app.android.util.compose.rememberToast
@@ -84,7 +82,6 @@ import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
-import kotlin.coroutines.resume
 
 /** 문제 만들기 3단계 (추가정보 입력) Screen */
 @Composable
@@ -135,7 +132,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
 //        if (isGranted) {
 //            launch {
 //                vm.loadGalleryImages()
-//                photoPickerVisible = true // 추후 삭제될 코드여서 변수 위치에 따라 오류나는 케이스는 고려하지 않음
+//                photoPickerVisible = true // 안고 가야하는건가.. ViewModel 에는 두기 싫어서 일단 이렇게 둠
 //            }
 //        } else {
 //            toast(permissionErrorMessage)
@@ -219,9 +216,11 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
                         src = team.duckie.quackquack.ui.R.drawable.quack_ic_area_24,
                         onClick = {
                             launch {
-                                val result = imagePermission.check(context, launcher)
+                                val result = imagePermission.check(context)
                                 if (result) {
                                     vm.loadGalleryImages()
+                                } else {
+                                    launcher.launch(imagePermission)
                                 }
                                 photoPickerVisible = result
                             }
@@ -324,7 +323,7 @@ private fun AdditionalThumbnailLayout(
         QuackImage(
             size = DpSize(
                 thumbnailWidthDp,
-                thumbnailWidthDp * HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16
+                thumbnailWidthDp * GetHeightRatioW328H240
             ),
             contentScale = ContentScale.FillWidth,
             src = thumbnail,
@@ -398,7 +397,7 @@ private fun AdditionalBottomSheetThumbnailLayout(
         QuackImage(
             size = DpSize(
                 thumbnailWidthDp,
-                thumbnailWidthDp * HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16
+                thumbnailWidthDp * GetHeightRatioW328H240
             ),
             contentScale = ContentScale.FillWidth,
             src = src,
@@ -420,31 +419,15 @@ private val imagePermission
     }
 
 /** 한 개의 권한을 체크한다. */
-private suspend fun String.check(
-    context: Context,
-    launcher: ManagedActivityResultLauncher<String, Boolean>
-) = suspendCancellableCoroutine {
-    val isGranted =
-        ContextCompat.checkSelfPermission(context, this) == PackageManager.PERMISSION_GRANTED
-    if (isGranted) {
-        it.resume(true)
-    } else {
-        launcher.launch(this)
-    }
+private fun String.check(context: Context): Boolean {
+    return ContextCompat.checkSelfPermission(context, this) == PackageManager.PERMISSION_GRANTED
 }
 
 // /** 여러 개의 권한을 체크한다. */
-// private suspend fun Array<String>.check(
-//     context: Context,
-//     launcher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>
-// ) = suspendCancellableCoroutine {
+// private fun Array<String>.check(context: Context): Boolean {
 //     this.all { permission ->
 //         ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
 //     }.let { isAllGranted ->
-//         if (isAllGranted) {
-//             it.resume(true)
-//         } else {
-//             launcher.launch(this)
-//         }
+//         return isAllGranted
 //     }
 // }

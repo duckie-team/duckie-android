@@ -39,7 +39,7 @@ import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.util.compose.CoroutineScopeContent
-import team.duckie.app.android.util.compose.HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16
+import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
@@ -170,7 +170,7 @@ private fun DetailContentLayout() {
         QuackImage(
             size = DpSize(
                 detailImageWidthDp,
-                detailImageWidthDp * HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16
+                detailImageWidthDp * GetHeightRatioW328H240
             ),
             padding = PaddingValues(
                 top = 16.dp,

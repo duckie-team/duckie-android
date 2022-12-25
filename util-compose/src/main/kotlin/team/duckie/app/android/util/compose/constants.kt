@@ -8,4 +8,6 @@
 package team.duckie.app.android.util.compose
 
 /** 상수 모음 */
-const val HEIGHT_RATIO_FULL_SCREEN_HORIZONTAL_16 = 240.toFloat() / 328
+
+// 328 x 240 비율에서 이미지의 높이값을 가져올 수 있는 비율값
+const val GetHeightRatioW328H240 = 240.toFloat() / 328

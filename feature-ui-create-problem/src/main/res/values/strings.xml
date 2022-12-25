@@ -6,7 +6,7 @@
   -->
 
 <resources>
-    <string name="create_problem_permission_toast_message">갤러리 접근 권한이 없습니다. 앱 설정에서 갤러리 접근 권한을 허용해주세요.</string>
+    <string name="create_problem_permission_toast_message">접근 권한이 없습니다.\n앱 설정에서 갤러리 권한을 허용해 주세요.</string>
 
     <string name="create_problem">"문제 만들기"</string>
     <string name="next">"다음"</string>
