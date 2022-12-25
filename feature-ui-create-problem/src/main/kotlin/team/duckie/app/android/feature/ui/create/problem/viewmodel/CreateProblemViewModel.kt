@@ -9,6 +9,8 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ExamParam
@@ -19,8 +21,6 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.Cr
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.viewmodel.BaseViewModel
-import javax.inject.Inject
-import javax.inject.Singleton
 
 private const val ExamTitleMaxLength = 12
 private const val ExamDescriptionMaxLength = 30
@@ -260,8 +260,7 @@ private val dummyParam = ExamParam(
             memo = "test memo 1",
             hint = "test hint 1",
             correctAnswer = "3",
-        )
-
+        ),
     ),
     userId = 1,
 )

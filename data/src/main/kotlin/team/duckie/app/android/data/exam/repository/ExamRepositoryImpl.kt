@@ -7,11 +7,11 @@
 
 package team.duckie.app.android.data.exam.repository
 
+import javax.inject.Inject
 import team.duckie.app.android.data.exam.datasource.remote.ExamDataSource
 import team.duckie.app.android.data.exam.mapper.toData
 import team.duckie.app.android.domain.exam.model.ExamParam
 import team.duckie.app.android.domain.exam.repository.ExamRepository
-import javax.inject.Inject
 
 class ExamRepositoryImpl @Inject constructor(
     private val examDataSource: ExamDataSource,

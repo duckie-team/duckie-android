@@ -12,19 +12,19 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
+import javax.inject.Inject
 import team.duckie.app.android.data.exam.model.ExamRequest
 import team.duckie.app.android.data.exam.model.PostResponse
-import javax.inject.Inject
 
 class ExamDataSource @Inject constructor(
-    private val client: HttpClient
+    private val client: HttpClient,
 ) {
     suspend fun postExams(examRequest: ExamRequest): Boolean {
         val request = client
             .post {
                 url("/exams")
                 setBody(examRequest)
-                // header("authorization", "AT") //TODO(Evergreen): access token 자동화 방안 마련 필요
+                // header("authorization", "AT") // TODO(Evergreen): access token 자동화 방안 마련 필요
             }
         val body: PostResponse = request.body()
         return body.success ?: false

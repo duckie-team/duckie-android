@@ -18,7 +18,7 @@ import androidx.datastore.preferences.core.edit
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
-import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
@@ -47,10 +47,7 @@ internal fun OnboardTopAppBar(
         onLeadingIconClick = {
             vm.navigateStep(currentStep - 1)
         },
-        trailingText = stringResource(R.string.topappbar_trailing_skip)
-            .takeIf {
-                showSkipTrailingText
-            },
+        trailingText = stringResource(R.string.topappbar_trailing_skip).takeIf { showSkipTrailingText },
         onTrailingTextClick = {
             launch {
                 context.dataStore.edit { preference ->
@@ -59,8 +56,6 @@ internal fun OnboardTopAppBar(
                 toast("온보딩 끝")
             }
             Unit
-        }.takeIf {
-            showSkipTrailingText
-        },
+        }.takeIf { showSkipTrailingText },
     )
 }
