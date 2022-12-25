@@ -11,4 +11,4 @@ class DuckieApiException(
     override val message: String,
     val code: String? = null,
     val errors: List<String>? = null,
-) : Exception(message)
+) : Exception()
