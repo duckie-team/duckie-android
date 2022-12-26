@@ -36,6 +36,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.quackquack.ui.component.QuackBody1

@@ -9,9 +9,9 @@ package team.duckie.app.android.feature.ui.home.viewmodel.state
 
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.screen.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.screen.HomeRecommendJumbotron
-import team.duckie.app.android.feature.ui.home.screen.HomeStep
 import team.duckie.app.android.feature.ui.home.screen.RecommendUserByTopic
 import team.duckie.app.android.feature.ui.home.screen.TestMaker
 import team.duckie.app.android.feature.ui.home.screen.TopicRecommendItem

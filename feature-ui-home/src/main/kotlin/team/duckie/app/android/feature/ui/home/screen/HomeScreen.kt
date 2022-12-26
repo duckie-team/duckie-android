@@ -13,6 +13,7 @@ package team.duckie.app.android.feature.ui.home.screen
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,35 +26,22 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize
 
-enum class HomeStep(
-    val index: Int,
-) {
-    HomeRecommendScreen(
-        index = 0,
-    ),
-
-    HomeFollowingScreen(
-        index = 1,
-    );
-
-    companion object {
-        fun toStep(value: Int) = HomeStep.values().first { it.index == value }
-    }
-}
-
 private val HomeIconSize = DpSize(24.dp)
 
-@OptIn(
-    ExperimentalLifecycleComposeApi::class,
+private val HomeHorizontalPadding = PaddingValues(
+    horizontal = 16.dp,
 )
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun DuckieHomeScreen() = CoroutineScopeContent {
     val vm = LocalViewModel.current as HomeViewModel
@@ -78,12 +66,12 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
                 HomeStep.HomeFollowingScreen -> {
                     if (state.recommendFollowingTest.isEmpty()) {
                         HomeRecommendFollowingTestScreen(
-                            modifier = Modifier.padding(horizontal = 16.dp),
+                            modifier = Modifier.padding(HomeHorizontalPadding),
                             followingTest = state.recommendFollowingTest,
                         )
                     } else {
                         HomeRecommendFollowingScreen(
-                            modifier = Modifier.padding(horizontal = 16.dp),
+                            modifier = Modifier.padding(HomeHorizontalPadding),
                             recommendCategories = state.recommendFollowing,
                         )
                     }

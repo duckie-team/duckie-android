@@ -39,6 +39,7 @@ import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.LocalViewModel

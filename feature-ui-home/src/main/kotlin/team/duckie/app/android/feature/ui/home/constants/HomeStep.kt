@@ -1,0 +1,20 @@
+package team.duckie.app.android.feature.ui.home.constants
+
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
+
+@AllowMagicNumber
+enum class HomeStep(
+    val index: Int,
+) {
+    HomeRecommendScreen(
+        index = 0,
+    ),
+
+    HomeFollowingScreen(
+        index = 1,
+    );
+
+    companion object {
+        fun toStep(value: Int) = HomeStep.values().first { it.index == value }
+    }
+}

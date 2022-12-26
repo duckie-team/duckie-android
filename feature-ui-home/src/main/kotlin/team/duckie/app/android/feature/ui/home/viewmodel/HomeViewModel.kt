@@ -9,9 +9,9 @@ package team.duckie.app.android.feature.ui.home.viewmodel
 
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.screen.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.screen.HomeRecommendJumbotron
-import team.duckie.app.android.feature.ui.home.screen.HomeStep
 import team.duckie.app.android.feature.ui.home.screen.RecommendUser
 import team.duckie.app.android.feature.ui.home.screen.RecommendUserByTopic
 import team.duckie.app.android.feature.ui.home.screen.TestMaker
@@ -21,7 +21,6 @@ import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 private val DummyJumbotrons =
     (0..2).map { index ->
