@@ -10,7 +10,7 @@ package team.duckie.app.android.feature.ui.home.viewmodel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
-import team.duckie.app.android.feature.ui.home.screen.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.viewmodel.BaseViewModel
@@ -20,7 +20,7 @@ import javax.inject.Singleton
 private val DummyJumbotrons =
     (0..2).map { index ->
         HomeState.HomeRecommendJumbotron(
-            image = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+            coverUrl = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
             title = "제 ${index}회 도로 패션영역",
             content = "아 저 근데 너무 재미있을 것 같아요\n내 시험 최고",
             buttonContent = "하기싫음 하지마세요",
@@ -29,25 +29,25 @@ private val DummyJumbotrons =
 
 private val DummyRecommendTopics =
     (0..10).map {
-        HomeState.TopicRecommendItem(
+        HomeState.RecommendTopic(
             title = "쿠키좀 쿠워봤어?\n#웹툰 퀴즈",
             tag = "#웹툰",
             items = persistentListOf(
-                HomeState.TopicRecommendItem.DuckTest(
+                HomeState.RecommendTopic.Test(
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     nickname = "세현",
                     title = "외모지상주의 잘 알아?",
                     examineeNumber = 20,
                     recommendId = 1,
                 ),
-                HomeState.TopicRecommendItem.DuckTest(
+                HomeState.RecommendTopic.Test(
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     nickname = "세현",
                     title = "안 아프게 맞는법!",
                     examineeNumber = 20,
                     recommendId = 1,
                 ),
-                HomeState.TopicRecommendItem.DuckTest(
+                HomeState.RecommendTopic.Test(
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     nickname = "세현",
                     title = "안 아프게 맞는법!",
@@ -62,7 +62,7 @@ private val DummyRecommendFollower = (0..3).map { index ->
     HomeState.RecommendUserByTopic(
         topic = "연예인$index",
         users = (0..5).map {
-            HomeState.RecommendUser(
+            HomeState.RecommendUserByTopic.User(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
                 name = "닉네임",
                 examineeNumber = 20,
@@ -74,12 +74,12 @@ private val DummyRecommendFollower = (0..3).map { index ->
 }.toPersistentList()
 
 private val DummyRecommendFollowerTest = (0..5).map {
-    HomeState.TestMaker(
+    HomeState.FollowingTest(
         title = "제 1회 도로 패션영역",
         examineeNumber = 30,
         createAt = "1일 전",
         coverUrl = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
-        owner = HomeState.TestMaker.User(
+        owner = HomeState.FollowingTest.User(
             profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
             name = "닉네임",
         ),

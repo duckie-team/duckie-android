@@ -144,7 +144,7 @@ private fun HomeRecommendJumbotronLayout(
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth(),
-            model = recommendItem.image,
+            model = recommendItem.coverUrl,
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
         )
@@ -178,7 +178,7 @@ private fun HomeTopicRecommendLayout(
     modifier: Modifier = Modifier,
     title: String,
     tag: String,
-    recommendItems: PersistentList<HomeState.TopicRecommendItem.DuckTest>,
+    recommendItems: PersistentList<HomeState.RecommendTopic.Test>,
     onClicked: (Int) -> Unit,
 ) {
     Column(

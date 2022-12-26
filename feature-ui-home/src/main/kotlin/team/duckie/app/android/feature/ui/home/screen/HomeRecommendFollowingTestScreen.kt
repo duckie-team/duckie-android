@@ -58,7 +58,7 @@ import team.duckie.quackquack.ui.util.DpSize
 @Composable
 internal fun HomeRecommendFollowingTestScreen(
     modifier: Modifier = Modifier,
-    followingTest: PersistentList<HomeState.TestMaker>,
+    followingTest: PersistentList<HomeState.FollowingTest>,
 ) {
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
@@ -174,7 +174,7 @@ internal fun HomeRecommendFollowingScreen(
 private fun HomeFollowingInitialRecommendUsers(
     modifier: Modifier = Modifier,
     topic: String,
-    recommendUser: List<HomeState.RecommendUser>,
+    recommendUser: List<HomeState.RecommendUserByTopic.User>,
     onClickFollowing: (Int) -> Unit,
 ) {
     Column(
