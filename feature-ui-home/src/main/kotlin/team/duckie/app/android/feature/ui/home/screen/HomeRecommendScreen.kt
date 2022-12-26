@@ -8,16 +8,20 @@
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -54,6 +58,19 @@ private val HomeHorizontalPadding = PaddingValues(
     horizontal = 16.dp,
 )
 
+// TODO("limsaehyun"): 로딩 상태 페이지 처리 필요
+@Suppress("FunctionName", "NOTHING_TO_INLINE")
+internal inline fun LazyListScope.HomeRecommendLoadingState() {
+    item {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+}
+
 @OptIn(
     ExperimentalPagerApi::class,
     ExperimentalLifecycleComposeApi::class,
@@ -72,61 +89,65 @@ internal fun HomeRecommendScreen(
     }
 
     LazyColumn(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        item {
-            HomeTopAppBar(
-                modifier = Modifier
-                    .padding(HomeHorizontalPadding)
-                    .padding(bottom = 16.dp),
-                selectedTabIndex = state.selectedTabIndex.index,
-                onTabSelected = { step ->
-                    vm.changedSelectedTab(
-                        HomeStep.toStep(step)
+        when(state.homeRecommendLoading) {
+            true -> HomeRecommendLoadingState()
+            false -> {
+                item {
+                    HomeTopAppBar(
+                        modifier = Modifier
+                            .padding(HomeHorizontalPadding)
+                            .padding(bottom = 16.dp),
+                        selectedTabIndex = state.selectedTabIndex.index,
+                        onTabSelected = { step ->
+                            vm.changedSelectedTab(
+                                HomeStep.toStep(step)
+                            )
+                        },
+                        onClickedEdit = {
+                            // TODO("limsaehyun"): 수정 페이지로 이동 필요
+                        },
                     )
-                },
-                onClickedEdit = {
-                    // TODO("limsaehyun"): 수정 페이지로 이동 필요
-                },
-            )
-        }
+                }
 
-        item {
-            HorizontalPager(
-                count = state.jumbotrons.size,
-                state = pageState,
-            ) { page ->
-                HomeRecommendJumbotronLayout(
-                    modifier = Modifier.padding(HomeHorizontalPadding),
-                    recommendItem = state.jumbotrons[page],
-                    onStartClicked = {
-                        // TODO ("limsaehyun"): 상세보기로 이동 필요
+                item {
+                    HorizontalPager(
+                        count = state.jumbotrons.size,
+                        state = pageState,
+                    ) { page ->
+                        HomeRecommendJumbotronLayout(
+                            modifier = Modifier.padding(HomeHorizontalPadding),
+                            recommendItem = state.jumbotrons[page],
+                            onStartClicked = {
+                                // TODO ("limsaehyun"): 상세보기로 이동 필요
+                            }
+                        )
                     }
-                )
+                }
+
+                item {
+                    HorizontalPagerIndicator(
+                        modifier = Modifier
+                            .padding(top = 24.dp, bottom = 60.dp),
+                        pagerState = pageState,
+                    )
+                }
+
+                items(items = state.recommendTopics) { item ->
+                    HomeTopicRecommendLayout(
+                        modifier = Modifier
+                            .padding(
+                                bottom = 60.dp,
+                            ),
+                        title = item.title,
+                        tag = item.tag,
+                        recommendItems = item.items,
+                        onClicked = { }
+                    )
+                }
             }
-        }
-
-        item {
-            HorizontalPagerIndicator(
-                modifier = Modifier
-                    .padding(top = 24.dp, bottom = 60.dp),
-                pagerState = pageState,
-            )
-        }
-
-        items(items = state.recommendTopics) { item ->
-            HomeTopicRecommendLayout(
-                modifier = Modifier
-                    .padding(
-                        bottom = 60.dp,
-                    ),
-                title = item.title,
-                tag = item.tag,
-                recommendItems = item.items,
-                onClicked = { }
-            )
         }
     }
 }

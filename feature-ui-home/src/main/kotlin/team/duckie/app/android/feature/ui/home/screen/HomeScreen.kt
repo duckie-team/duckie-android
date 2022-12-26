@@ -63,12 +63,10 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
                     if (state.recommendFollowingTest.isEmpty()) {
                         HomeRecommendFollowingTestScreen(
                             modifier = Modifier.padding(HomeHorizontalPadding),
-                            followingTest = state.recommendFollowingTest,
                         )
                     } else {
                         HomeRecommendFollowingScreen(
                             modifier = Modifier.padding(HomeHorizontalPadding),
-                            recommendCategories = state.recommendFollowing,
                         )
                     }
                 }

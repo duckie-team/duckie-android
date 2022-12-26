@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.ui.home.viewmodel
 
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
@@ -87,18 +88,31 @@ private val DummyRecommendFollowerTest = (0..5).map {
 }.toPersistentList()
 
 @Singleton
-class HomeViewModel @Inject constructor() :
-    BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
+class HomeViewModel @Inject constructor(
+    private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
+) : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
 
     // TODO(limsaehyun): Request Server
-    fun fetchRecommendations() {
-        updateState { prevState ->
-            prevState.copy(
-                jumbotrons = DummyJumbotrons,
-                recommendTopics = DummyRecommendTopics,
-            )
-        }
-    }
+    suspend fun fetchRecommendations() =
+        fetchRecommendationsUseCase()
+            .onSuccess {
+                updateState { prevState ->
+                    prevState.copy(
+                        jumbotrons = DummyJumbotrons,
+                        recommendTopics = DummyRecommendTopics,
+                    )
+                }
+            }.onFailure { exception ->
+                postSideEffect {
+                    HomeSideEffect.ReportError(exception)
+                }
+            }.also {
+                updateState { prevState ->
+                    prevState.copy(
+                        homeRecommendLoading = true,
+                    )
+                }
+            }
 
     // TODO(limsaehyun): Request Server
     fun fetchRecommendFollowing() {

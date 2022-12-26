@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import kotlinx.collections.immutable.PersistentList
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
@@ -58,7 +57,6 @@ import team.duckie.quackquack.ui.util.DpSize
 @Composable
 internal fun HomeRecommendFollowingTestScreen(
     modifier: Modifier = Modifier,
-    followingTest: PersistentList<HomeState.FollowingTest>,
 ) {
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
@@ -86,7 +84,7 @@ internal fun HomeRecommendFollowingTestScreen(
         }
 
         itemsIndexed(
-            items = followingTest,
+            items = state.recommendFollowingTest,
         ) { _, maker ->
             TestCoverWithMaker(
                 profile = maker.owner.profile,
@@ -112,7 +110,6 @@ internal fun HomeRecommendFollowingTestScreen(
 @Composable
 internal fun HomeRecommendFollowingScreen(
     modifier: Modifier = Modifier,
-    recommendCategories: PersistentList<HomeState.RecommendUserByTopic>,
 ) {
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
@@ -153,7 +150,7 @@ internal fun HomeRecommendFollowingScreen(
         }
 
         items(
-            items = recommendCategories,
+            items = state.recommendFollowing,
             key = { categories ->
                 categories.topic
             }
