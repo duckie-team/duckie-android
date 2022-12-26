@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,11 +33,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
+import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -48,7 +53,7 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
 
-internal data class Maker(
+data class TestMaker(
     val coverUrl: String,
     val title: String,
     val examineeNumber: Int,
@@ -61,12 +66,12 @@ internal data class Maker(
     )
 }
 
-internal data class RecommendCategories(
+data class RecommendUserByTopic(
     val topic: String,
     val users: ImmutableList<RecommendUser>,
 )
 
-internal data class RecommendUser(
+data class RecommendUser(
     val userId: Int,
     val profile: String,
     val name: String,
@@ -74,15 +79,37 @@ internal data class RecommendUser(
     val createAt: String,
 )
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
-internal fun HomeFollowingScreen(
+internal fun HomeRecommendFollowingTestScreen(
     modifier: Modifier = Modifier,
-    followingTest: PersistentList<Maker>,
+    followingTest: PersistentList<TestMaker>,
 ) {
+    val vm = LocalViewModel.current as HomeViewModel
+    val state = vm.state.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(Unit) {
+        vm.fetchRecommendFollowingTest()
+    }
+
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
+        item {
+            HomeTopAppBar(
+                selectedTabIndex = state.selectedTabIndex.index,
+                onTabSelected = { step ->
+                    vm.changedSelectedTab(
+                        HomeStep.toStep(step)
+                    )
+                },
+                onClickedEdit = {
+                    // TODO("limsaehyun"): 수정 페이지로 이동 필요
+                },
+            )
+        }
+
         itemsIndexed(
             items = followingTest,
         ) { _, maker ->
@@ -106,14 +133,36 @@ internal fun HomeFollowingScreen(
     }
 }
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
-internal fun HomeFollowingInitialScreen(
+internal fun HomeRecommendFollowingScreen(
     modifier: Modifier = Modifier,
-    recommendCategories: PersistentList<RecommendCategories>,
+    recommendCategories: PersistentList<RecommendUserByTopic>,
 ) {
+    val vm = LocalViewModel.current as HomeViewModel
+    val state = vm.state.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(Unit) {
+        vm.fetchRecommendFollowing()
+    }
+
     LazyColumn(
         modifier = modifier,
     ) {
+        item {
+            HomeTopAppBar(
+                selectedTabIndex = state.selectedTabIndex.index,
+                onTabSelected = { step ->
+                    vm.changedSelectedTab(
+                        HomeStep.toStep(step)
+                    )
+                },
+                onClickedEdit = {
+                    // TODO("limsaehyun"): 수정 페이지로 이동 필요
+                },
+            )
+        }
+
         item {
             Box(
                 modifier = Modifier
@@ -185,6 +234,7 @@ private fun HomeFollowingInitialRecommendUsers(
 
 @Composable
 private fun TestCoverWithMaker(
+    modifier: Modifier = Modifier,
     cover: String,
     profile: String,
     title: String,
@@ -194,7 +244,9 @@ private fun TestCoverWithMaker(
     onClickTestCover: () -> Unit,
     onClickUserProfile: () -> Unit,
 ) {
-    Column {
+    Column(
+        modifier = modifier,
+    ) {
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()

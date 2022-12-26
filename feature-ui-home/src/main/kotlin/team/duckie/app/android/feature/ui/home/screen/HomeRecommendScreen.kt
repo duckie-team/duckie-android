@@ -11,30 +11,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -43,6 +36,8 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
+import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -51,17 +46,16 @@ import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSplashSlogan
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
-import team.duckie.quackquack.ui.modifier.QuackDefaultAlwaysShowRipple
 import team.duckie.quackquack.ui.modifier.quackClickable
 
-internal data class HomeRecommendItem(
+data class HomeRecommendJumbotron(
     val image: String,
     val title: String,
     val content: String,
     val buttonContent: String,
 )
 
-internal data class TopicRecommendItem(
+data class TopicRecommendItem(
     val title: String,
     val tag: String,
     val items: PersistentList<DuckTest>,
@@ -79,28 +73,55 @@ private val HomeHorizontalPadding = PaddingValues(
     horizontal = 16.dp,
 )
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalPagerApi::class,
+    ExperimentalLifecycleComposeApi::class,
+)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
-    homeRecommendItems: PersistentList<HomeRecommendItem>,
-    topicRecommendItems: PersistentList<TopicRecommendItem>
+    recommendJumbotrons: PersistentList<HomeRecommendJumbotron>,
+    recommendTopics: PersistentList<TopicRecommendItem>,
 ) {
     val pageState = rememberPagerState()
 
+    val vm = LocalViewModel.current as HomeViewModel
+    val state = vm.state.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(Unit) {
+        vm.fetchRecommendations()
+    }
+
     LazyColumn(
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
+            HomeTopAppBar(
+                modifier = Modifier
+                    .padding(HomeHorizontalPadding)
+                    .padding(bottom = 16.dp),
+                selectedTabIndex = state.selectedTabIndex.index,
+                onTabSelected = { step ->
+                    vm.changedSelectedTab(
+                        HomeStep.toStep(step)
+                    )
+                },
+                onClickedEdit = {
+                    // TODO("limsaehyun"): 수정 페이지로 이동 필요
+                },
+            )
+        }
+
+        item {
             HorizontalPager(
-                count = homeRecommendItems.size,
+                count = recommendJumbotrons.size,
                 state = pageState,
             ) { page ->
-                HomeRecommendContentScreen(
+                HomeRecommendJumbotronLayout(
                     modifier = Modifier.padding(HomeHorizontalPadding),
-                    recommendItem = homeRecommendItems[page],
+                    recommendItem = recommendJumbotrons[page],
                     onStartClicked = {
                         // TODO ("limsaehyun"): 상세보기로 이동 필요
                     }
@@ -116,8 +137,8 @@ internal fun HomeRecommendScreen(
             )
         }
 
-        items(items = topicRecommendItems) { item ->
-            HomeTopicRecommend(
+        items(items = recommendTopics) { item ->
+            HomeTopicRecommendLayout(
                 modifier = Modifier
                     .padding(
                         bottom = 60.dp,
@@ -132,9 +153,9 @@ internal fun HomeRecommendScreen(
 }
 
 @Composable
-private fun HomeRecommendContentScreen(
+private fun HomeRecommendJumbotronLayout(
     modifier: Modifier = Modifier,
-    recommendItem: HomeRecommendItem,
+    recommendItem: HomeRecommendJumbotron,
     onStartClicked: () -> Unit,
 ) {
     Column(
@@ -174,7 +195,7 @@ private fun HomeRecommendContentScreen(
 }
 
 @Composable
-private fun HomeTopicRecommend(
+private fun HomeTopicRecommendLayout(
     modifier: Modifier = Modifier,
     title: String,
     tag: String,
@@ -194,9 +215,7 @@ private fun HomeTopicRecommend(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            item {
-                Spacer(modifier = Modifier.width(12.dp))
-            }
+            item {}
 
             items(items = recommendItems) { item ->
                 Column(
