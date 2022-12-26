@@ -33,6 +33,7 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -53,9 +54,13 @@ import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.launch
+import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackBasic2TextField
+import team.duckie.quackquack.ui.component.QuackBasicTextField
+import team.duckie.quackquack.ui.component.QuackDropDownCard
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSubtitle
@@ -247,7 +252,15 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                     },
                     content = {
                         items(19) {
-                            QuackSubtitle(modifier = Modifier.height(20.dp), text = "abcdefg $it")
+                            if (it % 3 == 0) {
+                                ShortFormProblemLayout(it + 1) {
+                                    launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
+                                }
+                            } else if (it % 3 == 1) {
+                                // TODO(riflockle7): 객관식/글 Layout 구현하기
+                            } else {
+                                // TODO(riflockle7): 객관식/사진 Layout 구현하기
+                            }
                         }
 
                         item {
@@ -272,6 +285,41 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
         )
     }
 }
+
+/** 문제 만들기 주관식 Layout */
+@Composable
+fun ShortFormProblemLayout(index: Int, onDropdownItemClick: (Int) -> Unit) {
+    val questionNo = index + 1
+    var input = remember { "" }
+    val toast = rememberToast()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        // TODO(riflockle7): 최상단 Line 없는 TextField 필요
+        QuackBasic2TextField(
+            modifier = Modifier,
+            text = input,
+            onTextChanged = { input = it },
+            placeholderText = "$questionNo. 문제를 입력해주세요.",
+            trailingIcon = QuackIcon.Image,
+            trailingIconOnClick = { toast("문제 이미지 클릭") }
+        )
+
+        // TODO(riflockle7): border 없는 DropDownCard 필요
+        QuackDropDownCard(text = "주관식", onClick = { onDropdownItemClick(index) })
+
+        // TODO(riflockle7): underLine 없는 TextField 필요
+        QuackBasicTextField(
+            text = input,
+            onTextChanged = { input = it },
+            placeholderText = "답안 입력"
+        )
+    }
+}
+
 
 /** 문제 만들기 2단계 최하단 Layout  */
 @Deprecated("임시 저장 기능 부활 시 다시 사용")
