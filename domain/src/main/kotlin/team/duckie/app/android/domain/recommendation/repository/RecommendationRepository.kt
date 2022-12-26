@@ -11,8 +11,14 @@ import androidx.compose.runtime.Immutable
 
 /**
  * 홈 화면에서 활용하는 Repository
+ *
+ * TODO(limsaehyun): 데이터 Return 필요
  */
 @Immutable
 interface RecommendationRepository {
     suspend fun fetchRecommendations()
+
+    suspend fun fetchFollowingTest()
+
+    suspend fun fetchRecommendFollowing()
 }

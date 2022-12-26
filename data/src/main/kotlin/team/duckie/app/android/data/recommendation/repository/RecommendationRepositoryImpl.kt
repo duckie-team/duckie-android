@@ -14,6 +14,14 @@ class RecommendationRepositoryImpl(
     private val context: Context
 ): RecommendationRepository {
     override suspend fun fetchRecommendations() {
-        // TODO(limsaehyun): 비즈니스 로직 작업 필요
+        // TODO(limsaehyun): repository 작업 필요
+    }
+
+    override suspend fun fetchFollowingTest() {
+        // TODO(limsaehyun): repository 작업 필요
+    }
+
+    override suspend fun fetchRecommendFollowing() {
+        // TODO(limsaehyun): repository 작업 필요
     }
 }
