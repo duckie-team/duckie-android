@@ -31,7 +31,6 @@ import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -57,10 +56,7 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
         ) { page ->
             when (page) {
                 HomeStep.HomeRecommendScreen -> {
-                    HomeRecommendScreen(
-                        recommendJumbotrons = state.jumbotrons,
-                        recommendTopics = state.recommendTopics,
-                    )
+                    HomeRecommendScreen()
                 }
 
                 HomeStep.HomeFollowingScreen -> {
@@ -80,7 +76,6 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
         }
     }
 }
-
 
 @Composable
 fun HomeTopAppBar(

@@ -38,6 +38,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -48,27 +49,6 @@ import team.duckie.quackquack.ui.component.QuackSplashSlogan
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 import team.duckie.quackquack.ui.modifier.quackClickable
-
-data class HomeRecommendJumbotron(
-    val image: String,
-    val title: String,
-    val content: String,
-    val buttonContent: String,
-)
-
-data class TopicRecommendItem(
-    val title: String,
-    val tag: String,
-    val items: PersistentList<DuckTest>,
-) {
-    data class DuckTest(
-        val coverImg: String,
-        val nickname: String,
-        val title: String,
-        val examineeNumber: Int,
-        val recommendId: Int,
-    )
-}
 
 private val HomeHorizontalPadding = PaddingValues(
     horizontal = 16.dp,
@@ -81,8 +61,6 @@ private val HomeHorizontalPadding = PaddingValues(
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
-    recommendJumbotrons: PersistentList<HomeRecommendJumbotron>,
-    recommendTopics: PersistentList<TopicRecommendItem>,
 ) {
     val pageState = rememberPagerState()
 
@@ -117,12 +95,12 @@ internal fun HomeRecommendScreen(
 
         item {
             HorizontalPager(
-                count = recommendJumbotrons.size,
+                count = state.jumbotrons.size,
                 state = pageState,
             ) { page ->
                 HomeRecommendJumbotronLayout(
                     modifier = Modifier.padding(HomeHorizontalPadding),
-                    recommendItem = recommendJumbotrons[page],
+                    recommendItem = state.jumbotrons[page],
                     onStartClicked = {
                         // TODO ("limsaehyun"): 상세보기로 이동 필요
                     }
@@ -138,7 +116,7 @@ internal fun HomeRecommendScreen(
             )
         }
 
-        items(items = recommendTopics) { item ->
+        items(items = state.recommendTopics) { item ->
             HomeTopicRecommendLayout(
                 modifier = Modifier
                     .padding(
@@ -156,7 +134,7 @@ internal fun HomeRecommendScreen(
 @Composable
 private fun HomeRecommendJumbotronLayout(
     modifier: Modifier = Modifier,
-    recommendItem: HomeRecommendJumbotron,
+    recommendItem: HomeState.HomeRecommendJumbotron,
     onStartClicked: () -> Unit,
 ) {
     Column(
@@ -200,7 +178,7 @@ private fun HomeTopicRecommendLayout(
     modifier: Modifier = Modifier,
     title: String,
     tag: String,
-    recommendItems: PersistentList<TopicRecommendItem.DuckTest>,
+    recommendItems: PersistentList<HomeState.TopicRecommendItem.DuckTest>,
     onClicked: (Int) -> Unit,
 ) {
     Column(

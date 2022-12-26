@@ -36,11 +36,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.kotlin.fastForEach
@@ -54,37 +54,11 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
 
-data class TestMaker(
-    val coverUrl: String,
-    val title: String,
-    val examineeNumber: Int,
-    val createAt: String,
-    val owner: User,
-) {
-    data class User(
-        val name: String,
-        val profile: String,
-    )
-}
-
-data class RecommendUserByTopic(
-    val topic: String,
-    val users: ImmutableList<RecommendUser>,
-)
-
-data class RecommendUser(
-    val userId: Int,
-    val profile: String,
-    val name: String,
-    val examineeNumber: Int,
-    val createAt: String,
-)
-
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun HomeRecommendFollowingTestScreen(
     modifier: Modifier = Modifier,
-    followingTest: PersistentList<TestMaker>,
+    followingTest: PersistentList<HomeState.TestMaker>,
 ) {
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
@@ -138,7 +112,7 @@ internal fun HomeRecommendFollowingTestScreen(
 @Composable
 internal fun HomeRecommendFollowingScreen(
     modifier: Modifier = Modifier,
-    recommendCategories: PersistentList<RecommendUserByTopic>,
+    recommendCategories: PersistentList<HomeState.RecommendUserByTopic>,
 ) {
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
@@ -200,7 +174,7 @@ internal fun HomeRecommendFollowingScreen(
 private fun HomeFollowingInitialRecommendUsers(
     modifier: Modifier = Modifier,
     topic: String,
-    recommendUser: List<RecommendUser>,
+    recommendUser: List<HomeState.RecommendUser>,
     onClickFollowing: (Int) -> Unit,
 ) {
     Column(
