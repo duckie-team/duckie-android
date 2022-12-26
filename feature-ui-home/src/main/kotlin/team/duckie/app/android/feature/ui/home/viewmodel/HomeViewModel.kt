@@ -9,6 +9,8 @@ package team.duckie.app.android.feature.ui.home.viewmodel
 
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
+import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
@@ -90,10 +92,12 @@ private val DummyRecommendFollowerTest = (0..5).map {
 @Singleton
 class HomeViewModel @Inject constructor(
     private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
+    private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,
+    private val fetchRecommendFollowingUseCase: FetchRecommendFollowingUseCase,
 ) : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
 
     // TODO(limsaehyun): Request Server
-    suspend fun fetchRecommendations() =
+    suspend fun fetchRecommendations() {
         fetchRecommendationsUseCase()
             .onSuccess {
                 updateState { prevState ->
@@ -109,27 +113,54 @@ class HomeViewModel @Inject constructor(
             }.also {
                 updateState { prevState ->
                     prevState.copy(
-                        homeRecommendLoading = true,
+                        isHomeRecommendLoading = false,
                     )
                 }
             }
-
-    // TODO(limsaehyun): Request Server
-    fun fetchRecommendFollowing() {
-        updateState { prevState ->
-            prevState.copy(
-                recommendFollowing = DummyRecommendFollower,
-            )
-        }
     }
 
     // TODO(limsaehyun): Request Server
-    fun fetchRecommendFollowingTest() {
-        updateState { prevState ->
-            prevState.copy(
-                recommendFollowingTest = DummyRecommendFollowerTest,
-            )
-        }
+    suspend fun fetchRecommendFollowingTest() {
+        fetchFollowingTestUseCase()
+            .onSuccess {
+                updateState { prevState ->
+                    prevState.copy(
+                        recommendFollowingTest = DummyRecommendFollowerTest,
+                    )
+                }
+            }.onFailure { exception ->
+                postSideEffect {
+                    HomeSideEffect.ReportError(exception)
+                }
+            }.also {
+                updateState { prevState ->
+                    prevState.copy(
+                        isHomeRecommendLoading = false,
+                    )
+                }
+            }
+    }
+
+    // TODO(limsaehyun): Request Server
+    suspend fun fetchRecommendFollowing() {
+        fetchRecommendFollowingUseCase()
+            .onSuccess {
+                updateState { prevState ->
+                    prevState.copy(
+                        recommendFollowing = DummyRecommendFollower,
+                    )
+                }
+            }.onFailure { exception ->
+                postSideEffect {
+                    HomeSideEffect.ReportError(exception)
+                }
+            }.also {
+                updateState { prevState ->
+                    prevState.copy(
+                        isHomeFollowingInitialLoading = false,
+                    )
+                }
+            }
     }
 
     fun navigationPage(

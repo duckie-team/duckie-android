@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.home.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
@@ -88,65 +90,69 @@ internal fun HomeRecommendScreen(
         vm.fetchRecommendations()
     }
 
-    LazyColumn(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
     ) {
-        when(state.homeRecommendLoading) {
-            true -> HomeRecommendLoadingState()
-            false -> {
-                item {
-                    HomeTopAppBar(
-                        modifier = Modifier
-                            .padding(HomeHorizontalPadding)
-                            .padding(bottom = 16.dp),
-                        selectedTabIndex = state.selectedTabIndex.index,
-                        onTabSelected = { step ->
-                            vm.changedSelectedTab(
-                                HomeStep.toStep(step)
-                            )
-                        },
-                        onClickedEdit = {
-                            // TODO("limsaehyun"): 수정 페이지로 이동 필요
-                        },
-                    )
-                }
+        AnimatedVisibility(visible = state.isHomeRecommendLoading) {
+            DuckieCircularProgressIndicator()
+        }
 
-                item {
-                    HorizontalPager(
-                        count = state.jumbotrons.size,
-                        state = pageState,
-                    ) { page ->
-                        HomeRecommendJumbotronLayout(
-                            modifier = Modifier.padding(HomeHorizontalPadding),
-                            recommendItem = state.jumbotrons[page],
-                            onStartClicked = {
-                                // TODO ("limsaehyun"): 상세보기로 이동 필요
-                            }
+        LazyColumn(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            item {
+                HomeTopAppBar(
+                    modifier = Modifier
+                        .padding(HomeHorizontalPadding)
+                        .padding(bottom = 16.dp),
+                    selectedTabIndex = state.selectedTabIndex.index,
+                    onTabSelected = { step ->
+                        vm.changedSelectedTab(
+                            HomeStep.toStep(step)
                         )
-                    }
-                }
+                    },
+                    onClickedEdit = {
+                        // TODO("limsaehyun"): 수정 페이지로 이동 필요
+                    },
+                )
+            }
 
-                item {
-                    HorizontalPagerIndicator(
-                        modifier = Modifier
-                            .padding(top = 24.dp, bottom = 60.dp),
-                        pagerState = pageState,
+            item {
+                HorizontalPager(
+                    count = state.jumbotrons.size,
+                    state = pageState,
+                ) { page ->
+                    HomeRecommendJumbotronLayout(
+                        modifier = Modifier.padding(HomeHorizontalPadding),
+                        recommendItem = state.jumbotrons[page],
+                        onStartClicked = {
+                            // TODO ("limsaehyun"): 상세보기로 이동 필요
+                        }
                     )
                 }
+            }
 
-                items(items = state.recommendTopics) { item ->
-                    HomeTopicRecommendLayout(
-                        modifier = Modifier
-                            .padding(
-                                bottom = 60.dp,
-                            ),
-                        title = item.title,
-                        tag = item.tag,
-                        recommendItems = item.items,
-                        onClicked = { }
-                    )
-                }
+            item {
+                HorizontalPagerIndicator(
+                    modifier = Modifier
+                        .padding(top = 24.dp, bottom = 60.dp),
+                    pagerState = pageState,
+                )
+            }
+
+            items(items = state.recommendTopics) { item ->
+                HomeTopicRecommendLayout(
+                    modifier = Modifier
+                        .padding(
+                            bottom = 60.dp,
+                        ),
+                    title = item.title,
+                    tag = item.tag,
+                    recommendItems = item.items,
+                    onClicked = { }
+                )
             }
         }
     }

@@ -14,7 +14,9 @@ import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 
 data class HomeState(
-    val homeRecommendLoading: Boolean = true,
+    val isHomeRecommendLoading: Boolean = true,
+    val isHomeFollowingTestLoading: Boolean = true,
+    val isHomeFollowingInitialLoading: Boolean = true,
 
     val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val selectedTabIndex: HomeStep = HomeStep.HomeRecommendScreen,
