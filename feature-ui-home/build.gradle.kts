@@ -22,6 +22,7 @@ android {
 
 dependencies {
     implementations(
+        platform(libs.firebase.bom),
         projects.di,
         projects.domain,
         projects.utilUi,
@@ -34,5 +35,6 @@ dependencies {
         libs.compose.coil,
         libs.ui.pager.asProvider(),
         libs.ui.pager.indicators,
+        libs.firebase.crashlytics,
     )
 }
