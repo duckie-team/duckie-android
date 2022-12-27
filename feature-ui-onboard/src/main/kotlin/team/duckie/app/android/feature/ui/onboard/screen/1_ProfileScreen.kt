@@ -223,7 +223,6 @@ internal fun ProfileScreen() {
                 OnboardTopAppBar(
                     modifier = Modifier.layoutId(ProfileScreenTopAppBarLayoutId),
                     currentStep = currentStep,
-                    showSkipTrailingText = false,
                 )
                 TitleAndDescription(
                     modifier = Modifier
