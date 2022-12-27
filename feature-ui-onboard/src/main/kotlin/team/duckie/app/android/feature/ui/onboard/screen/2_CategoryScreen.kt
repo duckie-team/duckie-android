@@ -127,7 +127,6 @@ internal fun CategoryScreen() {
             OnboardTopAppBar(
                 modifier = Modifier.layoutId(CategoryScreenTopAppBarLayoutId),
                 currentStep = currentStep,
-                showSkipTrailingText = false,
             )
             TitleAndDescription(
                 modifier = Modifier

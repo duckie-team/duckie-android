@@ -36,6 +36,7 @@ dependencies {
         libs.firebase.crashlytics,
         libs.compose.ui.material, // needs for ModalBottomSheet
         libs.compose.ktx.lifecycle,
+        libs.compose.ui.accompanist.flowlayout,
         libs.quack.ui.components,
     )
 }
