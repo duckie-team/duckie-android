@@ -53,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.datastore.preferences.core.edit
+import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.datastore.PreferenceKey
@@ -75,7 +76,6 @@ import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.fastFlatten
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
 import team.duckie.app.android.util.kotlin.npe
-import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasic2TextField
 import team.duckie.quackquack.ui.component.QuackCircleTag
@@ -189,7 +189,6 @@ internal fun TagScreen() = CoroutineScopeContent {
                 OnboardTopAppBar(
                     modifier = Modifier.layoutId(TagScreenTopAppBarLayoutId),
                     currentStep = currentStep,
-                    showSkipTrailingText = true,
                 )
                 TagSelection(
                     modifier = Modifier
@@ -292,28 +291,36 @@ private fun TagSelection(
                 text = stringResource(R.string.tag_added_tag),
             )
             if (addedTags.isNotEmpty()) {
-                QuackSingeLazyRowTag(
-                    // AnimatedVisibility 에 내장된 패딩? 이 있는거 같아서 패딩 조정
+                FlowRow(
                     modifier = Modifier.padding(
-                        top = 8.dp,
-                        bottom = 4.dp,
+                        vertical = 10.dp,
+                        horizontal = 20.dp,
                     ),
-                    items = addedTags,
-                    tagType = QuackTagType.Circle(trailingIcon = QuackIcon.Close),
-                    contentPadding = PaddingValues(horizontal = 20.dp),
-                    onClick = { index ->
-                        requestRemoveAddedTag(index)
-                    },
-                )
+                    mainAxisSpacing = 8.dp,
+                    crossAxisSpacing = 8.dp,
+                ) {
+                    addedTags.fastForEachIndexed { index, tag ->
+                        QuackCircleTag(
+                            text = tag,
+                            isSelected = false,
+                            trailingIcon = QuackIcon.Close,
+                        ) {
+                            requestRemoveAddedTag(index)
+                        }
+                    }
+                }
             }
             QuackHeadLine2(
-                modifier = Modifier.padding(horizontal = 20.dp),
+                modifier = Modifier.padding(
+                    top = if (addedTags.isNotEmpty()) 0.dp else 4.dp,
+                    start = 10.dp,
+                ),
                 text = stringResource(R.string.tag_add_manual),
                 padding = PaddingValues(
-                    top = 6.dp.runIf(addedTags.isEmpty()) {
-                        plus(6.dp)
-                    },
-                    bottom = 12.dp,
+                    top = if (addedTags.isNotEmpty()) 0.dp else 4.dp,
+                    start = 10.dp,
+                    end = 10.dp,
+                    bottom = 8.dp,
                 ),
                 color = QuackColor.DuckieOrange,
                 onClick = {
@@ -323,10 +330,10 @@ private fun TagSelection(
                 },
             )
         }
-        @AllowMagicNumber(because = "(28 - 12).dp")
+        @AllowMagicNumber(because = "(34 - 8).dp")
         Column(
             modifier = Modifier
-                .padding(top = (28 - 12).dp)
+                .padding(top = (34 - 8).dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -406,15 +413,23 @@ private fun TagScreenModalBottomSheetContent(
                 text = "",
                 isSelected = false,
             )
-            QuackSingeLazyRowTag(
-                modifier = Modifier.zIndex(1f),
-                items = inputtedTags,
-                tagType = QuackTagType.Circle(trailingIcon = QuackIcon.Close),
-                contentPadding = PaddingValues(horizontal = 20.dp),
-                onClick = { index ->
-                    inputtedTags.remove(inputtedTags[index])
-                },
-            )
+            FlowRow(
+                modifier = Modifier
+                    .zIndex(1f)
+                    .padding(horizontal = 20.dp),
+                mainAxisSpacing = 8.dp,
+                crossAxisSpacing = 8.dp,
+            ) {
+                inputtedTags.fastForEachIndexed { index, tag ->
+                    QuackCircleTag(
+                        text = tag,
+                        isSelected = false,
+                        trailingIcon = QuackIcon.Close,
+                    ) {
+                        inputtedTags.remove(inputtedTags[index])
+                    }
+                }
+            }
         }
         QuackBasic2TextField(
             modifier = Modifier.padding(top = 16.dp),
