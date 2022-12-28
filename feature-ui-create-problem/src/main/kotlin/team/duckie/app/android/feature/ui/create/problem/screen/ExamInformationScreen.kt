@@ -125,7 +125,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                         leadingIcon = QuackIcon.Search,
                         text = state.examArea,
                         onTextChanged = {},
-                        placeholderText = stringResource(id = R.string.find_exam_area),
+                        placeholderText = stringResource(id = R.string.search_exam_area_tag),
                         enabled = false,
                     )
                 }
