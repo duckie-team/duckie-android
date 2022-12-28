@@ -187,7 +187,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                             }
                         },
                     ),
-                    maxLength = CreateProblemViewModel.certifyingStatementMaxLength,
+                    maxLength = CertifyingStatementMaxLength,
                     showCounter = true,
                 )
             }
