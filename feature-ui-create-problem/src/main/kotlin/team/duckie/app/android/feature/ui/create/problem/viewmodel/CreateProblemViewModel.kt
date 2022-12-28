@@ -149,13 +149,17 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun setExamArea(examArea: String) {
+    fun setExamArea(
+        examArea: String,
+        cursorPosition: Int,
+    ) {
         updateState { prevState ->
             prevState.copy(
                 examInformation = prevState.examInformation.copy(
                     foundExamArea = prevState.examInformation.foundExamArea.copy(
                         examArea = examArea,
-                    )
+                        cursorPosition = cursorPosition,
+                    ),
                 ),
             )
         }

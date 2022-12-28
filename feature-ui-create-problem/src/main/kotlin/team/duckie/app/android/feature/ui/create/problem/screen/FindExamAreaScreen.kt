@@ -19,11 +19,16 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,6 +47,14 @@ internal fun FindExamAreaScreen() {
     val viewModel = LocalViewModel.current as CreateProblemViewModel
     val state = viewModel.state.collectAsStateWithLifecycle().value.examInformation.foundExamArea
     val focusRequester = remember { FocusRequester() }
+    var examAreaTextFieldValue by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = state.examArea,
+                selection = TextRange(state.cursorPosition),
+            )
+        )
+    }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -67,8 +80,14 @@ internal fun FindExamAreaScreen() {
             QuackBasicTextField(
                 modifier = Modifier.focusRequester(focusRequester),
                 leadingIcon = QuackIcon.Search,
-                text = state.examArea,
-                onTextChanged = viewModel::setExamArea,
+                value = examAreaTextFieldValue,
+                onValueChanged = { textFieldValue ->
+                    examAreaTextFieldValue = textFieldValue
+                    viewModel.setExamArea(
+                        examArea = textFieldValue.text,
+                        cursorPosition = textFieldValue.selection.end,
+                    )
+                },
                 placeholderText = stringResource(id = R.string.search_exam_area_tag),
                 keyboardActions = KeyboardActions(
                     onDone = { viewModel.onClickSearchListHeader() }
