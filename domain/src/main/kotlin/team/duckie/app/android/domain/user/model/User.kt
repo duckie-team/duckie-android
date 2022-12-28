@@ -5,18 +5,23 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("unused")
+
 package team.duckie.app.android.domain.user.model
 
 import androidx.compose.runtime.Immutable
 import java.util.Date
+import team.duckie.app.android.domain.user.constant.DuckieTier
+import team.duckie.app.android.util.kotlin.OutOfDateApi
 
+@OutOfDateApi
 @Immutable
 data class User(
     val id: Int,
-    val nickName: String,
+    val nickname: String,
     val accountEnabled: Boolean,
     val profileUrl: String,
-    val tier: Int,
+    val tier: DuckieTier,
     val createdAt: Date,
     val updatedAt: Date,
     val deletedAt: Date? = null,

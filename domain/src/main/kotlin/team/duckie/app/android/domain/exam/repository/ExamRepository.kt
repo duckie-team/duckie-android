@@ -8,12 +8,11 @@
 package team.duckie.app.android.domain.exam.repository
 
 import androidx.compose.runtime.Immutable
-import kotlinx.collections.immutable.ImmutableList
-import team.duckie.app.android.domain.exam.model.Category
-import team.duckie.app.android.domain.exam.model.ExamParam
+import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @Immutable
 interface ExamRepository {
-    suspend fun makeExam(examParam: ExamParam): Boolean
-    suspend fun getCategories(withPopularTags: Boolean): ImmutableList<Category>
+    @OutOfDateApi
+    suspend fun makeExam(exam: ExamBody): Boolean
 }

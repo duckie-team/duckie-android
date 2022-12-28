@@ -7,6 +7,9 @@
 
 @file:Suppress("MaxLineLength")
 
+// TODO: OptIn 제거
+@file:OptIn(OutOfDateApi::class)
+
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
 import javax.inject.Inject
@@ -14,16 +17,18 @@ import javax.inject.Singleton
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.exam.model.Answer
-import team.duckie.app.android.domain.exam.model.ExamParam
+import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.domain.exam.usecase.GetCategoriesUseCase
+import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
+import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
@@ -291,7 +296,7 @@ class CreateProblemViewModel @Inject constructor(
     }
 }
 
-private val dummyParam = ExamParam(
+private val dummyParam = ExamBody(
     // TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
     title = "제 1회 도로 패션영역",
     description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
@@ -300,18 +305,16 @@ private val dummyParam = ExamParam(
     categoryId = 3,
     thumbnailImageUrl = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1669793968813",
     certifyingStatement = "열심히 살지 말라고 하셨다",
-    thumbnailType = "image",
+    thumbnailType = ThumbnailType.Image,
     buttonTitle = "TestText",
     isPublic = true,
     problems = persistentListOf(
         Problem(
             question = Question.Text(
                 text = "",
-                type = "",
             ),
-            answer = Answer.ShortAnswer(
-                shortAnswer = "바보",
-                type = "",
+            answer = Answer.Short(
+                answer = "바보",
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -320,11 +323,9 @@ private val dummyParam = ExamParam(
         Problem(
             question = Question.Text(
                 text = "",
-                type = "",
             ),
-            answer = Answer.ShortAnswer(
-                shortAnswer = "바보",
-                type = "",
+            answer = Answer.Short(
+                answer = "바보",
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -333,11 +334,9 @@ private val dummyParam = ExamParam(
         Problem(
             question = Question.Text(
                 text = "",
-                type = "",
             ),
-            answer = Answer.ShortAnswer(
-                shortAnswer = "바보",
-                type = "",
+            answer = Answer.Short(
+                answer = "바보",
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -346,11 +345,9 @@ private val dummyParam = ExamParam(
         Problem(
             question = Question.Text(
                 text = "",
-                type = "",
             ),
-            answer = Answer.ShortAnswer(
-                shortAnswer = "바보",
-                type = "",
+            answer = Answer.Short(
+                answer = "바보",
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -359,11 +356,9 @@ private val dummyParam = ExamParam(
         Problem(
             question = Question.Text(
                 text = "",
-                type = "",
             ),
-            answer = Answer.ShortAnswer(
-                shortAnswer = "바보",
-                type = "",
+            answer = Answer.Short(
+                answer = "바보",
             ),
             memo = "test memo 1",
             hint = "test hint 1",

@@ -22,14 +22,13 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.jackson.jackson
-import javax.inject.Singleton
+import team.duckie.app.android.util.kotlin.seconds
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal class NetworkModule {
-
+    // TODO(sungbin): header 에 access token 설정
     @Provides
-    @Singleton
     fun provideKtorClient(): HttpClient = HttpClient(engineFactory = CIO) {
         expectSuccess = true
         engine {
@@ -42,7 +41,7 @@ internal class NetworkModule {
             url(urlString = BaseUrl)
             headers.append(
                 name = HttpHeaders.ContentType,
-                value = ApplicationJson
+                value = ContentType,
             )
         }
         install(plugin = ContentNegotiation) {
@@ -55,9 +54,9 @@ internal class NetworkModule {
     }
 
     private companion object {
-        const val MaxTimeoutMillis = 3000L
+        val MaxTimeoutMillis = 3.seconds
         const val MaxRetryCount = 3
         const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
-        const val ApplicationJson = "application/json"
+        const val ContentType = "application/json"
     }
 }

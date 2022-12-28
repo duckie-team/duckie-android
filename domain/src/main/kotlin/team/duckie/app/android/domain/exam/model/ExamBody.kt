@@ -13,16 +13,24 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 
+enum class ThumbnailType(val value: String) {
+    Default("default"),
+    Image("image"),
+}
+
 @OutOfDateApi
 @Immutable
-data class Exam(
+data class ExamBody(
     val title: String,
     val description: String,
-    val thumbnailUrl: String?,
-    val buttonTitle: String,
+    val mainTagId: Int,
+    val subTagIds: ImmutableList<Int>?,
+    val categoryId: Int,
     val certifyingStatement: String,
-    val solvedCount: Int,
-    val isPublic: Boolean,
-    val mainTag: Int,
-    val subTags: ImmutableList<Int>,
+    val thumbnailImageUrl: String?,
+    val thumbnailType: ThumbnailType?,
+    val problems: ImmutableList<Problem>,
+    val isPublic: Boolean?,
+    val buttonTitle: String?,
+    val userId: Int,
 )
