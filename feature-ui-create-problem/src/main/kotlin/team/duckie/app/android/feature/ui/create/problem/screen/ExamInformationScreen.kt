@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,13 +46,17 @@ import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.launch
+import team.duckie.quackquack.ui.border.QuackBorder
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackCircleTag
 import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
-import team.duckie.quackquack.ui.component.QuackMediumToggleButton
 import team.duckie.quackquack.ui.component.QuackReviewTextArea
+import team.duckie.quackquack.ui.component.QuackSurface
+import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
 internal fun ExamInformationScreen() = CoroutineScopeContent {
@@ -90,15 +96,11 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                 ),
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),
-        ) { // TODO(EvergreenTree97): 컴포넌트 필요
+        ) {
             TitleAndComponent(stringResource = R.string.category_title) {
                 AnimatedVisibility(visible = state.isCategoryLoading.not()) {
                     DuckieGridLayout(items = state.categories) { index, item ->
-                        QuackMediumToggleButton(
-                            modifier = Modifier.size(
-                                width = 102.dp,
-                                height = 40.dp,
-                            ),
+                        MediumButton(
                             text = item.name,
                             selected = state.categorySelection == index,
                             onClick = {
@@ -174,5 +176,45 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun MediumButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    QuackSurface(
+        modifier = modifier.size(
+            width = 102.dp,
+            height = 40.dp,
+        ),
+        backgroundColor = QuackColor.White,
+        border = QuackBorder(
+            color = when (selected) {
+                true -> QuackColor.DuckieOrange
+                else -> QuackColor.Gray3
+            },
+        ),
+        shape = RoundedCornerShape(size = 8.dp),
+        onClick = onClick,
+    ) {
+        QuackText(
+            modifier = Modifier.padding(all = 10.dp),
+            text = text,
+            style = when (selected) {
+                true -> QuackTextStyle.Title2.change(
+                    color = QuackColor.DuckieOrange,
+                    textAlign = TextAlign.Center,
+                )
+                else -> QuackTextStyle.Body1.change(
+                    color = QuackColor.Black,
+                    textAlign = TextAlign.Center,
+                )
+            },
+            singleLine = true,
+        )
     }
 }
