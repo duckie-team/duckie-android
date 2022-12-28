@@ -44,9 +44,9 @@ import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.launch
-import team.duckie.quackquack.ui.component.QuackBasicTextArea
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackCircleTag
+import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
 import team.duckie.quackquack.ui.component.QuackMediumToggleButton
 import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -154,9 +154,9 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                     keyboardActions = moveDownFocus(focusManager),
                     focused = state.examDescriptionFocused,
                 )
-            } // TODO(EvergreenTree97): 컴포넌트 필요
+            }
             TitleAndComponent(stringResource = R.string.certifying_statement) {
-                QuackBasicTextArea(
+                QuackGrayscaleTextField(
                     modifier = Modifier.padding(bottom = 16.dp),
                     text = state.certifyingStatement,
                     onTextChanged = viewModel::setCertifyingStatement,
@@ -169,6 +169,8 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                             }
                         },
                     ),
+                    maxLength = viewModel.certifyingStatementMaxLength,
+                    showCounter = true,
                 )
             }
         }

@@ -50,6 +50,9 @@ class CreateProblemViewModel @Inject constructor(
      */
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
 
+    val certifyingStatementMaxLength : Int
+        get() = CertifyingStatementMaxLength
+
     suspend fun makeExam() {
         makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
             print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
