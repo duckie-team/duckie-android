@@ -50,7 +50,7 @@ class CreateProblemViewModel @Inject constructor(
      */
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
 
-    val certifyingStatementMaxLength : Int
+    val certifyingStatementMaxLength: Int
         get() = CertifyingStatementMaxLength
 
     suspend fun makeExam() {
