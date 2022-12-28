@@ -27,10 +27,6 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
-private const val ExamTitleMaxLength = 12
-private const val ExamDescriptionMaxLength = 30
-private const val CertifyingStatementMaxLength = 16
-
 @Singleton
 class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
@@ -49,9 +45,6 @@ class CreateProblemViewModel @Inject constructor(
      * `ProfileScreen` 에서 `PhotoPicker` 에 사용할 이미지 목록을 불러오기 위해 사용됩니다.
      */
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
-
-    val certifyingStatementMaxLength: Int
-        get() = CertifyingStatementMaxLength
 
     suspend fun makeExam() {
         makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
@@ -114,38 +107,32 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     fun setExamTitle(examTitle: String) {
-        if (examTitle.length <= ExamTitleMaxLength) {
-            updateState { prevState ->
-                prevState.copy(
-                    examInformation = prevState.examInformation.copy(
-                        examTitle = examTitle,
-                    ),
-                )
-            }
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    examTitle = examTitle,
+                ),
+            )
         }
     }
 
     fun setExamDescription(examDescription: String) {
-        if (examDescription.length <= ExamDescriptionMaxLength) {
-            updateState { prevState ->
-                prevState.copy(
-                    examInformation = prevState.examInformation.copy(
-                        examDescription = examDescription,
-                    ),
-                )
-            }
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    examDescription = examDescription,
+                ),
+            )
         }
     }
 
     fun setCertifyingStatement(certifyingStatement: String) {
-        if (certifyingStatement.length <= CertifyingStatementMaxLength) {
-            updateState { prevState ->
-                prevState.copy(
-                    examInformation = prevState.examInformation.copy(
-                        certifyingStatement = certifyingStatement,
-                    ),
-                )
-            }
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    certifyingStatement = certifyingStatement,
+                ),
+            )
         }
     }
 
@@ -296,6 +283,7 @@ class CreateProblemViewModel @Inject constructor(
             categorySelection >= 0 && isExamAreaSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
     }
+
 }
 
 private val dummyParam = ExamParam(

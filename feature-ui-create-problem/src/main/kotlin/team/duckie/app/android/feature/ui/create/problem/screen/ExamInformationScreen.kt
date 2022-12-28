@@ -58,6 +58,10 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
+private const val ExamTitleMaxLength = 12
+private const val ExamDescriptionMaxLength = 30
+private const val CertifyingStatementMaxLength = 16
+
 @Composable
 internal fun ExamInformationScreen() = CoroutineScopeContent {
     val viewModel = LocalViewModel.current as CreateProblemViewModel
@@ -135,7 +139,11 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
             TitleAndComponent(stringResource = R.string.exam_title) {
                 QuackBasicTextField(
                     text = state.examTitle,
-                    onTextChanged = viewModel::setExamTitle,
+                    onTextChanged = {
+                        if (state.examTitle.length <= ExamTitleMaxLength) {
+                            viewModel.setExamTitle(it)
+                        }
+                    },
                     placeholderText = stringResource(id = R.string.input_exam_title),
                     keyboardOptions = ImeActionNext,
                     keyboardActions = moveDownFocus(focusManager),
@@ -150,7 +158,11 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                             viewModel.onExamAreaFocusChanged(state.isFocused)
                         },
                     text = state.examDescription,
-                    onTextChanged = viewModel::setExamDescription,
+                    onTextChanged = {
+                        if (state.examDescription.length <= ExamDescriptionMaxLength) {
+                            viewModel.setExamDescription(it)
+                        }
+                    },
                     placeholderText = stringResource(id = R.string.input_exam_description),
                     imeAction = ImeAction.Next,
                     keyboardActions = moveDownFocus(focusManager),
@@ -161,7 +173,11 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                 QuackGrayscaleTextField(
                     modifier = Modifier.padding(bottom = 16.dp),
                     text = state.certifyingStatement,
-                    onTextChanged = viewModel::setCertifyingStatement,
+                    onTextChanged = {
+                        if (state.certifyingStatement.length <= CertifyingStatementMaxLength) {
+                            viewModel.setCertifyingStatement(it)
+                        }
+                    },
                     placeholderText = stringResource(id = R.string.input_certifying_statement),
                     keyboardActions = KeyboardActions(
                         onDone = {
@@ -171,7 +187,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                             }
                         },
                     ),
-                    maxLength = viewModel.certifyingStatementMaxLength,
+                    maxLength = CreateProblemViewModel.certifyingStatementMaxLength,
                     showCounter = true,
                 )
             }
