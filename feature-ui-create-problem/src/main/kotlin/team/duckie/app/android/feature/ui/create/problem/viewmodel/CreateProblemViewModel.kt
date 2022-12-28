@@ -283,7 +283,6 @@ class CreateProblemViewModel @Inject constructor(
             categorySelection >= 0 && isExamAreaSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
     }
-
 }
 
 private val dummyParam = ExamParam(
