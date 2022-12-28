@@ -20,6 +20,7 @@ dependencies {
     implementations(
         projects.data,
         projects.domain,
-        libs.bundles.ktor
+        projects.utilKotlin,
+        libs.bundles.ktor,
     )
 }
