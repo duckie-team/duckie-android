@@ -18,7 +18,7 @@ import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
 @InstallIn(SingletonComponent::class)
 object CategoryUseCaseModule {
     @Provides
-    fun provideCategoriesUseCase(repository: CategoryRepository): GetCategoriesUseCase {
+    fun provideGetCategoriesUseCase(repository: CategoryRepository): GetCategoriesUseCase {
         return GetCategoriesUseCase(repository)
     }
 }
