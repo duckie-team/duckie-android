@@ -38,11 +38,27 @@ class DuckieResponseException(
     }
 }
 
+fun duckieResponseException(
+    message: String? = null,
+    code: String,
+    errors: List<String>? = null,
+): Nothing {
+    throw DuckieResponseException(
+        message = message,
+        code = code,
+        errors = errors,
+    )
+}
+
 /**
  * 덕키 API 의 response 에서 필수 필드가 null 로 나왔을 때 [DuckieException] 을 나타냅니다.
  *
  * @param field 누락된 필수 필드명
  */
 class DuckieResponseFieldNPE(field: String) : DuckieException(code = "") {
-    override val message = "필수 필드가 response에 누락되었습니다. 누락된 필드명: $field"
+    override val message = "필수 필드가 response 에 누락되었습니다. 누락된 필드명: $field"
+}
+
+fun duckieResponseFieldNpe(field: String): Nothing {
+    throw DuckieResponseFieldNPE(field = field)
 }
