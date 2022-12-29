@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.di.usecase.user
+package team.duckie.app.android.di.usecase.kakao
 
 import dagger.Module
 import dagger.Provides
