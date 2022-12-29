@@ -15,8 +15,8 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
-import team.duckie.app.android.domain.user.model.KakaoUser
-import team.duckie.app.android.domain.user.usecase.KakaoLoginUseCase
+import team.duckie.app.android.domain.kakao.model.KakaoUser
+import team.duckie.app.android.domain.kakao.usecase.KakaoLoginUseCase
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.impl.PermissionViewModelInstance
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect

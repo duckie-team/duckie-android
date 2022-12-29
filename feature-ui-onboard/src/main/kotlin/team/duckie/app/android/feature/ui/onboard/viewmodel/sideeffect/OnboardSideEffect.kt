@@ -10,8 +10,8 @@ package team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect
 import androidx.datastore.core.DataStore
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
-import team.duckie.app.android.domain.user.model.KakaoUser
-import team.duckie.app.android.domain.user.usecase.KakaoLoginUseCase
+import team.duckie.app.android.domain.kakao.model.KakaoUser
+import team.duckie.app.android.domain.kakao.usecase.KakaoLoginUseCase
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 

@@ -26,8 +26,8 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
-import team.duckie.app.android.di.repository.UserRepositoryModule
-import team.duckie.app.android.di.usecase.user.UserUseCaseModule
+import team.duckie.app.android.di.repository.ProvidesModule
+import team.duckie.app.android.di.usecase.user.KakaoUseCaseModule
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
@@ -55,10 +55,10 @@ class OnboardActivity : BaseActivity() {
     private lateinit var vm: OnboardViewModel
 
     private val userRepository by lazy {
-        UserRepositoryModule.provideKakaoLoginRepository(activityContext = this)
+        ProvidesModule.provideKakaoLoginRepository(activityContext = this)
     }
     private val kakaoLoginUseCase by lazy {
-        UserUseCaseModule.provideKakaoLoginUseCase(repository = userRepository)
+        KakaoUseCaseModule.provideKakaoLoginUseCase(repository = userRepository)
     }
 
     private val toast by lazy { ToastWrapper(applicationContext) }
