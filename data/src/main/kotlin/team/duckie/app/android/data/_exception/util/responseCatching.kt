@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("PackageNaming")
-
 package team.duckie.app.android.data._exception.util
 
 import io.ktor.client.call.body
