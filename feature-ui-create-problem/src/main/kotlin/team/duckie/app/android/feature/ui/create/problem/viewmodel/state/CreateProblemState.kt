@@ -41,6 +41,7 @@ data class CreateProblemState(
                 "도로 패션",
             ),
             val examArea: String = "",
+            val cursorPosition: Int = 0,
         )
         data class AdditionInfoArea(
             val thumbnail: Any? = null,

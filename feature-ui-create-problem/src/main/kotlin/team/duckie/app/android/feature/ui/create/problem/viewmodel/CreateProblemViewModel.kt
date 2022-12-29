@@ -27,10 +27,6 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
-private const val ExamTitleMaxLength = 12
-private const val ExamDescriptionMaxLength = 30
-private const val CertifyingStatementMaxLength = 16
-
 @Singleton
 class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
@@ -111,48 +107,46 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     fun setExamTitle(examTitle: String) {
-        if (examTitle.length <= ExamTitleMaxLength) {
-            updateState { prevState ->
-                prevState.copy(
-                    examInformation = prevState.examInformation.copy(
-                        examTitle = examTitle,
-                    ),
-                )
-            }
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    examTitle = examTitle,
+                ),
+            )
         }
     }
 
     fun setExamDescription(examDescription: String) {
-        if (examDescription.length <= ExamDescriptionMaxLength) {
-            updateState { prevState ->
-                prevState.copy(
-                    examInformation = prevState.examInformation.copy(
-                        examDescription = examDescription,
-                    ),
-                )
-            }
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    examDescription = examDescription,
+                ),
+            )
         }
     }
 
     fun setCertifyingStatement(certifyingStatement: String) {
-        if (certifyingStatement.length <= CertifyingStatementMaxLength) {
-            updateState { prevState ->
-                prevState.copy(
-                    examInformation = prevState.examInformation.copy(
-                        certifyingStatement = certifyingStatement,
-                    ),
-                )
-            }
+        updateState { prevState ->
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    certifyingStatement = certifyingStatement,
+                ),
+            )
         }
     }
 
-    fun setExamArea(examArea: String) {
+    fun setExamArea(
+        examArea: String,
+        cursorPosition: Int,
+    ) {
         updateState { prevState ->
             prevState.copy(
                 examInformation = prevState.examInformation.copy(
                     foundExamArea = prevState.examInformation.foundExamArea.copy(
                         examArea = examArea,
-                    )
+                        cursorPosition = cursorPosition,
+                    ),
                 ),
             )
         }
