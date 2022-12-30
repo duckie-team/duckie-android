@@ -33,9 +33,9 @@ class ExceptionTest {
     )
     private val exceptionContent = jsonMapper.writeValueAsString(
         ExceptionBody(
-            code = "1000",
-            message = "error",
-            errors = listOf("awesome-error"),
+            code = exception.code,
+            message = exception.originalMessage,
+            errors = exception.errors,
         )
     )
     private val client = buildMockHttpClient(content = exceptionContent)
