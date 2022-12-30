@@ -39,7 +39,6 @@ class GalleryRepositoryImpl @Inject constructor(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     id,
                 )
-
                 add(contentUri.toString())
             }
         }
