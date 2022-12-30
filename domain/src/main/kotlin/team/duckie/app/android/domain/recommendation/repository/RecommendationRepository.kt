@@ -21,4 +21,6 @@ interface RecommendationRepository {
     suspend fun fetchFollowingTest()
 
     suspend fun fetchRecommendFollowing()
+
+    suspend fun fetchRecommendTags(tag: String)
 }

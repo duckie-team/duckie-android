@@ -12,7 +12,7 @@ import team.duckie.app.android.domain.recommendation.repository.RecommendationRe
 
 class RecommendationRepositoryImpl(
     private val context: Context
-): RecommendationRepository {
+) : RecommendationRepository {
     override suspend fun fetchRecommendations() {
         // TODO(limsaehyun): repository 작업 필요
     }
@@ -22,6 +22,10 @@ class RecommendationRepositoryImpl(
     }
 
     override suspend fun fetchRecommendFollowing() {
+        // TODO(limsaehyun): repository 작업 필요
+    }
+
+    override suspend fun fetchRecommendTags(tag: String) {
         // TODO(limsaehyun): repository 작업 필요
     }
 }
