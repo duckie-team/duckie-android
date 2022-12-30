@@ -11,9 +11,12 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendFollowingUseCase
+import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendTagUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
+import team.duckie.app.android.feature.ui.home.component.DuckTestCoverItem
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.TagStep
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.viewmodel.BaseViewModel
@@ -89,11 +92,22 @@ private val DummyRecommendFollowerTest = (0..5).map {
     )
 }.toPersistentList()
 
+private val DummyRecommendTag = (0..10).map {
+    DuckTestCoverItem(
+        testId = it,
+        coverImg = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
+        nickname = "user$it",
+        title = "test$it",
+        examineeNumber = it,
+    )
+}.toPersistentList()
+
 @Singleton
 class HomeViewModel @Inject constructor(
     private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
     private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,
     private val fetchRecommendFollowingUseCase: FetchRecommendFollowingUseCase,
+    private val fetchRecommendTagUseCase: FetchRecommendTagUseCase,
 ) : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
 
     // TODO(limsaehyun): Request Server
@@ -163,6 +177,28 @@ class HomeViewModel @Inject constructor(
             }
     }
 
+    suspend fun fetchRecommendTag(tag: String) {
+        fetchRecommendTagUseCase(
+            tag = tag,
+        ).onSuccess {
+            updateState { prevState ->
+                prevState.copy(
+                    recommendByTags = DummyRecommendTag,
+                )
+            }
+        }.onFailure { exception ->
+            postSideEffect {
+                HomeSideEffect.ReportError(exception)
+            }
+        }.also {
+            updateState { prevState ->
+                prevState.copy(
+                    isHomeTagLoading = false,
+                )
+            }
+        }
+    }
+
     fun navigationPage(
         step: BottomNavigationStep,
     ) {
@@ -173,12 +209,32 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun changedSelectedTab(
+    fun changedHomeScreen(
         step: HomeStep,
     ) {
-        updateState { state ->
-            state.copy(
-                selectedTabIndex = step,
+        updateState { prevState ->
+            prevState.copy(
+                homeSelectedIndex = step,
+            )
+        }
+    }
+
+    fun changedTagSelectedTab(
+        step: TagStep,
+    ) {
+        updateState { prevState ->
+            prevState.copy(
+                tagSelectedTabIndex = step,
+            )
+        }
+    }
+
+    fun selectedTag(
+        tag: String,
+    ) {
+        updateState { prevState ->
+            prevState.copy(
+                selectedTag = tag
             )
         }
     }

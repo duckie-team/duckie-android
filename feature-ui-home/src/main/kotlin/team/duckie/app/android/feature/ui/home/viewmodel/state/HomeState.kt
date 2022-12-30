@@ -10,22 +10,29 @@ package team.duckie.app.android.feature.ui.home.viewmodel.state
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.feature.ui.home.component.DuckTestCoverItem
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.TagStep
 
 data class HomeState(
     val isHomeRecommendLoading: Boolean = true,
     val isHomeFollowingTestLoading: Boolean = true,
     val isHomeFollowingInitialLoading: Boolean = true,
+    val isHomeTagLoading: Boolean = true,
 
     val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,
-    val selectedTabIndex: HomeStep = HomeStep.HomeRecommendScreen,
+    val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
+
+    val selectedTag: String = "",
+    val tagSelectedTabIndex: TagStep = TagStep.DUCK_TEST,
 
     val jumbotrons: PersistentList<HomeRecommendJumbotron> = persistentListOf(),
     val recommendTopics: PersistentList<RecommendTopic> = persistentListOf(),
 
     val recommendFollowing: PersistentList<RecommendUserByTopic> = persistentListOf(),
     val recommendFollowingTest: PersistentList<FollowingTest> = persistentListOf(),
+    val recommendByTags: PersistentList<DuckTestCoverItem> = persistentListOf(),
 ) {
     /**
      * 팔로잉의 덕질고사 추천 피드 data class [FollowingTest]
