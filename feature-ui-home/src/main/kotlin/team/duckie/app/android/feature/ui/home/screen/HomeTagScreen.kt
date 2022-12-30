@@ -18,8 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,8 +28,8 @@ import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.feature.ui.home.component.DuckTestSmallCover
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
+import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.util.compose.LocalViewModel
-import team.duckie.app.android.util.compose.component.DuckieGridLayout
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.component.QuackTopAppBar
