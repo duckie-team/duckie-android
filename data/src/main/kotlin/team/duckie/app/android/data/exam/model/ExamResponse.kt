@@ -9,7 +9,7 @@ package team.duckie.app.android.data.exam.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class PostResponse(
+internal data class ExamResponse(
     @field:JsonProperty("success")
     val success: Boolean? = null,
 )

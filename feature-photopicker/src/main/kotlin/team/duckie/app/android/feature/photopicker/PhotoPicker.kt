@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,13 +28,17 @@ import com.ujizin.camposer.state.CamSelector
 import com.ujizin.camposer.state.rememberCamSelector
 import com.ujizin.camposer.state.rememberCameraState
 import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.util.kotlin.fastAny
+import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackGridLayout
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSelectableImage
+import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
 
 object PhotoPickerConstants {
@@ -69,7 +74,7 @@ object PhotoPickerConstants {
  * @param onAddClick 오른쪽 상단의 추가 버튼이 클릭됐을 때 호출될 람다
  */
 // TODO: single/multi selection mode, 이미지 편집 바텀바, 선택한 이미지 미리보기 (full-screen preview), 사진 폴더별로 보기
-// FIXME: 퍼포먼스 나락간거 고치기
+// FIXME: 퍼포먼스 개선
 @Composable
 fun PhotoPicker(
     modifier: Modifier = Modifier,
@@ -90,6 +95,7 @@ fun PhotoPicker(
     val sizedModifier = Modifier
         .aspectRatio(1f)
         .fillMaxSize()
+    val isAddable = imageSelections.fastAny { it }
 
     Column(modifier = modifier.zIndex(zIndex)) {
         QuackTopAppBar(
@@ -97,8 +103,25 @@ fun PhotoPicker(
             onLeadingIconClick = onCloseClick,
             centerText = stringResource(R.string.topappbar_filter_full),
             centerTextTrailingIcon = QuackIcon.ArrowDown,
-            trailingText = stringResource(R.string.topappbar_add),
-            onTrailingTextClick = onAddClick,
+            trailingContent = {
+                QuackSubtitle(
+                    modifier = Modifier
+                        .then(Modifier) // prevent Modifier.Companion
+                        .runIf(isAddable) {
+                            quackClickable(
+                                rippleEnabled = false,
+                                onClick = onAddClick,
+                            )
+                        }
+                        .padding(
+                            horizontal = 16.dp,
+                            vertical = 15.dp,
+                        ),
+                    text = stringResource(R.string.topappbar_add),
+                    color = if (isAddable) QuackColor.Black else QuackColor.Gray2,
+                    singleLine = true,
+                )
+            },
         )
         QuackGridLayout(
             modifier = Modifier.fillMaxSize(),

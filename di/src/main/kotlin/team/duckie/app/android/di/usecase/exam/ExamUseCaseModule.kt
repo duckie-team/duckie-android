@@ -17,7 +17,6 @@ import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 @Module
 @InstallIn(SingletonComponent::class)
 object ExamUseCaseModule {
-
     @Provides
     fun provideMakeExamUseCase(repository: ExamRepository): MakeExamUseCase {
         return MakeExamUseCase(repository)

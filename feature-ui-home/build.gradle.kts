@@ -32,7 +32,7 @@ dependencies {
         projects.sharedUiCompose,
         libs.quack.ui.components,
         libs.compose.ktx.lifecycle,
-        libs.compose.coil,
+        libs.compose.ui.coil,
         libs.ui.pager.asProvider(),
         libs.ui.pager.indicators,
         libs.firebase.crashlytics,

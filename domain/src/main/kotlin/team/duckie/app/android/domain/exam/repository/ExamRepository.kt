@@ -8,10 +8,11 @@
 package team.duckie.app.android.domain.exam.repository
 
 import androidx.compose.runtime.Immutable
-import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.exam.model.ExamParam
+import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @Immutable
 interface ExamRepository {
-    suspend fun makeExam(examParam: ExamParam): Boolean
+    @OutOfDateApi
+    suspend fun makeExam(exam: ExamBody): Boolean
 }

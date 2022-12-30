@@ -5,11 +5,15 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("unused")
+
 package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.util.kotlin.OutOfDateApi
 
+@OutOfDateApi
 @Immutable
 data class Exam(
     val title: String,

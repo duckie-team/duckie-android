@@ -7,17 +7,31 @@
 
 package team.duckie.app.android.data.exam.repository
 
-import team.duckie.app.android.data.exam.datasource.remote.ExamDataSource
-import team.duckie.app.android.data.exam.mapper.toData
-import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.exam.model.ExamParam
-import team.duckie.app.android.domain.exam.repository.ExamRepository
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
 import javax.inject.Inject
+import team.duckie.app.android.data._exception.util.responseCatching
+import team.duckie.app.android.data.exam.mapper.toData
+import team.duckie.app.android.data.exam.model.ExamResponse
+import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.util.kotlin.OutOfDateApi
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 class ExamRepositoryImpl @Inject constructor(
-    private val examDataSource: ExamDataSource,
+    private val client: HttpClient,
 ) : ExamRepository {
-    override suspend fun makeExam(examParam: ExamParam): Boolean{
-        return examDataSource.postExams(examParam.toData())
+    @OutOfDateApi
+    override suspend fun makeExam(exam: ExamBody): Boolean {
+        val response = client.post {
+            url("/exams")
+            setBody(exam.toData())
+        }
+        return responseCatching<ExamResponse, Boolean>(response.body()) { body ->
+            body.success ?: duckieResponseFieldNpe("success")
+        }
     }
 }

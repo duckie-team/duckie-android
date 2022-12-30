@@ -10,15 +10,15 @@ package team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect
 import androidx.datastore.core.DataStore
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
-import team.duckie.app.android.domain.user.model.KakaoUser
-import team.duckie.app.android.domain.user.usecase.KakaoLoginUseCase
+import team.duckie.app.android.domain.kakao.model.KakaoUser
+import team.duckie.app.android.domain.kakao.usecase.KakaoLoginUseCase
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 
 /**
  * [OnboardViewModel] 에서 사용되는 SideEffect 모음
  */
-sealed class OnboardSideEffect {
+internal sealed class OnboardSideEffect {
     /**
      * [KakaoLoginUseCase] 를 통해 얻은 [KakaoUser] 정보를 [DataStore] 및
      * [OnboardViewModel.me] 에 저장합니다.

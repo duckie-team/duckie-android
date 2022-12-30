@@ -20,14 +20,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
-import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
@@ -51,8 +53,49 @@ private const val CategoryScreenTitleAndDescriptionLayoutId = "CategoryScreenTit
 private const val CategoryScreenCategoriesGridLayoutId = "CategoryScreenQuackGridLayout"
 private const val CategoryScreenNextButtonLayoutId = "CategoryScreenQuackAnimatedVisibility"
 
-// FIXME: 카테고리 가져오는 방식이 바뀔 수 있어서 임시 하드코딩
-private val categories = persistentListOf(
+private val CategoryScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
+    val looseConstraints = constraints.asLoose()
+
+    val topAppBarPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == CategoryScreenTopAppBarLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    val titileAndDescriptionPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == CategoryScreenTitleAndDescriptionLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    val categoriesGridPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == CategoryScreenCategoriesGridLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    val goneableNextButtonPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == CategoryScreenNextButtonLayoutId
+    }?.measure(looseConstraints)
+
+    layout(
+        width = constraints.maxWidth,
+        height = constraints.maxHeight,
+    ) {
+        topAppBarPlaceable.place(
+            x = 0,
+            y = 0,
+        )
+        titileAndDescriptionPlaceable.place(
+            x = 0,
+            y = topAppBarPlaceable.height,
+        )
+        categoriesGridPlaceable.place(
+            x = 0,
+            y = topAppBarPlaceable.height + titileAndDescriptionPlaceable.height,
+        )
+        goneableNextButtonPlaceable?.place(
+            x = 0,
+            y = constraints.maxHeight - goneableNextButtonPlaceable.height,
+        )
+    }
+}
+
+private val categories: ImmutableList<Pair<String, Int>> = persistentListOf(
     "연예인" to R.drawable.img_category_celebrity,
     "영화" to R.drawable.img_category_movie,
     "만화/애니" to R.drawable.img_category_cartoon,
@@ -70,9 +113,7 @@ internal fun CategoryScreen() {
             elements = Array(
                 size = categories.size,
                 init = { index ->
-                    vm.selectedCategories.fastAny { selectedCategory ->
-                        categories[index].first == selectedCategory
-                    }
+                    vm.selectedCategories.contains(categories[index].first)
                 },
             )
         )
@@ -86,7 +127,6 @@ internal fun CategoryScreen() {
             OnboardTopAppBar(
                 modifier = Modifier.layoutId(CategoryScreenTopAppBarLayoutId),
                 currentStep = currentStep,
-                showSkipTrailingText = false,
             )
             TitleAndDescription(
                 modifier = Modifier
@@ -127,14 +167,14 @@ internal fun CategoryScreen() {
                     .layoutId(CategoryScreenNextButtonLayoutId)
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth(),
-                visible = categoriesSelectedIndex.fastAny { true },
+                visible = categoriesSelectedIndex.fastAny { it },
             ) {
                 QuackLargeButton(
                     type = QuackLargeButtonType.Fill,
                     enabled = true,
                     text = stringResource(R.string.button_next),
                 ) {
-                    vm.addSelectedCategories(
+                    vm.setSelectedCategories(
                         categories = categoriesSelectedIndex.mapIndexedNotNull { index, value ->
                             index.takeIf { value }?.let { categories[index].first }
                         },
@@ -142,48 +182,9 @@ internal fun CategoryScreen() {
                     vm.navigateStep(currentStep + 1)
                 }
             }
-        }
-    ) { measurables, constraints ->
-        val looseConstraints = constraints.asLoose()
-
-        val topAppBarPlaceable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == CategoryScreenTopAppBarLayoutId
-        }?.measure(looseConstraints) ?: npe()
-
-        val titileAndDescriptionPlaceable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == CategoryScreenTitleAndDescriptionLayoutId
-        }?.measure(looseConstraints) ?: npe()
-
-        val categoriesGridPlaceable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == CategoryScreenCategoriesGridLayoutId
-        }?.measure(looseConstraints) ?: npe()
-
-        val goneableNextButtonPlaceable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == CategoryScreenNextButtonLayoutId
-        }?.measure(looseConstraints)
-
-        layout(
-            width = constraints.maxWidth,
-            height = constraints.maxHeight,
-        ) {
-            topAppBarPlaceable.place(
-                x = 0,
-                y = 0,
-            )
-            titileAndDescriptionPlaceable.place(
-                x = 0,
-                y = topAppBarPlaceable.height,
-            )
-            categoriesGridPlaceable.place(
-                x = 0,
-                y = topAppBarPlaceable.height + titileAndDescriptionPlaceable.height,
-            )
-            goneableNextButtonPlaceable?.place(
-                x = 0,
-                y = constraints.maxHeight - goneableNextButtonPlaceable.height,
-            )
-        }
-    }
+        },
+        measurePolicy = CategoryScreenMeasurePolicy,
+    )
 }
 
 // FIXME: 디자인상 100.dp 가 맞는데, 100 을 주면 디바이스 너비에 압축됨

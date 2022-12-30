@@ -12,17 +12,14 @@
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -47,7 +45,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -55,14 +53,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.datastore.preferences.core.edit
+import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
-import team.duckie.app.android.feature.ui.onboard.constaint.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.shared.ui.compose.ImeSpacer
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
@@ -75,8 +76,6 @@ import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.fastFlatten
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
 import team.duckie.app.android.util.kotlin.npe
-import team.duckie.app.android.util.kotlin.runIf
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasic2TextField
 import team.duckie.quackquack.ui.component.QuackCircleTag
@@ -89,11 +88,49 @@ import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
 
+private val currentStep = OnboardStep.Tag
+
 private const val TagScreenTopAppBarLayoutId = "TagScreenTopAppBar"
 private const val TagScreenTagSelectionLayoutId = "TagScreenTagSelection"
 private const val TagScreenQuackLargeButtonLayoutId = "TagScreenQuackLargeButton"
 
-private val currentStep = OnboardStep.Tag
+private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
+    val looseConstraints = constraints.asLoose()
+
+    val topAppBarPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == TagScreenTopAppBarLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    val quackLargeButtonPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == TagScreenQuackLargeButtonLayoutId
+    }?.measure(looseConstraints) ?: npe()
+
+    // TagSelection content 에는 vertical scroll 이 있음 (최대 높이 지정 필요)
+    val tagSelectionConstraints = looseConstraints.copy(
+        maxHeight = constraints.maxHeight - topAppBarPlaceable.height - quackLargeButtonPlaceable.height
+    )
+    val tagSelectionPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == TagScreenTagSelectionLayoutId
+    }?.measure(tagSelectionConstraints) ?: npe()
+
+    layout(
+        width = constraints.maxWidth,
+        height = constraints.maxHeight,
+    ) {
+        topAppBarPlaceable.place(
+            x = 0,
+            y = 0,
+        )
+        tagSelectionPlaceable.place(
+            x = 0,
+            y = topAppBarPlaceable.height,
+        )
+        quackLargeButtonPlaceable.place(
+            x = 0,
+            y = constraints.maxHeight - quackLargeButtonPlaceable.height,
+        )
+    }
+}
 
 @Composable
 internal fun TagScreen() = CoroutineScopeContent {
@@ -102,6 +139,7 @@ internal fun TagScreen() = CoroutineScopeContent {
     val context = LocalContext.current.applicationContext
     val keyboard = LocalSoftwareKeyboardController.current
     val toast = rememberToast()
+    val coroutineScope = rememberCoroutineScope()
 
     var isStartable by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -113,6 +151,12 @@ internal fun TagScreen() = CoroutineScopeContent {
             if (state == ModalBottomSheetValue.Hidden) {
                 keyboard?.hide()
             }
+        }
+    }
+
+    BackHandler(sheetState.isVisible) {
+        coroutineScope.launch {
+            sheetState.hide()
         }
     }
 
@@ -145,7 +189,6 @@ internal fun TagScreen() = CoroutineScopeContent {
                 OnboardTopAppBar(
                     modifier = Modifier.layoutId(TagScreenTopAppBarLayoutId),
                     currentStep = currentStep,
-                    showSkipTrailingText = true,
                 )
                 TagSelection(
                     modifier = Modifier
@@ -175,48 +218,12 @@ internal fun TagScreen() = CoroutineScopeContent {
                         toast("온보딩 끝")
                     }
                 }
-            }
-        ) { measurables, constraints ->
-            val looseConstraints = constraints.asLoose()
-
-            val topAppBarPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == TagScreenTopAppBarLayoutId
-            }?.measure(looseConstraints) ?: npe()
-
-            val quackLargeButtonPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == TagScreenQuackLargeButtonLayoutId
-            }?.measure(looseConstraints) ?: npe()
-
-            // TagSelection content 에는 vertical scroll 이 있음 (최대 높이 지정 필요)
-            val tagSelectionConstraints = looseConstraints.copy(
-                maxHeight = constraints.maxHeight - topAppBarPlaceable.height - quackLargeButtonPlaceable.height
-            )
-            val tagSelectionPlaceable = measurables.fastFirstOrNull { measurable ->
-                measurable.layoutId == TagScreenTagSelectionLayoutId
-            }?.measure(tagSelectionConstraints) ?: npe()
-
-            layout(
-                width = constraints.maxWidth,
-                height = constraints.maxHeight,
-            ) {
-                topAppBarPlaceable.place(
-                    x = 0,
-                    y = 0,
-                )
-                tagSelectionPlaceable.place(
-                    x = 0,
-                    y = topAppBarPlaceable.height,
-                )
-                quackLargeButtonPlaceable.place(
-                    x = 0,
-                    y = constraints.maxHeight - quackLargeButtonPlaceable.height,
-                )
-            }
-        }
+            },
+            measurePolicy = TagScreenMeasurePolicy,
+        )
     }
 }
 
-// TODO: ViewModel 로 태그 상태 이전
 @Composable
 private fun TagSelection(
     modifier: Modifier,
@@ -227,7 +234,9 @@ private fun TagSelection(
 ) = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
 
-    val hottestTags = remember(vm.selectedCategories.size, vm) {
+    // 사용자가 이전 단계로 돌아가면 태그 선택 조정으로 예상하여
+    // 태그 상태를 저장하지 않음
+    val hottestTags = remember(vm.selectedCategories.size) {
         List(
             size = vm.selectedCategories.size,
             init = { index ->
@@ -281,33 +290,37 @@ private fun TagSelection(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 text = stringResource(R.string.tag_added_tag),
             )
-            QuackAnimatedVisibility(
-                modifier = Modifier.fillMaxWidth(),
-                visible = addedTags.isNotEmpty(),
-            ) {
-                QuackSingeLazyRowTag(
-                    // AnimatedVisibility 에 내장된 패딩? 이 있는거 같아서 패딩 조정
+            if (addedTags.isNotEmpty()) {
+                FlowRow(
                     modifier = Modifier.padding(
-                        top = 8.dp,
-                        bottom = 4.dp,
+                        vertical = 10.dp,
+                        horizontal = 20.dp,
                     ),
-                    items = addedTags,
-                    tagType = QuackTagType.Circle(trailingIcon = QuackIcon.Close),
-                    contentPadding = PaddingValues(horizontal = 20.dp),
-                    onClick = { index ->
-                        requestRemoveAddedTag(index)
-                    },
-                )
+                    mainAxisSpacing = 8.dp,
+                    crossAxisSpacing = 8.dp,
+                ) {
+                    addedTags.fastForEachIndexed { index, tag ->
+                        QuackCircleTag(
+                            text = tag,
+                            isSelected = false,
+                            trailingIcon = QuackIcon.Close,
+                        ) {
+                            requestRemoveAddedTag(index)
+                        }
+                    }
+                }
             }
-            // FIXME: QuackSingeLazyRowTag visibility 가 변경될 때 애니메이션이 잘못됨
             QuackHeadLine2(
-                modifier = Modifier.padding(horizontal = 20.dp),
+                modifier = Modifier.padding(
+                    top = if (addedTags.isNotEmpty()) 0.dp else 4.dp,
+                    start = 10.dp,
+                ),
                 text = stringResource(R.string.tag_add_manual),
                 padding = PaddingValues(
-                    top = 6.dp.runIf(addedTags.isEmpty()) {
-                        plus(6.dp)
-                    },
-                    bottom = 12.dp,
+                    top = if (addedTags.isNotEmpty()) 0.dp else 4.dp,
+                    start = 10.dp,
+                    end = 10.dp,
+                    bottom = 8.dp,
                 ),
                 color = QuackColor.DuckieOrange,
                 onClick = {
@@ -317,10 +330,10 @@ private fun TagSelection(
                 },
             )
         }
-        @AllowMagicNumber(because = "(28 - 12).dp")
+        @AllowMagicNumber(because = "(34 - 8).dp")
         Column(
             modifier = Modifier
-                .padding(top = (28 - 12).dp)
+                .padding(top = (34 - 8).dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -347,8 +360,6 @@ private fun TagScreenModalBottomSheetContent(
 ) {
     val toast = rememberToast()
     val context = LocalContext.current
-    val imeInsets = WindowInsets.ime
-    val navigationBarInsets = WindowInsets.navigationBars
 
     val inputtedTags = remember { mutableStateListOf<String>() }
     var tagInput by remember { mutableStateOf("") }
@@ -359,7 +370,7 @@ private fun TagScreenModalBottomSheetContent(
                 toast(context.getString(R.string.tag_toast_already_added))
                 return
             }
-            inputtedTags.add(index = 0, element = tagInput)
+            inputtedTags.add(0, tagInput)
             tagInput = ""
         }
     }
@@ -402,15 +413,23 @@ private fun TagScreenModalBottomSheetContent(
                 text = "",
                 isSelected = false,
             )
-            QuackSingeLazyRowTag(
-                modifier = Modifier.zIndex(1f),
-                items = inputtedTags,
-                tagType = QuackTagType.Circle(trailingIcon = QuackIcon.Close),
-                contentPadding = PaddingValues(horizontal = 20.dp),
-                onClick = { index ->
-                    inputtedTags.remove(inputtedTags[index])
-                },
-            )
+            FlowRow(
+                modifier = Modifier
+                    .zIndex(1f)
+                    .padding(horizontal = 20.dp),
+                mainAxisSpacing = 8.dp,
+                crossAxisSpacing = 8.dp,
+            ) {
+                inputtedTags.fastForEachIndexed { index, tag ->
+                    QuackCircleTag(
+                        text = tag,
+                        isSelected = false,
+                        trailingIcon = QuackIcon.Close,
+                    ) {
+                        inputtedTags.remove(inputtedTags[index])
+                    }
+                }
+            }
         }
         QuackBasic2TextField(
             modifier = Modifier.padding(top = 16.dp),
@@ -423,28 +442,6 @@ private fun TagScreenModalBottomSheetContent(
             trailingIconOnClick = ::updateTagInput,
             keyboardActions = KeyboardActions { updateTagInput() },
         )
-        Spacer(
-            modifier = Modifier.layout { measurable, _constraints ->
-                val imeHeight = imeInsets.getBottom(this)
-                val nagivationBarHeight = navigationBarInsets.getBottom(this)
-                // ime height 에 navigation height 가 포함되는 것으로 추측됨
-                val height = imeHeight
-                    .minus(nagivationBarHeight)
-                    .coerceAtLeast(0)
-
-                val constraints = _constraints.copy(
-                    minHeight = height,
-                    maxHeight = height,
-                )
-                val placeable = measurable.measure(constraints)
-
-                layout(
-                    width = constraints.maxWidth,
-                    height = height,
-                ) {
-                    placeable.place(x = 0, y = 0)
-                }
-            },
-        )
+        ImeSpacer()
     }
 }

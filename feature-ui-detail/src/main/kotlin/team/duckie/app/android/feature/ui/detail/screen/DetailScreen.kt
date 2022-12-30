@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:AllowMagicNumber
+
 package team.duckie.app.android.feature.ui.detail.screen
 
 import android.app.Activity
@@ -37,9 +39,11 @@ import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.util.compose.CoroutineScopeContent
+import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
@@ -150,6 +154,7 @@ internal fun DetailScreen(modifier: Modifier = Modifier) = CoroutineScopeContent
 }
 
 /** 상세 화면 컨텐츠 Layout */
+@Suppress("MagicNumber")
 @Composable
 private fun DetailContentLayout() {
     val configuration = LocalConfiguration.current
@@ -164,7 +169,10 @@ private fun DetailContentLayout() {
     ) {
         // 그림
         QuackImage(
-            size = DpSize(detailImageWidthDp, detailImageWidthDp * 240 / 328),
+            size = DpSize(
+                detailImageWidthDp,
+                detailImageWidthDp * GetHeightRatioW328H240
+            ),
             padding = PaddingValues(
                 top = 16.dp,
                 start = 16.dp,

@@ -22,6 +22,7 @@ dependencies {
     implementations(
         projects.utilViewmodel,
         projects.utilKotlin,
-        libs.kotlin.collections.immutable,
+        libs.quack.ui.components,
+        libs.compose.ui.activity,
     )
 }
