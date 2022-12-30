@@ -52,7 +52,7 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
     ) {
 
         Crossfade(
-            targetState = state.selectedTabIndex,
+            targetState = state.homeSelectedIndex,
         ) { page ->
             when (page) {
                 HomeStep.HomeRecommendScreen -> {
@@ -69,6 +69,10 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
                             modifier = Modifier.padding(HomeHorizontalPadding),
                         )
                     }
+                }
+
+                HomeStep.HomeTagScreen -> {
+                    HomeTagScreen()
                 }
             }
         }

@@ -15,5 +15,5 @@ sealed class HomeSideEffect {
      *
      * @param exception 발생한 예외
      */
-    class ReportError(val exception: Throwable): HomeSideEffect()
+    class ReportError(val exception: Throwable) : HomeSideEffect()
 }

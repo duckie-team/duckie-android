@@ -82,9 +82,9 @@ internal fun HomeRecommendFollowingTestScreen(
         ) {
             item {
                 HomeTopAppBar(
-                    selectedTabIndex = state.selectedTabIndex.index,
+                    selectedTabIndex = state.homeSelectedIndex.index,
                     onTabSelected = { step ->
-                        vm.changedSelectedTab(
+                        vm.changedHomeScreen(
                             HomeStep.toStep(step)
                         )
                     },
@@ -143,9 +143,9 @@ internal fun HomeRecommendFollowingScreen(
         ) {
             item {
                 HomeTopAppBar(
-                    selectedTabIndex = state.selectedTabIndex.index,
+                    selectedTabIndex = state.homeSelectedIndex.index,
                     onTabSelected = { step ->
-                        vm.changedSelectedTab(
+                        vm.changedHomeScreen(
                             HomeStep.toStep(step)
                         )
                     },
