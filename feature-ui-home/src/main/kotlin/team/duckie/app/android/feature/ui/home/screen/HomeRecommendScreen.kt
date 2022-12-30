@@ -17,12 +17,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -41,37 +38,23 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.component.DuckTestCoverItem
+import team.duckie.app.android.feature.ui.home.component.DuckTestSmallCover
 import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
+import team.duckie.quackquack.ui.component.QuackLarge1
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackSplashSlogan
-import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
-import team.duckie.quackquack.ui.modifier.quackClickable
 
 private val HomeHorizontalPadding = PaddingValues(
     horizontal = 16.dp,
 )
-
-// TODO("limsaehyun"): 로딩 상태 페이지 처리 필요
-@Suppress("FunctionName", "NOTHING_TO_INLINE")
-internal inline fun LazyListScope.HomeRecommendLoadingState() {
-    item {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            CircularProgressIndicator()
-        }
-    }
-}
 
 @OptIn(
     ExperimentalPagerApi::class,
@@ -107,9 +90,9 @@ internal fun HomeRecommendScreen(
                     modifier = Modifier
                         .padding(HomeHorizontalPadding)
                         .padding(bottom = 16.dp),
-                    selectedTabIndex = state.selectedTabIndex.index,
+                    selectedTabIndex = state.homeSelectedIndex.index,
                     onTabSelected = { step ->
-                        vm.changedSelectedTab(
+                        vm.changedHomeScreen(
                             HomeStep.toStep(step)
                         )
                     },
@@ -151,7 +134,11 @@ internal fun HomeRecommendScreen(
                     title = item.title,
                     tag = item.tag,
                     recommendItems = item.items,
-                    onClicked = { }
+                    onClicked = { },
+                    onTagClicked = { tag ->
+                        vm.selectedTag(tag)
+                        vm.changedHomeScreen(HomeStep.HomeTagScreen)
+                    },
                 )
             }
         }
@@ -176,7 +163,7 @@ private fun HomeRecommendJumbotronLayout(
             contentScale = ContentScale.FillWidth,
         )
         Spacer(modifier = Modifier.height(24.dp))
-        QuackSplashSlogan(
+        QuackLarge1(
             text = recommendItem.title,
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -206,6 +193,7 @@ private fun HomeTopicRecommendLayout(
     title: String,
     tag: String,
     recommendItems: PersistentList<HomeState.RecommendTopic.Test>,
+    onTagClicked: (String) -> Unit,
     onClicked: (Int) -> Unit,
 ) {
     Column(
@@ -215,6 +203,9 @@ private fun HomeTopicRecommendLayout(
             modifier = Modifier.padding(HomeHorizontalPadding),
             text = title,
             underlineTexts = persistentListOf(tag),
+            onClick = {
+                onTagClicked(tag)
+            }
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -224,32 +215,18 @@ private fun HomeTopicRecommendLayout(
             item {}
 
             items(items = recommendItems) { item ->
-                Column(
-                    modifier = Modifier
-                        .quackClickable(
-                            rippleEnabled = false,
-                        ) {
-                            onClicked(item.recommendId)
-                        }
-                ) {
-                    AsyncImage(
-                        modifier = Modifier.size(158.dp, 116.dp),
-                        model = item.coverImg,
-                        contentDescription = null,
-                    )
-                    QuackBody2(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = item.nickname,
-                    )
-                    QuackTitle2(
-                        modifier = Modifier.padding(top = 4.dp),
-                        text = item.title,
-                    )
-                    QuackBody2(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = "${stringResource(id = R.string.examinee)} ${item.examineeNumber}",
-                    )
-                }
+                DuckTestSmallCover(
+                    duckTestCoverItem = DuckTestCoverItem(
+                        testId = item.recommendId,
+                        coverImg = item.coverImg,
+                        nickname = item.nickname,
+                        title = item.title,
+                        examineeNumber = item.examineeNumber,
+                    ),
+                    onClick = {
+                        onClicked(it)
+                    }
+                )
             }
         }
     }
