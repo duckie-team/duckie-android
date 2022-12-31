@@ -10,8 +10,10 @@ package team.duckie.app.android.feature.ui.create.problem.viewmodel.state
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.category.model.Category
+import kotlinx.collections.immutable.persistentMapOf
 
 data class CreateProblemState(
+    // TODO(riflockle7): 추후 구현 완료 시 원래대로 돌려놓아야 함
     val createProblemStep: CreateProblemStep = CreateProblemStep.CreateProblem,
     val examInformation: ExamInformation = ExamInformation(),
     val error: ExamInformation.Error? = null,
@@ -27,6 +29,7 @@ data class CreateProblemState(
         val foundExamArea: FoundExamArea = FoundExamArea(),
         val scrollPosition: Int = 0,
         val examDescriptionFocused: Boolean = false,
+        val createProblemArea: CreateProblemArea = CreateProblemArea(),
         val additionalInfoArea: AdditionInfoArea = AdditionInfoArea(),
     ) {
         val examArea: String
@@ -43,6 +46,13 @@ data class CreateProblemState(
             val examArea: String = "",
             val cursorPosition: Int = 0,
         )
+
+        data class CreateProblemArea(
+            val questions: List<String> = listOf(),
+            val questionGalleryMap: Map<Int, Any?> = persistentMapOf(),
+            val answersGalleryMap: Map<Int, List<Any>> = persistentMapOf(),
+        )
+
         data class AdditionInfoArea(
             val thumbnail: Any? = null,
             val takeTitle: String = "",

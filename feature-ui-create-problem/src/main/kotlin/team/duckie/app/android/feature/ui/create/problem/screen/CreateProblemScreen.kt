@@ -7,12 +7,20 @@
 
 @file:OptIn(
     ExperimentalMaterialApi::class,
-    ExperimentalComposeUiApi::class
+    ExperimentalComposeUiApi::class,
+    ExperimentalLifecycleComposeApi::class
 )
 
 package team.duckie.app.android.feature.ui.create.problem.screen
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +41,11 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -42,10 +54,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
@@ -55,12 +74,14 @@ import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.launch
 import team.duckie.app.android.util.compose.rememberToast
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasic2TextField
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackDropDownCard
+import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSubtitle
@@ -68,6 +89,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 private const val TopAppBarLayoutId = "CreateProblemScreenTopAppBarLayoutId"
 private const val ContentLayoutId = "CreateProblemScreenContentLayoutId"
+private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
 // private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 
 private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constraints ->
@@ -107,9 +129,44 @@ private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constr
 /** 문제 만들기 2단계 (문제 만들기) Screen */
 @Composable
 fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
+    val context = LocalContext.current
     val vm = LocalViewModel.current as CreateProblemViewModel
+    val state =
+        vm.state.collectAsStateWithLifecycle().value.examInformation.createProblemArea
     val keyboard = LocalSoftwareKeyboardController.current
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val toast = rememberToast()
+    val permissionErrorMessage =
+        stringResource(id = R.string.create_problem_permission_toast_message)
+
+    // Gallery 관련
+    val selectedQuestionGalleryImage =
+        remember(state.questionGalleryMap) { state.questionGalleryMap }
+    val selectedAnswersGalleryImage = remember(state.answersGalleryMap) { state.answersGalleryMap }
+    val galleryImages = remember(vm.galleryImages) { vm.galleryImages }
+    val galleryImagesSelections = remember(vm.galleryImages) {
+        mutableStateListOf(
+            elements = Array(
+                size = galleryImages.size,
+                init = { false },
+            )
+        )
+    }
+    var photoPickerVisible by remember { mutableStateOf<PhotoState?>(null) }
+    var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
+
+    // 단일 권한 설정 launcher
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            launch {
+                photoPickerVisible = null // TODO(riflockle7): photoState 관리 방법을 고민해볼 예정
+            }
+        } else {
+            toast(permissionErrorMessage)
+        }
+    }
 
     BackHandler {
         vm.navigateStep(CreateProblemStep.ExamInformation)
@@ -253,9 +310,24 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                     content = {
                         items(19) {
                             if (it % 3 == 0) {
-                                ShortFormProblemLayout(it + 1) {
-                                    launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
-                                }
+                                ShortFormProblemLayout(
+                                    index = it,
+                                    questionImage = selectedQuestionGalleryImage[it],
+                                    imageClick = {
+                                        launch {
+                                            val result = imagePermission.check(context)
+                                            if (result) {
+                                                vm.loadGalleryImages()
+                                                photoPickerVisible = PhotoState.Question(it)
+                                            } else {
+                                                launcher.launch(imagePermission)
+                                            }
+                                        }
+                                    },
+                                    onDropdownItemClick = {
+                                        launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
+                                    }
+                                )
                             } else if (it % 3 == 1) {
                                 // TODO(riflockle7): 객관식/글 Layout 구현하기
                             } else {
@@ -284,14 +356,68 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
             }
         )
     }
+
+    // 갤러리 썸네일 선택 picker
+    if (photoPickerVisible != null) {
+        Log.i("sangwo-o.lee", "${galleryImages.size}")
+        PhotoPicker(
+            modifier = Modifier
+                .padding(top = systemBarPaddings.calculateTopPadding())
+                .fillMaxSize()
+                .background(color = QuackColor.White.composeColor)
+                .layoutId(GalleryListLayoutId),
+            imageUris = galleryImages,
+            imageSelections = galleryImagesSelections,
+            onCameraClick = {},
+            onImageClick = { index, _ ->
+                galleryImagesSelections[index] = !galleryImagesSelections[index]
+                if (galleryImagesSelectionIndex != index) {
+                    galleryImagesSelections[galleryImagesSelectionIndex] = false
+                }
+                galleryImagesSelectionIndex = index
+            },
+            onCloseClick = {
+                launch {
+                    photoPickerVisible = null
+                    galleryImagesSelections[galleryImagesSelectionIndex] = false
+                    sheetState.hide()
+                }
+            },
+            onAddClick = {
+                launch {
+                    with(photoPickerVisible) {
+                        when {
+                            this is PhotoState.Question -> {
+                                vm.setQuestionImage(
+                                    this.index,
+                                    galleryImages[galleryImagesSelectionIndex].toUri()
+                                )
+                                photoPickerVisible = null
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                    galleryImagesSelections[galleryImagesSelectionIndex] = false
+                    sheetState.hide()
+                }
+            },
+        )
+    }
 }
 
 /** 문제 만들기 주관식 Layout */
 @Composable
-fun ShortFormProblemLayout(index: Int, onDropdownItemClick: (Int) -> Unit) {
+fun ShortFormProblemLayout(
+    index: Int,
+    questionImage: Any?,
+    imageClick: () -> Unit,
+    onDropdownItemClick: (Int) -> Unit,
+) {
     val questionNo = index + 1
     var input = remember { "" }
-    val toast = rememberToast()
 
     Column(
         modifier = Modifier
@@ -305,11 +431,23 @@ fun ShortFormProblemLayout(index: Int, onDropdownItemClick: (Int) -> Unit) {
             onTextChanged = { input = it },
             placeholderText = "$questionNo. 문제를 입력해주세요.",
             trailingIcon = QuackIcon.Image,
-            trailingIconOnClick = { toast("문제 이미지 클릭") }
+            trailingIconOnClick = imageClick,
         )
 
+        questionImage?.let {
+            QuackImage(
+                modifier = Modifier.padding(top = 24.dp),
+                src = it,
+                size = DpSize(200.dp, 200.dp),
+            )
+        }
+
         // TODO(riflockle7): border 없는 DropDownCard 필요
-        QuackDropDownCard(text = "주관식", onClick = { onDropdownItemClick(index) })
+        QuackDropDownCard(
+            modifier = Modifier.padding(top = 24.dp),
+            text = "주관식",
+            onClick = { onDropdownItemClick(index) }
+        )
 
         // TODO(riflockle7): underLine 없는 TextField 필요
         QuackBasicTextField(
@@ -356,4 +494,22 @@ fun CreateProblemBottomLayout() {
 
         }
     }
+}
+
+sealed class PhotoState {
+    data class Question(val index: Int) : PhotoState()
+    data class Answers(val index: Int, val number: Int) : PhotoState()
+}
+
+/** 이미지 권한 체크시 사용해야하는 permission */
+private val imagePermission
+    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+
+/** 한 개의 권한을 체크한다. */
+private fun String.check(context: Context): Boolean {
+    return ContextCompat.checkSelfPermission(context, this) == PackageManager.PERMISSION_GRANTED
 }

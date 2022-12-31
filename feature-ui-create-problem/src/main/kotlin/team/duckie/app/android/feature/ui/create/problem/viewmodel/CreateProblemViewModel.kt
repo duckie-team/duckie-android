@@ -209,6 +209,25 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    // CreateProblem
+    fun setQuestionImage(index: Int, thumbnail: Any?) {
+        updateState { prevState ->
+            val newQuestionGalleryMap =
+                prevState.examInformation.createProblemArea.questionGalleryMap.toMutableMap()
+            newQuestionGalleryMap[index] = thumbnail
+
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    createProblemArea = prevState.examInformation.createProblemArea.copy(
+                        questionGalleryMap = newQuestionGalleryMap
+                    )
+                ),
+            )
+        }
+    }
+
+
+    // AdditionalInfo
     fun setThumbnail(thumbnail: Any?) {
         updateState { prevState ->
             prevState.copy(
@@ -280,7 +299,7 @@ class CreateProblemViewModel @Inject constructor(
 
     /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트합니다. */
     internal fun addGalleryImages(images: List<String>) {
-        mutableGalleryImages = mutableGalleryImages.addAll(images)
+        mutableGalleryImages = persistentListOf<String>().addAll(images)
     }
 
     fun isAllFieldsNotEmpty(): Boolean {
