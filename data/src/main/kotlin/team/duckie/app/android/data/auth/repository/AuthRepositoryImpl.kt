@@ -36,8 +36,10 @@ class AuthRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun checkAccessToken(): AccessTokenCheckResponse {
-        val response = client.get("/auth/token")
+    override suspend fun checkAccessToken(token: String): AccessTokenCheckResponse {
+        val response = client.get("/auth/token") {
+            headers.append("authorization", token)
+        }
         return responseCatching(
             response = response.body(),
             parse = AccessTokenCheckResponseData::toDomain,

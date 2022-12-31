@@ -13,9 +13,9 @@ import team.duckie.app.android.domain.auth.repository.AuthRepository
 class CheckAccessTokenUseCase @Inject constructor(
     private val repository: AuthRepository,
 ) {
-    suspend fun invoke(): Result<Int> { // 유저 아이디 반환
+    suspend operator fun invoke(token: String): Result<Int> { // 유저 아이디 반환
         return runCatching {
-            repository.checkAccessToken().userId
+            repository.checkAccessToken(token).userId
         }
     }
 }
