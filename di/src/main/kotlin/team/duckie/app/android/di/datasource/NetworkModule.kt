@@ -20,7 +20,9 @@ import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.append
 import io.ktor.serialization.jackson.jackson
 import team.duckie.app.android.util.kotlin.seconds
 
@@ -41,7 +43,7 @@ internal class NetworkModule {
             url(urlString = BaseUrl)
             headers.append(
                 name = HttpHeaders.ContentType,
-                value = ContentTypeJson,
+                value = ContentType.Application.Json,
             )
         }
         install(plugin = ContentNegotiation) {
@@ -57,6 +59,5 @@ internal class NetworkModule {
         val MaxTimeoutMillis = 3.seconds
         const val MaxRetryCount = 3
         const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
-        const val ContentTypeJson = "application/json"
     }
 }

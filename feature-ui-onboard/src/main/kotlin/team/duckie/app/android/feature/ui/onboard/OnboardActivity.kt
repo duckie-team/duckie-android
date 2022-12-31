@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 import team.duckie.app.android.di.repository.ProvidesModule
-import team.duckie.app.android.di.usecase.user.KakaoUseCaseModule
+import team.duckie.app.android.di.usecase.kakao.KakaoUseCaseModule
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep

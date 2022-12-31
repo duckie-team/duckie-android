@@ -8,6 +8,7 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import DependencyHandler.Extensions.implementations
+import DependencyHandler.Extensions.testImplementations
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
@@ -33,5 +34,9 @@ dependencies {
         libs.bundles.ktor,
         projects.domain,
         projects.utilKotlin,
+    )
+    testImplementations(
+        libs.test.coroutines,
+        libs.test.ktor.client,
     )
 }
