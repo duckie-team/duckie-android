@@ -22,32 +22,32 @@ data class Problem(
 )
 
 @Immutable
-sealed class Question(val type: String, open val text: String) {
-    private companion object {
-        const val Text = "text"
-        const val Image = "image"
-        const val Audio = "audio"
-        const val Video = "video"
+sealed class Question(val type: Type, open val text: String) {
+    enum class Type(val key: String) {
+        Text("text"),
+        Image("image"),
+        Audio("audio"),
+        Video("video"),
     }
 
     @Immutable
-    data class Text(override val text: String) : Question(type = Text, text = text)
+    data class Text(override val text: String) : Question(type = Type.Text, text = text)
 
     @Immutable
     data class Image(override val text: String, val imageUrl: String) : Question(
-        type = Image,
+        type = Type.Image,
         text = text,
     )
 
     @Immutable
     data class Audio(override val text: String, val audioUrl: String) : Question(
-        type = Audio,
+        type = Type.Audio,
         text = text,
     )
 
     @Immutable
     data class Video(override val text: String, val videoUrl: String) : Question(
-        type = Video,
+        type = Type.Video,
         text = text,
     )
 

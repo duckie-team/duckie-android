@@ -42,22 +42,22 @@ internal fun Problem.toData() = ProblemData(
     question = question.let { question ->
         when (question) {
             is Question.Text -> QuestionData.Text(
-                type = question.type,
+                type = question.type.key,
                 text = question.text,
             )
             is Question.Video -> QuestionData.Video(
                 videoUrl = question.videoUrl,
-                type = question.type,
+                type = question.type.key,
                 text = question.text,
             )
             is Question.Image -> QuestionData.Image(
                 imageUrl = question.imageUrl,
-                type = question.type,
+                type = question.type.key,
                 text = question.text,
             )
             is Question.Audio -> QuestionData.Audio(
                 audioUrl = question.audioUrl,
-                type = question.type,
+                type = question.type.key,
                 text = question.text,
             )
         }
