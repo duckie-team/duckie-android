@@ -64,6 +64,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
@@ -140,9 +142,8 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
         stringResource(id = R.string.create_problem_permission_toast_message)
 
     // Gallery 관련
-    val selectedQuestionGalleryImage =
-        remember(state.questionGalleryMap) { state.questionGalleryMap }
-    val selectedAnswersGalleryImage = remember(state.answersGalleryMap) { state.answersGalleryMap }
+    val selectedQuestions = remember(state.questions) { state.questions }
+    val selectedAnswers = remember(state.answers) { state.answers }
     val galleryImages = remember(vm.galleryImages) { vm.galleryImages }
     val galleryImagesSelections = remember(vm.galleryImages) {
         mutableStateListOf(
@@ -308,17 +309,29 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         }
                     },
                     content = {
-                        items(19) {
-                            if (it % 3 == 0) {
+                        items(19) { index ->
+                            val questionNo = index + 1
+                            if (questionNo % 3 == 0) {
+                                val question = selectedQuestions[questionNo]
                                 ShortFormProblemLayout(
-                                    index = it,
-                                    questionImage = selectedQuestionGalleryImage[it],
+                                    questionNo = questionNo,
+                                    question = question,
+                                    titleChanged = { newTitle ->
+                                        vm.setQuestion(
+                                            question?.type,
+                                            questionNo,
+                                            title = newTitle,
+                                        )
+                                    },
                                     imageClick = {
                                         launch {
                                             val result = imagePermission.check(context)
                                             if (result) {
                                                 vm.loadGalleryImages()
-                                                photoPickerVisible = PhotoState.Question(it)
+                                                photoPickerVisible = PhotoState.QuestionImageType(
+                                                    questionNo,
+                                                    question as Question.Image?
+                                                )
                                             } else {
                                                 launcher.launch(imagePermission)
                                             }
@@ -328,7 +341,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
                                     }
                                 )
-                            } else if (it % 3 == 1) {
+                            } else if (questionNo % 3 == 1) {
                                 // TODO(riflockle7): 객관식/글 Layout 구현하기
                             } else {
                                 // TODO(riflockle7): 객관식/사진 Layout 구현하기
@@ -386,18 +399,21 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
             onAddClick = {
                 launch {
                     with(photoPickerVisible) {
-                        when {
-                            this is PhotoState.Question -> {
-                                vm.setQuestionImage(
-                                    this.index,
-                                    galleryImages[galleryImagesSelectionIndex].toUri()
+                        when (this) {
+                            is PhotoState.QuestionImageType -> {
+                                vm.setQuestion(
+                                    this.value?.type,
+                                    this.questionNo,
+                                    urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
                                 )
                                 photoPickerVisible = null
                             }
 
-                            else -> {
+                            is PhotoState.AnswerImageType -> {
 
                             }
+
+                            else -> {}
                         }
                     }
                     galleryImagesSelections[galleryImagesSelectionIndex] = false
@@ -411,14 +427,12 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
 /** 문제 만들기 주관식 Layout */
 @Composable
 fun ShortFormProblemLayout(
-    index: Int,
-    questionImage: Any?,
+    questionNo: Int,
+    question: Question?,
+    titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
     onDropdownItemClick: (Int) -> Unit,
 ) {
-    val questionNo = index + 1
-    var input = remember { "" }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -427,14 +441,14 @@ fun ShortFormProblemLayout(
         // TODO(riflockle7): 최상단 Line 없는 TextField 필요
         QuackBasic2TextField(
             modifier = Modifier,
-            text = input,
-            onTextChanged = { input = it },
+            text = question?.text ?: "",
+            onTextChanged = titleChanged,
             placeholderText = "$questionNo. 문제를 입력해주세요.",
             trailingIcon = QuackIcon.Image,
             trailingIconOnClick = imageClick,
         )
 
-        questionImage?.let {
+        (question as? Question.Image)?.imageUrl?.let {
             QuackImage(
                 modifier = Modifier.padding(top = 24.dp),
                 src = it,
@@ -446,13 +460,13 @@ fun ShortFormProblemLayout(
         QuackDropDownCard(
             modifier = Modifier.padding(top = 24.dp),
             text = "주관식",
-            onClick = { onDropdownItemClick(index) }
+            onClick = { onDropdownItemClick(questionNo) }
         )
 
-        // TODO(riflockle7): underLine 없는 TextField 필요
+        // TODO(riflockle7): underLine 없는 TextField 필요, Answer 연동 시 추가 작업 필요
         QuackBasicTextField(
-            text = input,
-            onTextChanged = { input = it },
+            text = "",
+            onTextChanged = { },
             placeholderText = "답안 입력"
         )
     }
@@ -497,8 +511,16 @@ fun CreateProblemBottomLayout() {
 }
 
 sealed class PhotoState {
-    data class Question(val index: Int) : PhotoState()
-    data class Answers(val index: Int, val number: Int) : PhotoState()
+    data class QuestionImageType(
+        val questionNo: Int,
+        val value: Question.Image?,
+    ) : PhotoState()
+
+    data class AnswerImageType(
+        val questionNo: Int,
+        val choiceNo: Int,
+        val value: Answer.ImageChoice,
+    ) : PhotoState()
 }
 
 /** 이미지 권한 체크시 사용해야하는 permission */

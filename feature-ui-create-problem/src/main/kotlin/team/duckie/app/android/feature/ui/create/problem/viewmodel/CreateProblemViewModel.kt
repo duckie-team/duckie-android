@@ -12,6 +12,7 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import android.net.Uri
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.collections.immutable.ImmutableList
@@ -210,22 +211,45 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     // CreateProblem
-    fun setQuestionImage(index: Int, thumbnail: Any?) {
-        updateState { prevState ->
-            val newQuestionGalleryMap =
-                prevState.examInformation.createProblemArea.questionGalleryMap.toMutableMap()
-            newQuestionGalleryMap[index] = thumbnail
+    fun setQuestion(
+        questionType: Question.Type?,
+        questionNo: Int,
+        title: String? = null,
+        urlSource: Uri? = null,
+    ) = updateState { prevState ->
+        val newQuestions = prevState.examInformation.createProblemArea.questions.toMutableMap()
+        val changeQuestion = newQuestions[questionNo]
 
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    createProblemArea = prevState.examInformation.createProblemArea.copy(
-                        questionGalleryMap = newQuestionGalleryMap
-                    )
-                ),
+        newQuestions[questionNo] = when (questionType) {
+            Question.Type.Text -> Question.Text(
+                title ?: (changeQuestion?.text ?: ""),
             )
-        }
-    }
 
+            Question.Type.Image -> Question.Image(
+                title ?: changeQuestion?.text ?: "",
+                "${urlSource ?: changeQuestion ?: ""}"
+            )
+
+            Question.Type.Audio -> Question.Audio(
+                title ?: changeQuestion?.text ?: "",
+                "${urlSource ?: changeQuestion ?: ""}"
+            )
+
+            Question.Type.Video -> Question.Video(
+                title ?: changeQuestion?.text ?: "",
+                "${urlSource ?: changeQuestion ?: ""}"
+            )
+
+            else -> null
+        }
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(
+                createProblemArea = prevState.examInformation.createProblemArea.copy(
+                    questions = newQuestions
+                )
+            ),
+        )
+    }
 
     // AdditionalInfo
     fun setThumbnail(thumbnail: Any?) {

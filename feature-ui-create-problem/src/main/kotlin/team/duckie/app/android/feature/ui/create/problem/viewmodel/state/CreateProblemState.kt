@@ -11,6 +11,8 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.category.model.Category
 import kotlinx.collections.immutable.persistentMapOf
+import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.Question
 
 data class CreateProblemState(
     // TODO(riflockle7): 추후 구현 완료 시 원래대로 돌려놓아야 함
@@ -47,10 +49,15 @@ data class CreateProblemState(
             val cursorPosition: Int = 0,
         )
 
+        /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
         data class CreateProblemArea(
-            val questions: List<String> = listOf(),
-            val questionGalleryMap: Map<Int, Any?> = persistentMapOf(),
-            val answersGalleryMap: Map<Int, List<Any>> = persistentMapOf(),
+            // Problem 의 데이터를 Map 으로 쪼개 놓은 영역들
+            // (문제의 개수가 정해져 있지 않고, 반드시 순서대로 문제 만드는 게 아니므로 map 으로 처리한다.)
+            val questions: Map<Int, Question?> = mapOf(),
+            val answers: Map<Int, Answer?> = mapOf(),
+            val correctAnswers: Map<Int, String?> = mapOf(),
+            val hints: Map<Int, String?> = mapOf(),
+            val memos: Map<Int, String?> = mapOf(),
         )
 
         data class AdditionInfoArea(
