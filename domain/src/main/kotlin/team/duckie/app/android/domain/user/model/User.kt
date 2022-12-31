@@ -10,20 +10,17 @@
 package team.duckie.app.android.domain.user.model
 
 import androidx.compose.runtime.Immutable
-import java.util.Date
+import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.domain.category.model.Category
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.constant.DuckieTier
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 
-@OutOfDateApi
 @Immutable
 data class User(
     val id: Int,
     val nickname: String,
-    val accountEnabled: Boolean,
-    val profileUrl: String,
+    val profileImageUrl: String,
     val tier: DuckieTier,
-    val createdAt: Date,
-    val updatedAt: Date,
-    val deletedAt: Date? = null,
-    val bannedAt: Date? = null,
+    val favoriteTags: ImmutableList<Tag>?,
+    val favoriteCategories: ImmutableList<Category>?,
 )
