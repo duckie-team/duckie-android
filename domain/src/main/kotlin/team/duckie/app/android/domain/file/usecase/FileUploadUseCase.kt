@@ -17,7 +17,7 @@ import team.duckie.app.android.domain.file.repository.FileRepository
 class FileUploadUseCase @Inject constructor(
     private val repository: FileRepository,
 ) {
-    suspend fun invoke(file: File, type: FileType): Result<String> {
+    suspend operator fun invoke(file: File, type: FileType): Result<String> {
         return runCatching {
             repository.upload(file = file, type = type.value)
         }
