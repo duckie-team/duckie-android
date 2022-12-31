@@ -11,8 +11,10 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.kakao.repository.KakaoRepository
 
 @Immutable
-class KakaoLoginUseCase(private val repository: KakaoRepository) {
-    suspend operator fun invoke() = runCatching {
-        repository.login()
+class GetKakaoAccessTokenUseCase(private val repository: KakaoRepository) {
+    suspend operator fun invoke(): Result<String> {
+        return runCatching {
+            repository.getAccessToken()
+        }
     }
 }
