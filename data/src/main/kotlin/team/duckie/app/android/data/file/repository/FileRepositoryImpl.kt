@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.file.repository
 
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -16,14 +15,13 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import java.io.File
 import javax.inject.Inject
+import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.domain.file.repository.FileRepository
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
-class FileRepositoryImpl @Inject constructor(
-    private val client: HttpClient,
-) : FileRepository {
+class FileRepositoryImpl @Inject constructor() : FileRepository {
     override suspend fun upload(file: File, type: String): String {
         val response = client.post("/files") {
             setBody(

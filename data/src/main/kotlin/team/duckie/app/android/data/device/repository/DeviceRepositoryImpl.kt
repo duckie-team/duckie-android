@@ -7,16 +7,14 @@
 
 package team.duckie.app.android.data.device.repository
 
-import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.statement.bodyAsText
 import javax.inject.Inject
+import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._util.jsonBody
 import team.duckie.app.android.domain.device.repository.DeviceRepository
 
-class DeviceRepositoryImpl @Inject constructor(
-    private val client: HttpClient,
-) : DeviceRepository {
+class DeviceRepositoryImpl @Inject constructor() : DeviceRepository {
     override suspend fun register(fcmToken: String) {
         val response = client.post("/devices") {
             jsonBody {
