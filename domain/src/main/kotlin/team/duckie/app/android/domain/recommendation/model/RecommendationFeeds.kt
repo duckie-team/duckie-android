@@ -7,8 +7,6 @@
 
 package team.duckie.app.android.domain.recommendation.model
 
-import kotlinx.collections.immutable.PersistentList
-
 data class RecommendationFeeds(
     val recommendations: List<Recommendation>,
     val jumbotrons: List<Jumbotron>,

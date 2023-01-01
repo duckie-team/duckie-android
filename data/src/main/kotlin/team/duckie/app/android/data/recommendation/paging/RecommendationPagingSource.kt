@@ -78,8 +78,10 @@ class RecommendationPagingSource : PagingSource<Int, RecommendationFeeds.Recomme
                 data = response.recommendations.map { it.toEntity() },
                 prevKey = when (nextPageNumber) {
                     START_KEY -> null
-                    else -> when (val prevKey =
-                        ensureValidKey(key = range.first - params.loadSize)) {
+                    else -> when (
+                        val prevKey =
+                        ensureValidKey(key = range.first - params.loadSize)
+                    ) {
                         START_KEY -> null
                         else -> prevKey
                     }
@@ -98,4 +100,3 @@ class RecommendationPagingSource : PagingSource<Int, RecommendationFeeds.Recomme
 
     private fun ensureValidKey(key: Int) = max(START_KEY, key)
 }
-

@@ -9,7 +9,6 @@
 
 include(":feature-ui-search")
 
-
 rootProject.name = "duckie"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

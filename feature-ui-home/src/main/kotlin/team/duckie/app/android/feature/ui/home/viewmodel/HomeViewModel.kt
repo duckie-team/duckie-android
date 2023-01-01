@@ -89,7 +89,6 @@ class HomeViewModel @Inject constructor(
             }
     }
 
-
     // TODO(limsaehyun): Request Server
     fun fetchRecommendations() =
         Pager(

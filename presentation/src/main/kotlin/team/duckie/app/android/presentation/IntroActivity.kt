@@ -24,7 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
-import team.duckie.app.android.feature.ui.home.screen.HomeActivity
+import team.duckie.app.android.feature.ui.search.screen.SearchResultActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.kotlin.seconds
@@ -55,7 +55,7 @@ class IntroActivity : BaseActivity() {
 
             when (isOnboardFinished) {
                 true -> toast("온보딩 끝냄")
-                false -> changeActivityWithAnimation<HomeActivity>()
+                false -> changeActivityWithAnimation<SearchResultActivity>()
                 else -> Unit // null
             }
         }
