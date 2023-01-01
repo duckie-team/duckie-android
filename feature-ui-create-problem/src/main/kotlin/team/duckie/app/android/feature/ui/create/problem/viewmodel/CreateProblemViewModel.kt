@@ -30,6 +30,7 @@ import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.kotlin.OutOfDateApi
@@ -82,6 +83,12 @@ class CreateProblemViewModel @Inject constructor(
         postSideEffect {
             CreateProblemSideEffect.FinishActivity
         }
+    }
+
+    fun updatePhotoState(photoState: CreateProblemPhotoState?) = updateState {prevState ->
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(photoState = photoState),
+        )
     }
 
     fun onClickCategory(

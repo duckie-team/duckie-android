@@ -141,8 +141,8 @@ private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constr
 fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     val context = LocalContext.current
     val vm = LocalViewModel.current as CreateProblemViewModel
-    val state =
-        vm.state.collectAsStateWithLifecycle().value.examInformation.createProblemArea
+    val examInformationState = vm.state.collectAsStateWithLifecycle().value.examInformation
+    val state = examInformationState.createProblemArea
     val keyboard = LocalSoftwareKeyboardController.current
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val toast = rememberToast()
@@ -162,7 +162,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
             )
         )
     }
-    var photoPickerVisible by remember { mutableStateOf<PhotoState?>(null) }
+    val photoState = remember(examInformationState.photoState) { examInformationState.photoState }
     var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
 
     // 단일 권한 설정 launcher
@@ -170,9 +170,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            launch {
-                photoPickerVisible = null // TODO(riflockle7): photoState 관리 방법을 고민해볼 예정
-            }
+            launch { vm.updatePhotoState(null) }
         } else {
             toast(permissionErrorMessage)
         }
@@ -518,7 +516,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     }
 
     // 갤러리 썸네일 선택 picker
-    if (photoPickerVisible != null) {
+    if (photoState != null) {
         Log.i("sangwo-o.lee", "${galleryImages.size}")
         PhotoPicker(
             modifier = Modifier
@@ -538,32 +536,32 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
             },
             onCloseClick = {
                 launch {
-                    photoPickerVisible = null
+                    vm.updatePhotoState(null)
                     galleryImagesSelections[galleryImagesSelectionIndex] = false
                     sheetState.hide()
                 }
             },
             onAddClick = {
                 launch {
-                    with(photoPickerVisible) {
+                    with(photoState) {
                         when (this) {
-                            is PhotoState.QuestionImageType -> {
+                            is CreateProblemPhotoState.QuestionImageType -> {
                                 vm.setQuestion(
                                     Question.Type.Image,
                                     this.questionNo,
                                     urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
                                 )
-                                photoPickerVisible = null
+                                vm.updatePhotoState(null)
                             }
 
-                            is PhotoState.AnswerImageType -> {
+                            is CreateProblemPhotoState.AnswerImageType -> {
                                 vm.setAnswer(
                                     questionNo,
                                     answerNo,
                                     Answer.Type.ImageChoice,
                                     urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
                                 )
-                                photoPickerVisible = null
+                                vm.updatePhotoState(null)
                             }
 
                             else -> {}

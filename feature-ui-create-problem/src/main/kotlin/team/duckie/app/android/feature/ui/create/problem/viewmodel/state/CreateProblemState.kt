@@ -10,7 +10,6 @@ package team.duckie.app.android.feature.ui.create.problem.viewmodel.state
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.category.model.Category
-import kotlinx.collections.immutable.persistentMapOf
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 
@@ -33,6 +32,7 @@ data class CreateProblemState(
         val examDescriptionFocused: Boolean = false,
         val createProblemArea: CreateProblemArea = CreateProblemArea(),
         val additionalInfoArea: AdditionInfoArea = AdditionInfoArea(),
+        val photoState: CreateProblemPhotoState? = null,
     ) {
         val examArea: String
             get() = foundExamArea.examArea
@@ -68,4 +68,18 @@ data class CreateProblemState(
         )
         data class Error(val throwable: Throwable?)
     }
+}
+sealed class CreateProblemPhotoState {
+    data class QuestionImageType(
+        val questionNo: Int,
+        val value: Question?,
+    ) : CreateProblemPhotoState()
+
+    data class AnswerImageType(
+        val questionNo: Int,
+        val answerNo: Int,
+        val value: Answer.ImageChoice,
+    ) : CreateProblemPhotoState()
+
+    object AdditionalThumbnailType: CreateProblemPhotoState()
 }

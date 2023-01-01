@@ -67,6 +67,7 @@ import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
@@ -88,8 +89,8 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
     val context = LocalContext.current
     val vm = LocalViewModel.current as CreateProblemViewModel
-    val state =
-        vm.state.collectAsStateWithLifecycle().value.examInformation.additionalInfoArea
+    val examInformationState = vm.state.collectAsStateWithLifecycle().value.examInformation
+    val state = examInformationState.additionalInfoArea
     val keyboard = LocalSoftwareKeyboardController.current
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val toast = rememberToast()
@@ -107,7 +108,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
             )
         )
     }
-    var photoPickerVisible by remember { mutableStateOf(false) }
+    val photoState = remember(examInformationState.photoState) { examInformationState.photoState }
     var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
 
     // 단일 권한 설정 launcher
@@ -117,7 +118,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
         if (isGranted) {
             launch {
                 vm.loadGalleryImages()
-                photoPickerVisible = true // 안고 가야하는건가.. ViewModel 에는 두기 싫어서 일단 이렇게 둠
+                vm.updatePhotoState(null)
             }
         } else {
             toast(permissionErrorMessage)
@@ -140,9 +141,9 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
 //    }
 
     BackHandler {
-        if (photoPickerVisible) {
+        if (photoState != null) {
             launch {
-                photoPickerVisible = false
+                vm.updatePhotoState(null)
                 sheetState.hide()
             }
         } else {
@@ -219,10 +220,10 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
                                 val result = imagePermission.check(context)
                                 if (result) {
                                     vm.loadGalleryImages()
+                                    vm.updatePhotoState(CreateProblemPhotoState.AdditionalThumbnailType)
                                 } else {
                                     launcher.launch(imagePermission)
                                 }
-                                photoPickerVisible = result
                             }
                         }
                     )
@@ -271,7 +272,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
     }
 
     // 갤러리 썸네일 선택 picker
-    if (photoPickerVisible) {
+    if (photoState != null) {
         PhotoPicker(
             modifier = Modifier
                 .padding(top = systemBarPaddings.calculateTopPadding())
@@ -289,14 +290,14 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
             },
             onCloseClick = {
                 launch {
-                    photoPickerVisible = false
+                    vm.updatePhotoState(null)
                     sheetState.hide()
                 }
             },
             onAddClick = {
                 launch {
                     vm.setThumbnail(galleryImages[galleryImagesSelectionIndex].toUri())
-                    photoPickerVisible = false
+                    vm.updatePhotoState(null)
                     sheetState.hide()
                 }
             },
