@@ -23,6 +23,7 @@ import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ThumbnailType
@@ -332,7 +333,34 @@ class CreateProblemViewModel @Inject constructor(
                 else -> null
             }
 
-            Answer.Type.ImageChoice -> throw Exception()
+            Answer.Type.ImageChoice -> when (newAnswer) {
+                is Answer.Short -> Answer.ImageChoice(persistentListOf())
+                is Answer.Choice -> Answer.ImageChoice(
+                    newAnswer.choices.mapIndexed { index, choiceModel ->
+                        if (index == answerIndex)
+                            ImageChoiceModel(
+                                answer ?: choiceModel.text,
+                                "${urlSource ?: ""}"
+                            )
+                        else
+                            ImageChoiceModel(choiceModel.text, "")
+                    }.toPersistentList()
+                )
+
+                is Answer.ImageChoice -> Answer.ImageChoice(
+                    newAnswer.imageChoice.mapIndexed { index, imageChoiceModel ->
+                        if (index == answerIndex)
+                            ImageChoiceModel(
+                                answer ?: imageChoiceModel.text,
+                                "${urlSource ?: imageChoiceModel.imageUrl}"
+                            )
+                        else
+                            ImageChoiceModel(imageChoiceModel.text, imageChoiceModel.imageUrl)
+                    }.toPersistentList()
+                )
+
+                else -> null
+            }
 
             else -> null
         }
@@ -349,7 +377,8 @@ class CreateProblemViewModel @Inject constructor(
         questionNo: Int,
         correctAnswer: String? = null,
     ) = updateState { prevState ->
-        val newCorrectAnswers = prevState.examInformation.createProblemArea.correctAnswers.toMutableMap()
+        val newCorrectAnswers =
+            prevState.examInformation.createProblemArea.correctAnswers.toMutableMap()
         newCorrectAnswers[questionNo] = correctAnswer
 
         prevState.copy(
@@ -373,11 +402,17 @@ class CreateProblemViewModel @Inject constructor(
 
             Answer.Type.Choice -> {
                 val choiceAnswer = newAnswer as? Answer.Choice ?: throw Exception()
-                val newChoices = choiceAnswer.choices.toMutableList().apply { this.add(ChoiceModel("")) }
+                val newChoices =
+                    choiceAnswer.choices.toMutableList().apply { this.add(ChoiceModel("")) }
                 Answer.Choice(newChoices.toImmutableList())
             }
 
-            Answer.Type.ImageChoice -> throw Exception()
+            Answer.Type.ImageChoice -> {
+                val choiceAnswer = newAnswer as? Answer.ImageChoice ?: throw Exception()
+                val newImageChoices = choiceAnswer.imageChoice.toMutableList()
+                    .apply { this.add(ImageChoiceModel("", "")) }
+                Answer.ImageChoice(newImageChoices.toImmutableList())
+            }
 
             else -> null
         }

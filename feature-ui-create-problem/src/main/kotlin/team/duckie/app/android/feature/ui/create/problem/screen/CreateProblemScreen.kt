@@ -24,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -80,6 +81,8 @@ import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
+import team.duckie.quackquack.ui.border.QuackBorder
+import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasic2TextField
 import team.duckie.quackquack.ui.component.QuackBasicTextField
@@ -248,7 +251,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         text = stringResource(id = R.string.create_problem_bottom_sheet_title_choice_media),
                         onClick = {
                             launch {
-                                // vm.addProblem(Answer.Type.ImageChoice)
+                                vm.addProblem(Answer.Type.ImageChoice)
                                 sheetState.hide()
                             }
                         }
@@ -412,7 +415,78 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                 }
 
                                 Answer.Type.ImageChoice -> {
-                                    // TODO(riflockle7): 객관식/사진 Layout 구현하기
+                                    val question = selectedQuestions[questionNo]
+                                    val answers = selectedAnswers[questionNo] as Answer.ImageChoice
+                                    val correctAnswer = correctAnswers[questionNo]
+                                    ImageChoiceProblemLayout(
+                                        questionNo = questionNo,
+                                        question = question,
+                                        titleChanged = { newTitle ->
+                                            vm.setQuestion(
+                                                question?.type,
+                                                questionNo,
+                                                title = newTitle,
+                                            )
+                                        },
+                                        imageClick = {
+                                            launch {
+                                                val result = imagePermission.check(context)
+                                                if (result) {
+                                                    vm.loadGalleryImages()
+                                                    photoPickerVisible =
+                                                        PhotoState.QuestionImageType(
+                                                            questionNo,
+                                                            question
+                                                        )
+                                                    keyboard?.hide()
+                                                } else {
+                                                    launcher.launch(imagePermission)
+                                                }
+                                            }
+                                        },
+                                        onDropdownItemClick = {
+                                            launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
+                                        },
+                                        answers = answers,
+                                        answerTextChanged = { newTitle, answerNo ->
+                                            vm.setAnswer(
+                                                questionNo,
+                                                answerNo,
+                                                Answer.Type.ImageChoice,
+                                                answer = newTitle,
+                                            )
+                                        },
+                                        answerImageClick = { answersNo ->
+                                            launch {
+                                                val result = imagePermission.check(context)
+                                                if (result) {
+                                                    vm.loadGalleryImages()
+                                                    photoPickerVisible =
+                                                        PhotoState.AnswerImageType(
+                                                            questionNo,
+                                                            answersNo,
+                                                            answers,
+                                                        )
+                                                    keyboard?.hide()
+                                                } else {
+                                                    launcher.launch(imagePermission)
+                                                }
+                                            }
+                                        },
+                                        addAnswerClick = {
+                                            vm.addAnswer(
+                                                questionNo = questionNo,
+                                                Answer.Type.ImageChoice
+                                            )
+                                        },
+                                        correctAnswers = correctAnswer,
+                                        setCorrectAnswerClick = { newCorrectAnswer ->
+                                            vm.setCorrectAnswer(
+                                                questionNo = questionNo,
+                                                correctAnswer = newCorrectAnswer,
+                                            )
+                                        },
+                                    )
                                 }
 
                                 else -> {}
@@ -481,7 +555,13 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                             }
 
                             is PhotoState.AnswerImageType -> {
-
+                                vm.setAnswer(
+                                    questionNo,
+                                    answerNo,
+                                    Answer.Type.ImageChoice,
+                                    urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
+                                )
+                                photoPickerVisible = null
                             }
 
                             else -> {}
@@ -570,6 +650,109 @@ fun ChoiceProblemLayout(
                 }
             )
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        QuackSubtitle(
+            modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
+            text = "+ 보기 추가",
+            onClick = { addAnswerClick() }
+        )
+    }
+}
+
+/** 문제 만들기 객관식/사진 Layout */
+@Composable
+fun ImageChoiceProblemLayout(
+    questionNo: Int,
+    question: Question?,
+    titleChanged: (String) -> Unit,
+    imageClick: () -> Unit,
+    onDropdownItemClick: (Int) -> Unit,
+    answers: Answer.ImageChoice?,
+    answerTextChanged: (String, Int) -> Unit,
+    answerImageClick: (Int) -> Unit,
+    addAnswerClick: () -> Unit,
+    correctAnswers: String?,
+    setCorrectAnswerClick: (String?) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        // TODO(riflockle7): 최상단 Line 없는 TextField 필요
+        QuackBasic2TextField(
+            modifier = Modifier,
+            text = question?.text ?: "",
+            onTextChanged = titleChanged,
+            placeholderText = "$questionNo. 문제를 입력해주세요.",
+            trailingIcon = QuackIcon.Image,
+            trailingIconOnClick = imageClick,
+        )
+
+        (question as? Question.Image)?.imageUrl?.let {
+            QuackImage(
+                modifier = Modifier.padding(top = 24.dp),
+                src = it,
+                size = DpSize(200.dp, 200.dp),
+            )
+        }
+
+        // TODO(riflockle7): border 없는 DropDownCard 필요
+        QuackDropDownCard(
+            modifier = Modifier.padding(top = 24.dp),
+            text = "객관식/사진",
+            onClick = { onDropdownItemClick(questionNo) }
+        )
+
+        NoLazyGridItems(
+            count = answers?.imageChoice?.size ?: 0,
+            nColumns = 2,
+            paddingValues = PaddingValues(top = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            itemContent = { index ->
+                val answerNo = index + 1
+                val answerItem = answers?.imageChoice?.get(index)
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .applyAnimatedQuackBorder(border = QuackBorder(color = QuackColor.Gray4))
+                        .padding(12.dp)
+                ) {
+                    if (answerItem?.imageUrl.isNullOrEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .quackClickable { answerImageClick(answerNo) }
+                                .background(color = QuackColor.Gray4.composeColor)
+                                .padding(52.dp),
+                        ) {
+                            QuackImage(
+                                src = QuackIcon.Image,
+                                size = DpSize(32.dp, 32.dp)
+                            )
+                        }
+                    } else {
+                        answerItem?.imageUrl?.let { imageUrl ->
+                            QuackImage(
+                                src = imageUrl,
+                                size = DpSize(136.dp, 136.dp),
+                                onClick = { answerImageClick(answerNo) }
+                            )
+                        }
+                    }
+
+                    QuackBasicTextField(
+                        text = answers?.imageChoice?.get(index)?.text ?: "",
+                        onTextChanged = { newAnswer ->
+                            answerTextChanged(newAnswer, answerNo)
+                        },
+                        placeholderText = "${answerNo}번 보기"
+                    )
+                }
+            }
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -674,7 +857,7 @@ sealed class PhotoState {
 
     data class AnswerImageType(
         val questionNo: Int,
-        val choiceNo: Int,
+        val answerNo: Int,
         val value: Answer.ImageChoice,
     ) : PhotoState()
 }
