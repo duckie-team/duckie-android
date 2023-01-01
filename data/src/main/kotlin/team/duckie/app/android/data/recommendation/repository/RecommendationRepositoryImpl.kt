@@ -12,6 +12,7 @@ import androidx.paging.PagingSource
 import team.duckie.app.android.data.recommendation.model.RecommendationsResponse
 import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSource
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
+import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 
 class RecommendationRepositoryImpl(
@@ -33,7 +34,10 @@ class RecommendationRepositoryImpl(
         // TODO(limsaehyun): repository 작업 필요
     }
 
-    override suspend fun fetchRecommendTags(tag: String) {
+    override suspend fun fetchRecommendTags(
+        tag: String,
+        type: SearchType,
+    ) {
         // TODO(limsaehyun): repository 작업 필요
     }
 }

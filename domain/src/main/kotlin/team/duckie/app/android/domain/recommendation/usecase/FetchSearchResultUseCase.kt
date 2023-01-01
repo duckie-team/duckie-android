@@ -8,17 +8,22 @@
 package team.duckie.app.android.domain.recommendation.usecase
 
 import androidx.compose.runtime.Immutable
+import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import javax.inject.Inject
 
 @Immutable
-class FetchRecommendTagUseCase @Inject constructor(
+class FetchSearchResultUseCase @Inject constructor(
     private val repository: RecommendationRepository,
 ) {
 
-    suspend operator fun invoke(tag: String) = kotlin.runCatching {
+    suspend operator fun invoke(
+        tag: String,
+        type: SearchType,
+    ) = kotlin.runCatching {
         repository.fetchRecommendTags(
             tag = tag,
+            type = type,
         )
     }
 }
