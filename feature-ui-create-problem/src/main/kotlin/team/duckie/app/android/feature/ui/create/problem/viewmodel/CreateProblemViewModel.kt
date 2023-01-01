@@ -263,6 +263,41 @@ class CreateProblemViewModel @Inject constructor(
         )
     }
 
+    /**
+     * 문제를 삭제한다.
+     * // TODO(riflockle7): 좀더 깔끔하게 할 수 있는 방법이 없을까?
+     */
+    fun removeProblem(questionNo: Int) = updateState { prevState ->
+        val prevCreateProblemArea = prevState.examInformation.createProblemArea
+        val newQuestions = prevCreateProblemArea.questions.toMutableMap()
+            .apply { this.remove(questionNo) }.map { it.value }
+            .mapIndexed { index, question -> index + 1 to question }.toMap()
+        val newAnswers = prevCreateProblemArea.answers.toMutableMap()
+            .apply { this.remove(questionNo) }.map { it.value }
+            .mapIndexed { index, answer -> index + 1 to answer }.toMap()
+        val newCorrectAnswers = prevCreateProblemArea.correctAnswers.toMutableMap()
+            .apply { this.remove(questionNo) }.map { it.value }
+            .mapIndexed { index, correctAnswer -> index + 1 to correctAnswer }.toMap()
+        val newHints = prevCreateProblemArea.hints.toMutableMap()
+            .apply { this.remove(questionNo) }.map { it.value }
+            .mapIndexed { index, hint -> index + 1 to hint }.toMap()
+        val newMemos = prevCreateProblemArea.memos.toMutableMap()
+            .apply { this.remove(questionNo) }.map { it.value }
+            .mapIndexed { index, memo -> index + 1 to memo }.toMap()
+
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(
+                createProblemArea = prevState.examInformation.createProblemArea.copy(
+                    questions = newQuestions,
+                    answers = newAnswers,
+                    correctAnswers = newCorrectAnswers,
+                    hints = newHints,
+                    memos = newMemos,
+                )
+            ),
+        )
+    }
+
     fun setQuestion(
         questionType: Question.Type?,
         questionNo: Int,
@@ -337,6 +372,38 @@ class CreateProblemViewModel @Inject constructor(
     ) = updateState { prevState ->
         val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
             .generateAnswers(questionNo, answerNo, answerType, answer, urlSource)
+
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(
+                createProblemArea = prevState.examInformation.createProblemArea.copy(
+                    answers = newAnswers
+                )
+            ),
+        )
+    }
+
+    fun removeAnswer(
+        questionNo: Int,
+        answerNo: Int,
+    ) = updateState { prevState ->
+        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
+        val newAnswer = newAnswers[questionNo]
+        newAnswers[questionNo] = when (newAnswer) {
+            is Answer.Short -> throw Exception("주관식 답변은 삭제할 수 없습니다.")
+            is Answer.Choice -> Answer.Choice(
+                newAnswer.choices.toMutableList()
+                    .apply { removeAt(answerNo - 1) }
+                    .toImmutableList()
+            )
+
+            is Answer.ImageChoice -> Answer.ImageChoice(
+                newAnswer.imageChoice.toMutableList()
+                    .apply { removeAt(answerNo - 1) }
+                    .toImmutableList()
+            )
+
+            else -> throw Exception()
+        }
 
         prevState.copy(
             examInformation = prevState.examInformation.copy(

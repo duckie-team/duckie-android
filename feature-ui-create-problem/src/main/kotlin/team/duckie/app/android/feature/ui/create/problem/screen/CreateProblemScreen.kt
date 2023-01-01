@@ -92,6 +92,7 @@ import team.duckie.quackquack.ui.component.QuackBasic2TextField
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackBorderTextField
+import team.duckie.quackquack.ui.component.QuackDialog
 import team.duckie.quackquack.ui.component.QuackDropDownCard
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
@@ -170,6 +171,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
         )
     }
     val photoState = remember(examInformationState.photoState) { examInformationState.photoState }
+    var deleteDialogNo: (Pair<Int, Int?>)? by remember { mutableStateOf(null) }
     var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
 
     // 단일 권한 설정 launcher
@@ -351,6 +353,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             answer = newTitle,
                                         )
                                     },
+                                    deleteLongClick = { deleteDialogNo = Pair(questionNo, null) }
                                 )
 
                                 is Answer.Choice -> ChoiceProblemLayout(
@@ -403,6 +406,9 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             correctAnswer = newCorrectAnswer,
                                         )
                                     },
+                                    deleteLongClick = { answerNo: Int? ->
+                                        deleteDialogNo = Pair(questionNo, answerNo)
+                                    }
                                 )
 
                                 is Answer.ImageChoice -> ImageChoiceProblemLayout(
@@ -473,6 +479,9 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             correctAnswer = newCorrectAnswer,
                                         )
                                     },
+                                    deleteLongClick = { answerNo ->
+                                        deleteDialogNo = Pair(questionNo, answerNo)
+                                    }
                                 )
 
                                 else -> {}
@@ -556,6 +565,24 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
             },
         )
     }
+
+    QuackDialog(
+        title = "삭제하시겠습니까?",
+        visible = deleteDialogNo != null,
+        leftButtonText = "취소",
+        leftButtonOnClick = { deleteDialogNo = null },
+        rightButtonText = "확인",
+        rightButtonOnClick = {
+            deleteDialogNo?.let {
+                val questionNo = it.first
+                it.second?.let {answerNo ->
+                    vm.removeAnswer(questionNo, answerNo)
+                }  ?: vm.removeProblem(questionNo)
+            }
+            deleteDialogNo = null
+        },
+        onDismissRequest = { }
+    )
 }
 
 private fun CoroutineScopeContent.hideBottomSheet(
@@ -591,10 +618,11 @@ private fun CreateProblemTitleLayout(
     imageClick: () -> Unit,
     dropDownTitle: String,
     onDropdownItemClick: (Int) -> Unit,
+    deleteLongClick: () -> Unit,
 ) {
     // TODO(riflockle7): 최상단 Line 없는 TextField 필요
     QuackBasic2TextField(
-        modifier = Modifier,
+        modifier = Modifier.quackClickable(onLongClick = { deleteLongClick() }) {},
         text = question?.text ?: "",
         onTextChanged = titleChanged,
         placeholderText = "$questionNo. 문제를 입력해주세요.",
@@ -631,6 +659,7 @@ private fun ChoiceProblemLayout(
     addAnswerClick: () -> Unit,
     correctAnswers: String?,
     setCorrectAnswerClick: (String?) -> Unit,
+    deleteLongClick: (Int?) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -643,8 +672,8 @@ private fun ChoiceProblemLayout(
             titleChanged,
             imageClick,
             answers.type.title,
-            onDropdownItemClick,
-        )
+            onDropdownItemClick
+        ) { deleteLongClick(null) }
 
         answers.choices.forEachIndexed { answerIndex, choiceModel ->
             val answerNo = answerIndex + 1
@@ -659,9 +688,10 @@ private fun ChoiceProblemLayout(
                 trailingContent = {
                     val isChecked = correctAnswers == "$answerNo"
                     Column(
-                        modifier = Modifier.quackClickable {
-                            setCorrectAnswerClick(if (isChecked) "" else "$answerNo")
-                        },
+                        modifier = Modifier.quackClickable(
+                            onLongClick = { deleteLongClick(answerNo) },
+                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") }
+                        ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         QuackRoundCheckBox(checked = isChecked)
@@ -704,6 +734,7 @@ private fun ImageChoiceProblemLayout(
     addAnswerClick: () -> Unit,
     correctAnswers: String?,
     setCorrectAnswerClick: (String?) -> Unit,
+    deleteLongClick: (Int?) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -717,7 +748,7 @@ private fun ImageChoiceProblemLayout(
             imageClick,
             answers.type.title,
             onDropdownItemClick,
-        )
+        ) { deleteLongClick(null) }
 
         NoLazyGridItems(
             count = answers.imageChoice.size,
@@ -747,13 +778,12 @@ private fun ImageChoiceProblemLayout(
                             )
                         }
                     } else {
-                        answerItem.imageUrl.let { imageUrl ->
-                            QuackImage(
-                                src = imageUrl,
-                                size = DpSize(136.dp, 136.dp),
-                                onClick = { answerImageClick(answerNo) }
-                            )
-                        }
+                        QuackImage(
+                            src = answerItem.imageUrl,
+                            size = DpSize(136.dp, 136.dp),
+                            onClick = { answerImageClick(answerNo) },
+                            onLongClick = { deleteLongClick(answerNo) },
+                        )
                     }
 
                     QuackBasicTextField(
@@ -789,6 +819,7 @@ private fun ShortAnswerProblemLayout(
     onDropdownItemClick: (Int) -> Unit,
     answers: Answer.Short,
     answerTextChanged: (String, Int) -> Unit,
+    deleteLongClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -802,7 +833,7 @@ private fun ShortAnswerProblemLayout(
             imageClick,
             answers.type.title,
             onDropdownItemClick,
-        )
+        ) { deleteLongClick() }
 
         // TODO(riflockle7): underLine 없는 TextField 필요, Answer 연동 시 추가 작업 필요
         QuackBasicTextField(
