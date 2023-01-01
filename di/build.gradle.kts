@@ -20,7 +20,5 @@ dependencies {
     implementations(
         projects.data,
         projects.domain,
-        projects.utilKotlin,
-        libs.bundles.ktor,
     )
 }
