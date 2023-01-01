@@ -13,7 +13,6 @@ import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import team.duckie.app.android.convention.ApplicationConstants
 import team.duckie.app.android.convention.applyPlugins
 import team.duckie.app.android.convention.configureApplication
 
@@ -30,14 +29,6 @@ internal class AndroidLibraryPlugin : Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 configureApplication(this)
-
-                buildFeatures {
-                    buildConfig = false
-                }
-
-                defaultConfig.apply {
-                    targetSdk = ApplicationConstants.targetSdk
-                }
             }
         }
     }
