@@ -20,7 +20,7 @@ internal sealed class OnboardState {
 
     class CategoriesLoaded(val catagories: ImmutableList<Category>) : OnboardState()
     class FileUploaded(val url: String) : OnboardState()
-    class TagCreated(val id: Int): OnboardState()
+    class TagCreated(val id: Int) : OnboardState()
 
     class Error(val exception: Throwable) : OnboardState()
 }

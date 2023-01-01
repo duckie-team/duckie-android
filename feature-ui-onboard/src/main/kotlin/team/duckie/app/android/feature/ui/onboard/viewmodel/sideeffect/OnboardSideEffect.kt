@@ -15,8 +15,8 @@ internal sealed class OnboardSideEffect {
     class UpdateUser(val user: User) : OnboardSideEffect()
     class UpdateAccessToken(val accessToken: String) : OnboardSideEffect()
 
-    class AttachAccessTokenToHeader(val accessToken: String): OnboardSideEffect()
-    class DelegateJoin(val kakaoAccessToken: String): OnboardSideEffect()
+    class AttachAccessTokenToHeader(val accessToken: String) : OnboardSideEffect()
+    class DelegateJoin(val kakaoAccessToken: String) : OnboardSideEffect()
 
     class ReportError(val exception: Throwable) : OnboardSideEffect()
 }
