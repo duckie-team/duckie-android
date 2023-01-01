@@ -141,6 +141,8 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     val permissionErrorMessage =
         stringResource(id = R.string.create_problem_permission_toast_message)
 
+    val problemCount = remember(state.questions.size) { state.questions.size }
+
     // Gallery 관련
     val selectedQuestions = remember(state.questions) { state.questions }
     val selectedAnswers = remember(state.answers) { state.answers }
@@ -223,6 +225,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         text = stringResource(id = R.string.create_problem_bottom_sheet_title_choice_text),
                         onClick = {
                             launch {
+                                // vm.addProblem(Answer.Type.Choice)
                                 sheetState.hide()
                             }
                         }
@@ -241,6 +244,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         text = stringResource(id = R.string.create_problem_bottom_sheet_title_choice_media),
                         onClick = {
                             launch {
+                                // vm.addProblem(Answer.Type.ImageChoice)
                                 sheetState.hide()
                             }
                         }
@@ -259,6 +263,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         text = stringResource(id = R.string.create_problem_bottom_sheet_title_short_form),
                         onClick = {
                             launch {
+                                vm.addProblem(Answer.Type.ShortAnswer)
                                 sheetState.hide()
                             }
                         }
@@ -309,42 +314,47 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         }
                     },
                     content = {
-                        items(19) { index ->
+                        items(problemCount) { index ->
                             val questionNo = index + 1
-                            if (questionNo % 3 == 0) {
-                                val question = selectedQuestions[questionNo]
-                                ShortFormProblemLayout(
-                                    questionNo = questionNo,
-                                    question = question,
-                                    titleChanged = { newTitle ->
-                                        vm.setQuestion(
-                                            question?.type,
-                                            questionNo,
-                                            title = newTitle,
-                                        )
-                                    },
-                                    imageClick = {
-                                        launch {
-                                            val result = imagePermission.check(context)
-                                            if (result) {
-                                                vm.loadGalleryImages()
-                                                photoPickerVisible = PhotoState.QuestionImageType(
-                                                    questionNo,
-                                                    question as Question.Image?
-                                                )
-                                            } else {
-                                                launcher.launch(imagePermission)
+                            when(selectedAnswers[questionNo]?.type){
+                                Answer.Type.ShortAnswer -> {
+                                    val question = selectedQuestions[questionNo]
+                                    ShortFormProblemLayout(
+                                        questionNo = questionNo,
+                                        question = question,
+                                        titleChanged = { newTitle ->
+                                            vm.setQuestion(
+                                                question?.type,
+                                                questionNo,
+                                                title = newTitle,
+                                            )
+                                        },
+                                        imageClick = {
+                                            launch {
+                                                val result = imagePermission.check(context)
+                                                if (result) {
+                                                    vm.loadGalleryImages()
+                                                    photoPickerVisible = PhotoState.QuestionImageType(
+                                                        questionNo,
+                                                        question
+                                                    )
+                                                } else {
+                                                    launcher.launch(imagePermission)
+                                                }
                                             }
+                                        },
+                                        onDropdownItemClick = {
+                                            launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
                                         }
-                                    },
-                                    onDropdownItemClick = {
-                                        launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
-                                    }
-                                )
-                            } else if (questionNo % 3 == 1) {
-                                // TODO(riflockle7): 객관식/글 Layout 구현하기
-                            } else {
-                                // TODO(riflockle7): 객관식/사진 Layout 구현하기
+                                    )
+                                }
+                                Answer.Type.Choice -> {
+                                    // TODO(riflockle7): 객관식/글 Layout 구현하기
+                                }
+                                Answer.Type.ImageChoice -> {
+                                    // TODO(riflockle7): 객관식/사진 Layout 구현하기
+                                }
+                                else -> {}
                             }
                         }
 
@@ -402,7 +412,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         when (this) {
                             is PhotoState.QuestionImageType -> {
                                 vm.setQuestion(
-                                    this.value?.type,
+                                    Question.Type.Image,
                                     this.questionNo,
                                     urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
                                 )
@@ -513,7 +523,7 @@ fun CreateProblemBottomLayout() {
 sealed class PhotoState {
     data class QuestionImageType(
         val questionNo: Int,
-        val value: Question.Image?,
+        val value: Question?,
     ) : PhotoState()
 
     data class AnswerImageType(

@@ -211,6 +211,48 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     // CreateProblem
+    /** 문제를 만든다. 아래 규칙대로 [Problem] 을 만든다.
+     *
+     * [Problem.question]: 처음 문제를 만들 때 기본 [Question.Type] 은 [Question.Text] 이다.
+     * [Problem.answer]: 기본 [Answer.Type] 은 타입값에 기반하여 생성해준다. (객관식일 경우, 기본 Choice 개수는 0개이다)
+     * [Problem.correctAnswer]: 처음 문제를 만들 때 기본 값은 빈 값이다.
+     * [Problem.hint]: 처음 문제를 만들 때 기본 값은 null 값이다.
+     * [Problem.memo]: 처음 문제를 만들 때 기본 값은 null 값이다.
+     */
+    fun addProblem(answerType: Answer.Type) = updateState { prevState ->
+        val newQuestion = Question.Text(text = "")
+        val newAnswer = when (answerType) {
+            Answer.Type.ShortAnswer -> Answer.Short("")
+            Answer.Type.Choice -> Answer.Choice(persistentListOf())
+            Answer.Type.ImageChoice -> Answer.ImageChoice(persistentListOf())
+        }
+
+        val prevCreateProblemArea = prevState.examInformation.createProblemArea
+        val newProblemNo = prevCreateProblemArea.questions.size + 1
+        val newQuestions = prevCreateProblemArea.questions.toMutableMap()
+            .apply { this[newProblemNo] = newQuestion }
+        val newAnswers = prevCreateProblemArea.answers.toMutableMap()
+            .apply { this[newProblemNo] = newAnswer }
+        val newCorrectAnswers = prevCreateProblemArea.correctAnswers.toMutableMap()
+            .apply { this[newProblemNo] = "" }
+        val newHints = prevCreateProblemArea.hints.toMutableMap()
+            .apply { this[newProblemNo] = "" }
+        val newMemos = prevCreateProblemArea.memos.toMutableMap()
+            .apply { this[newProblemNo] = "" }
+
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(
+                createProblemArea = prevState.examInformation.createProblemArea.copy(
+                    questions = newQuestions,
+                    answers = newAnswers,
+                    correctAnswers = newCorrectAnswers,
+                    hints = newHints,
+                    memos = newMemos,
+                )
+            ),
+        )
+    }
+
     fun setQuestion(
         questionType: Question.Type?,
         questionNo: Int,
@@ -218,26 +260,25 @@ class CreateProblemViewModel @Inject constructor(
         urlSource: Uri? = null,
     ) = updateState { prevState ->
         val newQuestions = prevState.examInformation.createProblemArea.questions.toMutableMap()
-        val changeQuestion = newQuestions[questionNo]
-
+        val newQuestion = newQuestions[questionNo]
         newQuestions[questionNo] = when (questionType) {
             Question.Type.Text -> Question.Text(
-                title ?: (changeQuestion?.text ?: ""),
+                title ?: (newQuestion?.text ?: ""),
             )
 
             Question.Type.Image -> Question.Image(
-                title ?: changeQuestion?.text ?: "",
-                "${urlSource ?: changeQuestion ?: ""}"
+                title ?: newQuestion?.text ?: "",
+                "${urlSource ?: newQuestion ?: ""}"
             )
 
             Question.Type.Audio -> Question.Audio(
-                title ?: changeQuestion?.text ?: "",
-                "${urlSource ?: changeQuestion ?: ""}"
+                title ?: newQuestion?.text ?: "",
+                "${urlSource ?: newQuestion ?: ""}"
             )
 
             Question.Type.Video -> Question.Video(
-                title ?: changeQuestion?.text ?: "",
-                "${urlSource ?: changeQuestion ?: ""}"
+                title ?: newQuestion?.text ?: "",
+                "${urlSource ?: newQuestion ?: ""}"
             )
 
             else -> null
