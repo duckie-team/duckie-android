@@ -326,7 +326,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                             when (selectedAnswers[questionNo]?.type) {
                                 Answer.Type.ShortAnswer -> {
                                     val question = selectedQuestions[questionNo]
-                                    ShortFormProblemLayout(
+                                    ShortAnswerProblemLayout(
                                         questionNo = questionNo,
                                         question = question,
                                         titleChanged = { newTitle ->
@@ -577,6 +577,40 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     }
 }
 
+@Composable
+private fun CreateProblemTitleLayout(
+    questionNo: Int,
+    question: Question?,
+    titleChanged: (String) -> Unit,
+    imageClick: () -> Unit,
+    onDropdownItemClick: (Int) -> Unit,
+) {
+    // TODO(riflockle7): 최상단 Line 없는 TextField 필요
+    QuackBasic2TextField(
+        modifier = Modifier,
+        text = question?.text ?: "",
+        onTextChanged = titleChanged,
+        placeholderText = "$questionNo. 문제를 입력해주세요.",
+        trailingIcon = QuackIcon.Image,
+        trailingIconOnClick = imageClick,
+    )
+
+    (question as? Question.Image)?.imageUrl?.let {
+        QuackImage(
+            modifier = Modifier.padding(top = 24.dp),
+            src = it,
+            size = DpSize(200.dp, 200.dp),
+        )
+    }
+
+    // TODO(riflockle7): border 없는 DropDownCard 필요
+    QuackDropDownCard(
+        modifier = Modifier.padding(top = 24.dp),
+        text = "객관식/글",
+        onClick = { onDropdownItemClick(questionNo) }
+    )
+}
+
 /** 문제 만들기 객관식/글 Layout */
 @Composable
 fun ChoiceProblemLayout(
@@ -596,29 +630,12 @@ fun ChoiceProblemLayout(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        // TODO(riflockle7): 최상단 Line 없는 TextField 필요
-        QuackBasic2TextField(
-            modifier = Modifier,
-            text = question?.text ?: "",
-            onTextChanged = titleChanged,
-            placeholderText = "$questionNo. 문제를 입력해주세요.",
-            trailingIcon = QuackIcon.Image,
-            trailingIconOnClick = imageClick,
-        )
-
-        (question as? Question.Image)?.imageUrl?.let {
-            QuackImage(
-                modifier = Modifier.padding(top = 24.dp),
-                src = it,
-                size = DpSize(200.dp, 200.dp),
-            )
-        }
-
-        // TODO(riflockle7): border 없는 DropDownCard 필요
-        QuackDropDownCard(
-            modifier = Modifier.padding(top = 24.dp),
-            text = "객관식/글",
-            onClick = { onDropdownItemClick(questionNo) }
+        CreateProblemTitleLayout(
+            questionNo,
+            question,
+            titleChanged,
+            imageClick,
+            onDropdownItemClick,
         )
 
         answers?.choices?.forEachIndexed { answerIndex, choiceModel ->
@@ -683,29 +700,12 @@ fun ImageChoiceProblemLayout(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        // TODO(riflockle7): 최상단 Line 없는 TextField 필요
-        QuackBasic2TextField(
-            modifier = Modifier,
-            text = question?.text ?: "",
-            onTextChanged = titleChanged,
-            placeholderText = "$questionNo. 문제를 입력해주세요.",
-            trailingIcon = QuackIcon.Image,
-            trailingIconOnClick = imageClick,
-        )
-
-        (question as? Question.Image)?.imageUrl?.let {
-            QuackImage(
-                modifier = Modifier.padding(top = 24.dp),
-                src = it,
-                size = DpSize(200.dp, 200.dp),
-            )
-        }
-
-        // TODO(riflockle7): border 없는 DropDownCard 필요
-        QuackDropDownCard(
-            modifier = Modifier.padding(top = 24.dp),
-            text = "객관식/사진",
-            onClick = { onDropdownItemClick(questionNo) }
+        CreateProblemTitleLayout(
+            questionNo,
+            question,
+            titleChanged,
+            imageClick,
+            onDropdownItemClick,
         )
 
         NoLazyGridItems(
@@ -768,7 +768,7 @@ fun ImageChoiceProblemLayout(
 
 /** 문제 만들기 주관식 Layout */
 @Composable
-fun ShortFormProblemLayout(
+fun ShortAnswerProblemLayout(
     questionNo: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
@@ -780,29 +780,12 @@ fun ShortFormProblemLayout(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        // TODO(riflockle7): 최상단 Line 없는 TextField 필요
-        QuackBasic2TextField(
-            modifier = Modifier,
-            text = question?.text ?: "",
-            onTextChanged = titleChanged,
-            placeholderText = "$questionNo. 문제를 입력해주세요.",
-            trailingIcon = QuackIcon.Image,
-            trailingIconOnClick = imageClick,
-        )
-
-        (question as? Question.Image)?.imageUrl?.let {
-            QuackImage(
-                modifier = Modifier.padding(top = 24.dp),
-                src = it,
-                size = DpSize(200.dp, 200.dp),
-            )
-        }
-
-        // TODO(riflockle7): border 없는 DropDownCard 필요
-        QuackDropDownCard(
-            modifier = Modifier.padding(top = 24.dp),
-            text = "주관식",
-            onClick = { onDropdownItemClick(questionNo) }
+        CreateProblemTitleLayout(
+            questionNo,
+            question,
+            titleChanged,
+            imageClick,
+            onDropdownItemClick,
         )
 
         // TODO(riflockle7): underLine 없는 TextField 필요, Answer 연동 시 추가 작업 필요
