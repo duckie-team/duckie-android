@@ -26,7 +26,9 @@ val DuckieAuthorizationHeaderOrNothingPlugin = createClientPlugin(
 ) {
     DuckieAuthorizationHeader.accessToken?.let { accessToken ->
         onRequest { request, _ ->
-            request.headers.append("X-DUCKIE-AUTHORIZATION", accessToken)
+            // TODO: X-DUCKIE-AUTHORIZATION 으로 변경 필요
+            // See: https://sungbinland.slack.com/archives/C046SS32SEQ/p1672520272880839
+            request.headers.append("authorization", accessToken)
         }
     }
 }
