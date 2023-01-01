@@ -64,10 +64,6 @@ internal fun HomeRecommendFollowingTestScreen(
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
 
-    LaunchedEffect(Unit) {
-        vm.fetchRecommendFollowingTest()
-    }
-
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -171,9 +167,6 @@ internal fun HomeRecommendFollowingScreen(
 
             items(
                 items = state.recommendFollowing,
-                key = { categories ->
-                    categories.topic
-                }
             ) { categories ->
                 HomeFollowingInitialRecommendUsers(
                     modifier = Modifier.padding(bottom = 16.dp),

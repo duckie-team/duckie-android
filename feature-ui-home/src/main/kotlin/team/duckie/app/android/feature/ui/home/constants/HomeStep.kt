@@ -17,10 +17,6 @@ enum class HomeStep(
 
     HomeFollowingScreen(
         index = 1,
-    ),
-
-    HomeTagScreen(
-        index = 2,
     );
 
     companion object {

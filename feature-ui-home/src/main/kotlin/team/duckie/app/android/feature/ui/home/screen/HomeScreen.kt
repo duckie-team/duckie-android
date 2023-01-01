@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,11 +47,14 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
 
+    LaunchedEffect(Unit) {
+        vm.fetchRecommendFollowingTest()
+    }
+
     Column(
         modifier = Modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
         Crossfade(
             targetState = state.homeSelectedIndex,
         ) { page ->
@@ -58,9 +62,8 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
                 HomeStep.HomeRecommendScreen -> {
                     HomeRecommendScreen()
                 }
-
                 HomeStep.HomeFollowingScreen -> {
-                    if (state.recommendFollowingTest.isEmpty()) {
+                    if (state.recommendFollowingTest.isNotEmpty()) {
                         HomeRecommendFollowingTestScreen(
                             modifier = Modifier.padding(HomeHorizontalPadding),
                         )
@@ -69,10 +72,6 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
                             modifier = Modifier.padding(HomeHorizontalPadding),
                         )
                     }
-                }
-
-                HomeStep.HomeTagScreen -> {
-                    HomeTagScreen()
                 }
             }
         }

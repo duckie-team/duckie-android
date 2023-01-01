@@ -10,10 +10,8 @@ package team.duckie.app.android.feature.ui.home.viewmodel.state
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.feature.ui.home.component.DuckTestCoverItem
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
-import team.duckie.app.android.feature.ui.home.constants.TagStep
 
 data class HomeState(
     val isHomeRecommendLoading: Boolean = false,
@@ -23,11 +21,6 @@ data class HomeState(
 
     val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
-
-    val selectedTag: String = "",
-    val tagSelectedTab: TagStep = TagStep.DUCK_TEST,
-    val recommendTagTest: PersistentList<DuckTestCoverItem> = persistentListOf(),
-    val recommendTagUser: RecommendUserByTopic = RecommendUserByTopic(),
 
     val jumbotrons: PersistentList<HomeRecommendJumbotron> = persistentListOf(),
     val recommendTopics: PersistentList<RecommendTopic> = persistentListOf(),

@@ -7,21 +7,21 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel
 
-import kotlinx.collections.immutable.persistentListOf
+import androidx.compose.runtime.Immutable
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendFollowingUseCase
-import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendTagUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
-import team.duckie.app.android.feature.ui.home.component.DuckTestCoverItem
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
-import team.duckie.app.android.feature.ui.home.screen.TagStep
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 import javax.inject.Inject
-import javax.inject.Singleton
 
 private val DummyJumbotrons =
     (0..2).map { index ->
@@ -33,51 +33,23 @@ private val DummyJumbotrons =
         )
     }.toPersistentList()
 
-private val DummyRecommendTopics =
-    (0..10).map {
-        HomeState.RecommendTopic(
-            title = "쿠키좀 쿠워봤어?\n#웹툰 퀴즈",
-            tag = "#웹툰",
-            items = persistentListOf(
-                HomeState.RecommendTopic.Test(
-                    coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
-                    nickname = "세현",
-                    title = "외모지상주의 잘 알아?",
-                    examineeNumber = 20,
-                    recommendId = 1,
-                ),
-                HomeState.RecommendTopic.Test(
-                    coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
-                    nickname = "세현",
-                    title = "안 아프게 맞는법!",
-                    examineeNumber = 20,
-                    recommendId = 1,
-                ),
-                HomeState.RecommendTopic.Test(
-                    coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
-                    nickname = "세현",
-                    title = "안 아프게 맞는법!",
-                    examineeNumber = 20,
-                    recommendId = 1,
-                )
-            )
-        )
-    }.toPersistentList()
+private val DummyRecommendUsers = (0..3).map { index ->
+    DummyRecommendUser
+}.toPersistentList()
 
-private val DummyRecommendFollower = (0..3).map { index ->
+private val DummyRecommendUser =
     HomeState.RecommendUserByTopic(
-        topic = "연예인$index",
+        topic = "연예인",
         users = (0..5).map {
             HomeState.RecommendUserByTopic.User(
                 profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-                name = "닉네임",
+                name = "user$it",
                 examineeNumber = 20,
                 createAt = "1일 전",
                 userId = 0,
             )
         }.toPersistentList()
     )
-}.toPersistentList()
 
 private val DummyRecommendFollowerTest = (0..5).map {
     HomeState.FollowingTest(
@@ -92,49 +64,52 @@ private val DummyRecommendFollowerTest = (0..5).map {
     )
 }.toPersistentList()
 
-private val DummyRecommendTag = (0..10).map {
-    DuckTestCoverItem(
-        testId = it,
-        coverImg = "https://user-images.githubusercontent.com/80076029/206894333-d060111d-e78e-4294-8686-908b2c662f19.png",
-        nickname = "user$it",
-        title = "test$it",
-        examineeNumber = it,
-    )
-}.toPersistentList()
+private const val ITEMS_PER_PAGE = 10
 
-@Singleton
+@Immutable
 class HomeViewModel @Inject constructor(
     private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
     private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,
     private val fetchRecommendFollowingUseCase: FetchRecommendFollowingUseCase,
-    private val fetchRecommendTagUseCase: FetchRecommendTagUseCase,
 ) : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
 
-    // TODO(limsaehyun): Request Server
-    suspend fun fetchRecommendations() {
-        fetchRecommendationsUseCase()
+    // TODO(limsaehyun: Request Server
+    suspend fun fetchInitRecommendations() {
+        fetchRecommendationsUseCase.init()
             .onSuccess {
                 updateState { prevState ->
                     prevState.copy(
                         jumbotrons = DummyJumbotrons,
-                        recommendTopics = DummyRecommendTopics,
                     )
                 }
             }.onFailure { exception ->
                 postSideEffect {
                     HomeSideEffect.ReportError(exception)
                 }
-            }.also {
-                updateState { prevState ->
-                    prevState.copy(
-                        isHomeRecommendLoading = false,
-                    )
-                }
             }
     }
 
+
+    // TODO(limsaehyun): Request Server
+    fun fetchRecommendations() =
+        Pager(
+            pagingSourceFactory = {
+                fetchRecommendationsUseCase()
+            },
+            config = PagingConfig(
+                pageSize = ITEMS_PER_PAGE,
+                enablePlaceholders = true,
+            ),
+        ).flow
+
     // TODO(limsaehyun): Request Server
     suspend fun fetchRecommendFollowingTest() {
+        updateState { prevState ->
+            prevState.copy(
+                isHomeFollowingTestLoading = true,
+            )
+        }
+        delay(2.seconds)
         fetchFollowingTestUseCase()
             .onSuccess {
                 updateState { prevState ->
@@ -149,7 +124,7 @@ class HomeViewModel @Inject constructor(
             }.also {
                 updateState { prevState ->
                     prevState.copy(
-                        isHomeRecommendLoading = false,
+                        isHomeFollowingTestLoading = false,
                     )
                 }
             }
@@ -157,11 +132,17 @@ class HomeViewModel @Inject constructor(
 
     // TODO(limsaehyun): Request Server
     suspend fun fetchRecommendFollowing() {
+        updateState { prevState ->
+            prevState.copy(
+                isHomeFollowingInitialLoading = true,
+            )
+        }
+        delay(2.seconds)
         fetchRecommendFollowingUseCase()
             .onSuccess {
                 updateState { prevState ->
                     prevState.copy(
-                        recommendFollowing = DummyRecommendFollower,
+                        recommendFollowing = DummyRecommendUsers,
                     )
                 }
             }.onFailure { exception ->
@@ -175,28 +156,6 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             }
-    }
-
-    suspend fun fetchRecommendTag(tag: String) {
-        fetchRecommendTagUseCase(
-            tag = tag,
-        ).onSuccess {
-            updateState { prevState ->
-                prevState.copy(
-                    recommendByTags = DummyRecommendTag,
-                )
-            }
-        }.onFailure { exception ->
-            postSideEffect {
-                HomeSideEffect.ReportError(exception)
-            }
-        }.also {
-            updateState { prevState ->
-                prevState.copy(
-                    isHomeTagLoading = false,
-                )
-            }
-        }
     }
 
     fun navigationPage(
@@ -215,26 +174,6 @@ class HomeViewModel @Inject constructor(
         updateState { prevState ->
             prevState.copy(
                 homeSelectedIndex = step,
-            )
-        }
-    }
-
-    fun changedTagSelectedTab(
-        step: TagStep,
-    ) {
-        updateState { prevState ->
-            prevState.copy(
-                tagSelectedTabIndex = step,
-            )
-        }
-    }
-
-    fun selectedTag(
-        tag: String,
-    ) {
-        updateState { prevState ->
-            prevState.copy(
-                selectedTag = tag
             )
         }
     }
