@@ -89,8 +89,17 @@ sealed class Answer(val type: Type) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Answer) return false
-
         if (type != other.type) return false
+
+        if (this is Short && other is Short) {
+            return this.answer == other.answer
+        }
+        if (this is Choice && other is Choice) {
+            return this.choices == other.choices
+        }
+        if (this is ImageChoice && other is ImageChoice) {
+            return this.imageChoice == other.imageChoice
+        }
 
         return true
     }
