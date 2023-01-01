@@ -18,7 +18,7 @@ import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
 @InstallIn(ActivityComponent::class)
 object KakaoUseCaseModule {
     @Provides
-    fun provideKakaoLoginUseCase(repository: KakaoRepository): GetKakaoAccessTokenUseCase {
+    fun provideGetKakaoAccessTokenUseCase(repository: KakaoRepository): GetKakaoAccessTokenUseCase {
         return GetKakaoAccessTokenUseCase(repository)
     }
 }
