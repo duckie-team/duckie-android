@@ -18,8 +18,10 @@ import javax.inject.Singleton
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
@@ -287,6 +289,103 @@ class CreateProblemViewModel @Inject constructor(
             examInformation = prevState.examInformation.copy(
                 createProblemArea = prevState.examInformation.createProblemArea.copy(
                     questions = newQuestions
+                )
+            ),
+        )
+    }
+
+    fun setAnswer(
+        questionNo: Int,
+        answerNo: Int,
+        answerType: Answer.Type?,
+        answer: String? = null,
+        urlSource: Uri? = null,
+    ) = updateState { prevState ->
+        val answerIndex = answerNo - 1
+        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
+        val newAnswer = newAnswers[questionNo]
+        newAnswers[questionNo] = when (answerType) {
+            Answer.Type.ShortAnswer -> Answer.Short(
+                answer ?: ((newAnswer as? Answer.Short)?.answer ?: ""),
+            )
+
+            Answer.Type.Choice -> when (newAnswer) {
+                is Answer.Short -> Answer.Choice(persistentListOf())
+                is Answer.Choice -> Answer.Choice(
+                    newAnswer.choices.mapIndexed { index, choiceModel ->
+                        if (index == answerIndex)
+                            ChoiceModel(answer ?: choiceModel.text)
+                        else
+                            choiceModel
+                    }.toPersistentList()
+                )
+
+                is Answer.ImageChoice -> Answer.Choice(
+                    newAnswer.imageChoice.mapIndexed { index, imageChoiceModel ->
+                        if (index == answerIndex)
+                            ChoiceModel(answer ?: imageChoiceModel.text)
+                        else
+                            ChoiceModel(imageChoiceModel.text)
+                    }.toPersistentList()
+                )
+
+                else -> null
+            }
+
+            Answer.Type.ImageChoice -> throw Exception()
+
+            else -> null
+        }
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(
+                createProblemArea = prevState.examInformation.createProblemArea.copy(
+                    answers = newAnswers
+                )
+            ),
+        )
+    }
+
+    fun setCorrectAnswer(
+        questionNo: Int,
+        correctAnswer: String? = null,
+    ) = updateState { prevState ->
+        val newCorrectAnswers = prevState.examInformation.createProblemArea.correctAnswers.toMutableMap()
+        newCorrectAnswers[questionNo] = correctAnswer
+
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(
+                createProblemArea = prevState.examInformation.createProblemArea.copy(
+                    correctAnswers = newCorrectAnswers
+                )
+            ),
+        )
+    }
+
+    fun addAnswer(
+        questionNo: Int,
+        answerType: Answer.Type?,
+    ) = updateState { prevState ->
+        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
+        val newAnswer = newAnswers[questionNo]
+
+        newAnswers[questionNo] = when (answerType) {
+            Answer.Type.ShortAnswer -> throw Exception("주관식은 답이 여러개가 될 수 없습니다.")
+
+            Answer.Type.Choice -> {
+                val choiceAnswer = newAnswer as? Answer.Choice ?: throw Exception()
+                val newChoices = choiceAnswer.choices.toMutableList().apply { this.add(ChoiceModel("")) }
+                Answer.Choice(newChoices.toImmutableList())
+            }
+
+            Answer.Type.ImageChoice -> throw Exception()
+
+            else -> null
+        }
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(
+                createProblemArea = prevState.examInformation.createProblemArea.copy(
+                    questions = prevState.examInformation.createProblemArea.questions,
+                    answers = newAnswers
                 )
             ),
         )

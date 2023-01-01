@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -82,12 +83,16 @@ import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasic2TextField
 import team.duckie.quackquack.ui.component.QuackBasicTextField
+import team.duckie.quackquack.ui.component.QuackBody3
+import team.duckie.quackquack.ui.component.QuackBorderTextField
 import team.duckie.quackquack.ui.component.QuackDropDownCard
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
+import team.duckie.quackquack.ui.component.QuackRoundCheckBox
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.modifier.quackClickable
 
 private const val TopAppBarLayoutId = "CreateProblemScreenTopAppBarLayoutId"
 private const val ContentLayoutId = "CreateProblemScreenContentLayoutId"
@@ -140,8 +145,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     val toast = rememberToast()
     val permissionErrorMessage =
         stringResource(id = R.string.create_problem_permission_toast_message)
-
-    val problemCount = remember(state.questions.size) { state.questions.size }
+    val correctAnswers = remember(state.correctAnswers) { state.correctAnswers }
 
     // Gallery 관련
     val selectedQuestions = remember(state.questions) { state.questions }
@@ -225,7 +229,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         text = stringResource(id = R.string.create_problem_bottom_sheet_title_choice_text),
                         onClick = {
                             launch {
-                                // vm.addProblem(Answer.Type.Choice)
+                                vm.addProblem(Answer.Type.Choice)
                                 sheetState.hide()
                             }
                         }
@@ -314,9 +318,9 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         }
                     },
                     content = {
-                        items(problemCount) { index ->
+                        items(selectedQuestions.size) { index ->
                             val questionNo = index + 1
-                            when(selectedAnswers[questionNo]?.type){
+                            when (selectedAnswers[questionNo]?.type) {
                                 Answer.Type.ShortAnswer -> {
                                     val question = selectedQuestions[questionNo]
                                     ShortFormProblemLayout(
@@ -334,10 +338,11 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                                 val result = imagePermission.check(context)
                                                 if (result) {
                                                     vm.loadGalleryImages()
-                                                    photoPickerVisible = PhotoState.QuestionImageType(
-                                                        questionNo,
-                                                        question
-                                                    )
+                                                    photoPickerVisible =
+                                                        PhotoState.QuestionImageType(
+                                                            questionNo,
+                                                            question
+                                                        )
                                                 } else {
                                                     launcher.launch(imagePermission)
                                                 }
@@ -348,12 +353,68 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         }
                                     )
                                 }
+
                                 Answer.Type.Choice -> {
-                                    // TODO(riflockle7): 객관식/글 Layout 구현하기
+                                    val question = selectedQuestions[questionNo]
+                                    val answers = selectedAnswers[questionNo] as Answer.Choice
+                                    val correctAnswer = correctAnswers[questionNo]
+                                    ChoiceProblemLayout(
+                                        questionNo = questionNo,
+                                        question = question,
+                                        titleChanged = { newTitle ->
+                                            vm.setQuestion(
+                                                question?.type,
+                                                questionNo,
+                                                title = newTitle,
+                                            )
+                                        },
+                                        imageClick = {
+                                            launch {
+                                                val result = imagePermission.check(context)
+                                                if (result) {
+                                                    vm.loadGalleryImages()
+                                                    photoPickerVisible =
+                                                        PhotoState.QuestionImageType(
+                                                            questionNo,
+                                                            question
+                                                        )
+                                                } else {
+                                                    launcher.launch(imagePermission)
+                                                }
+                                            }
+                                        },
+                                        onDropdownItemClick = {
+                                            launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
+                                        },
+                                        answers = answers,
+                                        answerTextChanged = { newTitle, answerNo ->
+                                            vm.setAnswer(
+                                                questionNo,
+                                                answerNo,
+                                                Answer.Type.Choice,
+                                                answer = newTitle,
+                                            )
+                                        },
+                                        addAnswerClick = {
+                                            vm.addAnswer(
+                                                questionNo = questionNo,
+                                                Answer.Type.Choice
+                                            )
+                                        },
+                                        correctAnswers = correctAnswer,
+                                        setCorrectAnswerClick = { newCorrectAnswer ->
+                                            vm.setCorrectAnswer(
+                                                questionNo = questionNo,
+                                                correctAnswer = newCorrectAnswer,
+                                            )
+                                        },
+                                    )
                                 }
+
                                 Answer.Type.ImageChoice -> {
                                     // TODO(riflockle7): 객관식/사진 Layout 구현하기
                                 }
+
                                 else -> {}
                             }
                         }
@@ -434,6 +495,92 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     }
 }
 
+/** 문제 만들기 객관식/글 Layout */
+@Composable
+fun ChoiceProblemLayout(
+    questionNo: Int,
+    question: Question?,
+    titleChanged: (String) -> Unit,
+    imageClick: () -> Unit,
+    onDropdownItemClick: (Int) -> Unit,
+    answers: Answer.Choice?,
+    answerTextChanged: (String, Int) -> Unit,
+    addAnswerClick: () -> Unit,
+    correctAnswers: String?,
+    setCorrectAnswerClick: (String?) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        // TODO(riflockle7): 최상단 Line 없는 TextField 필요
+        QuackBasic2TextField(
+            modifier = Modifier,
+            text = question?.text ?: "",
+            onTextChanged = titleChanged,
+            placeholderText = "$questionNo. 문제를 입력해주세요.",
+            trailingIcon = QuackIcon.Image,
+            trailingIconOnClick = imageClick,
+        )
+
+        (question as? Question.Image)?.imageUrl?.let {
+            QuackImage(
+                modifier = Modifier.padding(top = 24.dp),
+                src = it,
+                size = DpSize(200.dp, 200.dp),
+            )
+        }
+
+        // TODO(riflockle7): border 없는 DropDownCard 필요
+        QuackDropDownCard(
+            modifier = Modifier.padding(top = 24.dp),
+            text = "객관식/글",
+            onClick = { onDropdownItemClick(questionNo) }
+        )
+
+        answers?.choices?.forEachIndexed { answerIndex, choiceModel ->
+            val answerNo = answerIndex + 1
+            // TODO(riflockle7): border 가 존재하는 TextField 필요
+            QuackBorderTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                text = choiceModel.text,
+                onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerNo) },
+                placeholderText = "${answerNo}번 보기",
+                trailingContent = {
+                    val isChecked = correctAnswers == "$answerNo"
+                    Column(
+                        modifier = Modifier.quackClickable {
+                            setCorrectAnswerClick(if (isChecked) "" else "$answerNo")
+                        },
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        QuackRoundCheckBox(checked = isChecked)
+
+                        if (isChecked) {
+                            QuackBody3(
+                                modifier = Modifier.padding(top = 2.dp),
+                                color = QuackColor.DuckieOrange,
+                                text = "정답",
+                            )
+                        }
+                    }
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        QuackSubtitle(
+            modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
+            text = "+ 보기 추가",
+            onClick = { addAnswerClick() }
+        )
+    }
+}
+
 /** 문제 만들기 주관식 Layout */
 @Composable
 fun ShortFormProblemLayout(
@@ -481,7 +628,6 @@ fun ShortFormProblemLayout(
         )
     }
 }
-
 
 /** 문제 만들기 2단계 최하단 Layout  */
 @Deprecated("임시 저장 기능 부활 시 다시 사용")
