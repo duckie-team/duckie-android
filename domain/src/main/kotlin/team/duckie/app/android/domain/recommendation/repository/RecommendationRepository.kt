@@ -8,6 +8,8 @@
 package team.duckie.app.android.domain.recommendation.repository
 
 import androidx.compose.runtime.Immutable
+import androidx.paging.PagingSource
+import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 
 /**
  * 홈 화면에서 활용하는 Repository
@@ -16,7 +18,9 @@ import androidx.compose.runtime.Immutable
  */
 @Immutable
 interface RecommendationRepository {
-    suspend fun fetchRecommendations()
+    fun fetchRecommendations(): PagingSource<Int, RecommendationFeeds.Recommendation>
+
+    suspend fun fetchInitRecommendations()
 
     suspend fun fetchFollowingTest()
 

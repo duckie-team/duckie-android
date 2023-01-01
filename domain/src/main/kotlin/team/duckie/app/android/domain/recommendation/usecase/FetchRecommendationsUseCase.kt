@@ -16,7 +16,9 @@ class FetchRecommendationsUseCase @Inject constructor(
     private val repository: RecommendationRepository,
 ) {
 
-    suspend operator fun invoke() = kotlin.runCatching {
+    operator fun invoke() = repository.fetchRecommendations()
+
+    fun init() = kotlin.runCatching {
         repository.fetchRecommendations()
     }
 }
