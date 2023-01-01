@@ -167,7 +167,7 @@ internal fun ProfileScreen() {
     }
 
     var photoPickerVisible by remember { mutableStateOf(false) }
-    var profilePhoto by remember { mutableStateOf<Any>(vm.me.profilePhotoUrl) }
+    var profilePhoto by remember { mutableStateOf<Any>(vm.me.profileImageUrl) }
 
     var profilePhotoLastSelectionIndex by remember { mutableStateOf(0) }
     val profilePhotoSelections = remember {
@@ -189,7 +189,7 @@ internal fun ProfileScreen() {
         }
     }
 
-    var nickname by remember { mutableStateOf(vm.me.name) }
+    var nickname by remember { mutableStateOf(vm.me.nickname) }
     var lastErrorText by remember { mutableStateOf("") }
     var nicknameRuleError by remember { mutableStateOf(false) }
     var debounceFinish by remember { mutableStateOf(false) }

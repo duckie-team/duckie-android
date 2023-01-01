@@ -240,7 +240,8 @@ private fun TagSelection(
         List(
             size = vm.selectedCategories.size,
             init = { index ->
-                vm.getRecommendationTags(vm.selectedCategories[index])
+                listOf("index: $index")
+                // vm.getRecommendationTags(vm.selectedCategories[index])
             },
         )
     }

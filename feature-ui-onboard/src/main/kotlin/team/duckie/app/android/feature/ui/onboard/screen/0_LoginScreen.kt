@@ -199,7 +199,7 @@ private fun LoginScreenLoginArea() = CoroutineScopeContent {
                     )
                 )
                 .suspendClickable {
-                    vm.kakaoLogin(currentStep + 1)
+                    // vm.kakaoLogin(currentStep + 1)
                 },
             content = {
                 // TODO: 로딩중 인디케이터
