@@ -10,7 +10,7 @@ package team.duckie.app.ktor.client.plugin.util
 import io.ktor.client.plugins.api.SendingRequest
 import io.ktor.client.plugins.api.createClientPlugin
 
-internal val LoggingRequestHeadersPlugin = createClientPlugin(
+val LoggingRequestHeadersPlugin = createClientPlugin(
     name = "LoggingRequestHeaders",
     createConfiguration = ::LogWriterConfig,
 ) {
@@ -20,7 +20,7 @@ internal val LoggingRequestHeadersPlugin = createClientPlugin(
     }
 }
 
-internal class LogWriterConfig {
+class LogWriterConfig {
     var writer: (log: String) -> Unit = ::println
 }
 
