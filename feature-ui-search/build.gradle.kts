@@ -11,26 +11,30 @@ plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
     id(ConventionEnum.AndroidLibraryComposeUiTest)
+    id(ConventionEnum.AndroidHilt)
     id(ConventionEnum.JvmJUnit4)
     id(ConventionEnum.JvmDokka)
 }
 
 android {
-    namespace = "team.duckie.app.android.presentation"
+    namespace = "team.duckie.app.android.feature.ui.search"
 }
 
 dependencies {
     implementations(
+        platform(libs.firebase.bom),
+        projects.di,
+        projects.domain,
         projects.utilUi,
-        projects.utilCompose,
         projects.utilKotlin,
-        projects.featureDatastore,
-        projects.featureUiOnboard,
-        projects.featureUiDetail,
-        projects.featureUiCreateProblem,
-        projects.featureUiHome,
-        projects.featureUiSearch,
-        libs.androidx.splash,
+        projects.utilCompose,
+        projects.utilViewmodel,
+        projects.sharedUiCompose,
         libs.quack.ui.components,
+        libs.compose.ktx.lifecycle,
+        libs.compose.ui.coil,
+        libs.firebase.crashlytics,
+        libs.paging.runtime,
+        libs.paging.compose,
     )
 }
