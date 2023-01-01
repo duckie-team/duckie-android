@@ -15,4 +15,5 @@ import team.duckie.app.android.domain.auth.model.JoinResponse
 interface AuthRepository {
     suspend fun join(kakaoOAuthToken: String): JoinResponse
     suspend fun checkAccessToken(token: String): AccessTokenCheckResponse
+    fun attachAccessTokenToHeader(accessToken: String)
 }
