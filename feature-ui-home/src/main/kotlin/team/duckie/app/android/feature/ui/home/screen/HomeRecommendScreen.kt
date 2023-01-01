@@ -30,6 +30,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -37,13 +40,16 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
+import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.component.DuckTestCoverItem
-import team.duckie.app.android.feature.ui.home.component.DuckTestSmallCover
 import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
+import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
+import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -63,14 +69,16 @@ private val HomeHorizontalPadding = PaddingValues(
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
-) {
+) = CoroutineScopeContent {
     val pageState = rememberPagerState()
 
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
 
+    val lazyRecommendations = vm.fetchRecommendations().collectAsLazyPagingItems()
+
     LaunchedEffect(Unit) {
-        vm.fetchRecommendations()
+        vm.fetchInitRecommendations()
     }
 
     Box(
@@ -125,19 +133,16 @@ internal fun HomeRecommendScreen(
                 )
             }
 
-            items(items = state.recommendTopics) { item ->
+            items(items = lazyRecommendations) { item ->
                 HomeTopicRecommendLayout(
                     modifier = Modifier
-                        .padding(
-                            bottom = 60.dp,
-                        ),
-                    title = item.title,
+                        .padding(bottom = 60.dp),
+                    title = item!!.title,
                     tag = item.tag,
-                    recommendItems = item.items,
+                    exams = item.exams.toPersistentList(),
                     onClicked = { },
                     onTagClicked = { tag ->
-                        vm.selectedTag(tag)
-                        vm.changedHomeScreen(HomeStep.HomeTagScreen)
+                        // TODO (limsaehyun): intent SearchResultActivity
                     },
                 )
             }
@@ -192,7 +197,7 @@ private fun HomeTopicRecommendLayout(
     modifier: Modifier = Modifier,
     title: String,
     tag: String,
-    recommendItems: PersistentList<HomeState.RecommendTopic.Test>,
+    exams: PersistentList<RecommendationFeeds.Recommendation.Exam>,
     onTagClicked: (String) -> Unit,
     onClicked: (Int) -> Unit,
 ) {
@@ -214,7 +219,7 @@ private fun HomeTopicRecommendLayout(
         ) {
             item {}
 
-            items(items = recommendItems) { item ->
+            items(items = exams) { item ->
                 DuckTestSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = item.recommendId,
