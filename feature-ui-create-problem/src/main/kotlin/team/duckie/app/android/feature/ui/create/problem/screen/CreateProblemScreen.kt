@@ -106,6 +106,8 @@ private const val ContentLayoutId = "CreateProblemScreenContentLayoutId"
 private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
 // private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 
+private const val MaximumChoice = 5
+
 private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constraints ->
     // 1. topAppBar, createProblemButton 높이값 측정
     val looseConstraints = constraints.asLoose()
@@ -678,11 +680,13 @@ private fun ChoiceProblemLayout(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        QuackSubtitle(
-            modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
-            text = "+ 보기 추가",
-            onClick = { addAnswerClick() }
-        )
+        if (answers.choices.size < MaximumChoice) {
+            QuackSubtitle(
+                modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
+                text = "+ 보기 추가",
+                onClick = { addAnswerClick() }
+            )
+        }
     }
 }
 
@@ -765,11 +769,13 @@ private fun ImageChoiceProblemLayout(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        QuackSubtitle(
-            modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
-            text = "+ 보기 추가",
-            onClick = { addAnswerClick() }
-        )
+        if (answers.imageChoice.size < MaximumChoice) {
+            QuackSubtitle(
+                modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
+                text = "+ 보기 추가",
+                onClick = { addAnswerClick() }
+            )
+        }
     }
 }
 
