@@ -24,7 +24,7 @@ import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeader
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlugin
 import team.duckie.app.ktor.client.plugin.util.LoggingRequestHeadersPlugin
 
-private const val DuckieAuthorizationHeaderKey = "X-DUCKIE-AUTHORIZATION"
+private const val DuckieAuthorizationHeaderKey = "authorization"
 private const val DuckieAuthorizationHeaderValue = "TEST"
 private const val DuckieAuthorizationHeaderLog = "-> $DuckieAuthorizationHeaderKey: $DuckieAuthorizationHeaderValue;"
 
