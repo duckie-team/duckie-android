@@ -50,6 +50,7 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackUnderlineBody3
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
+@Suppress("UnusedPrivateMember")
 private val currentStep = OnboardStep.Login
 
 private const val LoginScreenWelcomeLayoutId = "LoginScreenWelcome"
@@ -175,6 +176,7 @@ private val LoginScreenLoginAreaMeasurePolicy = MeasurePolicy { measurables, con
 
 @Composable
 private fun LoginScreenLoginArea() = CoroutineScopeContent {
+    @Suppress("UnusedPrivateMember")
     val vm = LocalViewModel.current as OnboardViewModel
     val context = LocalContext.current
 

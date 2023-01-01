@@ -176,25 +176,15 @@ class OnboardActivity : BaseActivity() {
                     ignoreThrottle = true,
                 )
             }
-            is OnboardState.Joined -> {
-
-            }
+            is OnboardState.Joined -> Unit // TODO
             is OnboardState.NavigateStep -> {
                 vm.navigateStep(state.step)
                 onboardStepState = state.step
             }
-            OnboardState.AccessTokenValidationFailed -> {
-
-            }
-            is OnboardState.CategoriesLoaded -> {
-
-            }
-            is OnboardState.FileUploaded -> {
-
-            }
-            is OnboardState.TagCreated -> {
-
-            }
+            OnboardState.AccessTokenValidationFailed -> Unit // TODO
+            is OnboardState.CategoriesLoaded -> Unit // TODO
+            is OnboardState.FileUploaded -> Unit // TODO
+            is OnboardState.TagCreated -> Unit // TODO
             is OnboardState.Error -> {
                 toast(getString(R.string.internal_error))
             }
@@ -214,9 +204,7 @@ class OnboardActivity : BaseActivity() {
                     preferences[PreferenceKey.Account.AccessToken] = effect.accessToken
                 }
             }
-            is OnboardSideEffect.AttachAccessTokenToHeader -> {
-
-            }
+            is OnboardSideEffect.AttachAccessTokenToHeader -> Unit // TODO
             is OnboardSideEffect.DelegateJoin -> {
                 vm.join(effect.kakaoAccessToken)
             }

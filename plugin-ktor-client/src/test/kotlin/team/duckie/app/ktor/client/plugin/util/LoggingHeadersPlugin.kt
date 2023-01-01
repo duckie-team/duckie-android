@@ -34,7 +34,7 @@ internal class LogWriterConfig {
 private fun LogWriterConfig.printHeader(entry: Map.Entry<String, List<String>>) {
     var headerString = entry.key + ": "
     entry.value.forEach { headerValue ->
-        headerString += "${headerValue};"
+        headerString += "$headerValue;"
     }
     writer("-> $headerString")
 }
