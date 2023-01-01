@@ -13,26 +13,27 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.component.DuckTestCoverItem
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
-import team.duckie.app.android.feature.ui.home.screen.TagStep
+import team.duckie.app.android.feature.ui.home.constants.TagStep
 
 data class HomeState(
-    val isHomeRecommendLoading: Boolean = true,
-    val isHomeFollowingTestLoading: Boolean = true,
-    val isHomeFollowingInitialLoading: Boolean = true,
-    val isHomeTagLoading: Boolean = true,
+    val isHomeRecommendLoading: Boolean = false,
+    val isHomeFollowingTestLoading: Boolean = false,
+    val isHomeFollowingInitialLoading: Boolean = false,
+    val isHomeTagLoading: Boolean = false,
 
     val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
 
     val selectedTag: String = "",
-    val tagSelectedTabIndex: TagStep = TagStep.DUCK_TEST,
+    val tagSelectedTab: TagStep = TagStep.DUCK_TEST,
+    val recommendTagTest: PersistentList<DuckTestCoverItem> = persistentListOf(),
+    val recommendTagUser: RecommendUserByTopic = RecommendUserByTopic(),
 
     val jumbotrons: PersistentList<HomeRecommendJumbotron> = persistentListOf(),
     val recommendTopics: PersistentList<RecommendTopic> = persistentListOf(),
 
     val recommendFollowing: PersistentList<RecommendUserByTopic> = persistentListOf(),
     val recommendFollowingTest: PersistentList<FollowingTest> = persistentListOf(),
-    val recommendByTags: PersistentList<DuckTestCoverItem> = persistentListOf(),
 ) {
     /**
      * 팔로잉의 덕질고사 추천 피드 data class [FollowingTest]
@@ -63,8 +64,8 @@ data class HomeState(
      * @param users 추천하는 유저들
      */
     data class RecommendUserByTopic(
-        val topic: String,
-        val users: ImmutableList<User>,
+        val topic: String = "",
+        val users: ImmutableList<User> = persistentListOf(),
     ) {
         data class User(
             val userId: Int,
@@ -72,6 +73,7 @@ data class HomeState(
             val name: String,
             val examineeNumber: Int,
             val createAt: String,
+            val isFollowing: Boolean = false,
         )
     }
 

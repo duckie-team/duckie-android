@@ -7,25 +7,30 @@
 
 package team.duckie.app.android.domain.recommendation.model
 
+import kotlinx.collections.immutable.PersistentList
+
 data class RecommendationFeeds(
-    val jumbotrons: List<Jumbotron>,
     val recommendations: List<Recommendation>,
+    val jumbotrons: List<Jumbotron>,
 ) {
     data class Jumbotron(
+        val coverUrl: String,
         val title: String,
-        val tag: List<Tag>,
-        val exams: List<Exam>,
-    ) {
-        data class Tag(
-            val id: Int,
-            val name: String,
-        )
+        val content: String,
+        val buttonContent: String,
+    )
 
-        data class Exam(
-            val id: Int,
-        )
-    }
     data class Recommendation(
         val title: String,
-    )
+        val tag: String,
+        val exams: List<Exam>,
+    ) {
+        data class Exam(
+            val coverImg: String,
+            val nickname: String,
+            val title: String,
+            val examineeNumber: Int,
+            val recommendId: Int,
+        )
+    }
 }
