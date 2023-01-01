@@ -66,19 +66,19 @@ internal fun Problem.toData() = ProblemData(
         when (answer) {
             is Answer.Short -> AnswerData.ShortAnswer(
                 shortAnswer = answer.answer,
-                type = answer.type,
+                type = answer.type.key,
             )
             is Answer.Choice -> AnswerData.Choice(
                 choices = answer.choices.map {
                     it.toData()
                 }.toList(),
-                type = answer.type,
+                type = answer.type.key,
             )
             is Answer.ImageChoice -> AnswerData.ImageChoice(
                 imageChoice = answer.imageChoice.map {
                     it.toData()
                 }.toList(),
-                type = answer.type,
+                type = answer.type.key,
             )
         }
     },

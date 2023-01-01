@@ -69,21 +69,22 @@ sealed class Question(val type: Type, open val text: String) {
 }
 
 @Immutable
-sealed class Answer(val type: String) {
-    private companion object {
-        const val ShortAnswer = "shortAnswer"
-        const val Choice = "choice"
-        const val ImageChoice = "imageChoice"
+sealed class Answer(val type: Type) {
+    enum class Type(val key: String) {
+        ShortAnswer("shortAnswer"),
+        Choice("choice"),
+        ImageChoice("imageChoice"),
     }
 
     @Immutable
-    class Short(val answer: String) : Answer(type = ShortAnswer)
+    class Short(val answer: String) : Answer(type = Type.ShortAnswer)
 
     @Immutable
-    class Choice(val choices: ImmutableList<ChoiceModel>) : Answer(type = Choice)
+    class Choice(val choices: ImmutableList<ChoiceModel>) : Answer(type = Type.Choice)
 
     @Immutable
-    class ImageChoice(val imageChoice: ImmutableList<ImageChoiceModel>) : Answer(type = ImageChoice)
+    class ImageChoice(val imageChoice: ImmutableList<ImageChoiceModel>) :
+        Answer(type = Type.ImageChoice)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
