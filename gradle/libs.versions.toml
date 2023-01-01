@@ -40,6 +40,8 @@ androidx-splash = "1.0.0"
 androidx-datastore = "1.0.0"
 androidx-room = "2.4.3"
 androidx-profile-installer = "1.2.0"
+androidx-paging-runtime = "3.1.1"
+androidx-paging-compose = "1.0.0-alpha16"
 
 # compose
 compose-core = "1.2.1"
@@ -163,6 +165,9 @@ compose-ktx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose
 ktx-core = { module = "androidx.core:core-ktx", version.ref = "ktx-core" }
 ktx-activiy = { module = "androidx.activity:activity-ktx", version.ref = "ktx-activity" }
 ktx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "ktx-lifecycle" }
+
+paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging-runtime" }
+paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging-compose" }
 
 ui-oss-license = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "ui-oss-license" }
 ui-system-controller = { module = "land.sungbin:systemuicontroller", version.ref = "ui-system-controller" }

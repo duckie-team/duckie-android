@@ -31,6 +31,7 @@ dependencies {
         libs.kotlin.coroutines,
         libs.kotlin.collections.immutable,
         libs.bundles.ktor,
+        libs.paging.runtime,
         projects.domain,
         projects.utilKotlin,
     )

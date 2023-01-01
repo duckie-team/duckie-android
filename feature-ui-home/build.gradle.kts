@@ -36,5 +36,7 @@ dependencies {
         libs.ui.pager.asProvider(),
         libs.ui.pager.indicators,
         libs.firebase.crashlytics,
+        libs.paging.runtime,
+        libs.paging.compose,
     )
 }
