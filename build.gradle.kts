@@ -29,6 +29,7 @@ val UtilModulePrefix = "util-"
 val FeatureModulePrefix = "feature-"
 val UiFeatureModulePrefix = "feature-ui-"
 val OnlyUiFeatureModulePrefix = "-ui-"
+val PluginModulePrefix = "plugin-"
 
 dependencyGraphConfigs {
     dotFilePath = "assets/dependency-graph/project.dot"
@@ -37,17 +38,15 @@ dependencyGraphConfigs {
         with(project) {
             when {
                 plugins.hasPlugin(PluginEnum.AndroidApplication) -> DependencyInfo(
-                    color = "#baffc9",
+                    color = "#9B5DE5",
                     isBoxShape = true,
                 )
-                plugins.hasPlugin(PluginEnum.AndroidDfm) -> DependencyInfo("#c9baff")
-                plugins.hasPlugin(PluginEnum.JavaLibrary) -> DependencyInfo("#ffc9ba")
-                name.startsWith(UtilModulePrefix) -> DependencyInfo("#ffebba")
-                name.startsWith(FeatureModulePrefix) && !name.contains(OnlyUiFeatureModulePrefix) -> {
-                    DependencyInfo("#81d4fa")
-                }
-                name.startsWith(UiFeatureModulePrefix) -> DependencyInfo("#00aeff")
-                plugins.hasPlugin(PluginEnum.AndroidLibrary) -> DependencyInfo("#fcb96a")
+                plugins.hasPlugin(PluginEnum.AndroidDfm) -> DependencyInfo("#C65CCD")
+                name.startsWith(PluginModulePrefix) -> DependencyInfo("#F15BB5")
+                name.startsWith(UtilModulePrefix) -> DependencyInfo("#F8A07B")
+                name.startsWith(UiFeatureModulePrefix) -> DependencyInfo("#FEE440")
+                name.startsWith(FeatureModulePrefix) -> DependencyInfo("#7FD09D")
+                plugins.hasPlugin(PluginEnum.AndroidLibrary) -> DependencyInfo("#00BBF9")
                 else -> null
             }
         }
