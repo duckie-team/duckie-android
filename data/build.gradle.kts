@@ -13,7 +13,6 @@ import DependencyHandler.Extensions.testImplementations
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.JvmJUnit4)
-    id(ConventionEnum.JvmDokka)
     id(ConventionEnum.AndroidHilt)
     id(libs.plugins.util.secrets.get().pluginId)
 }
