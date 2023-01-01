@@ -326,7 +326,16 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             launcher
                                         )
                                     },
-                                    onDropdownItemClick = { showBottomSheet(sheetState) }
+                                    onDropdownItemClick = { showBottomSheet(sheetState) },
+                                    answers = answers,
+                                    answerTextChanged = { newTitle, answerNo ->
+                                        vm.setAnswer(
+                                            questionNo,
+                                            answerNo,
+                                            Answer.Type.ShortAnswer,
+                                            answer = newTitle,
+                                        )
+                                    },
                                 )
 
                                 is Answer.Choice -> ChoiceProblemLayout(
@@ -742,6 +751,8 @@ private fun ShortAnswerProblemLayout(
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
     onDropdownItemClick: (Int) -> Unit,
+    answers: Answer.Short,
+    answerTextChanged: (String, Int) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -758,8 +769,8 @@ private fun ShortAnswerProblemLayout(
 
         // TODO(riflockle7): underLine 없는 TextField 필요, Answer 연동 시 추가 작업 필요
         QuackBasicTextField(
-            text = "",
-            onTextChanged = { },
+            text = answers.answer,
+            onTextChanged = { newAnswer -> answerTextChanged(newAnswer, 0) },
             placeholderText = "답안 입력"
         )
     }
