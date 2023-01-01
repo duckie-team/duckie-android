@@ -54,5 +54,5 @@ include(
     ":util-viewmodel",
     ":util-kotlin",
     ":util-compose",
-    ":shared-ui-compose",
+    ":plugin-ktor-client",
 )
