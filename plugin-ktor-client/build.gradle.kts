@@ -5,7 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-import DependencyHandler.Extensions.implementations
 import DependencyHandler.Extensions.testImplementations
 
 plugins {
@@ -14,12 +13,9 @@ plugins {
 }
 
 dependencies {
-    implementations(
-        libs.ktor.client,
-        libs.ktor.engine,
-    )
+    implementation(libs.ktor.client)
     testImplementations(
-        libs.test.ktor.client,
+        libs.ktor.engine,
         libs.test.coroutines,
     )
 }
