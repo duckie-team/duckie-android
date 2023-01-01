@@ -19,6 +19,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -39,6 +40,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -58,6 +60,7 @@ import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpSize
@@ -72,6 +75,7 @@ import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
@@ -177,7 +181,11 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     }
 
     BackHandler {
-        vm.navigateStep(CreateProblemStep.ExamInformation)
+        if (sheetState.isVisible) {
+            launch { sheetState.hide() }
+        } else {
+            vm.navigateStep(CreateProblemStep.ExamInformation)
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -217,62 +225,32 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
 
                 // 선택 목록
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    // 객관식/글 버튼
-                    QuackSubtitle(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        padding = PaddingValues(
-                            top = 12.dp,
-                            start = 16.dp,
-                            end = 16.dp,
-                            bottom = 12.dp,
-                        ),
-                        text = stringResource(id = R.string.create_problem_bottom_sheet_title_choice_text),
-                        onClick = {
-                            launch {
-                                vm.addProblem(Answer.Type.Choice)
-                                sheetState.hide()
+                    listOf(
+                        // 객관식/글 버튼
+                        stringResource(id = R.string.create_problem_bottom_sheet_title_choice_text)
+                                to Answer.Type.Choice,
+                        // 객관식/사진 버튼
+                        stringResource(id = R.string.create_problem_bottom_sheet_title_choice_media)
+                                to Answer.Type.ImageChoice,
+                        // 주관식 버튼
+                        stringResource(id = R.string.create_problem_bottom_sheet_title_short_form)
+                                to Answer.Type.ShortAnswer,
+                    ).forEach {
+                        QuackSubtitle(
+                            modifier = Modifier.fillMaxWidth(),
+                            padding = PaddingValues(
+                                vertical = 12.dp,
+                                horizontal = 16.dp,
+                            ),
+                            text = it.first,
+                            onClick = {
+                                launch {
+                                    vm.addProblem(it.second)
+                                    sheetState.hide()
+                                }
                             }
-                        }
-                    )
-
-                    // 객관식/사진 버튼
-                    QuackSubtitle(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        padding = PaddingValues(
-                            top = 12.dp,
-                            start = 16.dp,
-                            end = 16.dp,
-                            bottom = 12.dp,
-                        ),
-                        text = stringResource(id = R.string.create_problem_bottom_sheet_title_choice_media),
-                        onClick = {
-                            launch {
-                                vm.addProblem(Answer.Type.ImageChoice)
-                                sheetState.hide()
-                            }
-                        }
-                    )
-
-                    // 주관식 버튼
-                    QuackSubtitle(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        padding = PaddingValues(
-                            top = 12.dp,
-                            start = 16.dp,
-                            end = 16.dp,
-                            bottom = 12.dp,
-                        ),
-                        text = stringResource(id = R.string.create_problem_bottom_sheet_title_short_form),
-                        onClick = {
-                            launch {
-                                vm.addProblem(Answer.Type.ShortAnswer)
-                                sheetState.hide()
-                            }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
@@ -321,173 +299,147 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                     content = {
                         items(selectedQuestions.size) { index ->
                             val questionNo = index + 1
-                            when (selectedAnswers[questionNo]?.type) {
-                                Answer.Type.ShortAnswer -> {
-                                    val question = selectedQuestions[questionNo]
-                                    ShortAnswerProblemLayout(
-                                        questionNo = questionNo,
-                                        question = question,
-                                        titleChanged = { newTitle ->
-                                            vm.setQuestion(
-                                                question?.type,
+                            val question = selectedQuestions[questionNo]
+                            val answers = selectedAnswers[questionNo]
+                            val correctAnswer = correctAnswers[questionNo]
+
+                            when (answers) {
+                                is Answer.Short -> ShortAnswerProblemLayout(
+                                    questionNo = questionNo,
+                                    question = question,
+                                    titleChanged = { newTitle ->
+                                        vm.setQuestion(
+                                            question?.type,
+                                            questionNo,
+                                            title = newTitle,
+                                        )
+                                    },
+                                    imageClick = {
+                                        openPhotoPicker(
+                                            context,
+                                            vm,
+                                            CreateProblemPhotoState.QuestionImageType(
                                                 questionNo,
-                                                title = newTitle,
-                                            )
-                                        },
-                                        imageClick = {
-                                            launch {
-                                                val result = imagePermission.check(context)
-                                                if (result) {
-                                                    vm.loadGalleryImages()
-                                                    photoPickerVisible =
-                                                        PhotoState.QuestionImageType(
-                                                            questionNo,
-                                                            question
-                                                        )
-                                                    keyboard?.hide()
-                                                } else {
-                                                    launcher.launch(imagePermission)
-                                                }
+                                                question
+                                            ),
+                                            keyboard,
+                                            launcher
+                                        )
+                                    },
+                                    onDropdownItemClick = { showBottomSheet(sheetState) }
+                                )
+
+                                is Answer.Choice -> ChoiceProblemLayout(
+                                    questionNo = questionNo,
+                                    question = question,
+                                    titleChanged = { newTitle ->
+                                        vm.setQuestion(
+                                            question?.type,
+                                            questionNo,
+                                            title = newTitle,
+                                        )
+                                    },
+                                    imageClick = {
+                                        openPhotoPicker(
+                                            context,
+                                            vm,
+                                            CreateProblemPhotoState.QuestionImageType(
+                                                questionNo,
+                                                question
+                                            ),
+                                            keyboard,
+                                            launcher
+                                        )
+                                    },
+                                    onDropdownItemClick = { showBottomSheet(sheetState) },
+                                    answers = answers,
+                                    answerTextChanged = { newTitle, answerNo ->
+                                        vm.setAnswer(
+                                            questionNo,
+                                            answerNo,
+                                            Answer.Type.Choice,
+                                            answer = newTitle,
+                                        )
+                                    },
+                                    addAnswerClick = {
+                                        vm.addAnswer(
+                                            questionNo = questionNo,
+                                            Answer.Type.Choice
+                                        )
+                                    },
+                                    correctAnswers = correctAnswer,
+                                    setCorrectAnswerClick = { newCorrectAnswer ->
+                                        vm.setCorrectAnswer(
+                                            questionNo = questionNo,
+                                            correctAnswer = newCorrectAnswer,
+                                        )
+                                    },
+                                )
+
+                                is Answer.ImageChoice -> ImageChoiceProblemLayout(
+                                    questionNo = questionNo,
+                                    question = question,
+                                    titleChanged = { newTitle ->
+                                        vm.setQuestion(
+                                            question?.type,
+                                            questionNo,
+                                            title = newTitle,
+                                        )
+                                    },
+                                    imageClick = {
+                                        openPhotoPicker(
+                                            context,
+                                            vm,
+                                            CreateProblemPhotoState.QuestionImageType(
+                                                questionNo,
+                                                question
+                                            ),
+                                            keyboard,
+                                            launcher
+                                        )
+                                    },
+                                    onDropdownItemClick = { showBottomSheet(sheetState) },
+                                    answers = answers,
+                                    answerTextChanged = { newTitle, answerNo ->
+                                        vm.setAnswer(
+                                            questionNo,
+                                            answerNo,
+                                            Answer.Type.ImageChoice,
+                                            answer = newTitle,
+                                        )
+                                    },
+                                    answerImageClick = { answersNo ->
+                                        launch {
+                                            val result = imagePermission.check(context)
+                                            if (result) {
+                                                vm.loadGalleryImages()
+                                                vm.updatePhotoState(
+                                                    CreateProblemPhotoState.AnswerImageType(
+                                                        questionNo,
+                                                        answersNo,
+                                                        answers,
+                                                    )
+                                                )
+                                                keyboard?.hide()
+                                            } else {
+                                                launcher.launch(imagePermission)
                                             }
-                                        },
-                                        onDropdownItemClick = {
-                                            launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
                                         }
-                                    )
-                                }
-
-                                Answer.Type.Choice -> {
-                                    val question = selectedQuestions[questionNo]
-                                    val answers = selectedAnswers[questionNo] as Answer.Choice
-                                    val correctAnswer = correctAnswers[questionNo]
-                                    ChoiceProblemLayout(
-                                        questionNo = questionNo,
-                                        question = question,
-                                        titleChanged = { newTitle ->
-                                            vm.setQuestion(
-                                                question?.type,
-                                                questionNo,
-                                                title = newTitle,
-                                            )
-                                        },
-                                        imageClick = {
-                                            launch {
-                                                val result = imagePermission.check(context)
-                                                if (result) {
-                                                    vm.loadGalleryImages()
-                                                    photoPickerVisible =
-                                                        PhotoState.QuestionImageType(
-                                                            questionNo,
-                                                            question
-                                                        )
-                                                    keyboard?.hide()
-                                                } else {
-                                                    launcher.launch(imagePermission)
-                                                }
-                                            }
-                                        },
-                                        onDropdownItemClick = {
-                                            launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
-                                        },
-                                        answers = answers,
-                                        answerTextChanged = { newTitle, answerNo ->
-                                            vm.setAnswer(
-                                                questionNo,
-                                                answerNo,
-                                                Answer.Type.Choice,
-                                                answer = newTitle,
-                                            )
-                                        },
-                                        addAnswerClick = {
-                                            vm.addAnswer(
-                                                questionNo = questionNo,
-                                                Answer.Type.Choice
-                                            )
-                                        },
-                                        correctAnswers = correctAnswer,
-                                        setCorrectAnswerClick = { newCorrectAnswer ->
-                                            vm.setCorrectAnswer(
-                                                questionNo = questionNo,
-                                                correctAnswer = newCorrectAnswer,
-                                            )
-                                        },
-                                    )
-                                }
-
-                                Answer.Type.ImageChoice -> {
-                                    val question = selectedQuestions[questionNo]
-                                    val answers = selectedAnswers[questionNo] as Answer.ImageChoice
-                                    val correctAnswer = correctAnswers[questionNo]
-                                    ImageChoiceProblemLayout(
-                                        questionNo = questionNo,
-                                        question = question,
-                                        titleChanged = { newTitle ->
-                                            vm.setQuestion(
-                                                question?.type,
-                                                questionNo,
-                                                title = newTitle,
-                                            )
-                                        },
-                                        imageClick = {
-                                            launch {
-                                                val result = imagePermission.check(context)
-                                                if (result) {
-                                                    vm.loadGalleryImages()
-                                                    photoPickerVisible =
-                                                        PhotoState.QuestionImageType(
-                                                            questionNo,
-                                                            question
-                                                        )
-                                                    keyboard?.hide()
-                                                } else {
-                                                    launcher.launch(imagePermission)
-                                                }
-                                            }
-                                        },
-                                        onDropdownItemClick = {
-                                            launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
-                                        },
-                                        answers = answers,
-                                        answerTextChanged = { newTitle, answerNo ->
-                                            vm.setAnswer(
-                                                questionNo,
-                                                answerNo,
-                                                Answer.Type.ImageChoice,
-                                                answer = newTitle,
-                                            )
-                                        },
-                                        answerImageClick = { answersNo ->
-                                            launch {
-                                                val result = imagePermission.check(context)
-                                                if (result) {
-                                                    vm.loadGalleryImages()
-                                                    photoPickerVisible =
-                                                        PhotoState.AnswerImageType(
-                                                            questionNo,
-                                                            answersNo,
-                                                            answers,
-                                                        )
-                                                    keyboard?.hide()
-                                                } else {
-                                                    launcher.launch(imagePermission)
-                                                }
-                                            }
-                                        },
-                                        addAnswerClick = {
-                                            vm.addAnswer(
-                                                questionNo = questionNo,
-                                                Answer.Type.ImageChoice
-                                            )
-                                        },
-                                        correctAnswers = correctAnswer,
-                                        setCorrectAnswerClick = { newCorrectAnswer ->
-                                            vm.setCorrectAnswer(
-                                                questionNo = questionNo,
-                                                correctAnswer = newCorrectAnswer,
-                                            )
-                                        },
-                                    )
-                                }
+                                    },
+                                    addAnswerClick = {
+                                        vm.addAnswer(
+                                            questionNo = questionNo,
+                                            Answer.Type.ImageChoice
+                                        )
+                                    },
+                                    correctAnswers = correctAnswer,
+                                    setCorrectAnswerClick = { newCorrectAnswer ->
+                                        vm.setCorrectAnswer(
+                                            questionNo = questionNo,
+                                            correctAnswer = newCorrectAnswer,
+                                        )
+                                    },
+                                )
 
                                 else -> {}
                             }
@@ -495,19 +447,16 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
 
                         item {
                             QuackLargeButton(
-                                modifier = Modifier
-                                    .padding(
-                                        start = 20.dp,
-                                        end = 20.dp,
-                                        bottom = 20.dp,
-                                        top = 12.dp,
-                                    ),
+                                modifier = Modifier.padding(
+                                    start = 20.dp,
+                                    end = 20.dp,
+                                    bottom = 20.dp,
+                                    top = 12.dp,
+                                ),
                                 type = QuackLargeButtonType.Border,
                                 text = stringResource(id = R.string.create_problem_add_problem_button),
                                 leadingIcon = QuackIcon.Plus,
-                            ) {
-                                launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
-                            }
+                            ) { showBottomSheet(sheetState) }
                         }
                     }
                 )
@@ -575,6 +524,27 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     }
 }
 
+private fun CoroutineScopeContent.openPhotoPicker(
+    context: Context,
+    vm: CreateProblemViewModel,
+    createProblemPhotoState: CreateProblemPhotoState,
+    keyboard: SoftwareKeyboardController?,
+    launcher: ManagedActivityResultLauncher<String, Boolean>
+) = launch {
+    val result = imagePermission.check(context)
+    if (result) {
+        vm.loadGalleryImages()
+        vm.updatePhotoState(createProblemPhotoState)
+        keyboard?.hide()
+    } else {
+        launcher.launch(imagePermission)
+    }
+}
+
+private fun CoroutineScopeContent.showBottomSheet(sheetState: ModalBottomSheetState) {
+    launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
+}
+
 @Composable
 private fun CreateProblemTitleLayout(
     questionNo: Int,
@@ -611,7 +581,7 @@ private fun CreateProblemTitleLayout(
 
 /** 문제 만들기 객관식/글 Layout */
 @Composable
-fun ChoiceProblemLayout(
+private fun ChoiceProblemLayout(
     questionNo: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
@@ -680,7 +650,7 @@ fun ChoiceProblemLayout(
 
 /** 문제 만들기 객관식/사진 Layout */
 @Composable
-fun ImageChoiceProblemLayout(
+private fun ImageChoiceProblemLayout(
     questionNo: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
@@ -766,7 +736,7 @@ fun ImageChoiceProblemLayout(
 
 /** 문제 만들기 주관식 Layout */
 @Composable
-fun ShortAnswerProblemLayout(
+private fun ShortAnswerProblemLayout(
     questionNo: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
@@ -798,7 +768,7 @@ fun ShortAnswerProblemLayout(
 /** 문제 만들기 2단계 최하단 Layout  */
 @Deprecated("임시 저장 기능 부활 시 다시 사용")
 @Composable
-fun CreateProblemBottomLayout() {
+private fun CreateProblemBottomLayout() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -830,19 +800,6 @@ fun CreateProblemBottomLayout() {
 
         }
     }
-}
-
-sealed class PhotoState {
-    data class QuestionImageType(
-        val questionNo: Int,
-        val value: Question?,
-    ) : PhotoState()
-
-    data class AnswerImageType(
-        val questionNo: Int,
-        val answerNo: Int,
-        val value: Answer.ImageChoice,
-    ) : PhotoState()
 }
 
 /** 이미지 권한 체크시 사용해야하는 permission */
