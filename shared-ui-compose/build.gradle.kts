@@ -21,6 +21,7 @@ android {
 dependencies {
     implementations(
         libs.quack.ui.components,
+        libs.compose.ui.coil,
         projects.utilCompose,
         projects.utilKotlin,
     )

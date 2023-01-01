@@ -5,17 +5,27 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.component
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
+package team.duckie.app.android.shared.ui.compose
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import team.duckie.app.android.feature.ui.home.R
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
@@ -36,15 +46,20 @@ fun DuckTestSmallCover(
 ) {
     Column(
         modifier = modifier
+            .width(158.dp)
             .quackClickable(
-                rippleEnabled = false,
+                rippleEnabled = true,
             ) {
                 onClick(duckTestCoverItem.testId)
-            }
+            },
+        horizontalAlignment = Alignment.Start,
     ) {
         AsyncImage(
-            modifier = Modifier.size(158.dp, 116.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(116.dp),
             model = duckTestCoverItem.coverImg,
+            contentScale = ContentScale.FillWidth,
             contentDescription = null,
         )
         QuackBody2(
