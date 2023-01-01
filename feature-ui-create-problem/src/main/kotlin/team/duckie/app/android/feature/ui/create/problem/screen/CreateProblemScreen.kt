@@ -346,6 +346,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                                             questionNo,
                                                             question
                                                         )
+                                                    keyboard?.hide()
                                                 } else {
                                                     launcher.launch(imagePermission)
                                                 }
@@ -381,6 +382,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                                             questionNo,
                                                             question
                                                         )
+                                                    keyboard?.hide()
                                                 } else {
                                                     launcher.launch(imagePermission)
                                                 }
