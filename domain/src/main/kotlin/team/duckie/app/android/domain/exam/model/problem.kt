@@ -70,10 +70,10 @@ sealed class Question(val type: Type, open val text: String) {
 
 @Immutable
 sealed class Answer(val type: Type) {
-    enum class Type(val key: String) {
-        ShortAnswer("shortAnswer"),
-        Choice("choice"),
-        ImageChoice("imageChoice"),
+    enum class Type(val key: String, val title: String) {
+        ShortAnswer("shortAnswer", "주관식"),
+        Choice("choice", "객관식/글"),
+        ImageChoice("imageChoice", "객관식/사진"),
     }
 
     @Immutable

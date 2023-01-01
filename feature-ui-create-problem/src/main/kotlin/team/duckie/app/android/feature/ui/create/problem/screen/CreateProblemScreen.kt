@@ -152,6 +152,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     val toast = rememberToast()
     val permissionErrorMessage =
         stringResource(id = R.string.create_problem_permission_toast_message)
+    var selectedQuestionNo: Int? by remember { mutableStateOf(null) }
     val correctAnswers = remember(state.correctAnswers) { state.correctAnswers }
 
     // Gallery 관련
@@ -182,7 +183,9 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
 
     BackHandler {
         if (sheetState.isVisible) {
-            launch { sheetState.hide() }
+            hideBottomSheet(sheetState) { selectedQuestionNo = null }
+        } else if (photoState != null) {
+            vm.updatePhotoState(null)
         } else {
             vm.navigateStep(CreateProblemStep.ExamInformation)
         }
@@ -245,8 +248,13 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                             text = it.first,
                             onClick = {
                                 launch {
-                                    vm.addProblem(it.second)
-                                    sheetState.hide()
+                                    selectedQuestionNo?.let { questionNo ->
+                                        vm.setAnswers(questionNo, it.second)
+                                        selectedQuestionNo = null
+                                    } ?: kotlin.run {
+                                        vm.addProblem(it.second)
+                                    }
+                                    hideBottomSheet(sheetState) { selectedQuestionNo = null }
                                 }
                             }
                         )
@@ -326,7 +334,12 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             launcher
                                         )
                                     },
-                                    onDropdownItemClick = { showBottomSheet(sheetState) },
+                                    onDropdownItemClick = {
+                                        launch {
+                                            selectedQuestionNo = questionNo
+                                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                        }
+                                    },
                                     answers = answers,
                                     answerTextChanged = { newTitle, answerNo ->
                                         vm.setAnswer(
@@ -360,7 +373,12 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             launcher
                                         )
                                     },
-                                    onDropdownItemClick = { showBottomSheet(sheetState) },
+                                    onDropdownItemClick = {
+                                        launch {
+                                            selectedQuestionNo = questionNo
+                                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                        }
+                                    },
                                     answers = answers,
                                     answerTextChanged = { newTitle, answerNo ->
                                         vm.setAnswer(
@@ -407,7 +425,12 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             launcher
                                         )
                                     },
-                                    onDropdownItemClick = { showBottomSheet(sheetState) },
+                                    onDropdownItemClick = {
+                                        launch {
+                                            selectedQuestionNo = questionNo
+                                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                        }
+                                    },
                                     answers = answers,
                                     answerTextChanged = { newTitle, answerNo ->
                                         vm.setAnswer(
@@ -465,7 +488,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                 type = QuackLargeButtonType.Border,
                                 text = stringResource(id = R.string.create_problem_add_problem_button),
                                 leadingIcon = QuackIcon.Plus,
-                            ) { showBottomSheet(sheetState) }
+                            ) { launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) } }
                         }
                     }
                 )
@@ -496,7 +519,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                 launch {
                     vm.updatePhotoState(null)
                     galleryImagesSelections[galleryImagesSelectionIndex] = false
-                    sheetState.hide()
+                    hideBottomSheet(sheetState) { selectedQuestionNo = null }
                 }
             },
             onAddClick = {
@@ -526,11 +549,19 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         }
                     }
                     galleryImagesSelections[galleryImagesSelectionIndex] = false
-                    sheetState.hide()
+                    hideBottomSheet(sheetState) { selectedQuestionNo = null }
                 }
             },
         )
     }
+}
+
+private fun CoroutineScopeContent.hideBottomSheet(
+    sheetState: ModalBottomSheetState,
+    afterAction: (() -> Unit)? = null
+) = launch {
+    sheetState.hide()
+    afterAction?.invoke()
 }
 
 private fun CoroutineScopeContent.openPhotoPicker(
@@ -550,16 +581,13 @@ private fun CoroutineScopeContent.openPhotoPicker(
     }
 }
 
-private fun CoroutineScopeContent.showBottomSheet(sheetState: ModalBottomSheetState) {
-    launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
-}
-
 @Composable
 private fun CreateProblemTitleLayout(
     questionNo: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
+    dropDownTitle: String,
     onDropdownItemClick: (Int) -> Unit,
 ) {
     // TODO(riflockle7): 최상단 Line 없는 TextField 필요
@@ -583,7 +611,7 @@ private fun CreateProblemTitleLayout(
     // TODO(riflockle7): border 없는 DropDownCard 필요
     QuackDropDownCard(
         modifier = Modifier.padding(top = 24.dp),
-        text = "객관식/글",
+        text = dropDownTitle,
         onClick = { onDropdownItemClick(questionNo) }
     )
 }
@@ -596,7 +624,7 @@ private fun ChoiceProblemLayout(
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
     onDropdownItemClick: (Int) -> Unit,
-    answers: Answer.Choice?,
+    answers: Answer.Choice,
     answerTextChanged: (String, Int) -> Unit,
     addAnswerClick: () -> Unit,
     correctAnswers: String?,
@@ -612,10 +640,11 @@ private fun ChoiceProblemLayout(
             question,
             titleChanged,
             imageClick,
+            answers.type.title,
             onDropdownItemClick,
         )
 
-        answers?.choices?.forEachIndexed { answerIndex, choiceModel ->
+        answers.choices.forEachIndexed { answerIndex, choiceModel ->
             val answerNo = answerIndex + 1
             // TODO(riflockle7): border 가 존재하는 TextField 필요
             QuackBorderTextField(
@@ -665,7 +694,7 @@ private fun ImageChoiceProblemLayout(
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
     onDropdownItemClick: (Int) -> Unit,
-    answers: Answer.ImageChoice?,
+    answers: Answer.ImageChoice,
     answerTextChanged: (String, Int) -> Unit,
     answerImageClick: (Int) -> Unit,
     addAnswerClick: () -> Unit,
@@ -682,17 +711,18 @@ private fun ImageChoiceProblemLayout(
             question,
             titleChanged,
             imageClick,
+            answers.type.title,
             onDropdownItemClick,
         )
 
         NoLazyGridItems(
-            count = answers?.imageChoice?.size ?: 0,
+            count = answers.imageChoice.size,
             nColumns = 2,
             paddingValues = PaddingValues(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             itemContent = { index ->
                 val answerNo = index + 1
-                val answerItem = answers?.imageChoice?.get(index)
+                val answerItem = answers.imageChoice[index]
 
                 Column(
                     modifier = Modifier
@@ -700,7 +730,7 @@ private fun ImageChoiceProblemLayout(
                         .applyAnimatedQuackBorder(border = QuackBorder(color = QuackColor.Gray4))
                         .padding(12.dp)
                 ) {
-                    if (answerItem?.imageUrl.isNullOrEmpty()) {
+                    if (answerItem.imageUrl.isEmpty()) {
                         Box(
                             modifier = Modifier
                                 .quackClickable { answerImageClick(answerNo) }
@@ -713,7 +743,7 @@ private fun ImageChoiceProblemLayout(
                             )
                         }
                     } else {
-                        answerItem?.imageUrl?.let { imageUrl ->
+                        answerItem.imageUrl.let { imageUrl ->
                             QuackImage(
                                 src = imageUrl,
                                 size = DpSize(136.dp, 136.dp),
@@ -723,7 +753,7 @@ private fun ImageChoiceProblemLayout(
                     }
 
                     QuackBasicTextField(
-                        text = answers?.imageChoice?.get(index)?.text ?: "",
+                        text = answers.imageChoice[index].text,
                         onTextChanged = { newAnswer ->
                             answerTextChanged(newAnswer, answerNo)
                         },
@@ -764,6 +794,7 @@ private fun ShortAnswerProblemLayout(
             question,
             titleChanged,
             imageClick,
+            answers.type.title,
             onDropdownItemClick,
         )
 

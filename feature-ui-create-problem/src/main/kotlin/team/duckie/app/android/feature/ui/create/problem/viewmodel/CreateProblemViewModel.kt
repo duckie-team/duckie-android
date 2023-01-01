@@ -85,7 +85,7 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun updatePhotoState(photoState: CreateProblemPhotoState?) = updateState {prevState ->
+    fun updatePhotoState(photoState: CreateProblemPhotoState?) = updateState { prevState ->
         prevState.copy(
             examInformation = prevState.examInformation.copy(photoState = photoState),
         )
@@ -302,6 +302,32 @@ class CreateProblemViewModel @Inject constructor(
         )
     }
 
+    fun setAnswers(
+        questionNo: Int,
+        answerType: Answer.Type?,
+        answers: List<String>? = null,
+        urlSources: List<Uri>? = null,
+    ) = updateState { prevState ->
+        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
+        for (answerNo in 0 until newAnswers.size) {
+            newAnswers.generateAnswers(
+                questionNo,
+                answerNo,
+                answerType,
+                answers?.get(answerNo),
+                urlSources?.get(answerNo)
+            )
+        }
+
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(
+                createProblemArea = prevState.examInformation.createProblemArea.copy(
+                    answers = newAnswers
+                )
+            ),
+        )
+    }
+
     fun setAnswer(
         questionNo: Int,
         answerNo: Int,
@@ -309,10 +335,28 @@ class CreateProblemViewModel @Inject constructor(
         answer: String? = null,
         urlSource: Uri? = null,
     ) = updateState { prevState ->
-        val answerIndex = answerNo - 1
         val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
-        val newAnswer = newAnswers[questionNo]
-        newAnswers[questionNo] = when (answerType) {
+            .generateAnswers(questionNo, answerNo, answerType, answer, urlSource)
+
+        prevState.copy(
+            examInformation = prevState.examInformation.copy(
+                createProblemArea = prevState.examInformation.createProblemArea.copy(
+                    answers = newAnswers
+                )
+            ),
+        )
+    }
+
+    private fun MutableMap<Int, Answer?>.generateAnswers(
+        questionNo: Int,
+        answerNo: Int,
+        answerType: Answer.Type?,
+        answer: String?,
+        urlSource: Uri?
+    ): MutableMap<Int, Answer?> {
+        val answerIndex = answerNo - 1
+        val newAnswer = this[questionNo]
+        this[questionNo] = when (answerType) {
             Answer.Type.ShortAnswer -> Answer.Short(
                 answer ?: ((newAnswer as? Answer.Short)?.answer ?: ""),
             )
@@ -371,13 +415,7 @@ class CreateProblemViewModel @Inject constructor(
 
             else -> null
         }
-        prevState.copy(
-            examInformation = prevState.examInformation.copy(
-                createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    answers = newAnswers
-                )
-            ),
-        )
+        return this
     }
 
     fun setCorrectAnswer(
