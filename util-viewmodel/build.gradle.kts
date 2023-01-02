@@ -20,6 +20,7 @@ android {
 dependencies {
     implementations(
         libs.kotlin.coroutines,
+        libs.androidx.lifecycle.savedstate,
         projects.utilKotlin,
     )
     testImplementations(
