@@ -34,7 +34,7 @@ internal inline fun <DomainModel> responseCatching(
 ): DomainModel {
     return try {
         parse(response)
-    } catch (error: Throwable) {
+    } catch (_: Throwable) {
         val errorBody = jsonMapper.readValue(response, ExceptionBody::class.java)
         errorBody.throwing()
     }
