@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -85,7 +86,10 @@ class OnboardActivity : BaseActivity() {
             return finishWithAnimation()
         }
 
-        vm = vmFactory.create(getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase)
+        vm = vmFactory.create(
+            savedStateHandle = defaultViewModelCreationExtras.createSavedStateHandle(),
+            getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase,
+        )
         onBackPressedDispatcher.addCallback(owner = this) {
             if (onboardStepState == OnboardStep.Login || onboardStepState == OnboardStep.Tag) {
                 finishWithAnimation()

@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -34,6 +35,7 @@ import team.duckie.app.android.util.viewmodel.BaseViewModel
 private val NextStepNavigateThrottle = 1.seconds
 
 internal class OnboardViewModel @AssistedInject constructor(
+    @Assisted savedStateHandle: SavedStateHandle,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     private val joinUseCase: JoinUseCase,
     private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
@@ -125,6 +127,9 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface ViewModelFactory {
-        fun create(getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase): OnboardViewModel
+        fun create(
+            savedStateHandle: SavedStateHandle,
+            getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
+        ): OnboardViewModel
     }
 }
