@@ -35,8 +35,6 @@ import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize
 
-private val HomeIconSize = DpSize(24.dp)
-
 private val HomeHorizontalPadding = PaddingValues(
     horizontal = 16.dp,
 )
@@ -79,38 +77,5 @@ internal fun DuckieHomeScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun HomeTopAppBar(
-    modifier: Modifier = Modifier,
-    selectedTabIndex: Int,
-    onTabSelected: (Int) -> Unit,
-    onClickedEdit: () -> Unit,
-) {
-
-    val homeTextTabTitles = persistentListOf(
-        stringResource(id = R.string.recommend),
-        stringResource(id = R.string.following),
-    )
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        TextTabLayout(
-            titles = homeTextTabTitles,
-            selectedTabIndex = selectedTabIndex,
-            onTabSelected = onTabSelected,
-        )
-        QuackImage(
-            src = R.drawable.home_ic_create_24,
-            onClick = onClickedEdit,
-            size = HomeIconSize,
-        )
     }
 }
