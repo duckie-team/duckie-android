@@ -22,7 +22,7 @@ dependencies {
         libs.compose.runtime, // needs for Stability
         libs.kotlin.collections.immutable,
         libs.di.inject,
-        libs.paging.runtime,
+        libs.paging.common,
         projects.utilKotlin,
     )
 }
