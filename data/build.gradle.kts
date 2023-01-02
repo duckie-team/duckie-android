@@ -17,7 +17,6 @@ plugins {
     id(ConventionEnum.JvmDokka)
     id(ConventionEnum.AndroidHilt)
     id(ConventionEnum.AppVersionNameProvider)
-    id(libs.plugins.util.secrets.get().pluginId)
 }
 
 android {

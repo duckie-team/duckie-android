@@ -8,14 +8,12 @@
 package team.duckie.app.android.data.kakao.repository
 
 import android.app.Activity
-import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
 import java.lang.ref.WeakReference
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
-import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.domain.kakao.repository.KakaoRepository
 
 private val KakaoLoginException = IllegalStateException("Kakao API response is nothing.")
@@ -25,10 +23,6 @@ private val KakaoLoginException = IllegalStateException("Kakao API response is n
 class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
     private val _activity = WeakReference(activityContext)
     private val activity get() = _activity.get()!!
-
-    init {
-        KakaoSdk.init(activity, BuildConfig.KAKAO_NATIVE_APP_KEY)
-    }
 
     override suspend fun getAccessToken(): String {
         return if (UserApiClient.instance.isKakaoTalkLoginAvailable(activity)) {

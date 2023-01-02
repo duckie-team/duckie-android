@@ -15,6 +15,7 @@ plugins {
     id(libs.plugins.gms.google.service.get().pluginId)
     id(libs.plugins.firebase.crashlytics.get().pluginId)
     id(libs.plugins.firebase.performance.get().pluginId)
+    id(libs.plugins.util.secrets.get().pluginId)
 }
 
 android {
@@ -45,6 +46,7 @@ dependencies {
         libs.firebase.performance,
         libs.firebase.analytics,
         libs.firebase.crashlytics,
+        libs.login.kakao, // for KakaoSDK initialization
         libs.quack.ui.components, // for debug setting
         projects.presentation, // for launch IntroActivity
         projects.utilKotlin,

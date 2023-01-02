@@ -8,6 +8,7 @@
 package team.duckie.app.android
 
 import android.app.Application
+import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.quackquack.ui.animation.QuackAnimationMillis
@@ -19,5 +20,10 @@ class App : Application() {
         // 인앱에서 250 ms 는 너무 길게 느껴짐
         QuackAnimationMillis = 0.15.seconds.toInt()
         QuackAlwaysShowRipple = BuildConfig.ALWAYS_RIPPLE
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }
