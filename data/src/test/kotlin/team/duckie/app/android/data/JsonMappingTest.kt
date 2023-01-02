@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.data.util_test
+package team.duckie.app.android.data
 
 import org.junit.Test
 import strikt.api.expectThat
@@ -16,8 +16,11 @@ import team.duckie.app.android.data._util.toStringJsonMap
 class JsonMappingTest {
     @Test
     fun mapping2map() {
-        val json = "{\"name\":\"duckie\"}"
-        val map = json.toStringJsonMap()
-        expectThat(map["name"]).isNotNull().isEqualTo("duckie")
+        val rawJson = "{\"name\":\"duckie\"}"
+        val actual = rawJson.toStringJsonMap()
+
+        val expected = "duckie"
+
+        expectThat(actual["name"]).isNotNull().isEqualTo(expected)
     }
 }

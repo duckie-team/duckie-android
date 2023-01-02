@@ -7,9 +7,8 @@
 
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package team.duckie.app.android.data.util_test
+package team.duckie.app.android.data
 
-import team.duckie.app.android.data._exception.util.responseCatching as responseCatchingActual
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,6 +18,7 @@ import strikt.api.expectCatching
 import strikt.assertions.isEqualTo
 import strikt.assertions.isFailure
 import team.duckie.app.android.data._exception.model.ExceptionBody
+import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.jsonMapper
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserResponse
@@ -41,10 +41,11 @@ class ExceptionTest {
     private val client = buildMockHttpClient(content = exceptionContent)
 
     @Test
-    fun responseCatching() = runTest {
+    fun response_catching() = runTest {
         val response = client.get("")
+
         expectCatching {
-            responseCatchingActual(
+            responseCatching(
                 response = response.body(),
                 parse = UserResponse::toDomain,
             )
