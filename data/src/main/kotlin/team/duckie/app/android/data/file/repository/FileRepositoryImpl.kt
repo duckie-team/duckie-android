@@ -7,12 +7,12 @@
 
 package team.duckie.app.android.data.file.repository
 
-import io.ktor.client.call.body
 import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import java.io.File
 import javax.inject.Inject
 import team.duckie.app.android.data._datasource.client
@@ -36,7 +36,7 @@ class FileRepositoryImpl @Inject constructor() : FileRepository {
                 println("Sent $bytesSentTotal bytes from $contentLength")
             }
         }
-        return responseCatching<String, String>(response.body()) { body ->
+        return responseCatching(response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
             json["url"] ?: duckieResponseFieldNpe("url")
         }
