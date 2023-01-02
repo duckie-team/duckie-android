@@ -13,7 +13,8 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import team.duckie.app.android.domain.recommendation.model.SearchType
-import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultUseCase
+import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForExamUseCase
+import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForUserUseCase
 import team.duckie.app.android.feature.ui.search.constans.SearchResultStep
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchResultSideEffect
 import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchResultState
@@ -45,7 +46,8 @@ private val DummyResultResultForUser = (0..20).map {
 
 @Immutable
 class SearchResultViewModel @Inject constructor(
-    private val fetchSearchResultUseCase: FetchSearchResultUseCase,
+    private val fetchSearchResultForExamUseCase: FetchSearchResultForExamUseCase,
+    private val fetchSearchResultForUserUseCase: FetchSearchResultForUserUseCase,
 ) : BaseViewModel<SearchResultState, SearchResultSideEffect>(SearchResultState()) {
 
     // TODO(limsaehyun): Request Server
@@ -56,9 +58,8 @@ class SearchResultViewModel @Inject constructor(
             )
         }
         delay(2.seconds)
-        fetchSearchResultUseCase(
+        fetchSearchResultForExamUseCase(
             tag = tag,
-            type = SearchType.EXAM,
         ).onSuccess {
             updateState { prevState ->
                 prevState.copy(
@@ -86,9 +87,8 @@ class SearchResultViewModel @Inject constructor(
             )
         }
         delay(2.seconds)
-        fetchSearchResultUseCase(
+        fetchSearchResultForUserUseCase(
             tag = tag,
-            type = SearchType.USER,
         ).onSuccess {
             updateState { prevState ->
                 prevState.copy(

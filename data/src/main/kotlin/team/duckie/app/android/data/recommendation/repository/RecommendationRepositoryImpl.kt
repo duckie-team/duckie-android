@@ -22,7 +22,7 @@ class RecommendationRepositoryImpl(
         return RecommendationPagingSource()
     }
 
-    override suspend fun fetchInitRecommendations() {
+    override suspend fun fetchJumbotrons() {
         // TODO(limsaehyun): repository 작업 필요
     }
 

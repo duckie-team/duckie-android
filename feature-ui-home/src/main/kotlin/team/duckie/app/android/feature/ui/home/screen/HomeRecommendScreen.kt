@@ -43,6 +43,7 @@ import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
+import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
@@ -76,7 +77,7 @@ internal fun HomeRecommendScreen(
     val lazyRecommendations = vm.fetchRecommendations().collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
-        vm.fetchInitRecommendations()
+        vm.fetchJumbotrons()
     }
 
     Box(
@@ -217,7 +218,7 @@ private fun HomeTopicRecommendLayout(
             contentPadding = PaddingValues(
                 top = 12.dp,
                 start = 16.dp,
-            )
+            ),
         ) {
             items(items = exams) { item ->
                 DuckTestSmallCover(

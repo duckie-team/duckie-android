@@ -15,6 +15,7 @@ import androidx.paging.PagingConfig
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
+import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
@@ -71,13 +72,14 @@ private const val ITEMS_PER_PAGE = 10
 @Immutable
 class HomeViewModel @Inject constructor(
     private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
+    private val fetchJumbotronsUseCase: FetchJumbotronsUseCase,
     private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,
     private val fetchRecommendFollowingUseCase: FetchRecommendFollowingUseCase,
 ) : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
 
     // TODO(limsaehyun: Request Server
-    suspend fun fetchInitRecommendations() {
-        fetchRecommendationsUseCase.init()
+    suspend fun fetchJumbotrons() {
+        fetchJumbotronsUseCase()
             .onSuccess {
                 updateState { prevState ->
                     prevState.copy(

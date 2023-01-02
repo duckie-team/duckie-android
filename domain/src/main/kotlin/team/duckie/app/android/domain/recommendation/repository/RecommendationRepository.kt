@@ -21,7 +21,7 @@ import team.duckie.app.android.domain.recommendation.model.SearchType
 interface RecommendationRepository {
     fun fetchRecommendations(): PagingSource<Int, RecommendationFeeds.Recommendation>
 
-    suspend fun fetchInitRecommendations()
+    suspend fun fetchJumbotrons()
 
     suspend fun fetchFollowingTest()
 

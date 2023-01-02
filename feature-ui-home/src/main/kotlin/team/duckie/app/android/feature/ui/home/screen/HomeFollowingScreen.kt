@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
+import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
@@ -102,7 +103,7 @@ internal fun HomeRecommendFollowingTestScreen(
                     takers = maker.examineeNumber,
                     createAt = maker.createAt,
                     onClickUserProfile = {
-                        // TODO(limsaehyun): 추후에 유저의 profile로 이동 필요할 것 같음
+                        // TODO(limsaehyun): 추후에 유저의 profile로 이동 필요
                     },
                     onClickTestCover = {
                         // TODO(limsaehyun): 상세보기로 이동
