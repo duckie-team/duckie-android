@@ -28,7 +28,7 @@ private const val DuckieAuthorizationHeaderKey = "authorization"
 private const val DuckieAuthorizationHeaderValue = "TEST"
 private const val DuckieAuthorizationHeaderLog = "-> $DuckieAuthorizationHeaderKey: $DuckieAuthorizationHeaderValue;"
 
-class DuckieAuthorizationHeaderOrEmptyTest {
+class DuckieAuthorizationHeaderOrNothingTest {
     private val headers = mutableListOf<String>()
     private lateinit var client: HttpClient
 
