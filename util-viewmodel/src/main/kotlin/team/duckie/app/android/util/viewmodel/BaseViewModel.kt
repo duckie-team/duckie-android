@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.update
  * @param SideEffect ViewModel 에서 발생할 수 있는 부수 효과
  * @param initialState ViewModel 의 초기 상태
  */
+@Suppress("UnnecessaryAbstractClass")
 abstract class BaseViewModel<State, SideEffect>(initialState: State) {
     private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
 
@@ -49,6 +50,7 @@ abstract class BaseViewModel<State, SideEffect>(initialState: State) {
      * @param updater 상태를 업데이트하는 람다.
      * 새로운 상태를 반환하거나 skip 돼야 합니다.
      */
+    // TODO(sungbin): 동시성 보장
     fun updateState(updater: StateUpdater.(currentState: State) -> State) {
         try {
             mutableState.update { currentState ->
