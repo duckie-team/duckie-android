@@ -18,22 +18,22 @@ import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 
+private enum class State {
+    Waiting, Join, Leave, JoinRejected,
+}
+
+private enum class SideEffect {
+    Greeting,
+}
+
+private class ViewModel : BaseViewModel<State, SideEffect>(State.Waiting)
+
+@Suppress("NOTHING_TO_INLINE")
+private inline fun buildViewModel(): BaseViewModel<State, SideEffect> {
+    return ViewModel()
+}
+
 class BaseViewModelTest {
-    private enum class State {
-        Waiting, Join, Leave, JoinRejected,
-    }
-
-    private enum class SideEffect {
-        Greeting,
-    }
-
-    private class ViewModel : BaseViewModel<State, SideEffect>(State.Waiting)
-
-    @Suppress("NOTHING_TO_INLINE")
-    private inline fun buildViewModel(): BaseViewModel<State, SideEffect> {
-        return ViewModel()
-    }
-
     @Test
     fun `Waiting - Join - Leave 순으로 상태를 바꿈`() {
         val vm = buildViewModel()
@@ -46,7 +46,6 @@ class BaseViewModelTest {
         expectThat(vm.currentState).isEqualTo(State.Leave)
     }
 
-    @Suppress("UNREACHABLE_CODE")
     @Test
     fun `Waiting - JoinRejected 순으로 상태를 바꿈`() {
         val vm = buildViewModel()
@@ -54,6 +53,7 @@ class BaseViewModelTest {
 
         vm.updateState {
             skip()
+            @Suppress("UNREACHABLE_CODE")
             State.Join
         }
         expectThat(vm.currentState).isEqualTo(State.Waiting)
