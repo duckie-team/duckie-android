@@ -27,6 +27,9 @@ import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ThumbnailType
+import team.duckie.app.android.domain.exam.model.toChoice
+import team.duckie.app.android.domain.exam.model.toImageChoice
+import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
@@ -35,6 +38,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
+import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
 @Singleton
@@ -326,6 +330,7 @@ class CreateProblemViewModel @Inject constructor(
                 title ?: prevQuestion.text,
                 "${urlSource ?: prevQuestion}"
             )
+
             else -> null
         }
         newQuestion?.let { newQuestions[questionIndex] = it }
@@ -354,8 +359,7 @@ class CreateProblemViewModel @Inject constructor(
         val prevAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
         val newAnswers = mutableListOf<Answer>()
         for (answerIndex in 0 until prevAnswers.size) {
-            prevAnswers.getEditedAnswers(
-                questionIndex,
+            prevAnswers[questionIndex].getEditedAnswers(
                 answerIndex,
                 answerType,
                 answers?.get(answerIndex),
@@ -388,8 +392,7 @@ class CreateProblemViewModel @Inject constructor(
     ) = updateState { prevState ->
         val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
 
-        newAnswers.getEditedAnswers(
-            questionIndex,
+        newAnswers[questionIndex].getEditedAnswers(
             answerIndex,
             answerType,
             answer,
@@ -413,7 +416,7 @@ class CreateProblemViewModel @Inject constructor(
         val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
         val newAnswer = newAnswers[questionIndex]
         newAnswers[questionIndex] = when (newAnswer) {
-            is Answer.Short -> throw Exception("주관식 답변은 삭제할 수 없습니다.")
+            is Answer.Short -> error("주관식 답변은 삭제할 수 없습니다.")
             is Answer.Choice -> Answer.Choice(
                 newAnswer.choices.toMutableList()
                     .apply { removeAt(answerIndex) }
@@ -426,7 +429,7 @@ class CreateProblemViewModel @Inject constructor(
                     .toImmutableList()
             )
 
-            else -> throw Exception()
+            else -> npe()
         }
 
         prevState.copy(
@@ -443,66 +446,20 @@ class CreateProblemViewModel @Inject constructor(
      * [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 수정합니다.
      * 이후 [questionIndex + 1] 문제의 답안 목록을 가져옵니다.
      */
-    private fun MutableList<Answer>.getEditedAnswers(
-        questionIndex: Int,
+    private fun Answer.getEditedAnswers(
         answerIndex: Int,
         answerType: Answer.Type,
         answer: String?,
         urlSource: Uri?
     ): Answer {
-        val newAnswer = this[questionIndex]
         return when (answerType) {
-            Answer.Type.ShortAnswer -> Answer.Short(
-                answer ?: ((newAnswer as? Answer.Short)?.answer ?: ""),
+            Answer.Type.ShortAnswer -> this.toShort(answer)
+            Answer.Type.Choice -> this.toChoice(answerIndex, answer)
+            Answer.Type.ImageChoice -> this.toImageChoice(
+                answerIndex,
+                answer,
+                urlSource?.let { "$this" }
             )
-
-            Answer.Type.Choice -> when (newAnswer) {
-                is Answer.Short -> Answer.Choice(persistentListOf())
-                is Answer.Choice -> Answer.Choice(
-                    newAnswer.choices.mapIndexed { index, choiceModel ->
-                        if (index == answerIndex)
-                            ChoiceModel(answer ?: choiceModel.text)
-                        else
-                            choiceModel
-                    }.toPersistentList()
-                )
-
-                is Answer.ImageChoice -> Answer.Choice(
-                    newAnswer.imageChoice.mapIndexed { index, imageChoiceModel ->
-                        if (index == answerIndex)
-                            ChoiceModel(answer ?: imageChoiceModel.text)
-                        else
-                            ChoiceModel(imageChoiceModel.text)
-                    }.toPersistentList()
-                )
-            }
-
-            Answer.Type.ImageChoice -> when (newAnswer) {
-                is Answer.Short -> Answer.ImageChoice(persistentListOf())
-                is Answer.Choice -> Answer.ImageChoice(
-                    newAnswer.choices.mapIndexed { index, choiceModel ->
-                        if (index == answerIndex)
-                            ImageChoiceModel(
-                                answer ?: choiceModel.text,
-                                "${urlSource ?: ""}"
-                            )
-                        else
-                            ImageChoiceModel(choiceModel.text, "")
-                    }.toPersistentList()
-                )
-
-                is Answer.ImageChoice -> Answer.ImageChoice(
-                    newAnswer.imageChoice.mapIndexed { index, imageChoiceModel ->
-                        if (index == answerIndex)
-                            ImageChoiceModel(
-                                answer ?: imageChoiceModel.text,
-                                "${urlSource ?: imageChoiceModel.imageUrl}"
-                            )
-                        else
-                            ImageChoiceModel(imageChoiceModel.text, imageChoiceModel.imageUrl)
-                    }.toPersistentList()
-                )
-            }
         }
     }
 
@@ -536,17 +493,17 @@ class CreateProblemViewModel @Inject constructor(
         val newAnswer = newAnswers[questionIndex]
 
         when (answerType) {
-            Answer.Type.ShortAnswer -> throw Exception("주관식은 답이 여러개가 될 수 없습니다.")
+            Answer.Type.ShortAnswer -> error("주관식은 답이 여러개가 될 수 없습니다.")
 
             Answer.Type.Choice -> {
-                val choiceAnswer = newAnswer as? Answer.Choice ?: throw Exception()
-                val newChoices =
-                    choiceAnswer.choices.toMutableList().apply { this.add(ChoiceModel("")) }
+                val choiceAnswer = newAnswer as? Answer.Choice ?: npe()
+                val newChoices = choiceAnswer.choices.toMutableList()
+                    .apply { this.add(ChoiceModel("")) }
                 Answer.Choice(newChoices.toImmutableList())
             }
 
             Answer.Type.ImageChoice -> {
-                val choiceAnswer = newAnswer as? Answer.ImageChoice ?: throw Exception()
+                val choiceAnswer = newAnswer as? Answer.ImageChoice ?: npe()
                 val newImageChoices = choiceAnswer.imageChoice.toMutableList()
                     .apply { this.add(ImageChoiceModel("", "")) }
                 Answer.ImageChoice(newImageChoices.toImmutableList())

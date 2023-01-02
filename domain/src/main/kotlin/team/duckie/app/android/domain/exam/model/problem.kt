@@ -11,6 +11,8 @@ package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Immutable
 data class Problem(
@@ -118,3 +120,60 @@ data class ImageChoiceModel(
     val text: String,
     val imageUrl: String,
 )
+
+/** [Answer] -> [Answer.Short] */
+fun Answer.toShort(newAnswer: String?) = when (this) {
+    is Answer.Short -> Answer.Short(newAnswer ?: this.answer)
+    is Answer.Choice -> Answer.Short(newAnswer ?: this.choices.firstOrNull()?.text ?: "")
+    is Answer.ImageChoice -> Answer.Short(
+        newAnswer ?: this.imageChoice.firstOrNull()?.text ?: ""
+    )
+}
+
+/** [Answer] -> [Answer.Choice] */
+fun Answer.toChoice(answerIndex: Int, newAnswer: String?) = when (this) {
+    is Answer.Short -> Answer.Choice(persistentListOf())
+    is Answer.Choice -> Answer.Choice(
+        choices.toMutableList().apply {
+            this[answerIndex] = ChoiceModel(newAnswer ?: this[answerIndex].text)
+        }.toPersistentList()
+    )
+
+    is Answer.ImageChoice -> Answer.Choice(
+        imageChoice.mapIndexed { index, imageChoiceModel ->
+            if (index == answerIndex)
+                ChoiceModel(newAnswer ?: imageChoiceModel.text)
+            else
+                ChoiceModel(imageChoiceModel.text)
+        }.toPersistentList()
+    )
+}
+
+/** [Answer] -> [Answer.ImageChoice] */
+fun Answer.toImageChoice(
+    answerIndex: Int,
+    newAnswer: String?,
+    newUrlSource: String?,
+) = when (this) {
+    is Answer.Short -> Answer.ImageChoice(persistentListOf())
+    is Answer.Choice -> Answer.ImageChoice(
+        choices.mapIndexed { index, choiceModel ->
+            if (index == answerIndex)
+                ImageChoiceModel(
+                    newAnswer ?: choiceModel.text,
+                    newUrlSource ?: ""
+                )
+            else
+                ImageChoiceModel(choiceModel.text, "")
+        }.toPersistentList()
+    )
+
+    is Answer.ImageChoice -> Answer.ImageChoice(
+        imageChoice.toMutableList().apply {
+            this[answerIndex] = ImageChoiceModel(
+                newAnswer ?: this[answerIndex].text,
+                newUrlSource ?: this[answerIndex].imageUrl
+            )
+        }.toPersistentList()
+    )
+}

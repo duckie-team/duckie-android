@@ -17,6 +17,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -302,9 +303,9 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                             outPositions: IntArray
                         ) {
                             var current = 0
-                            sizes.take(sizes.size - 1).forEachIndexed { index, it ->
+                            sizes.take(sizes.size - 1).forEachIndexed { index, size ->
                                 outPositions[index] = current
-                                current += it
+                                current += size
                             }
                             outPositions[sizes.lastIndex] = totalSize - sizes.last()
                         }
@@ -574,9 +575,9 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
         rightButtonOnClick = {
             deleteDialogNo?.let {
                 val questionIndex = it.first
-                it.second?.let {answerIndex ->
+                it.second?.let { answerIndex ->
                     vm.removeAnswer(questionIndex, answerIndex)
-                }  ?: vm.removeProblem(questionIndex)
+                } ?: vm.removeProblem(questionIndex)
             }
             deleteDialogNo = null
         },
@@ -746,6 +747,9 @@ private fun ImageChoiceProblemLayout(
     setCorrectAnswerClick: (String) -> Unit,
     deleteLongClick: (Int?) -> Unit,
 ) {
+    // TODO(riflockle7): 정답 체크 연동 필요 (failed 를 막기 위해 추가한 코드)
+    Log.i("riflockle7", "$correctAnswers $setCorrectAnswerClick")
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -852,43 +856,6 @@ private fun ShortAnswerProblemLayout(
             onTextChanged = { newAnswer -> answerTextChanged(newAnswer, 0) },
             placeholderText = stringResource(id = R.string.create_problem_short_answer_placeholder)
         )
-    }
-}
-
-/** 최하단 Layout  */
-@Deprecated("임시 저장 기능 부활 시 다시 사용")
-@Composable
-private fun CreateProblemBottomLayout() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-//            .layoutId(BottomLayoutId)
-            .padding(
-                start = 20.dp,
-                end = 20.dp,
-                top = 12.dp,
-                bottom = 20.dp,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        // 임시저장 버튼
-        QuackLargeButton(
-            modifier = Modifier.weight(1f),
-            text = stringResource(id = R.string.create_problem_temp_save_button),
-            type = QuackLargeButtonType.Border,
-        ) {
-        }
-
-        // 다음 버튼
-        QuackLargeButton(
-            modifier = Modifier.weight(1f),
-            text = stringResource(id = R.string.next),
-            type = QuackLargeButtonType.Fill,
-            enabled = false,
-        ) {
-
-        }
     }
 }
 

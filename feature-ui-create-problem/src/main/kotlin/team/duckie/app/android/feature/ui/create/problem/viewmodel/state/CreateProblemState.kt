@@ -80,5 +80,5 @@ sealed class CreateProblemPhotoState {
         val value: Answer.ImageChoice,
     ) : CreateProblemPhotoState()
 
-    object AdditionalThumbnailType: CreateProblemPhotoState()
+    object AdditionalThumbnailType : CreateProblemPhotoState()
 }
