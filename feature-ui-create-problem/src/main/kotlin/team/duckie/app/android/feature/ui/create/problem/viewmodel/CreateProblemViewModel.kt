@@ -238,17 +238,16 @@ class CreateProblemViewModel @Inject constructor(
         }
 
         val prevCreateProblemArea = prevState.examInformation.createProblemArea
-        val newProblemNo = prevCreateProblemArea.questions.size + 1
-        val newQuestions = prevCreateProblemArea.questions.toMutableMap()
-            .apply { this[newProblemNo] = newQuestion }
-        val newAnswers = prevCreateProblemArea.answers.toMutableMap()
-            .apply { this[newProblemNo] = newAnswer }
-        val newCorrectAnswers = prevCreateProblemArea.correctAnswers.toMutableMap()
-            .apply { this[newProblemNo] = "" }
-        val newHints = prevCreateProblemArea.hints.toMutableMap()
-            .apply { this[newProblemNo] = "" }
-        val newMemos = prevCreateProblemArea.memos.toMutableMap()
-            .apply { this[newProblemNo] = "" }
+        val newQuestions = prevCreateProblemArea.questions.toMutableList()
+            .apply { add(newQuestion) }.toPersistentList()
+        val newAnswers = prevCreateProblemArea.answers.toMutableList()
+            .apply { add(newAnswer) }.toPersistentList()
+        val newCorrectAnswers = prevCreateProblemArea.correctAnswers.toMutableList()
+            .apply { add("") }.toPersistentList()
+        val newHints = prevCreateProblemArea.hints.toMutableList()
+            .apply { add("") }.toPersistentList()
+        val newMemos = prevCreateProblemArea.memos.toMutableList()
+            .apply { add("") }.toPersistentList()
 
         prevState.copy(
             examInformation = prevState.examInformation.copy(
@@ -267,23 +266,18 @@ class CreateProblemViewModel @Inject constructor(
      * 문제를 삭제한다.
      * // TODO(riflockle7): 좀더 깔끔하게 할 수 있는 방법이 없을까?
      */
-    fun removeProblem(questionNo: Int) = updateState { prevState ->
+    fun removeProblem(questionIndex: Int) = updateState { prevState ->
         val prevCreateProblemArea = prevState.examInformation.createProblemArea
-        val newQuestions = prevCreateProblemArea.questions.toMutableMap()
-            .apply { this.remove(questionNo) }.map { it.value }
-            .mapIndexed { index, question -> index + 1 to question }.toMap()
-        val newAnswers = prevCreateProblemArea.answers.toMutableMap()
-            .apply { this.remove(questionNo) }.map { it.value }
-            .mapIndexed { index, answer -> index + 1 to answer }.toMap()
-        val newCorrectAnswers = prevCreateProblemArea.correctAnswers.toMutableMap()
-            .apply { this.remove(questionNo) }.map { it.value }
-            .mapIndexed { index, correctAnswer -> index + 1 to correctAnswer }.toMap()
-        val newHints = prevCreateProblemArea.hints.toMutableMap()
-            .apply { this.remove(questionNo) }.map { it.value }
-            .mapIndexed { index, hint -> index + 1 to hint }.toMap()
-        val newMemos = prevCreateProblemArea.memos.toMutableMap()
-            .apply { this.remove(questionNo) }.map { it.value }
-            .mapIndexed { index, memo -> index + 1 to memo }.toMap()
+        val newQuestions = prevCreateProblemArea.questions.toMutableList()
+            .apply { this.removeAt(questionIndex) }.toPersistentList()
+        val newAnswers = prevCreateProblemArea.answers.toMutableList()
+            .apply { this.removeAt(questionIndex) }.toPersistentList()
+        val newCorrectAnswers = prevCreateProblemArea.correctAnswers.toMutableList()
+            .apply { this.removeAt(questionIndex) }.toPersistentList()
+        val newHints = prevCreateProblemArea.hints.toMutableList()
+            .apply { this.removeAt(questionIndex) }.toPersistentList()
+        val newMemos = prevCreateProblemArea.memos.toMutableList()
+            .apply { this.removeAt(questionIndex) }.toPersistentList()
 
         prevState.copy(
             examInformation = prevState.examInformation.copy(
@@ -300,105 +294,115 @@ class CreateProblemViewModel @Inject constructor(
 
     fun setQuestion(
         questionType: Question.Type?,
-        questionNo: Int,
+        questionIndex: Int,
         title: String? = null,
         urlSource: Uri? = null,
     ) = updateState { prevState ->
-        val newQuestions = prevState.examInformation.createProblemArea.questions.toMutableMap()
-        val newQuestion = newQuestions[questionNo]
-        newQuestions[questionNo] = when (questionType) {
+        val newQuestions = prevState.examInformation.createProblemArea.questions.toMutableList()
+        val prevQuestion = newQuestions[questionIndex]
+        val newQuestion = when (questionType) {
             Question.Type.Text -> Question.Text(
-                title ?: (newQuestion?.text ?: ""),
+                title ?: (prevQuestion.text),
             )
 
             Question.Type.Image -> Question.Image(
-                title ?: newQuestion?.text ?: "",
-                "${urlSource ?: newQuestion ?: ""}"
+                title ?: prevQuestion.text,
+                "${urlSource ?: prevQuestion}"
             )
 
             Question.Type.Audio -> Question.Audio(
-                title ?: newQuestion?.text ?: "",
-                "${urlSource ?: newQuestion ?: ""}"
+                title ?: prevQuestion.text,
+                "${urlSource ?: prevQuestion}"
             )
 
             Question.Type.Video -> Question.Video(
-                title ?: newQuestion?.text ?: "",
-                "${urlSource ?: newQuestion ?: ""}"
+                title ?: prevQuestion.text,
+                "${urlSource ?: prevQuestion}"
             )
-
             else -> null
         }
+        newQuestion?.let { newQuestions[questionIndex] = it }
+
         prevState.copy(
             examInformation = prevState.examInformation.copy(
                 createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    questions = newQuestions
+                    questions = newQuestions.toPersistentList()
                 )
             ),
         )
     }
 
     fun setAnswers(
-        questionNo: Int,
-        answerType: Answer.Type?,
+        questionIndex: Int,
+        answerType: Answer.Type,
         answers: List<String>? = null,
         urlSources: List<Uri>? = null,
     ) = updateState { prevState ->
-        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
-        for (answerNo in 0 until newAnswers.size) {
-            newAnswers.generateAnswers(
-                questionNo,
-                answerNo,
+        val prevAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
+        val newAnswers = mutableListOf<Answer>()
+        for (answerIndex in 0 until prevAnswers.size) {
+            prevAnswers.generateAnswers(
+                questionIndex,
+                answerIndex,
                 answerType,
-                answers?.get(answerNo),
-                urlSources?.get(answerNo)
-            )
+                answers?.get(answerIndex),
+                urlSources?.get(answerIndex)
+            ).let { newAnswers.add(it) }
         }
 
         prevState.copy(
             examInformation = prevState.examInformation.copy(
                 createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    answers = newAnswers
+                    answers = newAnswers.toPersistentList()
                 )
             ),
         )
     }
 
     fun setAnswer(
-        questionNo: Int,
-        answerNo: Int,
-        answerType: Answer.Type?,
+        questionIndex: Int,
+        answerIndex: Int,
+        answerType: Answer.Type,
         answer: String? = null,
         urlSource: Uri? = null,
     ) = updateState { prevState ->
-        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
-            .generateAnswers(questionNo, answerNo, answerType, answer, urlSource)
+        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
+            // .generateAnswers(questionIndex, answerIndex, answerType, answer, urlSource)
+
+        newAnswers.generateAnswers(
+            questionIndex,
+            answerIndex,
+            answerType,
+            answer,
+            urlSource
+        ).let { newAnswers[questionIndex] = it }
 
         prevState.copy(
             examInformation = prevState.examInformation.copy(
                 createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    answers = newAnswers
+                    answers = newAnswers.toPersistentList()
                 )
             ),
         )
     }
 
     fun removeAnswer(
-        questionNo: Int,
-        answerNo: Int,
+        questionIndex: Int,
+        answerIndex: Int,
     ) = updateState { prevState ->
-        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
-        val newAnswer = newAnswers[questionNo]
-        newAnswers[questionNo] = when (newAnswer) {
+        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
+        val newAnswer = newAnswers[questionIndex]
+        newAnswers[questionIndex] = when (newAnswer) {
             is Answer.Short -> throw Exception("주관식 답변은 삭제할 수 없습니다.")
             is Answer.Choice -> Answer.Choice(
                 newAnswer.choices.toMutableList()
-                    .apply { removeAt(answerNo - 1) }
+                    .apply { removeAt(answerIndex) }
                     .toImmutableList()
             )
 
             is Answer.ImageChoice -> Answer.ImageChoice(
                 newAnswer.imageChoice.toMutableList()
-                    .apply { removeAt(answerNo - 1) }
+                    .apply { removeAt(answerIndex) }
                     .toImmutableList()
             )
 
@@ -408,22 +412,21 @@ class CreateProblemViewModel @Inject constructor(
         prevState.copy(
             examInformation = prevState.examInformation.copy(
                 createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    answers = newAnswers
+                    answers = newAnswers.toPersistentList()
                 )
             ),
         )
     }
 
-    private fun MutableMap<Int, Answer?>.generateAnswers(
-        questionNo: Int,
-        answerNo: Int,
-        answerType: Answer.Type?,
+    private fun MutableList<Answer>.generateAnswers(
+        questionIndex: Int,
+        answerIndex: Int,
+        answerType: Answer.Type,
         answer: String?,
         urlSource: Uri?
-    ): MutableMap<Int, Answer?> {
-        val answerIndex = answerNo - 1
-        val newAnswer = this[questionNo]
-        this[questionNo] = when (answerType) {
+    ): Answer {
+        val newAnswer = this[questionIndex]
+        return when (answerType) {
             Answer.Type.ShortAnswer -> Answer.Short(
                 answer ?: ((newAnswer as? Answer.Short)?.answer ?: ""),
             )
@@ -447,8 +450,6 @@ class CreateProblemViewModel @Inject constructor(
                             ChoiceModel(imageChoiceModel.text)
                     }.toPersistentList()
                 )
-
-                else -> null
             }
 
             Answer.Type.ImageChoice -> when (newAnswer) {
@@ -476,40 +477,35 @@ class CreateProblemViewModel @Inject constructor(
                             ImageChoiceModel(imageChoiceModel.text, imageChoiceModel.imageUrl)
                     }.toPersistentList()
                 )
-
-                else -> null
             }
-
-            else -> null
         }
-        return this
     }
 
     fun setCorrectAnswer(
-        questionNo: Int,
-        correctAnswer: String? = null,
+        questionIndex: Int,
+        correctAnswer: String,
     ) = updateState { prevState ->
         val newCorrectAnswers =
-            prevState.examInformation.createProblemArea.correctAnswers.toMutableMap()
-        newCorrectAnswers[questionNo] = correctAnswer
+            prevState.examInformation.createProblemArea.correctAnswers.toMutableList()
+        newCorrectAnswers[questionIndex] = correctAnswer
 
         prevState.copy(
             examInformation = prevState.examInformation.copy(
                 createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    correctAnswers = newCorrectAnswers
+                    correctAnswers = newCorrectAnswers.toPersistentList()
                 )
             ),
         )
     }
 
     fun addAnswer(
-        questionNo: Int,
+        questionIndex: Int,
         answerType: Answer.Type?,
     ) = updateState { prevState ->
-        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableMap()
-        val newAnswer = newAnswers[questionNo]
+        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
+        val newAnswer = newAnswers[questionIndex]
 
-        newAnswers[questionNo] = when (answerType) {
+        when (answerType) {
             Answer.Type.ShortAnswer -> throw Exception("주관식은 답이 여러개가 될 수 없습니다.")
 
             Answer.Type.Choice -> {
@@ -527,12 +523,12 @@ class CreateProblemViewModel @Inject constructor(
             }
 
             else -> null
-        }
+        }?.let { newAnswers[questionIndex] = it }
         prevState.copy(
             examInformation = prevState.examInformation.copy(
                 createProblemArea = prevState.examInformation.createProblemArea.copy(
                     questions = prevState.examInformation.createProblemArea.questions,
-                    answers = newAnswers
+                    answers = newAnswers.toPersistentList()
                 )
             ),
         )

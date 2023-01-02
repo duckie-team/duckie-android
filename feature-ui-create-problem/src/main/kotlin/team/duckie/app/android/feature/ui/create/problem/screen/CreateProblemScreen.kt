@@ -155,7 +155,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     val toast = rememberToast()
     val permissionErrorMessage =
         stringResource(id = R.string.create_problem_permission_toast_message)
-    var selectedQuestionNo: Int? by remember { mutableStateOf(null) }
+    var selectedQuestionIndex: Int? by remember { mutableStateOf(null) }
     val correctAnswers = remember(state.correctAnswers) { state.correctAnswers }
 
     // Gallery 관련
@@ -187,7 +187,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
 
     BackHandler {
         if (sheetState.isVisible) {
-            hideBottomSheet(sheetState) { selectedQuestionNo = null }
+            hideBottomSheet(sheetState) { selectedQuestionIndex = null }
         } else if (photoState != null) {
             vm.updatePhotoState(null)
         } else {
@@ -252,13 +252,13 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                             text = it.first,
                             onClick = {
                                 launch {
-                                    selectedQuestionNo?.let { questionNo ->
-                                        vm.setAnswers(questionNo, it.second)
-                                        selectedQuestionNo = null
+                                    selectedQuestionIndex?.let { questionIndex ->
+                                        vm.setAnswers(questionIndex, it.second)
+                                        selectedQuestionIndex = null
                                     } ?: kotlin.run {
                                         vm.addProblem(it.second)
                                     }
-                                    hideBottomSheet(sheetState) { selectedQuestionNo = null }
+                                    hideBottomSheet(sheetState) { selectedQuestionIndex = null }
                                 }
                             }
                         )
@@ -309,20 +309,19 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         }
                     },
                     content = {
-                        items(selectedQuestions.size) { index ->
-                            val questionNo = index + 1
-                            val question = selectedQuestions[questionNo]
-                            val answers = selectedAnswers[questionNo]
-                            val correctAnswer = correctAnswers[questionNo]
+                        items(selectedQuestions.size) { questionIndex ->
+                            val question = selectedQuestions[questionIndex]
+                            val answers = selectedAnswers[questionIndex]
+                            val correctAnswer = correctAnswers[questionIndex]
 
                             when (answers) {
                                 is Answer.Short -> ShortAnswerProblemLayout(
-                                    questionNo = questionNo,
+                                    questionIndex = questionIndex,
                                     question = question,
                                     titleChanged = { newTitle ->
                                         vm.setQuestion(
-                                            question?.type,
-                                            questionNo,
+                                            question.type,
+                                            questionIndex,
                                             title = newTitle,
                                         )
                                     },
@@ -331,7 +330,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             context,
                                             vm,
                                             CreateProblemPhotoState.QuestionImageType(
-                                                questionNo,
+                                                questionIndex,
                                                 question
                                             ),
                                             keyboard,
@@ -340,29 +339,29 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                     },
                                     onDropdownItemClick = {
                                         launch {
-                                            selectedQuestionNo = questionNo
+                                            selectedQuestionIndex = questionIndex
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
                                     answers = answers,
-                                    answerTextChanged = { newTitle, answerNo ->
+                                    answerTextChanged = { newTitle, answerIndex ->
                                         vm.setAnswer(
-                                            questionNo,
-                                            answerNo,
+                                            questionIndex,
+                                            answerIndex,
                                             Answer.Type.ShortAnswer,
                                             answer = newTitle,
                                         )
                                     },
-                                    deleteLongClick = { deleteDialogNo = Pair(questionNo, null) }
+                                    deleteLongClick = { deleteDialogNo = Pair(questionIndex, null) }
                                 )
 
                                 is Answer.Choice -> ChoiceProblemLayout(
-                                    questionNo = questionNo,
+                                    questionIndex = questionIndex,
                                     question = question,
                                     titleChanged = { newTitle ->
                                         vm.setQuestion(
-                                            question?.type,
-                                            questionNo,
+                                            question.type,
+                                            questionIndex,
                                             title = newTitle,
                                         )
                                     },
@@ -371,7 +370,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             context,
                                             vm,
                                             CreateProblemPhotoState.QuestionImageType(
-                                                questionNo,
+                                                questionIndex,
                                                 question
                                             ),
                                             keyboard,
@@ -380,44 +379,44 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                     },
                                     onDropdownItemClick = {
                                         launch {
-                                            selectedQuestionNo = questionNo
+                                            selectedQuestionIndex = questionIndex
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
                                     answers = answers,
-                                    answerTextChanged = { newTitle, answerNo ->
+                                    answerTextChanged = { newTitle, answerIndex ->
                                         vm.setAnswer(
-                                            questionNo,
-                                            answerNo,
+                                            questionIndex,
+                                            answerIndex,
                                             Answer.Type.Choice,
                                             answer = newTitle,
                                         )
                                     },
                                     addAnswerClick = {
                                         vm.addAnswer(
-                                            questionNo = questionNo,
+                                            questionIndex = questionIndex,
                                             Answer.Type.Choice
                                         )
                                     },
                                     correctAnswers = correctAnswer,
                                     setCorrectAnswerClick = { newCorrectAnswer ->
                                         vm.setCorrectAnswer(
-                                            questionNo = questionNo,
+                                            questionIndex = questionIndex,
                                             correctAnswer = newCorrectAnswer,
                                         )
                                     },
-                                    deleteLongClick = { answerNo: Int? ->
-                                        deleteDialogNo = Pair(questionNo, answerNo)
+                                    deleteLongClick = { answerIndex: Int? ->
+                                        deleteDialogNo = Pair(questionIndex, answerIndex)
                                     }
                                 )
 
                                 is Answer.ImageChoice -> ImageChoiceProblemLayout(
-                                    questionNo = questionNo,
+                                    questionIndex = questionIndex,
                                     question = question,
                                     titleChanged = { newTitle ->
                                         vm.setQuestion(
                                             question?.type,
-                                            questionNo,
+                                            questionIndex,
                                             title = newTitle,
                                         )
                                     },
@@ -426,7 +425,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             context,
                                             vm,
                                             CreateProblemPhotoState.QuestionImageType(
-                                                questionNo,
+                                                questionIndex,
                                                 question
                                             ),
                                             keyboard,
@@ -435,15 +434,15 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                     },
                                     onDropdownItemClick = {
                                         launch {
-                                            selectedQuestionNo = questionNo
+                                            selectedQuestionIndex = questionIndex
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
                                     answers = answers,
-                                    answerTextChanged = { newTitle, answerNo ->
+                                    answerTextChanged = { newTitle, answerIndex ->
                                         vm.setAnswer(
-                                            questionNo,
-                                            answerNo,
+                                            questionIndex,
+                                            answerIndex,
                                             Answer.Type.ImageChoice,
                                             answer = newTitle,
                                         )
@@ -455,7 +454,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                                 vm.loadGalleryImages()
                                                 vm.updatePhotoState(
                                                     CreateProblemPhotoState.AnswerImageType(
-                                                        questionNo,
+                                                        questionIndex,
                                                         answersNo,
                                                         answers,
                                                     )
@@ -468,19 +467,19 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                     },
                                     addAnswerClick = {
                                         vm.addAnswer(
-                                            questionNo = questionNo,
+                                            questionIndex = questionIndex,
                                             Answer.Type.ImageChoice
                                         )
                                     },
                                     correctAnswers = correctAnswer,
                                     setCorrectAnswerClick = { newCorrectAnswer ->
                                         vm.setCorrectAnswer(
-                                            questionNo = questionNo,
+                                            questionIndex = questionIndex,
                                             correctAnswer = newCorrectAnswer,
                                         )
                                     },
-                                    deleteLongClick = { answerNo ->
-                                        deleteDialogNo = Pair(questionNo, answerNo)
+                                    deleteLongClick = { answerIndex ->
+                                        deleteDialogNo = Pair(questionIndex, answerIndex)
                                     }
                                 )
 
@@ -530,7 +529,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                 launch {
                     vm.updatePhotoState(null)
                     galleryImagesSelections[galleryImagesSelectionIndex] = false
-                    hideBottomSheet(sheetState) { selectedQuestionNo = null }
+                    hideBottomSheet(sheetState) { selectedQuestionIndex = null }
                 }
             },
             onAddClick = {
@@ -540,7 +539,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                             is CreateProblemPhotoState.QuestionImageType -> {
                                 vm.setQuestion(
                                     Question.Type.Image,
-                                    this.questionNo,
+                                    this.questionIndex,
                                     urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
                                 )
                                 vm.updatePhotoState(null)
@@ -548,8 +547,8 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
 
                             is CreateProblemPhotoState.AnswerImageType -> {
                                 vm.setAnswer(
-                                    questionNo,
-                                    answerNo,
+                                    questionIndex,
+                                    answerIndex,
                                     Answer.Type.ImageChoice,
                                     urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
                                 )
@@ -560,7 +559,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         }
                     }
                     galleryImagesSelections[galleryImagesSelectionIndex] = false
-                    hideBottomSheet(sheetState) { selectedQuestionNo = null }
+                    hideBottomSheet(sheetState) { selectedQuestionIndex = null }
                 }
             },
         )
@@ -574,10 +573,10 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
         rightButtonText = "확인",
         rightButtonOnClick = {
             deleteDialogNo?.let {
-                val questionNo = it.first
-                it.second?.let {answerNo ->
-                    vm.removeAnswer(questionNo, answerNo)
-                }  ?: vm.removeProblem(questionNo)
+                val questionIndex = it.first
+                it.second?.let {answerIndex ->
+                    vm.removeAnswer(questionIndex, answerIndex)
+                }  ?: vm.removeProblem(questionIndex)
             }
             deleteDialogNo = null
         },
@@ -612,7 +611,7 @@ private fun CoroutineScopeContent.openPhotoPicker(
 
 @Composable
 private fun CreateProblemTitleLayout(
-    questionNo: Int,
+    questionIndex: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
@@ -625,7 +624,7 @@ private fun CreateProblemTitleLayout(
         modifier = Modifier.quackClickable(onLongClick = { deleteLongClick() }) {},
         text = question?.text ?: "",
         onTextChanged = titleChanged,
-        placeholderText = "$questionNo. 문제를 입력해주세요.",
+        placeholderText = "$questionIndex. 문제를 입력해주세요.",
         trailingIcon = QuackIcon.Image,
         trailingIconOnClick = imageClick,
     )
@@ -642,14 +641,14 @@ private fun CreateProblemTitleLayout(
     QuackDropDownCard(
         modifier = Modifier.padding(top = 24.dp),
         text = dropDownTitle,
-        onClick = { onDropdownItemClick(questionNo) }
+        onClick = { onDropdownItemClick(questionIndex) }
     )
 }
 
 /** 문제 만들기 객관식/글 Layout */
 @Composable
 private fun ChoiceProblemLayout(
-    questionNo: Int,
+    questionIndex: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
@@ -658,7 +657,7 @@ private fun ChoiceProblemLayout(
     answerTextChanged: (String, Int) -> Unit,
     addAnswerClick: () -> Unit,
     correctAnswers: String?,
-    setCorrectAnswerClick: (String?) -> Unit,
+    setCorrectAnswerClick: (String) -> Unit,
     deleteLongClick: (Int?) -> Unit,
 ) {
     Column(
@@ -667,7 +666,7 @@ private fun ChoiceProblemLayout(
             .padding(16.dp)
     ) {
         CreateProblemTitleLayout(
-            questionNo,
+            questionIndex,
             question,
             titleChanged,
             imageClick,
@@ -676,21 +675,20 @@ private fun ChoiceProblemLayout(
         ) { deleteLongClick(null) }
 
         answers.choices.forEachIndexed { answerIndex, choiceModel ->
-            val answerNo = answerIndex + 1
             // TODO(riflockle7): border 가 존재하는 TextField 필요
             QuackBorderTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
                 text = choiceModel.text,
-                onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerNo) },
-                placeholderText = "${answerNo}번 보기",
+                onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
+                placeholderText = "${answerIndex + 1}번 보기",
                 trailingContent = {
-                    val isChecked = correctAnswers == "$answerNo"
+                    val isChecked = correctAnswers == "$answerIndex"
                     Column(
                         modifier = Modifier.quackClickable(
-                            onLongClick = { deleteLongClick(answerNo) },
-                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") }
+                            onLongClick = { deleteLongClick(answerIndex) },
+                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") }
                         ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -723,7 +721,7 @@ private fun ChoiceProblemLayout(
 /** 문제 만들기 객관식/사진 Layout */
 @Composable
 private fun ImageChoiceProblemLayout(
-    questionNo: Int,
+    questionIndex: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
@@ -733,7 +731,7 @@ private fun ImageChoiceProblemLayout(
     answerImageClick: (Int) -> Unit,
     addAnswerClick: () -> Unit,
     correctAnswers: String?,
-    setCorrectAnswerClick: (String?) -> Unit,
+    setCorrectAnswerClick: (String) -> Unit,
     deleteLongClick: (Int?) -> Unit,
 ) {
     Column(
@@ -742,7 +740,7 @@ private fun ImageChoiceProblemLayout(
             .padding(16.dp)
     ) {
         CreateProblemTitleLayout(
-            questionNo,
+            questionIndex,
             question,
             titleChanged,
             imageClick,
@@ -755,9 +753,8 @@ private fun ImageChoiceProblemLayout(
             nColumns = 2,
             paddingValues = PaddingValues(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            itemContent = { index ->
-                val answerNo = index + 1
-                val answerItem = answers.imageChoice[index]
+            itemContent = { answerIndex ->
+                val answerItem = answers.imageChoice[answerIndex]
 
                 Column(
                     modifier = Modifier
@@ -768,7 +765,7 @@ private fun ImageChoiceProblemLayout(
                     if (answerItem.imageUrl.isEmpty()) {
                         Box(
                             modifier = Modifier
-                                .quackClickable { answerImageClick(answerNo) }
+                                .quackClickable { answerImageClick(answerIndex) }
                                 .background(color = QuackColor.Gray4.composeColor)
                                 .padding(52.dp),
                         ) {
@@ -781,17 +778,17 @@ private fun ImageChoiceProblemLayout(
                         QuackImage(
                             src = answerItem.imageUrl,
                             size = DpSize(136.dp, 136.dp),
-                            onClick = { answerImageClick(answerNo) },
-                            onLongClick = { deleteLongClick(answerNo) },
+                            onClick = { answerImageClick(answerIndex) },
+                            onLongClick = { deleteLongClick(answerIndex) },
                         )
                     }
 
                     QuackBasicTextField(
-                        text = answers.imageChoice[index].text,
+                        text = answers.imageChoice[answerIndex].text,
                         onTextChanged = { newAnswer ->
-                            answerTextChanged(newAnswer, answerNo)
+                            answerTextChanged(newAnswer, answerIndex)
                         },
-                        placeholderText = "${answerNo}번 보기"
+                        placeholderText = "${answerIndex + 1}번 보기"
                     )
                 }
             }
@@ -812,7 +809,7 @@ private fun ImageChoiceProblemLayout(
 /** 문제 만들기 주관식 Layout */
 @Composable
 private fun ShortAnswerProblemLayout(
-    questionNo: Int,
+    questionIndex: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
@@ -827,7 +824,7 @@ private fun ShortAnswerProblemLayout(
             .padding(16.dp)
     ) {
         CreateProblemTitleLayout(
-            questionNo,
+            questionIndex,
             question,
             titleChanged,
             imageClick,

@@ -52,12 +52,11 @@ data class CreateProblemState(
         /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
         data class CreateProblemArea(
             // Problem 의 데이터를 Map 으로 쪼개 놓은 영역들
-            // (문제의 개수가 정해져 있지 않고, 반드시 순서대로 문제 만드는 게 아니므로 map 으로 처리한다.)
-            val questions: Map<Int, Question?> = mapOf(),
-            val answers: Map<Int, Answer?> = mapOf(),
-            val correctAnswers: Map<Int, String?> = mapOf(),
-            val hints: Map<Int, String?> = mapOf(),
-            val memos: Map<Int, String?> = mapOf(),
+            val questions: ImmutableList<Question> = persistentListOf(),
+            val answers: ImmutableList<Answer> = persistentListOf(),
+            val correctAnswers: ImmutableList<String> = persistentListOf(),
+            val hints: ImmutableList<String> = persistentListOf(),
+            val memos: ImmutableList<String> = persistentListOf(),
         )
 
         data class AdditionInfoArea(
@@ -71,13 +70,13 @@ data class CreateProblemState(
 }
 sealed class CreateProblemPhotoState {
     data class QuestionImageType(
-        val questionNo: Int,
+        val questionIndex: Int,
         val value: Question?,
     ) : CreateProblemPhotoState()
 
     data class AnswerImageType(
-        val questionNo: Int,
-        val answerNo: Int,
+        val questionIndex: Int,
+        val answerIndex: Int,
         val value: Answer.ImageChoice,
     ) : CreateProblemPhotoState()
 
