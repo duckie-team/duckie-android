@@ -37,8 +37,7 @@ class DateTest {
             val actualCal = Calendar.getInstance().apply { time = expected }
 
             get { expectCal.get(Calendar.YEAR) } isEqualTo actualCal.get(Calendar.YEAR)
-            get { expectCal.get(Calendar.MONTH) } isEqualTo actualCal.get(Calendar.MONTH)
-            get { expectCal.get(Calendar.DAY_OF_MONTH) } isEqualTo actualCal.get(Calendar.DAY_OF_MONTH)
+            get { expectCal.get(Calendar.DAY_OF_YEAR) } isEqualTo actualCal.get(Calendar.DAY_OF_YEAR)
             get { expectCal.get(Calendar.HOUR_OF_DAY) } isEqualTo actualCal.get(Calendar.HOUR_OF_DAY)
             get { expectCal.get(Calendar.MINUTE) } isEqualTo actualCal.get(Calendar.MINUTE)
             get { expectCal.get(Calendar.SECOND) } isEqualTo actualCal.get(Calendar.SECOND)
