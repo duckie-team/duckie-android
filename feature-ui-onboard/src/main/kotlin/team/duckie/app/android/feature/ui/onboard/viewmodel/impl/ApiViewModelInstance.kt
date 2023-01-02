@@ -37,24 +37,15 @@ internal class ApiViewModelInstance(
     private lateinit var exceptionHandler: suspend (exception: Throwable) -> Unit
 
     override fun setEventHandler(handler: (state: OnboardState) -> Unit) {
-        if (::eventHandler.isInitialized) {
-            error("ApiViewModelInstance.EventHandler is already initialized")
-        }
-        this.eventHandler = handler
+        eventHandler = handler
     }
 
     override fun setSideEffectHandler(handler: suspend (effect: OnboardSideEffect) -> Unit) {
-        if (::sideEffectHandler.isInitialized) {
-            error("ApiViewModelInstance.SideEffectHandler is already initialized")
-        }
-        this.sideEffectHandler = handler
+        sideEffectHandler = handler
     }
 
     override fun setExceptionHandler(handler: suspend (exception: Throwable) -> Unit) {
-        if (::exceptionHandler.isInitialized) {
-            error("ApiViewModelInstance.ExceptionHandler is already initialized")
-        }
-        this.exceptionHandler = handler
+        exceptionHandler = handler
     }
 
     override suspend fun getKakaoAccessToken() {
