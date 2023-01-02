@@ -7,9 +7,11 @@
 
 package team.duckie.app.android.domain.auth.usecase
 
+import androidx.compose.runtime.Immutable
 import javax.inject.Inject
 import team.duckie.app.android.domain.auth.repository.AuthRepository
 
+@Immutable
 class AttachAccessTokenToHeaderUseCase @Inject constructor(
     private val repository: AuthRepository,
 ) {
