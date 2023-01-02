@@ -342,6 +342,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                     onDropdownItemClick = {
                                         launch {
                                             selectedQuestionIndex = questionIndex
+                                            keyboard?.hide()
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
@@ -382,6 +383,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                     onDropdownItemClick = {
                                         launch {
                                             selectedQuestionIndex = questionIndex
+                                            keyboard?.hide()
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
@@ -437,6 +439,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                     onDropdownItemClick = {
                                         launch {
                                             selectedQuestionIndex = questionIndex
+                                            keyboard?.hide()
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
@@ -500,7 +503,12 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                 type = QuackLargeButtonType.Border,
                                 text = stringResource(id = R.string.create_problem_add_problem_button),
                                 leadingIcon = QuackIcon.Plus,
-                            ) { launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) } }
+                            ) {
+                                launch {
+                                    keyboard?.hide()
+                                    sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                }
+                            }
                         }
                     }
                 )
