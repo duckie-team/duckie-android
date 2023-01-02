@@ -7,15 +7,15 @@
 
 package team.duckie.app.android.data.exam.repository
 
-import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
+import io.ktor.client.statement.bodyAsText
 import javax.inject.Inject
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
+import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.exam.mapper.toData
-import team.duckie.app.android.data.exam.model.ExamResponse
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.util.kotlin.OutOfDateApi
@@ -28,8 +28,9 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
             url("/exams")
             setBody(exam.toData())
         }
-        return responseCatching<ExamResponse, Boolean>(response.body()) { body ->
-            body.success ?: duckieResponseFieldNpe("success")
+        return responseCatching(response.bodyAsText()) { body ->
+            val json = body.toStringJsonMap()
+            json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
         }
     }
 }
