@@ -10,11 +10,10 @@ package team.duckie.app.android.data.recommendation.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.delay
+import team.duckie.app.android.data.recommendation.mapper.toEntity
 import team.duckie.app.android.data.recommendation.model.RecommendationsResponse
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import kotlin.math.max
-
-private const val START_KEY = 1
 
 private suspend fun dummyReturn(a: Int): RecommendationsResponse {
     delay(1000)
@@ -50,39 +49,24 @@ private suspend fun dummyReturn(a: Int): RecommendationsResponse {
     )
 }
 
-fun RecommendationsResponse.Recommendation.toEntity(): RecommendationFeeds.Recommendation {
-    fun RecommendationsResponse.Recommendation.Exam.toEntity() =
-        RecommendationFeeds.Recommendation.Exam(
-            title = title,
-            coverImg = coverImg,
-            nickname = nickname,
-            examineeNumber = examineeNumber,
-            recommendId = recommendId,
-        )
-
-    return RecommendationFeeds.Recommendation(
-        title = title,
-        tag = tag,
-        exams = exams.map { it.toEntity() },
-    )
-}
+private const val STARTING_KEY = 1
 
 class RecommendationPagingSource : PagingSource<Int, RecommendationFeeds.Recommendation>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, RecommendationFeeds.Recommendation> {
         return try {
-            val nextPageNumber = params.key ?: START_KEY
-            val response = dummyReturn(nextPageNumber) // TODO(limsaehyun): server REQUEST
+            val nextPageNumber = params.key ?: STARTING_KEY
+            val response = dummyReturn(nextPageNumber) // TODO(limsaehyun): Server Request
             val range = nextPageNumber.until(nextPageNumber + params.loadSize)
 
             LoadResult.Page(
                 data = response.recommendations.map { it.toEntity() },
                 prevKey = when (nextPageNumber) {
-                    START_KEY -> null
+                    STARTING_KEY -> null
                     else -> when (
                         val prevKey =
-                        ensureValidKey(key = range.first - params.loadSize)
+                            ensureValidKey(key = range.first - params.loadSize)
                     ) {
-                        START_KEY -> null
+                        STARTING_KEY -> null
                         else -> prevKey
                     }
                 },
@@ -93,10 +77,10 @@ class RecommendationPagingSource : PagingSource<Int, RecommendationFeeds.Recomme
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, RecommendationFeeds.Recommendation>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, RecommendationFeeds.Recommendation>): Int {
         return ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2)
             .coerceAtLeast(0)
     }
 
-    private fun ensureValidKey(key: Int) = max(START_KEY, key)
+    private fun ensureValidKey(key: Int) = max(STARTING_KEY, key)
 }

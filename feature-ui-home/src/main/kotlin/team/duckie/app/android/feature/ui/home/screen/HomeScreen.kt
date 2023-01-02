@@ -43,7 +43,9 @@ private val HomeHorizontalPadding = PaddingValues(
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
-internal fun DuckieHomeScreen() = CoroutineScopeContent {
+internal fun DuckieHomeScreen(
+    navigateToSearchResult: (String) -> Unit,
+) = CoroutineScopeContent {
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
 
@@ -60,10 +62,12 @@ internal fun DuckieHomeScreen() = CoroutineScopeContent {
         ) { page ->
             when (page) {
                 HomeStep.HomeRecommendScreen -> {
-                    HomeRecommendScreen()
+                    HomeRecommendScreen(
+                        navigateToSearchResult = navigateToSearchResult,
+                    )
                 }
                 HomeStep.HomeFollowingScreen -> {
-                    if (state.recommendFollowingTest.isNotEmpty()) {
+                    if (state.recommendFollowingTest.isEmpty()) {
                         HomeRecommendFollowingTestScreen(
                             modifier = Modifier.padding(HomeHorizontalPadding),
                         )
@@ -94,9 +98,7 @@ fun HomeTopAppBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                vertical = 12.dp,
-            ),
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {

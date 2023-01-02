@@ -34,10 +34,6 @@ private val DummyJumbotrons =
     }.toPersistentList()
 
 private val DummyRecommendUsers = (0..3).map { index ->
-    DummyRecommendUser
-}.toPersistentList()
-
-private val DummyRecommendUser =
     HomeState.RecommendUserByTopic(
         topic = "연예인",
         users = (0..5).map {
@@ -50,6 +46,7 @@ private val DummyRecommendUser =
             )
         }.toPersistentList()
     )
+}.toPersistentList()
 
 private val DummyRecommendFollowerTest = (0..5).map {
     HomeState.FollowingTest(
@@ -64,6 +61,9 @@ private val DummyRecommendFollowerTest = (0..5).map {
     )
 }.toPersistentList()
 
+/**
+ * fetchRecommendatiins 에서 사용되는 paging 단위
+ */
 private const val ITEMS_PER_PAGE = 10
 
 @Immutable
@@ -89,7 +89,6 @@ class HomeViewModel @Inject constructor(
             }
     }
 
-    // TODO(limsaehyun): Request Server
     fun fetchRecommendations() =
         Pager(
             pagingSourceFactory = {

@@ -39,7 +39,8 @@ class SearchResultActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        searchResultViewModel.changeSearchTag("웹툰") // TODO(limsaehyun): intent getExtr
+        // TODO(limsaehyun) getExtra 필요
+        searchResultViewModel.changeSearchTag("웹툰")
 
         setContent {
             LaunchedEffect(key1 = searchResultViewModel.sideEffect) {

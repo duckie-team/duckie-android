@@ -57,9 +57,7 @@ import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 
-private val HomeHorizontalPadding = PaddingValues(
-    horizontal = 16.dp,
-)
+private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
 @OptIn(
     ExperimentalPagerApi::class,
@@ -68,6 +66,7 @@ private val HomeHorizontalPadding = PaddingValues(
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
+    navigateToSearchResult: (String) -> Unit,
 ) = CoroutineScopeContent {
     val pageState = rememberPagerState()
 
@@ -141,7 +140,7 @@ internal fun HomeRecommendScreen(
                     exams = item.exams.toPersistentList(),
                     onClicked = { },
                     onTagClicked = { tag ->
-                        // TODO (limsaehyun): intent SearchResultActivity
+                        navigateToSearchResult(tag)
                     },
                 )
             }
@@ -215,9 +214,8 @@ private fun HomeTopicRecommendLayout(
 
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(top = 12.dp)
         ) {
-            item {}
-
             items(items = exams) { item ->
                 DuckTestSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(

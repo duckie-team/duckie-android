@@ -11,6 +11,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -75,6 +77,7 @@ internal fun HomeRecommendFollowingTestScreen(
         LazyColumn(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(24.dp),
+            contentPadding = PaddingValues(bottom = 24.dp)
         ) {
             item {
                 HomeTopAppBar(
@@ -85,7 +88,7 @@ internal fun HomeRecommendFollowingTestScreen(
                         )
                     },
                     onClickedEdit = {
-                        // TODO("limsaehyun"): 수정 페이지로 이동 필요
+                        // TODO(limsaehyun): 수정 페이지로 이동 필요
                     },
                 )
             }
@@ -100,16 +103,14 @@ internal fun HomeRecommendFollowingTestScreen(
                     takers = maker.examineeNumber,
                     createAt = maker.createAt,
                     onClickUserProfile = {
-                        // TODO ("limsaehyun"): 추후에 유저의 profile로 이동 필요할 것 같음
+                        // TODO(limsaehyun): 추후에 유저의 profile로 이동 필요할 것 같음
                     },
                     onClickTestCover = {
-                        // TODO ("limsaehyun"): 상세보기로 이동
+                        // TODO(limsaehyun): 상세보기로 이동
                     },
                     cover = maker.coverUrl,
                 )
             }
-
-            item { }
         }
     }
 }
@@ -146,7 +147,7 @@ internal fun HomeRecommendFollowingScreen(
                         )
                     },
                     onClickedEdit = {
-                        // TODO("limsaehyun"): 수정 페이지로 이동 필요
+                        // TODO(limsaehyun): 수정 페이지로 이동 필요
                     },
                 )
             }
@@ -173,7 +174,7 @@ internal fun HomeRecommendFollowingScreen(
                     topic = categories.topic,
                     recommendUser = categories.users,
                     onClickFollowing = {
-                        // TODO ("limsaehyun"): viewModel에서 Following 필요
+                        // TODO (limsaehyun): viewModel에서 Following 필요
                     }
                 )
             }
