@@ -214,7 +214,10 @@ private fun HomeTopicRecommendLayout(
 
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(top = 12.dp)
+            contentPadding = PaddingValues(
+                top = 12.dp,
+                start = 16.dp,
+            )
         ) {
             items(items = exams) { item ->
                 DuckTestSmallCover(
