@@ -17,7 +17,7 @@ import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSi
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 
 internal interface ApiViewModel {
-    // TODO(sungbin): StateUpdater scope 제공
+    // TODO(sungbin): StateUpdater scope 제공. 근데 어떻게?
     @RestrictTo(RestrictTo.Scope.SUBCLASSES)
     fun setEventHandler(handler: (state: OnboardState) -> Unit)
 
