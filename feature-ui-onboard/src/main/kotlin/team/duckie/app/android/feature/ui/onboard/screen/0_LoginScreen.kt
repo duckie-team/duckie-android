@@ -50,6 +50,7 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackUnderlineBody3
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
+@Suppress("UnusedPrivateMember")
 private val currentStep = OnboardStep.Login
 
 private const val LoginScreenWelcomeLayoutId = "LoginScreenWelcome"
@@ -175,6 +176,7 @@ private val LoginScreenLoginAreaMeasurePolicy = MeasurePolicy { measurables, con
 
 @Composable
 private fun LoginScreenLoginArea() = CoroutineScopeContent {
+    @Suppress("UnusedPrivateMember")
     val vm = LocalViewModel.current as OnboardViewModel
     val context = LocalContext.current
 
@@ -199,10 +201,10 @@ private fun LoginScreenLoginArea() = CoroutineScopeContent {
                     )
                 )
                 .suspendClickable {
-                    vm.kakaoLogin(currentStep + 1)
+                    // vm.kakaoLogin(currentStep + 1)
                 },
             content = {
-                // TODO: 로딩중 인디케이터
+                // TODO(sungbin): 로딩중 인디케이터
                 Image(
                     modifier = Modifier
                         .layoutId(LoginScreenLoginAreaKakaoSymbolLayoutId)

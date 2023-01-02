@@ -19,3 +19,7 @@ internal val jsonMapper = ObjectMapper()
 internal fun String.toStringJsonMap(): Map<String, String?> {
     return jsonMapper.readValue(this, object : TypeReference<Map<String, String?>>() {})
 }
+
+internal inline fun <reified T> String.toJsonMap(): Map<String, T> {
+    return jsonMapper.readValue(this, object : TypeReference<Map<String, T>>() {})
+}

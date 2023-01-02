@@ -14,6 +14,8 @@ class ConventionEnum : Plugin<Project> {
     companion object {
         private const val prefix = "duckie"
 
+        const val AppVersionNameProvider = "$prefix.app.version.name.provider"
+
         const val AndroidApplication = "$prefix.android.application"
         const val AndroidApplicationCompose = "$prefix.android.application.compose"
 

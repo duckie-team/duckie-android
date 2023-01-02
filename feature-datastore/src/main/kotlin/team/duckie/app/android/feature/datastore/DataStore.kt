@@ -30,15 +30,9 @@ object PreferenceKey {
         )
     }
 
-    object User {
-        val Nickname = stringPreferencesKey(
-            name = buildPreferenceKey(type = "user", token = "nickname"),
-        )
-        val ProfilePhoto = stringPreferencesKey(
-            name = buildPreferenceKey(type = "user", token = "profile-photo"),
-        )
-        val Email = stringPreferencesKey(
-            name = buildPreferenceKey(type = "user", token = "email"),
+    object Account {
+        val AccessToken = stringPreferencesKey(
+            name = buildPreferenceKey(type = "account", token = "access_token"),
         )
     }
 }

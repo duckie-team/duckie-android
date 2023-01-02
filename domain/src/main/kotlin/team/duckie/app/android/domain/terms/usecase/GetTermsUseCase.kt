@@ -11,11 +11,13 @@ import androidx.compose.runtime.Immutable
 import javax.inject.Inject
 import team.duckie.app.android.domain.terms.model.Terms
 import team.duckie.app.android.domain.terms.repository.TermsRepository
+import team.duckie.app.android.util.kotlin.ExperimentalApi
 
 @Immutable
 class GetTermsUseCase @Inject constructor(
     private val repository: TermsRepository,
 ) {
+    @ExperimentalApi
     suspend fun invoke(version: String): Result<Terms> {
         return runCatching {
             repository.get(version)

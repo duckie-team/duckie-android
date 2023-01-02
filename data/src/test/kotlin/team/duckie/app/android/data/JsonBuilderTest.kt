@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.data.util_test
+package team.duckie.app.android.data
 
 import kotlinx.collections.immutable.persistentListOf
 import org.junit.Test
@@ -20,18 +20,20 @@ import team.duckie.app.android.domain.user.model.User
 class JsonBuilderTest {
     @Test
     fun single() {
-        val json = buildJson {
+        val actual = buildJson {
             "name" withString "duckie"
             "age" withInt 1
             "isDuck" withBoolean true
         }
+
         val expected = "{\"name\":\"duckie\",\"age\":1,\"isDuck\":true}"
-        expectThat(json).isEqualTo(expected)
+
+        expectThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun nested() {
-        val json = buildJson {
+        val actual = buildJson {
             "name" withString "duckie"
             "age" withInt 1
             "isDuck" withBoolean true
@@ -41,22 +43,26 @@ class JsonBuilderTest {
                 "zipCode" withInt 12345
             }
         }.replace("\\\"", "\"")
+
         val expected = "{\"name\":\"duckie\",\"age\":1,\"isDuck\":true," +
                 "\"address\":\"{\"city\":\"seoul\",\"country\":\"korea\",\"zipCode\":12345}\"}"
-        expectThat(json).isEqualTo(expected)
+
+        expectThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun nestedList() {
-        val json = buildJson {
+        val actual = buildJson {
             "name" withString "duckie"
             "age" withInt 1
             "isDuck" withBoolean true
             "favoriteNumbers" withInts listOf(1, 2, 3, 4, 5)
         }
+
         val expected = "{\"name\":\"duckie\",\"age\":1,\"isDuck\":true," +
                 "\"favoriteNumbers\":[1,2,3,4,5]}"
-        expectThat(json).isEqualTo(expected)
+
+        expectThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -66,7 +72,7 @@ class JsonBuilderTest {
             Tag(id = 2, name = "2"),
             Tag(id = 3, name = "3"),
         )
-        val json = buildJson {
+        val actual = buildJson {
             "name" withString "duckie"
             "age" withInt 1
             "isDuck" withBoolean true
@@ -121,6 +127,7 @@ class JsonBuilderTest {
                 ),
             )
         }
+
         val expected = "{\"name\":\"duckie\",\"age\":1,\"isDuck\":true," +
                 "\"friends\":[{\"id\":0,\"nickname\":\"test\",\"profileImageUrl\":\"test\"," +
                 "\"tier\":\"DuckKid\",\"favoriteTags\":[{\"id\":1,\"name\":\"1\"}," +
@@ -139,6 +146,7 @@ class JsonBuilderTest {
                 "{\"id\":2,\"name\":\"2\"},{\"id\":3,\"name\":\"3\"}]},{\"id\":3,\"name\":\"3\"," +
                 "\"popularTags\":[{\"id\":1,\"name\":\"1\"},{\"id\":2,\"name\":\"2\"}," +
                 "{\"id\":3,\"name\":\"3\"}]}]}]}"
-        expectThat(json).isEqualTo(expected)
+
+        expectThat(actual).isEqualTo(expected)
     }
 }

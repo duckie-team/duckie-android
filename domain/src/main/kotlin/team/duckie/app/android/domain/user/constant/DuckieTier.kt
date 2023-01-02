@@ -9,6 +9,9 @@
 
 package team.duckie.app.android.domain.user.constant
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 enum class DuckieTier(val level: Int) {
     DuckKid(0),
 }

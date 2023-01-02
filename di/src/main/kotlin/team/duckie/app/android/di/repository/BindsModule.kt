@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("UnnecessaryAbstractClass", "unused")
+@file:Suppress("unused")
 
 package team.duckie.app.android.di.repository
 

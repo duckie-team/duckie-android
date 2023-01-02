@@ -12,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.auth.repository.AuthRepository
+import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.CheckAccessTokenUseCase
 import team.duckie.app.android.domain.auth.usecase.JoinUseCase
 
@@ -26,5 +27,10 @@ object AuthUseCaseModule {
     @Provides
     fun provideJoinUseCase(repository: AuthRepository): JoinUseCase {
         return JoinUseCase(repository)
+    }
+
+    @Provides
+    fun provideAttachAccessTokenToHeaderUseCase(repository: AuthRepository): AttachAccessTokenToHeaderUseCase {
+        return AttachAccessTokenToHeaderUseCase(repository)
     }
 }
