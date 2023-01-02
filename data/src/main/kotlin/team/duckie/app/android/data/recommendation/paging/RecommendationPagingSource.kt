@@ -5,6 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress(
+    "MaxLineLength",
+    "MagicNumber"
+) // TODO(limsaehyun): 더미데이터를 위해 임시로 구현, 추후에 삭제 필요
+
 package team.duckie.app.android.data.recommendation.paging
 
 import androidx.paging.PagingSource
@@ -21,7 +26,7 @@ private suspend fun dummyReturn(a: Int): RecommendationsResponse {
         RecommendationsResponse.Recommendation(
             title = "쿠키좀 구워봤어?\n#웹툰 퀴즈",
             tag = "#웹툰",
-            exams = (0..3).map { exam ->
+            exams = (0..요3).map { exam ->
                 RecommendationsResponse.Recommendation.Exam(
                     title = "문제$exam",
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
@@ -52,6 +57,7 @@ private suspend fun dummyReturn(a: Int): RecommendationsResponse {
 private const val STARTING_KEY = 1
 
 class RecommendationPagingSource : PagingSource<Int, RecommendationFeeds.Recommendation>() {
+    @Suppress("TooGenericExceptionCaught")
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, RecommendationFeeds.Recommendation> {
         return try {
             val nextPageNumber = params.key ?: STARTING_KEY

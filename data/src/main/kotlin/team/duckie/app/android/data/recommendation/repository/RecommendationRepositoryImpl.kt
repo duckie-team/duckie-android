@@ -7,16 +7,13 @@
 
 package team.duckie.app.android.data.recommendation.repository
 
-import android.content.Context
 import androidx.paging.PagingSource
 import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSource
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 
-class RecommendationRepositoryImpl(
-    private val context: Context,
-) : RecommendationRepository {
+class RecommendationRepositoryImpl : RecommendationRepository {
     override fun fetchRecommendations(): PagingSource<Int, RecommendationFeeds.Recommendation> {
         return RecommendationPagingSource()
     }
