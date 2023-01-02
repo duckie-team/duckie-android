@@ -26,7 +26,7 @@ private suspend fun dummyReturn(a: Int): RecommendationsResponse {
         RecommendationsResponse.Recommendation(
             title = "쿠키좀 구워봤어?\n#웹툰 퀴즈",
             tag = "#웹툰",
-            exams = (0..요3).map { exam ->
+            exams = (0..3).map { exam ->
                 RecommendationsResponse.Recommendation.Exam(
                     title = "문제$exam",
                     coverImg = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
