@@ -14,8 +14,7 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 
 data class CreateProblemState(
-    // TODO(riflockle7): 추후 구현 완료 시 원래대로 돌려놓아야 함
-    val createProblemStep: CreateProblemStep = CreateProblemStep.CreateProblem,
+    val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
     val examInformation: ExamInformation = ExamInformation(),
     val error: ExamInformation.Error? = null,
 ) {

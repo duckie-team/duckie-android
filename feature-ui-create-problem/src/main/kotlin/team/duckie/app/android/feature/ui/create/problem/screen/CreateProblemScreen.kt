@@ -287,7 +287,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                     onTrailingTextClick = {
                         launch { vm.navigateStep(CreateProblemStep.AdditionalInformation) }
                     },
-                    trailingTextEnabled = vm.isAllFieldsNotEmpty(),
+                    trailingTextEnabled = true,
                 )
 
                 // 컨텐츠 Layout
