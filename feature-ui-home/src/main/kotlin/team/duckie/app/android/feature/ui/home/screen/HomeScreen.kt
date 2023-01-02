@@ -67,7 +67,7 @@ internal fun DuckieHomeScreen(
                     )
                 }
                 HomeStep.HomeFollowingScreen -> {
-                    if (state.recommendFollowingTest.isEmpty()) {
+                    if (state.recommendFollowingTest.isNotEmpty()) {
                         HomeRecommendFollowingTestScreen(
                             modifier = Modifier.padding(HomeHorizontalPadding),
                         )

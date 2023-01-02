@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.home.screen
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
@@ -33,15 +32,12 @@ import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigatio
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
-import team.duckie.app.android.feature.ui.search.screen.SearchResultActivity
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.changeActivityWithAnimation
-import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
@@ -87,7 +83,7 @@ class HomeActivity : BaseActivity() {
                                 ) {
                                     DuckieHomeScreen(
                                         navigateToSearchResult = { tag ->
-                                            //TODO(limsaehyun): navigate to search result screen
+                                            // TODO(limsaehyun): navigate to search result screen
                                         }
                                     )
                                 }
