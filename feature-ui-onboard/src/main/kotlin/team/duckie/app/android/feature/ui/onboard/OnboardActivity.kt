@@ -176,15 +176,15 @@ class OnboardActivity : BaseActivity() {
                     ignoreThrottle = true,
                 )
             }
-            is OnboardState.Joined -> Unit // TODO
+            is OnboardState.Joined -> Unit // TODO(sungbin): 기능 연결
             is OnboardState.NavigateStep -> {
                 vm.navigateStep(state.step)
                 onboardStepState = state.step
             }
-            OnboardState.AccessTokenValidationFailed -> Unit // TODO
-            is OnboardState.CategoriesLoaded -> Unit // TODO
-            is OnboardState.FileUploaded -> Unit // TODO
-            is OnboardState.TagCreated -> Unit // TODO
+            OnboardState.AccessTokenValidationFailed -> Unit // TODO(sungbin): 기능 연결
+            is OnboardState.CategoriesLoaded -> Unit // TODO(sungbin): 기능 연결
+            is OnboardState.FileUploaded -> Unit // TODO(sungbin): 기능 연결
+            is OnboardState.TagCreated -> Unit // TODO(sungbin): 기능 연결
             is OnboardState.Error -> {
                 toast(getString(R.string.internal_error))
             }
@@ -204,7 +204,7 @@ class OnboardActivity : BaseActivity() {
                     preferences[PreferenceKey.Account.AccessToken] = effect.accessToken
                 }
             }
-            is OnboardSideEffect.AttachAccessTokenToHeader -> Unit // TODO
+            is OnboardSideEffect.AttachAccessTokenToHeader -> Unit // TODO(sungbin): 기능 연결
             is OnboardSideEffect.DelegateJoin -> {
                 vm.join(effect.kakaoAccessToken)
             }

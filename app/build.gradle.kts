@@ -24,7 +24,7 @@ android {
         buildConfig = true
     }
 
-    // TODO: flavorDimensions 가 정확히 뭘까?
+    // TODO(sungbin): flavorDimensions 가 정확히 뭘까?
     flavorDimensions.add("mode")
     productFlavors {
         create("alwaysRipple") {

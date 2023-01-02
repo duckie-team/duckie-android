@@ -204,7 +204,7 @@ private fun LoginScreenLoginArea() = CoroutineScopeContent {
                     // vm.kakaoLogin(currentStep + 1)
                 },
             content = {
-                // TODO: 로딩중 인디케이터
+                // TODO(sungbin): 로딩중 인디케이터
                 Image(
                     modifier = Modifier
                         .layoutId(LoginScreenLoginAreaKakaoSymbolLayoutId)

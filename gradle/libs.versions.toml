@@ -87,7 +87,7 @@ quack-ui-components = "1.4.3"
 quack-lint-core = "1.0.1"
 quack-lint-quack = "1.0.1"
 quack-lint-compose = "1.0.2"
-# TODO: quack-lint-writing
+# TODO(sungbin): quack-lint-writing
 
 # test
 test-strikt = "0.34.1"
