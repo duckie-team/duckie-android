@@ -44,6 +44,6 @@ dependencies {
         libs.test.coroutines,
         libs.test.ktor.client,
         libs.test.ktor.server, // for E2E test
-        libs.bundles.ktor.server, // for E2E test
+        libs.ktor.server.core, // for E2E test
     )
 }

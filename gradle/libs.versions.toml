@@ -186,7 +186,6 @@ di-inject = { module = "javax.inject:javax.inject", version.ref = "di-inject" }
 
 ktor-jackson = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor-core" }
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor-core" }
-ktor-server-engine = { module = "io.ktor:ktor-server-netty", version.ref = "ktor-core" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-core" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-core" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-core" }
@@ -215,5 +214,4 @@ ktx = ["ktx-core", "ktx-activiy", "ktx-lifecycle"]
 compose-core = ["compose-runtime", "compose-ui-foundation", "compose-ui-activity", "compose-util-tooling-preview"]
 compose-debug = ["compose-util-tooling-core", "compose-util-customview-pooling-container"] # debugImplementation
 ktor-client = ["ktor-jackson", "ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-client-engine"]
-ktor-server = ["ktor-server-core", "ktor-server-engine"]
 quack-lint = ["quack-lint-core", "quack-lint-quack", "quack-lint-compose"]
