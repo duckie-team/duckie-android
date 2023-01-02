@@ -10,6 +10,7 @@ package team.duckie.app.android.util.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 internal class SavedStateFlowHelper<T>(
     private val savedStateHandle: SavedStateHandle? = null,
@@ -25,11 +26,10 @@ internal class SavedStateFlowHelper<T>(
     fun asStateFlow(): StateFlow<T> = savedState
 
     fun update(updater: (currentState: T) -> T) {
-        val newValue = updater(savedState.value)
         if (savedStateHandle != null && key != null) {
-            savedStateHandle[key] = newValue
+            savedStateHandle[key] = updater(savedState.value)
         } else {
-            (savedState as MutableStateFlow<T>).value = newValue
+            (savedState as MutableStateFlow<T>).update(updater)
         }
     }
 
