@@ -221,7 +221,8 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     // CreateProblem
-    /** 문제를 만든다. 아래 규칙대로 [Problem] 을 만든다.
+    /**
+     * 문제를 만든다. 아래 규칙대로 [Problem] 을 만든다.
      *
      * [Problem.question]: 처음 문제를 만들 때 기본 [Question.Type] 은 [Question.Text] 이다.
      * [Problem.answer]: 기본 [Answer.Type] 은 타입값에 기반하여 생성해준다. (객관식일 경우, 기본 Choice 개수는 0개이다)
@@ -263,7 +264,7 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     /**
-     * 문제를 삭제한다.
+     * [questionIndex + 1] 번 문제를 삭제한다.
      * // TODO(riflockle7): 좀더 깔끔하게 할 수 있는 방법이 없을까?
      */
     fun removeProblem(questionIndex: Int) = updateState { prevState ->
@@ -292,6 +293,12 @@ class CreateProblemViewModel @Inject constructor(
         )
     }
 
+    /**
+     * [questionIndex + 1] 번 문제를 설정합니다.
+     *
+     * [특정 문제 타입][questionType]으로 설정되며
+     * [텍스트][title], [이미지 소스 목록][urlSource]을 추가적으로 받아 해당 문제를 특정 값으로 초기 설정합니다.
+     */
     fun setQuestion(
         questionType: Question.Type?,
         questionIndex: Int,
@@ -332,6 +339,12 @@ class CreateProblemViewModel @Inject constructor(
         )
     }
 
+    /**
+     * [questionIndex + 1] 번 문제의 전체 답안을 설정합니다.
+     *
+     * [특정 답안 타입][answerType]으로 설정되며,
+     * [텍스트 목록][answers], [이미지 소스 목록][urlSources]을 추가적으로 받아 전체 답안을 해당 값으로 초기 설정합니다.
+     */
     fun setAnswers(
         questionIndex: Int,
         answerType: Answer.Type,
@@ -341,7 +354,7 @@ class CreateProblemViewModel @Inject constructor(
         val prevAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
         val newAnswers = mutableListOf<Answer>()
         for (answerIndex in 0 until prevAnswers.size) {
-            prevAnswers.generateAnswers(
+            prevAnswers.getEditedAnswers(
                 questionIndex,
                 answerIndex,
                 answerType,
@@ -359,6 +372,13 @@ class CreateProblemViewModel @Inject constructor(
         )
     }
 
+    /**
+     * [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 설정합니다.
+     * 주관식은 첫 번째 값만 변경합니다.
+     *
+     * [특정 답안 타입][answerType]으로 설정되며,
+     * [텍스트][answer], [이미지 소스][urlSource]을 추가적으로 받아 특정 답안을 해당 값으로 초기 설정합니다.
+     */
     fun setAnswer(
         questionIndex: Int,
         answerIndex: Int,
@@ -367,9 +387,8 @@ class CreateProblemViewModel @Inject constructor(
         urlSource: Uri? = null,
     ) = updateState { prevState ->
         val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
-            // .generateAnswers(questionIndex, answerIndex, answerType, answer, urlSource)
 
-        newAnswers.generateAnswers(
+        newAnswers.getEditedAnswers(
             questionIndex,
             answerIndex,
             answerType,
@@ -386,6 +405,7 @@ class CreateProblemViewModel @Inject constructor(
         )
     }
 
+    /** [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 삭제 합니다. */
     fun removeAnswer(
         questionIndex: Int,
         answerIndex: Int,
@@ -418,7 +438,12 @@ class CreateProblemViewModel @Inject constructor(
         )
     }
 
-    private fun MutableList<Answer>.generateAnswers(
+    /**
+     * [모든 문제의 답안 목록][this] 에서
+     * [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 수정합니다.
+     * 이후 [questionIndex + 1] 문제의 답안 목록을 가져옵니다.
+     */
+    private fun MutableList<Answer>.getEditedAnswers(
         questionIndex: Int,
         answerIndex: Int,
         answerType: Answer.Type,
@@ -481,6 +506,7 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    /** [questionIndex + 1] 번 문제의 [정답][correctAnswer]을 설정합니다. */
     fun setCorrectAnswer(
         questionIndex: Int,
         correctAnswer: String,
@@ -498,6 +524,10 @@ class CreateProblemViewModel @Inject constructor(
         )
     }
 
+    /**
+     * [questionIndex + 1] 번 문제의 답안을 추가합니다.
+     * [답안의 유형][answerType]에 맞춰 값이 추가 됩니다.
+     */
     fun addAnswer(
         questionIndex: Int,
         answerType: Answer.Type?,
@@ -524,6 +554,7 @@ class CreateProblemViewModel @Inject constructor(
 
             else -> null
         }?.let { newAnswers[questionIndex] = it }
+
         prevState.copy(
             examInformation = prevState.examInformation.copy(
                 createProblemArea = prevState.examInformation.createProblemArea.copy(

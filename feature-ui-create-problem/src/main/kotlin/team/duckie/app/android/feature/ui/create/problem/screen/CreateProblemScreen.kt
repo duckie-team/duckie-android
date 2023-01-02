@@ -17,7 +17,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -253,9 +252,11 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                             onClick = {
                                 launch {
                                     selectedQuestionIndex?.let { questionIndex ->
+                                        // 특정 문제의 답안 유형 수정
                                         vm.setAnswers(questionIndex, it.second)
                                         selectedQuestionIndex = null
                                     } ?: kotlin.run {
+                                        // 문제 추가
                                         vm.addProblem(it.second)
                                     }
                                     hideBottomSheet(sheetState) { selectedQuestionIndex = null }
@@ -415,7 +416,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                     question = question,
                                     titleChanged = { newTitle ->
                                         vm.setQuestion(
-                                            question?.type,
+                                            question.type,
                                             questionIndex,
                                             title = newTitle,
                                         )
@@ -508,7 +509,6 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
 
     // 갤러리 썸네일 선택 picker
     if (photoState != null) {
-        Log.i("sangwo-o.lee", "${galleryImages.size}")
         PhotoPicker(
             modifier = Modifier
                 .padding(top = systemBarPaddings.calculateTopPadding())
@@ -566,11 +566,11 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     }
 
     QuackDialog(
-        title = "삭제하시겠습니까?",
+        title = stringResource(id = R.string.create_problem_delete_dialog_title),
         visible = deleteDialogNo != null,
-        leftButtonText = "취소",
+        leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { deleteDialogNo = null },
-        rightButtonText = "확인",
+        rightButtonText = stringResource(id = R.string.ok),
         rightButtonOnClick = {
             deleteDialogNo?.let {
                 val questionIndex = it.first
@@ -584,6 +584,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     )
 }
 
+/** BottomSheet 를 닫습니다. */
 private fun CoroutineScopeContent.hideBottomSheet(
     sheetState: ModalBottomSheetState,
     afterAction: (() -> Unit)? = null
@@ -592,6 +593,7 @@ private fun CoroutineScopeContent.hideBottomSheet(
     afterAction?.invoke()
 }
 
+/** 사진 선택 화면을 엽니다. */
 private fun CoroutineScopeContent.openPhotoPicker(
     context: Context,
     vm: CreateProblemViewModel,
@@ -609,6 +611,7 @@ private fun CoroutineScopeContent.openPhotoPicker(
     }
 }
 
+/** 문제 항목 Layout 내 공통 제목 Layout */
 @Composable
 private fun CreateProblemTitleLayout(
     questionIndex: Int,
@@ -624,7 +627,10 @@ private fun CreateProblemTitleLayout(
         modifier = Modifier.quackClickable(onLongClick = { deleteLongClick() }) {},
         text = question?.text ?: "",
         onTextChanged = titleChanged,
-        placeholderText = "$questionIndex. 문제를 입력해주세요.",
+        placeholderText = stringResource(
+            id = R.string.create_problem_question_placeholder,
+            "${questionIndex + 1}"
+        ),
         trailingIcon = QuackIcon.Image,
         trailingIconOnClick = imageClick,
     )
@@ -645,7 +651,7 @@ private fun CreateProblemTitleLayout(
     )
 }
 
-/** 문제 만들기 객관식/글 Layout */
+/** 객관식/글 Layout */
 @Composable
 private fun ChoiceProblemLayout(
     questionIndex: Int,
@@ -682,7 +688,10 @@ private fun ChoiceProblemLayout(
                     .padding(top = 12.dp),
                 text = choiceModel.text,
                 onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
-                placeholderText = "${answerIndex + 1}번 보기",
+                placeholderText = stringResource(
+                    id = R.string.create_problem_answer_placeholder,
+                    "${answerIndex + 1}"
+                ),
                 trailingContent = {
                     val isChecked = correctAnswers == "$answerIndex"
                     Column(
@@ -698,7 +707,7 @@ private fun ChoiceProblemLayout(
                             QuackBody3(
                                 modifier = Modifier.padding(top = 2.dp),
                                 color = QuackColor.DuckieOrange,
-                                text = "정답",
+                                text = stringResource(id = R.string.answer),
                             )
                         }
                     }
@@ -711,14 +720,17 @@ private fun ChoiceProblemLayout(
         if (answers.choices.size < MaximumChoice) {
             QuackSubtitle(
                 modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
-                text = "+ 보기 추가",
+                text = stringResource(id = R.string.create_problem_add_button),
                 onClick = { addAnswerClick() }
             )
         }
     }
 }
 
-/** 문제 만들기 객관식/사진 Layout */
+/**
+ * 객관식/사진 Layout
+ * // TODO(riflockle7): 정답 체크 연동 필요
+ */
 @Composable
 private fun ImageChoiceProblemLayout(
     questionIndex: Int,
@@ -788,7 +800,10 @@ private fun ImageChoiceProblemLayout(
                         onTextChanged = { newAnswer ->
                             answerTextChanged(newAnswer, answerIndex)
                         },
-                        placeholderText = "${answerIndex + 1}번 보기"
+                        placeholderText = stringResource(
+                            id = R.string.create_problem_answer_placeholder,
+                            "${answerIndex + 1}"
+                        ),
                     )
                 }
             }
@@ -799,14 +814,14 @@ private fun ImageChoiceProblemLayout(
         if (answers.imageChoice.size < MaximumChoice) {
             QuackSubtitle(
                 modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
-                text = "+ 보기 추가",
+                text = stringResource(id = R.string.create_problem_add_problem_button),
                 onClick = { addAnswerClick() }
             )
         }
     }
 }
 
-/** 문제 만들기 주관식 Layout */
+/** 주관식 Layout */
 @Composable
 private fun ShortAnswerProblemLayout(
     questionIndex: Int,
@@ -832,16 +847,15 @@ private fun ShortAnswerProblemLayout(
             onDropdownItemClick,
         ) { deleteLongClick() }
 
-        // TODO(riflockle7): underLine 없는 TextField 필요, Answer 연동 시 추가 작업 필요
         QuackBasicTextField(
             text = answers.answer,
             onTextChanged = { newAnswer -> answerTextChanged(newAnswer, 0) },
-            placeholderText = "답안 입력"
+            placeholderText = stringResource(id = R.string.create_problem_short_answer_placeholder)
         )
     }
 }
 
-/** 문제 만들기 2단계 최하단 Layout  */
+/** 최하단 Layout  */
 @Deprecated("임시 저장 기능 부활 시 다시 사용")
 @Composable
 private fun CreateProblemBottomLayout() {
