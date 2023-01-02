@@ -33,10 +33,21 @@ internal fun updateClient(newClient: HttpClient) {
     client = newClient
 }
 
+internal object DuckieHttpHeaders {
+    const val DeviceName = "x-duckie-device-name"
+    const val Version = "x-duckie-version"
+    const val Client = "x-duckie-client"
+
+    // TODO(sungbin): X-DUCKIE-AUTHORIZATION 으로 변경 필요
+    // See: https://sungbinland.slack.com/archives/C046SS32SEQ/p1672520272880839
+    const val Authorization = "authorization"
+}
+
 internal object AuthorizationHeaderClient {
     private val MaxTimeoutMillis = 3.seconds
     private const val MaxRetryCount = 3
     private const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
+    private const val ClientName = "android"
 
     operator fun invoke() = HttpClient(engineFactory = CIO) {
         expectSuccess = true
@@ -50,12 +61,14 @@ internal object AuthorizationHeaderClient {
             url(BaseUrl)
             headers {
                 append(HttpHeaders.ContentType, ContentType.Application.Json)
-                append("x-duckie-device-name", Build.MODEL)
-                append("x-duckie-version", BuildConfig.APP_VERSION_NAME)
-                append("x-duckie-client", "android")
+                append(DuckieHttpHeaders.DeviceName, Build.MODEL)
+                append(DuckieHttpHeaders.Version, BuildConfig.APP_VERSION_NAME)
+                append(DuckieHttpHeaders.Client, ClientName)
             }
         }
-        install(plugin = DuckieAuthorizationHeaderOrNothingPlugin)
+        install(plugin = DuckieAuthorizationHeaderOrNothingPlugin) {
+            headerKey = DuckieHttpHeaders.Authorization
+        }
         install(plugin = ContentNegotiation) {
             jackson()
         }
