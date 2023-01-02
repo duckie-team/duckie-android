@@ -7,15 +7,17 @@
 
 package team.duckie.app.android.domain.auth.usecase
 
+import androidx.compose.runtime.Immutable
 import javax.inject.Inject
 import team.duckie.app.android.domain.auth.repository.AuthRepository
 
+@Immutable
 class CheckAccessTokenUseCase @Inject constructor(
     private val repository: AuthRepository,
 ) {
-    suspend fun invoke(): Result<Int> { // 유저 아이디 반환
+    suspend operator fun invoke(token: String): Result<Int> { // 유저 아이디 반환
         return runCatching {
-            repository.checkAccessToken().userId
+            repository.checkAccessToken(token).userId
         }
     }
 }

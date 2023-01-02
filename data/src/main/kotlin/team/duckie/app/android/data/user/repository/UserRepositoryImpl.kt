@@ -7,10 +7,10 @@
 
 package team.duckie.app.android.data.user.repository
 
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.patch
 import javax.inject.Inject
+import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.jsonBody
 import team.duckie.app.android.data.user.mapper.toDomain
@@ -21,9 +21,7 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.util.kotlin.runtimeCheck
 
-class UserRepositoryImpl @Inject constructor(
-    private val client: HttpClient,
-) : UserRepository {
+class UserRepositoryImpl @Inject constructor() : UserRepository {
     override suspend fun update(
         id: Int,
         nickname: String?,

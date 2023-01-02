@@ -51,14 +51,14 @@ import team.duckie.quackquack.ui.color.QuackColor
 class OnboardActivity : BaseActivity() {
 
     @Inject
-    internal lateinit var viewModelFactory: OnboardViewModel.ViewModelFactory
+    internal lateinit var vmFactory: OnboardViewModel.ViewModelFactory
     private lateinit var vm: OnboardViewModel
 
-    private val userRepository by lazy {
-        ProvidesModule.provideKakaoLoginRepository(activityContext = this)
+    private val kakaoRepository by lazy {
+        ProvidesModule.provideKakaoRepository(activityContext = this)
     }
-    private val kakaoLoginUseCase by lazy {
-        KakaoUseCaseModule.provideKakaoLoginUseCase(repository = userRepository)
+    private val getKakaoAccessTokenUseCase by lazy {
+        KakaoUseCaseModule.provideGetKakaoAccessTokenUseCase(repository = kakaoRepository)
     }
 
     private val toast by lazy { ToastWrapper(applicationContext) }
@@ -85,7 +85,7 @@ class OnboardActivity : BaseActivity() {
             return finishWithAnimation()
         }
 
-        vm = viewModelFactory.create(kakaoLoginUseCase = kakaoLoginUseCase)
+        vm = vmFactory.create(getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase)
         onBackPressedDispatcher.addCallback(owner = this) {
             if (onboardStepState == OnboardStep.Login || onboardStepState == OnboardStep.Tag) {
                 finishWithAnimation()
@@ -136,7 +136,7 @@ class OnboardActivity : BaseActivity() {
                     OnboardStep.Profile -> ProfileScreen()
                     OnboardStep.Category -> CategoryScreen()
                     OnboardStep.Tag -> TagScreen()
-                    else -> Unit // onboardStep is null
+                    null -> Unit
                 }
             }
         }
@@ -176,33 +176,41 @@ class OnboardActivity : BaseActivity() {
                     ignoreThrottle = true,
                 )
             }
+            is OnboardState.Joined -> Unit // TODO(sungbin): 기능 연결
             is OnboardState.NavigateStep -> {
                 vm.navigateStep(state.step)
                 onboardStepState = state.step
             }
+            OnboardState.AccessTokenValidationFailed -> Unit // TODO(sungbin): 기능 연결
+            is OnboardState.CategoriesLoaded -> Unit // TODO(sungbin): 기능 연결
+            is OnboardState.FileUploaded -> Unit // TODO(sungbin): 기능 연결
+            is OnboardState.TagCreated -> Unit // TODO(sungbin): 기능 연결
             is OnboardState.Error -> {
                 toast(getString(R.string.internal_error))
-                state.exception.printStackTrace()
             }
         }
     }
 
-    private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
-        when (sideEffect) {
-            is OnboardSideEffect.SaveUser -> {
-                vm.me = sideEffect.user
-                dataStore.edit { preference ->
-                    val (nickname, profileImage, email) = sideEffect.user
-                    preference[PreferenceKey.User.Nickname] = nickname
-                    preference[PreferenceKey.User.ProfilePhoto] = profileImage
-                    email?.let { preference[PreferenceKey.User.Email] = email }
+    private suspend fun handleSideEffect(effect: OnboardSideEffect) {
+        when (effect) {
+            is OnboardSideEffect.UpdateGalleryImages -> {
+                vm.addGalleryImages(effect.images)
+            }
+            is OnboardSideEffect.UpdateUser -> {
+                vm.me = effect.user
+            }
+            is OnboardSideEffect.UpdateAccessToken -> {
+                applicationContext.dataStore.edit { preferences ->
+                    preferences[PreferenceKey.Account.AccessToken] = effect.accessToken
                 }
             }
-            is OnboardSideEffect.UpdateGalleryImages -> {
-                vm.addGalleryImages(sideEffect.images)
+            is OnboardSideEffect.AttachAccessTokenToHeader -> Unit // TODO(sungbin): 기능 연결
+            is OnboardSideEffect.DelegateJoin -> {
+                vm.join(effect.kakaoAccessToken)
             }
             is OnboardSideEffect.ReportError -> {
-                Firebase.crashlytics.recordException(sideEffect.exception)
+                effect.exception.printStackTrace()
+                Firebase.crashlytics.recordException(effect.exception)
             }
         }
     }

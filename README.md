@@ -57,13 +57,14 @@ Edit Configurations -> Set `Launch Options` like this:
 ![dependencies](assets/dependency-graph/project.dot.png)
 
 <p align="center" >
-  <img src="https://img.shields.io/badge/Module-AndroidApplication-%23baffc9" />
-  <img src="https://img.shields.io/badge/Module-AndroidLibrary-%23fcb96a" /> 
-  <img src="https://img.shields.io/badge/Module-AndroidDFM-%23c9baff" />
-  <img src="https://img.shields.io/badge/Module-JvmLibrary-%23ffc9ba" />
-  <img src="https://img.shields.io/badge/Module-Util-%23ffebba" />
-  <img src="https://img.shields.io/badge/Module-Feature-%2381d4fa" />
-  <img src="https://img.shields.io/badge/Module-UiFeature-%2300aeff" />
+  <img src="https://img.shields.io/badge/Module-AndroidApplication-%23B4BD9B" />
+  <img src="https://img.shields.io/badge/Module-AndroidLibrary-%23CCD5C3" /> 
+  <img src="https://img.shields.io/badge/Module-AndroidDFM-%23BC455A" />
+  <img src="https://img.shields.io/badge/Module-Plugin-%23F9D6D3" />
+  <img src="https://img.shields.io/badge/Module-Util-%23FDBA77" />
+  <img src="https://img.shields.io/badge/Module-SharedUi-%23F6CF98" />
+  <img src="https://img.shields.io/badge/Module-Feature-%23FDF8EC" />
+  <img src="https://img.shields.io/badge/Module-UiFeature-%2381BDC3" />
 </p>
 
 ## Maintainers

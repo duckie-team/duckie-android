@@ -13,15 +13,15 @@ import android.app.Activity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ActivityComponent
 import team.duckie.app.android.data.kakao.repository.KakaoRepositoryImpl
 import team.duckie.app.android.domain.kakao.repository.KakaoRepository
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ActivityComponent::class)
 object ProvidesModule {
     @Provides
-    fun provideKakaoLoginRepository(activityContext: Activity): KakaoRepository {
+    fun provideKakaoRepository(activityContext: Activity): KakaoRepository {
         return KakaoRepositoryImpl(activityContext)
     }
 }
