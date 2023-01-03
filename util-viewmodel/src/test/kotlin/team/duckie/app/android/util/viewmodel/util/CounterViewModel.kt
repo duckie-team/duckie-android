@@ -10,7 +10,7 @@ package team.duckie.app.android.util.viewmodel.util
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
 @JvmInline
-value class CounterState(val value: Int)
+value class CounterState(val count: Int)
 
 class CounterViewModel : BaseViewModel<CounterState, Nothing>(CounterState(0))
 

@@ -34,7 +34,7 @@ class ViewModelSynchronismTest {
             val worker1 = launch(Dispatchers.IO.limitedParallelism(1)) {
                 repeat(times) {
                     vm.updateState { prevState ->
-                        CounterState(prevState.value + 1)
+                        CounterState(prevState.count + 1)
                     }
                     yield()
                 }
@@ -42,7 +42,7 @@ class ViewModelSynchronismTest {
             val worker2 = launch(Dispatchers.IO.limitedParallelism(1)) {
                 repeat(times) {
                     vm.updateState { prevState ->
-                        CounterState(prevState.value - 1)
+                        CounterState(prevState.count - 1)
                     }
                     yield()
                 }
@@ -50,6 +50,9 @@ class ViewModelSynchronismTest {
             joinAll(worker1, worker2)
         }
 
-        expectThat(vm.state.value.value).isEqualTo(0)
+        val actual = vm.state.value.count
+        val expected = 0
+
+        expectThat(actual).isEqualTo(expected)
     }
 }
