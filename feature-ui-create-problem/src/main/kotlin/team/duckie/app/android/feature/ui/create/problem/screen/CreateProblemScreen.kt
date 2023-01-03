@@ -242,7 +242,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         // 주관식 버튼
                         stringResource(id = R.string.create_problem_bottom_sheet_title_short_form)
                                 to Answer.Type.ShortAnswer,
-                    ).forEach {
+                    ).fastForEach {
                         QuackSubtitle(
                             modifier = Modifier.fillMaxWidth(),
                             padding = PaddingValues(
