@@ -14,6 +14,7 @@ import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -26,12 +27,14 @@ class ViewModelSideEffectTest {
         val vm = buildBasicViewModel()
 
         launch {
+            yield()
             vm.postSideEffect { BasicSideEffect.Greeting }
         }
 
         launch {
             vm.sideEffect.test {
                 expectThat(awaitItem()).isEqualTo(BasicSideEffect.Greeting)
+                ensureAllEventsConsumed()
                 expectNoEvents()
             }
         }

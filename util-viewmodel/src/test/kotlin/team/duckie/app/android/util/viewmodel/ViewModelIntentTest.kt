@@ -6,9 +6,15 @@
  */
 
 @file:Suppress("NonAsciiCharacters")
+@file:OptIn(ExperimentalCoroutinesApi::class)
 
 package team.duckie.app.android.util.viewmodel
 
+import app.cash.turbine.test
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -17,30 +23,47 @@ import team.duckie.app.android.util.viewmodel.util.buildBasicViewModel
 
 class ViewModelIntentTest {
     @Test
-    fun `Waiting - Join - Leave 순으로 상태를 바꿈`() {
+    fun `Waiting - Join - Leave 순으로 상태를 바꿈`() = runTest {
         val vm = buildBasicViewModel()
-        expectThat(vm.currentState).isEqualTo(BasicState.Waiting)
 
-        vm.updateState { BasicState.Join }
-        expectThat(vm.currentState).isEqualTo(BasicState.Join)
+        launch {
+            yield()
+            vm.updateState { BasicState.Join }
+            vm.updateState { BasicState.Leave }
+        }
 
-        vm.updateState { BasicState.Leave }
-        expectThat(vm.currentState).isEqualTo(BasicState.Leave)
+        launch {
+            vm.state.test {
+                expectThat(awaitItem()).isEqualTo(BasicState.Waiting)
+                expectThat(awaitItem()).isEqualTo(BasicState.Join)
+                expectThat(awaitItem()).isEqualTo(BasicState.Leave)
+                ensureAllEventsConsumed()
+                expectNoEvents()
+            }
+        }
     }
 
     @Test
-    fun `Waiting - JoinRejected 순으로 상태를 바꿈`() {
+    fun `Waiting - JoinRejected 순으로 상태를 바꿈`() = runTest {
         val vm = buildBasicViewModel()
-        expectThat(vm.currentState).isEqualTo(BasicState.Waiting)
 
-        vm.updateState {
-            skip()
-            @Suppress("UNREACHABLE_CODE")
-            BasicState.Join
+        launch {
+            yield()
+            vm.updateState {
+                skip()
+                @Suppress("UNREACHABLE_CODE")
+                BasicState.Join
+            }
+            vm.updateState { BasicState.JoinRejected }
         }
-        expectThat(vm.currentState).isEqualTo(BasicState.Waiting)
 
-        vm.updateState { BasicState.JoinRejected }
-        expectThat(vm.currentState).isEqualTo(BasicState.JoinRejected)
+        launch {
+            vm.state.test {
+                expectThat(awaitItem()).isEqualTo(BasicState.Waiting)
+                expectThat(awaitItem()).isEqualTo(BasicState.JoinRejected)
+                ensureAllEventsConsumed()
+                expectNoEvents()
+            }
+        }
     }
 }
