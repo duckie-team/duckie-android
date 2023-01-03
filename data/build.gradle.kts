@@ -35,7 +35,7 @@ dependencies {
         libs.login.kakao,
         libs.kotlin.coroutines,
         libs.kotlin.collections.immutable,
-        libs.bundles.ktor,
+        libs.bundles.ktor.client,
         projects.domain,
         projects.utilKotlin,
         projects.pluginKtorClient,
@@ -43,5 +43,7 @@ dependencies {
     testImplementations(
         libs.test.coroutines,
         libs.test.ktor.client,
+        libs.test.ktor.server, // for E2E test
+        libs.ktor.server.core, // for E2E test
     )
 }

@@ -7,8 +7,10 @@
 
 package team.duckie.app.android.data._util
 
+import team.duckie.app.android.util.kotlin.DuckieDsl
 import team.duckie.app.android.util.kotlin.fastForEach
 
+@DuckieDsl
 internal interface JsonBuilder {
     infix fun String.withInt(value: Int)
     infix fun String.withFloat(value: Float)

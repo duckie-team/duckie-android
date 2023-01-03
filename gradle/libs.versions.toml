@@ -184,11 +184,12 @@ di-hilt-core = { module = "com.google.dagger:hilt-android", version.ref = "di-hi
 di-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "di-hilt" }
 di-inject = { module = "javax.inject:javax.inject", version.ref = "di-inject" }
 
-ktor-client = { module = "io.ktor:ktor-client-core", version.ref = "ktor-core" }
-ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-core" }
 ktor-jackson = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor-core" }
-ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-core" }
-ktor-engine = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-core" }
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor-core" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-core" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-core" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-core" }
+ktor-client-engine = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-core" }
 
 quack-ui-components = { module = "team.duckie.quack:quack-ui-components", version.ref = "quack-ui-components" }
 quack-lint-core = { module = "team.duckie.quack:quack-lint-core", version.ref = "quack-lint-core" }
@@ -206,10 +207,11 @@ test-parameter-injector = { module = "com.google.testparameterinjector:test-para
 test-turbine = { module = "app.cash.turbine:turbine", version.ref = "test-turbine" }
 test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutines" }
 test-ktor-client = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-core" }
+test-ktor-server = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-core" }
 
 [bundles]
 ktx = ["ktx-core", "ktx-activiy", "ktx-lifecycle"]
 compose-core = ["compose-runtime", "compose-ui-foundation", "compose-ui-activity", "compose-util-tooling-preview"]
 compose-debug = ["compose-util-tooling-core", "compose-util-customview-pooling-container"] # debugImplementation
-ktor = ["ktor-client", "ktor-content-negotiation", "ktor-jackson", "ktor-logging", "ktor-engine"]
+ktor-client = ["ktor-jackson", "ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-client-engine"]
 quack-lint = ["quack-lint-core", "quack-lint-quack", "quack-lint-compose"]
