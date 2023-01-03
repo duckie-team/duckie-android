@@ -13,6 +13,8 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.util.kotlin.fastMapIndexed
 
 @Immutable
 data class Problem(
@@ -134,17 +136,22 @@ fun Answer.toShort(newAnswer: String?) = when (this) {
 fun Answer.toChoice(answerIndex: Int, newAnswer: String?) = when (this) {
     is Answer.Short -> Answer.Choice(persistentListOf())
     is Answer.Choice -> Answer.Choice(
-        choices.toMutableList().apply {
-            this[answerIndex] = ChoiceModel(newAnswer ?: this[answerIndex].text)
+        choices.fastMapIndexed { index, choiceModel ->
+            if (index == answerIndex) {
+                ChoiceModel(newAnswer ?: choiceModel.text)
+            } else {
+                choiceModel
+            }
         }.toPersistentList()
     )
 
     is Answer.ImageChoice -> Answer.Choice(
-        imageChoice.mapIndexed { index, imageChoiceModel ->
-            if (index == answerIndex)
+        imageChoice.fastMapIndexed { index, imageChoiceModel ->
+            if (index == answerIndex) {
                 ChoiceModel(newAnswer ?: imageChoiceModel.text)
-            else
+            } else {
                 ChoiceModel(imageChoiceModel.text)
+            }
         }.toPersistentList()
     )
 }
@@ -157,23 +164,25 @@ fun Answer.toImageChoice(
 ) = when (this) {
     is Answer.Short -> Answer.ImageChoice(persistentListOf())
     is Answer.Choice -> Answer.ImageChoice(
-        choices.mapIndexed { index, choiceModel ->
-            if (index == answerIndex)
-                ImageChoiceModel(
-                    newAnswer ?: choiceModel.text,
-                    newUrlSource ?: ""
-                )
-            else
+        choices.fastMapIndexed { index, choiceModel ->
+            if (index == answerIndex) {
+                ImageChoiceModel(newAnswer ?: choiceModel.text, newUrlSource ?: "")
+            } else {
                 ImageChoiceModel(choiceModel.text, "")
+            }
         }.toPersistentList()
     )
 
     is Answer.ImageChoice -> Answer.ImageChoice(
-        imageChoice.toMutableList().apply {
-            this[answerIndex] = ImageChoiceModel(
-                newAnswer ?: this[answerIndex].text,
-                newUrlSource ?: this[answerIndex].imageUrl
-            )
+        imageChoice.fastMapIndexed { index, imageChoiceModel ->
+            if (index == answerIndex) {
+                ImageChoiceModel(
+                    newAnswer ?: imageChoiceModel.text,
+                    newUrlSource ?: imageChoiceModel.imageUrl
+                )
+            } else {
+                imageChoiceModel
+            }
         }.toPersistentList()
     )
 }

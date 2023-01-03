@@ -140,6 +140,24 @@ inline fun <T, R> List<T>.fastMap(transform: (T) -> R): List<R> {
     return target
 }
 
+/**
+ * Returns a list containing the results of applying the given [transform] function
+ * to each element in the original collection.
+ *
+ * **random access 의 개념을 이해하고 사용해야 합니다!**
+ * 그렇지 않으면 성능이 오히려 떨어지는 부작용이 있을 수 있습니다.
+ */
+@Suppress("BanInlineOptIn")
+@OptIn(ExperimentalContracts::class)
+inline fun <T, R> List<T>.fastMapIndexed(transform: (Int, T) -> R): List<R> {
+    contract { callsInPlace(transform) }
+    val target = ArrayList<R>(size)
+    fastForEachIndexed { index, it ->
+        target += transform(index, it)
+    }
+    return target
+}
+
 // TODO: should be fastMaxByOrNull to match stdlib
 /**
  * Returns the first element yielding the largest value of the given function or `null` if there
