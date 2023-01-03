@@ -134,7 +134,7 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 
 @Composable
 internal fun TagScreen() = CoroutineScopeContent {
-    @Suppress("UNUSED_VARIABLE") // TODO: 태그 처리 로직
+    @Suppress("UNUSED_VARIABLE") // TODO(sungbin): 태그 처리 로직
     val vm = LocalViewModel.current as OnboardViewModel
     val context = LocalContext.current.applicationContext
     val keyboard = LocalSoftwareKeyboardController.current
@@ -240,7 +240,8 @@ private fun TagSelection(
         List(
             size = vm.selectedCategories.size,
             init = { index ->
-                vm.getRecommendationTags(vm.selectedCategories[index])
+                listOf("index: $index")
+                // vm.getRecommendationTags(vm.selectedCategories[index])
             },
         )
     }

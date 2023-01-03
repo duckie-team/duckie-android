@@ -26,9 +26,10 @@ plugins {
 }
 
 val UtilModulePrefix = "util-"
+val SharedUiModulePrefix = "shared-ui-"
 val FeatureModulePrefix = "feature-"
 val UiFeatureModulePrefix = "feature-ui-"
-val OnlyUiFeatureModulePrefix = "-ui-"
+val PluginModulePrefix = "plugin-"
 
 dependencyGraphConfigs {
     dotFilePath = "assets/dependency-graph/project.dot"
@@ -36,18 +37,18 @@ dependencyGraphConfigs {
     dependencyBuilder { project ->
         with(project) {
             when {
+                // colorset: https://coolors.co/palette/b4bd9b-bc455a-fdba77-f6cf98-81bdc3-fdf8ec-f9d6d3-ccd5c3
                 plugins.hasPlugin(PluginEnum.AndroidApplication) -> DependencyInfo(
-                    color = "#baffc9",
+                    color = "#B4BD9B",
                     isBoxShape = true,
                 )
-                plugins.hasPlugin(PluginEnum.AndroidDfm) -> DependencyInfo("#c9baff")
-                plugins.hasPlugin(PluginEnum.JavaLibrary) -> DependencyInfo("#ffc9ba")
-                name.startsWith(UtilModulePrefix) -> DependencyInfo("#ffebba")
-                name.startsWith(FeatureModulePrefix) && !name.contains(OnlyUiFeatureModulePrefix) -> {
-                    DependencyInfo("#81d4fa")
-                }
-                name.startsWith(UiFeatureModulePrefix) -> DependencyInfo("#00aeff")
-                plugins.hasPlugin(PluginEnum.AndroidLibrary) -> DependencyInfo("#fcb96a")
+                plugins.hasPlugin(PluginEnum.AndroidDfm) -> DependencyInfo("#BC455A")
+                name.startsWith(UtilModulePrefix) -> DependencyInfo("#FDBA77")
+                name.startsWith(SharedUiModulePrefix) -> DependencyInfo("#F6CF98")
+                name.startsWith(UiFeatureModulePrefix) -> DependencyInfo("#81BDC3")
+                name.startsWith(FeatureModulePrefix) -> DependencyInfo("#FDF8EC")
+                name.startsWith(PluginModulePrefix) -> DependencyInfo("#F9D6D3")
+                plugins.hasPlugin(PluginEnum.AndroidLibrary) -> DependencyInfo("#CCD5C3")
                 else -> null
             }
         }

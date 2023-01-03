@@ -80,14 +80,14 @@ di-hilt = "2.44"
 di-inject = "1"
 
 # ktor
-ktor-core = "2.1.2"
+ktor-core = "2.2.1"
 
 # quack
 quack-ui-components = "1.4.3"
 quack-lint-core = "1.0.1"
 quack-lint-quack = "1.0.1"
 quack-lint-compose = "1.0.2"
-# TODO: quack-lint-writing
+# TODO(sungbin): quack-lint-writing
 
 # test
 test-strikt = "0.34.1"

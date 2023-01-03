@@ -7,6 +7,9 @@
 
 package team.duckie.app.android.domain.device.repository
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 interface DeviceRepository {
     suspend fun register(fcmToken: String)
 }

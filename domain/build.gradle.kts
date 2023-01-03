@@ -9,8 +9,6 @@ import DependencyHandler.Extensions.implementations
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
-    id(ConventionEnum.JvmJUnit4)
-    id(ConventionEnum.JvmDokka)
 }
 
 android {

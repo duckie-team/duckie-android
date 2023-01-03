@@ -7,10 +7,12 @@
 
 package team.duckie.app.android.domain.gallery.usecase
 
+import androidx.compose.runtime.Immutable
 import javax.inject.Inject
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
 
+@Immutable
 class LoadGalleryImagesUseCase @Inject constructor(
     private val repository: GalleryRepository,
 ) {

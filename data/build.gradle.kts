@@ -7,15 +7,15 @@
 
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
+import AppVersionNameProvider.App.VersionName
 import DependencyHandler.Extensions.implementations
 import DependencyHandler.Extensions.testImplementations
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.JvmJUnit4)
-    id(ConventionEnum.JvmDokka)
     id(ConventionEnum.AndroidHilt)
-    id(libs.plugins.util.secrets.get().pluginId)
+    id(ConventionEnum.AppVersionNameProvider)
 }
 
 android {
@@ -23,6 +23,10 @@ android {
 
     buildFeatures {
         buildConfig = true
+    }
+
+    defaultConfig {
+        buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName\"")
     }
 }
 
@@ -34,6 +38,7 @@ dependencies {
         libs.bundles.ktor,
         projects.domain,
         projects.utilKotlin,
+        projects.pluginKtorClient,
     )
     testImplementations(
         libs.test.coroutines,

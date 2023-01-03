@@ -167,7 +167,7 @@ internal fun ProfileScreen() {
     }
 
     var photoPickerVisible by remember { mutableStateOf(false) }
-    var profilePhoto by remember { mutableStateOf<Any>(vm.me.profilePhotoUrl) }
+    var profilePhoto by remember { mutableStateOf<Any>(vm.me.profileImageUrl) }
 
     var profilePhotoLastSelectionIndex by remember { mutableStateOf(0) }
     val profilePhotoSelections = remember {
@@ -189,12 +189,12 @@ internal fun ProfileScreen() {
         }
     }
 
-    var nickname by remember { mutableStateOf(vm.me.name) }
+    var nickname by remember { mutableStateOf(vm.me.nickname) }
     var lastErrorText by remember { mutableStateOf("") }
     var nicknameRuleError by remember { mutableStateOf(false) }
     var debounceFinish by remember { mutableStateOf(false) }
 
-    // TODO: 중복 닉네임 검사
+    // TODO(sungbin): 중복 닉네임 검사
     @Suppress("CanBeVal")
     var nicknameIsUseable by remember { mutableStateOf(true) }
 
@@ -294,7 +294,7 @@ internal fun ProfileScreen() {
             measurePolicy = ProfileScreenMeasurePolicy,
         )
 
-        // TODO: 효율적인 애니메이션 (카메라가 로드되면서 생기는 프라임드랍 때문에 애니메이션 제거)
+        // TODO(sungbin): 효율적인 애니메이션 (카메라가 로드되면서 생기는 프라임드랍 때문에 애니메이션 제거)
         if (photoPickerVisible) {
             PhotoPicker(
                 modifier = Modifier

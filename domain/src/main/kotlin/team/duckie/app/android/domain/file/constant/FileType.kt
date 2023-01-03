@@ -7,6 +7,9 @@
 
 package team.duckie.app.android.domain.file.constant
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 enum class FileType(val value: String) {
     Profile("profile"),
     ProblemQuestionImage("problem-question-image"),

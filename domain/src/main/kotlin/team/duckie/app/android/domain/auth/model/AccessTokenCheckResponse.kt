@@ -7,6 +7,9 @@
 
 package team.duckie.app.android.domain.auth.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class AccessTokenCheckResponse(
     val userId: Int,
     val type: String,

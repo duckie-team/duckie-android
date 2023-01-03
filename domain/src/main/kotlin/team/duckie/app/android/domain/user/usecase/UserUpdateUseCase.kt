@@ -18,7 +18,7 @@ import team.duckie.app.android.domain.user.repository.UserRepository
 class UserUpdateUseCase @Inject constructor(
     private val repository: UserRepository,
 ) {
-    suspend fun invoke(
+    suspend operator fun invoke(
         id: Int,
         nickname: String,
         profileImageUrl: String,

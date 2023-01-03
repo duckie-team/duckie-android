@@ -7,8 +7,10 @@
 
 package team.duckie.app.android.domain.terms.model
 
+import androidx.compose.runtime.Immutable
 import java.util.Date
 
+@Immutable
 data class Terms(
     val id: Int,
     val condition: String,

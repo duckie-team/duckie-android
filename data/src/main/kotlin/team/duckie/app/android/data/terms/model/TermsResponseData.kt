@@ -9,7 +9,7 @@ package team.duckie.app.android.data.terms.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class TermsResponseData(
+internal data class TermsResponseData(
     @field:JsonProperty("createdAt")
     val createdAt: String? = null,
 

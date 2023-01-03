@@ -15,7 +15,7 @@ import team.duckie.app.android.domain.tag.repository.TagRepository
 class TagCreateUseCase @Inject constructor(
     private val repository: TagRepository,
 ) {
-    suspend fun invoke(name: String): Result<Int> {
+    suspend operator fun invoke(name: String): Result<Int> {
         return runCatching {
             repository.create(name).id
         }
