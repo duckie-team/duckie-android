@@ -90,9 +90,7 @@ class CreateProblemViewModel @Inject constructor(
     }
 
     fun updatePhotoState(photoState: CreateProblemPhotoState?) = updateState { prevState ->
-        prevState.copy(
-            examInformation = prevState.examInformation.copy(photoState = photoState),
-        )
+        prevState.copy(photoState = photoState)
     }
 
     fun onClickCategory(
@@ -242,7 +240,7 @@ class CreateProblemViewModel @Inject constructor(
             Answer.Type.ImageChoice -> Answer.ImageChoice(persistentListOf())
         }
 
-        with(prevState.examInformation.createProblemArea) {
+        with(prevState.createProblem) {
             val newQuestions = questions.toMutableList().apply { add(newQuestion) }
             val newAnswers = answers.toMutableList().apply { add(newAnswer) }
             val newCorrectAnswers = correctAnswers.toMutableList().apply { add("") }
@@ -250,22 +248,20 @@ class CreateProblemViewModel @Inject constructor(
             val newMemos = memos.toMutableList().apply { add("") }
 
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    createProblemArea = prevState.examInformation.createProblemArea.copy(
-                        questions = newQuestions.toPersistentList(),
-                        answers = newAnswers.toPersistentList(),
-                        correctAnswers = newCorrectAnswers.toPersistentList(),
-                        hints = newHints.toPersistentList(),
-                        memos = newMemos.toPersistentList(),
-                    )
-                ),
+                createProblem = prevState.createProblem.copy(
+                    questions = newQuestions.toPersistentList(),
+                    answers = newAnswers.toPersistentList(),
+                    correctAnswers = newCorrectAnswers.toPersistentList(),
+                    hints = newHints.toPersistentList(),
+                    memos = newMemos.toPersistentList(),
+                )
             )
         }
     }
 
     /** [questionIndex + 1] 번 문제를 삭제한다. */
     fun removeProblem(questionIndex: Int) = updateState { prevState ->
-        with(prevState.examInformation.createProblemArea) {
+        with(prevState.createProblem) {
             val newQuestions = questions.copy { removeAt(questionIndex) }
             val newAnswers = answers.copy { removeAt(questionIndex) }
             val newCorrectAnswers = correctAnswers.copy { removeAt(questionIndex) }
@@ -273,14 +269,12 @@ class CreateProblemViewModel @Inject constructor(
             val newMemos = memos.copy { removeAt(questionIndex) }
 
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    createProblemArea = prevState.examInformation.createProblemArea.copy(
-                        questions = newQuestions.toPersistentList(),
-                        answers = newAnswers.toPersistentList(),
-                        correctAnswers = newCorrectAnswers.toPersistentList(),
-                        hints = newHints.toPersistentList(),
-                        memos = newMemos.toPersistentList(),
-                    )
+                createProblem = prevState.createProblem.copy(
+                    questions = newQuestions.toPersistentList(),
+                    answers = newAnswers.toPersistentList(),
+                    correctAnswers = newCorrectAnswers.toPersistentList(),
+                    hints = newHints.toPersistentList(),
+                    memos = newMemos.toPersistentList(),
                 ),
             )
         }
@@ -298,7 +292,7 @@ class CreateProblemViewModel @Inject constructor(
         title: String? = null,
         urlSource: Uri? = null,
     ) = updateState { prevState ->
-        val newQuestions = prevState.examInformation.createProblemArea.questions.toMutableList()
+        val newQuestions = prevState.createProblem.questions.toMutableList()
         val prevQuestion = newQuestions[questionIndex]
         val newQuestion = when (questionType) {
             Question.Type.Text -> Question.Text(
@@ -325,10 +319,8 @@ class CreateProblemViewModel @Inject constructor(
         newQuestion?.let { newQuestions[questionIndex] = it }
 
         prevState.copy(
-            examInformation = prevState.examInformation.copy(
-                createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    questions = newQuestions.toPersistentList()
-                )
+            createProblem = prevState.createProblem.copy(
+                questions = newQuestions.toPersistentList()
             ),
         )
     }
@@ -345,7 +337,7 @@ class CreateProblemViewModel @Inject constructor(
         answers: List<String>? = null,
         urlSources: List<Uri>? = null,
     ) = updateState { prevState ->
-        val prevAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
+        val prevAnswers = prevState.createProblem.answers.toMutableList()
         val newAnswers = mutableListOf<Answer>()
         for (answerIndex in 0 until prevAnswers.size) {
             prevAnswers[questionIndex].getEditedAnswers(
@@ -357,10 +349,8 @@ class CreateProblemViewModel @Inject constructor(
         }
 
         prevState.copy(
-            examInformation = prevState.examInformation.copy(
-                createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    answers = newAnswers.toPersistentList()
-                )
+            createProblem = prevState.createProblem.copy(
+                answers = newAnswers.toPersistentList()
             ),
         )
     }
@@ -379,7 +369,7 @@ class CreateProblemViewModel @Inject constructor(
         answer: String? = null,
         urlSource: Uri? = null,
     ) = updateState { prevState ->
-        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
+        val newAnswers = prevState.createProblem.answers.toMutableList()
 
         newAnswers[questionIndex].getEditedAnswers(
             answerIndex,
@@ -389,10 +379,8 @@ class CreateProblemViewModel @Inject constructor(
         ).let { newAnswers[questionIndex] = it }
 
         prevState.copy(
-            examInformation = prevState.examInformation.copy(
-                createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    answers = newAnswers.toPersistentList()
-                )
+            createProblem = prevState.createProblem.copy(
+                answers = newAnswers.toPersistentList()
             ),
         )
     }
@@ -402,7 +390,7 @@ class CreateProblemViewModel @Inject constructor(
         questionIndex: Int,
         answerIndex: Int,
     ) = updateState { prevState ->
-        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
+        val newAnswers = prevState.createProblem.answers.toMutableList()
         val newAnswer = newAnswers[questionIndex]
         newAnswers[questionIndex] = when (newAnswer) {
             // TODO(riflockle7): 발현 케이스 확인을 위해 이렇게 두었으며, 추후 state 명세하면서 없앨 예정.
@@ -418,10 +406,8 @@ class CreateProblemViewModel @Inject constructor(
         }
 
         prevState.copy(
-            examInformation = prevState.examInformation.copy(
-                createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    answers = newAnswers.toPersistentList()
-                )
+            createProblem = prevState.createProblem.copy(
+                answers = newAnswers.toPersistentList()
             ),
         )
     }
@@ -454,14 +440,12 @@ class CreateProblemViewModel @Inject constructor(
         correctAnswer: String,
     ) = updateState { prevState ->
         val newCorrectAnswers =
-            prevState.examInformation.createProblemArea.correctAnswers.toMutableList()
+            prevState.createProblem.correctAnswers.toMutableList()
         newCorrectAnswers[questionIndex] = correctAnswer
 
         prevState.copy(
-            examInformation = prevState.examInformation.copy(
-                createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    correctAnswers = newCorrectAnswers.toPersistentList()
-                )
+            createProblem = prevState.createProblem.copy(
+                correctAnswers = newCorrectAnswers.toPersistentList()
             ),
         )
     }
@@ -474,7 +458,7 @@ class CreateProblemViewModel @Inject constructor(
         questionIndex: Int,
         answerType: Answer.Type,
     ) = updateState { prevState ->
-        val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
+        val newAnswers = prevState.createProblem.answers.toMutableList()
         val newAnswer = newAnswers[questionIndex]
 
         when (answerType) {
@@ -497,11 +481,9 @@ class CreateProblemViewModel @Inject constructor(
         }.let { newAnswers[questionIndex] = it }
 
         prevState.copy(
-            examInformation = prevState.examInformation.copy(
-                createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    questions = prevState.examInformation.createProblemArea.questions,
-                    answers = newAnswers.toPersistentList()
-                )
+            createProblem = prevState.createProblem.copy(
+                questions = prevState.createProblem.questions,
+                answers = newAnswers.toPersistentList()
             ),
         )
     }
@@ -510,10 +492,8 @@ class CreateProblemViewModel @Inject constructor(
     fun setThumbnail(thumbnail: Any?) {
         updateState { prevState ->
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
-                        thumbnail = thumbnail,
-                    )
+                additionalInfo = prevState.additionalInfo.copy(
+                    thumbnail = thumbnail,
                 ),
             )
         }
@@ -522,11 +502,9 @@ class CreateProblemViewModel @Inject constructor(
     fun setButtonTitle(buttonTitle: String) {
         updateState { prevState ->
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
-                        takeTitle = buttonTitle,
-                    )
-                ),
+                additionalInfo = prevState.additionalInfo.copy(
+                    takeTitle = buttonTitle,
+                )
             )
         }
     }
@@ -534,26 +512,22 @@ class CreateProblemViewModel @Inject constructor(
     fun setTempTag(tempTag: String) {
         updateState { prevState ->
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
-                        tempTag = tempTag,
-                    )
-                ),
+                additionalInfo = prevState.additionalInfo.copy(
+                    tempTag = tempTag,
+                )
             )
         }
     }
 
     fun addTag(tag: String) {
         updateState { prevState ->
-            val newTags = prevState.examInformation.additionalInfoArea.tags
+            val newTags = prevState.additionalInfo.tags
                 .copy { add(tag) }
                 .toImmutableList()
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
-                        tags = newTags,
-                    )
-                ),
+                additionalInfo = prevState.additionalInfo.copy(
+                    tags = newTags,
+                )
             )
         }
     }
@@ -568,7 +542,7 @@ class CreateProblemViewModel @Inject constructor(
             }
             .onFailure { exception ->
                 updateState { prevState ->
-                    prevState.copy(error = CreateProblemState.ExamInformation.Error(exception))
+                    prevState.copy(error = Error(exception))
                 }
                 postSideEffect {
                     CreateProblemSideEffect.ReportError(exception)

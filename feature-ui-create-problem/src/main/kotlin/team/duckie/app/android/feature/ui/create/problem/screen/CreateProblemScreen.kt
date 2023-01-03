@@ -150,8 +150,8 @@ private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constr
 fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     val context = LocalContext.current
     val vm = LocalViewModel.current as CreateProblemViewModel
-    val examInformationState = vm.state.collectAsStateWithLifecycle().value.examInformation
-    val state = examInformationState.createProblemArea
+    val rootState = vm.state.collectAsStateWithLifecycle().value
+    val state = rootState.createProblem
     val keyboard = LocalSoftwareKeyboardController.current
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val toast = rememberToast()
@@ -171,7 +171,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
             )
         )
     }
-    val photoState = remember(examInformationState.photoState) { examInformationState.photoState }
+    val photoState = remember(rootState.photoState) { rootState.photoState }
     // first: questionIndex / second: answerIndex
     var deleteDialogNo: (Pair<Int, Int?>)? by remember { mutableStateOf(null) }
     var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
@@ -945,7 +945,7 @@ fun <T> NoLazyGridItems(
                 val itemIndex = rowIndex * nColumns + columnIndex
                 if (itemIndex < data.count()) {
                     val item = data[itemIndex]
-                    androidx.compose.runtime.key(key?.invoke(item)) {
+                    key(key?.invoke(item)) {
                         Box(
                             modifier = Modifier.weight(1f, fill = true),
                             propagateMinConstraints = true

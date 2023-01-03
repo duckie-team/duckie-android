@@ -16,7 +16,10 @@ import team.duckie.app.android.domain.exam.model.Question
 data class CreateProblemState(
     val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
     val examInformation: ExamInformation = ExamInformation(),
-    val error: ExamInformation.Error? = null,
+    val createProblem: CreateProblem = CreateProblem(),
+    val additionalInfo: AdditionInfo = AdditionInfo(),
+    val error: Error? = null,
+    val photoState: CreateProblemPhotoState? = null,
 ) {
     data class ExamInformation(
         val isCategoryLoading: Boolean = true,
@@ -29,9 +32,6 @@ data class CreateProblemState(
         val foundExamArea: FoundExamArea = FoundExamArea(),
         val scrollPosition: Int = 0,
         val examDescriptionFocused: Boolean = false,
-        val createProblemArea: CreateProblemArea = CreateProblemArea(),
-        val additionalInfoArea: AdditionInfoArea = AdditionInfoArea(),
-        val photoState: CreateProblemPhotoState? = null,
     ) {
         val examArea: String
             get() = foundExamArea.examArea
@@ -47,25 +47,28 @@ data class CreateProblemState(
             val examArea: String = "",
             val cursorPosition: Int = 0,
         )
+    }
 
-        /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
-        data class CreateProblemArea(
-            // Problem 의 데이터를 Map 으로 쪼개 놓은 영역들
-            val questions: ImmutableList<Question> = persistentListOf(),
-            val answers: ImmutableList<Answer> = persistentListOf(),
-            val correctAnswers: ImmutableList<String> = persistentListOf(),
-            val hints: ImmutableList<String> = persistentListOf(),
-            val memos: ImmutableList<String> = persistentListOf(),
-        )
-
-        data class AdditionInfoArea(
-            val thumbnail: Any? = null,
-            val takeTitle: String = "",
-            val tempTag: String = "",
-            val tags: ImmutableList<String> = persistentListOf(),
-        )
+    /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
+    data class CreateProblem(
+        // Problem 의 데이터를 Map 으로 쪼개 놓은 영역들
+        val questions: ImmutableList<Question> = persistentListOf(),
+        val answers: ImmutableList<Answer> = persistentListOf(),
+        val correctAnswers: ImmutableList<String> = persistentListOf(),
+        val hints: ImmutableList<String> = persistentListOf(),
+        val memos: ImmutableList<String> = persistentListOf(),
+    ){
         data class Error(val throwable: Throwable?)
     }
+
+    /** 문제 만들기 3단계 화면에서 사용하는 data 모음 */
+    data class AdditionInfo(
+        val thumbnail: Any? = null,
+        val takeTitle: String = "",
+        val tempTag: String = "",
+        val tags: ImmutableList<String> = persistentListOf(),
+    )
+
 }
 sealed class CreateProblemPhotoState {
     data class QuestionImageType(

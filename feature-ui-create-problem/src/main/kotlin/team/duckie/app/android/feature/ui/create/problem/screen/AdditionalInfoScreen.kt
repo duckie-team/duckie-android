@@ -89,8 +89,8 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
     val context = LocalContext.current
     val vm = LocalViewModel.current as CreateProblemViewModel
-    val examInformationState = vm.state.collectAsStateWithLifecycle().value.examInformation
-    val state = examInformationState.additionalInfoArea
+    val rootState = vm.state.collectAsStateWithLifecycle().value
+    val state = rootState.additionalInfo
     val keyboard = LocalSoftwareKeyboardController.current
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val toast = rememberToast()
@@ -108,7 +108,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
             )
         )
     }
-    val photoState = remember(examInformationState.photoState) { examInformationState.photoState }
+    val photoState = remember(rootState.photoState) { rootState.photoState }
     var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
 
     // 단일 권한 설정 launcher
@@ -332,14 +332,14 @@ private fun AdditionalThumbnailLayout(
 @Composable
 private fun AdditionalTakeLayout() {
     val vm = LocalViewModel.current as CreateProblemViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value.examInformation
+    val state = vm.state.collectAsStateWithLifecycle().value.additionalInfo
 
     TitleAndComponent(
         modifier = Modifier.padding(top = 48.dp),
         stringResource = R.string.additional_information_take_title,
     ) {
         QuackBasicTextField(
-            text = state.additionalInfoArea.takeTitle,
+            text = state.takeTitle,
             onTextChanged = vm::setButtonTitle,
             placeholderText = stringResource(id = R.string.additional_information_take_input_hint),
             keyboardOptions = ImeActionNext,
@@ -351,14 +351,14 @@ private fun AdditionalTakeLayout() {
 @Composable
 private fun AdditionalTagLayout() {
     val vm = LocalViewModel.current as CreateProblemViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value.examInformation
+    val state = vm.state.collectAsStateWithLifecycle().value.additionalInfo
 
     TitleAndComponent(
         modifier = Modifier.padding(top = 48.dp),
         stringResource = R.string.additional_information_tag_title,
     ) {
         QuackBasicTextField(
-            text = state.additionalInfoArea.tempTag,
+            text = state.tempTag,
             onTextChanged = vm::setTempTag,
             placeholderText = stringResource(id = R.string.additional_information_tag_input_hint),
         )
