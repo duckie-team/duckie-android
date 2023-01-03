@@ -12,7 +12,6 @@ package team.duckie.app.android.feature.ui.search.viewmodel
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
-import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForExamUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForUserUseCase
 import team.duckie.app.android.feature.ui.search.constans.SearchResultStep
