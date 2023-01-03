@@ -13,9 +13,9 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.ktor.client)
+    implementation(libs.ktor.client.core)
     testImplementations(
-        libs.ktor.engine,
+        libs.ktor.client.engine,
         libs.test.coroutines,
     )
 }
