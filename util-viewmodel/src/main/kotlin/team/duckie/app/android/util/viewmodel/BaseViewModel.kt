@@ -50,13 +50,12 @@ abstract class BaseViewModel<State, SideEffect>(initialState: State) {
      * @param updater 상태를 업데이트하는 람다.
      * 새로운 상태를 반환하거나 skip 돼야 합니다.
      */
-    // TODO(sungbin): 동시성 보장
     fun updateState(updater: StateUpdater.(currentState: State) -> State) {
         try {
             mutableState.update { currentState ->
                 StateUpdaterScope.updater(currentState)
             }
-        } catch (ignore: StateUpdaterSkipException) {
+        } catch (_: StateUpdaterSkipException) {
             // Skip state update
         }
     }
