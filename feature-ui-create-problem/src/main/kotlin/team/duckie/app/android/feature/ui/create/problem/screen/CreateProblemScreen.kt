@@ -46,6 +46,7 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -157,7 +158,6 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
     val permissionErrorMessage =
         stringResource(id = R.string.create_problem_permission_toast_message)
     var selectedQuestionIndex: Int? by remember { mutableStateOf(null) }
-    val correctAnswers = remember(state.correctAnswers) { state.correctAnswers }
 
     // Gallery 관련
     val selectedQuestions = remember(state.questions) { state.questions }
@@ -198,11 +198,13 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
         }
     }
 
-    LaunchedEffect(Unit) {
-        val sheetStateFlow = snapshotFlow { sheetState.currentValue }
-        sheetStateFlow.collect { state ->
-            if (state == ModalBottomSheetValue.Hidden) {
-                keyboard?.hide()
+    key(sheetState) {
+        LaunchedEffect(Unit) {
+            val sheetStateFlow = snapshotFlow { sheetState.currentValue }
+            sheetStateFlow.collect { state ->
+                if (state == ModalBottomSheetValue.Hidden) {
+                    keyboard?.hide()
+                }
             }
         }
     }
@@ -317,7 +319,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         items(selectedQuestions.size) { questionIndex ->
                             val question = selectedQuestions[questionIndex]
                             val answers = selectedAnswers[questionIndex]
-                            val correctAnswer = correctAnswers[questionIndex]
+                            val correctAnswer = state.correctAnswers[questionIndex]
 
                             when (answers) {
                                 is Answer.Short -> ShortAnswerProblemLayout(
