@@ -283,7 +283,6 @@ class CreateProblemViewModel @Inject constructor(
                     )
                 ),
             )
-
         }
     }
 

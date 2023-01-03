@@ -13,7 +13,6 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 
 @Immutable

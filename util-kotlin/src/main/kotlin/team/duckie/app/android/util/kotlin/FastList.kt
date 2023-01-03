@@ -152,8 +152,8 @@ inline fun <T, R> List<T>.fastMap(transform: (T) -> R): List<R> {
 inline fun <T, R> List<T>.fastMapIndexed(transform: (Int, T) -> R): List<R> {
     contract { callsInPlace(transform) }
     val target = ArrayList<R>(size)
-    fastForEachIndexed { index, it ->
-        target += transform(index, it)
+    fastForEachIndexed { index, item ->
+        target += transform(index, item)
     }
     return target
 }
