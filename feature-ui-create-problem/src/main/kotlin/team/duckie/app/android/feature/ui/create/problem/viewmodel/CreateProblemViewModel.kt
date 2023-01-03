@@ -38,7 +38,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
-import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
 @Singleton
@@ -242,59 +242,49 @@ class CreateProblemViewModel @Inject constructor(
             Answer.Type.ImageChoice -> Answer.ImageChoice(persistentListOf())
         }
 
-        val prevCreateProblemArea = prevState.examInformation.createProblemArea
-        val newQuestions = prevCreateProblemArea.questions.toMutableList()
-            .apply { add(newQuestion) }.toPersistentList()
-        val newAnswers = prevCreateProblemArea.answers.toMutableList()
-            .apply { add(newAnswer) }.toPersistentList()
-        val newCorrectAnswers = prevCreateProblemArea.correctAnswers.toMutableList()
-            .apply { add("") }.toPersistentList()
-        val newHints = prevCreateProblemArea.hints.toMutableList()
-            .apply { add("") }.toPersistentList()
-        val newMemos = prevCreateProblemArea.memos.toMutableList()
-            .apply { add("") }.toPersistentList()
+        with(prevState.examInformation.createProblemArea) {
+            val newQuestions = questions.toMutableList().apply { add(newQuestion) }
+            val newAnswers = answers.toMutableList().apply { add(newAnswer) }
+            val newCorrectAnswers = correctAnswers.toMutableList().apply { add("") }
+            val newHints = hints.toMutableList().apply { add("") }
+            val newMemos = memos.toMutableList().apply { add("") }
 
-        prevState.copy(
-            examInformation = prevState.examInformation.copy(
-                createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    questions = newQuestions,
-                    answers = newAnswers,
-                    correctAnswers = newCorrectAnswers,
-                    hints = newHints,
-                    memos = newMemos,
-                )
-            ),
-        )
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    createProblemArea = prevState.examInformation.createProblemArea.copy(
+                        questions = newQuestions.toPersistentList(),
+                        answers = newAnswers.toPersistentList(),
+                        correctAnswers = newCorrectAnswers.toPersistentList(),
+                        hints = newHints.toPersistentList(),
+                        memos = newMemos.toPersistentList(),
+                    )
+                ),
+            )
+        }
     }
 
-    /**
-     * [questionIndex + 1] 번 문제를 삭제한다.
-     * // TODO(riflockle7): 좀더 깔끔하게 할 수 있는 방법이 없을까?
-     */
+    /** [questionIndex + 1] 번 문제를 삭제한다. */
     fun removeProblem(questionIndex: Int) = updateState { prevState ->
-        val prevCreateProblemArea = prevState.examInformation.createProblemArea
-        val newQuestions = prevCreateProblemArea.questions.toMutableList()
-            .apply { this.removeAt(questionIndex) }.toPersistentList()
-        val newAnswers = prevCreateProblemArea.answers.toMutableList()
-            .apply { this.removeAt(questionIndex) }.toPersistentList()
-        val newCorrectAnswers = prevCreateProblemArea.correctAnswers.toMutableList()
-            .apply { this.removeAt(questionIndex) }.toPersistentList()
-        val newHints = prevCreateProblemArea.hints.toMutableList()
-            .apply { this.removeAt(questionIndex) }.toPersistentList()
-        val newMemos = prevCreateProblemArea.memos.toMutableList()
-            .apply { this.removeAt(questionIndex) }.toPersistentList()
+        with(prevState.examInformation.createProblemArea) {
+            val newQuestions = questions.copy { removeAt(questionIndex) }
+            val newAnswers = answers.copy { removeAt(questionIndex) }
+            val newCorrectAnswers = correctAnswers.copy { removeAt(questionIndex) }
+            val newHints = hints.copy { removeAt(questionIndex) }
+            val newMemos = memos.copy { removeAt(questionIndex) }
 
-        prevState.copy(
-            examInformation = prevState.examInformation.copy(
-                createProblemArea = prevState.examInformation.createProblemArea.copy(
-                    questions = newQuestions,
-                    answers = newAnswers,
-                    correctAnswers = newCorrectAnswers,
-                    hints = newHints,
-                    memos = newMemos,
-                )
-            ),
-        )
+            prevState.copy(
+                examInformation = prevState.examInformation.copy(
+                    createProblemArea = prevState.examInformation.createProblemArea.copy(
+                        questions = newQuestions.toPersistentList(),
+                        answers = newAnswers.toPersistentList(),
+                        correctAnswers = newCorrectAnswers.toPersistentList(),
+                        hints = newHints.toPersistentList(),
+                        memos = newMemos.toPersistentList(),
+                    )
+                ),
+            )
+
+        }
     }
 
     /**
@@ -416,20 +406,16 @@ class CreateProblemViewModel @Inject constructor(
         val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
         val newAnswer = newAnswers[questionIndex]
         newAnswers[questionIndex] = when (newAnswer) {
-            is Answer.Short -> error("주관식 답변은 삭제할 수 없습니다.")
+            // TODO(riflockle7): 발현 케이스 확인을 위해 이렇게 두었으며, 추후 state 명세하면서 없앨 예정.
+            is Answer.Short -> duckieClientLogicProblemException(message = "주관식 답변은 삭제할 수 없습니다.")
+
             is Answer.Choice -> Answer.Choice(
-                newAnswer.choices.toMutableList()
-                    .apply { removeAt(answerIndex) }
-                    .toImmutableList()
+                newAnswer.choices.copy { removeAt(answerIndex) }.toImmutableList()
             )
 
             is Answer.ImageChoice -> Answer.ImageChoice(
-                newAnswer.imageChoice.toMutableList()
-                    .apply { removeAt(answerIndex) }
-                    .toImmutableList()
+                newAnswer.imageChoice.copy { removeAt(answerIndex) }.toImmutableList()
             )
-
-            else -> npe()
         }
 
         prevState.copy(
@@ -487,7 +473,7 @@ class CreateProblemViewModel @Inject constructor(
      */
     fun addAnswer(
         questionIndex: Int,
-        answerType: Answer.Type?,
+        answerType: Answer.Type,
     ) = updateState { prevState ->
         val newAnswers = prevState.examInformation.createProblemArea.answers.toMutableList()
         val newAnswer = newAnswers[questionIndex]
@@ -496,21 +482,20 @@ class CreateProblemViewModel @Inject constructor(
             Answer.Type.ShortAnswer -> error("주관식은 답이 여러개가 될 수 없습니다.")
 
             Answer.Type.Choice -> {
-                val choiceAnswer = newAnswer as? Answer.Choice ?: npe()
-                val newChoices = choiceAnswer.choices.toMutableList()
-                    .apply { this.add(ChoiceModel("")) }
+                val choiceAnswer =
+                    newAnswer as? Answer.Choice ?: duckieClientLogicProblemException()
+                val newChoices = choiceAnswer.choices.copy { this.add(ChoiceModel("")) }
                 Answer.Choice(newChoices.toImmutableList())
             }
 
             Answer.Type.ImageChoice -> {
-                val choiceAnswer = newAnswer as? Answer.ImageChoice ?: npe()
-                val newImageChoices = choiceAnswer.imageChoice.toMutableList()
-                    .apply { this.add(ImageChoiceModel("", "")) }
+                val choiceAnswer =
+                    newAnswer as? Answer.ImageChoice ?: duckieClientLogicProblemException()
+                val newImageChoices =
+                    choiceAnswer.imageChoice.copy { this.add(ImageChoiceModel("", "")) }
                 Answer.ImageChoice(newImageChoices.toImmutableList())
             }
-
-            else -> null
-        }?.let { newAnswers[questionIndex] = it }
+        }.let { newAnswers[questionIndex] = it }
 
         prevState.copy(
             examInformation = prevState.examInformation.copy(
@@ -594,7 +579,7 @@ class CreateProblemViewModel @Inject constructor(
 
     /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트합니다. */
     internal fun addGalleryImages(images: List<String>) {
-        mutableGalleryImages = persistentListOf<String>().addAll(images)
+        mutableGalleryImages = persistentListOf(*images.toTypedArray())
     }
 
     fun isAllFieldsNotEmpty(): Boolean {

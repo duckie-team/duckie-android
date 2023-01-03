@@ -112,6 +112,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
     var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
 
     // 단일 권한 설정 launcher
+    // TODO(riflockle7): 권한 로직은 추후 PermissionViewModel 과 같이 쓰면서 지워질 예정
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -124,21 +125,6 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
             toast(permissionErrorMessage)
         }
     }
-
-//    // 여러 개 권한 설정 launcher
-//    val launchers = rememberLauncherForActivityResult(
-//        ActivityResultContracts.RequestMultiplePermissions()
-//    ) { areGranted: Map<String, Boolean> ->
-//        val isGranted = areGranted.values.reduce { acc, next -> acc && next }
-//        if (isGranted) {
-//            launch {
-//                vm.loadGalleryImages()
-//                photoPickerVisible = true // 안고 가야하는건가.. ViewModel 에는 두기 싫어서 일단 이렇게 둠
-//            }
-//        } else {
-//            toast(permissionErrorMessage)
-//        }
-//    }
 
     BackHandler {
         if (photoState != null) {
@@ -411,7 +397,10 @@ private fun AdditionalBottomSheetThumbnailLayout(
     }
 }
 
-/** 이미지 권한 체크시 사용해야하는 permission */
+/**
+ * 이미지 권한 체크시 사용해야하는 permission
+ * TODO(riflockle7): 권한 로직은 추후 PermissionViewModel 과 같이 쓰면서 지워질 예정
+ */
 private val imagePermission
     get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         Manifest.permission.READ_MEDIA_IMAGES

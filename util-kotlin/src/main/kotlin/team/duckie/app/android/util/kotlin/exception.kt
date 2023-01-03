@@ -63,3 +63,34 @@ class DuckieResponseFieldNPE(field: String) : DuckieException(code = "") {
 fun duckieResponseFieldNpe(field: String): Nothing {
     throw DuckieResponseFieldNPE(field = field)
 }
+
+/**
+ * 클라이언트 내부 오류를 표현하고 싶을 때 나타냅니다.
+ *
+ * @param message 예외 메시지. 선택으로 값을 받습니다.
+ * @param code 예외 코드. 필수로 값을 받습니다.
+ * @param errors 발생한 에러 목록. 선택으로 값을 받습니다
+ */
+class DuckieClientLogicProblemException(
+    message: String? = null,
+    val code: String,
+    val errors: List<String>? = null,
+) : DuckieException(code) {
+    val originalMessage = message
+    override val message = "DuckieResponseException: $code".runIf(message != null) { plus(" - $message") }
+    override fun toString(): String {
+        return "DuckieApiException(message=$message, code=$code, errors=$errors)"
+    }
+}
+
+fun duckieClientLogicProblemException(
+    message: String? = null,
+    code: String = "client_logic_problem",
+    errors: List<String>? = null,
+): Nothing {
+    throw DuckieClientLogicProblemException(
+        message = message,
+        code = code,
+        errors = errors,
+    )
+}
