@@ -5,7 +5,7 @@
 상태: ~~승인~~ **사용 불가**  
 사용 불가: Activity 의 *완전한* Recreation 이 일어난 후에도 상태를 보존하려면 `SavedStateHandle` 로 상태 저장이 필요합니다. 하지만 `androidx.lifecycle.ViewModel` 를 사용하지 않으면 `SavedStateHandle` 을 구성하는 `CreationExtras` 중 하나인 `VIEW_MODEL_KEY` 제공이 불가능합니다.
 
-## 목차
+### 목차
 
 1. [규칙](#Prerequisites)
 2. [제안서](#Proposal)
