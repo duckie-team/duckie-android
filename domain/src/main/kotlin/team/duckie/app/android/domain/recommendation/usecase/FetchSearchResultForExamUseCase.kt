@@ -17,7 +17,7 @@ class FetchSearchResultForExamUseCase @Inject constructor(
     private val repository: RecommendationRepository,
 ) {
 
-    suspend operator fun invoke(tag: String) = kotlin.runCatching {
+    suspend operator fun invoke(tag: String) = runCatching {
         repository.fetchRecommendTags(
             tag = tag,
             type = SearchType.EXAM,

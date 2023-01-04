@@ -7,6 +7,9 @@
 
 package team.duckie.app.android.domain.recommendation.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class RecommendationFeeds(
     val recommendations: List<Recommendation>,
     val jumbotrons: List<Jumbotron>,

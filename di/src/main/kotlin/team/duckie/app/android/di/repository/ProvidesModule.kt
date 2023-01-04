@@ -18,8 +18,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.data.gallery.repository.GalleryRepositoryImpl
 import team.duckie.app.android.data.kakao.repository.KakaoRepositoryImpl
+import team.duckie.app.android.data.recommendation.repository.RecommendationRepositoryImpl
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
 import team.duckie.app.android.domain.kakao.repository.KakaoRepository
+import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -32,5 +34,10 @@ object ProvidesModule {
     @Provides
     fun provideKakaoLoginRepository(activityContext: Activity): KakaoRepository {
         return KakaoRepositoryImpl(activityContext)
+    }
+
+    @Provides
+    fun provideRecommendationRepository(@ApplicationContext context: Context): RecommendationRepository {
+        return RecommendationRepositoryImpl(context)
     }
 }

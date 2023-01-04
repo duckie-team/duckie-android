@@ -8,7 +8,6 @@
 package team.duckie.app.android.feature.ui.home.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
@@ -22,11 +21,11 @@ data class HomeState(
     val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
 
-    val jumbotrons: PersistentList<HomeRecommendJumbotron> = persistentListOf(),
-    val recommendTopics: PersistentList<RecommendTopic> = persistentListOf(),
+    val jumbotrons: ImmutableList<HomeRecommendJumbotron> = persistentListOf(),
+    val recommendTopics: ImmutableList<RecommendTopic> = persistentListOf(),
 
-    val recommendFollowing: PersistentList<RecommendUserByTopic> = persistentListOf(),
-    val recommendFollowingTest: PersistentList<FollowingTest> = persistentListOf(),
+    val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
+    val recommendFollowingTest: ImmutableList<FollowingTest> = persistentListOf(),
 ) {
     /**
      * 팔로잉의 덕질고사 추천 피드 data class [FollowingTest]
@@ -95,7 +94,7 @@ data class HomeState(
     data class RecommendTopic(
         val title: String,
         val tag: String,
-        val items: PersistentList<Test>,
+        val items: ImmutableList<Test>,
     ) {
         data class Test(
             val coverImg: String,

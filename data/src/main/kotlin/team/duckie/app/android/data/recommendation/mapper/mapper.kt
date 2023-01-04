@@ -11,15 +11,15 @@ import team.duckie.app.android.data.recommendation.model.RecommendationsResponse
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.util.kotlin.fastMap
 
-internal fun RecommendationsResponse.Recommendation.toEntity(): RecommendationFeeds.Recommendation {
+internal fun RecommendationsResponse.Recommendation.toDomain(): RecommendationFeeds.Recommendation {
     return RecommendationFeeds.Recommendation(
         title = title,
         tag = tag,
-        exams = exams.fastMap(RecommendationsResponse.Recommendation.Exam::toEntity),
+        exams = exams.fastMap(RecommendationsResponse.Recommendation.Exam::toDomain),
     )
 }
 
-internal fun RecommendationsResponse.Recommendation.Exam.toEntity() =
+internal fun RecommendationsResponse.Recommendation.Exam.toDomain() =
     RecommendationFeeds.Recommendation.Exam(
         title = title,
         coverImg = coverImg,

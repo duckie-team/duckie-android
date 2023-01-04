@@ -15,7 +15,7 @@ package team.duckie.app.android.data.recommendation.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.delay
-import team.duckie.app.android.data.recommendation.mapper.toEntity
+import team.duckie.app.android.data.recommendation.mapper.toDomain
 import team.duckie.app.android.data.recommendation.model.RecommendationsResponse
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import kotlin.math.max
@@ -65,7 +65,7 @@ class RecommendationPagingSource : PagingSource<Int, RecommendationFeeds.Recomme
             val range = nextPageNumber.until(nextPageNumber + params.loadSize)
 
             LoadResult.Page(
-                data = response.recommendations.map { it.toEntity() },
+                data = response.recommendations.map { it.toDomain() },
                 prevKey = when (nextPageNumber) {
                     STARTING_KEY -> null
                     else -> when (
