@@ -478,7 +478,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                     addAnswerClick = {
                                         vm.addAnswer(
                                             questionIndex = questionIndex,
-                                            Answer.Type.ImageChoice
+                                            answerType = Answer.Type.ImageChoice,
                                         )
                                     },
                                     correctAnswers = correctAnswer,
