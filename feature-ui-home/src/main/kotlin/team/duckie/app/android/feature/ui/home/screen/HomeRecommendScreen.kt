@@ -7,10 +7,8 @@
 
 package team.duckie.app.android.feature.ui.home.screen
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +22,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -36,14 +33,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
-import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
-import team.duckie.app.android.feature.ui.home.component.DuckieHorizontalPagerIndicator
+import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
@@ -77,77 +73,64 @@ internal fun HomeRecommendScreen(
 
     val lazyRecommendations = vm.fetchRecommendations().collectAsLazyPagingItems()
 
-    LaunchedEffect(Unit) {
-        vm.fetchJumbotrons()
-    }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        AnimatedVisibility(visible = state.isHomeRecommendLoading) {
-            DuckieCircularProgressIndicator()
+        item {
+            HomeTopAppBar(
+                modifier = Modifier
+                    .padding(HomeHorizontalPadding)
+                    .padding(bottom = 16.dp),
+                selectedTabIndex = state.homeSelectedIndex.index,
+                onTabSelected = { step ->
+                    vm.changedHomeScreen(
+                        HomeStep.toStep(step)
+                    )
+                },
+                onClickedEdit = {
+                    // TODO("limsaehyun"): 수정 페이지로 이동 필요
+                },
+            )
         }
 
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            item {
-                HomeTopAppBar(
-                    modifier = Modifier
-                        .padding(HomeHorizontalPadding)
-                        .padding(bottom = 16.dp),
-                    selectedTabIndex = state.homeSelectedIndex.index,
-                    onTabSelected = { step ->
-                        vm.changedHomeScreen(
-                            HomeStep.toStep(step)
-                        )
-                    },
-                    onClickedEdit = {
-                        // TODO("limsaehyun"): 수정 페이지로 이동 필요
-                    },
+        item {
+            HorizontalPager(
+                pageCount = state.jumbotrons.size,
+                state = pageState,
+            ) { page ->
+                HomeRecommendJumbotronLayout(
+                    modifier = Modifier.padding(HomeHorizontalPadding),
+                    recommendItem = state.jumbotrons[page],
+                    onStartClicked = {
+                        // TODO ("limsaehyun"): 상세보기로 이 필요
+                    }
                 )
             }
+        }
 
-            item {
-                HorizontalPager(
-                    pageCount = state.jumbotrons.size,
-                    state = pageState,
-                ) { page ->
-                    HomeRecommendJumbotronLayout(
-                        modifier = Modifier.padding(HomeHorizontalPadding),
-                        recommendItem = state.jumbotrons[page],
-                        onStartClicked = {
-                            // TODO ("limsaehyun"): 상세보기로 이 필요
-                        }
-                    )
-                }
-            }
+        item {
+            DuckieHorizontalPagerIndicator(
+                modifier = Modifier
+                    .padding(top = 24.dp, bottom = 60.dp),
+                pagerState = pageState,
+                pageCount = state.jumbotrons.size,
+                spacing = 6.dp,
+            )
+        }
 
-            item {
-                DuckieHorizontalPagerIndicator(
-                    modifier = Modifier
-                        .padding(top = 24.dp, bottom = 60.dp),
-                    pagerState = pageState,
-                    pageCount = state.jumbotrons.size,
-                    spacing = 6.dp,
-                )
-            }
-
-            items(items = lazyRecommendations) { item ->
-                HomeTopicRecommendLayout(
-                    modifier = Modifier
-                        .padding(bottom = 60.dp),
-                    title = item!!.title,
-                    tag = item.tag,
-                    exams = item.exams.toPersistentList(),
-                    onClicked = { },
-                    onTagClicked = { tag ->
-                        navigateToSearchResult(tag)
-                    },
-                )
-            }
+        items(items = lazyRecommendations) { item ->
+            HomeTopicRecommendLayout(
+                modifier = Modifier
+                    .padding(bottom = 60.dp),
+                title = item?.title ?: "",
+                tag = item?.tag ?: "",
+                exams = item?.exams?.toImmutableList() ?: persistentListOf(),
+                onClicked = { },
+                onTagClicked = { tag ->
+                    navigateToSearchResult(tag)
+                },
+            )
         }
     }
 }
@@ -199,7 +182,7 @@ private fun HomeTopicRecommendLayout(
     modifier: Modifier = Modifier,
     title: String,
     tag: String,
-    exams: PersistentList<RecommendationFeeds.Recommendation.Exam>,
+    exams: ImmutableList<RecommendationFeeds.Recommendation.Exam>,
     onTagClicked: (String) -> Unit,
     onClicked: (Int) -> Unit,
 ) {

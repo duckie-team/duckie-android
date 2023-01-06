@@ -20,7 +20,7 @@ class FetchSearchResultForExamUseCase @Inject constructor(
     suspend operator fun invoke(tag: String) = runCatching {
         repository.fetchRecommendTags(
             tag = tag,
-            type = SearchType.EXAM,
+            type = SearchType.Exam,
         )
     }
 }

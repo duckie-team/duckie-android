@@ -20,14 +20,14 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.ImmutableList
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackTitle2
 
 @Composable
 fun TextTabLayout(
-    titles: PersistentList<String>,
+    titles: ImmutableList<String>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
 ) {

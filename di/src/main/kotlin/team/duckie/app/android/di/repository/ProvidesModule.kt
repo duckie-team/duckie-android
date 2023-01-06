@@ -37,7 +37,7 @@ object ProvidesModule {
     }
 
     @Provides
-    fun provideRecommendationRepository(@ApplicationContext context: Context): RecommendationRepository {
-        return RecommendationRepositoryImpl(context)
+    fun provideRecommendationRepository(): RecommendationRepository {
+        return RecommendationRepositoryImpl()
     }
 }

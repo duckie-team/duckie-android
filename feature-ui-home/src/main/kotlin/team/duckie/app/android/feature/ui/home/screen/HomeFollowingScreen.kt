@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.home.screen
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,8 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
@@ -66,51 +65,42 @@ internal fun HomeRecommendFollowingTestScreen(
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(bottom = 24.dp)
     ) {
-        AnimatedVisibility(visible = state.isHomeFollowingTestLoading) {
-            DuckieCircularProgressIndicator()
+        item {
+            HomeTopAppBar(
+                selectedTabIndex = state.homeSelectedIndex.index,
+                onTabSelected = { step ->
+                    vm.changedHomeScreen(
+                        HomeStep.toStep(step)
+                    )
+                },
+                onClickedEdit = {
+                    // TODO(limsaehyun): 수정 페이지로 이동 필요
+                },
+            )
         }
 
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-            contentPadding = PaddingValues(bottom = 24.dp)
-        ) {
-            item {
-                HomeTopAppBar(
-                    selectedTabIndex = state.homeSelectedIndex.index,
-                    onTabSelected = { step ->
-                        vm.changedHomeScreen(
-                            HomeStep.toStep(step)
-                        )
-                    },
-                    onClickedEdit = {
-                        // TODO(limsaehyun): 수정 페이지로 이동 필요
-                    },
-                )
-            }
-
-            itemsIndexed(
-                items = state.recommendFollowingTest,
-            ) { _, maker ->
-                TestCoverWithMaker(
-                    profile = maker.owner.profile,
-                    name = maker.owner.name,
-                    title = maker.title,
-                    takers = maker.examineeNumber,
-                    createAt = maker.createAt,
-                    onClickUserProfile = {
-                        // TODO(limsaehyun): 추후에 유저의 profile로 이동 필요
-                    },
-                    onClickTestCover = {
-                        // TODO(limsaehyun): 상세보기로 이동
-                    },
-                    cover = maker.coverUrl,
-                )
-            }
+        itemsIndexed(
+            items = state.recommendFollowingTest,
+        ) { _, maker ->
+            TestCoverWithMaker(
+                profile = maker.owner.profile,
+                name = maker.owner.name,
+                title = maker.title,
+                takers = maker.examineeNumber,
+                createAt = maker.createAt,
+                onClickUserProfile = {
+                    // TODO(limsaehyun): 추후에 유저의 profile로 이동 필요
+                },
+                onClickTestCover = {
+                    // TODO(limsaehyun): 상세보기로 이동
+                },
+                cover = maker.coverUrl,
+            )
         }
     }
 }
@@ -127,57 +117,48 @@ internal fun HomeRecommendFollowingScreen(
         vm.fetchRecommendFollowing()
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
     ) {
-        AnimatedVisibility(visible = state.isHomeFollowingInitialLoading) {
-            DuckieCircularProgressIndicator()
+        item {
+            HomeTopAppBar(
+                selectedTabIndex = state.homeSelectedIndex.index,
+                onTabSelected = { step ->
+                    vm.changedHomeScreen(
+                        HomeStep.toStep(step)
+                    )
+                },
+                onClickedEdit = {
+                    // TODO(limsaehyun): 수정 페이지로 이동 필요
+                },
+            )
         }
 
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-        ) {
-            item {
-                HomeTopAppBar(
-                    selectedTabIndex = state.homeSelectedIndex.index,
-                    onTabSelected = { step ->
-                        vm.changedHomeScreen(
-                            HomeStep.toStep(step)
-                        )
-                    },
-                    onClickedEdit = {
-                        // TODO(limsaehyun): 수정 페이지로 이동 필요
-                    },
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(164.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                QuackHeadLine2(
+                    text = stringResource(id = R.string.home_following_initial_title),
+                    align = TextAlign.Center,
                 )
             }
+        }
 
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(164.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    QuackHeadLine2(
-                        text = stringResource(id = R.string.home_following_initial_title),
-                        align = TextAlign.Center,
-                    )
+        items(
+            items = state.recommendFollowing,
+        ) { categories ->
+            HomeFollowingInitialRecommendUsers(
+                modifier = Modifier.padding(bottom = 16.dp),
+                topic = categories.topic,
+                recommendUser = categories.users,
+                onClickFollowing = {
+                    // TODO (limsaehyun): viewModel에서 Following 필요
                 }
-            }
-
-            items(
-                items = state.recommendFollowing,
-            ) { categories ->
-                HomeFollowingInitialRecommendUsers(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    topic = categories.topic,
-                    recommendUser = categories.users,
-                    onClickFollowing = {
-                        // TODO (limsaehyun): viewModel에서 Following 필요
-                    }
-                )
-            }
+            )
         }
     }
 }
@@ -186,7 +167,7 @@ internal fun HomeRecommendFollowingScreen(
 private fun HomeFollowingInitialRecommendUsers(
     modifier: Modifier = Modifier,
     topic: String,
-    recommendUser: List<HomeState.RecommendUserByTopic.User>,
+    recommendUser: ImmutableList<HomeState.RecommendUserByTopic.User>,
     onClickFollowing: (Int) -> Unit,
 ) {
     Column(

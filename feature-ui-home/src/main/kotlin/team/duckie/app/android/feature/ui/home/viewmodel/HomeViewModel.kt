@@ -108,7 +108,7 @@ class HomeViewModel @Inject constructor(
     suspend fun fetchRecommendFollowingTest() {
         updateState { prevState ->
             prevState.copy(
-                isHomeFollowingTestLoading = true,
+                isHomeLoading = true,
             )
         }
         delay(2.seconds)
@@ -126,7 +126,7 @@ class HomeViewModel @Inject constructor(
             }.also {
                 updateState { prevState ->
                     prevState.copy(
-                        isHomeFollowingTestLoading = false,
+                        isHomeLoading = false,
                     )
                 }
             }
@@ -136,7 +136,7 @@ class HomeViewModel @Inject constructor(
     suspend fun fetchRecommendFollowing() {
         updateState { prevState ->
             prevState.copy(
-                isHomeFollowingInitialLoading = true,
+                isHomeLoading = true,
             )
         }
         delay(2.seconds)
@@ -154,7 +154,7 @@ class HomeViewModel @Inject constructor(
             }.also {
                 updateState { prevState ->
                     prevState.copy(
-                        isHomeFollowingInitialLoading = false,
+                        isHomeLoading = false,
                     )
                 }
             }

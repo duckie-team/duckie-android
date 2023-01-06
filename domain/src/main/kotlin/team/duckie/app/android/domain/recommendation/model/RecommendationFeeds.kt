@@ -8,11 +8,12 @@
 package team.duckie.app.android.domain.recommendation.model
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
 data class RecommendationFeeds(
-    val recommendations: List<Recommendation>,
-    val jumbotrons: List<Jumbotron>,
+    val recommendations: ImmutableList<Recommendation>,
+    val jumbotrons: ImmutableList<Jumbotron>,
 ) {
     data class Jumbotron(
         val coverUrl: String,
@@ -24,7 +25,7 @@ data class RecommendationFeeds(
     data class Recommendation(
         val title: String,
         val tag: String,
-        val exams: List<Exam>,
+        val exams: ImmutableList<Exam>,
     ) {
         data class Exam(
             val coverImg: String,

@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import okhttp3.internal.immutableListOf
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.quackquack.ui.component.QuackImage
@@ -31,11 +33,14 @@ internal fun HomeTopAppBar(
     onTabSelected: (Int) -> Unit,
     onClickedEdit: () -> Unit,
 ) {
+    val context = LocalContext.current
 
-    val homeTextTabTitles = persistentListOf(
-        stringResource(id = R.string.recommend),
-        stringResource(id = R.string.following),
-    )
+    val homeTextTabTitles = remember {
+        immutableListOf(
+            context.getString(R.string.recommend),
+            context.getString(R.string.following),
+        )
+    }
 
     Row(
         modifier = modifier
@@ -45,7 +50,7 @@ internal fun HomeTopAppBar(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         TextTabLayout(
-            titles = homeTextTabTitles,
+            titles = homeTextTabTitles.toImmutableList(),
             selectedTabIndex = selectedTabIndex,
             onTabSelected = onTabSelected,
         )

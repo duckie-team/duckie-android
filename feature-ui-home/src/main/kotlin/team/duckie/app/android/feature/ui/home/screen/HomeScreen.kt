@@ -11,7 +11,7 @@
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -21,10 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 
 private val HomeHorizontalPadding = PaddingValues(
     horizontal = 16.dp,
@@ -40,12 +42,17 @@ internal fun DuckieHomeScreen(
 
     LaunchedEffect(Unit) {
         vm.fetchRecommendFollowingTest()
+        vm.fetchJumbotrons()
     }
 
-    Column(
+    Box(
         modifier = Modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        contentAlignment = Alignment.Center,
     ) {
+        QuackAnimatedVisibility(visible = state.isHomeLoading) {
+            DuckieCircularProgressIndicator()
+        }
+
         Crossfade(
             targetState = state.homeSelectedIndex,
         ) { page ->

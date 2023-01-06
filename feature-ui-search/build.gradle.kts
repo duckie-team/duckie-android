@@ -34,7 +34,5 @@ dependencies {
         libs.compose.ktx.lifecycle,
         libs.compose.ui.coil,
         libs.firebase.crashlytics,
-        libs.paging.runtime,
-        libs.paging.compose,
     )
 }
