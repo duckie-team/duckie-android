@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,8 +23,7 @@ import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
@@ -36,6 +34,7 @@ import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastAny
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
+import team.duckie.app.android.util.kotlin.fastMapIndexedNotNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackGridLayout
@@ -95,25 +94,15 @@ private val CategoryScreenMeasurePolicy = MeasurePolicy { measurables, constrain
     }
 }
 
-private val categories: ImmutableList<Pair<String, Int>> = persistentListOf(
-    "연예인" to R.drawable.img_category_celebrity,
-    "영화" to R.drawable.img_category_movie,
-    "만화/애니" to R.drawable.img_category_cartoon,
-    "웹툰" to R.drawable.img_category_webtoon,
-    "게임" to R.drawable.img_category_game,
-    "밀리터리" to R.drawable.img_category_military,
-    "IT" to R.drawable.img_category_it,
-)
-
 @Composable
 internal fun CategoryScreen() {
     val vm = LocalViewModel.current as OnboardViewModel
-    val categoriesSelectedIndex = remember(categories, vm.selectedCategories) {
+    val categoriesSelectedIndex = remember(vm.categories, vm.selectedCategories) {
         mutableStateListOf(
             elements = Array(
-                size = categories.size,
+                size = vm.categories.size,
                 init = { index ->
-                    vm.selectedCategories.contains(categories[index].first)
+                    vm.selectedCategories.contains(vm.categories[index])
                 },
             )
         )
@@ -150,12 +139,12 @@ internal fun CategoryScreen() {
                     .fillMaxSize(),
                 verticalSpacing = 24.dp,
                 horizontalSpacing = 10.dp,
-                items = categories,
-                key = { _, (name, _) -> name },
-            ) { index, (name, imageRes) ->
+                items = vm.categories,
+                key = { _, category -> category.id },
+            ) { index, category ->
                 CategoryItem(
-                    imageRes = imageRes,
-                    name = name,
+                    imageUrl = category.thumbnailUrl,
+                    name = category.name,
                     isSelected = categoriesSelectedIndex[index],
                     onClick = {
                         categoriesSelectedIndex[index] = !categoriesSelectedIndex[index]
@@ -174,11 +163,9 @@ internal fun CategoryScreen() {
                     enabled = true,
                     text = stringResource(R.string.button_next),
                 ) {
-                    vm.setSelectedCategories(
-                        categories = categoriesSelectedIndex.mapIndexedNotNull { index, value ->
-                            index.takeIf { value }?.let { categories[index].first }
-                        },
-                    )
+                    vm.selectedCategories = categoriesSelectedIndex.fastMapIndexedNotNull { index, selected ->
+                        if (selected) vm.categories[index] else null
+                    }.toImmutableList()
                     vm.navigateStep(currentStep + 1)
                 }
             }
@@ -187,13 +174,13 @@ internal fun CategoryScreen() {
     )
 }
 
-// FIXME: 디자인상 100.dp 가 맞는데, 100 을 주면 디바이스 너비에 압축됨
+// FIXME(sungbin): 디자인상 100.dp 가 맞는데, 100 을 주면 디바이스 너비에 압축됨
 private val CategoryImageSize = DpSize(all = 80.dp)
 private val CategoryItemShape = RoundedCornerShape(size = 12.dp)
 
 @Composable
 private fun CategoryItem(
-    @DrawableRes imageRes: Int,
+    imageUrl: String,
     name: String,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -206,7 +193,7 @@ private fun CategoryItem(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         QuackSelectableImage(
-            src = imageRes,
+            src = imageUrl,
             size = CategoryImageSize,
             shape = CategoryItemShape,
             selectableType = QuackSelectableImageType.CheckOverlay,
