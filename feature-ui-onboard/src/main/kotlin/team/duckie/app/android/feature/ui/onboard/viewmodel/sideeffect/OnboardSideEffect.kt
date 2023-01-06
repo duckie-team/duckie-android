@@ -8,15 +8,23 @@
 package team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect
 
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.constant.RequiredStep
 
 internal sealed class OnboardSideEffect {
     class UpdateGalleryImages(val images: List<String>) : OnboardSideEffect()
 
-    class UpdateUser(val user: User) : OnboardSideEffect()
+    @RequiredStep(OnboardStep.Login)
+    class DelegateJoin(val kakaoAccessToken: String) : OnboardSideEffect()
+
+    @RequiredStep(OnboardStep.Login)
     class UpdateAccessToken(val accessToken: String) : OnboardSideEffect()
 
+    @RequiredStep(OnboardStep.Login)
     class AttachAccessTokenToHeader(val accessToken: String) : OnboardSideEffect()
-    class DelegateJoin(val kakaoAccessToken: String) : OnboardSideEffect()
+
+    @RequiredStep(OnboardStep.Login, OnboardStep.Tag) // 마지막 단계에서 유저 정보 업데이트함
+    class UpdateUser(val user: User) : OnboardSideEffect()
 
     class ReportError(val exception: Throwable) : OnboardSideEffect()
 }
