@@ -65,7 +65,7 @@ internal fun Problem.toData() = ProblemData(
     answer = answer.let { answer ->
         when (answer) {
             is Answer.Short -> AnswerData.ShortAnswer(
-                shortAnswer = answer.answer,
+                shortAnswer = answer.answer.text,
                 type = answer.type.key,
             )
             is Answer.Choice -> AnswerData.Choice(

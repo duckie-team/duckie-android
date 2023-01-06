@@ -12,6 +12,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 
 internal data class CreateProblemState(
     val createProblemStep: CreateProblemStep = CreateProblemStep.CreateProblem,
@@ -52,9 +53,11 @@ internal data class CreateProblemState(
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
     data class CreateProblem(
         // Problem 의 데이터를 Map 으로 쪼개 놓은 영역들
-        val questions: ImmutableList<Question> = persistentListOf(),
-        val answers: ImmutableList<Answer> = persistentListOf(),
-        val correctAnswers: ImmutableList<String> = persistentListOf(),
+        val questions: ImmutableList<Question> = persistentListOf(Question.Text("")),
+        val answers: ImmutableList<Answer> = persistentListOf(
+            Answer.Type.Choice.getDefaultAnswer(),
+        ),
+        val correctAnswers: ImmutableList<String> = persistentListOf(""),
         val hints: ImmutableList<String> = persistentListOf(),
         val memos: ImmutableList<String> = persistentListOf(),
     ){

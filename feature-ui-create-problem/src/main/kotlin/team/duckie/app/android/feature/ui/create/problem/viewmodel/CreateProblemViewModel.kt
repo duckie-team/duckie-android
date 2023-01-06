@@ -26,7 +26,9 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.exam.model.ShortModel
 import team.duckie.app.android.domain.exam.model.ThumbnailType
+import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.exam.model.toChoice
 import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
@@ -234,11 +236,7 @@ internal class CreateProblemViewModel @Inject constructor(
      */
     fun addProblem(answerType: Answer.Type) = updateState { prevState ->
         val newQuestion = Question.Text(text = "")
-        val newAnswer = when (answerType) {
-            Answer.Type.ShortAnswer -> Answer.Short("")
-            Answer.Type.Choice -> Answer.Choice(persistentListOf())
-            Answer.Type.ImageChoice -> Answer.ImageChoice(persistentListOf())
-        }
+        val newAnswer = answerType.getDefaultAnswer()
 
         with(prevState.createProblem) {
             val newQuestions = questions.copy { add(newQuestion) }
@@ -569,7 +567,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -580,7 +578,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -591,7 +589,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -602,7 +600,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -613,7 +611,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",

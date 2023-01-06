@@ -13,6 +13,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 
 @Immutable
@@ -80,7 +81,7 @@ sealed class Answer(val type: Type) {
     }
 
     @Immutable
-    class Short(val answer: String) : Answer(type = Type.ShortAnswer)
+    class Short(val answer: ShortModel) : Answer(type = Type.ShortAnswer)
 
     @Immutable
     class Choice(val choices: ImmutableList<ChoiceModel>) : Answer(type = Type.Choice)
@@ -95,7 +96,7 @@ sealed class Answer(val type: Type) {
         if (type != other.type) return false
 
         if (this is Short && other is Short) {
-            return this.answer == other.answer
+            return this.answer.text == other.answer.text
         }
         if (this is Choice && other is Choice) {
             return this.choices == other.choices
@@ -112,28 +113,59 @@ sealed class Answer(val type: Type) {
     }
 }
 
+/** [문제 타입][Answer.Type]에 맞는 기본 [답안][Answer] 를 가져옵니다. */
+fun Answer.Type.getDefaultAnswer(): Answer = when (this) {
+    Answer.Type.ShortAnswer -> Answer.Short(getDefaultAnswerModel())
+    Answer.Type.Choice -> Answer.Choice(
+        persistentListOf(
+            getDefaultAnswerModel(),
+            getDefaultAnswerModel()
+        )
+    )
+
+    Answer.Type.ImageChoice -> Answer.ImageChoice(
+        persistentListOf(
+            getDefaultAnswerModel(),
+            getDefaultAnswerModel()
+        )
+    )
+}
+
+interface AnswerModel
+
 @JvmInline
 @Immutable
-value class ChoiceModel(val text: String)
+value class ShortModel(val text: String) : AnswerModel
+
+@JvmInline
+@Immutable
+value class ChoiceModel(val text: String) : AnswerModel
 
 @Immutable
 data class ImageChoiceModel(
     val text: String,
     val imageUrl: String,
-)
+) : AnswerModel
 
-/** [Answer] -> [Answer.Short] */
-fun Answer.toShort(newAnswer: String?) = when (this) {
-    is Answer.Short -> Answer.Short(newAnswer ?: this.answer)
-    is Answer.Choice -> Answer.Short(newAnswer ?: this.choices.firstOrNull()?.text ?: "")
-    is Answer.ImageChoice -> Answer.Short(
-        newAnswer ?: this.imageChoice.firstOrNull()?.text ?: ""
-    )
+/** [문제 타입][Answer.Type]에 맞는 기본 [답안 모델][AnswerModel]을 가져옵니다. */
+fun <T: AnswerModel> Answer.Type.getDefaultAnswerModel() : T = when (this) {
+    Answer.Type.ShortAnswer -> ShortModel("") as T
+    Answer.Type.Choice -> ChoiceModel("") as T
+    Answer.Type.ImageChoice -> ImageChoiceModel("", "") as T
 }
 
+/** [Answer] -> [Answer.Short] */
+fun Answer.toShort(newAnswer: String? = null) = Answer.Short(
+    when (this) {
+        is Answer.Short -> ShortModel(newAnswer ?: this.answer.text)
+        is Answer.Choice -> ShortModel(newAnswer ?: this.choices.firstOrNull()?.text ?: "")
+        is Answer.ImageChoice -> ShortModel(newAnswer ?: this.imageChoice.firstOrNull()?.text ?: "")
+    }
+)
+
 /** [Answer] -> [Answer.Choice] */
-fun Answer.toChoice(answerIndex: Int, newAnswer: String?) = when (this) {
-    is Answer.Short -> Answer.Choice(persistentListOf())
+fun Answer.toChoice(answerIndex: Int? = null, newAnswer: String? = null) = when (this) {
+    is Answer.Short -> Answer.Type.Choice.getDefaultAnswer()
     is Answer.Choice -> Answer.Choice(
         choices.fastMapIndexed { index, choiceModel ->
             if (index == answerIndex) {
@@ -157,11 +189,11 @@ fun Answer.toChoice(answerIndex: Int, newAnswer: String?) = when (this) {
 
 /** [Answer] -> [Answer.ImageChoice] */
 fun Answer.toImageChoice(
-    answerIndex: Int,
-    newAnswer: String?,
-    newUrlSource: String?,
+    answerIndex: Int? = null,
+    newAnswer: String? = null,
+    newUrlSource: String? = null,
 ) = when (this) {
-    is Answer.Short -> Answer.ImageChoice(persistentListOf())
+    is Answer.Short -> Answer.Type.Choice.getDefaultAnswer()
     is Answer.Choice -> Answer.ImageChoice(
         choices.fastMapIndexed { index, choiceModel ->
             if (index == answerIndex) {

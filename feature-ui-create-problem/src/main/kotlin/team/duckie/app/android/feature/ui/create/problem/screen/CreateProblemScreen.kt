@@ -876,7 +876,7 @@ private fun ShortAnswerProblemLayout(
         ) { deleteLongClick() }
 
         QuackBasicTextField(
-            text = answers.answer,
+            text = answers.answer.text,
             onTextChanged = { newAnswer -> answerTextChanged(newAnswer, 0) },
             placeholderText = stringResource(id = R.string.create_problem_short_answer_placeholder)
         )
