@@ -329,7 +329,7 @@ internal class CreateProblemViewModel @Inject constructor(
         answerType: Answer.Type
     ) = updateState { prevState ->
         val newAnswers = prevState.createProblem.answers.toMutableList()
-        when(answerType) {
+        when (answerType) {
             Answer.Type.ShortAnswer -> newAnswers[questionIndex].toShort()
             Answer.Type.Choice -> newAnswers[questionIndex].toChoice()
             Answer.Type.ImageChoice -> newAnswers[questionIndex].toImageChoice()

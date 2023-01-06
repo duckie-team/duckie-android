@@ -334,7 +334,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle.take(20),
+                                            title = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
                                     imageClick = {
@@ -362,7 +362,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.ShortAnswer,
-                                            answer = newTitle.take(20),
+                                            answer = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
                                     deleteLongClick = { deleteDialogNo = Pair(questionIndex, null) }
@@ -375,7 +375,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle.take(20),
+                                            title = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
                                     imageClick = {
@@ -403,7 +403,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.Choice,
-                                            answer = newTitle.take(20),
+                                            answer = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
                                     addAnswerClick = {
@@ -431,7 +431,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle.take(20),
+                                            title = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
                                     imageClick = {
@@ -459,7 +459,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.ImageChoice,
-                                            answer = newTitle.take(20),
+                                            answer = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
                                     answerImageClick = { answersNo ->

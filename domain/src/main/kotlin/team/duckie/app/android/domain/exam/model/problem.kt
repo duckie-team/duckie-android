@@ -13,7 +13,6 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 
 @Immutable
@@ -148,7 +147,8 @@ data class ImageChoiceModel(
 ) : AnswerModel
 
 /** [문제 타입][Answer.Type]에 맞는 기본 [답안 모델][AnswerModel]을 가져옵니다. */
-fun <T: AnswerModel> Answer.Type.getDefaultAnswerModel() : T = when (this) {
+@Suppress("UNCHECKED_CAST")
+fun <T : AnswerModel> Answer.Type.getDefaultAnswerModel(): T = when (this) {
     Answer.Type.ShortAnswer -> ShortModel("") as T
     Answer.Type.Choice -> ChoiceModel("") as T
     Answer.Type.ImageChoice -> ImageChoiceModel("", "") as T
