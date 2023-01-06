@@ -325,28 +325,17 @@ internal class CreateProblemViewModel @Inject constructor(
         )
     }
 
-    /**
-     * [questionIndex + 1] 번 문제의 전체 답안을 설정합니다.
-     *
-     * [특정 답안 타입][answerType]으로 설정되며,
-     * [텍스트 목록][answers], [이미지 소스 목록][urlSources]을 추가적으로 받아 전체 답안을 해당 값으로 초기 설정합니다.
-     */
-    fun setAnswers(
+    /** [questionIndex + 1] 번 문제의 문제 타입을 [특정 답안 타입][answerType]으로 변경합니다. */
+    fun editAnswersType(
         questionIndex: Int,
-        answerType: Answer.Type,
-        answers: List<String>? = null,
-        urlSources: List<Uri>? = null,
+        answerType: Answer.Type
     ) = updateState { prevState ->
-        val prevAnswers = prevState.createProblem.answers.toMutableList()
-        val newAnswers = mutableListOf<Answer>()
-        for (answerIndex in 0 until prevAnswers.size) {
-            prevAnswers[questionIndex].getEditedAnswers(
-                answerIndex,
-                answerType,
-                answers?.get(answerIndex),
-                urlSources?.get(answerIndex)
-            ).let { newAnswers.add(it) }
-        }
+        val newAnswers = prevState.createProblem.answers.toMutableList()
+        when(answerType) {
+            Answer.Type.ShortAnswer -> newAnswers[questionIndex].toShort()
+            Answer.Type.Choice -> newAnswers[questionIndex].toChoice()
+            Answer.Type.ImageChoice -> newAnswers[questionIndex].toImageChoice()
+        }.let { newAnswers[questionIndex] = it }
 
         prevState.copy(
             createProblem = prevState.createProblem.copy(

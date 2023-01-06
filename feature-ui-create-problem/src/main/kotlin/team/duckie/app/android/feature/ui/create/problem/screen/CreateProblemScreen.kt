@@ -264,7 +264,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                 launch {
                                     selectedQuestionIndex?.let { questionIndex ->
                                         // 특정 문제의 답안 유형 수정
-                                        vm.setAnswers(questionIndex, it.second)
+                                        vm.editAnswersType(questionIndex, it.second)
                                         selectedQuestionIndex = null
                                     } ?: kotlin.run {
                                         // 문제 추가
