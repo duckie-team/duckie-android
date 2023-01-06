@@ -13,8 +13,8 @@ import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 
-data class CreateProblemState(
-    val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
+internal data class CreateProblemState(
+    val createProblemStep: CreateProblemStep = CreateProblemStep.CreateProblem,
     val examInformation: ExamInformation = ExamInformation(),
     val createProblem: CreateProblem = CreateProblem(),
     val additionalInfo: AdditionInfo = AdditionInfo(),

@@ -46,7 +46,7 @@ import javax.inject.Inject
 class CreateProblemActivity : BaseActivity() {
 
     @Inject
-    lateinit var viewModel: CreateProblemViewModel
+    internal lateinit var viewModel: CreateProblemViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

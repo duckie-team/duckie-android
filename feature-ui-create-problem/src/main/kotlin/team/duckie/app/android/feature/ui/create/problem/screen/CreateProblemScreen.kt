@@ -110,6 +110,7 @@ private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
 // private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 
 private const val MaximumChoice = 5
+private const val TextFieldMaxLength = 20
 
 private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constraints ->
     // 1. topAppBar, createProblemButton 높이값 측정
@@ -228,7 +229,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                 // 상단 회색 마크
                 Box(
                     modifier = Modifier
-                        .padding(top = 8.dp)
+                        .padding(vertical = 8.dp)
                         .width(40.dp)
                         .height(4.dp)
                         .clip(RoundedCornerShape(2.dp))
@@ -236,7 +237,11 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                 )
 
                 // 선택 목록
-                Column(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
                     listOf(
                         // 객관식/글 버튼
                         stringResource(id = R.string.create_problem_bottom_sheet_title_choice_text)
@@ -329,7 +334,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle,
+                                            title = newTitle.take(20),
                                         )
                                     },
                                     imageClick = {
@@ -357,7 +362,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.ShortAnswer,
-                                            answer = newTitle,
+                                            answer = newTitle.take(20),
                                         )
                                     },
                                     deleteLongClick = { deleteDialogNo = Pair(questionIndex, null) }
@@ -370,7 +375,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle,
+                                            title = newTitle.take(20),
                                         )
                                     },
                                     imageClick = {
@@ -398,7 +403,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.Choice,
-                                            answer = newTitle,
+                                            answer = newTitle.take(20),
                                         )
                                     },
                                     addAnswerClick = {
@@ -426,7 +431,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle,
+                                            title = newTitle.take(20),
                                         )
                                     },
                                     imageClick = {
@@ -454,7 +459,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.ImageChoice,
-                                            answer = newTitle,
+                                            answer = newTitle.take(20),
                                         )
                                     },
                                     answerImageClick = { answersNo ->
@@ -699,7 +704,13 @@ private fun ChoiceProblemLayout(
             QuackBorderTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp),
+                    .padding(top = 12.dp)
+                    .applyAnimatedQuackBorder(
+                        border = QuackBorder(
+                            width = 1.dp,
+                            color = QuackColor.Gray4
+                        )
+                    ),
                 text = choiceModel.text,
                 onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
                 placeholderText = stringResource(

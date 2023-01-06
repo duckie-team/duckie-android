@@ -33,7 +33,7 @@
     <string name="create_problem_delete_dialog_title">삭제하시겠습니까?</string>
     <string name="create_problem_question_placeholder">%s. 문제를 입력해주세요</string>
     <string name="create_problem_answer_placeholder">%s번 보기</string>
-    <string name="create_problem_add_button">+ 보기 추가</string>
+    <string name="create_problem_add_button">+ 보기추가</string>
     <string name="create_problem_short_answer_placeholder">답안 입력</string>
 
     <string name="additional_information_next">문제출제</string>

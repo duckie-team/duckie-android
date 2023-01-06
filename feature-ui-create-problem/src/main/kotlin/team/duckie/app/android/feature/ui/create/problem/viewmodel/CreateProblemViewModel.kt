@@ -42,7 +42,7 @@ import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
 @Singleton
-class CreateProblemViewModel @Inject constructor(
+internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
@@ -241,11 +241,11 @@ class CreateProblemViewModel @Inject constructor(
         }
 
         with(prevState.createProblem) {
-            val newQuestions = questions.toMutableList().apply { add(newQuestion) }
-            val newAnswers = answers.toMutableList().apply { add(newAnswer) }
-            val newCorrectAnswers = correctAnswers.toMutableList().apply { add("") }
-            val newHints = hints.toMutableList().apply { add("") }
-            val newMemos = memos.toMutableList().apply { add("") }
+            val newQuestions = questions.copy { add(newQuestion) }
+            val newAnswers = answers.copy { add(newAnswer) }
+            val newCorrectAnswers = correctAnswers.copy { add("") }
+            val newHints = hints.copy { add("") }
+            val newMemos = memos.copy { add("") }
 
             prevState.copy(
                 createProblem = prevState.createProblem.copy(

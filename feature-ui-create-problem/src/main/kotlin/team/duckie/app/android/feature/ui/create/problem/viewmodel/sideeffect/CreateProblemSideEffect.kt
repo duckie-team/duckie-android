@@ -12,7 +12,7 @@ import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 
-sealed class CreateProblemSideEffect {
+internal sealed class CreateProblemSideEffect {
     object FinishActivity : CreateProblemSideEffect()
 
     /**
