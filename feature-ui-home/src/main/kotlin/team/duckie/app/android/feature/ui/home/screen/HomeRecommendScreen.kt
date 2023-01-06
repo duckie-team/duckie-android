@@ -8,6 +8,7 @@
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -33,10 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.HorizontalPagerIndicator
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -44,6 +43,7 @@ import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
+import team.duckie.app.android.feature.ui.home.component.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
@@ -61,18 +61,19 @@ import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
 @OptIn(
-    ExperimentalPagerApi::class,
     ExperimentalLifecycleComposeApi::class,
+    ExperimentalFoundationApi::class,
 )
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
     navigateToSearchResult: (String) -> Unit,
 ) = CoroutineScopeContent {
-    val pageState = rememberPagerState()
 
     val vm = LocalViewModel.current as HomeViewModel
     val state = vm.state.collectAsStateWithLifecycle().value
+
+    val pageState = rememberPagerState()
 
     val lazyRecommendations = vm.fetchRecommendations().collectAsLazyPagingItems()
 
@@ -111,24 +112,26 @@ internal fun HomeRecommendScreen(
 
             item {
                 HorizontalPager(
-                    count = state.jumbotrons.size,
+                    pageCount = state.jumbotrons.size,
                     state = pageState,
                 ) { page ->
                     HomeRecommendJumbotronLayout(
                         modifier = Modifier.padding(HomeHorizontalPadding),
                         recommendItem = state.jumbotrons[page],
                         onStartClicked = {
-                            // TODO ("limsaehyun"): 상세보기로 이동 필요
+                            // TODO ("limsaehyun"): 상세보기로 이 필요
                         }
                     )
                 }
             }
 
             item {
-                HorizontalPagerIndicator(
+                DuckieHorizontalPagerIndicator(
                     modifier = Modifier
                         .padding(top = 24.dp, bottom = 60.dp),
                     pagerState = pageState,
+                    pageCount = state.jumbotrons.size,
+                    spacing = 6.dp,
                 )
             }
 
