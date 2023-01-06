@@ -154,13 +154,12 @@ internal fun ProfileScreen() {
     val keyboard = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 
+    @Suppress("RemoveExplicitTypeArguments")
     val galleryImages = remember<ImmutableList<String>>(vm.isImagePermissionGranted, vm.galleryImages) {
         if (vm.isImagePermissionGranted == true) {
-            vm.galleryImages
-                .toPersistentList()
-                .runIf(vm.isCameraPermissionGranted) {
-                    add(0, PhotoPickerConstants.Camera)
-                }
+            vm.galleryImages.runIf(vm.isCameraPermissionGranted) {
+                toPersistentList().add(0, PhotoPickerConstants.Camera)
+            }
         } else {
             persistentListOf()
         }
@@ -183,7 +182,9 @@ internal fun ProfileScreen() {
     ) { takenPhoto ->
         photoPickerVisible = false
         if (takenPhoto != null) {
-            profilePhoto = takenPhoto
+            profilePhoto = takenPhoto.also { photo ->
+                vm.updateUserProfileImageFile(imageBitmap = photo)
+            }
         } else {
             toast(context.getString(R.string.profile_fail_load_photo))
         }
@@ -195,8 +196,7 @@ internal fun ProfileScreen() {
     var debounceFinish by remember { mutableStateOf(false) }
 
     // TODO(sungbin): 중복 닉네임 검사
-    @Suppress("CanBeVal")
-    var nicknameIsUseable by remember { mutableStateOf(true) }
+    val nicknameIsUseable by remember { mutableStateOf(true) }
 
     LaunchedEffect(vm) {
         val nicknameInputFlow = snapshotFlow { nickname }
@@ -319,23 +319,13 @@ internal fun ProfileScreen() {
                     photoPickerVisible = false
                 },
                 onAddClick = {
-                    profilePhoto = galleryImages[profilePhotoLastSelectionIndex].toUri()
+                    profilePhoto = galleryImages[profilePhotoLastSelectionIndex].toUri().also { uri ->
+                        vm.updateUserProfileImageFile(fileUri = uri)
+                    }
                     photoPickerVisible = false
                 },
             )
         }
-    }
-}
-
-private fun navigateNextStepIfOk(
-    vm: OnboardViewModel,
-    debounceFinish: Boolean,
-    nickname: String,
-    nicknameRuleError: Boolean,
-    nicknameIsUseable: Boolean,
-) {
-    if (debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
-        vm.navigateStep(currentStep + 1)
     }
 }
 
@@ -362,5 +352,18 @@ private fun ProfilePhoto(
             onClick = openPhotoPicker ?: {}, // required when onLongClick is used
             onLongClick = { updateProfilePhoto(QuackIcon.Profile) },
         )
+    }
+}
+
+private fun navigateNextStepIfOk(
+    vm: OnboardViewModel,
+    debounceFinish: Boolean,
+    nickname: String,
+    nicknameRuleError: Boolean,
+    nicknameIsUseable: Boolean,
+) {
+    if (debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
+        vm.me.temporaryNickname = nickname
+        vm.navigateStep(currentStep + 1)
     }
 }
