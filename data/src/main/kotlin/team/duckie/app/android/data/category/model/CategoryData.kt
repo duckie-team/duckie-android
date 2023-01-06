@@ -17,6 +17,9 @@ internal data class CategoryData(
     @field:JsonProperty("name")
     val name: String? = null,
 
+    @field:JsonProperty("thumbnailUrl")
+    val thumbnailUrl: String? = null,
+
     @field:JsonProperty("popularTags")
     val popularTags: List<TagData>? = null,
 )

@@ -18,6 +18,7 @@ object CategoryDummyResponse {
             {
               "id": 1,
               "name": "연예인",
+              "thumbnailUrl": "thumbnailUrl",
               "popularTags": [
                 {
                   "name": "강호동",
@@ -32,6 +33,7 @@ object CategoryDummyResponse {
             {
               "id": 3,
               "name": "영화",
+              "thumbnailUrl": "thumbnailUrl",
               "popularTags": []
             }
           ]
@@ -42,6 +44,7 @@ object CategoryDummyResponse {
         Category(
             id = 1,
             name = "연예인",
+            thumbnailUrl = "thumbnailUrl",
             popularTags = persistentListOf(
                 Tag(
                     id = 8,
@@ -56,6 +59,7 @@ object CategoryDummyResponse {
         Category(
             id = 3,
             name = "영화",
+            thumbnailUrl = "thumbnailUrl",
             popularTags = persistentListOf(),
         ),
     )
