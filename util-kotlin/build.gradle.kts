@@ -9,3 +9,7 @@ plugins {
     id(ConventionEnum.JvmLibrary)
     id(ConventionEnum.JvmJUnit4)
 }
+
+dependencies {
+    implementation(libs.kotlin.coroutines)
+}
