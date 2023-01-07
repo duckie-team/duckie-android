@@ -22,7 +22,7 @@ import team.duckie.app.android.util.kotlin.AllowMagicNumber
  * @param index step의 index
  */
 @AllowMagicNumber
-enum class BottomNavigationStep(
+internal enum class BottomNavigationStep(
     val index: Int,
 ) {
     HomeScreen(

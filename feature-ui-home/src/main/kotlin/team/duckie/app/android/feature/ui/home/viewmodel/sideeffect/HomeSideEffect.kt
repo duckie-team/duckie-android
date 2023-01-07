@@ -7,7 +7,7 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel.sideeffect
 
-sealed class HomeSideEffect {
+internal sealed class HomeSideEffect {
 
     /**
      * [HomeViewModel] 의 비즈니스 로직 처리 중에 발생한 예외를 [exception] 으로 받고

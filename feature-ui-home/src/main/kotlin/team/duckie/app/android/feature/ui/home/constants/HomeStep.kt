@@ -8,7 +8,7 @@ import team.duckie.app.android.util.kotlin.AllowMagicNumber
  * @param index HomeStep 의 idnex
  */
 @AllowMagicNumber
-enum class HomeStep(
+internal enum class HomeStep(
     val index: Int,
 ) {
     HomeRecommendScreen(

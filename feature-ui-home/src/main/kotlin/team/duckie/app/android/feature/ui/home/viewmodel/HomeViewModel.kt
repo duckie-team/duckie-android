@@ -70,7 +70,7 @@ private val DummyRecommendFollowerTest = (0..5).map {
 private const val ITEMS_PER_PAGE = 10
 
 @Immutable
-class HomeViewModel @Inject constructor(
+internal class HomeViewModel @Inject constructor(
     private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
     private val fetchJumbotronsUseCase: FetchJumbotronsUseCase,
     private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,

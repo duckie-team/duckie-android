@@ -12,7 +12,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 
-data class HomeState(
+internal data class HomeState(
     val isHomeLoading: Boolean = false,
 
     val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,

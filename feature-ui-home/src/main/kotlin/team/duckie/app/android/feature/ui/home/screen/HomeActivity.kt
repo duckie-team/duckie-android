@@ -50,7 +50,7 @@ private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
 class HomeActivity : BaseActivity() {
 
     @Inject
-    lateinit var homeViewModel: HomeViewModel
+    internal lateinit var homeViewModel: HomeViewModel
 
     @OptIn(ExperimentalLifecycleComposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
