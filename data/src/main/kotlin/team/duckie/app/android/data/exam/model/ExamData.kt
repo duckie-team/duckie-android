@@ -51,4 +51,3 @@ internal data class ExamData(
     @field:JsonProperty("type")
     val type: String? = null,
 )
-

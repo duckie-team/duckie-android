@@ -62,4 +62,3 @@ internal fun RecommendationItemData.toDomain() = RecommendationItem(
     exams = exams?.fastMap(ExamData::toDomain)
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.items"),
 )
-

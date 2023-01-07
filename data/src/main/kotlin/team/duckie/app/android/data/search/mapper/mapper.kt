@@ -31,4 +31,3 @@ internal fun SearchData.toDomain() = when (this) {
         page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page")
     )
 }
-

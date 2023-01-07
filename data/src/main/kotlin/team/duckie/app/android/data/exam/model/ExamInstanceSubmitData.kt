@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.exam.model
 
-
 import com.fasterxml.jackson.annotation.JsonProperty
 
 internal data class ExamInstanceSubmitData(
