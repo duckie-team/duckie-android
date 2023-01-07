@@ -22,10 +22,11 @@ internal data class ExceptionBody(
     val errors: List<String?>? = null,
 )
 
-internal fun ExceptionBody.throwing(): Nothing {
+internal fun ExceptionBody.throwing(throwable: Throwable): Nothing {
     duckieResponseException(
         message = message,
         code = code ?: duckieResponseFieldNpe("code"),
         errors = errors?.filterNotNull(),
+        throwable = throwable,
     )
 }
