@@ -9,14 +9,14 @@ package team.duckie.app.android.feature.ui.search.viewmodel.state
 
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.feature.ui.search.constans.SearchResultStep
+import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 
-data class SearchResultState(
+internal data class SearchResultState(
     val isSearchResultLoading: Boolean = false,
 
     val searchTag: String = "",
-    val tagSelectedTab: SearchResultStep = SearchResultStep.DUCK_TEST,
+    val tagSelectedTab: SearchResultStep = SearchResultStep.DuckTest,
 
     val searchResultForTest: PersistentList<DuckTestCoverItem> = persistentListOf(),
     val searchResultForUser: PersistentList<User> = persistentListOf(),

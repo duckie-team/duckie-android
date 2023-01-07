@@ -5,13 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 package team.duckie.app.android.feature.ui.search.screen
 
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +21,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
@@ -36,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.toPersistentList
-import team.duckie.app.android.feature.ui.search.constans.SearchResultStep
+import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchResultViewModel
 import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
@@ -51,7 +43,7 @@ private val HomeTagListPadding = PaddingValues(
     end = 16.dp,
 )
 
-@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun SearchResultScreen(
     modifier: Modifier = Modifier,
@@ -89,7 +81,7 @@ internal fun SearchResultScreen(
             },
         )
         when (state.tagSelectedTab) {
-            SearchResultStep.DUCK_TEST -> LazyVerticalGrid(
+            SearchResultStep.DuckTest -> LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 state = rememberLazyGridState(),
                 verticalArrangement = Arrangement.spacedBy(48.dp),
@@ -105,7 +97,7 @@ internal fun SearchResultScreen(
                     )
                 }
             }
-            SearchResultStep.USER -> LazyColumn(
+            SearchResultStep.User -> LazyColumn(
                 contentPadding = HomeTagListPadding,
             ) {
                 items(state.searchResultForUser) { item ->

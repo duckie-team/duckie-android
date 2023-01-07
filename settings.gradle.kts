@@ -7,8 +7,6 @@
 
 @file:Suppress("UnstableApiUsage")
 
-include(":feature-ui-search")
-
 rootProject.name = "duckie"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
@@ -44,6 +42,7 @@ include(
     ":presentation",
     ":feature-datastore",
     ":feature-photopicker",
+    ":feature-ui-search",
     ":feature-ui-setting",
     ":feature-ui-onboard",
     ":feature-ui-notification",

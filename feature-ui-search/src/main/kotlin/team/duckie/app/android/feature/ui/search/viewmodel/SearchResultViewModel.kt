@@ -14,7 +14,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForExamUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForUserUseCase
-import team.duckie.app.android.feature.ui.search.constans.SearchResultStep
+import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchResultSideEffect
 import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchResultState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
@@ -44,7 +44,7 @@ private val DummyResultResultForUser = (0..20).map {
 }.toPersistentList()
 
 @Immutable
-class SearchResultViewModel @Inject constructor(
+internal class SearchResultViewModel @Inject constructor(
     private val fetchSearchResultForExamUseCase: FetchSearchResultForExamUseCase,
     private val fetchSearchResultForUserUseCase: FetchSearchResultForUserUseCase,
 ) : BaseViewModel<SearchResultState, SearchResultSideEffect>(SearchResultState()) {

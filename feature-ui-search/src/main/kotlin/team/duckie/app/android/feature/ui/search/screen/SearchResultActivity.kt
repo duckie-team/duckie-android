@@ -13,11 +13,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchResultViewModel
@@ -28,13 +28,12 @@ import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchResultActivity : BaseActivity() {
 
     @Inject
-    lateinit var searchResultViewModel: SearchResultViewModel
+    internal lateinit var searchResultViewModel: SearchResultViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +42,7 @@ class SearchResultActivity : BaseActivity() {
         searchResultViewModel.changeSearchTag("웹툰")
 
         setContent {
-            LaunchedEffect(key1 = searchResultViewModel.sideEffect) {
+            LaunchedEffect(key1 = searchResultViewModel) {
                 searchResultViewModel.sideEffect
                     .onEach(::handleSideEffect)
                     .launchIn(this)
