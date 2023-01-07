@@ -16,15 +16,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
+import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -43,7 +50,7 @@ private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
 class HomeActivity : BaseActivity() {
 
     @Inject
-    lateinit var homeViewModel: HomeViewModel
+    internal lateinit var homeViewModel: HomeViewModel
 
     @OptIn(ExperimentalLifecycleComposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +58,12 @@ class HomeActivity : BaseActivity() {
 
         setContent {
             val state by homeViewModel.state.collectAsStateWithLifecycle()
+
+            LaunchedEffect(key1 = homeViewModel.sideEffect) {
+                homeViewModel.sideEffect
+                    .onEach(::handleSideEffect)
+                    .launchIn(this)
+            }
 
             QuackTheme {
                 Layout(
@@ -68,8 +81,13 @@ class HomeActivity : BaseActivity() {
                                 BottomNavigationStep.HomeScreen -> CompositionLocalProvider(
                                     LocalViewModel provides homeViewModel
                                 ) {
-                                    DuckieHomeScreen()
+                                    DuckieHomeScreen(
+                                        navigateToSearchResult = { tag ->
+                                            // TODO(limsaehyun): navigate to search result screen
+                                        }
+                                    )
                                 }
+
                                 BottomNavigationStep.SearchScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
                                 BottomNavigationStep.RankingScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
                                 BottomNavigationStep.MyPageScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
@@ -135,6 +153,14 @@ class HomeActivity : BaseActivity() {
                         )
                     }
                 }
+            }
+        }
+    }
+
+    private fun handleSideEffect(sideEffect: HomeSideEffect) {
+        when (sideEffect) {
+            is HomeSideEffect.ReportError -> {
+                Firebase.crashlytics.recordException(sideEffect.exception)
             }
         }
     }

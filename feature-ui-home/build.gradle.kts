@@ -19,6 +19,7 @@ android {
 
 dependencies {
     implementations(
+        platform(libs.firebase.bom),
         projects.di,
         projects.domain,
         projects.utilUi,
@@ -29,7 +30,9 @@ dependencies {
         libs.quack.ui.components,
         libs.compose.ktx.lifecycle,
         libs.compose.ui.coil,
-        libs.ui.pager.asProvider(),
-        libs.ui.pager.indicators,
+        libs.compose.ui.material,
+        libs.firebase.crashlytics,
+        libs.paging.runtime,
+        libs.paging.compose,
     )
 }
