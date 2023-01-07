@@ -54,5 +54,6 @@ include(
     ":util-viewmodel",
     ":util-kotlin",
     ":util-compose",
+    ":util-exception-handling",
     ":plugin-ktor-client",
 )

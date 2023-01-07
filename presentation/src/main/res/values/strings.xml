@@ -9,4 +9,6 @@
     <string name="app_name">DUCKIE</string>
 
     <string name="intro_slogan">덕질엔 끝이 없다,\n취향따라 만나는 커뮤니티 덕키!</string>
+
+    <string name="expired_access_token_relogin_requried">자동 로그인이 만료됐어요. 로그인을 다시 진행해 주세요.</string>
 </resources>

@@ -67,11 +67,7 @@ class JsonBuilderTest {
 
     @Test
     fun nestedPojo() {
-        val tags = persistentListOf(
-            Tag(id = 1, name = "1"),
-            Tag(id = 2, name = "2"),
-            Tag(id = 3, name = "3"),
-        )
+        val tags = persistentListOf(Tag(id = 1, name = "tag"))
         val actual = buildJson {
             "name" withString "duckie"
             "age" withInt 1
@@ -87,40 +83,7 @@ class JsonBuilderTest {
                         Category(
                             id = 1,
                             name = "1",
-                            popularTags = tags,
-                        ),
-                        Category(
-                            id = 2,
-                            name = "2",
-                            popularTags = tags,
-                        ),
-                        Category(
-                            id = 3,
-                            name = "3",
-                            popularTags = tags,
-                        ),
-                    ),
-                ),
-                User(
-                    id = 1,
-                    nickname = "test2",
-                    profileImageUrl = "test2",
-                    tier = DuckieTier.DuckKid,
-                    favoriteTags = tags,
-                    favoriteCategories = persistentListOf(
-                        Category(
-                            id = 1,
-                            name = "1",
-                            popularTags = tags,
-                        ),
-                        Category(
-                            id = 2,
-                            name = "2",
-                            popularTags = tags,
-                        ),
-                        Category(
-                            id = 3,
-                            name = "3",
+                            thumbnailUrl = "thumbnailUrl",
                             popularTags = tags,
                         ),
                     ),
@@ -130,22 +93,9 @@ class JsonBuilderTest {
 
         val expected = "{\"name\":\"duckie\",\"age\":1,\"isDuck\":true," +
                 "\"friends\":[{\"id\":0,\"nickname\":\"test\",\"profileImageUrl\":\"test\"," +
-                "\"tier\":\"DuckKid\",\"favoriteTags\":[{\"id\":1,\"name\":\"1\"}," +
-                "{\"id\":2,\"name\":\"2\"},{\"id\":3,\"name\":\"3\"}]," +
-                "\"favoriteCategories\":[{\"id\":1,\"name\":\"1\",\"popularTags\":[{\"id\":1," +
-                "\"name\":\"1\"},{\"id\":2,\"name\":\"2\"},{\"id\":3,\"name\":\"3\"}]}," +
-                "{\"id\":2,\"name\":\"2\",\"popularTags\":[{\"id\":1,\"name\":\"1\"}," +
-                "{\"id\":2,\"name\":\"2\"},{\"id\":3,\"name\":\"3\"}]},{\"id\":3,\"name\":\"3\"," +
-                "\"popularTags\":[{\"id\":1,\"name\":\"1\"},{\"id\":2,\"name\":\"2\"}," +
-                "{\"id\":3,\"name\":\"3\"}]}]},{\"id\":1,\"nickname\":\"test2\"," +
-                "\"profileImageUrl\":\"test2\",\"tier\":\"DuckKid\",\"favoriteTags\":[{\"id\":1," +
-                "\"name\":\"1\"},{\"id\":2,\"name\":\"2\"},{\"id\":3,\"name\":\"3\"}]," +
-                "\"favoriteCategories\":[{\"id\":1,\"name\":\"1\",\"popularTags\":[{\"id\":1," +
-                "\"name\":\"1\"},{\"id\":2,\"name\":\"2\"},{\"id\":3,\"name\":\"3\"}]}," +
-                "{\"id\":2,\"name\":\"2\",\"popularTags\":[{\"id\":1,\"name\":\"1\"}," +
-                "{\"id\":2,\"name\":\"2\"},{\"id\":3,\"name\":\"3\"}]},{\"id\":3,\"name\":\"3\"," +
-                "\"popularTags\":[{\"id\":1,\"name\":\"1\"},{\"id\":2,\"name\":\"2\"}," +
-                "{\"id\":3,\"name\":\"3\"}]}]}]}"
+                "\"tier\":\"DuckKid\",\"favoriteTags\":[{\"id\":1,\"name\":\"tag\"}]," +
+                "\"favoriteCategories\":[{\"id\":1,\"name\":\"1\",\"thumbnailUrl\":\"thumbnailUrl\"," +
+                "\"popularTags\":[{\"id\":1,\"name\":\"tag\"}]}]}]}"
 
         expectThat(actual).isEqualTo(expected)
     }

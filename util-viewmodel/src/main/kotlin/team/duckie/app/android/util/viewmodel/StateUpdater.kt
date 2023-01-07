@@ -7,12 +7,9 @@
 
 package team.duckie.app.android.util.viewmodel
 
-import team.duckie.app.android.util.kotlin.DuckieDsl
-
 /**
  * Reducer 스코프를 나타냅니다.
  */
-@DuckieDsl
 interface StateUpdater
 
 internal object StateUpdaterScope : StateUpdater

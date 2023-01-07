@@ -56,6 +56,7 @@ import androidx.datastore.preferences.core.edit
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
@@ -75,6 +76,7 @@ import team.duckie.app.android.util.kotlin.fastAny
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.fastFlatten
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasic2TextField
@@ -134,7 +136,6 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 
 @Composable
 internal fun TagScreen() = CoroutineScopeContent {
-    @Suppress("UNUSED_VARIABLE") // TODO(sungbin): 태그 처리 로직
     val vm = LocalViewModel.current as OnboardViewModel
     val context = LocalContext.current.applicationContext
     val keyboard = LocalSoftwareKeyboardController.current
@@ -145,7 +146,7 @@ internal fun TagScreen() = CoroutineScopeContent {
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val addedTags = remember { mutableStateListOf<String>() }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(sheetState) {
         val sheetStateFlow = snapshotFlow { sheetState.currentValue }
         sheetStateFlow.collect { state ->
             if (state == ModalBottomSheetValue.Hidden) {
@@ -203,6 +204,7 @@ internal fun TagScreen() = CoroutineScopeContent {
                         isStartable = startable
                     },
                 )
+                // TODO(sungbin): 로딩 인디케이터
                 QuackLargeButton(
                     modifier = Modifier
                         .layoutId(TagScreenQuackLargeButtonLayoutId)
@@ -212,6 +214,20 @@ internal fun TagScreen() = CoroutineScopeContent {
                     enabled = isStartable,
                 ) {
                     launch {
+                        vm.updateUserProfileImage(
+                            coroutineScope = coroutineScope,
+                        )
+                        vm.updateUserFavorateTags(
+                            favorateTagNames = addedTags,
+                            coroutineScope = coroutineScope,
+                        )
+                        vm.updateUser(
+                            id = vm.me.id,
+                            nickname = vm.me.temporaryNickname,
+                            profileImageUrl = vm.me.temporaryProfileImageUrl,
+                            favoriteCategories = vm.selectedCategories,
+                            favoriteTags = vm.me.temporaryFavoriteTags,
+                        )
                         context.dataStore.edit { preference ->
                             preference[PreferenceKey.Onboard.Finish] = true
                         }
@@ -233,19 +249,15 @@ private fun TagSelection(
     startableUpdate: (startable: Boolean) -> Unit,
 ) = CoroutineScopeContent {
     val vm = LocalViewModel.current as OnboardViewModel
-
-    // 사용자가 이전 단계로 돌아가면 태그 선택 조정으로 예상하여
-    // 태그 상태를 저장하지 않음
-    val hottestTags = remember(vm.selectedCategories.size) {
+    val hottestTags = remember(vm.selectedCategories) {
         List(
             size = vm.selectedCategories.size,
             init = { index ->
-                listOf("index: $index")
-                // vm.getRecommendationTags(vm.selectedCategories[index])
+                vm.selectedCategories[index].popularTags?.fastMap(Tag::name).orEmpty()
             },
         )
     }
-    val hottestTagSelections = remember(vm.selectedCategories.size, hottestTags.size) {
+    val hottestTagSelections = remember(vm.selectedCategories) {
         List(
             size = vm.selectedCategories.size,
             init = { index ->
@@ -261,11 +273,7 @@ private fun TagSelection(
 
     LaunchedEffect(hottestTagSelections, addedTags) {
         // https://stackoverflow.com/a/70429284/14299073
-        val hottestTagSelectionsFlow = snapshotFlow {
-            hottestTagSelections.fastFlatten { hottestTagSelection ->
-                (hottestTagSelection as SnapshotStateList<Boolean>).toList()
-            }
-        }
+        val hottestTagSelectionsFlow = snapshotFlow { hottestTagSelections.fastFlatten() }
         val addedTagsFlow = snapshotFlow { addedTags.toList() }
 
         // hottest tag 에 최소 1개가 선택됐거나, 사용자가 최소 1개의 태그를 추가했을 때

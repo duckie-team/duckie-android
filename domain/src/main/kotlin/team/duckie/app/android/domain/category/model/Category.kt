@@ -15,5 +15,6 @@ import team.duckie.app.android.domain.tag.model.Tag
 data class Category(
     val id: Int,
     val name: String,
+    val thumbnailUrl: String,
     val popularTags: ImmutableList<Tag>?,
 )

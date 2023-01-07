@@ -21,8 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -41,6 +39,7 @@ import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSi
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.compose.setDuckieContent
+import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlytics
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.collectWithLifecycle
 import team.duckie.app.android.util.ui.finishWithAnimation
@@ -99,7 +98,7 @@ class OnboardActivity : BaseActivity() {
 
         permissionInit()
 
-        // FIXME: Lifecycle 처리 개선 (성빈의 지식 부족)
+        // TODO(sungbin): Lifecycle 처리 개선
         lifecycleScope.launchWhenCreated {
             launch {
                 vm.imagePermissionGrantState.collectWithLifecycle(lifecycle) { isGranted ->
@@ -121,6 +120,10 @@ class OnboardActivity : BaseActivity() {
                     lifecycle = lifecycle,
                     collector = ::handleSideEffect,
                 )
+            }
+
+            launch {
+                vm.getCategories(withPopularTags = true)
             }
         }
 
@@ -176,18 +179,26 @@ class OnboardActivity : BaseActivity() {
                     ignoreThrottle = true,
                 )
             }
-            is OnboardState.Joined -> Unit // TODO(sungbin): 기능 연결
             is OnboardState.NavigateStep -> {
-                vm.navigateStep(state.step)
                 onboardStepState = state.step
             }
-            OnboardState.AccessTokenValidationFailed -> Unit // TODO(sungbin): 기능 연결
-            is OnboardState.CategoriesLoaded -> Unit // TODO(sungbin): 기능 연결
-            is OnboardState.FileUploaded -> Unit // TODO(sungbin): 기능 연결
-            is OnboardState.TagCreated -> Unit // TODO(sungbin): 기능 연결
+            is OnboardState.Joined -> {
+                if (state.isNewUser) {
+                    vm.navigateStep(
+                        step = OnboardStep.Profile,
+                        ignoreThrottle = true,
+                    )
+                } else {
+                    // TODO(sungbin): 온보딩 종료
+                }
+            }
+            is OnboardState.CategoriesLoaded -> {
+                vm.categories = state.catagories
+            }
             is OnboardState.Error -> {
                 toast(getString(R.string.internal_error))
             }
+            else -> Unit
         }
     }
 
@@ -204,13 +215,15 @@ class OnboardActivity : BaseActivity() {
                     preferences[PreferenceKey.Account.AccessToken] = effect.accessToken
                 }
             }
-            is OnboardSideEffect.AttachAccessTokenToHeader -> Unit // TODO(sungbin): 기능 연결
+            is OnboardSideEffect.AttachAccessTokenToHeader -> {
+                vm.attachAccessTokenToHeader(effect.accessToken)
+            }
             is OnboardSideEffect.DelegateJoin -> {
                 vm.join(effect.kakaoAccessToken)
             }
             is OnboardSideEffect.ReportError -> {
                 effect.exception.printStackTrace()
-                Firebase.crashlytics.recordException(effect.exception)
+                effect.exception.reportToCrashlytics()
             }
         }
     }
