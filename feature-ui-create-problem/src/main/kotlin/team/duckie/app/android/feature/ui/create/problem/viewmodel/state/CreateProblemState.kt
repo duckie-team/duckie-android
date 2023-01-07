@@ -60,7 +60,7 @@ internal data class CreateProblemState(
         val correctAnswers: ImmutableList<String> = persistentListOf(""),
         val hints: ImmutableList<String> = persistentListOf(),
         val memos: ImmutableList<String> = persistentListOf(),
-    ){
+    ) {
         data class Error(val throwable: Throwable?)
     }
 
@@ -71,8 +71,8 @@ internal data class CreateProblemState(
         val tempTag: String = "",
         val tags: ImmutableList<String> = persistentListOf(),
     )
-
 }
+
 sealed class CreateProblemPhotoState {
     data class QuestionImageType(
         val questionIndex: Int,

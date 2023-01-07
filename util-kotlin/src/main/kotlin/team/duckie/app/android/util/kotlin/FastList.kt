@@ -158,8 +158,8 @@ inline fun <T, R> List<T>.fastMapIndexed(transform: (Int, T) -> R): List<R> {
         target += transform(index, item)
     }
     return target
-}    
-        
+}
+
 @Suppress("BanInlineOptIn")
 @OptIn(ExperimentalContracts::class)
 inline fun <T, R> List<T>.fastMapIndexedNotNull(transform: (Int, T) -> R?): List<R> {
