@@ -23,12 +23,12 @@ import androidx.compose.ui.layout.layout
  * 2. `android:windowSoftInputMode="adjustResize"`
  */
 @Composable
-fun ImeSpacer() {
+fun ImeSpacer(modifier: Modifier = Modifier) {
     val imeInsets = WindowInsets.ime
     val navigationBarInsets = WindowInsets.navigationBars
 
     Spacer(
-        modifier = Modifier.layout { measurable, _constraints ->
+        modifier = modifier.layout { measurable, _constraints ->
             val imeHeight = imeInsets.getBottom(this)
             val nagivationBarHeight = navigationBarInsets.getBottom(this)
             // ime height 에 navigation height 가 포함되는 것으로 추측됨

@@ -50,7 +50,7 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackUnderlineBody3
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
-@Suppress("UnusedPrivateMember")
+@Suppress("UnusedPrivateMember", "unused")
 private val currentStep = OnboardStep.Login
 
 private const val LoginScreenWelcomeLayoutId = "LoginScreenWelcome"
@@ -201,10 +201,9 @@ private fun LoginScreenLoginArea() = CoroutineScopeContent {
                     )
                 )
                 .suspendClickable {
-                    // vm.kakaoLogin(currentStep + 1)
+                    // TODO(sungbin): 카카오 로그인 백엔드 연결
                 },
             content = {
-                // TODO(sungbin): 로딩중 인디케이터
                 Image(
                     modifier = Modifier
                         .layoutId(LoginScreenLoginAreaKakaoSymbolLayoutId)
@@ -220,6 +219,7 @@ private fun LoginScreenLoginArea() = CoroutineScopeContent {
                     ),
                     contentDescription = null,
                 )
+                // QuackColor 생성자가 internal 이라 BasicText 사용
                 BasicText(
                     modifier = Modifier.layoutId(LoginScreenLoginAreaKakaoLoginLabelLayoutId),
                     text = stringResource(R.string.kakaologin_button_label),

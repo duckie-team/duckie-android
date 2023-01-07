@@ -10,9 +10,7 @@ package team.duckie.app.android.feature.ui.onboard.viewmodel
 import androidx.annotation.RestrictTo
 import java.io.File
 import team.duckie.app.android.domain.category.model.Category
-import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 
@@ -30,19 +28,19 @@ internal interface ApiViewModel {
     suspend fun getKakaoAccessToken()
 
     suspend fun join(kakaoAccessToken: String)
-    suspend fun checkAccessToken(token: String, nextStep: OnboardStep)
+    suspend fun attachAccessTokenToHeader(accessToken: String)
 
     suspend fun getCategories(withPopularTags: Boolean)
 
-    suspend fun updateFile(file: File, type: FileType)
+    suspend fun updateProfileImageFile(file: File)
 
     suspend fun createTag(name: String)
 
     suspend fun updateUser(
         id: Int,
-        nickname: String,
-        profileImageUrl: String,
-        favoriteCategories: List<Category>,
-        favoriteTags: List<Tag>,
+        nickname: String?,
+        profileImageUrl: String?,
+        favoriteCategories: List<Category>?,
+        favoriteTags: List<Tag>?,
     )
 }

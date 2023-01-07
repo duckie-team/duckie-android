@@ -34,12 +34,16 @@ kotlin-kover = "0.6.1"
 kotlin-coroutines = "1.6.2"
 kotlin-collections-immutable = "0.3.5"
 
+# apache
+apache-commons-io = "2.11.0"
+
 # androidx
 androidx-appcompat = "1.5.1" # needs for oss license activity
 androidx-splash = "1.0.0"
 androidx-datastore = "1.0.0"
 androidx-room = "2.4.3"
 androidx-profile-installer = "1.2.0"
+androidx-annotation = "1.5.0"
 
 # compose
 compose-core = "1.2.1"
@@ -81,6 +85,9 @@ di-inject = "1"
 
 # ktor
 ktor-core = "2.2.1"
+
+# jackson
+jackson-core = "2.14.1"
 
 # quack
 quack-ui-components = "1.4.3"
@@ -140,12 +147,15 @@ kotlin-dokka-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", vers
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 kotlin-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlin-collections-immutable" }
 
+apache-commons-io = { module = "commons-io:commons-io", version.ref = "apache-commons-io" }
+
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-splash = { module = "androidx.core:core-splashscreen", version.ref = "androidx-splash" }
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 androidx-room-core = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 androidx-profile-installer = { module = "androidx.profileinstaller:profileinstaller", version.ref = "androidx-profile-installer" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidx-annotation" }
 
 compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose-runtime" }
 compose-ui-coil = { module = "io.coil-kt:coil-compose", version.ref = "compose-coil" }
@@ -183,6 +193,8 @@ login-kakao = { module = "com.kakao.sdk:v2-user", version.ref = "login-kakao" }
 di-hilt-core = { module = "com.google.dagger:hilt-android", version.ref = "di-hilt" }
 di-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "di-hilt" }
 di-inject = { module = "javax.inject:javax.inject", version.ref = "di-inject" }
+
+jackson-annotation = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson-core" }
 
 ktor-jackson = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor-core" }
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor-core" }

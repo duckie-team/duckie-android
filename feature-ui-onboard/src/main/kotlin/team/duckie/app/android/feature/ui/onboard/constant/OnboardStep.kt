@@ -24,3 +24,5 @@ internal enum class OnboardStep(private val index: Int) {
         return values()[index + next]
     }
 }
+
+internal annotation class RequiredStep(@Suppress("unused") vararg val step: OnboardStep)

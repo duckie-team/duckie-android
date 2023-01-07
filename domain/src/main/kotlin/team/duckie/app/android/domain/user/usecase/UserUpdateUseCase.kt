@@ -20,10 +20,10 @@ class UserUpdateUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         id: Int,
-        nickname: String,
-        profileImageUrl: String,
-        favoriteCategories: List<Category>,
-        favoriteTags: List<Tag>,
+        nickname: String?,
+        profileImageUrl: String?,
+        favoriteCategories: List<Category>?,
+        favoriteTags: List<Tag>?,
     ): Result<User> {
         return runCatching {
             repository.update(

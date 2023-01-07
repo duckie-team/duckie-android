@@ -9,18 +9,25 @@ package team.duckie.app.android.feature.ui.onboard.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.category.model.Category
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.constant.RequiredStep
 
 internal sealed class OnboardState {
     object Initial : OnboardState()
-
-    class Joined(val isNewUser: Boolean) : OnboardState()
     class NavigateStep(val step: OnboardStep) : OnboardState()
-    object AccessTokenValidationFailed : OnboardState()
 
+    @RequiredStep(OnboardStep.Login)
+    class Joined(val isNewUser: Boolean) : OnboardState()
+
+    @RequiredStep(OnboardStep.Category)
     class CategoriesLoaded(val catagories: ImmutableList<Category>) : OnboardState()
-    class FileUploaded(val url: String) : OnboardState()
-    class TagCreated(val id: Int) : OnboardState()
+
+    @RequiredStep(OnboardStep.Tag)
+    class TagCreated(val tag: Tag) : OnboardState()
+
+    @RequiredStep(OnboardStep.Tag) // 마지막 단계에서 유저 정보 업데이트함
+    class PrfileImageUploaded(val url: String) : OnboardState()
 
     class Error(val exception: Throwable) : OnboardState()
 }

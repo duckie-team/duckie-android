@@ -7,6 +7,8 @@
 
 // TAKEN FROM: https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/ui/ui-util/src/commonMain/kotlin/androidx/compose/ui/util/ListUtils.kt
 
+@file:Suppress("unused")
+
 package team.duckie.app.android.util.kotlin
 
 import kotlin.contracts.ExperimentalContracts
@@ -140,6 +142,17 @@ inline fun <T, R> List<T>.fastMap(transform: (T) -> R): List<R> {
     return target
 }
 
+@Suppress("BanInlineOptIn")
+@OptIn(ExperimentalContracts::class)
+inline fun <T, R> List<T>.fastMapIndexedNotNull(transform: (Int, T) -> R?): List<R> {
+    contract { callsInPlace(transform) }
+    val target = ArrayList<R>(size)
+    fastForEachIndexed { index, item ->
+        transform(index, item)?.let { target += it }
+    }
+    return target
+}
+
 // TODO(sungbin): should be fastMaxByOrNull to match stdlib
 /**
  * Returns the first element yielding the largest value of the given function or `null` if there
@@ -177,7 +190,7 @@ inline fun <T, R : Comparable<R>> List<T>.fastMaxBy(selector: (T) -> R): T? {
 @OptIn(ExperimentalContracts::class)
 inline fun <T, R, C : MutableCollection<in R>> List<T>.fastMapTo(
     destination: C,
-    transform: (T) -> R
+    transform: (T) -> R,
 ): C {
     contract { callsInPlace(transform) }
     fastForEach { item ->

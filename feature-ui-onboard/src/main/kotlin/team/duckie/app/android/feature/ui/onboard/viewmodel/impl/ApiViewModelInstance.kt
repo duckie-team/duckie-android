@@ -8,7 +8,7 @@
 package team.duckie.app.android.feature.ui.onboard.viewmodel.impl
 
 import java.io.File
-import team.duckie.app.android.domain.auth.usecase.CheckAccessTokenUseCase
+import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.JoinUseCase
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
@@ -18,7 +18,6 @@ import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
-import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.ApiViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
@@ -26,7 +25,7 @@ import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 internal class ApiViewModelInstance(
     private val getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
     private val joinUseCase: JoinUseCase,
-    private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
+    private val attachAccessTokenToHeaderUseCase: AttachAccessTokenToHeaderUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val fileUploadUseCase: FileUploadUseCase,
     private val tagCreateUseCase: TagCreateUseCase,
@@ -71,19 +70,14 @@ internal class ApiViewModelInstance(
                 eventHandler(OnboardState.Joined(response.isNewUser))
                 sideEffectHandler(OnboardSideEffect.UpdateUser(response.user))
                 sideEffectHandler(OnboardSideEffect.UpdateAccessToken(response.accessToken))
+                sideEffectHandler(OnboardSideEffect.AttachAccessTokenToHeader(response.accessToken))
             }
             .attachExceptionHandling()
     }
 
-    override suspend fun checkAccessToken(token: String, nextStep: OnboardStep) {
-        checkAccessTokenUseCase(token)
-            .onSuccess {
-                sideEffectHandler(OnboardSideEffect.AttachAccessTokenToHeader(token))
-                eventHandler(OnboardState.NavigateStep(nextStep))
-            }
-            .attachExceptionHandling {
-                eventHandler(OnboardState.AccessTokenValidationFailed)
-            }
+    override suspend fun attachAccessTokenToHeader(accessToken: String) {
+        attachAccessTokenToHeaderUseCase(accessToken)
+            .attachExceptionHandling()
     }
 
     override suspend fun getCategories(withPopularTags: Boolean) {
@@ -94,10 +88,10 @@ internal class ApiViewModelInstance(
             .attachExceptionHandling()
     }
 
-    override suspend fun updateFile(file: File, type: FileType) {
-        fileUploadUseCase(file, type)
+    override suspend fun updateProfileImageFile(file: File) {
+        fileUploadUseCase(file, FileType.Profile)
             .onSuccess { url ->
-                eventHandler(OnboardState.FileUploaded(url))
+                eventHandler(OnboardState.PrfileImageUploaded(url))
             }
             .attachExceptionHandling()
     }
@@ -112,10 +106,10 @@ internal class ApiViewModelInstance(
 
     override suspend fun updateUser(
         id: Int,
-        nickname: String,
-        profileImageUrl: String,
-        favoriteCategories: List<Category>,
-        favoriteTags: List<Tag>,
+        nickname: String?,
+        profileImageUrl: String?,
+        favoriteCategories: List<Category>?,
+        favoriteTags: List<Tag>?,
     ) {
         userUpdateUseCase(
             id = id,

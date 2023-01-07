@@ -10,6 +10,8 @@
 package team.duckie.app.android.domain.user.model
 
 import androidx.compose.runtime.Immutable
+import com.fasterxml.jackson.annotation.JsonIgnore
+import java.io.File
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
@@ -23,4 +25,16 @@ data class User(
     val tier: DuckieTier,
     val favoriteTags: ImmutableList<Tag>?,
     val favoriteCategories: ImmutableList<Category>?,
-)
+) {
+    @JsonIgnore
+    var temporaryNickname: String? = null
+
+    @JsonIgnore
+    var temporaryProfileImageFile: File? = null
+
+    @JsonIgnore
+    var temporaryProfileImageUrl: String? = null
+
+    @JsonIgnore
+    var temporaryFavoriteTags: List<Tag>? = null
+}
