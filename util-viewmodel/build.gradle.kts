@@ -10,7 +10,6 @@ import DependencyHandler.Extensions.testImplementations
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
-    id(ConventionEnum.JvmDokka)
     id(ConventionEnum.JvmJUnit4)
 }
 

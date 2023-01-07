@@ -10,9 +10,13 @@ package team.duckie.app.android.data.gallery.repository
 import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
 
-class GalleryRepositoryImpl(private val context: Context) : GalleryRepository {
+class GalleryRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
+) : GalleryRepository {
     override fun loadImages() = buildList {
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
@@ -35,7 +39,6 @@ class GalleryRepositoryImpl(private val context: Context) : GalleryRepository {
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     id,
                 )
-
                 add(contentUri.toString())
             }
         }

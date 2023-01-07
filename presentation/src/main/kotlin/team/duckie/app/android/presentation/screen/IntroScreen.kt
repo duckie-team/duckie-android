@@ -55,7 +55,6 @@ internal fun IntroScreen() {
                     height = 32.dp,
                 ),
             )
-            // FIXME: QuackSplashSlogan 는 글자가 너무 커서 3줄이 됨
             QuackHeadLine1(text = stringResource(R.string.intro_slogan))
         }
         QuackImage(

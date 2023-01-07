@@ -73,8 +73,11 @@ object PhotoPickerConstants {
  * @param onCloseClick 왼쪽 상단의 닫기 버튼이 클릭됐을 때 호출될 람다
  * @param onAddClick 오른쪽 상단의 추가 버튼이 클릭됐을 때 호출될 람다
  */
-// TODO: single/multi selection mode, 이미지 편집 바텀바, 선택한 이미지 미리보기 (full-screen preview), 사진 폴더별로 보기
-// FIXME: 퍼포먼스 개선
+// TODO(sungbin): single/multi selection mode,
+//                이미지 편집 바텀바,
+//                선택한 이미지 미리보기 (full-screen preview),
+//                사진 폴더별로 보기,
+//                퍼포먼스 개선
 @Composable
 fun PhotoPicker(
     modifier: Modifier = Modifier,
@@ -158,9 +161,7 @@ fun PhotoPicker(
                     src = uri.toUri(),
                     isSelected = imageSelections[index],
                     contentScale = ContentScale.Crop,
-                    onClick = {
-                        onImageClick(index, uri)
-                    },
+                    onClick = { onImageClick(index, uri) },
                 )
             }
         }

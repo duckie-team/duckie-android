@@ -9,8 +9,6 @@ import DependencyHandler.Extensions.implementations
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
-    id(ConventionEnum.JvmJUnit4)
-    id(ConventionEnum.JvmDokka)
 }
 
 android {
@@ -21,6 +19,7 @@ dependencies {
     implementations(
         libs.compose.runtime, // needs for Stability
         libs.kotlin.collections.immutable,
+        libs.jackson.annotation,
         libs.di.inject,
         libs.paging.common,
         projects.utilKotlin,

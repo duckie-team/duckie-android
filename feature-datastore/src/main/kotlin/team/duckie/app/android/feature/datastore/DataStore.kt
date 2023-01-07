@@ -25,21 +25,11 @@ object PreferenceKey {
     }
 
     object Onboard {
-        val Finish = booleanPreferencesKey(
-            name = buildPreferenceKey(type = "onboard", token = "finish"),
-        )
+        val Finish = booleanPreferencesKey(buildPreferenceKey(type = "onboard", token = "finish"))
     }
 
-    object User {
-        val Nickname = stringPreferencesKey(
-            name = buildPreferenceKey(type = "user", token = "nickname"),
-        )
-        val ProfilePhoto = stringPreferencesKey(
-            name = buildPreferenceKey(type = "user", token = "profile-photo"),
-        )
-        val Email = stringPreferencesKey(
-            name = buildPreferenceKey(type = "user", token = "email"),
-        )
+    object Account {
+        val AccessToken = stringPreferencesKey(buildPreferenceKey(type = "account", token = "access_token"))
     }
 }
 

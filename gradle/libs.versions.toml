@@ -34,6 +34,9 @@ kotlin-kover = "0.6.1"
 kotlin-coroutines = "1.6.2"
 kotlin-collections-immutable = "0.3.5"
 
+# apache
+apache-commons-io = "2.11.0"
+
 # androidx
 androidx-appcompat = "1.5.1" # needs for oss license activity
 androidx-splash = "1.0.0"
@@ -42,6 +45,7 @@ androidx-room = "2.4.3"
 androidx-profile-installer = "1.2.0"
 androidx-paging = "3.1.1"
 androidx-paging-compose = "1.0.0-alpha16"
+androidx-annotation = "1.5.0"
 
 # compose
 compose-core = "1.2.1"
@@ -82,14 +86,17 @@ di-hilt = "2.44"
 di-inject = "1"
 
 # ktor
-ktor-core = "2.1.2"
+ktor-core = "2.2.1"
+
+# jackson
+jackson-core = "2.14.1"
 
 # quack
 quack-ui-components = "1.4.3"
 quack-lint-core = "1.0.1"
 quack-lint-quack = "1.0.1"
 quack-lint-compose = "1.0.2"
-# TODO: quack-lint-writing
+# TODO(sungbin): quack-lint-writing
 
 # test
 test-strikt = "0.34.1"
@@ -142,12 +149,15 @@ kotlin-dokka-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", vers
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 kotlin-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlin-collections-immutable" }
 
+apache-commons-io = { module = "commons-io:commons-io", version.ref = "apache-commons-io" }
+
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-splash = { module = "androidx.core:core-splashscreen", version.ref = "androidx-splash" }
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 androidx-room-core = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 androidx-profile-installer = { module = "androidx.profileinstaller:profileinstaller", version.ref = "androidx-profile-installer" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidx-annotation" }
 
 compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose-runtime" }
 compose-ui-coil = { module = "io.coil-kt:coil-compose", version.ref = "compose-coil" }
@@ -188,11 +198,14 @@ di-hilt-core = { module = "com.google.dagger:hilt-android", version.ref = "di-hi
 di-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "di-hilt" }
 di-inject = { module = "javax.inject:javax.inject", version.ref = "di-inject" }
 
-ktor-client = { module = "io.ktor:ktor-client-core", version.ref = "ktor-core" }
-ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-core" }
+jackson-annotation = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson-core" }
+
 ktor-jackson = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor-core" }
-ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-core" }
-ktor-engine = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-core" }
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor-core" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-core" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-core" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-core" }
+ktor-client-engine = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-core" }
 
 quack-ui-components = { module = "team.duckie.quack:quack-ui-components", version.ref = "quack-ui-components" }
 quack-lint-core = { module = "team.duckie.quack:quack-lint-core", version.ref = "quack-lint-core" }
@@ -210,10 +223,11 @@ test-parameter-injector = { module = "com.google.testparameterinjector:test-para
 test-turbine = { module = "app.cash.turbine:turbine", version.ref = "test-turbine" }
 test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutines" }
 test-ktor-client = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-core" }
+test-ktor-server = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-core" }
 
 [bundles]
 ktx = ["ktx-core", "ktx-activiy", "ktx-lifecycle"]
 compose-core = ["compose-runtime", "compose-ui-foundation", "compose-ui-activity", "compose-util-tooling-preview"]
 compose-debug = ["compose-util-tooling-core", "compose-util-customview-pooling-container"] # debugImplementation
-ktor = ["ktor-client", "ktor-content-negotiation", "ktor-jackson", "ktor-logging", "ktor-engine"]
+ktor-client = ["ktor-jackson", "ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-client-engine"]
 quack-lint = ["quack-lint-core", "quack-lint-quack", "quack-lint-compose"]

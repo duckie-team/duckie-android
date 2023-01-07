@@ -55,7 +55,7 @@ abstract class BaseViewModel<State, SideEffect>(initialState: State) {
             mutableState.update { currentState ->
                 StateUpdaterScope.updater(currentState)
             }
-        } catch (ignore: StateUpdaterSkipException) {
+        } catch (_: StateUpdaterSkipException) {
             // Skip state update
         }
     }

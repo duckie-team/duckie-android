@@ -18,5 +18,6 @@ import team.duckie.app.android.util.kotlin.fastMap
 internal fun CategoryData.toDomain() = Category(
     id = id ?: duckieResponseFieldNpe("id"),
     name = name ?: duckieResponseFieldNpe("name"),
+    thumbnailUrl = thumbnailUrl ?: duckieResponseFieldNpe("thumbnailUrl"),
     popularTags = popularTags?.fastMap(TagData::toDomain)?.toImmutableList(),
 )

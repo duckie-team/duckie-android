@@ -31,6 +31,10 @@ dependencies {
 
 gradlePlugin {
     plugins {
+        register("appVersionNameProviderPlugin") {
+            id = ConventionEnum.AppVersionNameProvider
+            implementationClass = "AppVersionNameProvider"
+        }
         register("androidHiltPlugin") {
             id = ConventionEnum.AndroidHilt
             implementationClass = "AndroidHiltPlugin"

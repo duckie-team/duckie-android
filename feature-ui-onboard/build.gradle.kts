@@ -10,10 +10,7 @@ import DependencyHandler.Extensions.implementations
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
-    id(ConventionEnum.AndroidLibraryComposeUiTest)
     id(ConventionEnum.AndroidHilt)
-    id(ConventionEnum.JvmJUnit4)
-    id(ConventionEnum.JvmDokka)
 }
 
 android {
@@ -22,18 +19,18 @@ android {
 
 dependencies {
     implementations(
-        platform(libs.firebase.bom),
         projects.di,
         projects.domain,
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
         projects.utilViewmodel,
+        projects.utilExceptionHandling,
         projects.featureDatastore,
         projects.featurePhotopicker,
         projects.sharedUiCompose,
+        libs.apache.commons.io,
         libs.ktx.lifecycle,
-        libs.firebase.crashlytics,
         libs.compose.ui.material, // needs for ModalBottomSheet
         libs.compose.ktx.lifecycle,
         libs.compose.ui.accompanist.flowlayout,

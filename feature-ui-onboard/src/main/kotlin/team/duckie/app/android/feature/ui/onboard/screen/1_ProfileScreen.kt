@@ -154,20 +154,19 @@ internal fun ProfileScreen() {
     val keyboard = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 
+    @Suppress("RemoveExplicitTypeArguments")
     val galleryImages = remember<ImmutableList<String>>(vm.isImagePermissionGranted, vm.galleryImages) {
         if (vm.isImagePermissionGranted == true) {
-            vm.galleryImages
-                .toPersistentList()
-                .runIf(vm.isCameraPermissionGranted) {
-                    add(0, PhotoPickerConstants.Camera)
-                }
+            vm.galleryImages.runIf(vm.isCameraPermissionGranted) {
+                toPersistentList().add(0, PhotoPickerConstants.Camera)
+            }
         } else {
             persistentListOf()
         }
     }
 
     var photoPickerVisible by remember { mutableStateOf(false) }
-    var profilePhoto by remember { mutableStateOf<Any>(vm.me.profilePhotoUrl) }
+    var profilePhoto by remember { mutableStateOf<Any>(vm.me.profileImageUrl) }
 
     var profilePhotoLastSelectionIndex by remember { mutableStateOf(0) }
     val profilePhotoSelections = remember {
@@ -183,20 +182,21 @@ internal fun ProfileScreen() {
     ) { takenPhoto ->
         photoPickerVisible = false
         if (takenPhoto != null) {
-            profilePhoto = takenPhoto
+            profilePhoto = takenPhoto.also { photo ->
+                vm.updateUserProfileImageFile(imageBitmap = photo)
+            }
         } else {
             toast(context.getString(R.string.profile_fail_load_photo))
         }
     }
 
-    var nickname by remember { mutableStateOf(vm.me.name) }
+    var nickname by remember { mutableStateOf(vm.me.nickname) }
     var lastErrorText by remember { mutableStateOf("") }
     var nicknameRuleError by remember { mutableStateOf(false) }
     var debounceFinish by remember { mutableStateOf(false) }
 
-    // TODO: 중복 닉네임 검사
-    @Suppress("CanBeVal")
-    var nicknameIsUseable by remember { mutableStateOf(true) }
+    // TODO(sungbin): 중복 닉네임 검사
+    val nicknameIsUseable by remember { mutableStateOf(true) }
 
     LaunchedEffect(vm) {
         val nicknameInputFlow = snapshotFlow { nickname }
@@ -294,7 +294,7 @@ internal fun ProfileScreen() {
             measurePolicy = ProfileScreenMeasurePolicy,
         )
 
-        // TODO: 효율적인 애니메이션 (카메라가 로드되면서 생기는 프라임드랍 때문에 애니메이션 제거)
+        // TODO(sungbin): 효율적인 애니메이션 (카메라가 로드되면서 생기는 프라임드랍 때문에 애니메이션 제거)
         if (photoPickerVisible) {
             PhotoPicker(
                 modifier = Modifier
@@ -319,23 +319,13 @@ internal fun ProfileScreen() {
                     photoPickerVisible = false
                 },
                 onAddClick = {
-                    profilePhoto = galleryImages[profilePhotoLastSelectionIndex].toUri()
+                    profilePhoto = galleryImages[profilePhotoLastSelectionIndex].toUri().also { uri ->
+                        vm.updateUserProfileImageFile(fileUri = uri)
+                    }
                     photoPickerVisible = false
                 },
             )
         }
-    }
-}
-
-private fun navigateNextStepIfOk(
-    vm: OnboardViewModel,
-    debounceFinish: Boolean,
-    nickname: String,
-    nicknameRuleError: Boolean,
-    nicknameIsUseable: Boolean,
-) {
-    if (debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
-        vm.navigateStep(currentStep + 1)
     }
 }
 
@@ -362,5 +352,18 @@ private fun ProfilePhoto(
             onClick = openPhotoPicker ?: {}, // required when onLongClick is used
             onLongClick = { updateProfilePhoto(QuackIcon.Profile) },
         )
+    }
+}
+
+private fun navigateNextStepIfOk(
+    vm: OnboardViewModel,
+    debounceFinish: Boolean,
+    nickname: String,
+    nicknameRuleError: Boolean,
+    nicknameIsUseable: Boolean,
+) {
+    if (debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
+        vm.me.temporaryNickname = nickname
+        vm.navigateStep(currentStep + 1)
     }
 }

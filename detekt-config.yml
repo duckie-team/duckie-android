@@ -34,6 +34,8 @@ style:
     active: false
   MaxLineLength:
     excludeCommentStatements: true
+  UnnecessaryAbstractClass:
+    ignoreAnnotated: [ 'Module' ]
 
 naming:
   TopLevelPropertyNaming:
@@ -44,3 +46,5 @@ naming:
     active: false
   VariableNaming:
     active: false
+  PackageNaming:
+    packagePattern: '[a-z]+(\._?[_?A-Za-z0-9]*)*'
