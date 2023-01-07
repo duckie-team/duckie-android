@@ -12,28 +12,39 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import android.net.Uri
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.exam.model.ShortModel
 import team.duckie.app.android.domain.exam.model.ThumbnailType
+import team.duckie.app.android.domain.exam.model.getDefaultAnswer
+import team.duckie.app.android.domain.exam.model.toChoice
+import team.duckie.app.android.domain.exam.model.toImageChoice
+import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
+import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
 @Singleton
-class CreateProblemViewModel @Inject constructor(
+internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
@@ -78,6 +89,10 @@ class CreateProblemViewModel @Inject constructor(
         postSideEffect {
             CreateProblemSideEffect.FinishActivity
         }
+    }
+
+    fun updatePhotoState(photoState: CreateProblemPhotoState?) = updateState { prevState ->
+        prevState.copy(photoState = photoState)
     }
 
     fun onClickCategory(
@@ -209,13 +224,263 @@ class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    // CreateProblem
+    /**
+     * 문제를 만든다. 아래 규칙대로 [Problem] 을 만든다.
+     *
+     * [Problem.question]: 처음 문제를 만들 때 기본 [Question.Type] 은 [Question.Text] 이다.
+     * [Problem.answer]: 기본 [Answer.Type] 은 타입값에 기반하여 생성해준다. (객관식일 경우, 기본 Choice 개수는 0개이다)
+     * [Problem.correctAnswer]: 처음 문제를 만들 때 기본 값은 빈 값이다.
+     * [Problem.hint]: 처음 문제를 만들 때 기본 값은 null 값이다.
+     * [Problem.memo]: 처음 문제를 만들 때 기본 값은 null 값이다.
+     */
+    fun addProblem(answerType: Answer.Type) = updateState { prevState ->
+        val newQuestion = Question.Text(text = "")
+        val newAnswer = answerType.getDefaultAnswer()
+
+        with(prevState.createProblem) {
+            val newQuestions = questions.copy { add(newQuestion) }
+            val newAnswers = answers.copy { add(newAnswer) }
+            val newCorrectAnswers = correctAnswers.copy { add("") }
+            val newHints = hints.copy { add("") }
+            val newMemos = memos.copy { add("") }
+
+            prevState.copy(
+                createProblem = prevState.createProblem.copy(
+                    questions = newQuestions.toPersistentList(),
+                    answers = newAnswers.toPersistentList(),
+                    correctAnswers = newCorrectAnswers.toPersistentList(),
+                    hints = newHints.toPersistentList(),
+                    memos = newMemos.toPersistentList(),
+                )
+            )
+        }
+    }
+
+    /** [questionIndex + 1] 번 문제를 삭제한다. */
+    fun removeProblem(questionIndex: Int) = updateState { prevState ->
+        with(prevState.createProblem) {
+            val newQuestions = questions.copy { removeAt(questionIndex) }
+            val newAnswers = answers.copy { removeAt(questionIndex) }
+            val newCorrectAnswers = correctAnswers.copy { removeAt(questionIndex) }
+            val newHints = hints.copy { removeAt(questionIndex) }
+            val newMemos = memos.copy { removeAt(questionIndex) }
+
+            prevState.copy(
+                createProblem = prevState.createProblem.copy(
+                    questions = newQuestions.toPersistentList(),
+                    answers = newAnswers.toPersistentList(),
+                    correctAnswers = newCorrectAnswers.toPersistentList(),
+                    hints = newHints.toPersistentList(),
+                    memos = newMemos.toPersistentList(),
+                ),
+            )
+        }
+    }
+
+    /**
+     * [questionIndex + 1] 번 문제를 설정합니다.
+     *
+     * [특정 문제 타입][questionType]으로 설정되며
+     * [텍스트][title], [이미지 소스 목록][urlSource]을 추가적으로 받아 해당 문제를 특정 값으로 초기 설정합니다.
+     */
+    fun setQuestion(
+        questionType: Question.Type?,
+        questionIndex: Int,
+        title: String? = null,
+        urlSource: Uri? = null,
+    ) = updateState { prevState ->
+        val newQuestions = prevState.createProblem.questions.toMutableList()
+        val prevQuestion = newQuestions[questionIndex]
+        val newQuestion = when (questionType) {
+            Question.Type.Text -> Question.Text(
+                title ?: (prevQuestion.text),
+            )
+
+            Question.Type.Image -> Question.Image(
+                title ?: prevQuestion.text,
+                "${urlSource ?: prevQuestion}"
+            )
+
+            Question.Type.Audio -> Question.Audio(
+                title ?: prevQuestion.text,
+                "${urlSource ?: prevQuestion}"
+            )
+
+            Question.Type.Video -> Question.Video(
+                title ?: prevQuestion.text,
+                "${urlSource ?: prevQuestion}"
+            )
+
+            else -> null
+        }
+        newQuestion?.let { newQuestions[questionIndex] = it }
+
+        prevState.copy(
+            createProblem = prevState.createProblem.copy(
+                questions = newQuestions.toPersistentList()
+            ),
+        )
+    }
+
+    /** [questionIndex + 1] 번 문제의 문제 타입을 [특정 답안 타입][answerType]으로 변경합니다. */
+    fun editAnswersType(
+        questionIndex: Int,
+        answerType: Answer.Type
+    ) = updateState { prevState ->
+        val newAnswers = prevState.createProblem.answers.toMutableList()
+        when (answerType) {
+            Answer.Type.ShortAnswer -> newAnswers[questionIndex].toShort()
+            Answer.Type.Choice -> newAnswers[questionIndex].toChoice()
+            Answer.Type.ImageChoice -> newAnswers[questionIndex].toImageChoice()
+        }.let { newAnswers[questionIndex] = it }
+
+        prevState.copy(
+            createProblem = prevState.createProblem.copy(
+                answers = newAnswers.toPersistentList()
+            ),
+        )
+    }
+
+    /**
+     * [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 설정합니다.
+     * 주관식은 첫 번째 값만 변경합니다.
+     *
+     * [특정 답안 타입][answerType]으로 설정되며,
+     * [텍스트][answer], [이미지 소스][urlSource]을 추가적으로 받아 특정 답안을 해당 값으로 초기 설정합니다.
+     */
+    fun setAnswer(
+        questionIndex: Int,
+        answerIndex: Int,
+        answerType: Answer.Type,
+        answer: String? = null,
+        urlSource: Uri? = null,
+    ) = updateState { prevState ->
+        val newAnswers = prevState.createProblem.answers.toMutableList()
+
+        newAnswers[questionIndex].getEditedAnswers(
+            answerIndex,
+            answerType,
+            answer,
+            urlSource
+        ).let { newAnswers[questionIndex] = it }
+
+        prevState.copy(
+            createProblem = prevState.createProblem.copy(
+                answers = newAnswers.toPersistentList()
+            ),
+        )
+    }
+
+    /** [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 삭제 합니다. */
+    fun removeAnswer(
+        questionIndex: Int,
+        answerIndex: Int,
+    ) = updateState { prevState ->
+        val newAnswers = prevState.createProblem.answers.toMutableList()
+        val newAnswer = newAnswers[questionIndex]
+        newAnswers[questionIndex] = when (newAnswer) {
+            // TODO(riflockle7): 발현 케이스 확인을 위해 이렇게 두었으며, 추후 state 명세하면서 없앨 예정.
+            is Answer.Short -> duckieClientLogicProblemException(message = "주관식 답변은 삭제할 수 없습니다.")
+
+            is Answer.Choice -> Answer.Choice(
+                newAnswer.choices.copy { removeAt(answerIndex) }.toImmutableList()
+            )
+
+            is Answer.ImageChoice -> Answer.ImageChoice(
+                newAnswer.imageChoice.copy { removeAt(answerIndex) }.toImmutableList()
+            )
+        }
+
+        prevState.copy(
+            createProblem = prevState.createProblem.copy(
+                answers = newAnswers.toPersistentList()
+            ),
+        )
+    }
+
+    /**
+     * [모든 문제의 답안 목록][this] 에서
+     * [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 수정합니다.
+     * 이후 [questionIndex + 1] 문제의 답안 목록을 가져옵니다.
+     */
+    private fun Answer.getEditedAnswers(
+        answerIndex: Int,
+        answerType: Answer.Type,
+        answer: String?,
+        urlSource: Uri?
+    ): Answer {
+        return when (answerType) {
+            Answer.Type.ShortAnswer -> this.toShort(answer)
+            Answer.Type.Choice -> this.toChoice(answerIndex, answer)
+            Answer.Type.ImageChoice -> this.toImageChoice(
+                answerIndex,
+                answer,
+                urlSource?.let { "$this" }
+            )
+        }
+    }
+
+    /** [questionIndex + 1] 번 문제의 [정답][correctAnswer]을 설정합니다. */
+    fun setCorrectAnswer(
+        questionIndex: Int,
+        correctAnswer: String,
+    ) = updateState { prevState ->
+        val newCorrectAnswers =
+            prevState.createProblem.correctAnswers.toMutableList()
+        newCorrectAnswers[questionIndex] = correctAnswer
+
+        prevState.copy(
+            createProblem = prevState.createProblem.copy(
+                correctAnswers = newCorrectAnswers.toPersistentList()
+            ),
+        )
+    }
+
+    /**
+     * [questionIndex + 1] 번 문제의 답안을 추가합니다.
+     * [답안의 유형][answerType]에 맞춰 값이 추가 됩니다.
+     */
+    fun addAnswer(
+        questionIndex: Int,
+        answerType: Answer.Type,
+    ) = updateState { prevState ->
+        val newAnswers = prevState.createProblem.answers.toMutableList()
+        val newAnswer = newAnswers[questionIndex]
+
+        when (answerType) {
+            Answer.Type.ShortAnswer -> error("주관식은 답이 여러개가 될 수 없습니다.")
+
+            Answer.Type.Choice -> {
+                val choiceAnswer =
+                    newAnswer as? Answer.Choice ?: duckieClientLogicProblemException()
+                val newChoices = choiceAnswer.choices.copy { this.add(ChoiceModel("")) }
+                Answer.Choice(newChoices.toImmutableList())
+            }
+
+            Answer.Type.ImageChoice -> {
+                val choiceAnswer =
+                    newAnswer as? Answer.ImageChoice ?: duckieClientLogicProblemException()
+                val newImageChoices =
+                    choiceAnswer.imageChoice.copy { this.add(ImageChoiceModel("", "")) }
+                Answer.ImageChoice(newImageChoices.toImmutableList())
+            }
+        }.let { newAnswers[questionIndex] = it }
+
+        prevState.copy(
+            createProblem = prevState.createProblem.copy(
+                questions = prevState.createProblem.questions,
+                answers = newAnswers.toPersistentList()
+            ),
+        )
+    }
+
+    // AdditionalInfo
     fun setThumbnail(thumbnail: Any?) {
         updateState { prevState ->
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
-                        thumbnail = thumbnail,
-                    )
+                additionalInfo = prevState.additionalInfo.copy(
+                    thumbnail = thumbnail,
                 ),
             )
         }
@@ -224,11 +489,9 @@ class CreateProblemViewModel @Inject constructor(
     fun setButtonTitle(buttonTitle: String) {
         updateState { prevState ->
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
-                        takeTitle = buttonTitle,
-                    )
-                ),
+                additionalInfo = prevState.additionalInfo.copy(
+                    takeTitle = buttonTitle,
+                )
             )
         }
     }
@@ -236,26 +499,22 @@ class CreateProblemViewModel @Inject constructor(
     fun setTempTag(tempTag: String) {
         updateState { prevState ->
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
-                        tempTag = tempTag,
-                    )
-                ),
+                additionalInfo = prevState.additionalInfo.copy(
+                    tempTag = tempTag,
+                )
             )
         }
     }
 
     fun addTag(tag: String) {
         updateState { prevState ->
-            val newTags = prevState.examInformation.additionalInfoArea.tags
+            val newTags = prevState.additionalInfo.tags
                 .copy { add(tag) }
                 .toImmutableList()
             prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    additionalInfoArea = prevState.examInformation.additionalInfoArea.copy(
-                        tags = newTags,
-                    )
-                ),
+                additionalInfo = prevState.additionalInfo.copy(
+                    tags = newTags,
+                )
             )
         }
     }
@@ -270,7 +529,7 @@ class CreateProblemViewModel @Inject constructor(
             }
             .onFailure { exception ->
                 updateState { prevState ->
-                    prevState.copy(error = CreateProblemState.ExamInformation.Error(exception))
+                    prevState.copy(error = Error(exception))
                 }
                 postSideEffect {
                     CreateProblemSideEffect.ReportError(exception)
@@ -280,7 +539,7 @@ class CreateProblemViewModel @Inject constructor(
 
     /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트합니다. */
     internal fun addGalleryImages(images: List<String>) {
-        mutableGalleryImages = mutableGalleryImages.addAll(images)
+        mutableGalleryImages = persistentListOf(*images.toTypedArray())
     }
 
     fun isAllFieldsNotEmpty(): Boolean {
@@ -308,7 +567,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -319,7 +578,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -330,7 +589,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -341,7 +600,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",
@@ -352,7 +611,7 @@ private val dummyParam = ExamBody(
                 text = "",
             ),
             answer = Answer.Short(
-                answer = "바보",
+                answer = ShortModel("바보"),
             ),
             memo = "test memo 1",
             hint = "test hint 1",
