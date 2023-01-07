@@ -35,6 +35,7 @@ dependencies {
         libs.login.kakao,
         libs.kotlin.coroutines,
         libs.kotlin.collections.immutable,
+        libs.paging.runtime,
         libs.bundles.ktor.client,
         projects.domain,
         projects.utilKotlin,

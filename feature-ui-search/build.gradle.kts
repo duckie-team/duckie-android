@@ -10,17 +10,25 @@ import DependencyHandler.Extensions.implementations
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
+    id(ConventionEnum.AndroidHilt)
 }
 
 android {
-    namespace = "team.duckie.app.android.shared.ui.compose"
+    namespace = "team.duckie.app.android.feature.ui.search"
 }
 
 dependencies {
     implementations(
-        libs.quack.ui.components,
-        libs.compose.ui.coil,
-        projects.utilCompose,
+        platform(libs.firebase.bom),
+        projects.di,
+        projects.domain,
+        projects.utilUi,
         projects.utilKotlin,
+        projects.utilCompose,
+        projects.utilViewmodel,
+        projects.sharedUiCompose,
+        libs.quack.ui.components,
+        libs.compose.ktx.lifecycle,
+        libs.firebase.crashlytics,
     )
 }

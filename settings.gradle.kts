@@ -42,6 +42,7 @@ include(
     ":presentation",
     ":feature-datastore",
     ":feature-photopicker",
+    ":feature-ui-search",
     ":feature-ui-setting",
     ":feature-ui-onboard",
     ":feature-ui-notification",
