@@ -46,3 +46,13 @@ internal data class ExamBodyData(
     @field:JsonProperty("userId")
     val userId: Int? = null,
 )
+
+internal data class ExamInstanceBodyData(
+    @field:JsonProperty("examId")
+    val examId: Int? = null,
+)
+
+internal data class ExamInstanceSubmitBodyData(
+    @field:JsonProperty("submitted")
+    val submitted: List<String>? = null,
+)

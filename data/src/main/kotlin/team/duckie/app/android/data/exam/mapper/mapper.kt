@@ -14,6 +14,9 @@ import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
 import team.duckie.app.android.data.exam.model.ExamBodyData
 import team.duckie.app.android.data.exam.model.ExamData
+import team.duckie.app.android.data.exam.model.ExamInstanceBodyData
+import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
+import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.QuestionData
@@ -23,6 +26,9 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.domain.exam.model.ExamInstanceBody
+import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
+import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
@@ -188,4 +194,18 @@ internal fun ChoiceModel.toData() = ChoiceData(text = text)
 internal fun ImageChoiceModel.toData() = ImageChoiceData(
     text = text,
     imageUrl = imageUrl,
+)
+
+@OutOfDateApi
+internal fun ExamInstanceBody.toData() = ExamInstanceBodyData(
+    examId = this.examId
+)
+@OutOfDateApi
+internal fun ExamInstanceSubmitBody.toData() = ExamInstanceSubmitBodyData(
+    submitted = this.submitted
+)
+
+internal fun ExamInstanceSubmitData.toDomain() = ExamInstanceSubmit(
+    message = message ?: duckieResponseFieldNpe("${this::class.java.simpleName}.message"),
+    results = results ?: duckieResponseFieldNpe("${this::class.java.simpleName}.results"),
 )
