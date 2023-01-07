@@ -25,15 +25,11 @@ object PreferenceKey {
     }
 
     object Onboard {
-        val Finish = booleanPreferencesKey(
-            name = buildPreferenceKey(type = "onboard", token = "finish"),
-        )
+        val Finish = booleanPreferencesKey(buildPreferenceKey(type = "onboard", token = "finish"))
     }
 
     object Account {
-        val AccessToken = stringPreferencesKey(
-            name = buildPreferenceKey(type = "account", token = "access_token"),
-        )
+        val AccessToken = stringPreferencesKey(buildPreferenceKey(type = "account", token = "access_token"))
     }
 }
 

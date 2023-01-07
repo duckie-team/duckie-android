@@ -10,6 +10,7 @@ import DependencyHandler.Extensions.implementations
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
+    id(ConventionEnum.AndroidHilt)
 }
 
 android {
@@ -18,14 +19,15 @@ android {
 
 dependencies {
     implementations(
+        projects.di,
         projects.utilUi,
         projects.utilCompose,
         projects.utilKotlin,
+        projects.utilViewmodel,
         projects.featureDatastore,
         projects.featureUiOnboard,
-        projects.featureUiDetail,
-        projects.featureUiCreateProblem,
-        projects.featureUiHome,
+        projects.utilExceptionHandling,
+        projects.domain,
         libs.androidx.splash,
         libs.quack.ui.components,
     )

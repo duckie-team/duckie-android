@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.component.QuackTopAppBar
@@ -25,7 +24,7 @@ internal fun OnboardTopAppBar(
     modifier: Modifier = Modifier,
     currentStep: OnboardStep,
     horizontalPadding: Dp = 20.dp,
-) = CoroutineScopeContent {
+) {
     val vm = LocalViewModel.current as OnboardViewModel
 
     QuackTopAppBar(

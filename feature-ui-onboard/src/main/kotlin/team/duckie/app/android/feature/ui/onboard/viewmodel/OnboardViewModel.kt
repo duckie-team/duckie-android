@@ -7,19 +7,30 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
+import kotlin.coroutines.resume
 import kotlin.properties.Delegates
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
-import team.duckie.app.android.domain.auth.usecase.CheckAccessTokenUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import org.apache.commons.io.FileUtils
+import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.JoinUseCase
+import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
@@ -28,26 +39,31 @@ import team.duckie.app.android.feature.ui.onboard.viewmodel.impl.ApiViewModelIns
 import team.duckie.app.android.feature.ui.onboard.viewmodel.impl.PermissionViewModelInstance
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
+import team.duckie.app.android.util.kotlin.cancelChildrenAndItself
+import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.viewmodel.BaseViewModel
 
 private val NextStepNavigateThrottle = 1.seconds
+private const val ProfileImageCompressQuality = 100
 
+// TODO(sungbin): #133 + AndroidViewModel + viewModelScope
 internal class OnboardViewModel @AssistedInject constructor(
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     private val joinUseCase: JoinUseCase,
-    private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
+    private val attachAccessTokenToHeaderUseCase: AttachAccessTokenToHeaderUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val fileUploadUseCase: FileUploadUseCase,
     private val tagCreateUseCase: TagCreateUseCase,
     private val userUpdateUseCase: UserUpdateUseCase,
+    @ApplicationContext private val context: Context,
     @Assisted private val getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
 ) : BaseViewModel<OnboardState, OnboardSideEffect>(OnboardState.Initial),
     PermissionViewModel by PermissionViewModelInstance,
     ApiViewModel by ApiViewModelInstance(
         getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase,
         joinUseCase = joinUseCase,
-        checkAccessTokenUseCase = checkAccessTokenUseCase,
+        attachAccessTokenToHeaderUseCase = attachAccessTokenToHeaderUseCase,
         getCategoriesUseCase = getCategoriesUseCase,
         fileUploadUseCase = fileUploadUseCase,
         tagCreateUseCase = tagCreateUseCase,
@@ -73,16 +89,18 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
+    private val duckieUserProfileImageTemporaryFile =
+        File.createTempFile("temporary-duckie-user-profile-image", ".png", context.cacheDir)
+
     private val nicknameFilter = Regex("[^가-힣a-zA-Z0-9_.]")
     private var lastestUpdateStepMillis = System.currentTimeMillis()
 
-    var selectedCategories: ImmutableList<String> = persistentListOf()
+    private var _galleryImages = persistentListOf<String>()
+    val galleryImages: ImmutableList<String> get() = _galleryImages
 
     var me by Delegates.notNull<User>()
-
-    private var mutableGalleryImages = persistentListOf<String>()
-
-    val galleryImages: ImmutableList<String> get() = mutableGalleryImages
+    var categories by Delegates.notNull<ImmutableList<Category>>()
+    var selectedCategories: ImmutableList<Category> = persistentListOf()
 
     fun navigateStep(step: OnboardStep, ignoreThrottle: Boolean = false) {
         if (!ignoreThrottle &&
@@ -115,12 +133,80 @@ internal class OnboardViewModel @AssistedInject constructor(
             }
     }
 
-    fun setSelectedCategories(categories: List<String>) {
-        selectedCategories = categories.toImmutableList()
+    fun addGalleryImages(images: List<String>) {
+        _galleryImages = _galleryImages.addAll(images)
     }
 
-    fun addGalleryImages(images: List<String>) {
-        mutableGalleryImages = mutableGalleryImages.addAll(images)
+    fun updateUserProfileImageFile(fileUri: Uri) {
+        val file = duckieUserProfileImageTemporaryFile.also { it.delete() }
+        val stream = context.contentResolver.openInputStream(fileUri)
+        FileUtils.copyInputStreamToFile(stream, file)
+        me.temporaryProfileImageFile = file
+    }
+
+    fun updateUserProfileImageFile(imageBitmap: Bitmap) {
+        val file = duckieUserProfileImageTemporaryFile.also { it.delete() }
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, ProfileImageCompressQuality, file.outputStream())
+        me.temporaryProfileImageFile = file
+    }
+
+    suspend fun updateUserProfileImage(coroutineScope: CoroutineScope) {
+        suspendCancellableCoroutine { continuation ->
+            val file = me.temporaryProfileImageFile ?: return@suspendCancellableCoroutine continuation.resume(Unit)
+            val job = coroutineScope.launch {
+                launch {
+                    state.collect { state ->
+                        if (state is OnboardState.PrfileImageUploaded) {
+                            me.temporaryProfileImageUrl = state.url
+                            continuation.resume(Unit)
+                        }
+                    }
+                }
+
+                launch {
+                    updateProfileImageFile(file)
+                    me.temporaryProfileImageFile?.delete()
+                }
+            }
+
+            continuation.invokeOnCancellation {
+                job.cancelChildrenAndItself()
+            }
+        }
+    }
+
+    suspend fun updateUserFavorateTags(
+        favorateTagNames: List<String>,
+        coroutineScope: CoroutineScope,
+    ) {
+        suspendCancellableCoroutine { continuation ->
+            val favorateTagSize = favorateTagNames.size
+            val favorateTags = ArrayList<Tag>(favorateTagSize)
+            val job = coroutineScope.launch {
+                launch {
+                    state.collect { state ->
+                        if (state is OnboardState.TagCreated) {
+                            favorateTags.add(state.tag)
+
+                            if (favorateTags.size == favorateTagSize) {
+                                me.temporaryFavoriteTags = favorateTags
+                                continuation.resume(Unit)
+                            }
+                        }
+                    }
+                }
+
+                favorateTagNames.fastForEach { name ->
+                    launch {
+                        createTag(name)
+                    }
+                }
+            }
+
+            continuation.invokeOnCancellation {
+                job.cancelChildrenAndItself()
+            }
+        }
     }
 
     @AssistedFactory

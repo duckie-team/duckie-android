@@ -15,7 +15,9 @@ import team.duckie.app.android.domain.auth.repository.AuthRepository
 class AttachAccessTokenToHeaderUseCase @Inject constructor(
     private val repository: AuthRepository,
 ) {
-    operator fun invoke(accessToken: String) {
-        repository.attachAccessTokenToHeader(accessToken)
+    operator fun invoke(accessToken: String): Result<Unit> {
+        return runCatching {
+            repository.attachAccessTokenToHeader(accessToken)
+        }
     }
 }
