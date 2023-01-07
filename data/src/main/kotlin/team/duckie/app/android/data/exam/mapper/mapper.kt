@@ -42,22 +42,22 @@ internal fun Problem.toData() = ProblemData(
     question = question.let { question ->
         when (question) {
             is Question.Text -> QuestionData.Text(
-                type = question.type,
+                type = question.type.key,
                 text = question.text,
             )
             is Question.Video -> QuestionData.Video(
                 videoUrl = question.videoUrl,
-                type = question.type,
+                type = question.type.key,
                 text = question.text,
             )
             is Question.Image -> QuestionData.Image(
                 imageUrl = question.imageUrl,
-                type = question.type,
+                type = question.type.key,
                 text = question.text,
             )
             is Question.Audio -> QuestionData.Audio(
                 audioUrl = question.audioUrl,
-                type = question.type,
+                type = question.type.key,
                 text = question.text,
             )
         }
@@ -65,20 +65,20 @@ internal fun Problem.toData() = ProblemData(
     answer = answer.let { answer ->
         when (answer) {
             is Answer.Short -> AnswerData.ShortAnswer(
-                shortAnswer = answer.answer,
-                type = answer.type,
+                shortAnswer = answer.answer.text,
+                type = answer.type.key,
             )
             is Answer.Choice -> AnswerData.Choice(
                 choices = answer.choices.map {
                     it.toData()
                 }.toList(),
-                type = answer.type,
+                type = answer.type.key,
             )
             is Answer.ImageChoice -> AnswerData.ImageChoice(
                 imageChoice = answer.imageChoice.map {
                     it.toData()
                 }.toList(),
-                type = answer.type,
+                type = answer.type.key,
             )
         }
     },

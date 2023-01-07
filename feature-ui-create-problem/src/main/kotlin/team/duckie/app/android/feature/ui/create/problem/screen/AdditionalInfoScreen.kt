@@ -67,6 +67,7 @@ import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
@@ -88,8 +89,8 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
     val context = LocalContext.current
     val vm = LocalViewModel.current as CreateProblemViewModel
-    val state =
-        vm.state.collectAsStateWithLifecycle().value.examInformation.additionalInfoArea
+    val rootState = vm.state.collectAsStateWithLifecycle().value
+    val state = rootState.additionalInfo
     val keyboard = LocalSoftwareKeyboardController.current
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val toast = rememberToast()
@@ -107,42 +108,28 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
             )
         )
     }
-    var photoPickerVisible by remember { mutableStateOf(false) }
+    val photoState = remember(rootState.photoState) { rootState.photoState }
     var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
 
     // 단일 권한 설정 launcher
+    // TODO(riflockle7): 권한 로직은 추후 PermissionViewModel 과 같이 쓰면서 지워질 예정
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
             launch {
                 vm.loadGalleryImages()
-                photoPickerVisible = true // 안고 가야하는건가.. ViewModel 에는 두기 싫어서 일단 이렇게 둠
+                vm.updatePhotoState(null)
             }
         } else {
             toast(permissionErrorMessage)
         }
     }
 
-//    // 여러 개 권한 설정 launcher
-//    val launchers = rememberLauncherForActivityResult(
-//        ActivityResultContracts.RequestMultiplePermissions()
-//    ) { areGranted: Map<String, Boolean> ->
-//        val isGranted = areGranted.values.reduce { acc, next -> acc && next }
-//        if (isGranted) {
-//            launch {
-//                vm.loadGalleryImages()
-//                photoPickerVisible = true // 안고 가야하는건가.. ViewModel 에는 두기 싫어서 일단 이렇게 둠
-//            }
-//        } else {
-//            toast(permissionErrorMessage)
-//        }
-//    }
-
     BackHandler {
-        if (photoPickerVisible) {
+        if (photoState != null) {
             launch {
-                photoPickerVisible = false
+                vm.updatePhotoState(null)
                 sheetState.hide()
             }
         } else {
@@ -219,10 +206,10 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
                                 val result = imagePermission.check(context)
                                 if (result) {
                                     vm.loadGalleryImages()
+                                    vm.updatePhotoState(CreateProblemPhotoState.AdditionalThumbnailType)
                                 } else {
                                     launcher.launch(imagePermission)
                                 }
-                                photoPickerVisible = result
                             }
                         }
                     )
@@ -271,7 +258,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
     }
 
     // 갤러리 썸네일 선택 picker
-    if (photoPickerVisible) {
+    if (photoState != null) {
         PhotoPicker(
             modifier = Modifier
                 .padding(top = systemBarPaddings.calculateTopPadding())
@@ -289,14 +276,14 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
             },
             onCloseClick = {
                 launch {
-                    photoPickerVisible = false
+                    vm.updatePhotoState(null)
                     sheetState.hide()
                 }
             },
             onAddClick = {
                 launch {
                     vm.setThumbnail(galleryImages[galleryImagesSelectionIndex].toUri())
-                    photoPickerVisible = false
+                    vm.updatePhotoState(null)
                     sheetState.hide()
                 }
             },
@@ -345,14 +332,14 @@ private fun AdditionalThumbnailLayout(
 @Composable
 private fun AdditionalTakeLayout() {
     val vm = LocalViewModel.current as CreateProblemViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value.examInformation
+    val state = vm.state.collectAsStateWithLifecycle().value.additionalInfo
 
     TitleAndComponent(
         modifier = Modifier.padding(top = 48.dp),
         stringResource = R.string.additional_information_take_title,
     ) {
         QuackBasicTextField(
-            text = state.additionalInfoArea.takeTitle,
+            text = state.takeTitle,
             onTextChanged = vm::setButtonTitle,
             placeholderText = stringResource(id = R.string.additional_information_take_input_hint),
             keyboardOptions = ImeActionNext,
@@ -364,14 +351,14 @@ private fun AdditionalTakeLayout() {
 @Composable
 private fun AdditionalTagLayout() {
     val vm = LocalViewModel.current as CreateProblemViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value.examInformation
+    val state = vm.state.collectAsStateWithLifecycle().value.additionalInfo
 
     TitleAndComponent(
         modifier = Modifier.padding(top = 48.dp),
         stringResource = R.string.additional_information_tag_title,
     ) {
         QuackBasicTextField(
-            text = state.additionalInfoArea.tempTag,
+            text = state.tempTag,
             onTextChanged = vm::setTempTag,
             placeholderText = stringResource(id = R.string.additional_information_tag_input_hint),
         )
@@ -410,7 +397,10 @@ private fun AdditionalBottomSheetThumbnailLayout(
     }
 }
 
-/** 이미지 권한 체크시 사용해야하는 permission */
+/**
+ * 이미지 권한 체크시 사용해야하는 permission
+ * TODO(riflockle7): 권한 로직은 추후 PermissionViewModel 과 같이 쓰면서 지워질 예정
+ */
 private val imagePermission
     get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         Manifest.permission.READ_MEDIA_IMAGES
