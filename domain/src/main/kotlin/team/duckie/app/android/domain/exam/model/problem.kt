@@ -17,6 +17,7 @@ import team.duckie.app.android.util.kotlin.fastMapIndexed
 
 @Immutable
 data class Problem(
+    val id: Int,
     val question: Question,
     val answer: Answer,
     val correctAnswer: String,

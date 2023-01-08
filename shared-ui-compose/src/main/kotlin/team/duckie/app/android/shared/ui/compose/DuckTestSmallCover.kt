@@ -32,7 +32,7 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 
 data class DuckTestCoverItem(
     val testId: Int,
-    val coverImg: String,
+    val coverImg: String?,
     val nickname: String,
     val title: String,
     val examineeNumber: Int,

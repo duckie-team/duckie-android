@@ -19,6 +19,7 @@ import team.duckie.app.android.data.device.repository.DeviceRepositoryImpl
 import team.duckie.app.android.data.exam.repository.ExamRepositoryImpl
 import team.duckie.app.android.data.file.repository.FileRepositoryImpl
 import team.duckie.app.android.data.gallery.repository.GalleryRepositoryImpl
+import team.duckie.app.android.data.search.repository.SearchRepositoryImpl
 import team.duckie.app.android.data.tag.repository.TagRepositoryImpl
 import team.duckie.app.android.data.terms.repository.TermsRepositoryImpl
 import team.duckie.app.android.data.user.repository.UserRepositoryImpl
@@ -28,6 +29,7 @@ import team.duckie.app.android.domain.device.repository.DeviceRepository
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.file.repository.FileRepository
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
+import team.duckie.app.android.domain.search.repository.SearchRepository
 import team.duckie.app.android.domain.tag.repository.TagRepository
 import team.duckie.app.android.domain.terms.repository.TermsRepository
 import team.duckie.app.android.domain.user.repository.UserRepository
@@ -61,4 +63,7 @@ abstract class BindsModule {
 
     @Binds
     abstract fun provideUserRepository(impl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    abstract fun provideSearchRepository(impl: SearchRepositoryImpl): SearchRepository
 }

@@ -21,7 +21,7 @@ internal inline fun HttpRequestBuilder.jsonBody(builder: JsonBuilder.() -> Unit)
 
 internal inline fun HttpClient.update(
     noinline updateLogic: HttpClientConfig<*>.() -> Unit = {},
-    updateField: (client: HttpClient) -> Unit = ::updateClient,
+    updateField: (client: HttpClient, String?) -> Unit = ::updateClient,
 ) {
-    updateField(config(updateLogic))
+    updateField(config(updateLogic), null)
 }

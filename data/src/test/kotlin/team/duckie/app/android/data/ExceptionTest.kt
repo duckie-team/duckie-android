@@ -32,6 +32,7 @@ class ExceptionTest {
         code = "1000",
         message = "error",
         errors = listOf("awesome-error"),
+        throwable = Throwable("ExceptionTest")
     )
     private val exceptionContent = jsonMapper.writeValueAsString(
         ExceptionBody(
