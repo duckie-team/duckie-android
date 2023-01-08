@@ -13,12 +13,16 @@ import org.junit.runner.Description
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._datasource.updateClient
 
-class HttpClientTestRule(private val mockClient: HttpClient) : TestWatcher() {
+class HttpClientTestRule(private val mockClient: HttpClient?) : TestWatcher() {
     private lateinit var originalClient: HttpClient
 
     override fun starting(description: Description?) {
         originalClient = client
-        updateClient(mockClient)
+        mockClient?.let {mockClient ->
+            updateClient(newClient = mockClient)
+        } ?: kotlin.run {
+            updateClient(newBuildModel = "realTest_atUnitTest")
+        }
         super.starting(description)
     }
 

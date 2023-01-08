@@ -21,9 +21,9 @@ internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
     return try {
         val body: DataModel = response.body()
         parse(body)
-    } catch (_: Throwable) {
+    } catch (throwable: Throwable) {
         val errorBody: ExceptionBody = response.body()
-        errorBody.throwing()
+        errorBody.throwing(throwable = throwable)
     }
 }
 
@@ -34,8 +34,8 @@ internal inline fun <DomainModel> responseCatching(
 ): DomainModel {
     return try {
         parse(response)
-    } catch (_: Throwable) {
+    } catch (throwable: Throwable) {
         val errorBody = jsonMapper.readValue(response, ExceptionBody::class.java)
-        errorBody.throwing()
+        errorBody.throwing(throwable = throwable)
     }
 }

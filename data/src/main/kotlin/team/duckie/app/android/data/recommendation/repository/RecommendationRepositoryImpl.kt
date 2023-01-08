@@ -5,17 +5,34 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("unused")
+
 package team.duckie.app.android.data.recommendation.repository
 
 import androidx.paging.PagingSource
+import io.ktor.client.request.get
+import io.ktor.client.request.url
+import io.ktor.client.statement.bodyAsText
+import team.duckie.app.android.data._datasource.client
+import team.duckie.app.android.data._exception.util.responseCatching
+import team.duckie.app.android.data._util.toJsonObject
+import team.duckie.app.android.data.recommendation.mapper.toDomain
+import team.duckie.app.android.data.recommendation.model.RecommendationData
 import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSource
-import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
+import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 
 class RecommendationRepositoryImpl : RecommendationRepository {
-    override fun fetchRecommendations(): PagingSource<Int, RecommendationFeeds.Recommendation> {
-        return RecommendationPagingSource()
+    override suspend fun fetchRecommendations(): PagingSource<Int, RecommendationItem> {
+        val response = client.get {
+            url("/recommendations")
+        }
+
+        return responseCatching(response.bodyAsText()) { body ->
+            val recommendations = body.toJsonObject<RecommendationData>().toDomain().recommendations
+            RecommendationPagingSource()
+        }
     }
 
     override suspend fun fetchJumbotrons() {

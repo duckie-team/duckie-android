@@ -563,6 +563,7 @@ private val dummyParam = ExamBody(
     isPublic = true,
     problems = persistentListOf(
         Problem(
+            id = 1,
             question = Question.Text(
                 text = "",
             ),
@@ -574,6 +575,7 @@ private val dummyParam = ExamBody(
             correctAnswer = "3",
         ),
         Problem(
+            id = 2,
             question = Question.Text(
                 text = "",
             ),
@@ -585,6 +587,7 @@ private val dummyParam = ExamBody(
             correctAnswer = "3",
         ),
         Problem(
+            id = 3,
             question = Question.Text(
                 text = "",
             ),
@@ -596,6 +599,7 @@ private val dummyParam = ExamBody(
             correctAnswer = "3",
         ),
         Problem(
+            id = 4,
             question = Question.Text(
                 text = "",
             ),
@@ -607,6 +611,7 @@ private val dummyParam = ExamBody(
             correctAnswer = "3",
         ),
         Problem(
+            id = 5,
             question = Question.Text(
                 text = "",
             ),

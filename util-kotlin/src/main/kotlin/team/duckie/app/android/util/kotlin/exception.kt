@@ -26,16 +26,18 @@ sealed class DuckieException(code: String) : IllegalStateException("DuckieExcept
  * @param message 예외 메시지. 선택으로 값을 받습니다.
  * @param code 예외 코드. 필수로 값을 받습니다.
  * @param errors 발생한 에러 목록. 선택으로 값을 받습니다
+ * @param throwable 실제로 앱 내에서 발생한 throwable 원본
  */
 class DuckieResponseException(
     message: String? = null,
     val code: String,
     val errors: List<String>? = null,
+    val throwable: Throwable
 ) : DuckieException(code) {
     val originalMessage = message
     override val message = "DuckieResponseException: $code".runIf(message != null) { plus(" - $message") }
     override fun toString(): String {
-        return "DuckieApiException(message=$message, code=$code, errors=$errors)"
+        return "DuckieApiException(message=$message, code=$code, errors=$errors, throwable=$throwable)"
     }
 }
 
@@ -43,11 +45,13 @@ fun duckieResponseException(
     message: String? = null,
     code: String,
     errors: List<String>? = null,
+    throwable: Throwable,
 ): Nothing {
     throw DuckieResponseException(
         message = message,
         code = code,
         errors = errors,
+        throwable = throwable,
     )
 }
 

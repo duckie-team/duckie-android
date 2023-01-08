@@ -16,7 +16,6 @@ import javax.inject.Inject
 class FetchSearchResultForExamUseCase @Inject constructor(
     private val repository: RecommendationRepository,
 ) {
-
     suspend operator fun invoke(tag: String) = runCatching {
         repository.fetchRecommendTags(
             tag = tag,

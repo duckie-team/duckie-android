@@ -12,8 +12,10 @@ package team.duckie.app.android.feature.ui.home.viewmodel
 import androidx.compose.runtime.Immutable
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
+import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendFollowingUseCase
@@ -24,6 +26,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffe
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 private val DummyJumbotrons =
@@ -76,6 +79,7 @@ internal class HomeViewModel @Inject constructor(
     private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,
     private val fetchRecommendFollowingUseCase: FetchRecommendFollowingUseCase,
 ) : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
+    var pager: Flow<PagingData<RecommendationItem>>? = null
 
     // TODO(limsaehyun: Request Server
     suspend fun fetchJumbotrons() {
@@ -93,16 +97,21 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
-    fun fetchRecommendations() =
-        Pager(
-            pagingSourceFactory = {
-                fetchRecommendationsUseCase()
-            },
-            config = PagingConfig(
-                pageSize = ITEMS_PER_PAGE,
-                enablePlaceholders = true,
-            ),
-        ).flow
+    suspend fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>? {
+        fetchRecommendationsUseCase().onSuccess {
+            pager = Pager(
+                pagingSourceFactory = { it },
+                config = PagingConfig(
+                    pageSize = ITEMS_PER_PAGE,
+                    enablePlaceholders = true,
+                ),
+            ).flow
+        }.onFailure {
+            // TODO(riflockle7): API 실패 시 케이스 필요
+        }
+        // TODO(riflockle7): 이렇게 구현하면 안됨 일단은 build 성공 이후 작업 다시 진행
+        return pager
+    }
 
     // TODO(limsaehyun): Request Server
     suspend fun fetchRecommendFollowingTest() {

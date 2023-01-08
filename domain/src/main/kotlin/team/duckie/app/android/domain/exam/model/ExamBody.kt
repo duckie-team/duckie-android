@@ -34,3 +34,15 @@ data class ExamBody(
     val buttonTitle: String?,
     val userId: Int,
 )
+
+@OutOfDateApi
+@Immutable
+data class ExamInstanceBody(
+    val examId: Int
+)
+
+@OutOfDateApi
+@Immutable
+data class ExamInstanceSubmitBody(
+    val submitted: ImmutableList<String>
+)

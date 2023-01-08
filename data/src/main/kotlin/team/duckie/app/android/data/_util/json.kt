@@ -23,3 +23,8 @@ internal fun String.toStringJsonMap(): Map<String, String?> {
 internal inline fun <reified T> String.toJsonMap(): Map<String, T> {
     return jsonMapper.readValue(this, object : TypeReference<Map<String, T>>() {})
 }
+
+/** 단순히 jsonString 으로부터 역직렬화된 [typed 데이터][T]를 가져오려면 해당 함수를 사용합니다. */
+internal inline fun <reified T> String.toJsonObject(): T {
+    return jsonMapper.readValue(this, T::class.java)
+}

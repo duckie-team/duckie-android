@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -36,7 +37,7 @@ import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
+import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
@@ -47,6 +48,7 @@ import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1
@@ -58,7 +60,7 @@ private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
 @OptIn(
     ExperimentalLifecycleComposeApi::class,
-    ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class, OutOfDateApi::class,
 )
 @Composable
 internal fun HomeRecommendScreen(
@@ -71,7 +73,11 @@ internal fun HomeRecommendScreen(
 
     val pageState = rememberPagerState()
 
-    val lazyRecommendations = vm.fetchRecommendations().collectAsLazyPagingItems()
+    val lazyRecommendations = vm.pager?.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        vm.fetchRecommendations()
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -119,18 +125,20 @@ internal fun HomeRecommendScreen(
             )
         }
 
-        items(items = lazyRecommendations) { item ->
-            HomeTopicRecommendLayout(
-                modifier = Modifier
-                    .padding(bottom = 60.dp),
-                title = item?.title ?: "",
-                tag = item?.tag ?: "",
-                exams = item?.exams?.toImmutableList() ?: persistentListOf(),
-                onClicked = { },
-                onTagClicked = { tag ->
-                    navigateToSearchResult(tag)
-                },
-            )
+        lazyRecommendations?.let {
+            items(items = lazyRecommendations) { item ->
+                HomeTopicRecommendLayout(
+                    modifier = Modifier
+                        .padding(bottom = 60.dp),
+                    title = item?.title ?: "",
+                    tag = item?.tag?.name ?: "",
+                    exams = item?.exams?.toImmutableList() ?: persistentListOf(),
+                    onClicked = { },
+                    onTagClicked = { tag ->
+                        navigateToSearchResult(tag)
+                    },
+                )
+            }
         }
     }
 }
@@ -177,12 +185,13 @@ private fun HomeRecommendJumbotronLayout(
     }
 }
 
+@OptIn(OutOfDateApi::class)
 @Composable
 private fun HomeTopicRecommendLayout(
     modifier: Modifier = Modifier,
     title: String,
     tag: String,
-    exams: ImmutableList<RecommendationFeeds.Recommendation.Exam>,
+    exams: ImmutableList<Exam>,
     onTagClicked: (String) -> Unit,
     onClicked: (Int) -> Unit,
 ) {
@@ -209,11 +218,11 @@ private fun HomeTopicRecommendLayout(
             items(items = exams) { item ->
                 DuckTestSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(
-                        testId = item.recommendId,
-                        coverImg = item.coverImg,
-                        nickname = item.nickname,
+                        testId = item.id,
+                        coverImg = item.thumbnailUrl,
+                        nickname = "item.nickname",
                         title = item.title,
-                        examineeNumber = item.examineeNumber,
+                        examineeNumber = item.solvedCount,
                     ),
                     onClick = {
                         onClicked(it)

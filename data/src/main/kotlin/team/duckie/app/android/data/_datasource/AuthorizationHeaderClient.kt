@@ -29,8 +29,16 @@ import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlug
 internal var client = AuthorizationHeaderClient()
     private set
 
-internal fun updateClient(newClient: HttpClient) {
-    client = newClient
+// [DuckieHttpHeaders.DeviceName] 을 대체한다.
+// mock 인 경우엔 오류가 발생하여 해당 변수에서 설정이 필요하다.
+private var deviceName = Build.MODEL
+
+internal fun updateClient(
+    newClient: HttpClient? = null,
+    newBuildModel: String? = null
+) {
+    newClient?.let { client = it }
+    newBuildModel?.let { deviceName = it }
 }
 
 internal object DuckieHttpHeaders {
@@ -61,7 +69,7 @@ internal object AuthorizationHeaderClient {
             url(BaseUrl)
             headers {
                 append(HttpHeaders.ContentType, ContentType.Application.Json)
-                append(DuckieHttpHeaders.DeviceName, Build.MODEL)
+                append(DuckieHttpHeaders.DeviceName, deviceName)
                 append(DuckieHttpHeaders.Version, BuildConfig.APP_VERSION_NAME)
                 append(DuckieHttpHeaders.Client, ClientName)
             }
