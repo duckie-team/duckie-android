@@ -236,7 +236,6 @@ test-ktor-server = { module = "io.ktor:ktor-server-test-host", version.ref = "kt
 test-orbit = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit-core" }
 
 [bundles]
-ktx = ["ktx-core", "ktx-activiy", "ktx-lifecycle"]
 compose-core = ["compose-runtime", "compose-ui-foundation", "compose-ui-activity", "compose-util-tooling-preview"]
 compose-debug = ["compose-util-tooling-core", "compose-util-customview-pooling-container"] # debugImplementation
 ktor-client = ["ktor-jackson", "ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-client-engine"]
