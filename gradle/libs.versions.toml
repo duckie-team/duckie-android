@@ -91,6 +91,9 @@ ktor-core = "2.2.1"
 # jackson
 jackson-core = "2.14.1"
 
+# orbit
+orbit-core = "4.5.0"
+
 # quack
 quack-ui-components = "1.4.3"
 quack-lint-core = "1.0.1"
@@ -177,7 +180,7 @@ ktx-activiy = { module = "androidx.activity:activity-ktx", version.ref = "ktx-ac
 ktx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "ktx-lifecycle" }
 
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging"}
+paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging-compose" }
 
 ui-oss-license = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "ui-oss-license" }
@@ -207,6 +210,9 @@ ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negoti
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-core" }
 ktor-client-engine = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-core" }
 
+orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit-core" }
+orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit-core" }
+
 quack-ui-components = { module = "team.duckie.quack:quack-ui-components", version.ref = "quack-ui-components" }
 quack-lint-core = { module = "team.duckie.quack:quack-lint-core", version.ref = "quack-lint-core" }
 quack-lint-quack = { module = "team.duckie.quack:quack-lint-quack", version.ref = "quack-lint-quack" }
@@ -224,6 +230,7 @@ test-turbine = { module = "app.cash.turbine:turbine", version.ref = "test-turbin
 test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutines" }
 test-ktor-client = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-core" }
 test-ktor-server = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-core" }
+test-orbit = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit-core" }
 
 [bundles]
 ktx = ["ktx-core", "ktx-activiy", "ktx-lifecycle"]
