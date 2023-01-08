@@ -29,7 +29,7 @@ import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastAny
@@ -95,8 +95,7 @@ private val CategoryScreenMeasurePolicy = MeasurePolicy { measurables, constrain
 }
 
 @Composable
-internal fun CategoryScreen() {
-    val vm = LocalViewModel.current as OnboardViewModel
+internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
     val categoriesSelectedIndex = remember(vm.categories, vm.selectedCategories) {
         mutableStateListOf(
             elements = Array(

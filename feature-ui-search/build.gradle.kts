@@ -25,10 +25,11 @@ dependencies {
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
-        projects.utilViewmodel,
         projects.sharedUiCompose,
+        libs.orbit.viewmodel,
+        libs.orbit.compose,
         libs.quack.ui.components,
-        libs.compose.ktx.lifecycle,
+        libs.compose.lifecycle.runtime,
         libs.firebase.crashlytics,
     )
 }

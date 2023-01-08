@@ -7,26 +7,33 @@
 
 package team.duckie.app.android.presentation.viewmodel
 
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.CheckAccessTokenUseCase
 import team.duckie.app.android.presentation.viewmodel.sideeffect.PresentationSideEffect
 import team.duckie.app.android.presentation.viewmodel.state.PresentationState
-import team.duckie.app.android.util.viewmodel.BaseViewModel
 
+@HiltViewModel
 internal class PresentationViewModel @Inject constructor(
     private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
     private val attachAccessTokenToHeaderUseCase: AttachAccessTokenToHeaderUseCase,
-) : BaseViewModel<PresentationState, PresentationSideEffect>(PresentationState.Initial) {
-    suspend fun checkAccessToken(accessToken: String) {
+) : ContainerHost<PresentationState, PresentationSideEffect>, ViewModel() {
+    override val container = container<PresentationState, PresentationSideEffect>(PresentationState.Initial)
+
+    fun checkAccessToken(accessToken: String) = intent {
         checkAccessTokenUseCase(accessToken)
             .onSuccess { pass ->
                 if (pass) {
-                    postSideEffect {
-                        PresentationSideEffect.AttachAccessTokenToHeader(accessToken)
-                    }
+                    postSideEffect(PresentationSideEffect.AttachAccessTokenToHeader(accessToken))
                 } else {
-                    updateState {
+                    reduce {
                         PresentationState.AccessTokenValidationFailed
                     }
                 }
@@ -34,24 +41,22 @@ internal class PresentationViewModel @Inject constructor(
             .attachExceptionHandling()
     }
 
-    suspend fun attachAccessTokenToHeader(accessToken: String) {
+    fun attachAccessTokenToHeader(accessToken: String) = intent {
         attachAccessTokenToHeaderUseCase(accessToken)
             .onSuccess {
-                updateState {
+                reduce {
                     PresentationState.AttachedAccessTokenToHeader
                 }
             }
             .attachExceptionHandling()
     }
 
-    private suspend fun Result<*>.attachExceptionHandling() {
+    private fun Result<*>.attachExceptionHandling() = intent {
         onFailure { exception ->
-            updateState {
+            reduce {
                 PresentationState.Error(exception)
             }
-            postSideEffect {
-                PresentationSideEffect.ReportError(exception)
-            }
+            postSideEffect(PresentationSideEffect.ReportError(exception))
         }
     }
 }

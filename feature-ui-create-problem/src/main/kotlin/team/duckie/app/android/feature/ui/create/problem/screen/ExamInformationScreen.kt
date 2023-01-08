@@ -23,6 +23,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -33,7 +34,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.FadeAnimatedVisibility
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
@@ -43,9 +45,7 @@ import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
-import team.duckie.app.android.util.compose.CoroutineScopeContent
-import team.duckie.app.android.util.compose.LocalViewModel
-import team.duckie.app.android.util.compose.launch
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
@@ -63,9 +63,9 @@ private const val ExamDescriptionMaxLength = 30
 private const val CertifyingStatementMaxLength = 16
 
 @Composable
-internal fun ExamInformationScreen() = CoroutineScopeContent {
-    val viewModel = LocalViewModel.current as CreateProblemViewModel
-    val state = viewModel.state.collectAsStateWithLifecycle().value.examInformation
+internal fun ExamInformationScreen(viewModel: CreateProblemViewModel = activityViewModel()) {
+    val state = viewModel.collectAsState().value.examInformation
+    val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val lazyListState = rememberLazyListState()
     val focusRequester = remember { FocusRequester() }
@@ -83,7 +83,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
         topBar = {
             PrevAndNextTopAppBar(
                 onLeadingIconClick = {
-                    launch { viewModel.onClickArrowBack() }
+                    coroutineScope.launch { viewModel.onClickArrowBack() }
                 },
                 onTrailingTextClick = { viewModel.navigateStep(CreateProblemStep.CreateProblem) },
                 trailingTextEnabled = viewModel.isAllFieldsNotEmpty(),
@@ -181,7 +181,7 @@ internal fun ExamInformationScreen() = CoroutineScopeContent {
                     placeholderText = stringResource(id = R.string.input_certifying_statement),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            launch {
+                            coroutineScope.launch {
                                 lazyListState.animateScrollToItem(lazyListState.firstVisibleItemIndex)
                                 focusManager.clearFocus()
                             }

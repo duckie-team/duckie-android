@@ -30,24 +30,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
-import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
-import team.duckie.app.android.util.compose.CoroutineScopeContent
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -65,12 +64,10 @@ private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
+    vm: HomeViewModel = activityViewModel(),
     navigateToSearchResult: (String) -> Unit,
-) = CoroutineScopeContent {
-
-    val vm = LocalViewModel.current as HomeViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value
-
+) {
+    val state = vm.collectAsState().value
     val pageState = rememberPagerState()
 
     val lazyRecommendations = vm.pager?.collectAsLazyPagingItems()

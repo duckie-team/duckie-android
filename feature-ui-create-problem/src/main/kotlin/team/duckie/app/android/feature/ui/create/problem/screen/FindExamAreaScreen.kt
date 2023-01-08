@@ -31,21 +31,20 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.ExitAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.SearchResultText
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-internal fun FindExamAreaScreen() {
-    val viewModel = LocalViewModel.current as CreateProblemViewModel
-    val state = viewModel.state.collectAsStateWithLifecycle().value.examInformation.foundExamArea
+internal fun FindExamAreaScreen(viewModel: CreateProblemViewModel = activityViewModel()) {
+    val state = viewModel.collectAsState().value.examInformation.foundExamArea
     val focusRequester = remember { FocusRequester() }
     var examAreaTextFieldValue by remember {
         mutableStateOf(

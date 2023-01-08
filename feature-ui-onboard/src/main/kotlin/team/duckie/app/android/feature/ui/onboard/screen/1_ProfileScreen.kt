@@ -55,7 +55,7 @@ import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -147,10 +147,9 @@ private val NicknameInputDebounceSecond = 0.3.seconds
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal fun ProfileScreen() {
+internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     val toast = rememberToast()
     val context = LocalContext.current
-    val vm = LocalViewModel.current as OnboardViewModel
     val keyboard = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 

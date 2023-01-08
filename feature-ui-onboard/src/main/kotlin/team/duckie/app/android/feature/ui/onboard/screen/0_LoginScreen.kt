@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.ui.onboard.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,8 +39,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.util.compose.CoroutineScopeContent
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
@@ -174,10 +174,9 @@ private val LoginScreenLoginAreaMeasurePolicy = MeasurePolicy { measurables, con
     }
 }
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
-private fun LoginScreenLoginArea() = CoroutineScopeContent {
-    @Suppress("UnusedPrivateMember")
-    val vm = LocalViewModel.current as OnboardViewModel
+private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
     val context = LocalContext.current
 
     Column(
@@ -200,7 +199,7 @@ private fun LoginScreenLoginArea() = CoroutineScopeContent {
                         )
                     )
                 )
-                .suspendClickable {
+                .clickable {
                     // TODO(sungbin): 카카오 로그인 백엔드 연결
                 },
             content = {

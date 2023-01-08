@@ -30,6 +30,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         }
 
         return responseCatching(response.bodyAsText()) { body ->
+            @Suppress("UNUSED_VARIABLE")
             val recommendations = body.toJsonObject<RecommendationData>().toDomain().recommendations
             RecommendationPagingSource()
         }

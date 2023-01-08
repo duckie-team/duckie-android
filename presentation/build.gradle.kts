@@ -23,11 +23,11 @@ dependencies {
         projects.utilUi,
         projects.utilCompose,
         projects.utilKotlin,
-        projects.utilViewmodel,
         projects.featureDatastore,
         projects.featureUiOnboard,
         projects.utilExceptionHandling,
         projects.domain,
+        libs.orbit.viewmodel,
         libs.androidx.splash,
         libs.quack.ui.components,
     )

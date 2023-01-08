@@ -9,9 +9,16 @@
 
 package team.duckie.app.android.feature.ui.search.viewmodel
 
-import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForExamUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForUserUseCase
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
@@ -19,8 +26,6 @@ import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchResu
 import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchResultState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.util.kotlin.seconds
-import team.duckie.app.android.util.viewmodel.BaseViewModel
-import javax.inject.Inject
 
 private val DummySearchResultForExam = (0..10).map {
     DuckTestCoverItem(
@@ -43,16 +48,18 @@ private val DummyResultResultForUser = (0..20).map {
     )
 }.toPersistentList()
 
-@Immutable
+@HiltViewModel
 internal class SearchResultViewModel @Inject constructor(
     private val fetchSearchResultForExamUseCase: FetchSearchResultForExamUseCase,
     private val fetchSearchResultForUserUseCase: FetchSearchResultForUserUseCase,
-) : BaseViewModel<SearchResultState, SearchResultSideEffect>(SearchResultState()) {
+) : ContainerHost<SearchResultState, SearchResultSideEffect>, ViewModel() {
+
+    override val container = container<SearchResultState, SearchResultSideEffect>(SearchResultState())
 
     // TODO(limsaehyun): Request Server
-    suspend fun fetchSearchResultForExam(tag: String) {
-        updateState { prevState ->
-            prevState.copy(
+    fun fetchSearchResultForExam(tag: String) = intent {
+        reduce {
+            state.copy(
                 isSearchResultLoading = true,
             )
         }
@@ -60,18 +67,16 @@ internal class SearchResultViewModel @Inject constructor(
         fetchSearchResultForExamUseCase(
             tag = tag,
         ).onSuccess {
-            updateState { prevState ->
-                prevState.copy(
+            reduce {
+                state.copy(
                     searchResultForTest = DummySearchResultForExam,
                 )
             }
         }.onFailure { exception ->
-            postSideEffect {
-                SearchResultSideEffect.ReportError(exception)
-            }
+            postSideEffect(SearchResultSideEffect.ReportError(exception))
         }.also {
-            updateState { prevState ->
-                prevState.copy(
+            reduce {
+                state.copy(
                     isSearchResultLoading = false,
                 )
             }
@@ -79,9 +84,9 @@ internal class SearchResultViewModel @Inject constructor(
     }
 
     // TODO(limsaehyun): Request Server
-    suspend fun fetchSearchResultForUser(tag: String) {
-        updateState { prevState ->
-            prevState.copy(
+    fun fetchSearchResultForUser(tag: String) = intent {
+        reduce {
+            state.copy(
                 isSearchResultLoading = true,
             )
         }
@@ -89,18 +94,16 @@ internal class SearchResultViewModel @Inject constructor(
         fetchSearchResultForUserUseCase(
             tag = tag,
         ).onSuccess {
-            updateState { prevState ->
-                prevState.copy(
+            reduce {
+                state.copy(
                     searchResultForUser = DummyResultResultForUser,
                 )
             }
         }.onFailure { exception ->
-            postSideEffect {
-                SearchResultSideEffect.ReportError(exception)
-            }
+            postSideEffect(SearchResultSideEffect.ReportError(exception))
         }.also {
-            updateState { prevState ->
-                prevState.copy(
+            reduce {
+                state.copy(
                     isSearchResultLoading = false,
                 )
             }
@@ -109,9 +112,9 @@ internal class SearchResultViewModel @Inject constructor(
 
     fun changeSearchResultTab(
         step: SearchResultStep,
-    ) {
-        updateState { prevState ->
-            prevState.copy(
+    ) = intent {
+        reduce {
+            state.copy(
                 tagSelectedTab = step,
             )
         }
@@ -119,9 +122,9 @@ internal class SearchResultViewModel @Inject constructor(
 
     fun changeSearchTag(
         tag: String,
-    ) {
-        updateState { prevState ->
-            prevState.copy(
+    ) = intent {
+        reduce {
+            state.copy(
                 searchTag = tag,
             )
         }
