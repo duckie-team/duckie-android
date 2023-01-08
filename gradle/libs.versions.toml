@@ -175,7 +175,8 @@ compose-ui-accompanist-flowlayout = { module = "com.google.accompanist:accompani
 compose-util-tooling-core = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-core" } # debugImplementation
 compose-util-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-core" }
 compose-util-customview-pooling-container = { module = "androidx.customview:customview-poolingcontainer", version.ref = "compose-customview-pooling-container" } # debugImplementation
-compose-ktx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
+compose-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
+compose-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
 
 ktx-core = { module = "androidx.core:core-ktx", version.ref = "ktx-core" }
 ktx-activiy = { module = "androidx.activity:activity-ktx", version.ref = "ktx-activity" }
