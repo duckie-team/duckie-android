@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.recommendation.model
 
-
 import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.tag.model.TagData

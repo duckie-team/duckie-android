@@ -10,7 +10,6 @@ package team.duckie.app.android.data.exam.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import team.duckie.app.android.domain.exam.model.Question
 
 internal data class ProblemData(
     @field:JsonProperty("id")

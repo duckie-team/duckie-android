@@ -19,7 +19,6 @@ import team.duckie.app.android.data.device.repository.DeviceRepositoryImpl
 import team.duckie.app.android.data.exam.repository.ExamRepositoryImpl
 import team.duckie.app.android.data.file.repository.FileRepositoryImpl
 import team.duckie.app.android.data.gallery.repository.GalleryRepositoryImpl
-import team.duckie.app.android.data.recommendation.repository.RecommendationRepositoryImpl
 import team.duckie.app.android.data.search.repository.SearchRepositoryImpl
 import team.duckie.app.android.data.tag.repository.TagRepositoryImpl
 import team.duckie.app.android.data.terms.repository.TermsRepositoryImpl

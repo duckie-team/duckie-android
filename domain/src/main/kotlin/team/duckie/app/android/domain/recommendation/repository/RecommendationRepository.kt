@@ -17,6 +17,7 @@ import team.duckie.app.android.domain.recommendation.model.SearchType
  *
  * TODO(limsaehyun): 데이터 Return 필요
  */
+@Immutable
 interface RecommendationRepository {
     suspend fun fetchRecommendations(): PagingSource<Int, RecommendationItem>
 

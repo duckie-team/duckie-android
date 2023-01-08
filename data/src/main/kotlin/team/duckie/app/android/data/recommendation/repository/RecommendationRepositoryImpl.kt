@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("unused")
+
 package team.duckie.app.android.data.recommendation.repository
 
 import androidx.paging.PagingSource
@@ -49,5 +51,6 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         tag: String,
         type: SearchType,
     ) {
+        // TODO(limsaehyun): repository 작업 필요
     }
 }

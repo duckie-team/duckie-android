@@ -38,7 +38,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
