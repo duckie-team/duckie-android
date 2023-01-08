@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.paging:paging-common-ktx:3.1.1")
     implementations(
         libs.login.kakao,
         libs.kotlin.coroutines,

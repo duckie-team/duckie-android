@@ -19,7 +19,6 @@ import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendation
 @Module
 @InstallIn(SingletonComponent::class)
 object RecommendationUseCaseModule {
-
     @Provides
     fun provideFetchFollowingTestUseCase(
         repository: RecommendationRepository,

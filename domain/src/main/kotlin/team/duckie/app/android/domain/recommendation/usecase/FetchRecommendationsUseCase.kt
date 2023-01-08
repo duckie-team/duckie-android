@@ -8,6 +8,8 @@
 package team.duckie.app.android.domain.recommendation.usecase
 
 import androidx.compose.runtime.Immutable
+import androidx.paging.PagingSource
+import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import javax.inject.Inject
 
@@ -15,6 +17,7 @@ import javax.inject.Inject
 class FetchRecommendationsUseCase @Inject constructor(
     private val repository: RecommendationRepository,
 ) {
-
-    operator fun invoke() = repository.fetchRecommendations()
+    suspend operator fun invoke() = runCatching {
+        repository.fetchRecommendations()
+    }
 }
