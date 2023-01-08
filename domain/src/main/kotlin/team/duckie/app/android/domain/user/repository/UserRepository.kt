@@ -14,6 +14,8 @@ import team.duckie.app.android.domain.user.model.User
 
 @Immutable
 interface UserRepository {
+    suspend fun get(id: Int): User
+
     suspend fun update(
         id: Int,
         nickname: String?,
@@ -21,4 +23,6 @@ interface UserRepository {
         favoriteCategories: List<Category>?,
         favoriteTags: List<Tag>?,
     ): User
+
+    suspend fun nicknameValidateCheck(nickname: String): Boolean
 }

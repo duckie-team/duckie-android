@@ -8,20 +8,33 @@
 package team.duckie.app.android.data.user.repository
 
 import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.patch
+import io.ktor.client.statement.bodyAsText
 import javax.inject.Inject
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.jsonBody
+import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.repository.UserRepository
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.runtimeCheck
 
 class UserRepositoryImpl @Inject constructor() : UserRepository {
+    override suspend fun get(id: Int): User {
+        val response = client.get("/users/$id") {}
+
+        return responseCatching(
+            response = response.body(),
+            parse = UserResponse::toDomain
+        )
+    }
+
     override suspend fun update(
         id: Int,
         nickname: String?,
@@ -47,5 +60,14 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
             response = response.body(),
             parse = UserResponse::toDomain,
         )
+    }
+
+    override suspend fun nicknameValidateCheck(nickname: String): Boolean {
+        val response = client.get("/users/$nickname/duplicate-check") {}
+
+        return responseCatching(response.bodyAsText()) { body ->
+            val json = body.toStringJsonMap()
+            json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
+        }
     }
 }
