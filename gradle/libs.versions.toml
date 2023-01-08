@@ -39,6 +39,7 @@ apache-commons-io = "2.11.0"
 
 # androidx
 androidx-appcompat = "1.5.1" # needs for oss license activity
+androidx-lifecycle-savedstate = "2.5.1"
 androidx-splash = "1.0.0"
 androidx-datastore = "1.0.0"
 androidx-room = "2.4.3"
@@ -63,7 +64,7 @@ compose-coil = "2.2.2"
 # ktx
 ktx-core = "1.9.0"
 ktx-activity = "1.4.0"
-ktx-lifecycle = "2.4.1"
+ktx-lifecycle = "2.5.1"
 
 # ui
 ui-oss-license = "17.0.0"
@@ -155,6 +156,7 @@ kotlin-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collect
 apache-commons-io = { module = "commons-io:commons-io", version.ref = "apache-commons-io" }
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-lifecycle-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle-savedstate" }
 androidx-splash = { module = "androidx.core:core-splashscreen", version.ref = "androidx-splash" }
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 androidx-room-core = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
@@ -177,7 +179,8 @@ compose-ktx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose
 
 ktx-core = { module = "androidx.core:core-ktx", version.ref = "ktx-core" }
 ktx-activiy = { module = "androidx.activity:activity-ktx", version.ref = "ktx-activity" }
-ktx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "ktx-lifecycle" }
+ktx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "ktx-lifecycle" }
+ktx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "ktx-lifecycle" }
 
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
 paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
