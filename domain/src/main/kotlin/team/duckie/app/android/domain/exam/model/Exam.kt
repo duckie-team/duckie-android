@@ -11,18 +11,24 @@ package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.domain.category.model.Category
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @OutOfDateApi
 @Immutable
 data class Exam(
+    val id: Int,
     val title: String,
     val description: String,
     val thumbnailUrl: String?,
     val buttonTitle: String,
     val certifyingStatement: String,
     val solvedCount: Int,
-    val isPublic: Boolean,
-    val mainTag: Int,
-    val subTags: ImmutableList<Int>,
+    val answerRate: Float,
+    val category: Category,
+    val mainTag: Tag,
+    val subTags: ImmutableList<Tag>,
+    val problems: ImmutableList<Problem>,
+    val type: String,
 )

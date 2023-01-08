@@ -8,8 +8,14 @@
 package team.duckie.app.android.data.exam.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import team.duckie.app.android.domain.exam.model.Question
 
 internal data class ProblemData(
+    @field:JsonProperty("id")
+    val id: Int? = null,
+
     @field:JsonProperty("question")
     val question: QuestionData? = null,
 
@@ -26,6 +32,13 @@ internal data class ProblemData(
     val memo: String? = null,
 )
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes(
+    JsonSubTypes.Type(value = QuestionData.Text::class, name = "text"),
+    JsonSubTypes.Type(value = QuestionData.Image::class, name = "image"),
+    JsonSubTypes.Type(value = QuestionData.Audio::class, name = "audio"),
+    JsonSubTypes.Type(value = QuestionData.Video::class, name = "video"),
+)
 internal sealed class QuestionData(
     @field:JsonProperty("type")
     open val type: String? = null,
@@ -34,32 +47,38 @@ internal sealed class QuestionData(
     open val text: String? = null,
 ) {
     internal data class Text(
-        override val type: String,
-        override val text: String,
+        override val type: String? = null,
+        override val text: String? = null,
     ) : QuestionData(type, text)
 
     internal data class Image(
         @field:JsonProperty("imageUrl")
         val imageUrl: String? = null,
-        override val type: String,
-        override val text: String,
+        override val type: String? = null,
+        override val text: String? = null,
     ) : QuestionData(type, text)
 
     internal data class Audio(
         @field:JsonProperty("audioUrl")
         val audioUrl: String? = null,
-        override val type: String,
-        override val text: String,
+        override val type: String? = null,
+        override val text: String? = null,
     ) : QuestionData(type, text)
 
     internal data class Video(
         @field:JsonProperty("videoUrl")
         val videoUrl: String? = null,
-        override val type: String,
-        override val text: String,
+        override val type: String? = null,
+        override val text: String? = null,
     ) : QuestionData(type, text)
 }
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes(
+    JsonSubTypes.Type(value = AnswerData.ShortAnswer::class, name = "shortAnswer"),
+    JsonSubTypes.Type(value = AnswerData.Choice::class, name = "choice"),
+    JsonSubTypes.Type(value = AnswerData.ImageChoice::class, name = "imageChoice"),
+)
 internal sealed class AnswerData(
     @field:JsonProperty("type")
     open val type: String? = null,
@@ -67,24 +86,23 @@ internal sealed class AnswerData(
     internal data class ShortAnswer(
         @field:JsonProperty("shortAnswer")
         val shortAnswer: String? = null,
-        override val type: String,
+        override val type: String? = null,
     ) : AnswerData(type)
 
     internal data class Choice(
-        @field:JsonProperty("choice")
+        @field:JsonProperty("choices")
         val choices: List<ChoiceData>? = null,
-        override val type: String,
+        override val type: String? = null,
     ) : AnswerData(type)
 
     internal data class ImageChoice(
         @field:JsonProperty("imageChoice")
         val imageChoice: List<ImageChoiceData>? = null,
-        override val type: String,
+        override val type: String? = null,
     ) : AnswerData(type)
 }
 
-@JvmInline
-internal value class ChoiceData(
+internal data class ChoiceData(
     @field:JsonProperty("text")
     val text: String? = null,
 )
