@@ -12,13 +12,27 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.user.repository.UserRepository
+import team.duckie.app.android.domain.user.usecase.GetUserUseCase
+import team.duckie.app.android.domain.user.usecase.UserNicknameValidateCheckUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
 object UserUseCaseModule {
     @Provides
+    fun provideGetUserUseCase(repository: UserRepository): GetUserUseCase {
+        return GetUserUseCase(repository)
+    }
+
+    @Provides
     fun provideUserUpdateUseCase(repository: UserRepository): UserUpdateUseCase {
         return UserUpdateUseCase(repository)
+    }
+
+    @Provides
+    fun provideUserNicknameValidateCheckUseCase(
+        repository: UserRepository,
+    ): UserNicknameValidateCheckUseCase {
+        return UserNicknameValidateCheckUseCase(repository)
     }
 }
