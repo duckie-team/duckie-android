@@ -11,14 +11,11 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.addCallback
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
@@ -31,29 +28,28 @@ import team.duckie.app.android.di.usecase.kakao.KakaoUseCaseModule
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
-import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
-import team.duckie.app.android.feature.ui.onboard.screen.LoginScreen
-import team.duckie.app.android.feature.ui.onboard.screen.ProfileScreen
-import team.duckie.app.android.feature.ui.onboard.screen.TagScreen
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.ToastWrapper
-import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlytics
+import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.collectWithLifecycle
 import team.duckie.app.android.util.ui.finishWithAnimation
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
 class OnboardActivity : BaseActivity() {
 
     @Inject
-    internal lateinit var vmFactory: OnboardViewModel.ViewModelFactory
-    private lateinit var vm: OnboardViewModel
+    internal lateinit var onboardVmFactory: OnboardViewModel.OnboardViewModelFactory
+    private val vm: OnboardViewModel by viewModels {
+        OnboardViewModel.Factory.FactoryProvider(
+            factory = onboardVmFactory,
+            getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase,
+            owner = this,
+        )
+    }
 
     private val kakaoRepository by lazy {
         ProvidesModule.provideKakaoRepository(activityContext = this)
@@ -80,13 +76,13 @@ class OnboardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("온보딩 진입")
 
         if (!NetworkUtil.isNetworkAvailable(applicationContext)) {
             toast(getString(R.string.bad_internet))
             return finishWithAnimation()
         }
 
-        vm = vmFactory.create(getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase)
         onBackPressedDispatcher.addCallback(owner = this) {
             if (onboardStepState == OnboardStep.Login || onboardStepState == OnboardStep.Tag) {
                 finishWithAnimation()
@@ -120,7 +116,7 @@ class OnboardActivity : BaseActivity() {
             }
         }
 
-        setContent {
+        /*setContent {
             QuackTheme {
                 QuackAnimatedContent(
                     modifier = Modifier
@@ -128,6 +124,7 @@ class OnboardActivity : BaseActivity() {
                         .background(color = QuackColor.White.composeColor),
                     targetState = onboardStepState,
                 ) { onboardStep ->
+                    println("Step: $onboardStep")
                     when (onboardStep) {
                         OnboardStep.Login -> LoginScreen()
                         OnboardStep.Profile -> ProfileScreen()
@@ -137,7 +134,7 @@ class OnboardActivity : BaseActivity() {
                     }
                 }
             }
-        }
+        }*/
     }
 
     private fun permissionInit() {
@@ -167,6 +164,7 @@ class OnboardActivity : BaseActivity() {
     }
 
     private fun handleState(state: OnboardState) {
+        println("state: $state")
         when (state) {
             OnboardState.Initial -> {
                 vm.navigateStep(
@@ -197,28 +195,29 @@ class OnboardActivity : BaseActivity() {
         }
     }
 
-    private suspend fun handleSideEffect(effect: OnboardSideEffect) {
-        when (effect) {
+    private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
+        println("SideEffect: $sideEffect")
+        when (sideEffect) {
             is OnboardSideEffect.UpdateGalleryImages -> {
-                vm.addGalleryImages(effect.images)
+                vm.addGalleryImages(sideEffect.images)
             }
             is OnboardSideEffect.UpdateUser -> {
-                vm.me = effect.user
+                vm.me = sideEffect.user
             }
             is OnboardSideEffect.UpdateAccessToken -> {
                 applicationContext.dataStore.edit { preferences ->
-                    preferences[PreferenceKey.Account.AccessToken] = effect.accessToken
+                    preferences[PreferenceKey.Account.AccessToken] = sideEffect.accessToken
                 }
             }
             is OnboardSideEffect.AttachAccessTokenToHeader -> {
-                vm.attachAccessTokenToHeader(effect.accessToken)
+                vm.attachAccessTokenToHeader(sideEffect.accessToken)
             }
             is OnboardSideEffect.DelegateJoin -> {
-                vm.join(effect.kakaoAccessToken)
+                vm.join(sideEffect.kakaoAccessToken)
             }
             is OnboardSideEffect.ReportError -> {
-                effect.exception.printStackTrace()
-                effect.exception.reportToCrashlytics()
+                sideEffect.exception.printStackTrace()
+                sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
         }
     }
