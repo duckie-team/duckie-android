@@ -71,7 +71,7 @@ ui-oss-license = "17.0.0"
 ui-system-controller = "1.0.1"
 
 # analytics
-analytics-leakcanary = "2.9.1"
+analytics-leakcanary = "2.10"
 analytics-anrwatchdog = "1.4.0"
 
 # firebase
