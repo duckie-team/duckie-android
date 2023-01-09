@@ -80,7 +80,7 @@ firebase-plugin-crashlytics = "2.9.2"
 firebase-plugin-performance = "1.4.2"
 
 # login
-login-kakao = "2.10.0"
+login-kakao = "2.12.0"
 
 # di
 di-hilt = "2.44"
