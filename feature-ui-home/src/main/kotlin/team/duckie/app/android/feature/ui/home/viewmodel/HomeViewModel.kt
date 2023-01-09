@@ -9,25 +9,30 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel
 
-import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
-import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.kotlin.seconds
-import team.duckie.app.android.util.viewmodel.BaseViewModel
-import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 private val DummyJumbotrons =
     (0..2).map { index ->
@@ -39,7 +44,7 @@ private val DummyJumbotrons =
         )
     }.toPersistentList()
 
-private val DummyRecommendUsers = (0..3).map { index ->
+private val DummyRecommendUsers = (0..3).map {
     HomeState.RecommendUserByTopic(
         topic = "연예인",
         users = (0..5).map {
@@ -72,28 +77,28 @@ private val DummyRecommendFollowerTest = (0..5).map {
  */
 private const val ITEMS_PER_PAGE = 10
 
-@Immutable
+@HiltViewModel
 internal class HomeViewModel @Inject constructor(
     private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
     private val fetchJumbotronsUseCase: FetchJumbotronsUseCase,
     private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,
     private val fetchRecommendFollowingUseCase: FetchRecommendFollowingUseCase,
-) : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
+) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
+    override val container = container<HomeState, HomeSideEffect>(HomeState())
+
     var pager: Flow<PagingData<RecommendationItem>>? = null
 
     // TODO(limsaehyun: Request Server
-    suspend fun fetchJumbotrons() {
+    fun fetchJumbotrons() = intent {
         fetchJumbotronsUseCase()
             .onSuccess {
-                updateState { prevState ->
-                    prevState.copy(
+                reduce {
+                    state.copy(
                         jumbotrons = DummyJumbotrons,
                     )
                 }
             }.onFailure { exception ->
-                postSideEffect {
-                    HomeSideEffect.ReportError(exception)
-                }
+                postSideEffect(HomeSideEffect.ReportError(exception))
             }
     }
 
@@ -114,27 +119,25 @@ internal class HomeViewModel @Inject constructor(
     }
 
     // TODO(limsaehyun): Request Server
-    suspend fun fetchRecommendFollowingTest() {
-        updateState { prevState ->
-            prevState.copy(
+    fun fetchRecommendFollowingTest() = intent {
+        reduce { ->
+            state.copy(
                 isHomeLoading = true,
             )
         }
         delay(2.seconds)
         fetchFollowingTestUseCase()
             .onSuccess {
-                updateState { prevState ->
-                    prevState.copy(
+                reduce {
+                    state.copy(
                         recommendFollowingTest = DummyRecommendFollowerTest,
                     )
                 }
             }.onFailure { exception ->
-                postSideEffect {
-                    HomeSideEffect.ReportError(exception)
-                }
+                postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
-                updateState { prevState ->
-                    prevState.copy(
+                reduce {
+                    state.copy(
                         isHomeLoading = false,
                     )
                 }
@@ -142,27 +145,25 @@ internal class HomeViewModel @Inject constructor(
     }
 
     // TODO(limsaehyun): Request Server
-    suspend fun fetchRecommendFollowing() {
-        updateState { prevState ->
-            prevState.copy(
+    fun fetchRecommendFollowing() = intent {
+        reduce {
+            state.copy(
                 isHomeLoading = true,
             )
         }
         delay(2.seconds)
         fetchRecommendFollowingUseCase()
             .onSuccess {
-                updateState { prevState ->
-                    prevState.copy(
+                reduce {
+                    state.copy(
                         recommendFollowing = DummyRecommendUsers,
                     )
                 }
             }.onFailure { exception ->
-                postSideEffect {
-                    HomeSideEffect.ReportError(exception)
-                }
+                postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
-                updateState { prevState ->
-                    prevState.copy(
+                reduce {
+                    state.copy(
                         isHomeLoading = false,
                     )
                 }
@@ -171,8 +172,8 @@ internal class HomeViewModel @Inject constructor(
 
     fun navigationPage(
         step: BottomNavigationStep,
-    ) {
-        updateState { state ->
+    ) = intent {
+        reduce {
             state.copy(
                 step = step,
             )
@@ -181,9 +182,9 @@ internal class HomeViewModel @Inject constructor(
 
     fun changedHomeScreen(
         step: HomeStep,
-    ) {
-        updateState { prevState ->
-            prevState.copy(
+    ) = intent {
+        reduce {
+            state.copy(
                 homeSelectedIndex = step,
             )
         }

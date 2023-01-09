@@ -24,15 +24,15 @@ dependencies {
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
-        projects.utilViewmodel,
         projects.utilExceptionHandling,
         projects.featureDatastore,
         projects.featurePhotopicker,
         projects.sharedUiCompose,
         libs.apache.commons.io,
-        libs.ktx.lifecycle,
+        libs.orbit.viewmodel,
+        libs.ktx.lifecycle.runtime,
         libs.compose.ui.material, // needs for ModalBottomSheet
-        libs.compose.ktx.lifecycle,
+        libs.compose.lifecycle.runtime,
         libs.compose.ui.accompanist.flowlayout,
         libs.quack.ui.components,
     )

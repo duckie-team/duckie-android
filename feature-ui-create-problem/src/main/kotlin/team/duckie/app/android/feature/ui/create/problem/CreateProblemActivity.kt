@@ -14,19 +14,19 @@ package team.duckie.app.android.feature.ui.create.problem
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.screen.AdditionalInformationScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.CreateProblemScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.ExamInformationScreen
@@ -34,24 +34,21 @@ import team.duckie.app.android.feature.ui.create.problem.screen.FindExamAreaScre
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
-import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateProblemActivity : BaseActivity() {
 
-    @Inject
-    internal lateinit var viewModel: CreateProblemViewModel
+    private val viewModel: CreateProblemViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val createProblemStep = viewModel.state.collectAsStateWithLifecycle().value.createProblemStep
+            val createProblemStep = viewModel.collectAsState().value.createProblemStep
 
             BackHandler {
                 when (createProblemStep) {
@@ -61,36 +58,32 @@ class CreateProblemActivity : BaseActivity() {
                 }
             }
 
-            LaunchedEffect(viewModel.sideEffect) {
-                viewModel.sideEffect
+            LaunchedEffect(viewModel) {
+                viewModel.container.sideEffectFlow
                     .onEach(::handleSideEffect)
                     .launchIn(this)
             }
 
             QuackTheme {
-                CompositionLocalProvider(
-                    LocalViewModel provides viewModel,
-                ) {
-                    QuackAnimatedContent(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = QuackColor.White.composeColor),
-                        targetState = createProblemStep,
-                    ) { step: CreateProblemStep ->
-                        when (step) {
-                            CreateProblemStep.ExamInformation -> ExamInformationScreen()
-                            CreateProblemStep.FindExamArea -> FindExamAreaScreen()
-                            CreateProblemStep.CreateProblem -> CreateProblemScreen(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .statusBarsPadding()
-                            )
-                            CreateProblemStep.AdditionalInformation -> AdditionalInformationScreen(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .statusBarsPadding()
-                            )
-                        }
+                QuackAnimatedContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = QuackColor.White.composeColor),
+                    targetState = createProblemStep,
+                ) { step: CreateProblemStep ->
+                    when (step) {
+                        CreateProblemStep.ExamInformation -> ExamInformationScreen()
+                        CreateProblemStep.FindExamArea -> FindExamAreaScreen()
+                        CreateProblemStep.CreateProblem -> CreateProblemScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .statusBarsPadding()
+                        )
+                        CreateProblemStep.AdditionalInformation -> AdditionalInformationScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .statusBarsPadding()
+                        )
                     }
                 }
             }

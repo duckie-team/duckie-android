@@ -19,26 +19,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
-import team.duckie.app.android.util.compose.CoroutineScopeContent
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 
 private val HomeHorizontalPadding = PaddingValues(
     horizontal = 16.dp,
 )
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun DuckieHomeScreen(
+    vm: HomeViewModel = activityViewModel(),
     navigateToSearchResult: (String) -> Unit,
-) = CoroutineScopeContent {
-    val vm = LocalViewModel.current as HomeViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value
+) {
+    val state = vm.collectAsState().value
 
     LaunchedEffect(Unit) {
         vm.fetchRecommendFollowingTest()

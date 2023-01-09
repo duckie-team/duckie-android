@@ -24,10 +24,10 @@ dependencies {
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
-        projects.utilViewmodel,
-        libs.ktx.lifecycle,
+        libs.orbit.viewmodel,
+        libs.ktx.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
-        libs.compose.ktx.lifecycle,
+        libs.compose.lifecycle.runtime,
         libs.quack.ui.components,
     )
 }

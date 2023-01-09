@@ -7,14 +7,15 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.properties.Delegates
 import kotlinx.collections.immutable.ImmutableList
@@ -23,13 +24,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.apache.commons.io.FileUtils
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.di.repository.ProvidesModule
+import team.duckie.app.android.di.usecase.kakao.KakaoUseCaseModule
 import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.JoinUseCase
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
-import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 import team.duckie.app.android.domain.user.model.User
@@ -42,13 +49,15 @@ import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.util.kotlin.cancelChildrenAndItself
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.app.android.util.kotlin.seconds
-import team.duckie.app.android.util.viewmodel.BaseViewModel
 
 private val NextStepNavigateThrottle = 1.seconds
 private const val ProfileImageCompressQuality = 100
 
-// TODO(sungbin): #133 + AndroidViewModel + viewModelScope
-internal class OnboardViewModel @AssistedInject constructor(
+// TODO(sungbin): AndroidViewModel + viewModelScope
+// FIXME(sungbin): ViewModel constructor should be annotated with @Inject instead of @AssistedInject.
+@Suppress("StaticFieldLeak")
+@HiltViewModel
+internal class OnboardViewModel @Inject constructor(
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     private val joinUseCase: JoinUseCase,
     private val attachAccessTokenToHeaderUseCase: AttachAccessTokenToHeaderUseCase,
@@ -57,11 +66,17 @@ internal class OnboardViewModel @AssistedInject constructor(
     private val tagCreateUseCase: TagCreateUseCase,
     private val userUpdateUseCase: UserUpdateUseCase,
     @ApplicationContext private val context: Context,
-    @Assisted private val getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
-) : BaseViewModel<OnboardState, OnboardSideEffect>(OnboardState.Initial),
+    // @Assisted private val getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
+) : ContainerHost<OnboardState, OnboardSideEffect>,
+    ViewModel(),
     PermissionViewModel by PermissionViewModelInstance,
     ApiViewModel by ApiViewModelInstance(
-        getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase,
+        // TODO(sungbin): FIXME
+        getKakaoAccessTokenUseCase = KakaoUseCaseModule.provideGetKakaoAccessTokenUseCase(
+            ProvidesModule.provideKakaoRepository(
+                context as Activity
+            )
+        ),
         joinUseCase = joinUseCase,
         attachAccessTokenToHeaderUseCase = attachAccessTokenToHeaderUseCase,
         getCategoriesUseCase = getCategoriesUseCase,
@@ -70,24 +85,27 @@ internal class OnboardViewModel @AssistedInject constructor(
         userUpdateUseCase = userUpdateUseCase,
     ) {
 
-    init {
-        setEventHandler { event ->
-            updateState { event }
-        }
+    override val container = container<OnboardState, OnboardSideEffect>(OnboardState.Initial)
 
-        setSideEffectHandler { effect ->
-            postSideEffect { effect }
-        }
+    // TODO(sungbin): implement
+    // init {
+    //     setEventHandler { event ->
+    //         updateState { event }
+    //     }
 
-        setExceptionHandler { exception ->
-            updateState {
-                OnboardState.Error(exception)
-            }
-            postSideEffect {
-                OnboardSideEffect.ReportError(exception)
-            }
-        }
-    }
+    //     setSideEffectHandler { effect ->
+    //         postSideEffect { effect }
+    //     }
+
+    //     setExceptionHandler { exception ->
+    //         updateState {
+    //             OnboardState.Error(exception)
+    //         }
+    //         postSideEffect {
+    //             OnboardSideEffect.ReportError(exception)
+    //         }
+    //     }
+    // }
 
     private val duckieUserProfileImageTemporaryFile =
         File.createTempFile("temporary-duckie-user-profile-image", ".png", context.cacheDir)
@@ -102,12 +120,12 @@ internal class OnboardViewModel @AssistedInject constructor(
     var categories by Delegates.notNull<ImmutableList<Category>>()
     var selectedCategories: ImmutableList<Category> = persistentListOf()
 
-    fun navigateStep(step: OnboardStep, ignoreThrottle: Boolean = false) {
+    fun navigateStep(step: OnboardStep, ignoreThrottle: Boolean = false) = intent {
         if (!ignoreThrottle &&
             System.currentTimeMillis() - lastestUpdateStepMillis < NextStepNavigateThrottle
-        ) return
+        ) return@intent
         lastestUpdateStepMillis = System.currentTimeMillis()
-        updateState {
+        reduce {
             OnboardState.NavigateStep(step)
         }
     }
@@ -116,20 +134,16 @@ internal class OnboardViewModel @AssistedInject constructor(
         return nicknameFilter.containsMatchIn(nickname)
     }
 
-    suspend fun loadGalleryImages() {
+    fun loadGalleryImages() = intent {
         loadGalleryImagesUseCase()
             .onSuccess { images ->
-                postSideEffect {
-                    OnboardSideEffect.UpdateGalleryImages(images)
-                }
+                postSideEffect(OnboardSideEffect.UpdateGalleryImages(images))
             }
             .onFailure { expection ->
-                updateState {
+                reduce {
                     OnboardState.Error(expection)
                 }
-                postSideEffect {
-                    OnboardSideEffect.ReportError(expection)
-                }
+                postSideEffect(OnboardSideEffect.ReportError(expection))
             }
     }
 
@@ -155,7 +169,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             val file = me.temporaryProfileImageFile ?: return@suspendCancellableCoroutine continuation.resume(Unit)
             val job = coroutineScope.launch {
                 launch {
-                    state.collect { state ->
+                    container.stateFlow.collect { state ->
                         if (state is OnboardState.PrfileImageUploaded) {
                             me.temporaryProfileImageUrl = state.url
                             continuation.resume(Unit)
@@ -184,7 +198,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             val favorateTags = ArrayList<Tag>(favorateTagSize)
             val job = coroutineScope.launch {
                 launch {
-                    state.collect { state ->
+                    container.stateFlow.collect { state ->
                         if (state is OnboardState.TagCreated) {
                             favorateTags.add(state.tag)
 
@@ -207,10 +221,5 @@ internal class OnboardViewModel @AssistedInject constructor(
                 job.cancelChildrenAndItself()
             }
         }
-    }
-
-    @AssistedFactory
-    interface ViewModelFactory {
-        fun create(getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase): OnboardViewModel
     }
 }

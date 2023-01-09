@@ -36,16 +36,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -61,9 +61,9 @@ import team.duckie.quackquack.ui.util.DpSize
 @Composable
 internal fun HomeRecommendFollowingTestScreen(
     modifier: Modifier = Modifier,
+    vm: HomeViewModel = activityViewModel(),
 ) {
-    val vm = LocalViewModel.current as HomeViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value
+    val state = vm.collectAsState().value
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -105,13 +105,12 @@ internal fun HomeRecommendFollowingTestScreen(
     }
 }
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun HomeRecommendFollowingScreen(
     modifier: Modifier = Modifier,
+    vm: HomeViewModel = activityViewModel(),
 ) {
-    val vm = LocalViewModel.current as HomeViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value
+    val state = vm.collectAsState().value
 
     LaunchedEffect(Unit) {
         vm.fetchRecommendFollowing()

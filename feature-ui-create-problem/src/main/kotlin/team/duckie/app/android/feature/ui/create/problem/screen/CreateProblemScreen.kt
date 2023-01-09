@@ -50,6 +50,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -69,7 +70,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.photopicker.PhotoPicker
@@ -78,10 +81,8 @@ import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAp
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
-import team.duckie.app.android.util.compose.CoroutineScopeContent
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.compose.launch
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
@@ -148,10 +149,14 @@ private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constr
 
 /** 문제 만들기 2단계 (문제 만들기) Screen */
 @Composable
-fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
+internal fun CreateProblemScreen(
+    modifier: Modifier,
+    vm: CreateProblemViewModel = activityViewModel(),
+) {
     val context = LocalContext.current
-    val vm = LocalViewModel.current as CreateProblemViewModel
-    val rootState = vm.state.collectAsStateWithLifecycle().value
+    val coroutineShape = rememberCoroutineScope()
+
+    val rootState = vm.collectAsState().value
     val state = rootState.createProblem
     val keyboard = LocalSoftwareKeyboardController.current
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -183,7 +188,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            launch { vm.updatePhotoState(null) }
+            vm.updatePhotoState(null)
         } else {
             toast(permissionErrorMessage)
         }
@@ -191,7 +196,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
 
     BackHandler {
         if (sheetState.isVisible) {
-            hideBottomSheet(sheetState) { selectedQuestionIndex = null }
+            coroutineShape.hideBottomSheet(sheetState) { selectedQuestionIndex = null }
         } else if (photoState != null) {
             vm.updatePhotoState(null)
         } else {
@@ -261,7 +266,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                             ),
                             text = it.first,
                             onClick = {
-                                launch {
+                                coroutineShape.launch {
                                     selectedQuestionIndex?.let { questionIndex ->
                                         // 특정 문제의 답안 유형 수정
                                         vm.editAnswersType(questionIndex, it.second)
@@ -291,11 +296,11 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         .fillMaxWidth()
                         .layoutId(TopAppBarLayoutId),
                     onLeadingIconClick = {
-                        launch { vm.navigateStep(CreateProblemStep.ExamInformation) }
+                        coroutineShape.launch { vm.navigateStep(CreateProblemStep.ExamInformation) }
                     },
                     trailingText = stringResource(id = R.string.next),
                     onTrailingTextClick = {
-                        launch { vm.navigateStep(CreateProblemStep.AdditionalInformation) }
+                        coroutineShape.launch { vm.navigateStep(CreateProblemStep.AdditionalInformation) }
                     },
                     trailingTextEnabled = true,
                 )
@@ -310,7 +315,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                         override fun Density.arrange(
                             totalSize: Int,
                             sizes: IntArray,
-                            outPositions: IntArray
+                            outPositions: IntArray,
                         ) {
                             var current = 0
                             sizes.take(sizes.size - 1).forEachIndexed { index, size ->
@@ -338,7 +343,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         )
                                     },
                                     imageClick = {
-                                        openPhotoPicker(
+                                        coroutineShape.openPhotoPicker(
                                             context,
                                             vm,
                                             CreateProblemPhotoState.QuestionImageType(
@@ -350,7 +355,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         )
                                     },
                                     onDropdownItemClick = {
-                                        launch {
+                                        coroutineShape.launch {
                                             selectedQuestionIndex = questionIndex
                                             keyboard?.hide()
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
@@ -379,7 +384,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         )
                                     },
                                     imageClick = {
-                                        openPhotoPicker(
+                                        coroutineShape.openPhotoPicker(
                                             context,
                                             vm,
                                             CreateProblemPhotoState.QuestionImageType(
@@ -391,7 +396,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         )
                                     },
                                     onDropdownItemClick = {
-                                        launch {
+                                        coroutineShape.launch {
                                             selectedQuestionIndex = questionIndex
                                             keyboard?.hide()
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
@@ -435,7 +440,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         )
                                     },
                                     imageClick = {
-                                        openPhotoPicker(
+                                        coroutineShape.openPhotoPicker(
                                             context,
                                             vm,
                                             CreateProblemPhotoState.QuestionImageType(
@@ -447,7 +452,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         )
                                     },
                                     onDropdownItemClick = {
-                                        launch {
+                                        coroutineShape.launch {
                                             selectedQuestionIndex = questionIndex
                                             keyboard?.hide()
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
@@ -463,7 +468,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                         )
                                     },
                                     answerImageClick = { answersNo ->
-                                        launch {
+                                        coroutineShape.launch {
                                             val result = imagePermission.check(context)
                                             if (result) {
                                                 vm.loadGalleryImages()
@@ -514,7 +519,7 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                                 text = stringResource(id = R.string.create_problem_add_problem_button),
                                 leadingIcon = QuackIcon.Plus,
                             ) {
-                                launch {
+                                coroutineShape.launch {
                                     keyboard?.hide()
                                     sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                 }
@@ -545,41 +550,37 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
                 galleryImagesSelectionIndex = index
             },
             onCloseClick = {
-                launch {
-                    vm.updatePhotoState(null)
-                    galleryImagesSelections[galleryImagesSelectionIndex] = false
-                    hideBottomSheet(sheetState) { selectedQuestionIndex = null }
-                }
+                vm.updatePhotoState(null)
+                galleryImagesSelections[galleryImagesSelectionIndex] = false
+                coroutineShape.hideBottomSheet(sheetState) { selectedQuestionIndex = null }
             },
             onAddClick = {
-                launch {
-                    with(photoState) {
-                        when (this) {
-                            is CreateProblemPhotoState.QuestionImageType -> {
-                                vm.setQuestion(
-                                    Question.Type.Image,
-                                    this.questionIndex,
-                                    urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
-                                )
-                                vm.updatePhotoState(null)
-                            }
-
-                            is CreateProblemPhotoState.AnswerImageType -> {
-                                vm.setAnswer(
-                                    questionIndex,
-                                    answerIndex,
-                                    Answer.Type.ImageChoice,
-                                    urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
-                                )
-                                vm.updatePhotoState(null)
-                            }
-
-                            else -> {}
+                with(photoState) {
+                    when (this) {
+                        is CreateProblemPhotoState.QuestionImageType -> {
+                            vm.setQuestion(
+                                Question.Type.Image,
+                                this.questionIndex,
+                                urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
+                            )
+                            vm.updatePhotoState(null)
                         }
+
+                        is CreateProblemPhotoState.AnswerImageType -> {
+                            vm.setAnswer(
+                                questionIndex,
+                                answerIndex,
+                                Answer.Type.ImageChoice,
+                                urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
+                            )
+                            vm.updatePhotoState(null)
+                        }
+
+                        else -> {}
                     }
-                    galleryImagesSelections[galleryImagesSelectionIndex] = false
-                    hideBottomSheet(sheetState) { selectedQuestionIndex = null }
                 }
+                galleryImagesSelections[galleryImagesSelectionIndex] = false
+                coroutineShape.hideBottomSheet(sheetState) { selectedQuestionIndex = null }
             },
         )
     }
@@ -599,26 +600,26 @@ fun CreateProblemScreen(modifier: Modifier) = CoroutineScopeContent {
             }
             deleteDialogNo = null
         },
-        onDismissRequest = { }
+        onDismissRequest = {}
     )
 }
 
 /** BottomSheet 를 닫습니다. */
-private fun CoroutineScopeContent.hideBottomSheet(
+private fun CoroutineScope.hideBottomSheet(
     sheetState: ModalBottomSheetState,
-    afterAction: (() -> Unit)? = null
+    afterAction: (() -> Unit)? = null,
 ) = launch {
     sheetState.hide()
     afterAction?.invoke()
 }
 
 /** 사진 선택 화면을 엽니다. */
-private fun CoroutineScopeContent.openPhotoPicker(
+private fun CoroutineScope.openPhotoPicker(
     context: Context,
     vm: CreateProblemViewModel,
     createProblemPhotoState: CreateProblemPhotoState,
     keyboard: SoftwareKeyboardController?,
-    launcher: ManagedActivityResultLauncher<String, Boolean>
+    launcher: ManagedActivityResultLauncher<String, Boolean>,
 ) = launch {
     val result = imagePermission.check(context)
     if (result) {

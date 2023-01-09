@@ -65,10 +65,8 @@ import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.shared.ui.compose.ImeSpacer
-import team.duckie.app.android.util.compose.CoroutineScopeContent
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.compose.launch
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
@@ -135,8 +133,7 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 }
 
 @Composable
-internal fun TagScreen() = CoroutineScopeContent {
-    val vm = LocalViewModel.current as OnboardViewModel
+internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     val context = LocalContext.current.applicationContext
     val keyboard = LocalSoftwareKeyboardController.current
     val toast = rememberToast()
@@ -173,7 +170,7 @@ internal fun TagScreen() = CoroutineScopeContent {
         sheetContent = {
             TagScreenModalBottomSheetContent(
                 onDismissRequest = { newAddedTags, clearAction ->
-                    launch {
+                    coroutineScope.launch {
                         addedTags.addAll(newAddedTags)
                         clearAction()
                         sheetState.hide()
@@ -213,7 +210,7 @@ internal fun TagScreen() = CoroutineScopeContent {
                     type = QuackLargeButtonType.Fill,
                     enabled = isStartable,
                 ) {
-                    launch {
+                    coroutineScope.launch {
                         vm.updateUserProfileImage(
                             coroutineScope = coroutineScope,
                         )
@@ -247,8 +244,9 @@ private fun TagSelection(
     addedTags: SnapshotStateList<String>,
     requestRemoveAddedTag: (index: Int) -> Unit,
     startableUpdate: (startable: Boolean) -> Unit,
-) = CoroutineScopeContent {
-    val vm = LocalViewModel.current as OnboardViewModel
+    vm: OnboardViewModel = activityViewModel(),
+) {
+    val coroutineScope = rememberCoroutineScope()
     val hottestTags = remember(vm.selectedCategories) {
         List(
             size = vm.selectedCategories.size,
@@ -333,7 +331,7 @@ private fun TagSelection(
                 ),
                 color = QuackColor.DuckieOrange,
                 onClick = {
-                    launch {
+                    coroutineScope.launch {
                         sheetState.animateTo(ModalBottomSheetValue.Expanded)
                     }
                 },
