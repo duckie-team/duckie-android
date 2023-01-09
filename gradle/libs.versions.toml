@@ -45,7 +45,7 @@ androidx-datastore = "1.0.0"
 androidx-room = "2.4.3"
 androidx-profile-installer = "1.2.0"
 androidx-paging = "3.1.1"
-androidx-paging-compose = "1.0.0-alpha16"
+androidx-paging-compose = "1.0.0-alpha17"
 androidx-annotation = "1.5.0"
 
 # compose
