@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.first
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
+import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
 import team.duckie.app.android.feature.ui.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.PresentationViewModel
@@ -73,7 +74,7 @@ class IntroActivity : BaseActivity() {
     }
 
     private fun launchOnboardActivity() {
-        changeActivityWithAnimation<OnboardActivity>()
+        changeActivityWithAnimation<CreateProblemActivity>()
     }
 
     private suspend fun handleState(state: PresentationState) {
