@@ -52,7 +52,6 @@ include(
     ":feature-ui-detail",
     ":shared-ui-compose",
     ":util-ui",
-    ":util-viewmodel",
     ":util-kotlin",
     ":util-compose",
     ":util-exception-handling",

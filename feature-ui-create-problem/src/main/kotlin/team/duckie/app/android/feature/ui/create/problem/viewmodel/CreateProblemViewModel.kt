@@ -13,12 +13,18 @@
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
 import android.net.Uri
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
@@ -41,14 +47,16 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
-import team.duckie.app.android.util.viewmodel.BaseViewModel
 
-@Singleton
+@HiltViewModel
 internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
-) : BaseViewModel<CreateProblemState, CreateProblemSideEffect>(CreateProblemState()) {
+) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
+
+    override val container = container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
+
     /**
      * [galleryImages] 의 mutable 한 객체를 나타냅니다.
      *
@@ -62,7 +70,7 @@ internal class CreateProblemViewModel @Inject constructor(
      */
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
 
-    suspend fun makeExam() {
+    fun makeExam() = intent {
         makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
             print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
         }.onFailure {
@@ -70,11 +78,11 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    suspend fun getCategories() {
+    fun getCategories() = intent {
         getCategoriesUseCase(false).onSuccess { categories ->
-            updateState { prevState ->
-                prevState.copy(
-                    examInformation = prevState.examInformation.copy(
+            reduce {
+                state.copy(
+                    examInformation = state.examInformation.copy(
                         isCategoryLoading = false,
                         categories = categories.toImmutableList()
                     )
@@ -85,32 +93,30 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    suspend fun onClickArrowBack() {
-        postSideEffect {
-            CreateProblemSideEffect.FinishActivity
+    fun onClickArrowBack() = intent {
+        postSideEffect(CreateProblemSideEffect.FinishActivity)
+    }
+
+    fun updatePhotoState(photoState: CreateProblemPhotoState?) = intent {
+        reduce {
+            state.copy(photoState = photoState)
         }
     }
 
-    fun updatePhotoState(photoState: CreateProblemPhotoState?) = updateState { prevState ->
-        prevState.copy(photoState = photoState)
-    }
-
-    fun onClickCategory(
-        index: Int,
-    ) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    categorySelection = index
+    fun onClickCategory(index: Int) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
+                    categorySelection = index,
                 ),
             )
         }
     }
 
-    fun onClickExamArea(scrollPosition: Int) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
+    fun onClickExamArea(scrollPosition: Int) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
                     scrollPosition = scrollPosition,
                 )
             )
@@ -118,52 +124,47 @@ internal class CreateProblemViewModel @Inject constructor(
         navigateStep(CreateProblemStep.FindExamArea)
     }
 
-    fun navigateStep(step: CreateProblemStep) {
-        updateState { prevState ->
-            prevState.copy(
-                createProblemStep = step,
-            )
+    fun navigateStep(step: CreateProblemStep) = intent {
+        reduce {
+            state.copy(createProblemStep = step)
         }
     }
 
-    fun setExamTitle(examTitle: String) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
+    fun setExamTitle(examTitle: String) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
                     examTitle = examTitle,
                 ),
             )
         }
     }
 
-    fun setExamDescription(examDescription: String) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
+    fun setExamDescription(examDescription: String) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
                     examDescription = examDescription,
                 ),
             )
         }
     }
 
-    fun setCertifyingStatement(certifyingStatement: String) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
+    fun setCertifyingStatement(certifyingStatement: String) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
                     certifyingStatement = certifyingStatement,
                 ),
             )
         }
     }
 
-    fun setExamArea(
-        examArea: String,
-        cursorPosition: Int,
-    ) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
-                    foundExamArea = prevState.examInformation.foundExamArea.copy(
+    fun setExamArea(examArea: String, cursorPosition: Int) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
+                    foundExamArea = state.examInformation.foundExamArea.copy(
                         examArea = examArea,
                         cursorPosition = cursorPosition,
                     ),
@@ -172,10 +173,10 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onClickSearchListHeader() {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
+    fun onClickSearchListHeader() = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
                     isExamAreaSelected = true,
                 ),
             )
@@ -183,11 +184,11 @@ internal class CreateProblemViewModel @Inject constructor(
         navigateStep(CreateProblemStep.ExamInformation)
     }
 
-    fun onClickSearchList(index: Int) {
-        updateState { prevState ->
-            prevState.copy(
+    fun onClickSearchList(index: Int) = intent {
+        reduce {
+            state.copy(
                 createProblemStep = CreateProblemStep.ExamInformation,
-                examInformation = prevState.examInformation.run {
+                examInformation = state.examInformation.run {
                     copy(
                         isExamAreaSelected = true,
                         foundExamArea = foundExamArea.copy(
@@ -199,10 +200,10 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onClickCloseTag(isExamAreaSelected: Boolean) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.run {
+    fun onClickCloseTag(isExamAreaSelected: Boolean) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.run {
                     copy(
                         isExamAreaSelected = isExamAreaSelected,
                         foundExamArea = foundExamArea.copy(
@@ -214,10 +215,10 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onExamAreaFocusChanged(isFocused: Boolean) {
-        updateState { prevState ->
-            prevState.copy(
-                examInformation = prevState.examInformation.copy(
+    fun onExamAreaFocusChanged(isFocused: Boolean) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
                     examDescriptionFocused = isFocused,
                 )
             )
@@ -234,47 +235,51 @@ internal class CreateProblemViewModel @Inject constructor(
      * [Problem.hint]: 처음 문제를 만들 때 기본 값은 null 값이다.
      * [Problem.memo]: 처음 문제를 만들 때 기본 값은 null 값이다.
      */
-    fun addProblem(answerType: Answer.Type) = updateState { prevState ->
+    fun addProblem(answerType: Answer.Type) = intent {
         val newQuestion = Question.Text(text = "")
         val newAnswer = answerType.getDefaultAnswer()
 
-        with(prevState.createProblem) {
+        with(state.createProblem) {
             val newQuestions = questions.copy { add(newQuestion) }
             val newAnswers = answers.copy { add(newAnswer) }
             val newCorrectAnswers = correctAnswers.copy { add("") }
             val newHints = hints.copy { add("") }
             val newMemos = memos.copy { add("") }
 
-            prevState.copy(
-                createProblem = prevState.createProblem.copy(
-                    questions = newQuestions.toPersistentList(),
-                    answers = newAnswers.toPersistentList(),
-                    correctAnswers = newCorrectAnswers.toPersistentList(),
-                    hints = newHints.toPersistentList(),
-                    memos = newMemos.toPersistentList(),
+            reduce {
+                state.copy(
+                    createProblem = state.createProblem.copy(
+                        questions = newQuestions.toPersistentList(),
+                        answers = newAnswers.toPersistentList(),
+                        correctAnswers = newCorrectAnswers.toPersistentList(),
+                        hints = newHints.toPersistentList(),
+                        memos = newMemos.toPersistentList(),
+                    )
                 )
-            )
+            }
         }
     }
 
     /** [questionIndex + 1] 번 문제를 삭제한다. */
-    fun removeProblem(questionIndex: Int) = updateState { prevState ->
-        with(prevState.createProblem) {
+    fun removeProblem(questionIndex: Int) = intent {
+        with(state.createProblem) {
             val newQuestions = questions.copy { removeAt(questionIndex) }
             val newAnswers = answers.copy { removeAt(questionIndex) }
             val newCorrectAnswers = correctAnswers.copy { removeAt(questionIndex) }
             val newHints = hints.copy { removeAt(questionIndex) }
             val newMemos = memos.copy { removeAt(questionIndex) }
 
-            prevState.copy(
-                createProblem = prevState.createProblem.copy(
-                    questions = newQuestions.toPersistentList(),
-                    answers = newAnswers.toPersistentList(),
-                    correctAnswers = newCorrectAnswers.toPersistentList(),
-                    hints = newHints.toPersistentList(),
-                    memos = newMemos.toPersistentList(),
-                ),
-            )
+            reduce {
+                state.copy(
+                    createProblem = state.createProblem.copy(
+                        questions = newQuestions.toPersistentList(),
+                        answers = newAnswers.toPersistentList(),
+                        correctAnswers = newCorrectAnswers.toPersistentList(),
+                        hints = newHints.toPersistentList(),
+                        memos = newMemos.toPersistentList(),
+                    ),
+                )
+            }
         }
     }
 
@@ -289,8 +294,8 @@ internal class CreateProblemViewModel @Inject constructor(
         questionIndex: Int,
         title: String? = null,
         urlSource: Uri? = null,
-    ) = updateState { prevState ->
-        val newQuestions = prevState.createProblem.questions.toMutableList()
+    ) = intent {
+        val newQuestions = state.createProblem.questions.toMutableList()
         val prevQuestion = newQuestions[questionIndex]
         val newQuestion = when (questionType) {
             Question.Type.Text -> Question.Text(
@@ -316,30 +321,34 @@ internal class CreateProblemViewModel @Inject constructor(
         }
         newQuestion?.let { newQuestions[questionIndex] = it }
 
-        prevState.copy(
-            createProblem = prevState.createProblem.copy(
-                questions = newQuestions.toPersistentList()
-            ),
-        )
+        reduce {
+            state.copy(
+                createProblem = state.createProblem.copy(
+                    questions = newQuestions.toPersistentList()
+                ),
+            )
+        }
     }
 
     /** [questionIndex + 1] 번 문제의 문제 타입을 [특정 답안 타입][answerType]으로 변경합니다. */
     fun editAnswersType(
         questionIndex: Int,
-        answerType: Answer.Type
-    ) = updateState { prevState ->
-        val newAnswers = prevState.createProblem.answers.toMutableList()
-        when (answerType) {
+        answerType: Answer.Type,
+    ) = intent {
+        val newAnswers = state.createProblem.answers.toMutableList()
+        newAnswers[questionIndex] = when (answerType) {
             Answer.Type.ShortAnswer -> newAnswers[questionIndex].toShort()
             Answer.Type.Choice -> newAnswers[questionIndex].toChoice()
             Answer.Type.ImageChoice -> newAnswers[questionIndex].toImageChoice()
-        }.let { newAnswers[questionIndex] = it }
+        }
 
-        prevState.copy(
-            createProblem = prevState.createProblem.copy(
-                answers = newAnswers.toPersistentList()
-            ),
-        )
+        reduce {
+            state.copy(
+                createProblem = state.createProblem.copy(
+                    answers = newAnswers.toPersistentList()
+                ),
+            )
+        }
     }
 
     /**
@@ -355,8 +364,8 @@ internal class CreateProblemViewModel @Inject constructor(
         answerType: Answer.Type,
         answer: String? = null,
         urlSource: Uri? = null,
-    ) = updateState { prevState ->
-        val newAnswers = prevState.createProblem.answers.toMutableList()
+    ) = intent {
+        val newAnswers = state.createProblem.answers.toMutableList()
 
         newAnswers[questionIndex].getEditedAnswers(
             answerIndex,
@@ -365,19 +374,21 @@ internal class CreateProblemViewModel @Inject constructor(
             urlSource
         ).let { newAnswers[questionIndex] = it }
 
-        prevState.copy(
-            createProblem = prevState.createProblem.copy(
-                answers = newAnswers.toPersistentList()
-            ),
-        )
+        reduce {
+            state.copy(
+                createProblem = state.createProblem.copy(
+                    answers = newAnswers.toPersistentList()
+                ),
+            )
+        }
     }
 
     /** [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 삭제 합니다. */
     fun removeAnswer(
         questionIndex: Int,
         answerIndex: Int,
-    ) = updateState { prevState ->
-        val newAnswers = prevState.createProblem.answers.toMutableList()
+    ) = intent {
+        val newAnswers = state.createProblem.answers.toMutableList()
         val newAnswer = newAnswers[questionIndex]
         newAnswers[questionIndex] = when (newAnswer) {
             // TODO(riflockle7): 발현 케이스 확인을 위해 이렇게 두었으며, 추후 state 명세하면서 없앨 예정.
@@ -392,11 +403,13 @@ internal class CreateProblemViewModel @Inject constructor(
             )
         }
 
-        prevState.copy(
-            createProblem = prevState.createProblem.copy(
-                answers = newAnswers.toPersistentList()
-            ),
-        )
+        reduce {
+            state.copy(
+                createProblem = state.createProblem.copy(
+                    answers = newAnswers.toPersistentList()
+                ),
+            )
+        }
     }
 
     /**
@@ -408,7 +421,7 @@ internal class CreateProblemViewModel @Inject constructor(
         answerIndex: Int,
         answerType: Answer.Type,
         answer: String?,
-        urlSource: Uri?
+        urlSource: Uri?,
     ): Answer {
         return when (answerType) {
             Answer.Type.ShortAnswer -> this.toShort(answer)
@@ -425,16 +438,17 @@ internal class CreateProblemViewModel @Inject constructor(
     fun setCorrectAnswer(
         questionIndex: Int,
         correctAnswer: String,
-    ) = updateState { prevState ->
-        val newCorrectAnswers =
-            prevState.createProblem.correctAnswers.toMutableList()
+    ) = intent {
+        val newCorrectAnswers = state.createProblem.correctAnswers.toMutableList()
         newCorrectAnswers[questionIndex] = correctAnswer
 
-        prevState.copy(
-            createProblem = prevState.createProblem.copy(
-                correctAnswers = newCorrectAnswers.toPersistentList()
-            ),
-        )
+        reduce {
+            state.copy(
+                createProblem = state.createProblem.copy(
+                    correctAnswers = newCorrectAnswers.toPersistentList()
+                ),
+            )
+        }
     }
 
     /**
@@ -444,8 +458,8 @@ internal class CreateProblemViewModel @Inject constructor(
     fun addAnswer(
         questionIndex: Int,
         answerType: Answer.Type,
-    ) = updateState { prevState ->
-        val newAnswers = prevState.createProblem.answers.toMutableList()
+    ) = intent {
+        val newAnswers = state.createProblem.answers.toMutableList()
         val newAnswer = newAnswers[questionIndex]
 
         when (answerType) {
@@ -467,52 +481,54 @@ internal class CreateProblemViewModel @Inject constructor(
             }
         }.let { newAnswers[questionIndex] = it }
 
-        prevState.copy(
-            createProblem = prevState.createProblem.copy(
-                questions = prevState.createProblem.questions,
-                answers = newAnswers.toPersistentList()
-            ),
-        )
+        reduce {
+            state.copy(
+                createProblem = state.createProblem.copy(
+                    questions = state.createProblem.questions,
+                    answers = newAnswers.toPersistentList()
+                ),
+            )
+        }
     }
 
     // AdditionalInfo
-    fun setThumbnail(thumbnail: Any?) {
-        updateState { prevState ->
-            prevState.copy(
-                additionalInfo = prevState.additionalInfo.copy(
+    fun setThumbnail(thumbnail: Any?) = intent {
+        reduce {
+            state.copy(
+                additionalInfo = state.additionalInfo.copy(
                     thumbnail = thumbnail,
                 ),
             )
         }
     }
 
-    fun setButtonTitle(buttonTitle: String) {
-        updateState { prevState ->
-            prevState.copy(
-                additionalInfo = prevState.additionalInfo.copy(
+    fun setButtonTitle(buttonTitle: String) = intent {
+        reduce {
+            state.copy(
+                additionalInfo = state.additionalInfo.copy(
                     takeTitle = buttonTitle,
                 )
             )
         }
     }
 
-    fun setTempTag(tempTag: String) {
-        updateState { prevState ->
-            prevState.copy(
-                additionalInfo = prevState.additionalInfo.copy(
+    fun setTempTag(tempTag: String) = intent {
+        reduce {
+            state.copy(
+                additionalInfo = state.additionalInfo.copy(
                     tempTag = tempTag,
                 )
             )
         }
     }
 
-    fun addTag(tag: String) {
-        updateState { prevState ->
-            val newTags = prevState.additionalInfo.tags
+    fun addTag(tag: String) = intent {
+        reduce {
+            val newTags = state.additionalInfo.tags
                 .copy { add(tag) }
                 .toImmutableList()
-            prevState.copy(
-                additionalInfo = prevState.additionalInfo.copy(
+            state.copy(
+                additionalInfo = state.additionalInfo.copy(
                     tags = newTags,
                 )
             )
@@ -520,30 +536,26 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 갤러리에서 이미지 목록을 조회합니다. */
-    suspend fun loadGalleryImages() {
+    fun loadGalleryImages() = intent {
         loadGalleryImagesUseCase()
             .onSuccess { images ->
-                postSideEffect {
-                    CreateProblemSideEffect.UpdateGalleryImages(images)
-                }
+                postSideEffect(CreateProblemSideEffect.UpdateGalleryImages(images))
             }
             .onFailure { exception ->
-                updateState { prevState ->
-                    prevState.copy(error = Error(exception))
+                reduce {
+                    state.copy(error = Error(exception))
                 }
-                postSideEffect {
-                    CreateProblemSideEffect.ReportError(exception)
-                }
+                postSideEffect(CreateProblemSideEffect.ReportError(exception))
             }
     }
 
     /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트합니다. */
-    internal fun addGalleryImages(images: List<String>) {
+    internal fun addGalleryImages(images: List<String>) = intent {
         mutableGalleryImages = persistentListOf(*images.toTypedArray())
     }
 
     fun isAllFieldsNotEmpty(): Boolean {
-        return with(currentState.examInformation) {
+        return with(container.stateFlow.value.examInformation) {
             categorySelection >= 0 && isExamAreaSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
     }

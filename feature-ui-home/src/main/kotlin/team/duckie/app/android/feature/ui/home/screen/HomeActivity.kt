@@ -9,30 +9,28 @@ package team.duckie.app.android.feature.ui.home.screen
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
-import team.duckie.app.android.util.compose.LocalViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
@@ -40,7 +38,6 @@ import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
-import javax.inject.Inject
 
 private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
 private const val HomeBottomNavigationDividerLayoutId = "HomeBottomNavigationDivider"
@@ -49,18 +46,16 @@ private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
 
-    @Inject
-    internal lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModels()
 
-    @OptIn(ExperimentalLifecycleComposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val state by homeViewModel.state.collectAsStateWithLifecycle()
+            val state by homeViewModel.collectAsState()
 
-            LaunchedEffect(key1 = homeViewModel.sideEffect) {
-                homeViewModel.sideEffect
+            LaunchedEffect(key1 = homeViewModel) {
+                homeViewModel.container.sideEffectFlow
                     .onEach(::handleSideEffect)
                     .launchIn(this)
             }
@@ -78,15 +73,11 @@ class HomeActivity : BaseActivity() {
                             targetState = state.step,
                         ) { page ->
                             when (page) {
-                                BottomNavigationStep.HomeScreen -> CompositionLocalProvider(
-                                    LocalViewModel provides homeViewModel
-                                ) {
-                                    DuckieHomeScreen(
-                                        navigateToSearchResult = { tag ->
-                                            // TODO(limsaehyun): navigate to search result screen
-                                        }
-                                    )
-                                }
+                                BottomNavigationStep.HomeScreen -> DuckieHomeScreen(
+                                    navigateToSearchResult = {
+                                        // TODO(limsaehyun): navigate to search result screen
+                                    }
+                                )
 
                                 BottomNavigationStep.SearchScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
                                 BottomNavigationStep.RankingScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")

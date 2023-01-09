@@ -38,9 +38,8 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
-import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
@@ -67,17 +66,19 @@ private const val DetailScreenBottomBarLayoutId = "DetailScreenBottomBar"
 
 /** 상세 화면 Screen */
 @Composable
-internal fun DetailScreen(modifier: Modifier = Modifier) = CoroutineScopeContent {
+internal fun DetailScreen(
+    modifier: Modifier = Modifier,
+    viewModel: DetailViewModel = activityViewModel(),
+) {
     val activity = LocalContext.current as Activity
-    val viewModel = LocalViewModel.current as DetailViewModel
     val toast = rememberToast()
 
     LaunchedEffect(Unit) {
         viewModel.sendToast("상세 화면 진입")
     }
 
-    LaunchedEffect(viewModel.sideEffect) {
-        viewModel.sideEffect.collect { effect ->
+    LaunchedEffect(viewModel) {
+        viewModel.container.sideEffectFlow.collect { effect ->
             when (effect) {
                 is DetailSideEffect.SendToast -> toast(effect.message)
                 is DetailSideEffect.Click -> Unit

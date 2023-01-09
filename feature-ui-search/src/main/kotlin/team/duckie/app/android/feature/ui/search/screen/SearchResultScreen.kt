@@ -25,14 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.toPersistentList
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchResultViewModel
 import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
-import team.duckie.app.android.util.compose.LocalViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -43,14 +42,13 @@ private val HomeTagListPadding = PaddingValues(
     end = 16.dp,
 )
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun SearchResultScreen(
     modifier: Modifier = Modifier,
+    vm: SearchResultViewModel = activityViewModel(),
     onPrevious: () -> Unit,
 ) {
-    val vm = LocalViewModel.current as SearchResultViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value
+    val state = vm.collectAsState().value
 
     LaunchedEffect(Unit) {
         vm.fetchSearchResultForExam(state.searchTag)

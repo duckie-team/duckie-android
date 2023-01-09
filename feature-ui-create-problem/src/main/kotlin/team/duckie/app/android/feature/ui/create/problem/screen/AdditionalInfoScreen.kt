@@ -44,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -60,7 +61,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
@@ -69,10 +71,8 @@ import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
-import team.duckie.app.android.util.compose.CoroutineScopeContent
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
-import team.duckie.app.android.util.compose.LocalViewModel
-import team.duckie.app.android.util.compose.launch
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.color.QuackColor
@@ -86,10 +86,13 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 
 /** 문제 만들기 3단계 (추가정보 입력) Screen */
 @Composable
-fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
+internal fun AdditionalInformationScreen(
+    modifier: Modifier,
+    vm: CreateProblemViewModel = activityViewModel(),
+) {
     val context = LocalContext.current
-    val vm = LocalViewModel.current as CreateProblemViewModel
-    val rootState = vm.state.collectAsStateWithLifecycle().value
+    val coroutineScope = rememberCoroutineScope()
+    val rootState = vm.collectAsState().value
     val state = rootState.additionalInfo
     val keyboard = LocalSoftwareKeyboardController.current
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -117,10 +120,8 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            launch {
-                vm.loadGalleryImages()
-                vm.updatePhotoState(null)
-            }
+            vm.loadGalleryImages()
+            vm.updatePhotoState(null)
         } else {
             toast(permissionErrorMessage)
         }
@@ -128,8 +129,8 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
 
     BackHandler {
         if (photoState != null) {
-            launch {
-                vm.updatePhotoState(null)
+            vm.updatePhotoState(null)
+            coroutineScope.launch {
                 sheetState.hide()
             }
         } else {
@@ -190,8 +191,8 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
                         title = "기본 썸네일",
                         src = team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
                         onClick = {
-                            launch {
-                                vm.setThumbnail(team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24)
+                            vm.setThumbnail(team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24)
+                            coroutineScope.launch {
                                 sheetState.hide()
                             }
                         }
@@ -202,14 +203,12 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
                         title = "",
                         src = team.duckie.quackquack.ui.R.drawable.quack_ic_area_24,
                         onClick = {
-                            launch {
-                                val result = imagePermission.check(context)
-                                if (result) {
-                                    vm.loadGalleryImages()
-                                    vm.updatePhotoState(CreateProblemPhotoState.AdditionalThumbnailType)
-                                } else {
-                                    launcher.launch(imagePermission)
-                                }
+                            val result = imagePermission.check(context)
+                            if (result) {
+                                vm.loadGalleryImages()
+                                vm.updatePhotoState(CreateProblemPhotoState.AdditionalThumbnailType)
+                            } else {
+                                launcher.launch(imagePermission)
                             }
                         }
                     )
@@ -224,13 +223,9 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
         ) {
             // 상단 탭바
             PrevAndNextTopAppBar(
-                onLeadingIconClick = {
-                    launch { vm.navigateStep(CreateProblemStep.CreateProblem) }
-                },
+                onLeadingIconClick = { vm.navigateStep(CreateProblemStep.CreateProblem) },
                 trailingText = stringResource(id = R.string.additional_information_next),
-                onTrailingTextClick = {
-                    launch { vm.onClickArrowBack() }
-                },
+                onTrailingTextClick = { vm.onClickArrowBack() },
                 trailingTextEnabled = vm.isAllFieldsNotEmpty(),
             )
 
@@ -242,8 +237,8 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
             ) {
                 // 썸네일 선택 (어떤 분야를 좋아하나요?) Layout
                 AdditionalThumbnailLayout(thumbnail = selectedGalleryImage) {
-                    launch {
-                        keyboard?.hide()
+                    keyboard?.hide()
+                    coroutineScope.launch {
                         sheetState.animateTo(ModalBottomSheetValue.Expanded)
                     }
                 }
@@ -275,13 +270,13 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
                 galleryImagesSelectionIndex = index
             },
             onCloseClick = {
-                launch {
+                coroutineScope.launch {
                     vm.updatePhotoState(null)
                     sheetState.hide()
                 }
             },
             onAddClick = {
-                launch {
+                coroutineScope.launch {
                     vm.setThumbnail(galleryImages[galleryImagesSelectionIndex].toUri())
                     vm.updatePhotoState(null)
                     sheetState.hide()
@@ -295,7 +290,7 @@ fun AdditionalInformationScreen(modifier: Modifier) = CoroutineScopeContent {
 @Composable
 private fun AdditionalThumbnailLayout(
     thumbnail: Any?,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
@@ -330,9 +325,8 @@ private fun AdditionalThumbnailLayout(
 
 /** 시험 응시 텍스트 선택 (시험 응시하기 버튼) Layout */
 @Composable
-private fun AdditionalTakeLayout() {
-    val vm = LocalViewModel.current as CreateProblemViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value.additionalInfo
+private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel()) {
+    val state = vm.collectAsState().value.additionalInfo
 
     TitleAndComponent(
         modifier = Modifier.padding(top = 48.dp),
@@ -349,9 +343,8 @@ private fun AdditionalTakeLayout() {
 
 /** 시험 태그 추가 (태그 추가) Layout */
 @Composable
-private fun AdditionalTagLayout() {
-    val vm = LocalViewModel.current as CreateProblemViewModel
-    val state = vm.state.collectAsStateWithLifecycle().value.additionalInfo
+private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()) {
+    val state = vm.collectAsState().value.additionalInfo
 
     TitleAndComponent(
         modifier = Modifier.padding(top = 48.dp),

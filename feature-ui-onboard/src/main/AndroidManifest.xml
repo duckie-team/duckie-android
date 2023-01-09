@@ -25,7 +25,6 @@
     <application>
         <activity
             android:name=".OnboardActivity"
-            android:configChanges="colorMode|uiMode|orientation|screenSize|screenLayout|keyboardHidden|locale|layoutDirection"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
     </application>
