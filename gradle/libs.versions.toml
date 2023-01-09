@@ -96,7 +96,7 @@ jackson-core = "2.14.1"
 orbit-core = "4.5.0"
 
 # quack
-quack-ui-components = "1.4.3"
+quack-ui-components = "1.4.5"
 quack-lint-core = "1.0.1"
 quack-lint-quack = "1.0.1"
 quack-lint-compose = "1.0.2"
