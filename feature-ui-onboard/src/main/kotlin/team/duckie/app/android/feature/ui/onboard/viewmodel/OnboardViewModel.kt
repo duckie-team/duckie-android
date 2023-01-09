@@ -10,7 +10,12 @@ package team.duckie.app.android.feature.ui.onboard.viewmodel
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Bundle
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.savedstate.SavedStateRegistryOwner
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -56,6 +61,7 @@ private const val ProfileImageCompressQuality = 100
 
 internal class OnboardViewModel @AssistedInject constructor(
     application: Application,
+    @Assisted savedStateHandle: SavedStateHandle,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     private val joinUseCase: JoinUseCase,
     private val attachAccessTokenToHeaderUseCase: AttachAccessTokenToHeaderUseCase,
@@ -68,8 +74,32 @@ internal class OnboardViewModel @AssistedInject constructor(
     /* ----- Assisted ----- */
 
     @AssistedFactory
-    interface ViewModelFactory {
-        fun create(getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase): OnboardViewModel
+    interface OnboardViewModelFactory {
+        fun create(
+            getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
+            savedStateHandle: SavedStateHandle,
+        ): OnboardViewModel
+    }
+
+    companion object Factory {
+        class FactoryProvider(
+            private val factory: OnboardViewModelFactory,
+            private val getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
+            owner: SavedStateRegistryOwner,
+            defaultArgs: Bundle? = null,
+        ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+            override fun <T : ViewModel> create(
+                key: String,
+                modelClass: Class<T>,
+                handle: SavedStateHandle,
+            ): T {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create(
+                    getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase,
+                    savedStateHandle = handle,
+                ) as T
+            }
+        }
     }
 
     /* ----- Variable ----- */
