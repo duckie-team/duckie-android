@@ -53,6 +53,7 @@ include(
     ":shared-ui-compose",
     ":util-ui",
     ":util-kotlin",
+    ":util-android",
     ":util-compose",
     ":util-exception-handling",
     ":plugin-ktor-client",
