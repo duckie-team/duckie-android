@@ -13,7 +13,6 @@ import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
@@ -24,6 +23,7 @@ import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.di.repository.ProvidesModule
@@ -35,10 +35,10 @@ import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
 import team.duckie.app.android.feature.ui.onboard.screen.LoginScreen
 import team.duckie.app.android.feature.ui.onboard.screen.ProfileScreen
 import team.duckie.app.android.feature.ui.onboard.screen.TagScreen
-import team.duckie.app.android.feature.ui.onboard.util.NetworkUtil
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
+import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlytics
 import team.duckie.app.android.util.ui.BaseActivity
@@ -51,12 +51,13 @@ import team.duckie.quackquack.ui.theme.QuackTheme
 @AndroidEntryPoint
 class OnboardActivity : BaseActivity() {
 
-    private val vm: OnboardViewModel by viewModels()
+    @Inject
+    internal lateinit var vmFactory: OnboardViewModel.ViewModelFactory
+    private lateinit var vm: OnboardViewModel
 
     private val kakaoRepository by lazy {
         ProvidesModule.provideKakaoRepository(activityContext = this)
     }
-    @Suppress("unused")
     private val getKakaoAccessTokenUseCase by lazy {
         KakaoUseCaseModule.provideGetKakaoAccessTokenUseCase(repository = kakaoRepository)
     }
@@ -85,6 +86,7 @@ class OnboardActivity : BaseActivity() {
             return finishWithAnimation()
         }
 
+        vm = vmFactory.create(getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase)
         onBackPressedDispatcher.addCallback(owner = this) {
             if (onboardStepState == OnboardStep.Login || onboardStepState == OnboardStep.Tag) {
                 finishWithAnimation()
