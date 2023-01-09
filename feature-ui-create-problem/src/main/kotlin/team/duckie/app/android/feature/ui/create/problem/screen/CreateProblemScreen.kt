@@ -700,7 +700,7 @@ private fun ChoiceProblemLayout(
         ) { deleteLongClick(null) }
 
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
-            // TODO(riflockle7): border 가 존재하는 TextField 필요
+            val isChecked = correctAnswers == "$answerIndex"
             QuackBorderTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -708,8 +708,8 @@ private fun ChoiceProblemLayout(
                     .applyAnimatedQuackBorder(
                         border = QuackBorder(
                             width = 1.dp,
-                            color = QuackColor.Gray4,
-                        ),
+                            color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4
+                        )
                     ),
                 text = choiceModel.text,
                 onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
@@ -718,7 +718,6 @@ private fun ChoiceProblemLayout(
                     "${answerIndex + 1}",
                 ),
                 trailingContent = {
-                    val isChecked = correctAnswers == "$answerIndex"
                     Column(
                         modifier = Modifier.quackClickable(
                             onLongClick = { deleteLongClick(answerIndex) },
@@ -771,9 +770,6 @@ private fun ImageChoiceProblemLayout(
     setCorrectAnswerClick: (String) -> Unit,
     deleteLongClick: (Int?) -> Unit,
 ) {
-    // TODO(riflockle7): 정답 체크 연동 필요 (failed 를 막기 위해 추가한 코드)
-    Log.i("riflockle7", "$correctAnswers $setCorrectAnswerClick")
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -795,13 +791,40 @@ private fun ImageChoiceProblemLayout(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             itemContent = { answerIndex ->
                 val answerItem = answers.imageChoice[answerIndex]
+                val isChecked = correctAnswers == "$answerIndex"
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .applyAnimatedQuackBorder(border = QuackBorder(color = QuackColor.Gray4))
+                        .applyAnimatedQuackBorder(
+                            border = QuackBorder(
+                                width = 1.dp,
+                                color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4
+                            )
+                        )
                         .padding(12.dp),
                 ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .quackClickable(
+                                onLongClick = { deleteLongClick(answerIndex) },
+                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") }
+                            ),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        QuackRoundCheckBox(checked = isChecked)
+
+                        if (isChecked) {
+                            QuackBody3(
+                                modifier = Modifier.padding(start = 2.dp),
+                                color = QuackColor.DuckieOrange,
+                                text = stringResource(id = R.string.answer),
+                            )
+                        }
+                    }
+
                     if (answerItem.imageUrl.isEmpty()) {
                         Box(
                             modifier = Modifier
