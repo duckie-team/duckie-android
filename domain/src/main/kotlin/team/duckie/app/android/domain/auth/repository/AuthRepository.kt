@@ -13,7 +13,7 @@ import team.duckie.app.android.domain.auth.model.JoinResponse
 
 @Immutable
 interface AuthRepository {
-    suspend fun join(kakaoOAuthToken: String): JoinResponse
+    suspend fun join(kakaoAccessToken: String): JoinResponse
     suspend fun checkAccessToken(token: String): AccessTokenCheckResponse
     fun attachAccessTokenToHeader(accessToken: String)
 }
