@@ -15,6 +15,7 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -24,7 +25,6 @@ import kotlin.coroutines.resume
 import kotlin.properties.Delegates
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -46,6 +46,7 @@ import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.domain.user.usecase.NicknameDuplicateCheckUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
@@ -62,6 +63,7 @@ private const val ProfileImageCompressQuality = 100
 internal class OnboardViewModel @AssistedInject constructor(
     application: Application,
     @Assisted savedStateHandle: SavedStateHandle,
+    private val nicknameDuplicateCheckUseCase: NicknameDuplicateCheckUseCase,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     private val joinUseCase: JoinUseCase,
     private val attachAccessTokenToHeaderUseCase: AttachAccessTokenToHeaderUseCase,
@@ -138,6 +140,14 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
+    suspend fun nicknameDuplicateCheck(nickname: String) = intent {
+        nicknameDuplicateCheckUseCase(nickname)
+            .onSuccess { result ->
+                reduce { OnboardState.NicknameDuplicateChecked(result) }
+            }
+            .attachExceptionHandling()
+    }
+
     fun checkNicknameRuleError(nickname: String): Boolean {
         return nicknameFilter.containsMatchIn(nickname)
     }
@@ -172,10 +182,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         me.temporaryProfileImageFile = file
     }
 
-    suspend fun updateUserProfileImage(coroutineScope: CoroutineScope) {
+    suspend fun updateUserProfileImage() {
         suspendCancellableCoroutine { continuation ->
             val file = me.temporaryProfileImageFile ?: return@suspendCancellableCoroutine continuation.resume(Unit)
-            val job = coroutineScope.launch {
+            val job = viewModelScope.launch {
                 launch {
                     container.stateFlow.collect { state ->
                         if (state is OnboardState.PrfileImageUploaded) {
@@ -197,14 +207,11 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    suspend fun updateUserFavorateTags(
-        favorateTagNames: List<String>,
-        coroutineScope: CoroutineScope,
-    ) {
+    suspend fun updateUserFavorateTags(favorateTagNames: List<String>) {
         suspendCancellableCoroutine { continuation ->
             val favorateTagSize = favorateTagNames.size
             val favorateTags = ArrayList<Tag>(favorateTagSize)
-            val job = coroutineScope.launch {
+            val job = viewModelScope.launch {
                 launch {
                     container.stateFlow.collect { state ->
                         if (state is OnboardState.TagCreated) {
@@ -239,7 +246,7 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     /* ----- Api ----- */
 
-    fun getKakaoAccessToken() = intent {
+    suspend fun getKakaoAccessToken() = intent {
         getKakaoAccessTokenUseCase()
             .onSuccess { token ->
                 postSideEffect(OnboardSideEffect.DelegateJoin(token))
@@ -247,7 +254,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             .attachExceptionHandling()
     }
 
-    fun join(kakaoAccessToken: String) = intent {
+    suspend fun join(kakaoAccessToken: String) = intent {
         joinUseCase(kakaoAccessToken)
             .onSuccess { response ->
                 reduce { OnboardState.Joined(response.isNewUser) }
@@ -262,7 +269,7 @@ internal class OnboardViewModel @AssistedInject constructor(
         attachAccessTokenToHeaderUseCase(accessToken).attachExceptionHandling()
     }
 
-    fun getCategories(withPopularTags: Boolean) = intent {
+    suspend fun getCategories(withPopularTags: Boolean) = intent {
         getCategoriesUseCase(withPopularTags)
             .onSuccess { categories ->
                 reduce { OnboardState.CategoriesLoaded(categories) }
@@ -270,7 +277,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             .attachExceptionHandling()
     }
 
-    fun updateProfileImageFile(file: File) = intent {
+    private suspend fun updateProfileImageFile(file: File) = intent {
         fileUploadUseCase(file, FileType.Profile)
             .onSuccess { url ->
                 reduce { OnboardState.PrfileImageUploaded(url) }
@@ -278,7 +285,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             .attachExceptionHandling()
     }
 
-    fun createTag(name: String) = intent {
+    private suspend fun createTag(name: String) = intent {
         tagCreateUseCase(name)
             .onSuccess { tag ->
                 reduce { OnboardState.TagCreated(tag) }
@@ -286,7 +293,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             .attachExceptionHandling()
     }
 
-    fun updateUser(
+    suspend fun updateUser(
         id: Int,
         nickname: String?,
         profileImageUrl: String?,
