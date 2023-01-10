@@ -15,6 +15,12 @@ performance:
   SpreadOperator:
     active: false
 
+formatting:
+  TrailingCommaOnCallSite:
+    active: true
+  TrailingCommaOnDeclarationSite:
+    active: true
+
 style:
   MagicNumber:
     ignorePropertyDeclaration: true
