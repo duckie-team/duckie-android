@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(FlowPreview::class)
+@file:OptIn(FlowPreview::class, ExperimentalComposeUiApi::class)
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
@@ -48,6 +48,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.compose.collectState
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.photopicker.PhotoPickerConstants
 import team.duckie.app.android.feature.ui.onboard.R
@@ -55,6 +56,7 @@ import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
@@ -145,7 +147,6 @@ private val ProfileScreenMeasurePolicy = MeasurePolicy { measurables, constraint
 private const val MaxNicknameLength = 10
 private val NicknameInputDebounceSecond = 0.3.seconds
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     val toast = rememberToast()
@@ -194,17 +195,24 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     var nicknameRuleError by remember { mutableStateOf(false) }
     var debounceFinish by remember { mutableStateOf(false) }
 
-    // TODO(sungbin): 중복 닉네임 검사
-    val nicknameIsUseable by remember { mutableStateOf(true) }
+    var nicknameIsUseable by remember { mutableStateOf(false) }
+
+    // Collecting in LaunchedEffect
+    vm.collectState { state ->
+        if (state is OnboardState.NicknameDuplicateChecked) {
+            nicknameIsUseable = state.isUsable
+        }
+    }
 
     LaunchedEffect(vm) {
         val nicknameInputFlow = snapshotFlow { nickname }
         nicknameInputFlow
             .onEach { debounceFinish = false }
             .debounce(NicknameInputDebounceSecond)
-            .collect {
+            .collect { nickname ->
                 debounceFinish = true
                 nicknameRuleError = vm.checkNicknameRuleError(nickname)
+                vm.nicknameDuplicateCheck(nickname)
             }
     }
 
