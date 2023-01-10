@@ -18,6 +18,7 @@ import strikt.assertions.containsExactly
 import strikt.assertions.isNotEmpty
 import team.duckie.app.android.data.category.repository.CategoryRepositoryImpl
 import team.duckie.app.android.data.dummy.CategoryDummyResponse
+import team.duckie.app.android.data.util.ApiTest
 import team.duckie.app.android.data.util.buildMockHttpClient
 import team.duckie.app.android.domain.category.repository.CategoryRepository
 

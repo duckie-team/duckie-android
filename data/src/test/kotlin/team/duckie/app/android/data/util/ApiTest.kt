@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.data
+package team.duckie.app.android.data.util
 
 import io.ktor.client.HttpClient
 import org.junit.Rule
