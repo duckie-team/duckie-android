@@ -11,11 +11,15 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.addCallback
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +32,10 @@ import team.duckie.app.android.di.usecase.kakao.KakaoUseCaseModule
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
+import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
+import team.duckie.app.android.feature.ui.onboard.screen.LoginScreen
+import team.duckie.app.android.feature.ui.onboard.screen.ProfileScreen
+import team.duckie.app.android.feature.ui.onboard.screen.TagScreen
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
@@ -37,6 +45,9 @@ import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyt
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.collectWithLifecycle
 import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.quackquack.ui.animation.QuackAnimatedContent
+import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
 class OnboardActivity : BaseActivity() {
@@ -76,7 +87,6 @@ class OnboardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("온보딩 진입")
 
         if (!NetworkUtil.isNetworkAvailable(applicationContext)) {
             toast(getString(R.string.bad_internet))
@@ -116,7 +126,7 @@ class OnboardActivity : BaseActivity() {
             }
         }
 
-        /*setContent {
+        setContent {
             QuackTheme {
                 QuackAnimatedContent(
                     modifier = Modifier
@@ -124,7 +134,6 @@ class OnboardActivity : BaseActivity() {
                         .background(color = QuackColor.White.composeColor),
                     targetState = onboardStepState,
                 ) { onboardStep ->
-                    println("Step: $onboardStep")
                     when (onboardStep) {
                         OnboardStep.Login -> LoginScreen()
                         OnboardStep.Profile -> ProfileScreen()
@@ -134,7 +143,7 @@ class OnboardActivity : BaseActivity() {
                     }
                 }
             }
-        }*/
+        }
     }
 
     private fun permissionInit() {
@@ -164,7 +173,6 @@ class OnboardActivity : BaseActivity() {
     }
 
     private fun handleState(state: OnboardState) {
-        println("state: $state")
         when (state) {
             OnboardState.Initial -> {
                 vm.navigateStep(
@@ -196,7 +204,6 @@ class OnboardActivity : BaseActivity() {
     }
 
     private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
-        println("SideEffect: $sideEffect")
         when (sideEffect) {
             is OnboardSideEffect.UpdateGalleryImages -> {
                 vm.addGalleryImages(sideEffect.images)
