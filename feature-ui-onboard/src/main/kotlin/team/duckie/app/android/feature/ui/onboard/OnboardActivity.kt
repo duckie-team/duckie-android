@@ -122,7 +122,7 @@ class OnboardActivity : BaseActivity() {
             }
 
             launch {
-                vm.getCategories(withPopularTags = true)
+                // vm.getCategories(withPopularTags = true)
             }
         }
 
