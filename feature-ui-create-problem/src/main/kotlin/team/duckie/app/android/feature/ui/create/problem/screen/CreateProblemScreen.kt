@@ -8,7 +8,6 @@
 @file:OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalComposeUiApi::class,
-    ExperimentalLifecycleComposeApi::class
 )
 
 package team.duckie.app.android.feature.ui.create.problem.screen
@@ -69,7 +68,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -87,6 +85,7 @@ import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.fastForEach
+import team.duckie.app.android.util.kotlin.fastForEachIndexed
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
@@ -174,7 +173,7 @@ internal fun CreateProblemScreen(
             elements = Array(
                 size = galleryImages.size,
                 init = { false },
-            )
+            ),
         )
     }
     val photoState = remember(rootState.photoState) { rootState.photoState }
@@ -185,13 +184,25 @@ internal fun CreateProblemScreen(
     // 단일 권한 설정 launcher
     // TODO(riflockle7): 권한 로직은 추후 PermissionViewModel 과 같이 쓰면서 지워질 예정
     val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
+        ActivityResultContracts.RequestPermission(),
     ) { isGranted: Boolean ->
         if (isGranted) {
             vm.updatePhotoState(null)
         } else {
             toast(permissionErrorMessage)
         }
+    }
+
+    val buttonNames = remember {
+        @Suppress("MaxLineLength")
+        listOf(
+            // 객관식/글 버튼
+            context.getString(R.string.create_problem_bottom_sheet_title_choice_text) to Answer.Type.Choice,
+            // 객관식/사진 버튼
+            context.getString(R.string.create_problem_bottom_sheet_title_choice_media) to Answer.Type.ImageChoice,
+            // 주관식 버튼
+            context.getString(R.string.create_problem_bottom_sheet_title_short_form) to Answer.Type.ShortAnswer,
+        )
     }
 
     BackHandler {
@@ -204,13 +215,11 @@ internal fun CreateProblemScreen(
         }
     }
 
-    key(sheetState) {
-        LaunchedEffect(Unit) {
-            val sheetStateFlow = snapshotFlow { sheetState.currentValue }
-            sheetStateFlow.collect { state ->
-                if (state == ModalBottomSheetValue.Hidden) {
-                    keyboard?.hide()
-                }
+    LaunchedEffect(sheetState) {
+        val sheetStateFlow = snapshotFlow { sheetState.currentValue }
+        sheetStateFlow.collect { state ->
+            if (state == ModalBottomSheetValue.Hidden) {
+                keyboard?.hide()
             }
         }
     }
@@ -238,26 +247,16 @@ internal fun CreateProblemScreen(
                         .width(40.dp)
                         .height(4.dp)
                         .clip(RoundedCornerShape(2.dp))
-                        .background(QuackColor.Gray2.composeColor)
+                        .background(QuackColor.Gray2.composeColor),
                 )
 
                 // 선택 목록
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp)
+                        .padding(top = 16.dp),
                 ) {
-                    listOf(
-                        // 객관식/글 버튼
-                        stringResource(id = R.string.create_problem_bottom_sheet_title_choice_text)
-                                to Answer.Type.Choice,
-                        // 객관식/사진 버튼
-                        stringResource(id = R.string.create_problem_bottom_sheet_title_choice_media)
-                                to Answer.Type.ImageChoice,
-                        // 주관식 버튼
-                        stringResource(id = R.string.create_problem_bottom_sheet_title_short_form)
-                                to Answer.Type.ShortAnswer,
-                    ).fastForEach {
+                    buttonNames.fastForEach {
                         QuackSubtitle(
                             modifier = Modifier.fillMaxWidth(),
                             padding = PaddingValues(
@@ -271,18 +270,18 @@ internal fun CreateProblemScreen(
                                         // 특정 문제의 답안 유형 수정
                                         vm.editAnswersType(questionIndex, it.second)
                                         selectedQuestionIndex = null
-                                    } ?: kotlin.run {
+                                    } ?: run {
                                         // 문제 추가
                                         vm.addProblem(it.second)
                                     }
                                     hideBottomSheet(sheetState) { selectedQuestionIndex = null }
                                 }
-                            }
+                            },
                         )
                     }
                 }
             }
-        }
+        },
     ) {
         Layout(
             modifier = modifier
@@ -348,10 +347,10 @@ internal fun CreateProblemScreen(
                                             vm,
                                             CreateProblemPhotoState.QuestionImageType(
                                                 questionIndex,
-                                                question
+                                                question,
                                             ),
                                             keyboard,
-                                            launcher
+                                            launcher,
                                         )
                                     },
                                     onDropdownItemClick = {
@@ -370,7 +369,7 @@ internal fun CreateProblemScreen(
                                             answer = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
-                                    deleteLongClick = { deleteDialogNo = Pair(questionIndex, null) }
+                                    deleteLongClick = { deleteDialogNo = Pair(questionIndex, null) },
                                 )
 
                                 is Answer.Choice -> ChoiceProblemLayout(
@@ -389,10 +388,10 @@ internal fun CreateProblemScreen(
                                             vm,
                                             CreateProblemPhotoState.QuestionImageType(
                                                 questionIndex,
-                                                question
+                                                question,
                                             ),
                                             keyboard,
-                                            launcher
+                                            launcher,
                                         )
                                     },
                                     onDropdownItemClick = {
@@ -426,7 +425,7 @@ internal fun CreateProblemScreen(
                                     },
                                     deleteLongClick = { answerIndex: Int? ->
                                         deleteDialogNo = Pair(questionIndex, answerIndex)
-                                    }
+                                    },
                                 )
 
                                 is Answer.ImageChoice -> ImageChoiceProblemLayout(
@@ -445,10 +444,10 @@ internal fun CreateProblemScreen(
                                             vm,
                                             CreateProblemPhotoState.QuestionImageType(
                                                 questionIndex,
-                                                question
+                                                question,
                                             ),
                                             keyboard,
-                                            launcher
+                                            launcher,
                                         )
                                     },
                                     onDropdownItemClick = {
@@ -477,7 +476,7 @@ internal fun CreateProblemScreen(
                                                         questionIndex,
                                                         answersNo,
                                                         answers,
-                                                    )
+                                                    ),
                                                 )
                                                 keyboard?.hide()
                                             } else {
@@ -500,7 +499,7 @@ internal fun CreateProblemScreen(
                                     },
                                     deleteLongClick = { answerIndex ->
                                         deleteDialogNo = Pair(questionIndex, answerIndex)
-                                    }
+                                    },
                                 )
 
                                 else -> {}
@@ -525,9 +524,9 @@ internal fun CreateProblemScreen(
                                 }
                             }
                         }
-                    }
+                    },
                 )
-            }
+            },
         )
     }
 
@@ -600,7 +599,7 @@ internal fun CreateProblemScreen(
             }
             deleteDialogNo = null
         },
-        onDismissRequest = {}
+        onDismissRequest = {},
     )
 }
 
@@ -649,7 +648,7 @@ private fun CreateProblemTitleLayout(
         onTextChanged = titleChanged,
         placeholderText = stringResource(
             id = R.string.create_problem_question_placeholder,
-            "${questionIndex + 1}"
+            "${questionIndex + 1}",
         ),
         trailingIcon = QuackIcon.Image,
         trailingIconOnClick = imageClick,
@@ -667,7 +666,7 @@ private fun CreateProblemTitleLayout(
     QuackDropDownCard(
         modifier = Modifier.padding(top = 24.dp),
         text = dropDownTitle,
-        onClick = { onDropdownItemClick(questionIndex) }
+        onClick = { onDropdownItemClick(questionIndex) },
     )
 }
 
@@ -689,7 +688,7 @@ private fun ChoiceProblemLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -697,10 +696,10 @@ private fun ChoiceProblemLayout(
             titleChanged,
             imageClick,
             answers.type.title,
-            onDropdownItemClick
+            onDropdownItemClick,
         ) { deleteLongClick(null) }
 
-        answers.choices.forEachIndexed { answerIndex, choiceModel ->
+        answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
             // TODO(riflockle7): border 가 존재하는 TextField 필요
             QuackBorderTextField(
                 modifier = Modifier
@@ -709,21 +708,21 @@ private fun ChoiceProblemLayout(
                     .applyAnimatedQuackBorder(
                         border = QuackBorder(
                             width = 1.dp,
-                            color = QuackColor.Gray4
-                        )
+                            color = QuackColor.Gray4,
+                        ),
                     ),
                 text = choiceModel.text,
                 onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
                 placeholderText = stringResource(
                     id = R.string.create_problem_answer_placeholder,
-                    "${answerIndex + 1}"
+                    "${answerIndex + 1}",
                 ),
                 trailingContent = {
                     val isChecked = correctAnswers == "$answerIndex"
                     Column(
                         modifier = Modifier.quackClickable(
                             onLongClick = { deleteLongClick(answerIndex) },
-                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") }
+                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") },
                         ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -737,7 +736,7 @@ private fun ChoiceProblemLayout(
                             )
                         }
                     }
-                }
+                },
             )
         }
 
@@ -747,7 +746,7 @@ private fun ChoiceProblemLayout(
             QuackSubtitle(
                 modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
                 text = stringResource(id = R.string.create_problem_add_button),
-                onClick = { addAnswerClick() }
+                onClick = { addAnswerClick() },
             )
         }
     }
@@ -778,7 +777,7 @@ private fun ImageChoiceProblemLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -801,7 +800,7 @@ private fun ImageChoiceProblemLayout(
                     modifier = Modifier
                         .fillMaxWidth()
                         .applyAnimatedQuackBorder(border = QuackBorder(color = QuackColor.Gray4))
-                        .padding(12.dp)
+                        .padding(12.dp),
                 ) {
                     if (answerItem.imageUrl.isEmpty()) {
                         Box(
@@ -812,7 +811,7 @@ private fun ImageChoiceProblemLayout(
                         ) {
                             QuackImage(
                                 src = QuackIcon.Image,
-                                size = DpSize(32.dp, 32.dp)
+                                size = DpSize(32.dp, 32.dp),
                             )
                         }
                     } else {
@@ -831,11 +830,11 @@ private fun ImageChoiceProblemLayout(
                         },
                         placeholderText = stringResource(
                             id = R.string.create_problem_answer_placeholder,
-                            "${answerIndex + 1}"
+                            "${answerIndex + 1}",
                         ),
                     )
                 }
-            }
+            },
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -844,7 +843,7 @@ private fun ImageChoiceProblemLayout(
             QuackSubtitle(
                 modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
                 text = stringResource(id = R.string.create_problem_add_problem_button),
-                onClick = { addAnswerClick() }
+                onClick = { addAnswerClick() },
             )
         }
     }
@@ -865,7 +864,7 @@ private fun ShortAnswerProblemLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -879,7 +878,7 @@ private fun ShortAnswerProblemLayout(
         QuackBasicTextField(
             text = answers.answer.text,
             onTextChanged = { newAnswer -> answerTextChanged(newAnswer, 0) },
-            placeholderText = stringResource(id = R.string.create_problem_short_answer_placeholder)
+            placeholderText = stringResource(id = R.string.create_problem_short_answer_placeholder),
         )
     }
 }
@@ -951,7 +950,7 @@ fun <T> NoLazyGridItems(
     for (rowIndex in 0 until rows) {
         Row(
             modifier = Modifier.padding(paddingValues),
-            horizontalArrangement = horizontalArrangement
+            horizontalArrangement = horizontalArrangement,
         ) {
             for (columnIndex in 0 until nColumns) {
                 val itemIndex = rowIndex * nColumns + columnIndex
@@ -960,7 +959,7 @@ fun <T> NoLazyGridItems(
                     key(key?.invoke(item)) {
                         Box(
                             modifier = Modifier.weight(1f, fill = true),
-                            propagateMinConstraints = true
+                            propagateMinConstraints = true,
                         ) {
                             itemContent.invoke(this, item)
                         }

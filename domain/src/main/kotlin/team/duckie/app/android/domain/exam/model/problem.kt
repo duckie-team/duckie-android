@@ -119,18 +119,19 @@ fun Answer.Type.getDefaultAnswer(): Answer = when (this) {
     Answer.Type.Choice -> Answer.Choice(
         persistentListOf(
             getDefaultAnswerModel(),
-            getDefaultAnswerModel()
-        )
+            getDefaultAnswerModel(),
+        ),
     )
 
     Answer.Type.ImageChoice -> Answer.ImageChoice(
         persistentListOf(
             getDefaultAnswerModel(),
-            getDefaultAnswerModel()
-        )
+            getDefaultAnswerModel(),
+        ),
     )
 }
 
+@Immutable
 interface AnswerModel
 
 @JvmInline
@@ -161,7 +162,7 @@ fun Answer.toShort(newAnswer: String? = null) = Answer.Short(
         is Answer.Short -> ShortModel(newAnswer ?: this.answer.text)
         is Answer.Choice -> ShortModel(newAnswer ?: this.choices.firstOrNull()?.text ?: "")
         is Answer.ImageChoice -> ShortModel(newAnswer ?: this.imageChoice.firstOrNull()?.text ?: "")
-    }
+    },
 )
 
 /** [Answer] -> [Answer.Choice] */
@@ -174,7 +175,7 @@ fun Answer.toChoice(answerIndex: Int? = null, newAnswer: String? = null) = when 
             } else {
                 choiceModel
             }
-        }.toPersistentList()
+        }.toPersistentList(),
     )
 
     is Answer.ImageChoice -> Answer.Choice(
@@ -184,7 +185,7 @@ fun Answer.toChoice(answerIndex: Int? = null, newAnswer: String? = null) = when 
             } else {
                 ChoiceModel(imageChoiceModel.text)
             }
-        }.toPersistentList()
+        }.toPersistentList(),
     )
 }
 
@@ -202,7 +203,7 @@ fun Answer.toImageChoice(
             } else {
                 ImageChoiceModel(choiceModel.text, "")
             }
-        }.toPersistentList()
+        }.toPersistentList(),
     )
 
     is Answer.ImageChoice -> Answer.ImageChoice(
@@ -210,11 +211,11 @@ fun Answer.toImageChoice(
             if (index == answerIndex) {
                 ImageChoiceModel(
                     newAnswer ?: imageChoiceModel.text,
-                    newUrlSource ?: imageChoiceModel.imageUrl
+                    newUrlSource ?: imageChoiceModel.imageUrl,
                 )
             } else {
                 imageChoiceModel
             }
-        }.toPersistentList()
+        }.toPersistentList(),
     )
 }

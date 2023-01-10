@@ -76,7 +76,7 @@ class HomeActivity : BaseActivity() {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen(
                                     navigateToSearchResult = {
                                         // TODO(limsaehyun): navigate to search result screen
-                                    }
+                                    },
                                 )
 
                                 BottomNavigationStep.SearchScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
@@ -94,7 +94,7 @@ class HomeActivity : BaseActivity() {
                             selectedIndex = state.step.index,
                             onClick = { index ->
                                 homeViewModel.navigationPage(
-                                    BottomNavigationStep.toStep(index)
+                                    BottomNavigationStep.toStep(index),
                                 )
                             },
                         )
@@ -118,7 +118,7 @@ class HomeActivity : BaseActivity() {
 
                     val homeCrossFadeConstraints = constraints.copy(
                         minHeight = 0,
-                        maxHeight = constraints.maxHeight - homeBottomNavigationHeight
+                        maxHeight = constraints.maxHeight - homeBottomNavigationHeight,
                     )
                     val homeCrossFacadePlaceable = measurables.fastFirstOrNull { measurable ->
                         measurable.layoutId == HomeCrossFacadeLayoutId
@@ -126,7 +126,7 @@ class HomeActivity : BaseActivity() {
 
                     layout(
                         width = constraints.maxWidth,
-                        height = constraints.maxHeight
+                        height = constraints.maxHeight,
                     ) {
                         homeCrossFacadePlaceable.place(
                             x = 0,
@@ -135,12 +135,12 @@ class HomeActivity : BaseActivity() {
 
                         homeBottomNavigationDividerPlaceable.place(
                             x = 0,
-                            y = constraints.maxHeight - homeBottomNavigationHeight - homeBottomNavigationDividerHeight
+                            y = constraints.maxHeight - homeBottomNavigationHeight - homeBottomNavigationDividerHeight,
                         )
 
                         homeBottomNavigationPlaceable.place(
                             x = 0,
-                            y = constraints.maxHeight - homeBottomNavigationHeight
+                            y = constraints.maxHeight - homeBottomNavigationHeight,
                         )
                     }
                 }

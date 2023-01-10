@@ -88,7 +88,7 @@ internal fun ExamInformationScreen(viewModel: CreateProblemViewModel = activityV
                 onTrailingTextClick = { viewModel.navigateStep(CreateProblemStep.CreateProblem) },
                 trailingTextEnabled = viewModel.isAllFieldsNotEmpty(),
             )
-        }
+        },
     ) { contentPadding ->
         LazyColumn(
             modifier = Modifier
@@ -96,7 +96,7 @@ internal fun ExamInformationScreen(viewModel: CreateProblemViewModel = activityV
                 .padding(
                     top = 16.dp,
                     start = 16.dp,
-                    end = 16.dp
+                    end = 16.dp,
                 ),
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(space = 48.dp),

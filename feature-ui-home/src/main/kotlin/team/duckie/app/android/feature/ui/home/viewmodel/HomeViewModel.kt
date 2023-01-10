@@ -55,7 +55,7 @@ private val DummyRecommendUsers = (0..3).map {
                 createAt = "1일 전",
                 userId = 0,
             )
-        }.toPersistentList()
+        }.toPersistentList(),
     )
 }.toPersistentList()
 

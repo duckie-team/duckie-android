@@ -18,12 +18,13 @@ import strikt.assertions.containsExactly
 import strikt.assertions.isNotEmpty
 import team.duckie.app.android.data.category.repository.CategoryRepositoryImpl
 import team.duckie.app.android.data.dummy.CategoryDummyResponse
+import team.duckie.app.android.data.util.ApiTest
 import team.duckie.app.android.data.util.buildMockHttpClient
 import team.duckie.app.android.domain.category.repository.CategoryRepository
 
 class CategoryRepositoryTest : ApiTest(
     isMock = true,
-    client = buildMockHttpClient(content = CategoryDummyResponse.RawData)
+    client = buildMockHttpClient(content = CategoryDummyResponse.RawData),
 ) {
     private val repository: CategoryRepository by lazy { CategoryRepositoryImpl() }
 

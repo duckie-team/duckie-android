@@ -74,40 +74,40 @@ internal fun ProblemData.toDomain() = Problem(
 
 internal fun QuestionData.toDomain() = when (this) {
     is QuestionData.Text -> Question.Text(
-        text = text ?: duckieResponseFieldNpe("${this::class.java.simpleName}.text")
+        text = text ?: duckieResponseFieldNpe("${this::class.java.simpleName}.text"),
     )
 
     is QuestionData.Image -> Question.Image(
         text = text ?: duckieResponseFieldNpe("${this::class.java.simpleName}.text"),
-        imageUrl = imageUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.imageUrl")
+        imageUrl = imageUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.imageUrl"),
     )
 
     is QuestionData.Audio -> Question.Audio(
         text = text ?: duckieResponseFieldNpe("${this::class.java.simpleName}.text"),
-        audioUrl = audioUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.audioUrl")
+        audioUrl = audioUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.audioUrl"),
     )
 
     is QuestionData.Video -> Question.Video(
         text = text ?: duckieResponseFieldNpe("${this::class.java.simpleName}.text"),
-        videoUrl = videoUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.videoUrl")
+        videoUrl = videoUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.videoUrl"),
     )
 }
 
 internal fun AnswerData.toDomain(): Answer = when (this) {
     is AnswerData.ShortAnswer -> Answer.Short(
         answer = ShortModel(
-            shortAnswer ?: duckieResponseFieldNpe("${this::class.java.simpleName}.shortAnswer")
-        )
+            shortAnswer ?: duckieResponseFieldNpe("${this::class.java.simpleName}.shortAnswer"),
+        ),
     )
 
     is AnswerData.Choice -> Answer.Choice(
         choices = choices?.fastMap(ChoiceData::toDomain)?.toImmutableList()
-            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.choices")
+            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.choices"),
     )
 
     is AnswerData.ImageChoice -> Answer.ImageChoice(
         imageChoice = imageChoice?.fastMap(ImageChoiceData::toDomain)?.toImmutableList()
-            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.imageChoice")
+            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.imageChoice"),
     )
 }
 
@@ -116,7 +116,7 @@ internal fun ChoiceData.toDomain() =
 
 internal fun ImageChoiceData.toDomain() = ImageChoiceModel(
     text = text ?: duckieResponseFieldNpe("${this::class.java.simpleName}.text"),
-    imageUrl = imageUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.imageUrl")
+    imageUrl = imageUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.imageUrl"),
 )
 
 @OutOfDateApi
@@ -198,11 +198,12 @@ internal fun ImageChoiceModel.toData() = ImageChoiceData(
 
 @OutOfDateApi
 internal fun ExamInstanceBody.toData() = ExamInstanceBodyData(
-    examId = this.examId
+    examId = this.examId,
 )
+
 @OutOfDateApi
 internal fun ExamInstanceSubmitBody.toData() = ExamInstanceSubmitBodyData(
-    submitted = this.submitted
+    submitted = this.submitted,
 )
 
 internal fun ExamInstanceSubmitData.toDomain() = ExamInstanceSubmit(

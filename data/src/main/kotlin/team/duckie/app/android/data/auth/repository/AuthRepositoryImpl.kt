@@ -25,10 +25,10 @@ import team.duckie.app.android.domain.auth.repository.AuthRepository
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeader
 
 class AuthRepositoryImpl @Inject constructor() : AuthRepository {
-    override suspend fun join(kakaoOAuthToken: String): JoinResponse {
+    override suspend fun join(kakaoAccessToken: String): JoinResponse {
         val response = client.post("/auth/kakao") {
             jsonBody {
-                "code" withString kakaoOAuthToken
+                "code" withString kakaoAccessToken
             }
         }
         return responseCatching(

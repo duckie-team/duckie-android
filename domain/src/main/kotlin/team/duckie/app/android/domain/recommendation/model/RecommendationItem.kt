@@ -12,8 +12,9 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 
+@OptIn(OutOfDateApi::class)
 @Immutable
-data class RecommendationItem @OptIn(OutOfDateApi::class) constructor(
+data class RecommendationItem(
     val title: String,
     val tag: Tag,
     val exams: List<Exam>,

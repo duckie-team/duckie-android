@@ -14,6 +14,7 @@
     <!--
     [ android:largeHeap="true" ]
     https://stackoverflow.com/a/18034671/14299073
+    참고: https://stackoverflow.com/a/30930239/14299073
     추후 OOM 의 진짜 원인을 파악해야 함
     -->
     <application

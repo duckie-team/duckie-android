@@ -49,7 +49,7 @@ class SearchResultActivity : BaseActivity() {
                 SearchResultScreen(
                     modifier = Modifier
                         .padding(systemBarPaddings)
-                        .background(QuackColor.White.composeColor)
+                        .background(QuackColor.White.composeColor),
                 ) {
                     finishWithAnimation()
                 }

@@ -19,15 +19,16 @@ sealed class Search(val type: String, open val page: Int) {
         const val User = "user"
     }
 
+    @OptIn(OutOfDateApi::class)
     @Immutable
-    data class ExamSearch @OptIn(OutOfDateApi::class) constructor(
+    data class ExamSearch(
         val exams: List<Exam>,
-        override val page: Int
+        override val page: Int,
     ) : Search(Exam, page)
 
     @Immutable
     data class UserSearch(
         val users: List<User>,
-        override val page: Int
+        override val page: Int,
     ) : Search(User, page)
 }

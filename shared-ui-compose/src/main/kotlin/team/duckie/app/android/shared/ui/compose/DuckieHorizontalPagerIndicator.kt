@@ -5,13 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 package team.duckie.app.android.shared.ui.compose
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -59,13 +52,12 @@ fun DuckieHorizontalPagerIndicator(
     spacing: Dp = indicatorWidth,
     indicatorShape: Shape = CircleShape,
 ) {
-
     val indicatorWidthPx = LocalDensity.current.run { indicatorWidth.roundToPx() }
     val spacingPx = LocalDensity.current.run { spacing.roundToPx() }
 
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(spacing),
@@ -87,14 +79,14 @@ fun DuckieHorizontalPagerIndicator(
                         .coerceIn(0f, pagerState.currentPage.coerceAtLeast(0).toFloat())
                     IntOffset(
                         x = ((spacingPx + indicatorWidthPx) * scrollPosition).toInt(),
-                        y = 0
+                        y = 0,
                     )
                 }
                 .size(width = indicatorWidth, height = indicatorHeight)
                 .background(
                     color = activeColor,
                     shape = indicatorShape,
-                )
+                ),
         )
     }
 }

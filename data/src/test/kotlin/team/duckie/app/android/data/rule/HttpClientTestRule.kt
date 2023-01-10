@@ -18,11 +18,9 @@ class HttpClientTestRule(private val mockClient: HttpClient?) : TestWatcher() {
 
     override fun starting(description: Description?) {
         originalClient = client
-        mockClient?.let {mockClient ->
+        mockClient?.let { mockClient ->
             updateClient(newClient = mockClient)
-        } ?: kotlin.run {
-            updateClient(newBuildModel = "realTest_atUnitTest")
-        }
+        } ?: updateClient(newBuildModel = "realTest_atUnitTest")
         super.starting(description)
     }
 

@@ -5,19 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 package team.duckie.app.android.shared.ui.compose
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,15 +26,11 @@ import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
+import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
 private val HomeProfileSize: DpSize = DpSize(
     all = 32.dp,
-)
-
-// TODO(limsaehyun): 추후에 QuackQuack Shape 으로 대체 필요
-private val HomeProfileShape: RoundedCornerShape = RoundedCornerShape(
-    size = 16.dp
 )
 
 private const val UserInfoBlockUserProfileLayoutId = "UserInfoContentUserProfile"
@@ -74,7 +62,7 @@ fun UserFollowingLayout(
                 modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
                 src = profile,
                 size = HomeProfileSize,
-                shape = HomeProfileShape,
+                shape = SquircleShape,
                 onClick = {
                     if (onClickUserProfile != null) {
                         onClickUserProfile(userId)
@@ -94,15 +82,13 @@ fun UserFollowingLayout(
                 text = "${stringResource(id = R.string.examinee)} $examineeNumber  ·  $createAt",
             )
             QuackBody2(
-                modifier = Modifier
-                    .layoutId(UserInfoBlockFollowingButtonLayoutId),
-                text = if (isFollowing) stringResource(id = R.string.follow)
-                else stringResource(id = R.string.following),
+                modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
+                text = if (isFollowing) stringResource(id = R.string.follow) else stringResource(id = R.string.following),
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                 onClick = { onClickFollowing(!isFollowing) },
                 rippleEnabled = false,
             )
-        }
+        },
     ) { measurables, constraints ->
         val extraLooseConstraints = constraints.asLoose(width = true)
 

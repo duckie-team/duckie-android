@@ -77,12 +77,12 @@ class CreateProblemActivity : BaseActivity() {
                         CreateProblemStep.CreateProblem -> CreateProblemScreen(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .statusBarsPadding()
+                                .statusBarsPadding(),
                         )
                         CreateProblemStep.AdditionalInformation -> AdditionalInformationScreen(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .statusBarsPadding()
+                                .statusBarsPadding(),
                         )
                     }
                 }

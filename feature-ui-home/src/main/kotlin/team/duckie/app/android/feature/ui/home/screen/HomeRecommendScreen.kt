@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalFoundationApi::class, OutOfDateApi::class)
+
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -29,7 +31,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
@@ -57,10 +58,6 @@ import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
-@OptIn(
-    ExperimentalLifecycleComposeApi::class,
-    ExperimentalFoundationApi::class, OutOfDateApi::class,
-)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
@@ -87,9 +84,7 @@ internal fun HomeRecommendScreen(
                     .padding(bottom = 16.dp),
                 selectedTabIndex = state.homeSelectedIndex.index,
                 onTabSelected = { step ->
-                    vm.changedHomeScreen(
-                        HomeStep.toStep(step)
-                    )
+                    vm.changedHomeScreen(HomeStep.toStep(step))
                 },
                 onClickedEdit = {
                     // TODO("limsaehyun"): 수정 페이지로 이동 필요
@@ -107,7 +102,7 @@ internal fun HomeRecommendScreen(
                     recommendItem = state.jumbotrons[page],
                     onStartClicked = {
                         // TODO ("limsaehyun"): 상세보기로 이 필요
-                    }
+                    },
                 )
             }
         }
@@ -175,9 +170,7 @@ private fun HomeRecommendJumbotronLayout(
         )
         Spacer(modifier = Modifier.height(8.dp))
         QuackBody3(
-            text = stringResource(
-                id = R.string.home_volume_control_message,
-            )
+            text = stringResource(id = R.string.home_volume_control_message),
         )
     }
 }
@@ -201,7 +194,7 @@ private fun HomeTopicRecommendLayout(
             underlineTexts = persistentListOf(tag),
             onClick = {
                 onTagClicked(tag)
-            }
+            },
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -223,7 +216,7 @@ private fun HomeTopicRecommendLayout(
                     ),
                     onClick = {
                         onClicked(it)
-                    }
+                    },
                 )
             }
         }

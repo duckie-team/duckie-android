@@ -13,6 +13,7 @@ plugins {
 }
 
 dependencies {
+    detektPlugins(libs.detekt.plugin.formatting)
     implementation(libs.ktor.client.core)
     testImplementations(
         libs.ktor.client.engine,

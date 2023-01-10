@@ -16,9 +16,9 @@ import team.duckie.app.android.domain.auth.repository.AuthRepository
 class JoinUseCase @Inject constructor(
     private val repository: AuthRepository,
 ) {
-    suspend operator fun invoke(kakaoOAuthToken: String): Result<JoinResponse> {
+    suspend operator fun invoke(kakaoAccessToken: String): Result<JoinResponse> {
         return runCatching {
-            repository.join(kakaoOAuthToken)
+            repository.join(kakaoAccessToken)
         }
     }
 }
