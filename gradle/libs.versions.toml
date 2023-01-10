@@ -236,6 +236,8 @@ test-ktor-client = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-co
 test-ktor-server = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-core" }
 test-orbit = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit-core" }
 
+detekt-plugin-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "plugin-code-detekt" }
+
 [bundles]
 compose-core = ["compose-runtime", "compose-ui-foundation", "compose-ui-activity", "compose-util-tooling-preview"]
 compose-debug = ["compose-util-tooling-core", "compose-util-customview-pooling-container"] # debugImplementation
