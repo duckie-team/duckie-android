@@ -12,10 +12,12 @@ import javax.inject.Inject
 import team.duckie.app.android.domain.user.repository.UserRepository
 
 @Immutable
-class UserNicknameValidateCheckUseCase @Inject constructor(
+class NicknameDuplicateCheckUseCase @Inject constructor(
     private val repository: UserRepository,
 ) {
     suspend operator fun invoke(nickname: String): Result<Boolean> {
-        return runCatching { repository.nicknameValidateCheck(nickname) }
+        return runCatching {
+            repository.nicknameValidateCheck(nickname)
+        }
     }
 }
