@@ -194,6 +194,18 @@ internal fun CreateProblemScreen(
         }
     }
 
+    val buttonNames = remember {
+        @Suppress("MaxLineLength")
+        listOf(
+            // 객관식/글 버튼
+            context.getString(R.string.create_problem_bottom_sheet_title_choice_text) to Answer.Type.Choice,
+            // 객관식/사진 버튼
+            context.getString(R.string.create_problem_bottom_sheet_title_choice_media) to Answer.Type.ImageChoice,
+            // 주관식 버튼
+            context.getString(R.string.create_problem_bottom_sheet_title_short_form) to Answer.Type.ShortAnswer,
+        )
+    }
+
     BackHandler {
         if (sheetState.isVisible) {
             coroutineShape.hideBottomSheet(sheetState) { selectedQuestionIndex = null }
@@ -204,13 +216,11 @@ internal fun CreateProblemScreen(
         }
     }
 
-    key(sheetState) {
-        LaunchedEffect(Unit) {
-            val sheetStateFlow = snapshotFlow { sheetState.currentValue }
-            sheetStateFlow.collect { state ->
-                if (state == ModalBottomSheetValue.Hidden) {
-                    keyboard?.hide()
-                }
+    LaunchedEffect(sheetState) {
+        val sheetStateFlow = snapshotFlow { sheetState.currentValue }
+        sheetStateFlow.collect { state ->
+            if (state == ModalBottomSheetValue.Hidden) {
+                keyboard?.hide()
             }
         }
     }
@@ -247,17 +257,7 @@ internal fun CreateProblemScreen(
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                 ) {
-                    listOf(
-                        // 객관식/글 버튼
-                        stringResource(id = R.string.create_problem_bottom_sheet_title_choice_text)
-                                to Answer.Type.Choice,
-                        // 객관식/사진 버튼
-                        stringResource(id = R.string.create_problem_bottom_sheet_title_choice_media)
-                                to Answer.Type.ImageChoice,
-                        // 주관식 버튼
-                        stringResource(id = R.string.create_problem_bottom_sheet_title_short_form)
-                                to Answer.Type.ShortAnswer,
-                    ).fastForEach {
+                    buttonNames.fastForEach {
                         QuackSubtitle(
                             modifier = Modifier.fillMaxWidth(),
                             padding = PaddingValues(
@@ -271,7 +271,7 @@ internal fun CreateProblemScreen(
                                         // 특정 문제의 답안 유형 수정
                                         vm.editAnswersType(questionIndex, it.second)
                                         selectedQuestionIndex = null
-                                    } ?: kotlin.run {
+                                    } ?: run {
                                         // 문제 추가
                                         vm.addProblem(it.second)
                                     }
