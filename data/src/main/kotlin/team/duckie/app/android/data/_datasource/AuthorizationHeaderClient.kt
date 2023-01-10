@@ -19,8 +19,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.headers
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.append
+import io.ktor.http.contentType
 import io.ktor.serialization.jackson.jackson
 import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.util.kotlin.seconds
@@ -31,27 +30,25 @@ internal var client = AuthorizationHeaderClient()
 
 // [DuckieHttpHeaders.DeviceName] 을 대체한다.
 // mock 인 경우엔 오류가 발생하여 해당 변수에서 설정이 필요하다.
-private var deviceName = Build.MODEL
+private var DeviceName = Build.MODEL
 
 internal fun updateClient(
     newClient: HttpClient? = null,
-    newBuildModel: String? = null
+    newBuildModel: String? = null,
 ) {
     newClient?.let { client = it }
-    newBuildModel?.let { deviceName = it }
+    newBuildModel?.let { DeviceName = it }
 }
 
 internal object DuckieHttpHeaders {
     const val DeviceName = "x-duckie-device-name"
     const val Version = "x-duckie-version"
     const val Client = "x-duckie-client"
-
-    // TODO(sungbin): X-DUCKIE-AUTHORIZATION 으로 변경 필요
-    // See: https://sungbinland.slack.com/archives/C046SS32SEQ/p1672520272880839
-    const val Authorization = "authorization"
+    // Authorization 가 AuthRepositoryImpl 에서 접근 필요
+    const val Authorization = "X-DUCKIE-AUTHORIZATION"
 }
 
-internal object AuthorizationHeaderClient {
+private object AuthorizationHeaderClient {
     private val MaxTimeoutMillis = 3.seconds
     private const val MaxRetryCount = 3
     private const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
@@ -67,9 +64,9 @@ internal object AuthorizationHeaderClient {
         }
         defaultRequest {
             url(BaseUrl)
+            contentType(ContentType.Application.Json)
             headers {
-                append(HttpHeaders.ContentType, ContentType.Application.Json)
-                append(DuckieHttpHeaders.DeviceName, deviceName)
+                append(DuckieHttpHeaders.DeviceName, DeviceName)
                 append(DuckieHttpHeaders.Version, BuildConfig.APP_VERSION_NAME)
                 append(DuckieHttpHeaders.Client, ClientName)
             }
