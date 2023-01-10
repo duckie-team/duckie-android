@@ -18,7 +18,8 @@ internal enum class SearchResultStep(
     User(
         title = "사용자",
         index = 1,
-    );
+    ),
+    ;
 
     companion object {
         fun toStep(value: Int) = SearchResultStep.values().first { it.index == value }

@@ -29,8 +29,8 @@ class FileRepositoryImpl @Inject constructor() : FileRepository {
                     formData {
                         append("type", type)
                         append("file", file.readBytes())
-                    }
-                )
+                    },
+                ),
             )
             onUpload { bytesSentTotal, contentLength ->
                 println("Sent $bytesSentTotal bytes from $contentLength")

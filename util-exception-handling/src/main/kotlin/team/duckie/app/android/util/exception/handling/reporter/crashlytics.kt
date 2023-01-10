@@ -11,7 +11,7 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import team.duckie.app.android.util.exception.handling.BuildConfig
 
-fun Throwable.reportToCrashlytics() {
+fun Throwable.reportToCrashlyticsIfNeeded() {
     if (!BuildConfig.DEBUG) {
         Firebase.crashlytics.recordException(this)
     }

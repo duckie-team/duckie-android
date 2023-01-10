@@ -8,7 +8,6 @@
 @file:OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalComposeUiApi::class,
-    ExperimentalLifecycleComposeApi::class
 )
 
 package team.duckie.app.android.feature.ui.create.problem.screen
@@ -60,7 +59,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.photopicker.PhotoPicker
@@ -108,7 +106,7 @@ internal fun AdditionalInformationScreen(
             elements = Array(
                 size = galleryImages.size,
                 init = { false },
-            )
+            ),
         )
     }
     val photoState = remember(rootState.photoState) { rootState.photoState }
@@ -117,7 +115,7 @@ internal fun AdditionalInformationScreen(
     // 단일 권한 설정 launcher
     // TODO(riflockle7): 권한 로직은 추후 PermissionViewModel 과 같이 쓰면서 지워질 예정
     val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
+        ActivityResultContracts.RequestPermission(),
     ) { isGranted: Boolean ->
         if (isGranted) {
             vm.loadGalleryImages()
@@ -170,7 +168,7 @@ internal fun AdditionalInformationScreen(
                         .width(40.dp)
                         .height(4.dp)
                         .clip(RoundedCornerShape(2.dp))
-                        .background(QuackColor.Gray2.composeColor)
+                        .background(QuackColor.Gray2.composeColor),
                 )
 
                 // 선택 목록
@@ -183,7 +181,7 @@ internal fun AdditionalInformationScreen(
                             end = 16.dp,
                             bottom = 24.dp,
                         ),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     // 기본 썸네일 선택
                     // TODO(riflockle7): quack_ic_profile_24 -> 백앤드에서 받아온 이미지
@@ -195,7 +193,7 @@ internal fun AdditionalInformationScreen(
                             coroutineScope.launch {
                                 sheetState.hide()
                             }
-                        }
+                        },
                     )
 
                     // 갤러리에서 선택
@@ -210,16 +208,16 @@ internal fun AdditionalInformationScreen(
                             } else {
                                 launcher.launch(imagePermission)
                             }
-                        }
+                        },
                     )
                 }
             }
-        }
+        },
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .navigationBarsPadding()
+                .navigationBarsPadding(),
         ) {
             // 상단 탭바
             PrevAndNextTopAppBar(
@@ -233,7 +231,7 @@ internal fun AdditionalInformationScreen(
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
             ) {
                 // 썸네일 선택 (어떤 분야를 좋아하나요?) Layout
                 AdditionalThumbnailLayout(thumbnail = selectedGalleryImage) {
@@ -300,12 +298,12 @@ private fun AdditionalThumbnailLayout(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp),
-        stringResource = R.string.category_title
+        stringResource = R.string.category_title,
     ) {
         QuackImage(
             size = DpSize(
                 thumbnailWidthDp,
-                thumbnailWidthDp * GetHeightRatioW328H240
+                thumbnailWidthDp * GetHeightRatioW328H240,
             ),
             contentScale = ContentScale.FillWidth,
             src = thumbnail,
@@ -372,12 +370,12 @@ private fun AdditionalBottomSheetThumbnailLayout(
         modifier = Modifier.quackClickable(
             rippleEnabled = true,
             onClick = onClick,
-        )
+        ),
     ) {
         QuackImage(
             size = DpSize(
                 thumbnailWidthDp,
-                thumbnailWidthDp * GetHeightRatioW328H240
+                thumbnailWidthDp * GetHeightRatioW328H240,
             ),
             contentScale = ContentScale.FillWidth,
             src = src,

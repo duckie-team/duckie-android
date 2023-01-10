@@ -28,7 +28,7 @@ import team.duckie.app.android.presentation.viewmodel.PresentationViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.PresentationSideEffect
 import team.duckie.app.android.presentation.viewmodel.state.PresentationState
 import team.duckie.app.android.util.compose.ToastWrapper
-import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlytics
+import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.BaseActivity
@@ -106,14 +106,14 @@ class IntroActivity : BaseActivity() {
         }
     }
 
-    private fun handleSideEffect(effect: PresentationSideEffect) {
-        when (effect) {
+    private fun handleSideEffect(sideEffect: PresentationSideEffect) {
+        when (sideEffect) {
             is PresentationSideEffect.AttachAccessTokenToHeader -> {
-                vm.attachAccessTokenToHeader(effect.accessToken)
+                vm.attachAccessTokenToHeader(sideEffect.accessToken)
             }
             is PresentationSideEffect.ReportError -> {
-                effect.exception.printStackTrace()
-                effect.exception.reportToCrashlytics()
+                sideEffect.exception.printStackTrace()
+                sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
         }
     }

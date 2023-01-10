@@ -55,6 +55,7 @@ import androidx.compose.ui.zIndex
 import androidx.datastore.preferences.core.edit
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.datastore.PreferenceKey
@@ -107,7 +108,7 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 
     // TagSelection content 에는 vertical scroll 이 있음 (최대 높이 지정 필요)
     val tagSelectionConstraints = looseConstraints.copy(
-        maxHeight = constraints.maxHeight - topAppBarPlaceable.height - quackLargeButtonPlaceable.height
+        maxHeight = constraints.maxHeight - topAppBarPlaceable.height - quackLargeButtonPlaceable.height,
     )
     val tagSelectionPlaceable = measurables.fastFirstOrNull { measurable ->
         measurable.layoutId == TagScreenTagSelectionLayoutId
@@ -139,6 +140,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     val toast = rememberToast()
     val coroutineScope = rememberCoroutineScope()
 
+    var isLoadingToFinish by remember { mutableStateOf(false) }
     var isStartable by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val addedTags = remember { mutableStateListOf<String>() }
@@ -175,7 +177,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                         clearAction()
                         sheetState.hide()
                     }
-                }
+                },
             )
         },
     ) {
@@ -209,15 +211,17 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                     text = stringResource(id = R.string.button_start_duckie),
                     type = QuackLargeButtonType.Fill,
                     enabled = isStartable,
+                    isLoading = isLoadingToFinish,
                 ) {
+                    isLoadingToFinish = true
                     coroutineScope.launch {
-                        vm.updateUserProfileImage(
-                            coroutineScope = coroutineScope,
-                        )
-                        vm.updateUserFavorateTags(
-                            favorateTagNames = addedTags,
-                            coroutineScope = coroutineScope,
-                        )
+                        val updateUserProfileImageJob = launch {
+                            vm.updateUserProfileImage()
+                        }
+                        val updateUserFavorateTagJob = launch {
+                            vm.updateUserFavorateTags(favorateTagNames = addedTags)
+                        }
+                        joinAll(updateUserProfileImageJob, updateUserFavorateTagJob)
                         vm.updateUser(
                             id = vm.me.id,
                             nickname = vm.me.temporaryNickname,
@@ -228,6 +232,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                         context.dataStore.edit { preference ->
                             preference[PreferenceKey.Onboard.Finish] = true
                         }
+                        isLoadingToFinish = false
                         toast("온보딩 끝")
                     }
                 }

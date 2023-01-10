@@ -14,7 +14,8 @@ internal enum class OnboardStep(private val index: Int) {
     Login(0),
     Profile(1),
     Category(2),
-    Tag(3);
+    Tag(3),
+    ;
 
     operator fun minus(previous: Int): OnboardStep {
         return values()[index - previous]

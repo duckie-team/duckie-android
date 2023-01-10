@@ -25,9 +25,7 @@ object ExamUseCaseModule {
     }
 
     @Provides
-    fun provideMakeExamInstanceSubmitUseCase(
-        repository: ExamRepository
-    ): MakeExamInstanceSubmitUseCase {
+    fun provideMakeExamInstanceSubmitUseCase(repository: ExamRepository): MakeExamInstanceSubmitUseCase {
         return MakeExamInstanceSubmitUseCase(repository)
     }
 

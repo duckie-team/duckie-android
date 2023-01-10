@@ -14,5 +14,5 @@ internal data class ExamInstanceSubmitData(
     val message: String? = null,
 
     @JsonProperty("results")
-    val results: List<String>? = null
+    val results: List<String>? = null,
 )

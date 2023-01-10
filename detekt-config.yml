@@ -2,7 +2,7 @@ complexity:
   LongMethod:
     threshold: 100
     ignoreAnnotated: [ 'Composable' ]
-  ComplexMethod:
+  CyclomaticComplexMethod:
     ignoreAnnotated: [ 'Composable' ]
   LongParameterList:
     active: false
@@ -14,6 +14,24 @@ complexity:
 performance:
   SpreadOperator:
     active: false
+
+formatting:
+  TrailingCommaOnCallSite:
+    active: true
+  TrailingCommaOnDeclarationSite:
+    active: true
+  ImportOrdering:
+    active: false
+  MaximumLineLength:
+    maxLineLength: 150
+  Indentation:
+    active: false
+  Filename:
+    active: false
+  PackageName:
+    active: false
+  ArgumentListWrapping:
+    maxLineLength: 150
 
 style:
   MagicNumber:
@@ -33,6 +51,7 @@ style:
   DestructuringDeclarationWithTooManyEntries:
     active: false
   MaxLineLength:
+    maxLineLength: 150
     excludeCommentStatements: true
   UnnecessaryAbstractClass:
     ignoreAnnotated: [ 'Module' ]

@@ -103,7 +103,7 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
                 init = { index ->
                     vm.selectedCategories.contains(vm.categories[index])
                 },
-            )
+            ),
         )
     }
 

@@ -7,13 +7,14 @@
 
 @file:Suppress(
     "MaxLineLength",
-    "MagicNumber"
+    "MagicNumber",
 ) // TODO(limsaehyun): 더미데이터를 위해 임시로 구현, 추후에 삭제 필요
 
 package team.duckie.app.android.data.recommendation.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import kotlin.math.max
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import team.duckie.app.android.data.category.model.CategoryData
@@ -29,7 +30,6 @@ import team.duckie.app.android.data.recommendation.model.RecommendationJumbotron
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.util.kotlin.fastMap
-import kotlin.math.max
 
 private suspend fun dummyReturn(a: Int): RecommendationData {
     delay(1000)
@@ -52,7 +52,7 @@ private suspend fun dummyReturn(a: Int): RecommendationData {
                     subTags = persistentListOf(
                         TagData(2, "블랙핑크"),
                         TagData(3, "볼빨간사춘기"),
-                        TagData(4, "위너")
+                        TagData(4, "위너"),
                     ),
                     problems = persistentListOf(
                         ProblemData(
@@ -63,18 +63,18 @@ private suspend fun dummyReturn(a: Int): RecommendationData {
                                     ChoiceData("교촌치킨"),
                                     ChoiceData("BBQ"),
                                     ChoiceData("지코바"),
-                                    ChoiceData("엄마가 만들어준 치킨")
-                                )
+                                    ChoiceData("엄마가 만들어준 치킨"),
+                                ),
                             ),
                             question = QuestionData.Text("다음 중 도로가 가장 좋아하는 치킨 브랜드는?"),
                             hint = "",
                             memo = "",
-                            correctAnswer = "지코바"
+                            correctAnswer = "지코바",
                         ),
                     ),
                     type = "text",
                 )
-            }
+            },
         )
     }
     val jumbotrons = (0..2).map {
@@ -92,8 +92,8 @@ private suspend fun dummyReturn(a: Int): RecommendationData {
             subTags = persistentListOf(
                 TagData(2, "블랙핑크"),
                 TagData(3, "볼빨간사춘기"),
-                TagData(4, "위너")
-            )
+                TagData(4, "위너"),
+            ),
         )
     }
     return RecommendationData(

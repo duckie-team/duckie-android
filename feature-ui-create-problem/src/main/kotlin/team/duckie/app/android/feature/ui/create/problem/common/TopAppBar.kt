@@ -42,6 +42,7 @@ internal fun PrevAndNextTopAppBar(
         },
     )
 }
+
 // TODO(EvergreenTree): QuackTopAppBar에 leadingIcon이 nullable로 변경됨이 필요
 @Composable
 internal fun ExitAppBar(

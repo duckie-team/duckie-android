@@ -29,6 +29,6 @@ interface ExamRepository {
     @OutOfDateApi
     suspend fun postExamInstanceSubmit(
         id: Int,
-        examInstanceSubmitBody: ExamInstanceSubmitBody
+        examInstanceSubmitBody: ExamInstanceSubmitBody,
     ): ExamInstanceSubmit
 }

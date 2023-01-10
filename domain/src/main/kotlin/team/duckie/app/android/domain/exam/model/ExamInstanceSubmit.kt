@@ -7,7 +7,10 @@
 
 package team.duckie.app.android.domain.exam.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class ExamInstanceSubmit(
     val message: String,
-    val results: List<String>
+    val results: List<String>,
 )

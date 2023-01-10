@@ -24,6 +24,7 @@ import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.di.repository.ProvidesModule
@@ -35,12 +36,12 @@ import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
 import team.duckie.app.android.feature.ui.onboard.screen.LoginScreen
 import team.duckie.app.android.feature.ui.onboard.screen.ProfileScreen
 import team.duckie.app.android.feature.ui.onboard.screen.TagScreen
-import team.duckie.app.android.feature.ui.onboard.util.NetworkUtil
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
+import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.ToastWrapper
-import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlytics
+import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.collectWithLifecycle
 import team.duckie.app.android.util.ui.finishWithAnimation
@@ -51,12 +52,19 @@ import team.duckie.quackquack.ui.theme.QuackTheme
 @AndroidEntryPoint
 class OnboardActivity : BaseActivity() {
 
-    private val vm: OnboardViewModel by viewModels()
+    @Inject
+    internal lateinit var onboardVmFactory: OnboardViewModel.OnboardViewModelFactory
+    private val vm: OnboardViewModel by viewModels {
+        OnboardViewModel.Factory.FactoryProvider(
+            factory = onboardVmFactory,
+            getKakaoAccessTokenUseCase = getKakaoAccessTokenUseCase,
+            owner = this,
+        )
+    }
 
     private val kakaoRepository by lazy {
         ProvidesModule.provideKakaoRepository(activityContext = this)
     }
-    @Suppress("unused")
     private val getKakaoAccessTokenUseCase by lazy {
         KakaoUseCaseModule.provideGetKakaoAccessTokenUseCase(repository = kakaoRepository)
     }
@@ -114,7 +122,7 @@ class OnboardActivity : BaseActivity() {
             }
 
             launch {
-                vm.getCategories(withPopularTags = true)
+                // vm.getCategories(withPopularTags = true)
             }
         }
 
@@ -142,12 +150,12 @@ class OnboardActivity : BaseActivity() {
         vm.updateImagePermissionGrantState(
             ActivityCompat.checkSelfPermission(
                 this,
-                vm.imagePermission
-            ) == PackageManager.PERMISSION_GRANTED
+                vm.imagePermission,
+            ) == PackageManager.PERMISSION_GRANTED,
         )
         vm.isCameraPermissionGranted = ActivityCompat.checkSelfPermission(
             this,
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
         ) == PackageManager.PERMISSION_GRANTED
 
         if (vm.isImagePermissionGranted == false || !vm.isCameraPermissionGranted) {
@@ -195,28 +203,28 @@ class OnboardActivity : BaseActivity() {
         }
     }
 
-    private suspend fun handleSideEffect(effect: OnboardSideEffect) {
-        when (effect) {
+    private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
+        when (sideEffect) {
             is OnboardSideEffect.UpdateGalleryImages -> {
-                vm.addGalleryImages(effect.images)
+                vm.addGalleryImages(sideEffect.images)
             }
             is OnboardSideEffect.UpdateUser -> {
-                vm.me = effect.user
+                vm.me = sideEffect.user
             }
             is OnboardSideEffect.UpdateAccessToken -> {
                 applicationContext.dataStore.edit { preferences ->
-                    preferences[PreferenceKey.Account.AccessToken] = effect.accessToken
+                    preferences[PreferenceKey.Account.AccessToken] = sideEffect.accessToken
                 }
             }
             is OnboardSideEffect.AttachAccessTokenToHeader -> {
-                vm.attachAccessTokenToHeader(effect.accessToken)
+                vm.attachAccessTokenToHeader(sideEffect.accessToken)
             }
             is OnboardSideEffect.DelegateJoin -> {
-                vm.join(effect.kakaoAccessToken)
+                vm.join(sideEffect.kakaoAccessToken)
             }
             is OnboardSideEffect.ReportError -> {
-                effect.exception.printStackTrace()
-                effect.exception.reportToCrashlytics()
+                sideEffect.exception.printStackTrace()
+                sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
         }
     }

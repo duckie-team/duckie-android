@@ -51,7 +51,7 @@ internal fun FindExamAreaScreen(viewModel: CreateProblemViewModel = activityView
             TextFieldValue(
                 text = state.examArea,
                 selection = TextRange(state.cursorPosition),
-            )
+            ),
         )
     }
 
@@ -66,9 +66,9 @@ internal fun FindExamAreaScreen(viewModel: CreateProblemViewModel = activityView
                 leadingText = stringResource(id = R.string.find_exam_area),
                 onTrailingIconClick = {
                     viewModel.navigateStep(CreateProblemStep.ExamInformation)
-                }
+                },
             )
-        }
+        },
     ) { contentPadding ->
         Column(
             modifier = Modifier
@@ -89,8 +89,8 @@ internal fun FindExamAreaScreen(viewModel: CreateProblemViewModel = activityView
                 },
                 placeholderText = stringResource(id = R.string.search_exam_area_tag),
                 keyboardActions = KeyboardActions(
-                    onDone = { viewModel.onClickSearchListHeader() }
-                )
+                    onDone = { viewModel.onClickSearchListHeader() },
+                ),
             )
             QuackAnimatedVisibility(visible = state.examArea.isNotEmpty()) {
                 LazyColumn {
@@ -111,7 +111,7 @@ internal fun FindExamAreaScreen(viewModel: CreateProblemViewModel = activityView
                             text = item,
                             onClick = {
                                 viewModel.onClickSearchList(index)
-                            }
+                            },
                         )
                     }
                 }

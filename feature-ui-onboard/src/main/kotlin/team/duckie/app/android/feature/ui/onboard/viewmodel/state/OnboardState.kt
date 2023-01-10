@@ -20,6 +20,9 @@ internal sealed class OnboardState {
     @RequiredStep(OnboardStep.Login)
     class Joined(val isNewUser: Boolean) : OnboardState()
 
+    @RequiredStep(OnboardStep.Profile)
+    class NicknameDuplicateChecked(val isUsable: Boolean) : OnboardState()
+
     @RequiredStep(OnboardStep.Category)
     class CategoriesLoaded(val catagories: ImmutableList<Category>) : OnboardState()
 

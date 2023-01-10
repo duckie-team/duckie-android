@@ -11,5 +11,6 @@ plugins {
 }
 
 dependencies {
+    detektPlugins(libs.detekt.plugin.formatting)
     implementation(libs.kotlin.coroutines)
 }

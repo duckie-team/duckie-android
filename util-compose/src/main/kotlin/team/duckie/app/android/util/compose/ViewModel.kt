@@ -22,5 +22,5 @@ inline fun <reified VM : ViewModel> activityViewModel(
     VM::class.java,
     LocalContext.current as ComponentActivity,
     key,
-    factory
+    factory,
 )

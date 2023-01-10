@@ -17,7 +17,8 @@ internal enum class HomeStep(
 
     HomeFollowingScreen(
         index = 1,
-    );
+    ),
+    ;
 
     companion object {
         fun toStep(value: Int) = HomeStep.values().first { it.index == value }

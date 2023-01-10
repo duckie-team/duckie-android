@@ -32,7 +32,7 @@ class DuckieResponseException(
     message: String? = null,
     val code: String,
     val errors: List<String>? = null,
-    val throwable: Throwable
+    val throwable: Throwable,
 ) : DuckieException(code) {
     val originalMessage = message
     override val message = "DuckieResponseException: $code".runIf(message != null) { plus(" - $message") }
