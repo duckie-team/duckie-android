@@ -44,6 +44,7 @@ internal object DuckieHttpHeaders {
     const val DeviceName = "x-duckie-device-name"
     const val Version = "x-duckie-version"
     const val Client = "x-duckie-client"
+
     // Authorization 가 AuthRepositoryImpl 에서 접근 필요
     const val Authorization = "X-DUCKIE-AUTHORIZATION"
 }

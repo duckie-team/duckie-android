@@ -150,12 +150,12 @@ class OnboardActivity : BaseActivity() {
         vm.updateImagePermissionGrantState(
             ActivityCompat.checkSelfPermission(
                 this,
-                vm.imagePermission
-            ) == PackageManager.PERMISSION_GRANTED
+                vm.imagePermission,
+            ) == PackageManager.PERMISSION_GRANTED,
         )
         vm.isCameraPermissionGranted = ActivityCompat.checkSelfPermission(
             this,
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
         ) == PackageManager.PERMISSION_GRANTED
 
         if (vm.isImagePermissionGranted == false || !vm.isCameraPermissionGranted) {

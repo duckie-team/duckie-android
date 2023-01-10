@@ -196,8 +196,8 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                         ContextCompat.getColor(
                             context,
                             R.color.kakao_login_button_container_background,
-                        )
-                    )
+                        ),
+                    ),
                 )
                 .clickable {
                     // TODO(sungbin): 카카오 로그인 백엔드 연결
@@ -213,8 +213,8 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                             ContextCompat.getColor(
                                 context,
                                 R.color.kakao_login_button_symbol_tint,
-                            )
-                        )
+                            ),
+                        ),
                     ),
                     contentDescription = null,
                 )
@@ -227,9 +227,9 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                             ContextCompat.getColor(
                                 context,
                                 R.color.kakao_login_button_label,
-                            )
+                            ),
                         ),
-                    )
+                    ),
                 )
             },
             measurePolicy = LoginScreenLoginAreaMeasurePolicy,

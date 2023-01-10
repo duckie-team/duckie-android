@@ -101,15 +101,15 @@ object ExamDummyResponse {
                         ChoiceModel("교촌치킨"),
                         ChoiceModel("BBQ"),
                         ChoiceModel("지코바"),
-                        ChoiceModel("엄마가 만들어준 치킨")
-                    )
+                        ChoiceModel("엄마가 만들어준 치킨"),
+                    ),
                 ),
                 question = Question.Text("다음 중 도로가 가장 좋아하는 치킨 브랜드는?"),
                 hint = "",
                 memo = "",
-                correctAnswer = "지코바"
+                correctAnswer = "지코바",
             ),
         ),
-        type = "text"
+        type = "text",
     )
 }

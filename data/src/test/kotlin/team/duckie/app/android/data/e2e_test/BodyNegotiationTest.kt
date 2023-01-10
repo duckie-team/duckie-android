@@ -61,7 +61,7 @@ class BodyNegotiationTest {
                 mapOf(
                     "name" to "Duckie",
                     "age" to 1,
-                )
+                ),
             )
         }
         val actual = response.bodyAsText()
@@ -81,7 +81,7 @@ class BodyNegotiationTest {
                 mapOf(
                     "name" to "Duckie",
                     "age" to 100,
-                )
+                ),
             )
         }
         val actual = response.bodyAsText()

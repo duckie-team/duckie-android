@@ -133,7 +133,9 @@ internal class OnboardViewModel @AssistedInject constructor(
     fun navigateStep(step: OnboardStep, ignoreThrottle: Boolean = false) = intent {
         if (!ignoreThrottle &&
             System.currentTimeMillis() - lastestUpdateStepMillis < NextStepNavigateThrottle
-        ) return@intent
+        ) {
+            return@intent
+        }
         lastestUpdateStepMillis = System.currentTimeMillis()
         reduce {
             OnboardState.NavigateStep(step)

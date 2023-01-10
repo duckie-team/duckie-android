@@ -44,7 +44,7 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
     ): User {
         runtimeCheck(
             nickname != null || profileImageUrl != null ||
-                    favoriteCategories != null || favoriteTags != null
+                    favoriteCategories != null || favoriteTags != null,
         ) {
             "At least one of the parameters must be non-null"
         }

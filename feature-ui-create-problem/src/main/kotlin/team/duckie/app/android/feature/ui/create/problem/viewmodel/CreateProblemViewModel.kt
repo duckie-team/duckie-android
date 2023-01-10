@@ -84,8 +84,8 @@ internal class CreateProblemViewModel @Inject constructor(
                 state.copy(
                     examInformation = state.examInformation.copy(
                         isCategoryLoading = false,
-                        categories = categories.toImmutableList()
-                    )
+                        categories = categories.toImmutableList(),
+                    ),
                 )
             }
         }.onFailure {
@@ -118,7 +118,7 @@ internal class CreateProblemViewModel @Inject constructor(
             state.copy(
                 examInformation = state.examInformation.copy(
                     scrollPosition = scrollPosition,
-                )
+                ),
             )
         }
         navigateStep(CreateProblemStep.FindExamArea)
@@ -192,8 +192,8 @@ internal class CreateProblemViewModel @Inject constructor(
                     copy(
                         isExamAreaSelected = true,
                         foundExamArea = foundExamArea.copy(
-                            examArea = foundExamArea.searchResults[index]
-                        )
+                            examArea = foundExamArea.searchResults[index],
+                        ),
                     )
                 },
             )
@@ -206,11 +206,9 @@ internal class CreateProblemViewModel @Inject constructor(
                 examInformation = state.examInformation.run {
                     copy(
                         isExamAreaSelected = isExamAreaSelected,
-                        foundExamArea = foundExamArea.copy(
-                            examArea = ""
-                        ),
+                        foundExamArea = foundExamArea.copy(examArea = ""),
                     )
-                }
+                },
             )
         }
     }
@@ -220,7 +218,7 @@ internal class CreateProblemViewModel @Inject constructor(
             state.copy(
                 examInformation = state.examInformation.copy(
                     examDescriptionFocused = isFocused,
-                )
+                ),
             )
         }
     }
@@ -254,7 +252,7 @@ internal class CreateProblemViewModel @Inject constructor(
                         correctAnswers = newCorrectAnswers.toPersistentList(),
                         hints = newHints.toPersistentList(),
                         memos = newMemos.toPersistentList(),
-                    )
+                    ),
                 )
             }
         }
@@ -304,17 +302,17 @@ internal class CreateProblemViewModel @Inject constructor(
 
             Question.Type.Image -> Question.Image(
                 title ?: prevQuestion.text,
-                "${urlSource ?: prevQuestion}"
+                "${urlSource ?: prevQuestion}",
             )
 
             Question.Type.Audio -> Question.Audio(
                 title ?: prevQuestion.text,
-                "${urlSource ?: prevQuestion}"
+                "${urlSource ?: prevQuestion}",
             )
 
             Question.Type.Video -> Question.Video(
                 title ?: prevQuestion.text,
-                "${urlSource ?: prevQuestion}"
+                "${urlSource ?: prevQuestion}",
             )
 
             else -> null
@@ -324,7 +322,7 @@ internal class CreateProblemViewModel @Inject constructor(
         reduce {
             state.copy(
                 createProblem = state.createProblem.copy(
-                    questions = newQuestions.toPersistentList()
+                    questions = newQuestions.toPersistentList(),
                 ),
             )
         }
@@ -345,7 +343,7 @@ internal class CreateProblemViewModel @Inject constructor(
         reduce {
             state.copy(
                 createProblem = state.createProblem.copy(
-                    answers = newAnswers.toPersistentList()
+                    answers = newAnswers.toPersistentList(),
                 ),
             )
         }
@@ -371,13 +369,13 @@ internal class CreateProblemViewModel @Inject constructor(
             answerIndex,
             answerType,
             answer,
-            urlSource
+            urlSource,
         ).let { newAnswers[questionIndex] = it }
 
         reduce {
             state.copy(
                 createProblem = state.createProblem.copy(
-                    answers = newAnswers.toPersistentList()
+                    answers = newAnswers.toPersistentList(),
                 ),
             )
         }
@@ -395,18 +393,18 @@ internal class CreateProblemViewModel @Inject constructor(
             is Answer.Short -> duckieClientLogicProblemException(message = "주관식 답변은 삭제할 수 없습니다.")
 
             is Answer.Choice -> Answer.Choice(
-                newAnswer.choices.copy { removeAt(answerIndex) }.toImmutableList()
+                newAnswer.choices.copy { removeAt(answerIndex) }.toImmutableList(),
             )
 
             is Answer.ImageChoice -> Answer.ImageChoice(
-                newAnswer.imageChoice.copy { removeAt(answerIndex) }.toImmutableList()
+                newAnswer.imageChoice.copy { removeAt(answerIndex) }.toImmutableList(),
             )
         }
 
         reduce {
             state.copy(
                 createProblem = state.createProblem.copy(
-                    answers = newAnswers.toPersistentList()
+                    answers = newAnswers.toPersistentList(),
                 ),
             )
         }
@@ -429,7 +427,7 @@ internal class CreateProblemViewModel @Inject constructor(
             Answer.Type.ImageChoice -> this.toImageChoice(
                 answerIndex,
                 answer,
-                urlSource?.let { "$this" }
+                urlSource?.let { "$this" },
             )
         }
     }
@@ -445,7 +443,7 @@ internal class CreateProblemViewModel @Inject constructor(
         reduce {
             state.copy(
                 createProblem = state.createProblem.copy(
-                    correctAnswers = newCorrectAnswers.toPersistentList()
+                    correctAnswers = newCorrectAnswers.toPersistentList(),
                 ),
             )
         }
@@ -485,7 +483,7 @@ internal class CreateProblemViewModel @Inject constructor(
             state.copy(
                 createProblem = state.createProblem.copy(
                     questions = state.createProblem.questions,
-                    answers = newAnswers.toPersistentList()
+                    answers = newAnswers.toPersistentList(),
                 ),
             )
         }
@@ -507,7 +505,7 @@ internal class CreateProblemViewModel @Inject constructor(
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
                     takeTitle = buttonTitle,
-                )
+                ),
             )
         }
     }
@@ -517,7 +515,7 @@ internal class CreateProblemViewModel @Inject constructor(
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
                     tempTag = tempTag,
-                )
+                ),
             )
         }
     }
@@ -530,7 +528,7 @@ internal class CreateProblemViewModel @Inject constructor(
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
                     tags = newTags,
-                )
+                ),
             )
         }
     }

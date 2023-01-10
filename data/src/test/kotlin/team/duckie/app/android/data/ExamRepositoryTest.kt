@@ -30,7 +30,7 @@ import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @OutOfDateApi
 class ExamRepositoryTest : ApiTest(
-    client = buildMockHttpClient(content = ExamDummyResponse.RawData)
+    client = buildMockHttpClient(content = ExamDummyResponse.RawData),
 ) {
     private val repository: ExamRepository by lazy { ExamRepositoryImpl() }
 

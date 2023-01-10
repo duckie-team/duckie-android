@@ -14,7 +14,8 @@ enum class CreateProblemStep(private val index: Int) {
     FindExamArea(0),
     ExamInformation(1),
     CreateProblem(2),
-    AdditionalInformation(3);
+    AdditionalInformation(3),
+    ;
 
     operator fun minus(previous: Int): CreateProblemStep {
         return values()[index - previous]

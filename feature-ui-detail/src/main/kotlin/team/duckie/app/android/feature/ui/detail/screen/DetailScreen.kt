@@ -108,7 +108,7 @@ internal fun DetailScreen(
                 onHeartClick = { },
                 onChallengeClick = { },
             )
-        }
+        },
     ) { measurableItems, constraints ->
         // 1. topAppBar, bottomBar 높이값 측정
         val looseConstraints = constraints.asLoose()
@@ -172,12 +172,12 @@ private fun DetailContentLayout() {
         QuackImage(
             size = DpSize(
                 detailImageWidthDp,
-                detailImageWidthDp * GetHeightRatioW328H240
+                detailImageWidthDp * GetHeightRatioW328H240,
             ),
             padding = PaddingValues(
                 top = 16.dp,
                 start = 16.dp,
-                end = 16.dp
+                end = 16.dp,
             ),
             contentScale = ContentScale.FillWidth,
             src = R.drawable.img_duckie_detail_image_dummy,
@@ -187,14 +187,14 @@ private fun DetailContentLayout() {
         // 제목
         QuackHeadLine2(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = "제 1회 도로 패션영역"
+            text = "제 1회 도로 패션영역",
         )
         // 공백
         Spacer(modifier = Modifier.height(8.dp))
         // 내용
         QuackBody2(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = "아 저 근데 너무 재밌을거 같아요 내 시험 최고"
+            text = "아 저 근데 너무 재밌을거 같아요 내 시험 최고",
         )
         // 공백
         Spacer(modifier = Modifier.height(12.dp))
@@ -202,9 +202,7 @@ private fun DetailContentLayout() {
         QuackSingeLazyRowTag(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
             horizontalSpace = 4.dp,
-            items = persistentListOf(
-                "도로", "패션", "도로패션", "도로로", "Doro Driven Design"
-            ),
+            items = persistentListOf("도로", "패션", "도로패션", "도로로", "Doro Driven Design"),
             tagType = QuackTagType.Grayscale(""),
             onClick = {},
         )
@@ -234,12 +232,12 @@ private fun DetailProfileLayout() {
             horizontal = 16.dp,
             vertical = 12.dp,
         ),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         // 작성자 프로필 이미지
         QuackImage(
             src = team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
-            size = DpSize(32.dp, 32.dp)
+            size = DpSize(32.dp, 32.dp),
         )
         // 공백
         Spacer(modifier = Modifier.width(8.dp))
@@ -263,7 +261,7 @@ private fun DetailProfileLayout() {
             // 응시자, 일자
             QuackBody3(
                 text = stringResource(R.string.detail_num_date, "20", "1일 전"),
-                color = QuackColor.Gray2
+                color = QuackColor.Gray2,
             )
         }
         // 공백
@@ -288,7 +286,7 @@ private fun DetailScoreDistributionLayout() {
     // 제목 Layout
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         // 제목
         QuackText(text = "점수 분포도", style = QuackTextStyle.Title2)
@@ -297,7 +295,7 @@ private fun DetailScoreDistributionLayout() {
         // 정답률 텍스트
         QuackText(
             text = stringResource(R.string.detail_right_percent, "80%"),
-            style = QuackTextStyle.Body2
+            style = QuackTextStyle.Body2,
         )
     }
     // 공백
@@ -306,7 +304,7 @@ private fun DetailScoreDistributionLayout() {
     QuackText(
         modifier = Modifier.padding(horizontal = 16.dp),
         text = "분포도 레퍼 필요",
-        style = QuackTextStyle.Body2
+        style = QuackTextStyle.Body2,
     )
 }
 

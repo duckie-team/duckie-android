@@ -108,7 +108,7 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 
     // TagSelection content 에는 vertical scroll 이 있음 (최대 높이 지정 필요)
     val tagSelectionConstraints = looseConstraints.copy(
-        maxHeight = constraints.maxHeight - topAppBarPlaceable.height - quackLargeButtonPlaceable.height
+        maxHeight = constraints.maxHeight - topAppBarPlaceable.height - quackLargeButtonPlaceable.height,
     )
     val tagSelectionPlaceable = measurables.fastFirstOrNull { measurable ->
         measurable.layoutId == TagScreenTagSelectionLayoutId
@@ -177,7 +177,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                         clearAction()
                         sheetState.hide()
                     }
-                }
+                },
             )
         },
     ) {

@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,7 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import org.orbitmvi.orbit.compose.collectAsState
@@ -55,9 +53,9 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 internal fun HomeRecommendFollowingTestScreen(
     modifier: Modifier = Modifier,
@@ -68,15 +66,13 @@ internal fun HomeRecommendFollowingTestScreen(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(bottom = 24.dp)
+        contentPadding = PaddingValues(bottom = 24.dp),
     ) {
         item {
             HomeTopAppBar(
                 selectedTabIndex = state.homeSelectedIndex.index,
                 onTabSelected = { step ->
-                    vm.changedHomeScreen(
-                        HomeStep.toStep(step)
-                    )
+                    vm.changedHomeScreen(HomeStep.toStep(step))
                 },
                 onClickedEdit = {
                     // TODO(limsaehyun): 수정 페이지로 이동 필요
@@ -123,9 +119,7 @@ internal fun HomeRecommendFollowingScreen(
             HomeTopAppBar(
                 selectedTabIndex = state.homeSelectedIndex.index,
                 onTabSelected = { step ->
-                    vm.changedHomeScreen(
-                        HomeStep.toStep(step)
-                    )
+                    vm.changedHomeScreen(HomeStep.toStep(step))
                 },
                 onClickedEdit = {
                     // TODO(limsaehyun): 수정 페이지로 이동 필요
@@ -156,7 +150,7 @@ internal fun HomeRecommendFollowingScreen(
                 recommendUser = categories.users,
                 onClickFollowing = {
                     // TODO (limsaehyun): viewModel에서 Following 필요
-                }
+                },
             )
         }
     }
@@ -240,11 +234,6 @@ private val HomeProfileSize: DpSize = DpSize(
     all = 24.dp,
 )
 
-// TODO(limsaehyun): 추후에 QuackQuack Shape 으로 대체 필요
-private val HomeProfileShape: RoundedCornerShape = RoundedCornerShape(
-    size = 16.dp
-)
-
 @Composable
 private fun TestMakerLayout(
     modifier: Modifier = Modifier,
@@ -262,22 +251,16 @@ private fun TestMakerLayout(
         QuackImage(
             src = profile,
             size = HomeProfileSize,
-            shape = HomeProfileShape,
+            shape = SquircleShape,
             onClick = {
                 if (onClickUserProfile != null) {
                     onClickUserProfile()
                 }
             },
         )
-        Column(
-            modifier = Modifier.padding(start = 8.dp)
-        ) {
-            QuackSubtitle2(
-                text = title,
-            )
-            Row(
-                modifier = Modifier.padding(top = 4.dp)
-            ) {
+        Column(modifier = Modifier.padding(start = 8.dp)) {
+            QuackSubtitle2(text = title)
+            Row(modifier = Modifier.padding(top = 4.dp)) {
                 QuackBody3(text = name)
                 Spacer(modifier = Modifier.width(8.dp))
                 QuackBody3(

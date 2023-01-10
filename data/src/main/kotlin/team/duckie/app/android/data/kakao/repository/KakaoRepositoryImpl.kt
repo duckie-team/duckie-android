@@ -40,7 +40,7 @@ class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
                         error != null -> failure(error)
                         token != null -> success(token.accessToken)
                         else -> failure(KakaoLoginException)
-                    }
+                    },
                 )
             }
         }.getOrThrow()
@@ -54,7 +54,7 @@ class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
                         error != null -> failure(error)
                         token != null -> success(token.accessToken)
                         else -> failure(KakaoLoginException)
-                    }
+                    },
                 )
             }
         }.getOrThrow()

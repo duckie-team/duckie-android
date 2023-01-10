@@ -68,7 +68,7 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
     @OutOfDateApi
     override suspend fun postExamInstanceSubmit(
         id: Int,
-        examInstanceSubmitBody: ExamInstanceSubmitBody
+        examInstanceSubmitBody: ExamInstanceSubmitBody,
     ): ExamInstanceSubmit {
         val response = client.post {
             url("/exam-instance/$id/submit")

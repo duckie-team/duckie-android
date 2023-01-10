@@ -174,7 +174,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
             elements = Array(
                 size = galleryImages.size,
                 init = { false },
-            )
+            ),
         )
     }
     val takePhotoFromCameraLauncher = rememberLauncherForActivityResult(

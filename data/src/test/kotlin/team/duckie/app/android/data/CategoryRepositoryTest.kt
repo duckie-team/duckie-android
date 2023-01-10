@@ -24,7 +24,7 @@ import team.duckie.app.android.domain.category.repository.CategoryRepository
 
 class CategoryRepositoryTest : ApiTest(
     isMock = true,
-    client = buildMockHttpClient(content = CategoryDummyResponse.RawData)
+    client = buildMockHttpClient(content = CategoryDummyResponse.RawData),
 ) {
     private val repository: CategoryRepository by lazy { CategoryRepositoryImpl() }
 

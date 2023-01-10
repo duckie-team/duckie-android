@@ -22,12 +22,12 @@ internal fun SearchData.toDomain() = when (this) {
     is SearchData.ExamSearchData -> Search.ExamSearch(
         exams = exams?.fastMap(ExamData::toDomain)
             ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams"),
-        page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page")
+        page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
     )
 
     is SearchData.UserSearchData -> Search.UserSearch(
         users = users?.fastMap(UserResponse::toDomain)
             ?: duckieResponseFieldNpe("${this::class.java.simpleName}.users"),
-        page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page")
+        page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
     )
 }
