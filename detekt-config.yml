@@ -20,6 +20,12 @@ formatting:
     active: true
   TrailingCommaOnDeclarationSite:
     active: true
+  ImportOrdering:
+    active: false
+  MaximumLineLength:
+    maxLineLength: 150
+  Indentation:
+    active: false
 
 style:
   MagicNumber:
