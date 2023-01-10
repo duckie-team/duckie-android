@@ -38,9 +38,6 @@ internal fun Project.configureApplication(extension: CommonExtension<*, *, *, *>
             checkTestSources = true
         }
 
-        dependencies.add(
-            "detektPlugins",
-            "io.gitlab.arturbosch.detekt:detekt-formatting:${libs.findVersion("plugin-code-detekt").get()}",
-        )
+        dependencies.add("detektPlugins", libs.findLibrary("detekt-plugin-formatting").get().get())
     }
 }
