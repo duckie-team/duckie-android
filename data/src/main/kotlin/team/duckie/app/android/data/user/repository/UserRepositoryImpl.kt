@@ -27,11 +27,11 @@ import team.duckie.app.android.util.kotlin.runtimeCheck
 
 class UserRepositoryImpl @Inject constructor() : UserRepository {
     override suspend fun get(id: Int): User {
-        val response = client.get("/users/$id") {}
+        val response = client.get("/users/$id")
 
         return responseCatching(
             response = response.body(),
-            parse = UserResponse::toDomain
+            parse = UserResponse::toDomain,
         )
     }
 
@@ -63,7 +63,7 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
     }
 
     override suspend fun nicknameValidateCheck(nickname: String): Boolean {
-        val response = client.get("/users/$nickname/duplicate-check") {}
+        val response = client.get("/users/$nickname/duplicate-check")
 
         return responseCatching(response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
