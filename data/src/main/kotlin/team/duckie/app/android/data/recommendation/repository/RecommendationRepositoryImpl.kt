@@ -24,8 +24,10 @@ import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
+import team.duckie.app.android.util.kotlin.ExperimentalApi
 
 class RecommendationRepositoryImpl : RecommendationRepository {
+    @ExperimentalApi
     override suspend fun fetchRecommendations(): PagingSource<Int, RecommendationItem> {
         val response = client.get {
             url("/recommendations")
@@ -38,6 +40,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         }
     }
 
+    @ExperimentalApi
     override suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem> {
         val response = client.get {
             url("/recommendations")
@@ -49,14 +52,17 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         }
     }
 
+    @ExperimentalApi
     override suspend fun fetchFollowingTest() {
         // TODO(limsaehyun): repository 작업 필요
     }
 
+    @ExperimentalApi
     override suspend fun fetchRecommendFollowing() {
         // TODO(limsaehyun): repository 작업 필요
     }
 
+    @ExperimentalApi
     override suspend fun fetchRecommendTags(
         tag: String,
         type: SearchType,
