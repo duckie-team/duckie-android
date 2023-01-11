@@ -11,12 +11,24 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 
+enum class JumbotronType(
+    val original: String,
+) {
+    Text("text");
+
+    companion object {
+        fun toJumbotronType(type: String): JumbotronType {
+            return values().firstOrNull { it.original == type } ?: Text
+        }
+    }
+}
+
 @Immutable
 data class RecommendationJumbotronItem(
     val id: Int,
     val title: String,
     val description: String,
-    val thumbnailUrl: Any? = null,
+    val thumbnailUrl: String?,
     val buttonTitle: String,
     val certifyingStatement: String,
     val solvedCount: Int,
@@ -24,4 +36,5 @@ data class RecommendationJumbotronItem(
     val category: Category,
     val mainTag: Tag,
     val subTags: List<Tag>,
+    val type: JumbotronType,
 )
