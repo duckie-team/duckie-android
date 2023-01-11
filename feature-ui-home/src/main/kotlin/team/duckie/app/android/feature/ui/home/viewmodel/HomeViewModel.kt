@@ -14,24 +14,30 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import okhttp3.internal.toImmutableList
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.domain.recommendation.model.JumbotronType
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
+import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
+import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.seconds
 
 private val DummyJumbotrons =
@@ -41,6 +47,8 @@ private val DummyJumbotrons =
             title = "제 ${index}회 도로 패션영역",
             content = "아 저 근데 너무 재미있을 것 같아요\n내 시험 최고",
             buttonContent = "하기싫음 하지마세요",
+            id = 1,
+            type = JumbotronType.Text,
         )
     }.toPersistentList()
 
@@ -90,30 +98,36 @@ internal class HomeViewModel @Inject constructor(
 
     // TODO(limsaehyun: Request Server
     fun fetchJumbotrons() = intent {
+        updateHomeLoading(true)
         fetchJumbotronsUseCase()
-            .onSuccess {
+            .onSuccess { jumbotrons ->
                 reduce {
                     state.copy(
-                        jumbotrons = DummyJumbotrons,
+                        jumbotrons = jumbotrons
+                            .fastMap(RecommendationJumbotronItem::toUiModel)
+                            .toPersistentList(),
                     )
                 }
             }.onFailure { exception ->
                 postSideEffect(HomeSideEffect.ReportError(exception))
+            }.also {
+                updateHomeLoading(false)
             }
     }
 
     suspend fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>? {
-        fetchRecommendationsUseCase().onSuccess {
-            pager = Pager(
-                pagingSourceFactory = { it },
-                config = PagingConfig(
-                    pageSize = ITEMS_PER_PAGE,
-                    enablePlaceholders = true,
-                ),
-            ).flow
-        }.onFailure {
-            // TODO(riflockle7): API 실패 시 케이스 필요
-        }
+        fetchRecommendationsUseCase()
+            .onSuccess {
+                pager = Pager(
+                    pagingSourceFactory = { it },
+                    config = PagingConfig(
+                        pageSize = ITEMS_PER_PAGE,
+                        enablePlaceholders = true,
+                    ),
+                ).flow
+            }.onFailure {
+                // TODO(riflockle7): API 실패 시 케이스 필요
+            }
         // TODO(riflockle7): 이렇게 구현하면 안됨 일단은 build 성공 이후 작업 다시 진행
         return pager
     }
@@ -168,6 +182,16 @@ internal class HomeViewModel @Inject constructor(
                     )
                 }
             }
+    }
+
+    private fun updateHomeLoading(
+        loading: Boolean
+    ) = intent {
+        reduce {
+            state.copy(
+                isHomeLoading = loading
+            )
+        }
     }
 
     fun navigationPage(

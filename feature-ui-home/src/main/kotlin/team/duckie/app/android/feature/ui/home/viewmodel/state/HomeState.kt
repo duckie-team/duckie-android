@@ -7,8 +7,10 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel.state
 
+import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.domain.recommendation.model.JumbotronType
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 
@@ -74,11 +76,14 @@ internal data class HomeState(
      * @param content 덕질고사 설명
      * @param buttonContent 시작 버튼 content
      */
+    @Immutable
     data class HomeRecommendJumbotron(
-        val coverUrl: String,
+        val id: Int,
+        val coverUrl: String?,
         val title: String,
         val content: String,
         val buttonContent: String,
+        val type: JumbotronType,
     )
 
     /**

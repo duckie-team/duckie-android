@@ -11,6 +11,7 @@ package team.duckie.app.android.data.recommendation.repository
 
 import androidx.paging.PagingSource
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import team.duckie.app.android.data._datasource.client
@@ -20,6 +21,7 @@ import team.duckie.app.android.data.recommendation.mapper.toDomain
 import team.duckie.app.android.data.recommendation.model.RecommendationData
 import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSource
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
+import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 
@@ -36,8 +38,15 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         }
     }
 
-    override suspend fun fetchJumbotrons() {
-        // TODO(limsaehyun): repository 작업 필요
+    override suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem> {
+        val response = client.get {
+            url("/recommendations")
+            parameter("page", 1)
+        }
+
+        return responseCatching(response.bodyAsText()) { body ->
+            body.toJsonObject<RecommendationData>().toDomain().jumbotrons
+        }
     }
 
     override suspend fun fetchFollowingTest() {

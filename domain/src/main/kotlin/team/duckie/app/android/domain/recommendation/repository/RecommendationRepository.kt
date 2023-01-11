@@ -10,6 +10,7 @@ package team.duckie.app.android.domain.recommendation.repository
 import androidx.compose.runtime.Immutable
 import androidx.paging.PagingSource
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
+import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
 
 /**
@@ -21,7 +22,7 @@ import team.duckie.app.android.domain.recommendation.model.SearchType
 interface RecommendationRepository {
     suspend fun fetchRecommendations(): PagingSource<Int, RecommendationItem>
 
-    suspend fun fetchJumbotrons()
+    suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem>
 
     suspend fun fetchFollowingTest()
 

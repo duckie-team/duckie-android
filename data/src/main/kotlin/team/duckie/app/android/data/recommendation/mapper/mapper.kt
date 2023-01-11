@@ -17,6 +17,7 @@ import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.recommendation.model.RecommendationData
 import team.duckie.app.android.data.recommendation.model.RecommendationItemData
 import team.duckie.app.android.data.tag.mapper.toDomain
+import team.duckie.app.android.domain.recommendation.model.JumbotronType
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.util.kotlin.OutOfDateApi
@@ -53,6 +54,8 @@ internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotro
     thumbnailUrl = thumbnailUrl
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
+    type = type?.let { JumbotronType.valueOf(it) }
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type")
 )
 
 @OptIn(OutOfDateApi::class)
