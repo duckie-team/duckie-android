@@ -27,8 +27,10 @@ import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.fastMap
 
 class ExamRepositoryImpl @Inject constructor() : ExamRepository {
     @OutOfDateApi
@@ -76,6 +78,17 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
         }
         return responseCatching(response.bodyAsText()) { body ->
             body.toJsonObject<ExamInstanceSubmitData>().toDomain()
+        }
+    }
+
+    @OutOfDateApi
+    override suspend fun getExamFollowing(): List<Exam> {
+        val response = client.get {
+            url("/exams/following")
+        }
+
+        return responseCatching(response.bodyAsText()) { body ->
+            body.toJsonObject<List<ExamData>>().fastMap(ExamData::toDomain)
         }
     }
 }
