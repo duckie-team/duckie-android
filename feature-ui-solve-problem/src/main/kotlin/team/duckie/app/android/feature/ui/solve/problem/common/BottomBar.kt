@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.solve.problem.R
-import team.duckie.app.android.shared.ui.compose.FadeAnimatedVisibility
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackDivider
@@ -45,7 +45,7 @@ internal fun DoubleButtonBottomBar(
                 ),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            FadeAnimatedVisibility(visible = !isFirstPage) {
+            QuackAnimatedVisibility(visible = !isFirstPage) {
                 MediumButton(
                     text = stringResource(id = R.string.previous),
                     onClick = onLeftButtonClick,

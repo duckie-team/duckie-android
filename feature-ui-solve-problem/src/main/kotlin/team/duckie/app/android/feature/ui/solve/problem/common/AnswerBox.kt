@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.shared.ui.compose.FadeAnimatedVisibility
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
@@ -112,7 +112,7 @@ private fun TextAndCheck(
             ),
             singleLine = true,
         )
-        FadeAnimatedVisibility(visible = selected) {
+        QuackAnimatedVisibility(visible = selected) {
             QuackImage(
                 src = QuackIcon.Check,
                 tint = QuackColor.DuckieOrange,
