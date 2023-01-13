@@ -11,15 +11,16 @@ package team.duckie.app.android.feature.ui.create.problem.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -63,7 +64,10 @@ private const val ExamDescriptionMaxLength = 30
 private const val CertifyingStatementMaxLength = 16
 
 @Composable
-internal fun ExamInformationScreen(viewModel: CreateProblemViewModel = activityViewModel()) {
+internal fun ExamInformationScreen(
+    viewModel: CreateProblemViewModel = activityViewModel(),
+    modifier: Modifier
+) {
     val state = viewModel.collectAsState().value.examInformation
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
@@ -78,21 +82,21 @@ internal fun ExamInformationScreen(viewModel: CreateProblemViewModel = activityV
         lazyListState.scrollToItem(index = state.scrollPosition)
     }
 
-    Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
-            PrevAndNextTopAppBar(
-                onLeadingIconClick = {
-                    coroutineScope.launch { viewModel.onClickArrowBack() }
-                },
-                onTrailingTextClick = { viewModel.navigateStep(CreateProblemStep.CreateProblem) },
-                trailingTextEnabled = viewModel.isAllFieldsNotEmpty(),
-            )
-        },
-    ) { contentPadding ->
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .navigationBarsPadding(),
+    ) {
+        PrevAndNextTopAppBar(
+            onLeadingIconClick = {
+                coroutineScope.launch { viewModel.onClickArrowBack() }
+            },
+            onTrailingTextClick = { viewModel.navigateStep(CreateProblemStep.CreateProblem) },
+            trailingTextEnabled = viewModel.isAllFieldsNotEmpty(),
+        )
+
         LazyColumn(
             modifier = Modifier
-                .padding(contentPadding)
                 .padding(
                     top = 16.dp,
                     start = 16.dp,
@@ -192,6 +196,7 @@ internal fun ExamInformationScreen(viewModel: CreateProblemViewModel = activityV
                 )
             }
         }
+
     }
 }
 

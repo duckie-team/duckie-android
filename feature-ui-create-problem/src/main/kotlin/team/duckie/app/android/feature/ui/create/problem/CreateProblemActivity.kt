@@ -72,7 +72,11 @@ class CreateProblemActivity : BaseActivity() {
                     targetState = createProblemStep,
                 ) { step: CreateProblemStep ->
                     when (step) {
-                        CreateProblemStep.ExamInformation -> ExamInformationScreen()
+                        CreateProblemStep.ExamInformation -> ExamInformationScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .statusBarsPadding(),
+                        )
                         CreateProblemStep.FindExamArea -> FindExamAreaScreen()
                         CreateProblemStep.CreateProblem -> CreateProblemScreen(
                             modifier = Modifier
