@@ -108,6 +108,7 @@ private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
 
 private const val MaximumChoice = 5
+private const val MaximumProblem = 10
 private const val TextFieldMaxLength = 20
 
 private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constraints ->
@@ -173,6 +174,8 @@ internal fun CreateProblemScreen(
     val permissionErrorMessage =
         stringResource(id = R.string.create_problem_permission_toast_message)
     var selectedQuestionIndex: Int? by remember { mutableStateOf(null) }
+
+    val problemCount = remember(state.questions.size) { state.questions.size }
 
     // Gallery 관련
     val selectedQuestions = remember(state.questions) { state.questions }
@@ -521,6 +524,7 @@ internal fun CreateProblemScreen(
                             vm.navigateStep(CreateProblemStep.AdditionalInformation)
                         }
                     },
+                    isMaximumProblemCount = problemCount >= MaximumProblem
                 )
             },
         )
@@ -1019,6 +1023,7 @@ fun CreateProblemBottomLayout(
     createButtonClick: () -> Unit,
     tempSaveButtonClick: () -> Unit,
     nextButtonClick: () -> Unit,
+    isMaximumProblemCount: Boolean,
 ) {
     Column(modifier = modifier.background(QuackColor.White.composeColor)) {
         QuackDivider()
@@ -1030,11 +1035,19 @@ fun CreateProblemBottomLayout(
         ) {
             Row(
                 modifier = Modifier
-                    .quackClickable { createButtonClick() }
+                    .quackClickable {
+                        if (!isMaximumProblemCount) {
+                            createButtonClick()
+                        }
+                    }
                     .padding(4.dp),
             ) {
+                // TODO(riflockle7): 추후 비활성화 될 때의 resouce 이미지 필요
                 QuackImage(src = QuackIcon.Plus, size = DpSize(16.dp, 16.dp))
-                QuackSubtitle2(text = stringResource(id = R.string.create_problem_add_problem_button))
+                QuackSubtitle2(
+                    text = stringResource(id = R.string.create_problem_add_problem_button),
+                    color = if (isMaximumProblemCount) QuackColor.Gray2 else QuackColor.Black,
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
