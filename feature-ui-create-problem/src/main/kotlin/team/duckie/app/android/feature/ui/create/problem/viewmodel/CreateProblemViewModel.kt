@@ -372,10 +372,16 @@ internal class CreateProblemViewModel @Inject constructor(
             urlSource,
         ).let { newAnswers[questionIndex] = it }
 
+        val newCorrectAnswers = state.createProblem.correctAnswers.toMutableList()
+        if (answerType == Answer.Type.ShortAnswer) {
+            newCorrectAnswers[questionIndex] = answer ?: ""
+        }
+
         reduce {
             state.copy(
                 createProblem = state.createProblem.copy(
                     answers = newAnswers.toPersistentList(),
+                    correctAnswers = newCorrectAnswers.toPersistentList(),
                 ),
             )
         }
@@ -401,10 +407,17 @@ internal class CreateProblemViewModel @Inject constructor(
             )
         }
 
+        // 만약 정답 처리 된 내용을 삭제하는 경우 정답내용(여기에서는 정답 index)를 초기화 시킨다.
+        val newCorrectAnswers = state.createProblem.correctAnswers.toMutableList()
+        if ("$answerIndex" == newCorrectAnswers[questionIndex]) {
+            newCorrectAnswers[questionIndex] = ""
+        }
+
         reduce {
             state.copy(
                 createProblem = state.createProblem.copy(
                     answers = newAnswers.toPersistentList(),
+                    correctAnswers = newCorrectAnswers.toPersistentList(),
                 ),
             )
         }

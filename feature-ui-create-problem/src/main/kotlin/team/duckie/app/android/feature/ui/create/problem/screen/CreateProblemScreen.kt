@@ -639,16 +639,13 @@ private fun CreateProblemTitleLayout(
     imageClick: () -> Unit,
     dropDownTitle: String,
     onDropdownItemClick: (Int) -> Unit,
-    deleteLongClick: () -> Unit,
 ) {
     // TODO(riflockle7): 최상단 Line 없는 TextField 필요
     QuackBasic2TextField(
-        modifier = Modifier.quackClickable(onLongClick = { deleteLongClick() }) {},
         text = question?.text ?: "",
         onTextChanged = titleChanged,
         placeholderText = stringResource(
-            id = R.string.create_problem_question_placeholder,
-            "${questionIndex + 1}",
+            id = R.string.create_problem_question_placeholder, "${questionIndex + 1}"
         ),
         trailingIcon = QuackIcon.Image,
         trailingIconOnClick = imageClick,
@@ -663,11 +660,9 @@ private fun CreateProblemTitleLayout(
     }
 
     // TODO(riflockle7): border 없는 DropDownCard 필요
-    QuackDropDownCard(
-        modifier = Modifier.padding(top = 24.dp),
+    QuackDropDownCard(modifier = Modifier.padding(top = 24.dp),
         text = dropDownTitle,
-        onClick = { onDropdownItemClick(questionIndex) },
-    )
+        onClick = { onDropdownItemClick(questionIndex) })
 }
 
 /** 객관식/글 Layout */
@@ -688,7 +683,8 @@ private fun ChoiceProblemLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .quackClickable(onLongClick = { deleteLongClick(null) }) {}
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -696,8 +692,8 @@ private fun ChoiceProblemLayout(
             titleChanged,
             imageClick,
             answers.type.title,
-            onDropdownItemClick,
-        ) { deleteLongClick(null) }
+            onDropdownItemClick
+        )
 
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
             val isChecked = correctAnswers == "$answerIndex"
@@ -710,7 +706,10 @@ private fun ChoiceProblemLayout(
                             width = 1.dp,
                             color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4
                         )
-                    ),
+                    )
+                    .quackClickable(
+                        onLongClick = { deleteLongClick(answerIndex) },
+                    ) {},
                 text = choiceModel.text,
                 onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
                 placeholderText = stringResource(
@@ -720,8 +719,7 @@ private fun ChoiceProblemLayout(
                 trailingContent = {
                     Column(
                         modifier = Modifier.quackClickable(
-                            onLongClick = { deleteLongClick(answerIndex) },
-                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") },
+                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") }
                         ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -773,7 +771,8 @@ private fun ImageChoiceProblemLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .quackClickable(onLongClick = { deleteLongClick(null) }) {}
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -782,7 +781,7 @@ private fun ImageChoiceProblemLayout(
             imageClick,
             answers.type.title,
             onDropdownItemClick,
-        ) { deleteLongClick(null) }
+        )
 
         NoLazyGridItems(
             count = answers.imageChoice.size,
@@ -806,15 +805,15 @@ private fun ImageChoiceProblemLayout(
                         .padding(12.dp),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .quackClickable(
-                                onLongClick = { deleteLongClick(answerIndex) },
-                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") }
-                            ),
+                        modifier = Modifier.padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        QuackRoundCheckBox(checked = isChecked)
+                        QuackRoundCheckBox(
+                            modifier = Modifier.quackClickable(
+                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") }
+                            ),
+                            checked = isChecked
+                        )
 
                         if (isChecked) {
                             QuackBody3(
@@ -823,6 +822,16 @@ private fun ImageChoiceProblemLayout(
                                 text = stringResource(id = R.string.answer),
                             )
                         }
+
+                        Spacer(Modifier.weight(1f))
+
+                        QuackImage(
+                            modifier = Modifier.quackClickable(
+                                onClick = { deleteLongClick(answerIndex) }
+                            ),
+                            src = QuackIcon.Close,
+                            size = DpSize(20.dp, 20.dp)
+                        )
                     }
 
                     if (answerItem.imageUrl.isEmpty()) {
@@ -865,8 +874,8 @@ private fun ImageChoiceProblemLayout(
         if (answers.imageChoice.size < MaximumChoice) {
             QuackSubtitle(
                 modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
-                text = stringResource(id = R.string.create_problem_add_problem_button),
-                onClick = { addAnswerClick() },
+                text = stringResource(id = R.string.create_problem_add_button),
+                onClick = { addAnswerClick() }
             )
         }
     }
@@ -887,7 +896,8 @@ private fun ShortAnswerProblemLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .quackClickable(onLongClick = { deleteLongClick() }) {}
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -896,7 +906,7 @@ private fun ShortAnswerProblemLayout(
             imageClick,
             answers.type.title,
             onDropdownItemClick,
-        ) { deleteLongClick() }
+        )
 
         QuackBasicTextField(
             text = answers.answer.text,
