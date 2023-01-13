@@ -58,8 +58,8 @@ internal data class CreateProblemState(
             Answer.Type.Choice.getDefaultAnswer(),
         ),
         val correctAnswers: ImmutableList<String> = persistentListOf(""),
-        val hints: ImmutableList<String> = persistentListOf(),
-        val memos: ImmutableList<String> = persistentListOf(),
+        val hints: ImmutableList<String> = persistentListOf(""),
+        val memos: ImmutableList<String> = persistentListOf(""),
     ) {
         data class Error(val throwable: Throwable?)
     }
