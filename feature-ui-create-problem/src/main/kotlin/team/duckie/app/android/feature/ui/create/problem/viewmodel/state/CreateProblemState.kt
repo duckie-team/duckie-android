@@ -60,6 +60,7 @@ internal data class CreateProblemState(
         val correctAnswers: ImmutableList<String> = persistentListOf(""),
         val hints: ImmutableList<String> = persistentListOf(""),
         val memos: ImmutableList<String> = persistentListOf(""),
+        val isValidate: Boolean = false,
     ) {
         data class Error(val throwable: Throwable?)
     }

@@ -502,6 +502,22 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    fun isValidate(): Boolean {
+        return with(container.stateFlow.value.createProblem) {
+            val questionsValidate = this.questions.asSequence()
+                .map { it.validate() }
+                .reduce { acc, next -> acc && next }
+            val answersValidate = this.answers.asSequence()
+                .map { it.validate() }
+                .reduce { acc, next -> acc && next }
+            val correctAnswersValidate = this.correctAnswers.asSequence()
+                .map { it.isNotEmpty() }
+                .reduce { acc, next -> acc && next }
+
+            questionsValidate && answersValidate && correctAnswersValidate
+        }
+    }
+
     // AdditionalInfo
     fun setThumbnail(thumbnail: Any?) = intent {
         reduce {

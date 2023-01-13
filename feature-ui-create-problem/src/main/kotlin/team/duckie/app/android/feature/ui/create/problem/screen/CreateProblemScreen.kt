@@ -524,7 +524,8 @@ internal fun CreateProblemScreen(
                             vm.navigateStep(CreateProblemStep.AdditionalInformation)
                         }
                     },
-                    isMaximumProblemCount = problemCount >= MaximumProblem
+                    isMaximumProblemCount = problemCount >= MaximumProblem,
+                    isValidateCheck = vm::isValidate,
                 )
             },
         )
@@ -1024,10 +1025,11 @@ fun CreateProblemBottomLayout(
     tempSaveButtonClick: () -> Unit,
     nextButtonClick: () -> Unit,
     isMaximumProblemCount: Boolean,
+    isValidateCheck: () -> Boolean,
 ) {
+    val isValidate = isValidateCheck()
     Column(modifier = modifier.background(QuackColor.White.composeColor)) {
         QuackDivider()
-
         Row(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -1071,10 +1073,27 @@ fun CreateProblemBottomLayout(
             QuackSubtitle(
                 modifier = Modifier
                     .clip(RoundedCornerShape(size = 8.dp))
-                    .background(QuackColor.DuckieOrange.composeColor)
-                    .quackClickable { nextButtonClick() }
+                    .background(
+                        if (isValidate) {
+                            QuackColor.DuckieOrange.composeColor
+                        } else {
+                            QuackColor.Gray2.composeColor
+                        }
+                    )
+                    .quackClickable {
+                        if (isValidate) {
+                            nextButtonClick()
+                        }
+                    }
                     .applyAnimatedQuackBorder(
-                        QuackBorder(1.dp, QuackColor.DuckieOrange),
+                        QuackBorder(
+                            1.dp,
+                            if (isValidate) {
+                                QuackColor.DuckieOrange
+                            } else {
+                                QuackColor.Gray2
+                            }
+                        ),
                         shape = RoundedCornerShape(size = 8.dp),
                     )
                     .padding(

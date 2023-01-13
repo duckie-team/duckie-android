@@ -70,6 +70,13 @@ sealed class Question(val type: Type, open val text: String) {
         result = 31 * result + text.hashCode()
         return result
     }
+
+    fun validate(): Boolean = when (this) {
+        is Text -> this.text.isNotEmpty()
+        is Image -> this.text.isNotEmpty() && this.imageUrl.isNotEmpty()
+        is Audio -> this.text.isNotEmpty() && this.audioUrl.isNotEmpty()
+        is Video -> this.text.isNotEmpty() && this.videoUrl.isNotEmpty()
+    }
 }
 
 @Immutable
@@ -110,6 +117,18 @@ sealed class Answer(val type: Type) {
 
     override fun hashCode(): Int {
         return type.hashCode()
+    }
+
+    fun validate(): Boolean = when (this) {
+        is Short -> this.answer.text.isNotEmpty()
+        is Choice -> this.choices
+            .asSequence()
+            .map { it.text.isNotEmpty() }
+            .reduce { acc, next -> acc && next }
+        is ImageChoice -> this.imageChoice
+            .asSequence()
+            .map { it.text.isNotEmpty() && it.imageUrl.isNotEmpty() }
+            .reduce { acc, next -> acc && next }
     }
 }
 
