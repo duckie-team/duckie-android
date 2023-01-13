@@ -151,7 +151,7 @@ private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constr
         )
         bottomLayoutMeasurable.place(
             x = 0,
-            y = topAppBarHeight + contentThresholdHeight
+            y = topAppBarHeight + contentThresholdHeight,
         )
     }
 }
@@ -308,9 +308,7 @@ internal fun CreateProblemScreen(
                         coroutineShape.launch { vm.navigateStep(CreateProblemStep.ExamInformation) }
                     },
                     trailingText = stringResource(id = R.string.next),
-                    onTrailingTextClick = {
-
-                    },
+                    onTrailingTextClick = {},
                     trailingTextEnabled = true,
                 )
 
@@ -365,7 +363,9 @@ internal fun CreateProblemScreen(
                                             answer = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
-                                    deleteLongClick = { deleteDialogNo = Pair(questionIndex, null) },
+                                    deleteLongClick = {
+                                        deleteDialogNo = Pair(questionIndex, null)
+                                    },
                                 )
 
                                 is Answer.Choice -> ChoiceProblemLayout(
@@ -501,7 +501,7 @@ internal fun CreateProblemScreen(
                                 else -> {}
                             }
                         }
-                    }
+                    },
                 )
 
                 // 최하단 Layout
@@ -641,7 +641,8 @@ private fun CreateProblemTitleLayout(
         text = question?.text ?: "",
         onTextChanged = titleChanged,
         placeholderText = stringResource(
-            id = R.string.create_problem_question_placeholder, "${questionIndex + 1}"
+            id = R.string.create_problem_question_placeholder,
+            "${questionIndex + 1}",
         ),
         trailingIcon = QuackIcon.Image,
         trailingIconOnClick = imageClick,
@@ -656,9 +657,13 @@ private fun CreateProblemTitleLayout(
     }
 
     // TODO(riflockle7): border 없는 DropDownCard 필요
-    QuackDropDownCard(modifier = Modifier.padding(top = 24.dp),
+    QuackDropDownCard(
+        modifier = Modifier.padding(top = 24.dp),
         text = dropDownTitle,
-        onClick = { onDropdownItemClick(questionIndex) })
+        onClick = {
+            onDropdownItemClick(questionIndex)
+        },
+    )
 }
 
 /** 객관식/글 Layout */
@@ -680,7 +685,9 @@ private fun ChoiceProblemLayout(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .quackClickable(onLongClick = { deleteLongClick(null) }) {}
+            .quackClickable(
+                onLongClick = { deleteLongClick(null) },
+            ) {},
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -688,7 +695,7 @@ private fun ChoiceProblemLayout(
             titleChanged,
             imageClick,
             answers.type.title,
-            onDropdownItemClick
+            onDropdownItemClick,
         )
 
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
@@ -700,8 +707,8 @@ private fun ChoiceProblemLayout(
                     .applyAnimatedQuackBorder(
                         border = QuackBorder(
                             width = 1.dp,
-                            color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4
-                        )
+                            color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4,
+                        ),
                     )
                     .quackClickable(
                         onLongClick = { deleteLongClick(answerIndex) },
@@ -715,7 +722,7 @@ private fun ChoiceProblemLayout(
                 trailingContent = {
                     Column(
                         modifier = Modifier.quackClickable(
-                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") }
+                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") },
                         ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -768,7 +775,9 @@ private fun ImageChoiceProblemLayout(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .quackClickable(onLongClick = { deleteLongClick(null) }) {}
+            .quackClickable(
+                onLongClick = { deleteLongClick(null) },
+            ) {},
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -795,8 +804,8 @@ private fun ImageChoiceProblemLayout(
                         .applyAnimatedQuackBorder(
                             border = QuackBorder(
                                 width = 1.dp,
-                                color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4
-                            )
+                                color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4,
+                            ),
                         )
                         .padding(12.dp),
                 ) {
@@ -806,9 +815,9 @@ private fun ImageChoiceProblemLayout(
                     ) {
                         QuackRoundCheckBox(
                             modifier = Modifier.quackClickable(
-                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") }
+                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") },
                             ),
-                            checked = isChecked
+                            checked = isChecked,
                         )
 
                         if (isChecked) {
@@ -823,10 +832,10 @@ private fun ImageChoiceProblemLayout(
 
                         QuackImage(
                             modifier = Modifier.quackClickable(
-                                onClick = { deleteLongClick(answerIndex) }
+                                onClick = { deleteLongClick(answerIndex) },
                             ),
                             src = QuackIcon.Close,
-                            size = DpSize(20.dp, 20.dp)
+                            size = DpSize(20.dp, 20.dp),
                         )
                     }
 
@@ -871,7 +880,7 @@ private fun ImageChoiceProblemLayout(
             QuackSubtitle(
                 modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
                 text = stringResource(id = R.string.create_problem_add_button),
-                onClick = { addAnswerClick() }
+                onClick = { addAnswerClick() },
             )
         }
     }
@@ -893,7 +902,9 @@ private fun ShortAnswerProblemLayout(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .quackClickable(onLongClick = { deleteLongClick() }) {}
+            .quackClickable(
+                onLongClick = { deleteLongClick() },
+            ) {},
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -1036,11 +1047,11 @@ fun CreateProblemBottomLayout(
                     .quackClickable { tempSaveButtonClick() }
                     .applyAnimatedQuackBorder(
                         QuackBorder(1.dp, QuackColor.Gray3),
-                        shape = RoundedCornerShape(size = 8.dp)
+                        shape = RoundedCornerShape(size = 8.dp),
                     )
                     .padding(vertical = 12.dp, horizontal = 19.dp),
                 color = QuackColor.Black,
-                text = stringResource(id = R.string.create_problem_temp_save_button)
+                text = stringResource(id = R.string.create_problem_temp_save_button),
             )
 
             // 다음 버튼
@@ -1051,11 +1062,14 @@ fun CreateProblemBottomLayout(
                     .quackClickable { nextButtonClick() }
                     .applyAnimatedQuackBorder(
                         QuackBorder(1.dp, QuackColor.DuckieOrange),
-                        shape = RoundedCornerShape(size = 8.dp)
+                        shape = RoundedCornerShape(size = 8.dp),
                     )
-                    .padding(vertical = 12.dp, horizontal = 19.dp),
+                    .padding(
+                        vertical = 12.dp,
+                        horizontal = 19.dp,
+                    ),
                 color = QuackColor.White,
-                text = stringResource(id = R.string.next)
+                text = stringResource(id = R.string.next),
             )
         }
 
