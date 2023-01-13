@@ -230,6 +230,12 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    fun examInformationIsValidate(): Boolean {
+        return with(container.stateFlow.value.examInformation) {
+            categorySelection >= 0 && isExamAreaSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+        }
+    }
+
     // CreateProblem
     /**
      * 문제를 만든다. 아래 규칙대로 [Problem] 을 만든다.
@@ -509,7 +515,7 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun isValidate(): Boolean {
+    fun createProblemIsValidate(): Boolean {
         return with(container.stateFlow.value.createProblem) {
             val questionsValidate = this.questions.asSequence()
                 .map { it.validate() }
@@ -588,10 +594,15 @@ internal class CreateProblemViewModel @Inject constructor(
         mutableGalleryImages = persistentListOf(*images.toTypedArray())
     }
 
-    fun isAllFieldsNotEmpty(): Boolean {
-        return with(container.stateFlow.value.examInformation) {
-            categorySelection >= 0 && isExamAreaSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+    private fun additionInfoIsValidate(): Boolean {
+        return with(container.stateFlow.value.additionalInfo) {
+            // TODO(sangwo-o.lee) 추후 tags 로 체크해야 함
+            thumbnail != null && takeTitle.isNotEmpty() && tempTag.isNotEmpty()
         }
+    }
+
+    fun isAllFieldsNotEmpty(): Boolean {
+        return examInformationIsValidate() && createProblemIsValidate() && additionInfoIsValidate()
     }
 }
 
