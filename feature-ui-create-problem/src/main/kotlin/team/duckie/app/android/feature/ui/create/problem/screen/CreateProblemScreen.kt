@@ -704,7 +704,8 @@ private fun ChoiceProblemLayout(
         )
 
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
-            val isChecked = correctAnswers == "$answerIndex"
+            val answerNo = answerIndex + 1
+            val isChecked = correctAnswers == "$answerNo"
             QuackBorderTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -722,12 +723,12 @@ private fun ChoiceProblemLayout(
                 onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
                 placeholderText = stringResource(
                     id = R.string.create_problem_answer_placeholder,
-                    "${answerIndex + 1}",
+                    "$answerNo",
                 ),
                 trailingContent = {
                     Column(
                         modifier = Modifier.quackClickable(
-                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") },
+                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
                         ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -799,8 +800,9 @@ private fun ImageChoiceProblemLayout(
             paddingValues = PaddingValues(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             itemContent = { answerIndex ->
-                val answerItem = answers.imageChoice[answerIndex]
-                val isChecked = correctAnswers == "$answerIndex"
+                val answerNo = answerIndex + 1
+                val answerItem = answers.imageChoice[answerNo]
+                val isChecked = correctAnswers == "$answerNo"
 
                 Column(
                     modifier = Modifier
@@ -820,7 +822,7 @@ private fun ImageChoiceProblemLayout(
                     ) {
                         QuackRoundCheckBox(
                             modifier = Modifier.quackClickable(
-                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") },
+                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
                             ),
                             checked = isChecked,
                         )
@@ -837,7 +839,7 @@ private fun ImageChoiceProblemLayout(
 
                         QuackImage(
                             modifier = Modifier.quackClickable(
-                                onClick = { deleteLongClick(answerIndex) },
+                                onClick = { deleteLongClick(answerNo) },
                             ),
                             src = QuackIcon.Close,
                             size = DpSize(20.dp, 20.dp),
@@ -847,7 +849,7 @@ private fun ImageChoiceProblemLayout(
                     if (answerItem.imageUrl.isEmpty()) {
                         Box(
                             modifier = Modifier
-                                .quackClickable { answerImageClick(answerIndex) }
+                                .quackClickable { answerImageClick(answerNo) }
                                 .background(color = QuackColor.Gray4.composeColor)
                                 .padding(52.dp),
                         ) {
@@ -860,19 +862,19 @@ private fun ImageChoiceProblemLayout(
                         QuackImage(
                             src = answerItem.imageUrl,
                             size = DpSize(136.dp, 136.dp),
-                            onClick = { answerImageClick(answerIndex) },
-                            onLongClick = { deleteLongClick(answerIndex) },
+                            onClick = { answerImageClick(answerNo) },
+                            onLongClick = { deleteLongClick(answerNo) },
                         )
                     }
 
                     QuackBasicTextField(
-                        text = answers.imageChoice[answerIndex].text,
+                        text = answers.imageChoice[answerNo].text,
                         onTextChanged = { newAnswer ->
-                            answerTextChanged(newAnswer, answerIndex)
+                            answerTextChanged(newAnswer, answerNo)
                         },
                         placeholderText = stringResource(
                             id = R.string.create_problem_answer_placeholder,
-                            "${answerIndex + 1}",
+                            "$answerNo",
                         ),
                     )
                 }
