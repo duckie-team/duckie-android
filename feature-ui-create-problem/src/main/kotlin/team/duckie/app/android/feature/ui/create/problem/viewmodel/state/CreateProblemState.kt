@@ -45,6 +45,7 @@ internal data class CreateProblemState(
                 "도로 셀카",
                 "도로 패션",
             ),
+            val textFieldValue: String = "",
             val examArea: String = "",
             val cursorPosition: Int = 0,
         )

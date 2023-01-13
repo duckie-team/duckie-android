@@ -49,7 +49,7 @@ internal fun FindExamAreaScreen(viewModel: CreateProblemViewModel = activityView
     var examAreaTextFieldValue by remember {
         mutableStateOf(
             TextFieldValue(
-                text = state.examArea,
+                text = state.textFieldValue,
                 selection = TextRange(state.cursorPosition),
             ),
         )
@@ -82,8 +82,8 @@ internal fun FindExamAreaScreen(viewModel: CreateProblemViewModel = activityView
                 value = examAreaTextFieldValue,
                 onValueChanged = { textFieldValue ->
                     examAreaTextFieldValue = textFieldValue
-                    viewModel.setExamArea(
-                        examArea = textFieldValue.text,
+                    viewModel.setTextFieldValue(
+                        textFieldValue = textFieldValue.text,
                         cursorPosition = textFieldValue.selection.end,
                     )
                 },
@@ -92,13 +92,13 @@ internal fun FindExamAreaScreen(viewModel: CreateProblemViewModel = activityView
                     onDone = { viewModel.onClickSearchListHeader() },
                 ),
             )
-            QuackAnimatedVisibility(visible = state.examArea.isNotEmpty()) {
+            QuackAnimatedVisibility(visible = state.textFieldValue.isNotEmpty()) {
                 LazyColumn {
                     item {
                         SearchResultText(
                             text = stringResource(
                                 id = R.string.add_also,
-                                state.examArea,
+                                state.textFieldValue,
                             ),
                             onClick = viewModel::onClickSearchListHeader,
                         )

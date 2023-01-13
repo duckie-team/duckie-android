@@ -160,12 +160,12 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun setExamArea(examArea: String, cursorPosition: Int) = intent {
+    fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
                     foundExamArea = state.examInformation.foundExamArea.copy(
-                        examArea = examArea,
+                        textFieldValue = textFieldValue,
                         cursorPosition = cursorPosition,
                     ),
                 ),
@@ -176,9 +176,15 @@ internal class CreateProblemViewModel @Inject constructor(
     fun onClickSearchListHeader() = intent {
         reduce {
             state.copy(
-                examInformation = state.examInformation.copy(
-                    isExamAreaSelected = true,
-                ),
+                examInformation = state.examInformation.run {
+                    copy(
+                        isExamAreaSelected = true,
+                        foundExamArea = foundExamArea.copy(
+                            examArea = foundExamArea.textFieldValue,
+                            textFieldValue = ""
+                        ),
+                    )
+                },
             )
         }
         navigateStep(CreateProblemStep.ExamInformation)
@@ -193,6 +199,7 @@ internal class CreateProblemViewModel @Inject constructor(
                         isExamAreaSelected = true,
                         foundExamArea = foundExamArea.copy(
                             examArea = foundExamArea.searchResults[index],
+                            textFieldValue = ""
                         ),
                     )
                 },
@@ -206,7 +213,7 @@ internal class CreateProblemViewModel @Inject constructor(
                 examInformation = state.examInformation.run {
                     copy(
                         isExamAreaSelected = isExamAreaSelected,
-                        foundExamArea = foundExamArea.copy(examArea = ""),
+                        foundExamArea = foundExamArea.copy(examArea = "", textFieldValue = ""),
                     )
                 },
             )
