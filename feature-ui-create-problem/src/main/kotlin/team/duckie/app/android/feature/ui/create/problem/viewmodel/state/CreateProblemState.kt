@@ -19,7 +19,7 @@ internal data class CreateProblemState(
     val examInformation: ExamInformation = ExamInformation(),
     val createProblem: CreateProblem = CreateProblem(),
     val additionalInfo: AdditionInfo = AdditionInfo(),
-    val findResultType: FindResultType = FindResultType.None,
+    val findResultType: FindResultType = FindResultType.ExamCategory,
     val error: Error? = null,
     val photoState: CreateProblemPhotoState? = null,
 ) {
@@ -80,9 +80,9 @@ data class SearchScreenData(
 )
 
 enum class FindResultType {
-    None, ExamCategory, Tag;
+    ExamCategory, Tag;
 
-    fun isMultiMode() = this != None && this == Tag
+    fun isMultiMode() = this == Tag
 }
 
 sealed class CreateProblemPhotoState {

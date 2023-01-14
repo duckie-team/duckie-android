@@ -118,13 +118,13 @@ internal class CreateProblemViewModel @Inject constructor(
     fun onClickExamCategory(scrollPosition: Int) = intent {
         reduce {
             state.copy(
+                createProblemStep = CreateProblemStep.Search,
                 findResultType = FindResultType.ExamCategory,
                 examInformation = state.examInformation.copy(
                     scrollPosition = scrollPosition,
                 ),
             )
         }
-        navigateStep(CreateProblemStep.Search)
     }
 
     fun navigateStep(step: CreateProblemStep) = intent {
@@ -187,8 +187,6 @@ internal class CreateProblemViewModel @Inject constructor(
                         ),
                     )
                 }
-
-                else -> duckieClientLogicProblemException()
             }
         }
     }
@@ -198,7 +196,6 @@ internal class CreateProblemViewModel @Inject constructor(
             when (state.findResultType) {
                 FindResultType.ExamCategory -> {
                     state.copy(
-                        findResultType = FindResultType.None,
                         examInformation = state.examInformation.run {
                             copy(
                                 isExamCategorySelected = true,
@@ -227,8 +224,6 @@ internal class CreateProblemViewModel @Inject constructor(
                         },
                     )
                 }
-
-                else -> duckieClientLogicProblemException()
             }
         }
     }
@@ -238,7 +233,6 @@ internal class CreateProblemViewModel @Inject constructor(
             when (state.findResultType) {
                 FindResultType.ExamCategory -> {
                     state.copy(
-                        findResultType = FindResultType.None,
                         createProblemStep = CreateProblemStep.ExamInformation,
                         examInformation = state.examInformation.run {
                             copy(
@@ -269,8 +263,6 @@ internal class CreateProblemViewModel @Inject constructor(
                         },
                     )
                 }
-
-                else -> duckieClientLogicProblemException(message = "이 화면에는 해당 기능이 없습니다.")
             }
         }
     }
@@ -678,44 +670,22 @@ internal class CreateProblemViewModel @Inject constructor(
     fun onClickTag() = intent {
         reduce {
             state.copy(
+                createProblemStep = CreateProblemStep.Search,
                 findResultType = FindResultType.Tag,
             )
         }
-        navigateStep(CreateProblemStep.Search)
     }
 
-    fun clearSearchScreen() = intent {
+    fun exitSearchScreen() = intent {
         reduce {
             when (state.findResultType) {
                 FindResultType.ExamCategory -> state.copy(
-                    findResultType = FindResultType.None,
                     createProblemStep = CreateProblemStep.ExamInformation,
-                    examInformation = state.examInformation.run {
-                        copy(
-                            isExamCategorySelected = false,
-                            searchExamCategory = searchExamCategory.copy(
-                                results = persistentListOf(),
-                                textFieldValue = ""
-                            ),
-                        )
-                    },
                 )
 
                 FindResultType.Tag -> state.copy(
-                    findResultType = FindResultType.None,
                     createProblemStep = CreateProblemStep.AdditionalInformation,
-                    additionalInfo = state.additionalInfo.run {
-                        copy(
-                            isTagsAdded = false,
-                            searchTag = searchTag.copy(
-                                results = persistentListOf(),
-                                textFieldValue = ""
-                            ),
-                        )
-                    },
                 )
-
-                else -> duckieClientLogicProblemException(message = "이 화면에는 해당 기능이 없습니다.")
             }
         }
     }

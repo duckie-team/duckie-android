@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalLifecycleComposeApi::class)
-
 package team.duckie.app.android.feature.ui.create.problem.screen
 
 import androidx.activity.compose.BackHandler
@@ -31,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.ExitAppBar
@@ -53,12 +50,11 @@ internal fun SearchScreen(
 ) {
     val context = LocalContext.current
 
-    val rootState = viewModel.collectAsState().value;
+    val rootState = viewModel.collectAsState().value
 
     val state = when (rootState.findResultType) {
         FindResultType.ExamCategory -> rootState.examInformation.searchExamCategory
         FindResultType.Tag -> rootState.additionalInfo.searchTag
-        else -> null
     }
 
     val title by remember {
@@ -66,7 +62,6 @@ internal fun SearchScreen(
             when (rootState.findResultType) {
                 FindResultType.ExamCategory -> context.getString(R.string.find_exam_category)
                 FindResultType.Tag -> context.getString(R.string.additional_information_tag_title)
-                else -> ""
             }
         )
     }
@@ -75,7 +70,6 @@ internal fun SearchScreen(
             when (rootState.findResultType) {
                 FindResultType.ExamCategory -> context.getString(R.string.search_exam_category_placeholder)
                 FindResultType.Tag -> context.getString(R.string.additional_information_tag_input_hint)
-                else -> ""
             }
         )
     }
@@ -86,17 +80,15 @@ internal fun SearchScreen(
     val focusRequester = remember { FocusRequester() }
     var searchTextFieldValue by remember {
         mutableStateOf(
-            state?.let {
-                TextFieldValue(
-                    text = state.textFieldValue,
-                    selection = TextRange(state.cursorPosition),
-                )
-            } ?: TextFieldValue(text = "")
+            TextFieldValue(
+                text = state.textFieldValue,
+                selection = TextRange(state.cursorPosition),
+            )
         )
     }
 
     BackHandler {
-        viewModel.clearSearchScreen()
+        viewModel.exitSearchScreen()
     }
 
     LaunchedEffect(Unit) {
@@ -109,14 +101,14 @@ internal fun SearchScreen(
     ) {
         ExitAppBar(
             leadingText = title,
-            onTrailingIconClick = { viewModel.clearSearchScreen() },
+            onTrailingIconClick = { viewModel.exitSearchScreen() },
         )
 
         if (multiSelectMode) {
             QuackSingeLazyRowTag(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
                 horizontalSpace = 4.dp,
-                items = state!!.results,
+                items = state.results,
                 tagType = QuackTagType.Circle(QuackIcon.Close),
                 onClick = { viewModel.onClickCloseTag(it) },
             )
@@ -146,40 +138,38 @@ internal fun SearchScreen(
             ),
         )
 
-        state?.run {
-            QuackAnimatedVisibility(
-                modifier = Modifier.padding(16.dp),
-                visible = textFieldValue.isNotEmpty()
-            ) {
-                LazyColumn {
-                    item {
-                        SearchResultText(
-                            text = stringResource(
-                                id = R.string.add_also,
-                                textFieldValue,
-                            ),
-                            onClick = {
-                                if (searchTextValidate(searchTextFieldValue, state)) {
-                                    viewModel.onClickSearchListHeader()
-                                    searchTextFieldValue = TextFieldValue()
-                                }
-                            },
-                        )
-                    }
-                    itemsIndexed(
-                        items = searchResults,
-                        key = { _, item -> item },
-                    ) { index: Int, item: String ->
-                        SearchResultText(
-                            text = item,
-                            onClick = {
-                                if (searchTextValidate(searchTextFieldValue, state)) {
-                                    viewModel.onClickSearchList(index)
-                                    searchTextFieldValue = TextFieldValue()
-                                }
-                            },
-                        )
-                    }
+        QuackAnimatedVisibility(
+            modifier = Modifier.padding(16.dp),
+            visible = state.textFieldValue.isNotEmpty()
+        ) {
+            LazyColumn {
+                item {
+                    SearchResultText(
+                        text = stringResource(
+                            id = R.string.add_also,
+                            state.textFieldValue,
+                        ),
+                        onClick = {
+                            if (searchTextValidate(searchTextFieldValue, state)) {
+                                viewModel.onClickSearchListHeader()
+                                searchTextFieldValue = TextFieldValue()
+                            }
+                        },
+                    )
+                }
+                itemsIndexed(
+                    items = state.searchResults,
+                    key = { _, item -> item },
+                ) { index: Int, item: String ->
+                    SearchResultText(
+                        text = item,
+                        onClick = {
+                            if (searchTextValidate(searchTextFieldValue, state)) {
+                                viewModel.onClickSearchList(index)
+                                searchTextFieldValue = TextFieldValue()
+                            }
+                        },
+                    )
                 }
             }
         }
