@@ -115,16 +115,16 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onClickExamArea(scrollPosition: Int) = intent {
+    fun onClickExamCategory(scrollPosition: Int) = intent {
         reduce {
             state.copy(
-                findResultType = FindResultType.Exam,
+                findResultType = FindResultType.ExamCategory,
                 examInformation = state.examInformation.copy(
                     scrollPosition = scrollPosition,
                 ),
             )
         }
-        navigateStep(CreateProblemStep.FindExamArea)
+        navigateStep(CreateProblemStep.Search)
     }
 
     fun navigateStep(step: CreateProblemStep) = intent {
@@ -166,10 +166,10 @@ internal class CreateProblemViewModel @Inject constructor(
     fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
         reduce {
             when (state.findResultType) {
-                FindResultType.Exam -> {
+                FindResultType.ExamCategory -> {
                     state.copy(
                         examInformation = state.examInformation.copy(
-                            foundExamArea = state.examInformation.foundExamArea.copy(
+                            searchExamCategory = state.examInformation.searchExamCategory.copy(
                                 textFieldValue = textFieldValue,
                                 cursorPosition = cursorPosition,
                             ),
@@ -180,7 +180,7 @@ internal class CreateProblemViewModel @Inject constructor(
                 FindResultType.Tag -> {
                     state.copy(
                         additionalInfo = state.additionalInfo.copy(
-                            foundTagArea = state.additionalInfo.foundTagArea.copy(
+                            searchTag = state.additionalInfo.searchTag.copy(
                                 textFieldValue = textFieldValue,
                                 cursorPosition = cursorPosition,
                             ),
@@ -196,14 +196,14 @@ internal class CreateProblemViewModel @Inject constructor(
     fun onClickSearchListHeader() = intent {
         reduce {
             when (state.findResultType) {
-                FindResultType.Exam -> {
+                FindResultType.ExamCategory -> {
                     state.copy(
                         findResultType = FindResultType.None,
                         examInformation = state.examInformation.run {
                             copy(
-                                isExamAreaSelected = true,
-                                foundExamArea = foundExamArea.copy(
-                                    resultArea = listOf(foundExamArea.textFieldValue),
+                                isExamCategorySelected = true,
+                                searchExamCategory = searchExamCategory.copy(
+                                    results = persistentListOf(searchExamCategory.textFieldValue),
                                     textFieldValue = ""
                                 ),
                             )
@@ -214,12 +214,13 @@ internal class CreateProblemViewModel @Inject constructor(
                 FindResultType.Tag -> {
                     state.copy(
                         additionalInfo = state.additionalInfo.run {
-                            val newResultArea = foundTagArea.resultArea
-                                .copy { add(foundTagArea.textFieldValue) }
+                            val newSearchResults = searchTag.results
+                                .copy { add(searchTag.textFieldValue) }
+                                .toPersistentList()
                             copy(
-                                isTagAreaSelected = true,
-                                foundTagArea = foundTagArea.copy(
-                                    resultArea = newResultArea,
+                                isTagsAdded = true,
+                                searchTag = searchTag.copy(
+                                    results = newSearchResults,
                                     textFieldValue = ""
                                 ),
                             )
@@ -235,15 +236,16 @@ internal class CreateProblemViewModel @Inject constructor(
     fun onClickSearchList(index: Int) = intent {
         reduce {
             when (state.findResultType) {
-                FindResultType.Exam -> {
+                FindResultType.ExamCategory -> {
                     state.copy(
                         findResultType = FindResultType.None,
                         createProblemStep = CreateProblemStep.ExamInformation,
                         examInformation = state.examInformation.run {
                             copy(
-                                isExamAreaSelected = true,
-                                foundExamArea = foundExamArea.copy(
-                                    resultArea = listOf(foundExamArea.searchResults[index]),
+                                isExamCategorySelected = true,
+                                searchExamCategory = searchExamCategory.copy(
+                                    results =
+                                    persistentListOf(searchExamCategory.searchResults[index]),
                                     textFieldValue = ""
                                 ),
                             )
@@ -254,12 +256,13 @@ internal class CreateProblemViewModel @Inject constructor(
                 FindResultType.Tag -> {
                     state.copy(
                         additionalInfo = state.additionalInfo.run {
-                            val newResultArea = foundTagArea.resultArea
-                                .copy { add(foundTagArea.searchResults[index]) }
+                            val newSearchResults = searchTag.results
+                                .copy { add(searchTag.searchResults[index]) }
+                                .toPersistentList()
                             copy(
-                                isTagAreaSelected = true,
-                                foundTagArea = foundTagArea.copy(
-                                    resultArea = newResultArea,
+                                isTagsAdded = true,
+                                searchTag = searchTag.copy(
+                                    results = newSearchResults,
                                     textFieldValue = ""
                                 ),
                             )
@@ -279,9 +282,9 @@ internal class CreateProblemViewModel @Inject constructor(
                     state.copy(
                         examInformation = state.examInformation.run {
                             copy(
-                                isExamAreaSelected = false,
-                                foundExamArea = foundExamArea.copy(
-                                    resultArea = listOf(),
+                                isExamCategorySelected = false,
+                                searchExamCategory = searchExamCategory.copy(
+                                    results = persistentListOf(),
                                     textFieldValue = ""
                                 ),
                             )
@@ -289,14 +292,16 @@ internal class CreateProblemViewModel @Inject constructor(
                     )
                 }
 
-                CreateProblemStep.FindExamArea, CreateProblemStep.AdditionalInformation -> {
+                CreateProblemStep.Search, CreateProblemStep.AdditionalInformation -> {
                     state.copy(
                         additionalInfo = state.additionalInfo.run {
-                            val newResultArea = foundTagArea.resultArea.copy { removeAt(index) }
+                            val newSearchResults = searchTag.results
+                                .copy { removeAt(index) }
+                                .toPersistentList()
                             copy(
-                                isTagAreaSelected = newResultArea.isNotEmpty(),
-                                foundTagArea = foundTagArea.copy(
-                                    resultArea = newResultArea,
+                                isTagsAdded = newSearchResults.isNotEmpty(),
+                                searchTag = searchTag.copy(
+                                    results = newSearchResults,
                                     textFieldValue = ""
                                 ),
                             )
@@ -309,7 +314,7 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onExamAreaFocusChanged(isFocused: Boolean) = intent {
+    fun onSearchTextFocusChanged(isFocused: Boolean) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -321,7 +326,7 @@ internal class CreateProblemViewModel @Inject constructor(
 
     fun examInformationIsValidate(): Boolean {
         return with(container.stateFlow.value.examInformation) {
-            categorySelection >= 0 && isExamAreaSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+            categorySelection >= 0 && isExamCategorySelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
     }
 
@@ -662,7 +667,6 @@ internal class CreateProblemViewModel @Inject constructor(
 
     private fun additionInfoIsValidate(): Boolean {
         return with(container.stateFlow.value.additionalInfo) {
-            // TODO(sangwo-o.lee) 추후 tags 로 체크해야 함
             thumbnail != null && takeTitle.isNotEmpty() && tags.isNotEmpty()
         }
     }
@@ -671,26 +675,26 @@ internal class CreateProblemViewModel @Inject constructor(
         return examInformationIsValidate() && createProblemIsValidate() && additionInfoIsValidate()
     }
 
-    fun onClickTagArea() = intent {
+    fun onClickTag() = intent {
         reduce {
             state.copy(
                 findResultType = FindResultType.Tag,
             )
         }
-        navigateStep(CreateProblemStep.FindExamArea)
+        navigateStep(CreateProblemStep.Search)
     }
 
-    fun clearFindResultArea() = intent {
+    fun clearSearchScreen() = intent {
         reduce {
             when (state.findResultType) {
-                FindResultType.Exam -> state.copy(
+                FindResultType.ExamCategory -> state.copy(
                     findResultType = FindResultType.None,
                     createProblemStep = CreateProblemStep.ExamInformation,
                     examInformation = state.examInformation.run {
                         copy(
-                            isExamAreaSelected = false,
-                            foundExamArea = foundExamArea.copy(
-                                resultArea = listOf(),
+                            isExamCategorySelected = false,
+                            searchExamCategory = searchExamCategory.copy(
+                                results = persistentListOf(),
                                 textFieldValue = ""
                             ),
                         )
@@ -702,9 +706,9 @@ internal class CreateProblemViewModel @Inject constructor(
                     createProblemStep = CreateProblemStep.AdditionalInformation,
                     additionalInfo = state.additionalInfo.run {
                         copy(
-                            isTagAreaSelected = false,
-                            foundTagArea = foundTagArea.copy(
-                                resultArea = listOf(),
+                            isTagsAdded = false,
+                            searchTag = searchTag.copy(
+                                results = persistentListOf(),
                                 textFieldValue = ""
                             ),
                         )

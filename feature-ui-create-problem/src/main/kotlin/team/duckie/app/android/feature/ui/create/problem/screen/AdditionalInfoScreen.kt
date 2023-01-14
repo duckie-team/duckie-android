@@ -62,7 +62,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.photopicker.PhotoPicker
@@ -82,7 +81,6 @@ import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
-import team.duckie.quackquack.ui.component.QuackCircleTag
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
@@ -381,7 +379,7 @@ private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()
     ) {
         QuackBasicTextField(
             modifier = Modifier.quackClickable {
-                vm.onClickTagArea()
+                vm.onClickTag()
             },
             text = "",
             onTextChanged = {},
@@ -389,8 +387,8 @@ private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()
             enabled = false,
         )
 
-        if (state.isTagAreaSelected) {
-            FadeAnimatedVisibility(visible = !state.isTagAreaSelected) {
+        if (state.isTagsAdded) {
+            FadeAnimatedVisibility(visible = false) {
                 QuackSingeLazyRowTag(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
                     horizontalSpace = 4.dp,
@@ -398,12 +396,6 @@ private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()
                     tagType = QuackTagType.Grayscale(""),
                     onClick = { vm.onClickCloseTag(it) },
                 )
-                // QuackCircleTag(
-                //     text = state.tagArea,
-                //     trailingIcon = QuackIcon.Close,
-                //     isSelected = false,
-                //     onClick = { vm.onClickCloseTag(false) },
-                // )
             }
         }
     }

@@ -131,24 +131,24 @@ internal fun ExamInformationScreen(
                         }
                     }
                 }
-                TitleAndComponent(stringResource = R.string.exam_area) {
-                    if (state.isExamAreaSelected) {
+                TitleAndComponent(stringResource = R.string.exam_category) {
+                    if (state.isExamCategorySelected) {
                         QuackCircleTag(
-                            text = state.examArea,
+                            text = state.examCategory,
                             trailingIcon = QuackIcon.Close,
                             isSelected = false,
                             onClick = { viewModel.onClickCloseTag() },
                         )
                     }
-                    FadeAnimatedVisibility(visible = !state.isExamAreaSelected) {
+                    FadeAnimatedVisibility(visible = !state.isExamCategorySelected) {
                         QuackBasicTextField(
                             modifier = Modifier.quackClickable {
-                                viewModel.onClickExamArea(lazyListState.firstVisibleItemIndex)
+                                viewModel.onClickExamCategory(lazyListState.firstVisibleItemIndex)
                             },
                             leadingIcon = QuackIcon.Search,
-                            text = state.examArea,
+                            text = state.examCategory,
                             onTextChanged = {},
-                            placeholderText = stringResource(id = R.string.search_exam_area_tag),
+                            placeholderText = stringResource(id = R.string.search_exam_category_placeholder),
                             enabled = false,
                         )
                     }
@@ -172,7 +172,7 @@ internal fun ExamInformationScreen(
                             .heightIn(140.dp)
                             .focusRequester(focusRequester = focusRequester)
                             .onFocusChanged { state ->
-                                viewModel.onExamAreaFocusChanged(state.isFocused)
+                                viewModel.onSearchTextFocusChanged(state.isFocused)
                             },
                         text = state.examDescription,
                         onTextChanged = {
@@ -258,6 +258,7 @@ private fun MediumButton(
                     color = QuackColor.DuckieOrange,
                     textAlign = TextAlign.Center,
                 )
+
                 else -> QuackTextStyle.Body1.change(
                     color = QuackColor.Black,
                     textAlign = TextAlign.Center,

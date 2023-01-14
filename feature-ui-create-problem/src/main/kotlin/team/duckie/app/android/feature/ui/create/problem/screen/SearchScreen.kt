@@ -38,7 +38,7 @@ import team.duckie.app.android.feature.ui.create.problem.common.ExitAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.SearchResultText
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
-import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FoundExamArea
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.SearchScreenData
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackBasicTextField
@@ -47,7 +47,7 @@ import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-internal fun FindExamAreaScreen(
+internal fun SearchScreen(
     modifier: Modifier,
     viewModel: CreateProblemViewModel = activityViewModel(),
 ) {
@@ -56,15 +56,15 @@ internal fun FindExamAreaScreen(
     val rootState = viewModel.collectAsState().value;
 
     val state = when (rootState.findResultType) {
-        FindResultType.Exam -> rootState.examInformation.foundExamArea
-        FindResultType.Tag -> rootState.additionalInfo.foundTagArea
+        FindResultType.ExamCategory -> rootState.examInformation.searchExamCategory
+        FindResultType.Tag -> rootState.additionalInfo.searchTag
         else -> null
     }
 
     val title by remember {
         mutableStateOf(
             when (rootState.findResultType) {
-                FindResultType.Exam -> context.getString(R.string.find_exam_area)
+                FindResultType.ExamCategory -> context.getString(R.string.find_exam_category)
                 FindResultType.Tag -> context.getString(R.string.additional_information_tag_title)
                 else -> ""
             }
@@ -73,7 +73,7 @@ internal fun FindExamAreaScreen(
     val placeholderText by remember {
         mutableStateOf(
             when (rootState.findResultType) {
-                FindResultType.Exam -> context.getString(R.string.search_exam_area_tag)
+                FindResultType.ExamCategory -> context.getString(R.string.search_exam_category_placeholder)
                 FindResultType.Tag -> context.getString(R.string.additional_information_tag_input_hint)
                 else -> ""
             }
@@ -84,7 +84,7 @@ internal fun FindExamAreaScreen(
         remember(rootState.findResultType) { rootState.findResultType.isMultiMode() }
 
     val focusRequester = remember { FocusRequester() }
-    var examAreaTextFieldValue by remember {
+    var searchTextFieldValue by remember {
         mutableStateOf(
             state?.let {
                 TextFieldValue(
@@ -96,7 +96,7 @@ internal fun FindExamAreaScreen(
     }
 
     BackHandler {
-        viewModel.clearFindResultArea()
+        viewModel.clearSearchScreen()
     }
 
     LaunchedEffect(Unit) {
@@ -109,14 +109,14 @@ internal fun FindExamAreaScreen(
     ) {
         ExitAppBar(
             leadingText = title,
-            onTrailingIconClick = { viewModel.clearFindResultArea() },
+            onTrailingIconClick = { viewModel.clearSearchScreen() },
         )
 
         if (multiSelectMode) {
             QuackSingeLazyRowTag(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
                 horizontalSpace = 4.dp,
-                items = state!!.resultArea,
+                items = state!!.results,
                 tagType = QuackTagType.Circle(QuackIcon.Close),
                 onClick = { viewModel.onClickCloseTag(it) },
             )
@@ -127,9 +127,9 @@ internal fun FindExamAreaScreen(
                 .padding(16.dp)
                 .focusRequester(focusRequester),
             leadingIcon = QuackIcon.Search,
-            value = examAreaTextFieldValue,
+            value = searchTextFieldValue,
             onValueChanged = { textFieldValue ->
-                examAreaTextFieldValue = textFieldValue
+                searchTextFieldValue = textFieldValue
                 viewModel.setTextFieldValue(
                     textFieldValue = textFieldValue.text,
                     cursorPosition = textFieldValue.selection.end,
@@ -138,9 +138,9 @@ internal fun FindExamAreaScreen(
             placeholderText = placeholderText,
             keyboardActions = KeyboardActions(
                 onDone = {
-                    if (resultAreaValidate(examAreaTextFieldValue, state)) {
+                    if (searchTextValidate(searchTextFieldValue, state)) {
                         viewModel.onClickSearchListHeader()
-                        examAreaTextFieldValue = TextFieldValue()
+                        searchTextFieldValue = TextFieldValue()
                     }
                 },
             ),
@@ -159,9 +159,9 @@ internal fun FindExamAreaScreen(
                                 textFieldValue,
                             ),
                             onClick = {
-                                if (resultAreaValidate(examAreaTextFieldValue, state)) {
+                                if (searchTextValidate(searchTextFieldValue, state)) {
                                     viewModel.onClickSearchListHeader()
-                                    examAreaTextFieldValue = TextFieldValue()
+                                    searchTextFieldValue = TextFieldValue()
                                 }
                             },
                         )
@@ -173,9 +173,9 @@ internal fun FindExamAreaScreen(
                         SearchResultText(
                             text = item,
                             onClick = {
-                                if (resultAreaValidate(examAreaTextFieldValue, state)) {
+                                if (searchTextValidate(searchTextFieldValue, state)) {
                                     viewModel.onClickSearchList(index)
-                                    examAreaTextFieldValue = TextFieldValue()
+                                    searchTextFieldValue = TextFieldValue()
                                 }
                             },
                         )
@@ -187,8 +187,8 @@ internal fun FindExamAreaScreen(
 }
 
 /** 현재 입력한 내용이 추가하기 적합한 내용인지 확인한다. */
-private fun resultAreaValidate(
-    examAreaTextFieldValue: TextFieldValue,
-    state: FoundExamArea?
-): Boolean = examAreaTextFieldValue.text.isNotEmpty()
-        && state?.resultArea?.contains(examAreaTextFieldValue.text) != true
+private fun searchTextValidate(
+    searchTextFieldValue: TextFieldValue,
+    state: SearchScreenData?
+): Boolean = searchTextFieldValue.text.isNotEmpty()
+        && state?.results?.contains(searchTextFieldValue.text) != true

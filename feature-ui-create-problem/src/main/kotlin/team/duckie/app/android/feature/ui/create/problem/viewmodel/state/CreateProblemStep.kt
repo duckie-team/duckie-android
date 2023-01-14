@@ -11,7 +11,7 @@ import team.duckie.app.android.util.kotlin.AllowMagicNumber
 
 @AllowMagicNumber
 enum class CreateProblemStep(private val index: Int) {
-    FindExamArea(0),
+    Search(0),
     ExamInformation(1),
     CreateProblem(2),
     AdditionalInformation(3),

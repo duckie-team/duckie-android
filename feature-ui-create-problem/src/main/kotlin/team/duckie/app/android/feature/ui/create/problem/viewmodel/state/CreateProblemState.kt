@@ -27,16 +27,16 @@ internal data class CreateProblemState(
         val isCategoryLoading: Boolean = true,
         val categories: ImmutableList<Category> = persistentListOf(),
         val categorySelection: Int = -1,
-        val isExamAreaSelected: Boolean = false,
+        val isExamCategorySelected: Boolean = false,
         val examTitle: String = "",
         val examDescription: String = "",
         val certifyingStatement: String = "",
-        val foundExamArea: FoundExamArea = FoundExamArea(),
+        val searchExamCategory: SearchScreenData = SearchScreenData(),
         val scrollPosition: Int = 0,
         val examDescriptionFocused: Boolean = false,
     ) {
-        val examArea: String
-            get() = foundExamArea.resultArea.firstOrNull() ?: ""
+        val examCategory: String
+            get() = searchExamCategory.results.firstOrNull() ?: ""
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
@@ -58,16 +58,15 @@ internal data class CreateProblemState(
     data class AdditionInfo(
         val thumbnail: Any? = null,
         val takeTitle: String = "",
-        val isTagAreaSelected: Boolean = false,
-        val tags: ImmutableList<String> = persistentListOf(),
-        val foundTagArea: FoundExamArea = FoundExamArea(),
+        val isTagsAdded: Boolean = false,
+        val searchTag: SearchScreenData = SearchScreenData(),
     ) {
-        val tagArea: List<String>
-            get() = foundTagArea.resultArea
+        val tags: ImmutableList<String>
+            get() = searchTag.results
     }
 }
 
-data class FoundExamArea(
+data class SearchScreenData(
     val searchResults: ImmutableList<String> = persistentListOf(
         // TODO(EvergreenTree97): Server Request
         "도로",
@@ -76,12 +75,12 @@ data class FoundExamArea(
         "도로 패션",
     ),
     val textFieldValue: String = "",
-    val resultArea: List<String> = listOf(),
+    val results: ImmutableList<String> = persistentListOf(),
     val cursorPosition: Int = 0,
 )
 
 enum class FindResultType {
-    None, Exam, Tag;
+    None, ExamCategory, Tag;
 
     fun isMultiMode() = this != None && this == Tag
 }

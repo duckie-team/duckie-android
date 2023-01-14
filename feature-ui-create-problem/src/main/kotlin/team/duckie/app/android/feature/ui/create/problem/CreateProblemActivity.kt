@@ -30,7 +30,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.screen.AdditionalInformationScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.CreateProblemScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.ExamInformationScreen
-import team.duckie.app.android.feature.ui.create.problem.screen.FindExamAreaScreen
+import team.duckie.app.android.feature.ui.create.problem.screen.SearchScreen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
@@ -53,7 +53,7 @@ class CreateProblemActivity : BaseActivity() {
             BackHandler {
                 when (createProblemStep) {
                     CreateProblemStep.ExamInformation -> finishWithAnimation()
-                    CreateProblemStep.FindExamArea -> viewModel.navigateStep(CreateProblemStep.ExamInformation)
+                    CreateProblemStep.Search -> viewModel.navigateStep(CreateProblemStep.ExamInformation)
                     else -> viewModel.navigateStep(createProblemStep.minus(1))
                 }
             }
@@ -77,7 +77,7 @@ class CreateProblemActivity : BaseActivity() {
                                 .fillMaxSize()
                                 .statusBarsPadding(),
                         )
-                        CreateProblemStep.FindExamArea -> FindExamAreaScreen(
+                        CreateProblemStep.Search -> SearchScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
