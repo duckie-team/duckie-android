@@ -120,15 +120,20 @@ sealed class Answer(val type: Type) {
     }
 
     fun validate(): Boolean = when (this) {
-        is Short -> this.answer.text.isNotEmpty()
-        is Choice -> this.choices
-            .asSequence()
-            .map { it.text.isNotEmpty() }
-            .reduce { acc, next -> acc && next }
-        is ImageChoice -> this.imageChoice
-            .asSequence()
-            .map { it.text.isNotEmpty() && it.imageUrl.isNotEmpty() }
-            .reduce { acc, next -> acc && next }
+        is Short ->
+            this.answer.text.isNotEmpty()
+
+        is Choice ->
+            this.choices
+                .asSequence()
+                .map { it.text.isNotEmpty() }
+                .reduce { acc, next -> acc && next }
+
+        is ImageChoice ->
+            this.imageChoice
+                .asSequence()
+                .map { it.text.isNotEmpty() && it.imageUrl.isNotEmpty() }
+                .reduce { acc, next -> acc && next }
     }
 }
 

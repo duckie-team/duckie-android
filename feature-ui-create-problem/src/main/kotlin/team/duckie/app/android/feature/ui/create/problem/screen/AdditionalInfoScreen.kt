@@ -275,7 +275,7 @@ internal fun AdditionalInformationScreen(
                     },
                     isValidateCheck = vm::isAllFieldsNotEmpty,
                 )
-            }
+            },
         )
     }
 

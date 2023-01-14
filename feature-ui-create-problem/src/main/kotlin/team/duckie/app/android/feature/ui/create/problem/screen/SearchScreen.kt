@@ -62,7 +62,7 @@ internal fun SearchScreen(
             when (rootState.findResultType) {
                 FindResultType.ExamCategory -> context.getString(R.string.find_exam_category)
                 FindResultType.Tag -> context.getString(R.string.additional_information_tag_title)
-            }
+            },
         )
     }
     val placeholderText by remember {
@@ -70,7 +70,7 @@ internal fun SearchScreen(
             when (rootState.findResultType) {
                 FindResultType.ExamCategory -> context.getString(R.string.search_exam_category_placeholder)
                 FindResultType.Tag -> context.getString(R.string.additional_information_tag_input_hint)
-            }
+            },
         )
     }
 
@@ -83,7 +83,7 @@ internal fun SearchScreen(
             TextFieldValue(
                 text = state.textFieldValue,
                 selection = TextRange(state.cursorPosition),
-            )
+            ),
         )
     }
 
@@ -140,7 +140,7 @@ internal fun SearchScreen(
 
         QuackAnimatedVisibility(
             modifier = Modifier.padding(16.dp),
-            visible = state.textFieldValue.isNotEmpty()
+            visible = state.textFieldValue.isNotEmpty(),
         ) {
             LazyColumn {
                 item {
@@ -179,6 +179,6 @@ internal fun SearchScreen(
 /** 현재 입력한 내용이 추가하기 적합한 내용인지 확인한다. */
 private fun searchTextValidate(
     searchTextFieldValue: TextFieldValue,
-    state: SearchScreenData?
-): Boolean = searchTextFieldValue.text.isNotEmpty()
-        && state?.results?.contains(searchTextFieldValue.text) != true
+    state: SearchScreenData?,
+): Boolean = searchTextFieldValue.text.isNotEmpty() &&
+        state?.results?.contains(searchTextFieldValue.text) != true

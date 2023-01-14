@@ -153,7 +153,7 @@ internal fun CreateProblemBottomLayout(
                             QuackColor.DuckieOrange.composeColor
                         } else {
                             QuackColor.Gray2.composeColor
-                        }
+                        },
                     )
                     .quackClickable {
                         if (isValidate) {
@@ -167,7 +167,7 @@ internal fun CreateProblemBottomLayout(
                                 QuackColor.DuckieOrange
                             } else {
                                 QuackColor.Gray2
-                            }
+                            },
                         ),
                         shape = RoundedCornerShape(size = 8.dp),
                     )

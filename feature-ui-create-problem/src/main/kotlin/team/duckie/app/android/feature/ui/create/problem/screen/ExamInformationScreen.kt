@@ -73,7 +73,7 @@ private const val CertifyingStatementMaxLength = 16
 @Composable
 internal fun ExamInformationScreen(
     viewModel: CreateProblemViewModel = activityViewModel(),
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     val state = viewModel.collectAsState().value.examInformation
     val coroutineScope = rememberCoroutineScope()
@@ -224,7 +224,7 @@ internal fun ExamInformationScreen(
                 },
                 isValidateCheck = viewModel::examInformationIsValidate,
             )
-        }
+        },
     )
 }
 

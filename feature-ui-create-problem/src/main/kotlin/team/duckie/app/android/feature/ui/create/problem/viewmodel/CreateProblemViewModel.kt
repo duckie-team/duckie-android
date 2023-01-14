@@ -201,7 +201,7 @@ internal class CreateProblemViewModel @Inject constructor(
                                 isExamCategorySelected = true,
                                 searchExamCategory = searchExamCategory.copy(
                                     results = persistentListOf(searchExamCategory.textFieldValue),
-                                    textFieldValue = ""
+                                    textFieldValue = "",
                                 ),
                             )
                         },
@@ -218,7 +218,7 @@ internal class CreateProblemViewModel @Inject constructor(
                                 isTagsAdded = true,
                                 searchTag = searchTag.copy(
                                     results = newSearchResults,
-                                    textFieldValue = ""
+                                    textFieldValue = "",
                                 ),
                             )
                         },
@@ -240,7 +240,7 @@ internal class CreateProblemViewModel @Inject constructor(
                                 searchExamCategory = searchExamCategory.copy(
                                     results =
                                     persistentListOf(searchExamCategory.searchResults[index]),
-                                    textFieldValue = ""
+                                    textFieldValue = "",
                                 ),
                             )
                         },
@@ -257,7 +257,7 @@ internal class CreateProblemViewModel @Inject constructor(
                                 isTagsAdded = true,
                                 searchTag = searchTag.copy(
                                     results = newSearchResults,
-                                    textFieldValue = ""
+                                    textFieldValue = "",
                                 ),
                             )
                         },
