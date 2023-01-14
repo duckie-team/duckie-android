@@ -7,7 +7,7 @@
 
 @file:Suppress("MaxLineLength")
 
-// TODO(문제만들기 담당자): OptIn 제거
+// TODO(riflockle7): OptIn 제거
 @file:OptIn(OutOfDateApi::class)
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
