@@ -18,7 +18,6 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":feature-ui-create-problem")))
     implementations(
         projects.di,
         projects.utilUi,
