@@ -72,6 +72,8 @@ internal class CreateProblemViewModel @Inject constructor(
      */
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
 
+    // 공통
+    /** 시험 컨텐츠를 만든다. */
     fun makeExam() = intent {
         makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
             print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
@@ -80,193 +82,12 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun getCategories() = intent {
-        getCategoriesUseCase(false).onSuccess { categories ->
-            reduce {
-                state.copy(
-                    examInformation = state.examInformation.copy(
-                        isCategoryLoading = false,
-                        categories = categories.toImmutableList(),
-                    ),
-                )
-            }
-        }.onFailure {
-            print("실패")
-        }
-    }
-
-    fun onClickArrowBack() = intent {
+    /** 문제 만들기 화면을 종료한다. */
+    fun finishCreateProblem() = intent {
         postSideEffect(CreateProblemSideEffect.FinishActivity)
     }
 
-    fun updatePhotoState(photoState: CreateProblemPhotoState?) = intent {
-        reduce {
-            state.copy(photoState = photoState)
-        }
-    }
-
-    fun onClickCategory(index: Int) = intent {
-        reduce {
-            state.copy(
-                examInformation = state.examInformation.copy(
-                    categorySelection = index,
-                ),
-            )
-        }
-    }
-
-    fun onClickExamCategory(scrollPosition: Int) = intent {
-        reduce {
-            state.copy(
-                createProblemStep = CreateProblemStep.Search,
-                findResultType = FindResultType.ExamCategory,
-                examInformation = state.examInformation.copy(
-                    scrollPosition = scrollPosition,
-                ),
-            )
-        }
-    }
-
-    fun navigateStep(step: CreateProblemStep) = intent {
-        reduce {
-            state.copy(createProblemStep = step)
-        }
-    }
-
-    fun setExamTitle(examTitle: String) = intent {
-        reduce {
-            state.copy(
-                examInformation = state.examInformation.copy(
-                    examTitle = examTitle,
-                ),
-            )
-        }
-    }
-
-    fun setExamDescription(examDescription: String) = intent {
-        reduce {
-            state.copy(
-                examInformation = state.examInformation.copy(
-                    examDescription = examDescription,
-                ),
-            )
-        }
-    }
-
-    fun setCertifyingStatement(certifyingStatement: String) = intent {
-        reduce {
-            state.copy(
-                examInformation = state.examInformation.copy(
-                    certifyingStatement = certifyingStatement,
-                ),
-            )
-        }
-    }
-
-    fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
-        reduce {
-            when (state.findResultType) {
-                FindResultType.ExamCategory -> {
-                    state.copy(
-                        examInformation = state.examInformation.copy(
-                            searchExamCategory = state.examInformation.searchExamCategory.copy(
-                                textFieldValue = textFieldValue,
-                                cursorPosition = cursorPosition,
-                            ),
-                        ),
-                    )
-                }
-
-                FindResultType.Tag -> {
-                    state.copy(
-                        additionalInfo = state.additionalInfo.copy(
-                            searchTag = state.additionalInfo.searchTag.copy(
-                                textFieldValue = textFieldValue,
-                                cursorPosition = cursorPosition,
-                            ),
-                        ),
-                    )
-                }
-            }
-        }
-    }
-
-    fun onClickSearchListHeader() = intent {
-        reduce {
-            when (state.findResultType) {
-                FindResultType.ExamCategory -> {
-                    state.copy(
-                        examInformation = state.examInformation.run {
-                            copy(
-                                isExamCategorySelected = true,
-                                searchExamCategory = searchExamCategory.copy(
-                                    results = persistentListOf(searchExamCategory.textFieldValue),
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    ).also { navigateStep(CreateProblemStep.ExamInformation) }
-                }
-
-                FindResultType.Tag -> {
-                    state.copy(
-                        additionalInfo = state.additionalInfo.run {
-                            val newSearchResults = searchTag.results
-                                .copy { add(searchTag.textFieldValue) }
-                                .toPersistentList()
-                            copy(
-                                isTagsAdded = true,
-                                searchTag = searchTag.copy(
-                                    results = newSearchResults,
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    )
-                }
-            }
-        }
-    }
-
-    fun onClickSearchList(index: Int) = intent {
-        reduce {
-            when (state.findResultType) {
-                FindResultType.ExamCategory -> {
-                    state.copy(
-                        createProblemStep = CreateProblemStep.ExamInformation,
-                        examInformation = state.examInformation.run {
-                            copy(
-                                isExamCategorySelected = true,
-                                searchExamCategory = searchExamCategory.copy(
-                                    results =
-                                    persistentListOf(searchExamCategory.searchResults[index]),
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    )
-                }
-
-                FindResultType.Tag -> {
-                    state.copy(
-                        additionalInfo = state.additionalInfo.run {
-                            val newSearchResults = searchTag.results
-                                .copy { add(searchTag.searchResults[index]) }
-                                .toPersistentList()
-                            copy(
-                                isTagsAdded = true,
-                                searchTag = searchTag.copy(
-                                    results = newSearchResults,
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    )
-                }
-            }
-        }
-    }
-
+    /** 특정 태그의 닫기 버튼을 클릭한다. 대체로 삭제 로직이 실행된다. */
     fun onClickCloseTag(index: Int = 0) = intent {
         reduce {
             when (state.createProblemStep) {
@@ -304,16 +125,114 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onSearchTextFocusChanged(isFocused: Boolean) = intent {
+    /** 사진 추가를 위한 작업을 시작 또는 종료한다. */
+    fun updatePhotoState(photoState: CreateProblemPhotoState?) = intent {
+        reduce {
+            state.copy(photoState = photoState)
+        }
+    }
+
+    /** 갤러리에서 이미지 목록을 조회한다. */
+    fun loadGalleryImages() = intent {
+        loadGalleryImagesUseCase()
+            .onSuccess { images ->
+                postSideEffect(CreateProblemSideEffect.UpdateGalleryImages(images))
+            }
+            .onFailure { exception ->
+                reduce {
+                    state.copy(error = Error(exception))
+                }
+                postSideEffect(CreateProblemSideEffect.ReportError(exception))
+            }
+    }
+
+    /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트한다. */
+    internal fun addGalleryImages(images: List<String>) = intent {
+        mutableGalleryImages = persistentListOf(*images.toTypedArray())
+    }
+
+    /** 특정 화면으로 이동한다. */
+    fun navigateStep(step: CreateProblemStep) = intent {
+        reduce {
+            state.copy(createProblemStep = step)
+        }
+    }
+
+    // ExamInformation
+    /** 카테고리 정보를 가져온다. */
+    fun getCategories() = intent {
+        getCategoriesUseCase(false).onSuccess { categories ->
+            reduce {
+                state.copy(
+                    examInformation = state.examInformation.copy(
+                        isCategoryLoading = false,
+                        categories = categories.toImmutableList(),
+                    ),
+                )
+            }
+        }.onFailure {
+            print("실패")
+        }
+    }
+
+    /** 카테고리 항목을 클릭한다. */
+    fun onClickCategory(index: Int) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
-                    examDescriptionFocused = isFocused,
+                    categorySelection = index,
                 ),
             )
         }
     }
 
+    /** 시험 영역 항목을 등록하기 위한 검색화면으로 진입한다. */
+    fun goToSearchExamCategory(scrollPosition: Int) = intent {
+        reduce {
+            state.copy(
+                createProblemStep = CreateProblemStep.Search,
+                findResultType = FindResultType.ExamCategory,
+                examInformation = state.examInformation.copy(
+                    scrollPosition = scrollPosition,
+                ),
+            )
+        }
+    }
+
+    /** 시험 제목을 작성한다. */
+    fun setExamTitle(examTitle: String) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
+                    examTitle = examTitle,
+                ),
+            )
+        }
+    }
+
+    /** 설명을 작성한다. */
+    fun setExamDescription(examDescription: String) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
+                    examDescription = examDescription,
+                ),
+            )
+        }
+    }
+
+    /** 필적 확인 문구를 작성한다. */
+    fun setCertifyingStatement(certifyingStatement: String) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
+                    certifyingStatement = certifyingStatement,
+                ),
+            )
+        }
+    }
+
+    /** 문제 만들기 1단계 화면의 유효성을 체크한다. */
     fun examInformationIsValidate(): Boolean {
         return with(container.stateFlow.value.examInformation) {
             categorySelection >= 0 && isExamCategorySelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
@@ -599,6 +518,7 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    /** 문제 만들기 2단계 화면의 유효성을 체크한다. */
     fun createProblemIsValidate(): Boolean {
         return with(container.stateFlow.value.createProblem) {
             val questionsValidate = this.questions.asSequence()
@@ -616,6 +536,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     // AdditionalInfo
+    /** 카테고리 썸네일을 정한다. */
     fun setThumbnail(thumbnail: Any?) = intent {
         reduce {
             state.copy(
@@ -626,6 +547,7 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    /** 시험 응시하기 버튼 제목을 정한다. */
     fun setButtonTitle(buttonTitle: String) = intent {
         reduce {
             state.copy(
@@ -636,36 +558,20 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    /** 갤러리에서 이미지 목록을 조회합니다. */
-    fun loadGalleryImages() = intent {
-        loadGalleryImagesUseCase()
-            .onSuccess { images ->
-                postSideEffect(CreateProblemSideEffect.UpdateGalleryImages(images))
-            }
-            .onFailure { exception ->
-                reduce {
-                    state.copy(error = Error(exception))
-                }
-                postSideEffect(CreateProblemSideEffect.ReportError(exception))
-            }
-    }
-
-    /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트합니다. */
-    internal fun addGalleryImages(images: List<String>) = intent {
-        mutableGalleryImages = persistentListOf(*images.toTypedArray())
-    }
-
+    /** 문제 만들기 3단계 화면의 유효성을 체크한다. */
     private fun additionInfoIsValidate(): Boolean {
         return with(container.stateFlow.value.additionalInfo) {
             thumbnail != null && takeTitle.isNotEmpty() && tags.isNotEmpty()
         }
     }
 
+    /** 문제 만들기 전체 화면의 유효성을 체크한다. */
     fun isAllFieldsNotEmpty(): Boolean {
         return examInformationIsValidate() && createProblemIsValidate() && additionInfoIsValidate()
     }
 
-    fun onClickTag() = intent {
+    /** 태그 항목들을 등록하기 위한 검색화면으로 진입한다. */
+    fun goToSearchTag() = intent {
         reduce {
             state.copy(
                 createProblemStep = CreateProblemStep.Search,
@@ -674,6 +580,126 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    // Search
+    /** 검색 입력 필드의 값을 설정(= 갱신) 한다. */
+    fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
+        reduce {
+            when (state.findResultType) {
+                FindResultType.ExamCategory -> {
+                    state.copy(
+                        examInformation = state.examInformation.copy(
+                            searchExamCategory = state.examInformation.searchExamCategory.copy(
+                                textFieldValue = textFieldValue,
+                                cursorPosition = cursorPosition,
+                            ),
+                        ),
+                    )
+                }
+
+                FindResultType.Tag -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.copy(
+                            searchTag = state.additionalInfo.searchTag.copy(
+                                textFieldValue = textFieldValue,
+                                cursorPosition = cursorPosition,
+                            ),
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    /** 추천 검색 목록에서 헤더(1번째 항목)을 클릭한다. */
+    fun onClickSearchListHeader() = intent {
+        reduce {
+            when (state.findResultType) {
+                FindResultType.ExamCategory -> {
+                    state.copy(
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isExamCategorySelected = true,
+                                searchExamCategory = searchExamCategory.copy(
+                                    results = persistentListOf(searchExamCategory.textFieldValue),
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    ).also { navigateStep(CreateProblemStep.ExamInformation) }
+                }
+
+                FindResultType.Tag -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newSearchResults = searchTag.results
+                                .copy { add(searchTag.textFieldValue) }
+                                .toPersistentList()
+                            copy(
+                                isTagsAdded = true,
+                                searchTag = searchTag.copy(
+                                    results = newSearchResults,
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    )
+                }
+            }
+        }
+    }
+
+    /** 추천 검색 목록에서 1번째 이외의 항목을 클릭한다. */
+    fun onClickSearchList(index: Int) = intent {
+        reduce {
+            when (state.findResultType) {
+                FindResultType.ExamCategory -> {
+                    state.copy(
+                        createProblemStep = CreateProblemStep.ExamInformation,
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isExamCategorySelected = true,
+                                searchExamCategory = searchExamCategory.copy(
+                                    results =
+                                    persistentListOf(searchExamCategory.searchResults[index]),
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    )
+                }
+
+                FindResultType.Tag -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newSearchResults = searchTag.results
+                                .copy { add(searchTag.searchResults[index]) }
+                                .toPersistentList()
+                            copy(
+                                isTagsAdded = true,
+                                searchTag = searchTag.copy(
+                                    results = newSearchResults,
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    )
+                }
+            }
+        }
+    }
+
+    /** 검색 입력 필드의 focus 를 변경한다. */
+    fun onSearchTextFocusChanged(isFocused: Boolean) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
+                    examDescriptionFocused = isFocused,
+                ),
+            )
+        }
+    }
+
+    /** 검색 화면을 종료한다. */
     fun exitSearchScreen() = intent {
         reduce {
             when (state.findResultType) {

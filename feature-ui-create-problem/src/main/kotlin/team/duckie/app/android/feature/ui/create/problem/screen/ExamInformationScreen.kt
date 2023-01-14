@@ -100,7 +100,7 @@ internal fun ExamInformationScreen(
                 modifier = Modifier.layoutId(TopAppBarLayoutId),
                 trailingText = stringResource(id = R.string.next),
                 onLeadingIconClick = {
-                    coroutineScope.launch { viewModel.onClickArrowBack() }
+                    coroutineScope.launch { viewModel.finishCreateProblem() }
                 },
             )
 
@@ -140,7 +140,7 @@ internal fun ExamInformationScreen(
                     FadeAnimatedVisibility(visible = !state.isExamCategorySelected) {
                         QuackBasicTextField(
                             modifier = Modifier.quackClickable {
-                                viewModel.onClickExamCategory(lazyListState.firstVisibleItemIndex)
+                                viewModel.goToSearchExamCategory(lazyListState.firstVisibleItemIndex)
                             },
                             leadingIcon = QuackIcon.Search,
                             text = state.examCategory,

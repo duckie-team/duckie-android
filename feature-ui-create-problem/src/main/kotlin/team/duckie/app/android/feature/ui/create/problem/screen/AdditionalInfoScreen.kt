@@ -271,7 +271,7 @@ internal fun AdditionalInformationScreen(
                         .layoutId(BottomLayoutId),
                     tempSaveButtonClick = {},
                     nextButtonClick = {
-                        coroutineScope.launch { vm.onClickArrowBack() }
+                        coroutineScope.launch { vm.finishCreateProblem() }
                     },
                     isValidateCheck = vm::isAllFieldsNotEmpty,
                 )
@@ -379,7 +379,7 @@ private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()
     ) {
         QuackBasicTextField(
             modifier = Modifier.quackClickable {
-                vm.onClickTag()
+                vm.goToSearchTag()
             },
             text = "",
             onTextChanged = {},
