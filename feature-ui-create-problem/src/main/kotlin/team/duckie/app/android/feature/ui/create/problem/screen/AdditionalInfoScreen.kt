@@ -23,6 +23,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,11 +62,13 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
+import team.duckie.app.android.feature.ui.create.problem.common.FadeAnimatedVisibility
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
@@ -79,10 +82,13 @@ import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
+import team.duckie.quackquack.ui.component.QuackCircleTag
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
+import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackSubtitle
+import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 
@@ -260,7 +266,6 @@ internal fun AdditionalInformationScreen(
                     AdditionalTagLayout()
                 }
 
-
                 // 최하단 Layout
                 CreateProblemBottomLayout(
                     modifier = Modifier
@@ -375,10 +380,32 @@ private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()
         stringResource = R.string.additional_information_tag_title,
     ) {
         QuackBasicTextField(
-            text = state.tempTag,
-            onTextChanged = vm::setTempTag,
+            modifier = Modifier.quackClickable {
+                vm.onClickTagArea()
+            },
+            text = "",
+            onTextChanged = {},
             placeholderText = stringResource(id = R.string.additional_information_tag_input_hint),
+            enabled = false,
         )
+
+        if (state.isTagAreaSelected) {
+            FadeAnimatedVisibility(visible = !state.isTagAreaSelected) {
+                QuackSingeLazyRowTag(
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                    horizontalSpace = 4.dp,
+                    items = state.tags,
+                    tagType = QuackTagType.Grayscale(""),
+                    onClick = { vm.onClickCloseTag(it) },
+                )
+                // QuackCircleTag(
+                //     text = state.tagArea,
+                //     trailingIcon = QuackIcon.Close,
+                //     isSelected = false,
+                //     onClick = { vm.onClickCloseTag(false) },
+                // )
+            }
+        }
     }
 }
 

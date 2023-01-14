@@ -77,7 +77,11 @@ class CreateProblemActivity : BaseActivity() {
                                 .fillMaxSize()
                                 .statusBarsPadding(),
                         )
-                        CreateProblemStep.FindExamArea -> FindExamAreaScreen()
+                        CreateProblemStep.FindExamArea -> FindExamAreaScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .statusBarsPadding(),
+                        )
                         CreateProblemStep.CreateProblem -> CreateProblemScreen(
                             modifier = Modifier
                                 .fillMaxSize()

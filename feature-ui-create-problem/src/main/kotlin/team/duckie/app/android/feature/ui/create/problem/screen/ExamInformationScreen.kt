@@ -137,7 +137,7 @@ internal fun ExamInformationScreen(
                             text = state.examArea,
                             trailingIcon = QuackIcon.Close,
                             isSelected = false,
-                            onClick = { viewModel.onClickCloseTag(false) },
+                            onClick = { viewModel.onClickCloseTag() },
                         )
                     }
                     FadeAnimatedVisibility(visible = !state.isExamAreaSelected) {

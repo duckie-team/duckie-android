@@ -15,10 +15,11 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 
 internal data class CreateProblemState(
-    val createProblemStep: CreateProblemStep = CreateProblemStep.CreateProblem,
+    val createProblemStep: CreateProblemStep = CreateProblemStep.AdditionalInformation,
     val examInformation: ExamInformation = ExamInformation(),
     val createProblem: CreateProblem = CreateProblem(),
     val additionalInfo: AdditionInfo = AdditionInfo(),
+    val findResultType: FindResultType = FindResultType.None,
     val error: Error? = null,
     val photoState: CreateProblemPhotoState? = null,
 ) {
@@ -35,20 +36,7 @@ internal data class CreateProblemState(
         val examDescriptionFocused: Boolean = false,
     ) {
         val examArea: String
-            get() = foundExamArea.examArea
-
-        data class FoundExamArea(
-            val searchResults: ImmutableList<String> = persistentListOf(
-                // TODO(EvergreenTree97): Server Request
-                "도로",
-                "도로 주행",
-                "도로 셀카",
-                "도로 패션",
-            ),
-            val textFieldValue: String = "",
-            val examArea: String = "",
-            val cursorPosition: Int = 0,
-        )
+            get() = foundExamArea.resultArea.firstOrNull() ?: ""
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
@@ -70,9 +58,32 @@ internal data class CreateProblemState(
     data class AdditionInfo(
         val thumbnail: Any? = null,
         val takeTitle: String = "",
-        val tempTag: String = "",
+        val isTagAreaSelected: Boolean = false,
         val tags: ImmutableList<String> = persistentListOf(),
-    )
+        val foundTagArea: FoundExamArea = FoundExamArea(),
+    ) {
+        val tagArea: List<String>
+            get() = foundTagArea.resultArea
+    }
+}
+
+data class FoundExamArea(
+    val searchResults: ImmutableList<String> = persistentListOf(
+        // TODO(EvergreenTree97): Server Request
+        "도로",
+        "도로 주행",
+        "도로 셀카",
+        "도로 패션",
+    ),
+    val textFieldValue: String = "",
+    val resultArea: List<String> = listOf(),
+    val cursorPosition: Int = 0,
+)
+
+enum class FindResultType {
+    None, Exam, Tag;
+
+    fun isMultiMode() = this != None && this == Tag
 }
 
 sealed class CreateProblemPhotoState {

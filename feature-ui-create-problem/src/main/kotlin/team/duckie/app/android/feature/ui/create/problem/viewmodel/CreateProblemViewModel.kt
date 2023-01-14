@@ -44,6 +44,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.Cr
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
@@ -55,7 +56,8 @@ internal class CreateProblemViewModel @Inject constructor(
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
 
-    override val container = container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
+    override val container =
+        container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
 
     /**
      * [galleryImages] 의 mutable 한 객체를 나타냅니다.
@@ -116,6 +118,7 @@ internal class CreateProblemViewModel @Inject constructor(
     fun onClickExamArea(scrollPosition: Int) = intent {
         reduce {
             state.copy(
+                findResultType = FindResultType.Exam,
                 examInformation = state.examInformation.copy(
                     scrollPosition = scrollPosition,
                 ),
@@ -162,61 +165,147 @@ internal class CreateProblemViewModel @Inject constructor(
 
     fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
         reduce {
-            state.copy(
-                examInformation = state.examInformation.copy(
-                    foundExamArea = state.examInformation.foundExamArea.copy(
-                        textFieldValue = textFieldValue,
-                        cursorPosition = cursorPosition,
-                    ),
-                ),
-            )
+            when (state.findResultType) {
+                FindResultType.Exam -> {
+                    state.copy(
+                        examInformation = state.examInformation.copy(
+                            foundExamArea = state.examInformation.foundExamArea.copy(
+                                textFieldValue = textFieldValue,
+                                cursorPosition = cursorPosition,
+                            ),
+                        ),
+                    )
+                }
+
+                FindResultType.Tag -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.copy(
+                            foundTagArea = state.additionalInfo.foundTagArea.copy(
+                                textFieldValue = textFieldValue,
+                                cursorPosition = cursorPosition,
+                            ),
+                        ),
+                    )
+                }
+
+                else -> duckieClientLogicProblemException()
+            }
         }
     }
 
     fun onClickSearchListHeader() = intent {
         reduce {
-            state.copy(
-                examInformation = state.examInformation.run {
-                    copy(
-                        isExamAreaSelected = true,
-                        foundExamArea = foundExamArea.copy(
-                            examArea = foundExamArea.textFieldValue,
-                            textFieldValue = ""
-                        ),
+            when (state.findResultType) {
+                FindResultType.Exam -> {
+                    state.copy(
+                        findResultType = FindResultType.None,
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isExamAreaSelected = true,
+                                foundExamArea = foundExamArea.copy(
+                                    resultArea = listOf(foundExamArea.textFieldValue),
+                                    textFieldValue = ""
+                                ),
+                            )
+                        },
+                    ).also { navigateStep(CreateProblemStep.ExamInformation) }
+                }
+
+                FindResultType.Tag -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newResultArea = foundTagArea.resultArea
+                                .copy { add(foundTagArea.textFieldValue) }
+                            copy(
+                                isTagAreaSelected = true,
+                                foundTagArea = foundTagArea.copy(
+                                    resultArea = newResultArea,
+                                    textFieldValue = ""
+                                ),
+                            )
+                        },
                     )
-                },
-            )
+                }
+
+                else -> duckieClientLogicProblemException()
+            }
         }
-        navigateStep(CreateProblemStep.ExamInformation)
     }
 
     fun onClickSearchList(index: Int) = intent {
         reduce {
-            state.copy(
-                createProblemStep = CreateProblemStep.ExamInformation,
-                examInformation = state.examInformation.run {
-                    copy(
-                        isExamAreaSelected = true,
-                        foundExamArea = foundExamArea.copy(
-                            examArea = foundExamArea.searchResults[index],
-                            textFieldValue = ""
-                        ),
+            when (state.findResultType) {
+                FindResultType.Exam -> {
+                    state.copy(
+                        findResultType = FindResultType.None,
+                        createProblemStep = CreateProblemStep.ExamInformation,
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isExamAreaSelected = true,
+                                foundExamArea = foundExamArea.copy(
+                                    resultArea = listOf(foundExamArea.searchResults[index]),
+                                    textFieldValue = ""
+                                ),
+                            )
+                        },
                     )
-                },
-            )
+                }
+
+                FindResultType.Tag -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newResultArea = foundTagArea.resultArea
+                                .copy { add(foundTagArea.searchResults[index]) }
+                            copy(
+                                isTagAreaSelected = true,
+                                foundTagArea = foundTagArea.copy(
+                                    resultArea = newResultArea,
+                                    textFieldValue = ""
+                                ),
+                            )
+                        },
+                    )
+                }
+
+                else -> duckieClientLogicProblemException(message = "이 화면에는 해당 기능이 없습니다.")
+            }
         }
     }
 
-    fun onClickCloseTag(isExamAreaSelected: Boolean) = intent {
+    fun onClickCloseTag(index: Int = 0) = intent {
         reduce {
-            state.copy(
-                examInformation = state.examInformation.run {
-                    copy(
-                        isExamAreaSelected = isExamAreaSelected,
-                        foundExamArea = foundExamArea.copy(examArea = "", textFieldValue = ""),
+            when (state.createProblemStep) {
+                CreateProblemStep.ExamInformation -> {
+                    state.copy(
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isExamAreaSelected = false,
+                                foundExamArea = foundExamArea.copy(
+                                    resultArea = listOf(),
+                                    textFieldValue = ""
+                                ),
+                            )
+                        },
                     )
-                },
-            )
+                }
+
+                CreateProblemStep.FindExamArea, CreateProblemStep.AdditionalInformation -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newResultArea = foundTagArea.resultArea.copy { removeAt(index) }
+                            copy(
+                                isTagAreaSelected = newResultArea.isNotEmpty(),
+                                foundTagArea = foundTagArea.copy(
+                                    resultArea = newResultArea,
+                                    textFieldValue = ""
+                                ),
+                            )
+                        },
+                    )
+                }
+
+                else -> duckieClientLogicProblemException(message = "이 화면에는 해당 기능이 없습니다.")
+            }
         }
     }
 
@@ -552,29 +641,6 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun setTempTag(tempTag: String) = intent {
-        reduce {
-            state.copy(
-                additionalInfo = state.additionalInfo.copy(
-                    tempTag = tempTag,
-                ),
-            )
-        }
-    }
-
-    fun addTag(tag: String) = intent {
-        reduce {
-            val newTags = state.additionalInfo.tags
-                .copy { add(tag) }
-                .toImmutableList()
-            state.copy(
-                additionalInfo = state.additionalInfo.copy(
-                    tags = newTags,
-                ),
-            )
-        }
-    }
-
     /** 갤러리에서 이미지 목록을 조회합니다. */
     fun loadGalleryImages() = intent {
         loadGalleryImagesUseCase()
@@ -597,12 +663,57 @@ internal class CreateProblemViewModel @Inject constructor(
     private fun additionInfoIsValidate(): Boolean {
         return with(container.stateFlow.value.additionalInfo) {
             // TODO(sangwo-o.lee) 추후 tags 로 체크해야 함
-            thumbnail != null && takeTitle.isNotEmpty() && tempTag.isNotEmpty()
+            thumbnail != null && takeTitle.isNotEmpty() && tags.isNotEmpty()
         }
     }
 
     fun isAllFieldsNotEmpty(): Boolean {
         return examInformationIsValidate() && createProblemIsValidate() && additionInfoIsValidate()
+    }
+
+    fun onClickTagArea() = intent {
+        reduce {
+            state.copy(
+                findResultType = FindResultType.Tag,
+            )
+        }
+        navigateStep(CreateProblemStep.FindExamArea)
+    }
+
+    fun clearFindResultArea() = intent {
+        reduce {
+            when (state.findResultType) {
+                FindResultType.Exam -> state.copy(
+                    findResultType = FindResultType.None,
+                    createProblemStep = CreateProblemStep.ExamInformation,
+                    examInformation = state.examInformation.run {
+                        copy(
+                            isExamAreaSelected = false,
+                            foundExamArea = foundExamArea.copy(
+                                resultArea = listOf(),
+                                textFieldValue = ""
+                            ),
+                        )
+                    },
+                )
+
+                FindResultType.Tag -> state.copy(
+                    findResultType = FindResultType.None,
+                    createProblemStep = CreateProblemStep.AdditionalInformation,
+                    additionalInfo = state.additionalInfo.run {
+                        copy(
+                            isTagAreaSelected = false,
+                            foundTagArea = foundTagArea.copy(
+                                resultArea = listOf(),
+                                textFieldValue = ""
+                            ),
+                        )
+                    },
+                )
+
+                else -> duckieClientLogicProblemException(message = "이 화면에는 해당 기능이 없습니다.")
+            }
+        }
     }
 }
 
