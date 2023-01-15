@@ -56,7 +56,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -73,18 +72,17 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
+import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
+import team.duckie.app.android.feature.ui.create.problem.common.getCreateProblemMeasurePolicy
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
-import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
@@ -93,12 +91,10 @@ import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackBorderTextField
 import team.duckie.quackquack.ui.component.QuackDialog
-import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackDropDownCard
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackRoundCheckBox
 import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 
@@ -108,53 +104,8 @@ private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
 
 private const val MaximumChoice = 5
+private const val MaximumProblem = 10
 private const val TextFieldMaxLength = 20
-
-private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constraints ->
-    val looseConstraints = constraints.asLoose()
-
-    // 1. topAppBar 높이값 측정
-    val topAppBarMeasurable = measurableItems.fastFirstOrNull { measureItem ->
-        measureItem.layoutId == TopAppBarLayoutId
-    }?.measure(looseConstraints) ?: npe()
-    val topAppBarHeight = topAppBarMeasurable.height
-
-    // 2. bottomLayout, 높이값 측정
-    val bottomLayoutMeasurable = measurableItems.fastFirstOrNull { measureItem ->
-        measureItem.layoutId == BottomLayoutId
-    }?.measure(looseConstraints) ?: npe()
-    // TODO(riflockle7): 왜 이걸 더해야하는지 모르겠음.. padding 을 더하면 이렇게 됨...
-    val bottomLayoutHeight = topAppBarMeasurable.height + 72.toDp().toPx().toInt()
-
-    // 3. createProblemButton 높이값 측정
-    val contentThresholdHeight = constraints.maxHeight - topAppBarHeight - bottomLayoutHeight
-    val contentConstraints = constraints.copy(
-        minHeight = contentThresholdHeight,
-        maxHeight = contentThresholdHeight,
-    )
-    val contentMeasurable = measurableItems.fastFirstOrNull { measurable ->
-        measurable.layoutId == ContentLayoutId
-    }?.measure(contentConstraints) ?: npe()
-
-    // 3. 위에서 추출한 값들을 활용해 레이아웃 위치 처리
-    layout(
-        width = constraints.maxWidth,
-        height = constraints.maxHeight,
-    ) {
-        topAppBarMeasurable.place(
-            x = 0,
-            y = 0,
-        )
-        contentMeasurable.place(
-            x = 0,
-            y = topAppBarHeight,
-        )
-        bottomLayoutMeasurable.place(
-            x = 0,
-            y = topAppBarHeight + contentThresholdHeight,
-        )
-    }
-}
 
 /** 문제 만들기 2단계 (문제 만들기) Screen */
 @Composable
@@ -173,6 +124,8 @@ internal fun CreateProblemScreen(
     val permissionErrorMessage =
         stringResource(id = R.string.create_problem_permission_toast_message)
     var selectedQuestionIndex: Int? by remember { mutableStateOf(null) }
+
+    val problemCount = remember(state.questions.size) { state.questions.size }
 
     // Gallery 관련
     val selectedQuestions = remember(state.questions) { state.questions }
@@ -297,7 +250,11 @@ internal fun CreateProblemScreen(
             modifier = modifier
                 .fillMaxWidth()
                 .navigationBarsPadding(),
-            measurePolicy = createProblemMeasurePolicy,
+            measurePolicy = getCreateProblemMeasurePolicy(
+                TopAppBarLayoutId,
+                ContentLayoutId,
+                BottomLayoutId,
+            ),
             content = {
                 // 상단 탭바
                 PrevAndNextTopAppBar(
@@ -509,7 +466,9 @@ internal fun CreateProblemScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .layoutId(BottomLayoutId),
-                    createButtonClick = {
+                    leftButtonLeadingIcon = QuackIcon.Plus,
+                    leftButtonText = stringResource(id = R.string.create_problem_add_problem_button),
+                    leftButtonClick = {
                         coroutineShape.launch {
                             keyboard?.hide()
                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
@@ -521,6 +480,8 @@ internal fun CreateProblemScreen(
                             vm.navigateStep(CreateProblemStep.AdditionalInformation)
                         }
                     },
+                    isMaximumProblemCount = problemCount >= MaximumProblem,
+                    isValidateCheck = vm::createProblemIsValidate,
                 )
             },
         )
@@ -699,7 +660,8 @@ private fun ChoiceProblemLayout(
         )
 
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
-            val isChecked = correctAnswers == "$answerIndex"
+            val answerNo = answerIndex + 1
+            val isChecked = correctAnswers == "$answerNo"
             QuackBorderTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -717,12 +679,12 @@ private fun ChoiceProblemLayout(
                 onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
                 placeholderText = stringResource(
                     id = R.string.create_problem_answer_placeholder,
-                    "${answerIndex + 1}",
+                    "$answerNo",
                 ),
                 trailingContent = {
                     Column(
                         modifier = Modifier.quackClickable(
-                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") },
+                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
                         ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -794,8 +756,9 @@ private fun ImageChoiceProblemLayout(
             paddingValues = PaddingValues(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             itemContent = { answerIndex ->
-                val answerItem = answers.imageChoice[answerIndex]
-                val isChecked = correctAnswers == "$answerIndex"
+                val answerNo = answerIndex + 1
+                val answerItem = answers.imageChoice[answerNo]
+                val isChecked = correctAnswers == "$answerNo"
 
                 Column(
                     modifier = Modifier
@@ -815,7 +778,7 @@ private fun ImageChoiceProblemLayout(
                     ) {
                         QuackRoundCheckBox(
                             modifier = Modifier.quackClickable(
-                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") },
+                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
                             ),
                             checked = isChecked,
                         )
@@ -832,7 +795,7 @@ private fun ImageChoiceProblemLayout(
 
                         QuackImage(
                             modifier = Modifier.quackClickable(
-                                onClick = { deleteLongClick(answerIndex) },
+                                onClick = { deleteLongClick(answerNo) },
                             ),
                             src = QuackIcon.Close,
                             size = DpSize(20.dp, 20.dp),
@@ -842,7 +805,7 @@ private fun ImageChoiceProblemLayout(
                     if (answerItem.imageUrl.isEmpty()) {
                         Box(
                             modifier = Modifier
-                                .quackClickable { answerImageClick(answerIndex) }
+                                .quackClickable { answerImageClick(answerNo) }
                                 .background(color = QuackColor.Gray4.composeColor)
                                 .padding(52.dp),
                         ) {
@@ -855,19 +818,19 @@ private fun ImageChoiceProblemLayout(
                         QuackImage(
                             src = answerItem.imageUrl,
                             size = DpSize(136.dp, 136.dp),
-                            onClick = { answerImageClick(answerIndex) },
-                            onLongClick = { deleteLongClick(answerIndex) },
+                            onClick = { answerImageClick(answerNo) },
+                            onLongClick = { deleteLongClick(answerNo) },
                         )
                     }
 
                     QuackBasicTextField(
-                        text = answers.imageChoice[answerIndex].text,
+                        text = answers.imageChoice[answerNo].text,
                         onTextChanged = { newAnswer ->
-                            answerTextChanged(newAnswer, answerIndex)
+                            answerTextChanged(newAnswer, answerNo)
                         },
                         placeholderText = stringResource(
                             id = R.string.create_problem_answer_placeholder,
-                            "${answerIndex + 1}",
+                            "$answerNo",
                         ),
                     )
                 }
@@ -1009,70 +972,5 @@ fun <T> NoLazyGridItems(
                 }
             }
         }
-    }
-}
-
-/** 문제 만들기 2단계 최하단 Layout  */
-@Composable
-fun CreateProblemBottomLayout(
-    modifier: Modifier,
-    createButtonClick: () -> Unit,
-    tempSaveButtonClick: () -> Unit,
-    nextButtonClick: () -> Unit,
-) {
-    Column(modifier = modifier.background(QuackColor.White.composeColor)) {
-        QuackDivider()
-
-        Row(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Row(
-                modifier = Modifier
-                    .quackClickable { createButtonClick() }
-                    .padding(4.dp),
-            ) {
-                QuackImage(src = QuackIcon.Plus, size = DpSize(16.dp, 16.dp))
-                QuackSubtitle2(text = stringResource(id = R.string.create_problem_add_problem_button))
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // 임시저장 버튼
-            QuackSubtitle(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(size = 8.dp))
-                    .background(QuackColor.White.composeColor)
-                    .quackClickable { tempSaveButtonClick() }
-                    .applyAnimatedQuackBorder(
-                        QuackBorder(1.dp, QuackColor.Gray3),
-                        shape = RoundedCornerShape(size = 8.dp),
-                    )
-                    .padding(vertical = 12.dp, horizontal = 19.dp),
-                color = QuackColor.Black,
-                text = stringResource(id = R.string.create_problem_temp_save_button),
-            )
-
-            // 다음 버튼
-            QuackSubtitle(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(size = 8.dp))
-                    .background(QuackColor.DuckieOrange.composeColor)
-                    .quackClickable { nextButtonClick() }
-                    .applyAnimatedQuackBorder(
-                        QuackBorder(1.dp, QuackColor.DuckieOrange),
-                        shape = RoundedCornerShape(size = 8.dp),
-                    )
-                    .padding(
-                        vertical = 12.dp,
-                        horizontal = 19.dp,
-                    ),
-                color = QuackColor.White,
-                text = stringResource(id = R.string.next),
-            )
-        }
-
-        QuackDivider()
     }
 }

@@ -11,15 +11,15 @@ package team.duckie.app.android.feature.ui.create.problem.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -37,10 +39,12 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.R
+import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.ui.create.problem.common.FadeAnimatedVisibility
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
+import team.duckie.app.android.feature.ui.create.problem.common.getCreateProblemMeasurePolicy
 import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
@@ -58,12 +62,19 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
+private const val TopAppBarLayoutId = "ExamInformationScreenTopAppBarLayoutId"
+private const val ContentLayoutId = "ExamInformationScreenContentLayoutId"
+private const val BottomLayoutId = "ExamInformationScreenBottomLayoutId"
+
 private const val ExamTitleMaxLength = 12
 private const val ExamDescriptionMaxLength = 30
 private const val CertifyingStatementMaxLength = 16
 
 @Composable
-internal fun ExamInformationScreen(viewModel: CreateProblemViewModel = activityViewModel()) {
+internal fun ExamInformationScreen(
+    viewModel: CreateProblemViewModel = activityViewModel(),
+    modifier: Modifier,
+) {
     val state = viewModel.collectAsState().value.examInformation
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
@@ -78,121 +89,143 @@ internal fun ExamInformationScreen(viewModel: CreateProblemViewModel = activityV
         lazyListState.scrollToItem(index = state.scrollPosition)
     }
 
-    Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = {
+    Layout(
+        modifier = modifier
+            .fillMaxWidth()
+            .navigationBarsPadding(),
+        measurePolicy = getCreateProblemMeasurePolicy(
+            TopAppBarLayoutId,
+            ContentLayoutId,
+            BottomLayoutId,
+        ),
+        content = {
             PrevAndNextTopAppBar(
+                modifier = Modifier.layoutId(TopAppBarLayoutId),
+                trailingText = stringResource(id = R.string.next),
                 onLeadingIconClick = {
                     coroutineScope.launch { viewModel.onClickArrowBack() }
                 },
-                onTrailingTextClick = { viewModel.navigateStep(CreateProblemStep.CreateProblem) },
-                trailingTextEnabled = viewModel.isAllFieldsNotEmpty(),
             )
-        },
-    ) { contentPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(contentPadding)
-                .padding(
-                    top = 16.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                ),
-            state = lazyListState,
-            verticalArrangement = Arrangement.spacedBy(space = 48.dp),
-        ) {
-            TitleAndComponent(stringResource = R.string.category_title) {
-                AnimatedVisibility(visible = state.isCategoryLoading.not()) {
-                    DuckieGridLayout(items = state.categories) { index, item ->
-                        MediumButton(
-                            text = item.name,
-                            selected = state.categorySelection == index,
-                            onClick = {
-                                viewModel.onClickCategory(index)
+
+            LazyColumn(
+                modifier = Modifier
+                    .padding(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                    )
+                    .layoutId(ContentLayoutId),
+                state = lazyListState,
+                verticalArrangement = Arrangement.spacedBy(space = 48.dp),
+            ) {
+                TitleAndComponent(stringResource = R.string.category_title) {
+                    AnimatedVisibility(visible = state.isCategoryLoading.not()) {
+                        DuckieGridLayout(items = state.categories) { index, item ->
+                            MediumButton(
+                                text = item.name,
+                                selected = state.categorySelection == index,
+                                onClick = {
+                                    viewModel.onClickCategory(index)
+                                },
+                            )
+                        }
+                    }
+                }
+                TitleAndComponent(stringResource = R.string.exam_category) {
+                    if (state.isExamCategorySelected) {
+                        QuackCircleTag(
+                            text = state.examCategory,
+                            trailingIcon = QuackIcon.Close,
+                            isSelected = false,
+                            onClick = { viewModel.onClickCloseTag() },
+                        )
+                    }
+                    FadeAnimatedVisibility(visible = !state.isExamCategorySelected) {
+                        QuackBasicTextField(
+                            modifier = Modifier.quackClickable {
+                                viewModel.onClickExamCategory(lazyListState.firstVisibleItemIndex)
                             },
+                            leadingIcon = QuackIcon.Search,
+                            text = state.examCategory,
+                            onTextChanged = {},
+                            placeholderText = stringResource(id = R.string.search_exam_category_placeholder),
+                            enabled = false,
                         )
                     }
                 }
-            }
-            TitleAndComponent(stringResource = R.string.exam_area) {
-                if (state.isExamAreaSelected) {
-                    QuackCircleTag(
-                        text = state.examArea,
-                        trailingIcon = QuackIcon.Close,
-                        isSelected = false,
-                        onClick = { viewModel.onClickCloseTag(false) },
-                    )
-                }
-                FadeAnimatedVisibility(visible = !state.isExamAreaSelected) {
+                TitleAndComponent(stringResource = R.string.exam_title) {
                     QuackBasicTextField(
-                        modifier = Modifier.quackClickable {
-                            viewModel.onClickExamArea(lazyListState.firstVisibleItemIndex)
-                        },
-                        leadingIcon = QuackIcon.Search,
-                        text = state.examArea,
-                        onTextChanged = {},
-                        placeholderText = stringResource(id = R.string.search_exam_area_tag),
-                        enabled = false,
-                    )
-                }
-            }
-            TitleAndComponent(stringResource = R.string.exam_title) {
-                QuackBasicTextField(
-                    text = state.examTitle,
-                    onTextChanged = {
-                        if (state.examTitle.length <= ExamTitleMaxLength) {
-                            viewModel.setExamTitle(it)
-                        }
-                    },
-                    placeholderText = stringResource(id = R.string.input_exam_title),
-                    keyboardOptions = ImeActionNext,
-                    keyboardActions = moveDownFocus(focusManager),
-                )
-            }
-            TitleAndComponent(stringResource = R.string.exam_description) {
-                QuackReviewTextArea(
-                    modifier = Modifier
-                        .heightIn(140.dp)
-                        .focusRequester(focusRequester = focusRequester)
-                        .onFocusChanged { state ->
-                            viewModel.onExamAreaFocusChanged(state.isFocused)
-                        },
-                    text = state.examDescription,
-                    onTextChanged = {
-                        if (state.examDescription.length <= ExamDescriptionMaxLength) {
-                            viewModel.setExamDescription(it)
-                        }
-                    },
-                    placeholderText = stringResource(id = R.string.input_exam_description),
-                    imeAction = ImeAction.Next,
-                    keyboardActions = moveDownFocus(focusManager),
-                    focused = state.examDescriptionFocused,
-                )
-            }
-            TitleAndComponent(stringResource = R.string.certifying_statement) {
-                QuackGrayscaleTextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    text = state.certifyingStatement,
-                    onTextChanged = {
-                        if (state.certifyingStatement.length <= CertifyingStatementMaxLength) {
-                            viewModel.setCertifyingStatement(it)
-                        }
-                    },
-                    placeholderText = stringResource(id = R.string.input_certifying_statement),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            coroutineScope.launch {
-                                lazyListState.animateScrollToItem(lazyListState.firstVisibleItemIndex)
-                                focusManager.clearFocus()
+                        text = state.examTitle,
+                        onTextChanged = {
+                            if (state.examTitle.length <= ExamTitleMaxLength) {
+                                viewModel.setExamTitle(it)
                             }
                         },
-                    ),
-                    maxLength = CertifyingStatementMaxLength,
-                    showCounter = true,
-                )
+                        placeholderText = stringResource(id = R.string.input_exam_title),
+                        keyboardOptions = ImeActionNext,
+                        keyboardActions = moveDownFocus(focusManager),
+                    )
+                }
+                TitleAndComponent(stringResource = R.string.exam_description) {
+                    QuackReviewTextArea(
+                        modifier = Modifier
+                            .heightIn(140.dp)
+                            .focusRequester(focusRequester = focusRequester)
+                            .onFocusChanged { state ->
+                                viewModel.onSearchTextFocusChanged(state.isFocused)
+                            },
+                        text = state.examDescription,
+                        onTextChanged = {
+                            if (state.examDescription.length <= ExamDescriptionMaxLength) {
+                                viewModel.setExamDescription(it)
+                            }
+                        },
+                        placeholderText = stringResource(id = R.string.input_exam_description),
+                        imeAction = ImeAction.Next,
+                        keyboardActions = moveDownFocus(focusManager),
+                        focused = state.examDescriptionFocused,
+                    )
+                }
+                TitleAndComponent(stringResource = R.string.certifying_statement) {
+                    QuackGrayscaleTextField(
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        text = state.certifyingStatement,
+                        onTextChanged = {
+                            if (state.certifyingStatement.length <= CertifyingStatementMaxLength) {
+                                viewModel.setCertifyingStatement(it)
+                            }
+                        },
+                        placeholderText = stringResource(id = R.string.input_certifying_statement),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                coroutineScope.launch {
+                                    lazyListState.animateScrollToItem(lazyListState.firstVisibleItemIndex)
+                                    focusManager.clearFocus()
+                                }
+                            },
+                        ),
+                        maxLength = CertifyingStatementMaxLength,
+                        showCounter = true,
+                    )
+                }
             }
-        }
-    }
+
+            // 최하단 Layout
+            CreateProblemBottomLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .layoutId(BottomLayoutId),
+                leftButtonText = stringResource(id = R.string.additional_information_next),
+                tempSaveButtonClick = {},
+                nextButtonClick = {
+                    coroutineScope.launch {
+                        viewModel.navigateStep(CreateProblemStep.CreateProblem)
+                    }
+                },
+                isValidateCheck = viewModel::examInformationIsValidate,
+            )
+        },
+    )
 }
 
 @Composable
@@ -225,6 +258,7 @@ private fun MediumButton(
                     color = QuackColor.DuckieOrange,
                     textAlign = TextAlign.Center,
                 )
+
                 else -> QuackTextStyle.Body1.change(
                     color = QuackColor.Black,
                     textAlign = TextAlign.Center,

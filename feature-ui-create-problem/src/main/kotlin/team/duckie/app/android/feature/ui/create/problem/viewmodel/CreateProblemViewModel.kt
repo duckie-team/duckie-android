@@ -44,6 +44,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.Cr
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
+import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
@@ -55,7 +56,8 @@ internal class CreateProblemViewModel @Inject constructor(
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
 
-    override val container = container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
+    override val container =
+        container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
 
     /**
      * [galleryImages] 의 mutable 한 객체를 나타냅니다.
@@ -113,15 +115,16 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onClickExamArea(scrollPosition: Int) = intent {
+    fun onClickExamCategory(scrollPosition: Int) = intent {
         reduce {
             state.copy(
+                createProblemStep = CreateProblemStep.Search,
+                findResultType = FindResultType.ExamCategory,
                 examInformation = state.examInformation.copy(
                     scrollPosition = scrollPosition,
                 ),
             )
         }
-        navigateStep(CreateProblemStep.FindExamArea)
     }
 
     fun navigateStep(step: CreateProblemStep) = intent {
@@ -160,66 +163,160 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun setExamArea(examArea: String, cursorPosition: Int) = intent {
+    fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
         reduce {
-            state.copy(
-                examInformation = state.examInformation.copy(
-                    foundExamArea = state.examInformation.foundExamArea.copy(
-                        examArea = examArea,
-                        cursorPosition = cursorPosition,
-                    ),
-                ),
-            )
+            when (state.findResultType) {
+                FindResultType.ExamCategory -> {
+                    state.copy(
+                        examInformation = state.examInformation.copy(
+                            searchExamCategory = state.examInformation.searchExamCategory.copy(
+                                textFieldValue = textFieldValue,
+                                cursorPosition = cursorPosition,
+                            ),
+                        ),
+                    )
+                }
+
+                FindResultType.Tag -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.copy(
+                            searchTag = state.additionalInfo.searchTag.copy(
+                                textFieldValue = textFieldValue,
+                                cursorPosition = cursorPosition,
+                            ),
+                        ),
+                    )
+                }
+            }
         }
     }
 
     fun onClickSearchListHeader() = intent {
         reduce {
-            state.copy(
-                examInformation = state.examInformation.copy(
-                    isExamAreaSelected = true,
-                ),
-            )
+            when (state.findResultType) {
+                FindResultType.ExamCategory -> {
+                    state.copy(
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isExamCategorySelected = true,
+                                searchExamCategory = searchExamCategory.copy(
+                                    results = persistentListOf(searchExamCategory.textFieldValue),
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    ).also { navigateStep(CreateProblemStep.ExamInformation) }
+                }
+
+                FindResultType.Tag -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newSearchResults = searchTag.results
+                                .copy { add(searchTag.textFieldValue) }
+                                .toPersistentList()
+                            copy(
+                                isTagsAdded = true,
+                                searchTag = searchTag.copy(
+                                    results = newSearchResults,
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    )
+                }
+            }
         }
-        navigateStep(CreateProblemStep.ExamInformation)
     }
 
     fun onClickSearchList(index: Int) = intent {
         reduce {
-            state.copy(
-                createProblemStep = CreateProblemStep.ExamInformation,
-                examInformation = state.examInformation.run {
-                    copy(
-                        isExamAreaSelected = true,
-                        foundExamArea = foundExamArea.copy(
-                            examArea = foundExamArea.searchResults[index],
-                        ),
+            when (state.findResultType) {
+                FindResultType.ExamCategory -> {
+                    state.copy(
+                        createProblemStep = CreateProblemStep.ExamInformation,
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isExamCategorySelected = true,
+                                searchExamCategory = searchExamCategory.copy(
+                                    results =
+                                    persistentListOf(searchExamCategory.searchResults[index]),
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
                     )
-                },
-            )
+                }
+
+                FindResultType.Tag -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newSearchResults = searchTag.results
+                                .copy { add(searchTag.searchResults[index]) }
+                                .toPersistentList()
+                            copy(
+                                isTagsAdded = true,
+                                searchTag = searchTag.copy(
+                                    results = newSearchResults,
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    )
+                }
+            }
         }
     }
 
-    fun onClickCloseTag(isExamAreaSelected: Boolean) = intent {
+    fun onClickCloseTag(index: Int = 0) = intent {
         reduce {
-            state.copy(
-                examInformation = state.examInformation.run {
-                    copy(
-                        isExamAreaSelected = isExamAreaSelected,
-                        foundExamArea = foundExamArea.copy(examArea = ""),
+            when (state.createProblemStep) {
+                CreateProblemStep.ExamInformation -> {
+                    state.copy(
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isExamCategorySelected = false,
+                                searchExamCategory = searchExamCategory.copy(
+                                    results = persistentListOf(),
+                                ),
+                            )
+                        },
                     )
-                },
-            )
+                }
+
+                CreateProblemStep.Search, CreateProblemStep.AdditionalInformation -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newSearchResults = searchTag.results
+                                .copy { removeAt(index) }
+                                .toPersistentList()
+                            copy(
+                                isTagsAdded = newSearchResults.isNotEmpty(),
+                                searchTag = searchTag.copy(
+                                    results = newSearchResults,
+                                ),
+                            )
+                        },
+                    )
+                }
+
+                else -> duckieClientLogicProblemException(message = "이 화면에는 해당 기능이 없습니다.")
+            }
         }
     }
 
-    fun onExamAreaFocusChanged(isFocused: Boolean) = intent {
+    fun onSearchTextFocusChanged(isFocused: Boolean) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
                     examDescriptionFocused = isFocused,
                 ),
             )
+        }
+    }
+
+    fun examInformationIsValidate(): Boolean {
+        return with(container.stateFlow.value.examInformation) {
+            categorySelection >= 0 && isExamCategorySelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
     }
 
@@ -502,6 +599,22 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    fun createProblemIsValidate(): Boolean {
+        return with(container.stateFlow.value.createProblem) {
+            val questionsValidate = this.questions.asSequence()
+                .map { it.validate() }
+                .reduce { acc, next -> acc && next }
+            val answersValidate = this.answers.asSequence()
+                .map { it.validate() }
+                .reduce { acc, next -> acc && next }
+            val correctAnswersValidate = this.correctAnswers.asSequence()
+                .map { it.isNotEmpty() }
+                .reduce { acc, next -> acc && next }
+
+            questionsValidate && answersValidate && correctAnswersValidate
+        }
+    }
+
     // AdditionalInfo
     fun setThumbnail(thumbnail: Any?) = intent {
         reduce {
@@ -518,29 +631,6 @@ internal class CreateProblemViewModel @Inject constructor(
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
                     takeTitle = buttonTitle,
-                ),
-            )
-        }
-    }
-
-    fun setTempTag(tempTag: String) = intent {
-        reduce {
-            state.copy(
-                additionalInfo = state.additionalInfo.copy(
-                    tempTag = tempTag,
-                ),
-            )
-        }
-    }
-
-    fun addTag(tag: String) = intent {
-        reduce {
-            val newTags = state.additionalInfo.tags
-                .copy { add(tag) }
-                .toImmutableList()
-            state.copy(
-                additionalInfo = state.additionalInfo.copy(
-                    tags = newTags,
                 ),
             )
         }
@@ -565,9 +655,36 @@ internal class CreateProblemViewModel @Inject constructor(
         mutableGalleryImages = persistentListOf(*images.toTypedArray())
     }
 
+    private fun additionInfoIsValidate(): Boolean {
+        return with(container.stateFlow.value.additionalInfo) {
+            thumbnail != null && takeTitle.isNotEmpty() && tags.isNotEmpty()
+        }
+    }
+
     fun isAllFieldsNotEmpty(): Boolean {
-        return with(container.stateFlow.value.examInformation) {
-            categorySelection >= 0 && isExamAreaSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+        return examInformationIsValidate() && createProblemIsValidate() && additionInfoIsValidate()
+    }
+
+    fun onClickTag() = intent {
+        reduce {
+            state.copy(
+                createProblemStep = CreateProblemStep.Search,
+                findResultType = FindResultType.Tag,
+            )
+        }
+    }
+
+    fun exitSearchScreen() = intent {
+        reduce {
+            when (state.findResultType) {
+                FindResultType.ExamCategory -> state.copy(
+                    createProblemStep = CreateProblemStep.ExamInformation,
+                )
+
+                FindResultType.Tag -> state.copy(
+                    createProblemStep = CreateProblemStep.AdditionalInformation,
+                )
+            }
         }
     }
 }
