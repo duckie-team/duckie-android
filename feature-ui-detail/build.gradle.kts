@@ -18,6 +18,7 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":domain")))
     implementations(
         platform(libs.firebase.bom),
         projects.di,
@@ -25,6 +26,7 @@ dependencies {
         projects.utilKotlin,
         projects.utilCompose,
         libs.orbit.viewmodel,
+        libs.orbit.compose,
         libs.ktx.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
         libs.compose.lifecycle.runtime,

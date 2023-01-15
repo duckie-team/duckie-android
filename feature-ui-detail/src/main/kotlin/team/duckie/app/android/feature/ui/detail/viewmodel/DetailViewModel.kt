@@ -12,16 +12,24 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
+import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @HiltViewModel
-class DetailViewModel @Inject constructor() : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
-    override val container = container<DetailState, DetailSideEffect>(DetailState.Initial)
+class DetailViewModel @Inject constructor(
+    private val examRepository: ExamRepository,
+) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
+    override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
-    fun sendToast(message: String) = intent {
-        postSideEffect(DetailSideEffect.SendToast(message))
+    @OutOfDateApi
+    suspend fun initExamData(examId: Int) {
+        val exam = examRepository.getExam(examId)
+        intent {
+            reduce { DetailState.Success(exam) }
+        }
     }
 }
