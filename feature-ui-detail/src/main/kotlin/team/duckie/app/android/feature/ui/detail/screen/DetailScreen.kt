@@ -13,6 +13,7 @@ package team.duckie.app.android.feature.ui.detail.screen
 import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -30,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
@@ -69,6 +72,7 @@ import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.QuackTitle1
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 private const val DetailScreenTopAppBarLayoutId = "DetailScreenTopAppBar"
@@ -285,11 +289,20 @@ private fun DetailProfileLayout(state: DetailState.Success) {
         if (state.examPublisher.profileImageUrl.isNotEmpty()) {
             QuackImage(
                 src = state.examPublisher.profileImageUrl,
+                shape = SquircleShape,
                 size = DpSize(32.dp, 32.dp),
             )
-            // 공백
-            Spacer(modifier = Modifier.width(8.dp))
+        } else {
+            Box(
+                Modifier
+                    .size(DpSize(32.dp, 32.dp))
+                    .clip(SquircleShape)
+                    .background(QuackColor.Gray2.composeColor)
+            )
         }
+
+        // 공백
+        Spacer(modifier = Modifier.width(8.dp))
         // 닉네임, 응시자, 일자 Layout
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
