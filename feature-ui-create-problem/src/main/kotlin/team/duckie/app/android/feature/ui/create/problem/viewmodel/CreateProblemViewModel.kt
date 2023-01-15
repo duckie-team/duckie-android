@@ -651,38 +651,32 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 추천 검색 목록에서 헤더(1번째 항목)을 클릭한다. */
-    suspend fun onClickSearchListHeader() {
+    suspend fun onClickSearchListHeader(): Boolean {
         val state = container.stateFlow.value
         val tagText = when (state.findResultType) {
             FindResultType.ExamCategory -> state.examInformation.searchExamCategory.textFieldValue
             FindResultType.Tag -> state.additionalInfo.searchTag.textFieldValue
         }
-        // TODO(riflockle7): 에러 핸들링 필요
-        val newTag = try {
-            tagRepository.create(tagText)
-        } catch (e: Throwable) {
-            Tag(3, tagText)
-        }
 
-        exitSearchScreenAfterAddTag(newTag)
+        runCatching { tagRepository.create(tagText) }.getOrNull()?.run {
+            exitSearchScreenAfterAddTag(this)
+            return true
+        } ?: return false
     }
 
     /** 추천 검색 목록에서 1번째 이외의 항목을 클릭한다. */
-    suspend fun onClickSearchList(index: Int) {
+    suspend fun onClickSearchList(index: Int): Boolean {
         val state = container.stateFlow.value
         val tagText = when (state.findResultType) {
             FindResultType.ExamCategory ->
                 state.examInformation.searchExamCategory.searchResults[index]
             FindResultType.Tag -> state.additionalInfo.searchTag.searchResults[index]
         }
-        // TODO(riflockle7): 에러 핸들링 필요
-        val newTag = try {
-            tagRepository.create(tagText)
-        } catch (e: Throwable) {
-            Tag(3, tagText)
-        }
 
-        exitSearchScreenAfterAddTag(newTag)
+        runCatching { tagRepository.create(tagText) }.getOrNull()?.run {
+            exitSearchScreenAfterAddTag(this)
+            return true
+        } ?: return false
     }
 
     /**

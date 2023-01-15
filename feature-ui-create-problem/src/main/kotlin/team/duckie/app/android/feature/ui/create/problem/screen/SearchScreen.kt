@@ -39,6 +39,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblem
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.SearchScreenData
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackBasicTextField
@@ -54,6 +55,7 @@ internal fun SearchScreen(
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
+    val toast = rememberToast()
 
     val rootState = viewModel.collectAsState().value
 
@@ -62,6 +64,7 @@ internal fun SearchScreen(
         FindResultType.Tag -> rootState.additionalInfo.searchTag
     }
 
+    val networkErrorMessage = stringResource(id = R.string.network_error)
     val title by remember {
         mutableStateOf(
             when (rootState.findResultType) {
@@ -83,6 +86,9 @@ internal fun SearchScreen(
         remember(rootState.findResultType) { rootState.findResultType.isMultiMode() }
 
     val focusRequester = remember { FocusRequester() }
+    // TODO(riflockle7): TextFieldValue 자체를 viewModel 에 두기엔 android 와 밀접 연계되어 있고
+    //   String 과 cursorPosition 을 viewModel 로 두고 처리하려니 무한 실행 되고
+    //   하나로 공통화하여 처리할 수 없을지 고민중
     var searchTextFieldValue by remember {
         mutableStateOf(
             TextFieldValue(
@@ -137,8 +143,11 @@ internal fun SearchScreen(
                 onDone = {
                     if (searchTextValidate(searchTextFieldValue, state)) {
                         coroutineScope.launch {
-                            viewModel.onClickSearchListHeader()
-                            searchTextFieldValue = TextFieldValue()
+                            if (viewModel.onClickSearchListHeader()) {
+                                searchTextFieldValue = TextFieldValue()
+                            } else {
+                                toast(networkErrorMessage)
+                            }
                         }
                     }
                 },
@@ -159,8 +168,11 @@ internal fun SearchScreen(
                         onClick = {
                             if (searchTextValidate(searchTextFieldValue, state)) {
                                 coroutineScope.launch {
-                                    viewModel.onClickSearchListHeader()
-                                    searchTextFieldValue = TextFieldValue()
+                                    if (viewModel.onClickSearchListHeader()) {
+                                        searchTextFieldValue = TextFieldValue()
+                                    } else {
+                                        toast(networkErrorMessage)
+                                    }
                                 }
                             }
                         },
@@ -175,8 +187,11 @@ internal fun SearchScreen(
                         onClick = {
                             if (searchTextValidate(searchTextFieldValue, state)) {
                                 coroutineScope.launch {
-                                    viewModel.onClickSearchList(index)
-                                    searchTextFieldValue = TextFieldValue()
+                                    if (viewModel.onClickSearchList(index)) {
+                                        searchTextFieldValue = TextFieldValue()
+                                    } else {
+                                        toast(networkErrorMessage)
+                                    }
                                 }
                             }
                         },
