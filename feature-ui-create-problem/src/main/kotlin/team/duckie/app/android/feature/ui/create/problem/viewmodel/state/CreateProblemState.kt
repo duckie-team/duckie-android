@@ -12,7 +12,9 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
+import team.duckie.app.android.domain.tag.model.Tag
 
 internal data class CreateProblemState(
     val createProblemStep: CreateProblemStep = CreateProblemStep.AdditionalInformation,
@@ -36,7 +38,7 @@ internal data class CreateProblemState(
         val examDescriptionFocused: Boolean = false,
     ) {
         val examCategory: String
-            get() = searchExamCategory.results.firstOrNull() ?: ""
+            get() = searchExamCategory.results.firstOrNull()?.name ?: ""
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
@@ -57,11 +59,12 @@ internal data class CreateProblemState(
     /** 문제 만들기 3단계 화면에서 사용하는 data 모음 */
     data class AdditionInfo(
         val thumbnail: Any? = null,
+        val thumbnailType: ThumbnailType? = null,
         val takeTitle: String = "",
         val isTagsAdded: Boolean = false,
         val searchTag: SearchScreenData = SearchScreenData(),
     ) {
-        val tags: ImmutableList<String>
+        val tags: ImmutableList<Tag>
             get() = searchTag.results
     }
 }
@@ -75,7 +78,7 @@ data class SearchScreenData(
         "도로 패션",
     ),
     val textFieldValue: String = "",
-    val results: ImmutableList<String> = persistentListOf(),
+    val results: ImmutableList<Tag> = persistentListOf(),
     val cursorPosition: Int = 0,
 )
 

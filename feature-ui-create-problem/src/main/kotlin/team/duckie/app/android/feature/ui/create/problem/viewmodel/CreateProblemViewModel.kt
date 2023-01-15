@@ -40,6 +40,8 @@ import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
+import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.domain.tag.repository.TagRepository
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
@@ -48,11 +50,13 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindRes
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.fastMapIndexed
 
 @HiltViewModel
 internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val tagRepository: TagRepository,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
 
@@ -75,11 +79,46 @@ internal class CreateProblemViewModel @Inject constructor(
     // 공통
     /** 시험 컨텐츠를 만든다. */
     fun makeExam() = intent {
-        makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
+        makeExamUseCase(generateExamBody()).onSuccess { isSuccess: Boolean ->
             print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
         }.onFailure {
             it.printStackTrace()
+            throw it;
         }
+    }
+
+    /** request 를 위해 필요한 [ExamBody] 를 생성한다. */
+    private fun generateExamBody(): ExamBody {
+        val examInformationState = container.stateFlow.value.examInformation
+        val createProblemState = container.stateFlow.value.createProblem
+        val additionalInfoState = container.stateFlow.value.additionalInfo
+
+        val problems = createProblemState.questions.fastMapIndexed { index, question ->
+            Problem(
+                index,
+                question,
+                createProblemState.answers[index],
+                createProblemState.correctAnswers[index],
+                createProblemState.hints[index],
+                createProblemState.memos[index],
+            )
+        }.toPersistentList()
+
+        return ExamBody(
+            title = examInformationState.examTitle,
+            description = examInformationState.examDescription,
+            mainTagId = examInformationState.categories.first().id,
+            subTagIds = additionalInfoState.tags.map { it.id }.toPersistentList(),
+            categoryId = examInformationState.categorySelection,
+            certifyingStatement = examInformationState.certifyingStatement,
+            thumbnailImageUrl = "${additionalInfoState.thumbnail}",
+            thumbnailType = additionalInfoState.thumbnailType,
+            problems = problems,
+            isPublic = true,
+            buttonTitle = additionalInfoState.takeTitle,
+            // TODO(riflockle7): userId 추후 확인 필요
+            userId = 1,
+        )
     }
 
     /** 문제 만들기 화면을 종료한다. */
@@ -537,11 +576,12 @@ internal class CreateProblemViewModel @Inject constructor(
 
     // AdditionalInfo
     /** 카테고리 썸네일을 정한다. */
-    fun setThumbnail(thumbnail: Any?) = intent {
+    fun setThumbnail(thumbnail: Any?, thumbnailType: ThumbnailType) = intent {
         reduce {
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
                     thumbnail = thumbnail,
+                    thumbnailType = thumbnailType,
                 ),
             )
         }
@@ -611,45 +651,45 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 추천 검색 목록에서 헤더(1번째 항목)을 클릭한다. */
-    fun onClickSearchListHeader() = intent {
-        reduce {
-            when (state.findResultType) {
-                FindResultType.ExamCategory -> {
-                    state.copy(
-                        examInformation = state.examInformation.run {
-                            copy(
-                                isExamCategorySelected = true,
-                                searchExamCategory = searchExamCategory.copy(
-                                    results = persistentListOf(searchExamCategory.textFieldValue),
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    ).also { navigateStep(CreateProblemStep.ExamInformation) }
-                }
-
-                FindResultType.Tag -> {
-                    state.copy(
-                        additionalInfo = state.additionalInfo.run {
-                            val newSearchResults = searchTag.results
-                                .copy { add(searchTag.textFieldValue) }
-                                .toPersistentList()
-                            copy(
-                                isTagsAdded = true,
-                                searchTag = searchTag.copy(
-                                    results = newSearchResults,
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    )
-                }
-            }
+    suspend fun onClickSearchListHeader() {
+        val state = container.stateFlow.value
+        val tagText = when (state.findResultType) {
+            FindResultType.ExamCategory -> state.examInformation.searchExamCategory.textFieldValue
+            FindResultType.Tag -> state.additionalInfo.searchTag.textFieldValue
         }
+        // TODO(riflockle7): 에러 핸들링 필요
+        val newTag = try {
+            tagRepository.create(tagText)
+        } catch (e: Throwable) {
+            Tag(3, tagText)
+        }
+
+        exitSearchScreenAfterAddTag(newTag)
     }
 
     /** 추천 검색 목록에서 1번째 이외의 항목을 클릭한다. */
-    fun onClickSearchList(index: Int) = intent {
+    suspend fun onClickSearchList(index: Int) {
+        val state = container.stateFlow.value
+        val tagText = when (state.findResultType) {
+            FindResultType.ExamCategory ->
+                state.examInformation.searchExamCategory.searchResults[index]
+            FindResultType.Tag -> state.additionalInfo.searchTag.searchResults[index]
+        }
+        // TODO(riflockle7): 에러 핸들링 필요
+        val newTag = try {
+            tagRepository.create(tagText)
+        } catch (e: Throwable) {
+            Tag(3, tagText)
+        }
+
+        exitSearchScreenAfterAddTag(newTag)
+    }
+
+    /**
+     * 검색 화면을 종료한다. 태그 추가를 완료한 후 실행되어야 한다.
+     * // TODO(riflockle7): 추후 [exitSearchScreen] 와 합칠 수 있을지 확인하기
+     */
+    private fun exitSearchScreenAfterAddTag(newTag: Tag) = intent {
         reduce {
             when (state.findResultType) {
                 FindResultType.ExamCategory -> {
@@ -659,8 +699,7 @@ internal class CreateProblemViewModel @Inject constructor(
                             copy(
                                 isExamCategorySelected = true,
                                 searchExamCategory = searchExamCategory.copy(
-                                    results =
-                                    persistentListOf(searchExamCategory.searchResults[index]),
+                                    results = persistentListOf(newTag),
                                     textFieldValue = "",
                                 ),
                             )
@@ -672,7 +711,7 @@ internal class CreateProblemViewModel @Inject constructor(
                     state.copy(
                         additionalInfo = state.additionalInfo.run {
                             val newSearchResults = searchTag.results
-                                .copy { add(searchTag.searchResults[index]) }
+                                .copy { add(newTag) }
                                 .toPersistentList()
                             copy(
                                 isTagsAdded = true,

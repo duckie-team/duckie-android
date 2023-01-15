@@ -64,6 +64,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
@@ -79,6 +80,7 @@ import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackImage
@@ -201,7 +203,10 @@ internal fun AdditionalInformationScreen(
                         title = "기본 썸네일",
                         src = team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
                         onClick = {
-                            vm.setThumbnail(team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24)
+                            vm.setThumbnail(
+                                team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
+                                ThumbnailType.Default,
+                            )
                             coroutineScope.launch {
                                 sheetState.hide()
                             }
@@ -271,7 +276,10 @@ internal fun AdditionalInformationScreen(
                         .layoutId(BottomLayoutId),
                     tempSaveButtonClick = {},
                     nextButtonClick = {
-                        coroutineScope.launch { vm.finishCreateProblem() }
+                        coroutineScope.launch {
+                            vm.makeExam()
+                            vm.finishCreateProblem()
+                        }
                     },
                     isValidateCheck = vm::isAllFieldsNotEmpty,
                 )
@@ -304,7 +312,10 @@ internal fun AdditionalInformationScreen(
             },
             onAddClick = {
                 coroutineScope.launch {
-                    vm.setThumbnail(galleryImages[galleryImagesSelectionIndex].toUri())
+                    vm.setThumbnail(
+                        galleryImages[galleryImagesSelectionIndex].toUri(),
+                        ThumbnailType.Image,
+                    )
                     vm.updatePhotoState(null)
                     sheetState.hide()
                 }
@@ -392,7 +403,7 @@ private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()
                 QuackSingeLazyRowTag(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
                     horizontalSpace = 4.dp,
-                    items = state.tags,
+                    items = state.tags.fastMap { it.name },
                     tagType = QuackTagType.Grayscale(""),
                     onClick = { vm.onClickCloseTag(it) },
                 )

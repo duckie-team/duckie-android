@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.ExitAppBar
@@ -37,6 +39,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblem
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.SearchScreenData
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
@@ -49,6 +52,8 @@ internal fun SearchScreen(
     viewModel: CreateProblemViewModel = activityViewModel(),
 ) {
     val context = LocalContext.current
+
+    val coroutineScope = rememberCoroutineScope()
 
     val rootState = viewModel.collectAsState().value
 
@@ -108,7 +113,7 @@ internal fun SearchScreen(
             QuackSingeLazyRowTag(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
                 horizontalSpace = 4.dp,
-                items = state.results,
+                items = state.results.fastMap { it.name },
                 tagType = QuackTagType.Circle(QuackIcon.Close),
                 onClick = { viewModel.onClickCloseTag(it) },
             )
@@ -131,8 +136,10 @@ internal fun SearchScreen(
             keyboardActions = KeyboardActions(
                 onDone = {
                     if (searchTextValidate(searchTextFieldValue, state)) {
-                        viewModel.onClickSearchListHeader()
-                        searchTextFieldValue = TextFieldValue()
+                        coroutineScope.launch {
+                            viewModel.onClickSearchListHeader()
+                            searchTextFieldValue = TextFieldValue()
+                        }
                     }
                 },
             ),
@@ -151,8 +158,10 @@ internal fun SearchScreen(
                         ),
                         onClick = {
                             if (searchTextValidate(searchTextFieldValue, state)) {
-                                viewModel.onClickSearchListHeader()
-                                searchTextFieldValue = TextFieldValue()
+                                coroutineScope.launch {
+                                    viewModel.onClickSearchListHeader()
+                                    searchTextFieldValue = TextFieldValue()
+                                }
                             }
                         },
                     )
@@ -165,8 +174,10 @@ internal fun SearchScreen(
                         text = item,
                         onClick = {
                             if (searchTextValidate(searchTextFieldValue, state)) {
-                                viewModel.onClickSearchList(index)
-                                searchTextFieldValue = TextFieldValue()
+                                coroutineScope.launch {
+                                    viewModel.onClickSearchList(index)
+                                    searchTextFieldValue = TextFieldValue()
+                                }
                             }
                         },
                     )
@@ -181,4 +192,4 @@ private fun searchTextValidate(
     searchTextFieldValue: TextFieldValue,
     state: SearchScreenData?,
 ): Boolean = searchTextFieldValue.text.isNotEmpty() &&
-        state?.results?.contains(searchTextFieldValue.text) != true
+        state?.results?.fastMap { it.name }?.contains(searchTextFieldValue.text) != true
