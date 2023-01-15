@@ -16,12 +16,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -43,6 +45,7 @@ import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
+import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
@@ -59,22 +62,50 @@ import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 
 private const val DetailScreenTopAppBarLayoutId = "DetailScreenTopAppBar"
 private const val DetailScreenContentLayoutId = "DetailScreenContent"
 private const val DetailScreenBottomBarLayoutId = "DetailScreenBottomBar"
 
 /** 상세 화면 Screen */
+@OutOfDateApi
 @Composable
 internal fun DetailScreen(
     modifier: Modifier = Modifier,
     viewModel: DetailViewModel = activityViewModel(),
+) = when (val state = viewModel.collectAsState().value) {
+    is DetailState.Loading -> Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(QuackColor.White.composeColor),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        // TODO(riflockle7): 추후 DuckieCircularProgressIndicator.kt 와 합치거나 꽥꽥 컴포넌트로 필요
+        CircularProgressIndicator(
+            color = QuackColor.DuckieOrange.composeColor,
+        )
+    }
+    is DetailState.Success -> DetailSuccessScreen(viewModel, modifier, state)
+    is DetailState.Error -> DetailErrorScreen()
+}
+
+/** 데이터 성공적으로 받은[DetailState.Success] 상세 화면 */
+@OutOfDateApi
+@Composable
+private fun DetailSuccessScreen(
+    viewModel: DetailViewModel,
+    modifier: Modifier,
+    state: DetailState.Success,
 ) {
     val activity = LocalContext.current as Activity
     val toast = rememberToast()
 
     LaunchedEffect(Unit) {
-        viewModel.sendToast("상세 화면 진입")
+        // TODO(riflockle7): examId 어떻게 가져올 것인지 처리 필요
+        viewModel.initExamData(1)
     }
 
     LaunchedEffect(viewModel) {
@@ -343,4 +374,10 @@ private fun DetailBottomLayout(
             )
         }
     }
+}
+
+/** 에러 발생한[DetailState.Error] 상세 화면 */
+@Composable
+private fun DetailErrorScreen() {
+
 }
