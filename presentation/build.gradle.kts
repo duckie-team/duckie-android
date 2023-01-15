@@ -18,6 +18,7 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":feature-ui-detail")))
     implementations(
         projects.di,
         projects.utilUi,
