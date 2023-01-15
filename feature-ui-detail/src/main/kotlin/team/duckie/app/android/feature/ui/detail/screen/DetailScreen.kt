@@ -58,6 +58,7 @@ import team.duckie.app.android.util.kotlin.percents
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
+import team.duckie.quackquack.ui.component.QuackCircleTag
 import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
@@ -66,7 +67,6 @@ import team.duckie.quackquack.ui.component.QuackSmallButton
 import team.duckie.quackquack.ui.component.QuackSmallButtonType
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.QuackTitle1
-import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
@@ -125,7 +125,6 @@ private fun DetailSuccessScreen(
     modifier: Modifier,
     state: DetailState.Success,
 ) {
-    val activity = LocalContext.current as Activity
     val toast = rememberToast()
 
     LaunchedEffect(viewModel) {
@@ -141,13 +140,9 @@ private fun DetailSuccessScreen(
         modifier = modifier.navigationBarsPadding(),
         content = {
             // 상단 탭바 Layout
-            // TODO(riflockle7): trailingIcon 의 경우, 추후 커스텀 composable 을 넣을 수 있게 하면 어떨지...?
-            QuackTopAppBar(
+            TopAppCustomBar(
                 modifier = Modifier.layoutId(DetailScreenTopAppBarLayoutId),
-                leadingIcon = QuackIcon.ArrowBack,
-                trailingIcon = QuackIcon.More,
-                onLeadingIconClick = { activity.finish() },
-                onTrailingIconClick = {},
+                state = state,
             )
             // content Layout
             DetailContentLayout(state)
@@ -418,6 +413,37 @@ private fun DetailErrorScreen(viewModel: DetailViewModel, modifier: Modifier) {
         // TODO(riflockle7): 추후 DuckieCircularProgressIndicator.kt 와 합치거나 꽥꽥 컴포넌트로 필요
         QuackTitle1(
             text = "에러입니다\nTODO$viewModel\n추후 데이터 다시 가져오기 로직 넣어야 합니다.",
+        )
+    }
+}
+
+/** 상세 화면에서 사용하는 TopAppBar */
+@Composable
+private fun TopAppCustomBar(modifier: Modifier, state: DetailState.Success) {
+    val activity = LocalContext.current as Activity
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(QuackColor.White.composeColor)
+            .padding(
+                vertical = 6.dp,
+                horizontal = 10.dp,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        QuackImage(
+            padding = PaddingValues(6.dp),
+            src = QuackIcon.ArrowBack,
+            size = DpSize(24.dp, 24.dp),
+            rippleEnabled = false,
+            onClick = { activity.finish() },
+        )
+
+        QuackCircleTag(
+            text = state.exam.mainTag.name,
+            trailingIcon = QuackIcon.ArrowRight,
+            isSelected = false,
         )
     }
 }
