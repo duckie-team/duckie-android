@@ -23,6 +23,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,6 +52,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -63,9 +66,12 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
+import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
+import team.duckie.app.android.feature.ui.create.problem.common.FadeAnimatedVisibility
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
+import team.duckie.app.android.feature.ui.create.problem.common.getCreateProblemMeasurePolicy
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
@@ -78,9 +84,15 @@ import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
+import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackSubtitle
+import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
+
+private const val TopAppBarLayoutId = "AdditionalInfoScreenTopAppBarLayoutId"
+private const val ContentLayoutId = "AdditionalInfoScreenContentLayoutId"
+private const val BottomLayoutId = "AdditionalInfoScreenBottomLayoutId"
 
 /** 문제 만들기 3단계 (추가정보 입력) Screen */
 @Composable
@@ -214,40 +226,57 @@ internal fun AdditionalInformationScreen(
             }
         },
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
+        Layout(
+            modifier = modifier
+                .fillMaxWidth()
                 .navigationBarsPadding(),
-        ) {
-            // 상단 탭바
-            PrevAndNextTopAppBar(
-                onLeadingIconClick = { vm.navigateStep(CreateProblemStep.CreateProblem) },
-                trailingText = stringResource(id = R.string.additional_information_next),
-                onTrailingTextClick = { vm.onClickArrowBack() },
-                trailingTextEnabled = vm.isAllFieldsNotEmpty(),
-            )
+            measurePolicy = getCreateProblemMeasurePolicy(
+                TopAppBarLayoutId,
+                ContentLayoutId,
+                BottomLayoutId,
+            ),
+            content = {
+                // 상단 탭바
+                PrevAndNextTopAppBar(
+                    modifier = Modifier.layoutId(TopAppBarLayoutId),
+                    onLeadingIconClick = { vm.navigateStep(CreateProblemStep.CreateProblem) },
+                )
 
-            // 컨텐츠 Layout
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp),
-            ) {
-                // 썸네일 선택 (어떤 분야를 좋아하나요?) Layout
-                AdditionalThumbnailLayout(thumbnail = selectedGalleryImage) {
-                    keyboard?.hide()
-                    coroutineScope.launch {
-                        sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                // 컨텐츠 Layout
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp)
+                        .layoutId(ContentLayoutId),
+                ) {
+                    // 썸네일 선택 (어떤 분야를 좋아하나요?) Layout
+                    AdditionalThumbnailLayout(thumbnail = selectedGalleryImage) {
+                        keyboard?.hide()
+                        coroutineScope.launch {
+                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                        }
                     }
+
+                    // 시험 응시 텍스트 선택 (시험 응시하기 버튼) Layout
+                    AdditionalTakeLayout()
+
+                    // 시험 태그 추가 (태그 추가) Layout
+                    AdditionalTagLayout()
                 }
 
-                // 시험 응시 텍스트 선택 (시험 응시하기 버튼) Layout
-                AdditionalTakeLayout()
-
-                // 시험 태그 추가 (태그 추가) Layout
-                AdditionalTagLayout()
-            }
-        }
+                // 최하단 Layout
+                CreateProblemBottomLayout(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .layoutId(BottomLayoutId),
+                    tempSaveButtonClick = {},
+                    nextButtonClick = {
+                        coroutineScope.launch { vm.onClickArrowBack() }
+                    },
+                    isValidateCheck = vm::isAllFieldsNotEmpty,
+                )
+            },
+        )
     }
 
     // 갤러리 썸네일 선택 picker
@@ -349,10 +378,26 @@ private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()
         stringResource = R.string.additional_information_tag_title,
     ) {
         QuackBasicTextField(
-            text = state.tempTag,
-            onTextChanged = vm::setTempTag,
+            modifier = Modifier.quackClickable {
+                vm.onClickTag()
+            },
+            text = "",
+            onTextChanged = {},
             placeholderText = stringResource(id = R.string.additional_information_tag_input_hint),
+            enabled = false,
         )
+
+        if (state.isTagsAdded) {
+            FadeAnimatedVisibility(visible = false) {
+                QuackSingeLazyRowTag(
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                    horizontalSpace = 4.dp,
+                    items = state.tags,
+                    tagType = QuackTagType.Grayscale(""),
+                    onClick = { vm.onClickCloseTag(it) },
+                )
+            }
+        }
     }
 }
 

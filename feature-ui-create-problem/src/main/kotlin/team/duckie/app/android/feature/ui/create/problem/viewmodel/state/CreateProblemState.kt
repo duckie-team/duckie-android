@@ -15,10 +15,11 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 
 internal data class CreateProblemState(
-    val createProblemStep: CreateProblemStep = CreateProblemStep.CreateProblem,
+    val createProblemStep: CreateProblemStep = CreateProblemStep.AdditionalInformation,
     val examInformation: ExamInformation = ExamInformation(),
     val createProblem: CreateProblem = CreateProblem(),
     val additionalInfo: AdditionInfo = AdditionInfo(),
+    val findResultType: FindResultType = FindResultType.ExamCategory,
     val error: Error? = null,
     val photoState: CreateProblemPhotoState? = null,
 ) {
@@ -26,28 +27,16 @@ internal data class CreateProblemState(
         val isCategoryLoading: Boolean = true,
         val categories: ImmutableList<Category> = persistentListOf(),
         val categorySelection: Int = -1,
-        val isExamAreaSelected: Boolean = false,
+        val isExamCategorySelected: Boolean = false,
         val examTitle: String = "",
         val examDescription: String = "",
         val certifyingStatement: String = "",
-        val foundExamArea: FoundExamArea = FoundExamArea(),
+        val searchExamCategory: SearchScreenData = SearchScreenData(),
         val scrollPosition: Int = 0,
         val examDescriptionFocused: Boolean = false,
     ) {
-        val examArea: String
-            get() = foundExamArea.examArea
-
-        data class FoundExamArea(
-            val searchResults: ImmutableList<String> = persistentListOf(
-                // TODO(EvergreenTree97): Server Request
-                "도로",
-                "도로 주행",
-                "도로 셀카",
-                "도로 패션",
-            ),
-            val examArea: String = "",
-            val cursorPosition: Int = 0,
-        )
+        val examCategory: String
+            get() = searchExamCategory.results.firstOrNull() ?: ""
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
@@ -58,8 +47,9 @@ internal data class CreateProblemState(
             Answer.Type.Choice.getDefaultAnswer(),
         ),
         val correctAnswers: ImmutableList<String> = persistentListOf(""),
-        val hints: ImmutableList<String> = persistentListOf(),
-        val memos: ImmutableList<String> = persistentListOf(),
+        val hints: ImmutableList<String> = persistentListOf(""),
+        val memos: ImmutableList<String> = persistentListOf(""),
+        val isValidate: Boolean = false,
     ) {
         data class Error(val throwable: Throwable?)
     }
@@ -68,9 +58,31 @@ internal data class CreateProblemState(
     data class AdditionInfo(
         val thumbnail: Any? = null,
         val takeTitle: String = "",
-        val tempTag: String = "",
-        val tags: ImmutableList<String> = persistentListOf(),
-    )
+        val isTagsAdded: Boolean = false,
+        val searchTag: SearchScreenData = SearchScreenData(),
+    ) {
+        val tags: ImmutableList<String>
+            get() = searchTag.results
+    }
+}
+
+data class SearchScreenData(
+    val searchResults: ImmutableList<String> = persistentListOf(
+        // TODO(EvergreenTree97): Server Request
+        "도로",
+        "도로 주행",
+        "도로 셀카",
+        "도로 패션",
+    ),
+    val textFieldValue: String = "",
+    val results: ImmutableList<String> = persistentListOf(),
+    val cursorPosition: Int = 0,
+)
+
+enum class FindResultType {
+    ExamCategory, Tag;
+
+    fun isMultiMode() = this == Tag
 }
 
 sealed class CreateProblemPhotoState {
