@@ -399,12 +399,11 @@ private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()
         )
 
         if (state.isTagsAdded) {
-            FadeAnimatedVisibility(visible = false) {
+            FadeAnimatedVisibility(visible = true) {
                 QuackSingeLazyRowTag(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
                     horizontalSpace = 4.dp,
                     items = state.tags.fastMap { it.name },
-                    tagType = QuackTagType.Grayscale(""),
+                    tagType = QuackTagType.Circle(QuackIcon.Close),
                     onClick = { vm.onClickCloseTag(it) },
                 )
             }
