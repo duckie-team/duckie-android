@@ -32,7 +32,6 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.domain.exam.model.ShortModel
 import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.exam.model.toChoice
@@ -83,7 +82,7 @@ internal class CreateProblemViewModel @Inject constructor(
             print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
         }.onFailure {
             it.printStackTrace()
-            throw it;
+            throw it
         }
     }
 
@@ -747,80 +746,3 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 }
-
-private val dummyParam = ExamBody(
-    // TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
-    title = "제 1회 도로 패션영역",
-    description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
-    mainTagId = 3,
-    subTagIds = persistentListOf(5, 15, 2, 3, 4),
-    categoryId = 3,
-    thumbnailImageUrl = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1669793968813",
-    certifyingStatement = "열심히 살지 말라고 하셨다",
-    thumbnailType = ThumbnailType.Image,
-    buttonTitle = "TestText",
-    isPublic = true,
-    problems = persistentListOf(
-        Problem(
-            id = 1,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 2,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 3,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 4,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 5,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-    ),
-    userId = 1,
-)
