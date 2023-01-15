@@ -23,7 +23,7 @@ class DetailActivity : BaseActivity() {
                     Modifier
                         .fillMaxSize()
                         .background(color = QuackColor.White.composeColor)
-                        .systemBarsPadding()
+                        .systemBarsPadding(),
                 )
             }
         }

@@ -297,7 +297,7 @@ private fun DetailProfileLayout(state: DetailState.Success) {
                 Modifier
                     .size(DpSize(32.dp, 32.dp))
                     .clip(SquircleShape)
-                    .background(QuackColor.Gray2.composeColor)
+                    .background(QuackColor.Gray2.composeColor),
             )
         }
 

@@ -33,6 +33,8 @@ import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import javax.inject.Inject
 
+const val DelayTime = 2000L
+
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
@@ -43,7 +45,7 @@ class DetailViewModel @Inject constructor(
     suspend fun initExamData(examId: Int, userId: Int) {
         val exam = runCatching { examRepository.getExam(examId) }.getOrNull() ?: dummyExam
         val user = runCatching { userRepository.get(userId) }.getOrNull() ?: dummyUser
-        delay(2000)
+        delay(DelayTime)
         intent {
             reduce { DetailState.Success(exam, user) }
         }
