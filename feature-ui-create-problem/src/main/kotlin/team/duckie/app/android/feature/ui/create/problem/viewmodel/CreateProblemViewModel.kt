@@ -77,7 +77,7 @@ internal class CreateProblemViewModel @Inject constructor(
 
     // 공통
     /** 시험 컨텐츠를 만든다. */
-    fun makeExam() = intent {
+    internal fun makeExam() = intent {
         makeExamUseCase(generateExamBody()).onSuccess { isSuccess: Boolean ->
             print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
         }.onFailure {
@@ -121,12 +121,12 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 문제 만들기 화면을 종료한다. */
-    fun finishCreateProblem() = intent {
+    internal fun finishCreateProblem() = intent {
         postSideEffect(CreateProblemSideEffect.FinishActivity)
     }
 
     /** 특정 태그의 닫기 버튼을 클릭한다. 대체로 삭제 로직이 실행된다. */
-    fun onClickCloseTag(index: Int = 0) = intent {
+    internal fun onClickCloseTag(index: Int = 0) = intent {
         reduce {
             when (state.createProblemStep) {
                 CreateProblemStep.ExamInformation -> {
@@ -164,14 +164,14 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 사진 추가를 위한 작업을 시작 또는 종료한다. */
-    fun updatePhotoState(photoState: CreateProblemPhotoState?) = intent {
+    internal fun updatePhotoState(photoState: CreateProblemPhotoState?) = intent {
         reduce {
             state.copy(photoState = photoState)
         }
     }
 
     /** 갤러리에서 이미지 목록을 조회한다. */
-    fun loadGalleryImages() = intent {
+    internal fun loadGalleryImages() = intent {
         loadGalleryImagesUseCase()
             .onSuccess { images ->
                 postSideEffect(CreateProblemSideEffect.UpdateGalleryImages(images))
@@ -190,7 +190,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 특정 화면으로 이동한다. */
-    fun navigateStep(step: CreateProblemStep) = intent {
+    internal fun navigateStep(step: CreateProblemStep) = intent {
         reduce {
             state.copy(createProblemStep = step)
         }
@@ -198,7 +198,7 @@ internal class CreateProblemViewModel @Inject constructor(
 
     // ExamInformation
     /** 카테고리 정보를 가져온다. */
-    fun getCategories() = intent {
+    internal fun getCategories() = intent {
         getCategoriesUseCase(false).onSuccess { categories ->
             reduce {
                 state.copy(
@@ -214,7 +214,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 카테고리 항목을 클릭한다. */
-    fun onClickCategory(index: Int) = intent {
+    internal fun onClickCategory(index: Int) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -225,7 +225,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 시험 영역 항목을 등록하기 위한 검색화면으로 진입한다. */
-    fun goToSearchExamCategory(scrollPosition: Int) = intent {
+    internal fun goToSearchExamCategory(scrollPosition: Int) = intent {
         reduce {
             state.copy(
                 createProblemStep = CreateProblemStep.Search,
@@ -238,7 +238,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 시험 제목을 작성한다. */
-    fun setExamTitle(examTitle: String) = intent {
+    internal fun setExamTitle(examTitle: String) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -249,7 +249,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 설명을 작성한다. */
-    fun setExamDescription(examDescription: String) = intent {
+    internal fun setExamDescription(examDescription: String) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -260,7 +260,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 필적 확인 문구를 작성한다. */
-    fun setCertifyingStatement(certifyingStatement: String) = intent {
+    internal fun setCertifyingStatement(certifyingStatement: String) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -271,7 +271,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 문제 만들기 1단계 화면의 유효성을 체크한다. */
-    fun examInformationIsValidate(): Boolean {
+    internal fun examInformationIsValidate(): Boolean {
         return with(container.stateFlow.value.examInformation) {
             categorySelection >= 0 && isExamCategorySelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
         }
@@ -287,7 +287,7 @@ internal class CreateProblemViewModel @Inject constructor(
      * [Problem.hint]: 처음 문제를 만들 때 기본 값은 null 값이다.
      * [Problem.memo]: 처음 문제를 만들 때 기본 값은 null 값이다.
      */
-    fun addProblem(answerType: Answer.Type) = intent {
+    internal fun addProblem(answerType: Answer.Type) = intent {
         val newQuestion = Question.Text(text = "")
         val newAnswer = answerType.getDefaultAnswer()
 
@@ -313,7 +313,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** [questionIndex + 1] 번 문제를 삭제한다. */
-    fun removeProblem(questionIndex: Int) = intent {
+    internal fun removeProblem(questionIndex: Int) = intent {
         with(state.createProblem) {
             val newQuestions = questions.copy { removeAt(questionIndex) }
             val newAnswers = answers.copy { removeAt(questionIndex) }
@@ -341,7 +341,7 @@ internal class CreateProblemViewModel @Inject constructor(
      * [특정 문제 타입][questionType]으로 설정되며
      * [텍스트][title], [이미지 소스 목록][urlSource]을 추가적으로 받아 해당 문제를 특정 값으로 초기 설정합니다.
      */
-    fun setQuestion(
+    internal fun setQuestion(
         questionType: Question.Type?,
         questionIndex: Int,
         title: String? = null,
@@ -383,7 +383,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** [questionIndex + 1] 번 문제의 문제 타입을 [특정 답안 타입][answerType]으로 변경합니다. */
-    fun editAnswersType(
+    internal fun editAnswersType(
         questionIndex: Int,
         answerType: Answer.Type,
     ) = intent {
@@ -410,7 +410,7 @@ internal class CreateProblemViewModel @Inject constructor(
      * [특정 답안 타입][answerType]으로 설정되며,
      * [텍스트][answer], [이미지 소스][urlSource]을 추가적으로 받아 특정 답안을 해당 값으로 초기 설정합니다.
      */
-    fun setAnswer(
+    internal fun setAnswer(
         questionIndex: Int,
         answerIndex: Int,
         answerType: Answer.Type,
@@ -442,7 +442,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 삭제 합니다. */
-    fun removeAnswer(
+    internal fun removeAnswer(
         questionIndex: Int,
         answerIndex: Int,
     ) = intent {
@@ -500,7 +500,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** [questionIndex + 1] 번 문제의 [정답][correctAnswer]을 설정합니다. */
-    fun setCorrectAnswer(
+    internal fun setCorrectAnswer(
         questionIndex: Int,
         correctAnswer: String,
     ) = intent {
@@ -520,7 +520,7 @@ internal class CreateProblemViewModel @Inject constructor(
      * [questionIndex + 1] 번 문제의 답안을 추가합니다.
      * [답안의 유형][answerType]에 맞춰 값이 추가 됩니다.
      */
-    fun addAnswer(
+    internal fun addAnswer(
         questionIndex: Int,
         answerType: Answer.Type,
     ) = intent {
@@ -557,7 +557,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 문제 만들기 2단계 화면의 유효성을 체크한다. */
-    fun createProblemIsValidate(): Boolean {
+    internal fun createProblemIsValidate(): Boolean {
         return with(container.stateFlow.value.createProblem) {
             val questionsValidate = this.questions.asSequence()
                 .map { it.validate() }
@@ -575,7 +575,7 @@ internal class CreateProblemViewModel @Inject constructor(
 
     // AdditionalInfo
     /** 카테고리 썸네일을 정한다. */
-    fun setThumbnail(thumbnail: Any?, thumbnailType: ThumbnailType) = intent {
+    internal fun setThumbnail(thumbnail: Any?, thumbnailType: ThumbnailType) = intent {
         reduce {
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
@@ -587,7 +587,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 시험 응시하기 버튼 제목을 정한다. */
-    fun setButtonTitle(buttonTitle: String) = intent {
+    internal fun setButtonTitle(buttonTitle: String) = intent {
         reduce {
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
@@ -605,12 +605,12 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 문제 만들기 전체 화면의 유효성을 체크한다. */
-    fun isAllFieldsNotEmpty(): Boolean {
+    internal fun isAllFieldsNotEmpty(): Boolean {
         return examInformationIsValidate() && createProblemIsValidate() && additionInfoIsValidate()
     }
 
     /** 태그 항목들을 등록하기 위한 검색화면으로 진입한다. */
-    fun goToSearchTag() = intent {
+    internal fun goToSearchTag() = intent {
         reduce {
             state.copy(
                 createProblemStep = CreateProblemStep.Search,
@@ -621,7 +621,7 @@ internal class CreateProblemViewModel @Inject constructor(
 
     // Search
     /** 검색 입력 필드의 값을 설정(= 갱신) 한다. */
-    fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
+    internal fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
         reduce {
             when (state.findResultType) {
                 FindResultType.ExamCategory -> {
@@ -650,7 +650,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 추천 검색 목록에서 헤더(1번째 항목)을 클릭한다. */
-    suspend fun onClickSearchListHeader(): Boolean {
+    internal suspend fun onClickSearchListHeader(): Boolean {
         val state = container.stateFlow.value
         val tagText = when (state.findResultType) {
             FindResultType.ExamCategory -> state.examInformation.searchExamCategory.textFieldValue
@@ -664,7 +664,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 추천 검색 목록에서 1번째 이외의 항목을 클릭한다. */
-    suspend fun onClickSearchList(index: Int): Boolean {
+    internal suspend fun onClickSearchList(index: Int): Boolean {
         val state = container.stateFlow.value
         val tagText = when (state.findResultType) {
             FindResultType.ExamCategory ->
@@ -721,7 +721,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 검색 입력 필드의 focus 를 변경한다. */
-    fun onSearchTextFocusChanged(isFocused: Boolean) = intent {
+    internal fun onSearchTextFocusChanged(isFocused: Boolean) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -732,7 +732,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 검색 화면을 종료한다. */
-    fun exitSearchScreen() = intent {
+    internal fun exitSearchScreen() = intent {
         reduce {
             when (state.findResultType) {
                 FindResultType.ExamCategory -> state.copy(
