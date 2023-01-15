@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.feature.ui.detail.viewmodel.state
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 
@@ -22,6 +23,7 @@ sealed class DetailState {
     /** [DetailViewModel] 데이터를 잘 받았을 때의 상태를 나타냅니다. */
     data class Success(
         val exam: Exam,
+        val examPublisher: User,
     ) : DetailState()
 
     /**

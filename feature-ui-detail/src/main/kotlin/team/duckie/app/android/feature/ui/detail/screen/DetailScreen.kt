@@ -6,6 +6,7 @@
  */
 
 @file:AllowMagicNumber
+@file:OptIn(OutOfDateApi::class)
 
 package team.duckie.app.android.feature.ui.detail.screen
 
@@ -16,9 +17,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +27,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -36,18 +38,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
+import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.OutOfDateApi
+import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.util.kotlin.percents
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -62,24 +69,41 @@ import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
-import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 
 private const val DetailScreenTopAppBarLayoutId = "DetailScreenTopAppBar"
 private const val DetailScreenContentLayoutId = "DetailScreenContent"
 private const val DetailScreenBottomBarLayoutId = "DetailScreenBottomBar"
 
 /** 상세 화면 Screen */
-@OutOfDateApi
 @Composable
 internal fun DetailScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     viewModel: DetailViewModel = activityViewModel(),
 ) = when (val state = viewModel.collectAsState().value) {
-    is DetailState.Loading -> Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(QuackColor.White.composeColor),
+    is DetailState.Loading -> DetailLoadingScreen(
+        viewModel,
+        modifier,
+    )
+
+    is DetailState.Success -> DetailSuccessScreen(
+        viewModel,
+        modifier,
+        state,
+    )
+
+    is DetailState.Error -> DetailErrorScreen()
+}
+
+@Composable
+private fun DetailLoadingScreen(viewModel: DetailViewModel, modifier: Modifier) {
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        // TODO(riflockle7): examId, userId 어떻게 가져올 것인지 처리 필요
+        coroutineScope.launch { viewModel.initExamData(1, 1) }
+    }
+
+    Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -88,12 +112,9 @@ internal fun DetailScreen(
             color = QuackColor.DuckieOrange.composeColor,
         )
     }
-    is DetailState.Success -> DetailSuccessScreen(viewModel, modifier, state)
-    is DetailState.Error -> DetailErrorScreen()
 }
 
 /** 데이터 성공적으로 받은[DetailState.Success] 상세 화면 */
-@OutOfDateApi
 @Composable
 private fun DetailSuccessScreen(
     viewModel: DetailViewModel,
@@ -102,11 +123,6 @@ private fun DetailSuccessScreen(
 ) {
     val activity = LocalContext.current as Activity
     val toast = rememberToast()
-
-    LaunchedEffect(Unit) {
-        // TODO(riflockle7): examId 어떻게 가져올 것인지 처리 필요
-        viewModel.initExamData(1)
-    }
 
     LaunchedEffect(viewModel) {
         viewModel.container.sideEffectFlow.collect { effect ->
@@ -118,7 +134,7 @@ private fun DetailSuccessScreen(
     }
 
     Layout(
-        modifier = modifier,
+        modifier = modifier.navigationBarsPadding(),
         content = {
             // 상단 탭바 Layout
             // TODO(riflockle7): trailingIcon 의 경우, 추후 커스텀 composable 을 넣을 수 있게 하면 어떨지...?
@@ -130,12 +146,13 @@ private fun DetailSuccessScreen(
                 onTrailingIconClick = {},
             )
             // content Layout
-            DetailContentLayout()
+            DetailContentLayout(state)
             // 최하단 Layout
             DetailBottomLayout(
                 modifier = Modifier
                     .layoutId(DetailScreenBottomBarLayoutId)
                     .background(color = QuackColor.White.composeColor),
+                state,
                 onHeartClick = { },
                 onChallengeClick = { },
             )
@@ -188,7 +205,7 @@ private fun DetailSuccessScreen(
 /** 상세 화면 컨텐츠 Layout */
 @Suppress("MagicNumber")
 @Composable
-private fun DetailContentLayout() {
+private fun DetailContentLayout(state: DetailState.Success) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
     val detailImageWidthDp = screenWidthDp - 32.dp
@@ -211,21 +228,21 @@ private fun DetailContentLayout() {
                 end = 16.dp,
             ),
             contentScale = ContentScale.FillWidth,
-            src = R.drawable.img_duckie_detail_image_dummy,
+            src = state.exam.thumbnailUrl,
         )
         // 공백
         Spacer(modifier = Modifier.height(12.dp))
         // 제목
         QuackHeadLine2(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = "제 1회 도로 패션영역",
+            text = state.exam.title,
         )
         // 공백
         Spacer(modifier = Modifier.height(8.dp))
         // 내용
         QuackBody2(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = "아 저 근데 너무 재밌을거 같아요 내 시험 최고",
+            text = state.exam.description,
         )
         // 공백
         Spacer(modifier = Modifier.height(12.dp))
@@ -233,7 +250,7 @@ private fun DetailContentLayout() {
         QuackSingeLazyRowTag(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
             horizontalSpace = 4.dp,
-            items = persistentListOf("도로", "패션", "도로패션", "도로로", "Doro Driven Design"),
+            items = state.exam.subTags.copy { add(0, state.exam.mainTag) }.fastMap { it.name },
             tagType = QuackTagType.Grayscale(""),
             onClick = {},
         )
@@ -242,13 +259,13 @@ private fun DetailContentLayout() {
         // 구분선
         QuackDivider()
         // 프로필 Layout
-        DetailProfileLayout()
+        DetailProfileLayout(state)
         // 구분선
         QuackDivider()
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
         // 점수 분포도 Layout
-        DetailScoreDistributionLayout()
+        DetailScoreDistributionLayout(state)
     }
 }
 
@@ -257,7 +274,7 @@ private fun DetailContentLayout() {
  * TODO(riflockle7): 추후 공통화하기
  */
 @Composable
-private fun DetailProfileLayout() {
+private fun DetailProfileLayout(state: DetailState.Success) {
     Row(
         modifier = Modifier.padding(
             horizontal = 16.dp,
@@ -266,18 +283,20 @@ private fun DetailProfileLayout() {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // 작성자 프로필 이미지
-        QuackImage(
-            src = team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
-            size = DpSize(32.dp, 32.dp),
-        )
-        // 공백
-        Spacer(modifier = Modifier.width(8.dp))
+        if (state.examPublisher.profileImageUrl.isNotEmpty()) {
+            QuackImage(
+                src = state.examPublisher.profileImageUrl,
+                size = DpSize(32.dp, 32.dp),
+            )
+            // 공백
+            Spacer(modifier = Modifier.width(8.dp))
+        }
         // 닉네임, 응시자, 일자 Layout
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임
                 QuackBody3(
-                    text = "닉네임",
+                    text = state.examPublisher.nickname,
                     onClick = {},
                     color = QuackColor.Black,
                 )
@@ -291,7 +310,11 @@ private fun DetailProfileLayout() {
 
             // 응시자, 일자
             QuackBody3(
-                text = stringResource(R.string.detail_num_date, "20", "1일 전"),
+                text = stringResource(
+                    R.string.detail_num_date,
+                    "${state.exam.solvedCount}",
+                    "1일 전",
+                ),
                 color = QuackColor.Gray2,
             )
         }
@@ -313,7 +336,7 @@ private fun DetailProfileLayout() {
 
 /** 상세 화면 점수 분포도 Layout */
 @Composable
-private fun DetailScoreDistributionLayout() {
+private fun DetailScoreDistributionLayout(state: DetailState.Success) {
     // 제목 Layout
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -325,7 +348,10 @@ private fun DetailScoreDistributionLayout() {
         Spacer(modifier = Modifier.weight(1f))
         // 정답률 텍스트
         QuackText(
-            text = stringResource(R.string.detail_right_percent, "80%"),
+            text = stringResource(
+                R.string.detail_right_percent,
+                state.exam.answerRate.percents,
+            ),
             style = QuackTextStyle.Body2,
         )
     }
@@ -343,6 +369,7 @@ private fun DetailScoreDistributionLayout() {
 @Composable
 private fun DetailBottomLayout(
     modifier: Modifier,
+    state: DetailState.Success,
     onHeartClick: () -> Unit,
     onChallengeClick: () -> Unit,
 ) {
@@ -367,7 +394,7 @@ private fun DetailBottomLayout(
 
             // 버튼
             QuackSmallButton(
-                text = "하기싫음 하지마세요",
+                text = state.exam.buttonTitle,
                 type = QuackSmallButtonType.Fill,
                 enabled = true,
                 onClick = onChallengeClick,
