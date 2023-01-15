@@ -86,7 +86,7 @@ import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
+import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -400,11 +400,13 @@ private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()
 
         if (state.isTagsAdded) {
             FadeAnimatedVisibility(visible = true) {
-                QuackSingeLazyRowTag(
+                // TODO(riflockle7): 추후 꽥꽥에서, 전체 너비만큼 태그 Composable 을 넣을 수 있는 Composable 적용 필요
+                QuackLazyVerticalGridTag(
                     horizontalSpace = 4.dp,
                     items = state.tags.fastMap { it.name },
                     tagType = QuackTagType.Circle(QuackIcon.Close),
                     onClick = { vm.onClickCloseTag(it) },
+                    itemChunkedSize = 3,
                 )
             }
         }

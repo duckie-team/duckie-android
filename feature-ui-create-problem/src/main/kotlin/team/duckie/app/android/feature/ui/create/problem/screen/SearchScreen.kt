@@ -43,7 +43,7 @@ import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackBasicTextField
-import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
+import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
 
@@ -116,12 +116,14 @@ internal fun SearchScreen(
         )
 
         if (multiSelectMode) {
-            QuackSingeLazyRowTag(
+            // TODO(riflockle7): 추후 꽥꽥에서, 전체 너비만큼 태그 Composable 을 넣을 수 있는 Composable 적용 필요
+            QuackLazyVerticalGridTag(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
                 horizontalSpace = 4.dp,
                 items = state.results.fastMap { it.name },
                 tagType = QuackTagType.Circle(QuackIcon.Close),
                 onClick = { viewModel.onClickCloseTag(it) },
+                itemChunkedSize = 3,
             )
         }
 
