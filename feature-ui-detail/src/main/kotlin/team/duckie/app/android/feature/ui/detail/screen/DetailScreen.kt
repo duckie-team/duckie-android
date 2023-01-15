@@ -65,6 +65,7 @@ import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackSmallButton
 import team.duckie.quackquack.ui.component.QuackSmallButtonType
 import team.duckie.quackquack.ui.component.QuackTagType
+import team.duckie.quackquack.ui.component.QuackTitle1
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -91,7 +92,10 @@ internal fun DetailScreen(
         state,
     )
 
-    is DetailState.Error -> DetailErrorScreen()
+    is DetailState.Error -> DetailErrorScreen(
+        viewModel,
+        modifier,
+    )
 }
 
 @Composable
@@ -405,6 +409,15 @@ private fun DetailBottomLayout(
 
 /** 에러 발생한[DetailState.Error] 상세 화면 */
 @Composable
-private fun DetailErrorScreen() {
-
+private fun DetailErrorScreen(viewModel: DetailViewModel, modifier: Modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        // TODO(riflockle7): 추후 DuckieCircularProgressIndicator.kt 와 합치거나 꽥꽥 컴포넌트로 필요
+        QuackTitle1(
+            text = "에러입니다\nTODO$viewModel\n추후 데이터 다시 가져오기 로직 넣어야 합니다.",
+        )
+    }
 }
