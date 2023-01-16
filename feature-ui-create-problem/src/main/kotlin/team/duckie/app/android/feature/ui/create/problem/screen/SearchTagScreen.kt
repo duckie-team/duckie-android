@@ -47,7 +47,7 @@ import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
 
-const val maximumSubTagCount = 5
+const val MaximumSubTagCount = 5
 
 @Composable
 internal fun SearchTagScreen(
@@ -224,5 +224,5 @@ private fun searchTextValidate(
     searchTextFieldValue: String,
     state: SearchScreenData?,
 ): Boolean = searchTextFieldValue.isNotEmpty() &&
-        (state?.results?.count() ?: 0) < maximumSubTagCount &&
+        (state?.results?.count() ?: 0) < MaximumSubTagCount &&
         state?.results?.fastMap { it.name }?.contains(searchTextFieldValue) != true
