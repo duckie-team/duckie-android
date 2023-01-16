@@ -58,8 +58,9 @@ internal data class CreateProblemState(
 
     /** 문제 만들기 3단계 화면에서 사용하는 data 모음 */
     data class AdditionInfo(
-        val thumbnail: Any? = null,
-        val thumbnailType: ThumbnailType? = null,
+        // TODO(riflockle7): quack_ic_profile_24 -> 백앤드에서 받아온 이미지
+        val thumbnail: Any = team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
+        val thumbnailType: ThumbnailType = ThumbnailType.Default,
         val takeTitle: String = "",
         val isSubTagsAdded: Boolean = false,
         val searchSubTags: SearchScreenData = SearchScreenData(),
