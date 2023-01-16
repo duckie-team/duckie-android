@@ -79,7 +79,6 @@ data class SearchScreenData(
     ),
     val textFieldValue: String = "",
     val results: ImmutableList<Tag> = persistentListOf(),
-    val cursorPosition: Int = 0,
 )
 
 enum class FindResultType {

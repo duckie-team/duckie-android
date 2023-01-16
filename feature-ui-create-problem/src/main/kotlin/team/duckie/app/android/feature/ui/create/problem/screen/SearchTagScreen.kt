@@ -88,17 +88,7 @@ internal fun SearchTagScreen(
         remember(rootState.findResultType) { rootState.findResultType.isMultiMode() }
 
     val focusRequester = remember { FocusRequester() }
-    // TODO(riflockle7): TextFieldValue 자체를 viewModel 에 두기엔 android 와 밀접 연계되어 있고
-    //   String 과 cursorPosition 을 viewModel 로 두고 처리하려니 무한 실행 되고
-    //   하나로 공통화하여 처리할 수 없을지 고민중
-    var searchTextFieldValue by remember {
-        mutableStateOf(
-            TextFieldValue(
-                text = state.textFieldValue,
-                selection = TextRange(state.cursorPosition),
-            ),
-        )
-    }
+    var searchTextFieldValue = remember(state.textFieldValue) { state.textFieldValue }
 
     BackHandler {
         viewModel.exitSearchScreen()
@@ -134,13 +124,10 @@ internal fun SearchTagScreen(
                 .padding(16.dp)
                 .focusRequester(focusRequester),
             leadingIcon = QuackIcon.Search,
-            value = searchTextFieldValue,
-            onValueChanged = { textFieldValue ->
+            text = searchTextFieldValue,
+            onTextChanged = { textFieldValue ->
                 searchTextFieldValue = textFieldValue
-                viewModel.setTextFieldValue(
-                    textFieldValue = textFieldValue.text,
-                    cursorPosition = textFieldValue.selection.end,
-                )
+                viewModel.setTextFieldValue(textFieldValue = textFieldValue)
             },
             placeholderText = placeholderText,
             keyboardActions = KeyboardActions(
@@ -148,7 +135,7 @@ internal fun SearchTagScreen(
                     if (searchTextValidate(searchTextFieldValue, state)) {
                         coroutineScope.launch {
                             if (viewModel.onClickSearchListHeader()) {
-                                searchTextFieldValue = TextFieldValue()
+                                searchTextFieldValue = ""
                             } else {
                                 toast(networkErrorMessage)
                             }
@@ -173,7 +160,7 @@ internal fun SearchTagScreen(
                             if (searchTextValidate(searchTextFieldValue, state)) {
                                 coroutineScope.launch {
                                     if (viewModel.onClickSearchListHeader()) {
-                                        searchTextFieldValue = TextFieldValue()
+                                        searchTextFieldValue = ""
                                     } else {
                                         toast(networkErrorMessage)
                                     }
@@ -192,7 +179,7 @@ internal fun SearchTagScreen(
                             if (searchTextValidate(searchTextFieldValue, state)) {
                                 coroutineScope.launch {
                                     if (viewModel.onClickSearchList(index)) {
-                                        searchTextFieldValue = TextFieldValue()
+                                        searchTextFieldValue = ""
                                     } else {
                                         toast(networkErrorMessage)
                                     }
@@ -208,8 +195,8 @@ internal fun SearchTagScreen(
 
 /** 현재 입력한 내용이 추가하기 적합한 내용인지 확인한다. */
 private fun searchTextValidate(
-    searchTextFieldValue: TextFieldValue,
+    searchTextFieldValue: String,
     state: SearchScreenData?,
-): Boolean = searchTextFieldValue.text.isNotEmpty() &&
+): Boolean = searchTextFieldValue.isNotEmpty() &&
         (state?.results?.count() ?: 0) < maximumSubTagCount &&
-        state?.results?.fastMap { it.name }?.contains(searchTextFieldValue.text) != true
+        state?.results?.fastMap { it.name }?.contains(searchTextFieldValue) != true

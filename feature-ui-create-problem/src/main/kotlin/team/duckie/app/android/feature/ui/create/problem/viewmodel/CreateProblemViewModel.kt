@@ -136,6 +136,7 @@ internal class CreateProblemViewModel @Inject constructor(
                                 isMainTagSelected = false,
                                 searchMainTag = searchMainTag.copy(
                                     results = persistentListOf(),
+                                    textFieldValue = "",
                                 ),
                             )
                         },
@@ -151,7 +152,8 @@ internal class CreateProblemViewModel @Inject constructor(
                             copy(
                                 isSubTagsAdded = newSearchResults.isNotEmpty(),
                                 searchSubTags = searchSubTags.copy(
-                                    results = newSearchResults,
+                                    results = persistentListOf(),
+                                    textFieldValue = "",
                                 ),
                             )
                         },
@@ -621,7 +623,7 @@ internal class CreateProblemViewModel @Inject constructor(
 
     // Search
     /** 검색 입력 필드의 값을 설정(= 갱신) 한다. */
-    internal fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
+    internal fun setTextFieldValue(textFieldValue: String) = intent {
         reduce {
             when (state.findResultType) {
                 FindResultType.MainTag -> {
@@ -629,7 +631,6 @@ internal class CreateProblemViewModel @Inject constructor(
                         examInformation = state.examInformation.copy(
                             searchMainTag = state.examInformation.searchMainTag.copy(
                                 textFieldValue = textFieldValue,
-                                cursorPosition = cursorPosition,
                             ),
                         ),
                     )
@@ -640,7 +641,6 @@ internal class CreateProblemViewModel @Inject constructor(
                         additionalInfo = state.additionalInfo.copy(
                             searchSubTags = state.additionalInfo.searchSubTags.copy(
                                 textFieldValue = textFieldValue,
-                                cursorPosition = cursorPosition,
                             ),
                         ),
                     )
@@ -737,10 +737,28 @@ internal class CreateProblemViewModel @Inject constructor(
             when (state.findResultType) {
                 FindResultType.MainTag -> state.copy(
                     createProblemStep = CreateProblemStep.ExamInformation,
+                    examInformation = state.examInformation.run {
+                        copy(
+                            isMainTagSelected = false,
+                            searchMainTag = searchMainTag.copy(
+                                results = persistentListOf(),
+                                textFieldValue = "",
+                            ),
+                        )
+                    },
                 )
 
                 FindResultType.SubTags -> state.copy(
                     createProblemStep = CreateProblemStep.AdditionalInformation,
+                    additionalInfo = state.additionalInfo.run {
+                        copy(
+                            isSubTagsAdded = false,
+                            searchSubTags = searchSubTags.copy(
+                                results = persistentListOf(),
+                                textFieldValue = "",
+                            ),
+                        )
+                    },
                 )
             }
         }
