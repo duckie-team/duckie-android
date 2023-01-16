@@ -473,7 +473,9 @@ internal fun CreateProblemScreen(
                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                         }
                     },
+                    tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
                     tempSaveButtonClick = {},
+                    nextButtonText = stringResource(id = R.string.next),
                     nextButtonClick = {
                         coroutineShape.launch {
                             vm.navigateStep(CreateProblemStep.AdditionalInformation)

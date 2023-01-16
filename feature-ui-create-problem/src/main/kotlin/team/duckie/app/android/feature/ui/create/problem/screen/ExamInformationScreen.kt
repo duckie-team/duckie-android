@@ -213,7 +213,9 @@ internal fun ExamInformationScreen(
                     .fillMaxWidth()
                     .layoutId(BottomLayoutId),
                 leftButtonText = stringResource(id = R.string.additional_information_next),
+                tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
                 tempSaveButtonClick = {},
+                nextButtonText = stringResource(id = R.string.next),
                 nextButtonClick = {
                     coroutineScope.launch {
                         viewModel.navigateStep(CreateProblemStep.CreateProblem)

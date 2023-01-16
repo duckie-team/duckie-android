@@ -273,7 +273,9 @@ internal fun AdditionalInformationScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .layoutId(BottomLayoutId),
+                    tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
                     tempSaveButtonClick = {},
+                    nextButtonText = stringResource(id = R.string.next),
                     nextButtonClick = {
                         coroutineScope.launch {
                             vm.makeExam()
