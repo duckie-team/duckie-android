@@ -18,9 +18,9 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":domain")))
     implementations(
         platform(libs.firebase.bom),
+        projects.domain,
         projects.di,
         projects.utilUi,
         projects.utilKotlin,
