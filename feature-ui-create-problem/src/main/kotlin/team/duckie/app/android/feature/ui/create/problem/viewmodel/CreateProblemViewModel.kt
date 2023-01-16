@@ -732,7 +732,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 검색 화면을 종료한다. */
-    internal fun exitSearchScreen() = intent {
+    internal fun exitSearchScreen(isComplete: Boolean = false) = intent {
         reduce {
             when (state.findResultType) {
                 FindResultType.MainTag -> state.copy(
@@ -752,9 +752,13 @@ internal class CreateProblemViewModel @Inject constructor(
                     createProblemStep = CreateProblemStep.AdditionalInformation,
                     additionalInfo = state.additionalInfo.run {
                         copy(
-                            isSubTagsAdded = false,
+                            isSubTagsAdded = isComplete,
                             searchSubTags = searchSubTags.copy(
-                                results = persistentListOf(),
+                                results = if (isComplete) {
+                                    searchSubTags.results
+                                } else {
+                                    persistentListOf()
+                                },
                                 textFieldValue = "",
                             ),
                         )

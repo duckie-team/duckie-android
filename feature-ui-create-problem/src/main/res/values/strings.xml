@@ -14,6 +14,7 @@
     <string name="answer">정답</string>
     <string name="ok">확인</string>
     <string name="next">"다음"</string>
+    <string name="complete">완료</string>
     <string name="category_title">"카테고리"</string>
     <string name="main_tag">"시험 영역"</string>
     <string name="find_main_tag">"시험 영역 찾기"</string>
