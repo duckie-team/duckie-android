@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.key
 
 /**
  * Lazy 하지 않은 그리드 목록 빌더 (개수로 계산)
@@ -75,7 +76,7 @@ internal fun <T> NoLazyGridItems(
                 val itemIndex = rowIndex * nColumns + columnIndex
                 if (itemIndex < data.count()) {
                     val item = data[itemIndex]
-                    androidx.compose.runtime.key(key?.invoke(item)) {
+                    key(key?.invoke(item)) {
                         Box(
                             modifier = Modifier.weight(1f, fill = true),
                             propagateMinConstraints = true,
