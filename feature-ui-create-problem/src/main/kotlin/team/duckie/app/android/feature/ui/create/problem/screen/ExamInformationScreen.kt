@@ -128,24 +128,24 @@ internal fun ExamInformationScreen(
                         }
                     }
                 }
-                TitleAndComponent(stringResource = R.string.exam_category) {
-                    if (state.isExamCategorySelected) {
+                TitleAndComponent(stringResource = R.string.main_tag) {
+                    if (state.isMainTagSelected) {
                         QuackCircleTag(
-                            text = state.examCategory,
+                            text = state.mainTag,
                             trailingIcon = QuackIcon.Close,
                             isSelected = false,
                             onClick = { viewModel.onClickCloseTag() },
                         )
                     }
-                    FadeAnimatedVisibility(visible = !state.isExamCategorySelected) {
+                    FadeAnimatedVisibility(visible = !state.isMainTagSelected) {
                         QuackBasicTextField(
                             modifier = Modifier.quackClickable {
-                                viewModel.goToSearchExamCategory(lazyListState.firstVisibleItemIndex)
+                                viewModel.goToSearchMainTag(lazyListState.firstVisibleItemIndex)
                             },
                             leadingIcon = QuackIcon.Search,
-                            text = state.examCategory,
+                            text = state.mainTag,
                             onTextChanged = {},
-                            placeholderText = stringResource(id = R.string.search_exam_category_placeholder),
+                            placeholderText = stringResource(id = R.string.search_main_tag_placeholder),
                             enabled = false,
                         )
                     }

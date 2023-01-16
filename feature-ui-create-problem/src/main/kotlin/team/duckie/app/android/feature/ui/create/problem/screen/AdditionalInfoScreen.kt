@@ -265,7 +265,7 @@ internal fun AdditionalInformationScreen(
                     AdditionalTakeLayout()
 
                     // 시험 태그 추가 (태그 추가) Layout
-                    AdditionalTagLayout()
+                    AdditionalSubTagsLayout()
                 }
 
                 // 최하단 Layout
@@ -380,29 +380,29 @@ private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel(
 
 /** 시험 태그 추가 (태그 추가) Layout */
 @Composable
-private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()) {
+private fun AdditionalSubTagsLayout(vm: CreateProblemViewModel = activityViewModel()) {
     val state = vm.collectAsState().value.additionalInfo
 
     TitleAndComponent(
         modifier = Modifier.padding(top = 48.dp),
-        stringResource = R.string.additional_information_tag_title,
+        stringResource = R.string.additional_information_sub_tags_title,
     ) {
         QuackBasicTextField(
             modifier = Modifier.quackClickable {
-                vm.goToSearchTag()
+                vm.goToSearchSubTags()
             },
             text = "",
             onTextChanged = {},
-            placeholderText = stringResource(id = R.string.additional_information_tag_input_hint),
+            placeholderText = stringResource(id = R.string.additional_information_sub_tags_placeholder),
             enabled = false,
         )
 
-        if (state.isTagsAdded) {
+        if (state.isSubTagsAdded) {
             FadeAnimatedVisibility(visible = true) {
                 // TODO(riflockle7): 추후 꽥꽥에서, 전체 너비만큼 태그 Composable 을 넣을 수 있는 Composable 적용 필요
                 QuackLazyVerticalGridTag(
                     horizontalSpace = 4.dp,
-                    items = state.tags.fastMap { it.name },
+                    items = state.subTags.fastMap { it.name },
                     tagType = QuackTagType.Circle(QuackIcon.Close),
                     onClick = { vm.onClickCloseTag(it) },
                     itemChunkedSize = 3,

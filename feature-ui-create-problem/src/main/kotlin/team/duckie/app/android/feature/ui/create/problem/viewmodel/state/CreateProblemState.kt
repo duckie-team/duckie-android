@@ -21,7 +21,7 @@ internal data class CreateProblemState(
     val examInformation: ExamInformation = ExamInformation(),
     val createProblem: CreateProblem = CreateProblem(),
     val additionalInfo: AdditionInfo = AdditionInfo(),
-    val findResultType: FindResultType = FindResultType.ExamCategory,
+    val findResultType: FindResultType = FindResultType.MainTag,
     val error: Error? = null,
     val photoState: CreateProblemPhotoState? = null,
 ) {
@@ -29,16 +29,16 @@ internal data class CreateProblemState(
         val isCategoryLoading: Boolean = true,
         val categories: ImmutableList<Category> = persistentListOf(),
         val categorySelection: Int = -1,
-        val isExamCategorySelected: Boolean = false,
+        val isMainTagSelected: Boolean = false,
         val examTitle: String = "",
         val examDescription: String = "",
         val certifyingStatement: String = "",
-        val searchExamCategory: SearchScreenData = SearchScreenData(),
+        val searchMainTag: SearchScreenData = SearchScreenData(),
         val scrollPosition: Int = 0,
         val examDescriptionFocused: Boolean = false,
     ) {
-        val examCategory: String
-            get() = searchExamCategory.results.firstOrNull()?.name ?: ""
+        val mainTag: String
+            get() = searchMainTag.results.firstOrNull()?.name ?: ""
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
@@ -61,11 +61,11 @@ internal data class CreateProblemState(
         val thumbnail: Any? = null,
         val thumbnailType: ThumbnailType? = null,
         val takeTitle: String = "",
-        val isTagsAdded: Boolean = false,
-        val searchTag: SearchScreenData = SearchScreenData(),
+        val isSubTagsAdded: Boolean = false,
+        val searchSubTags: SearchScreenData = SearchScreenData(),
     ) {
-        val tags: ImmutableList<Tag>
-            get() = searchTag.results
+        val subTags: ImmutableList<Tag>
+            get() = searchSubTags.results
     }
 }
 
@@ -83,9 +83,9 @@ data class SearchScreenData(
 )
 
 enum class FindResultType {
-    ExamCategory, Tag;
+    MainTag, SubTags;
 
-    fun isMultiMode() = this == Tag
+    fun isMultiMode() = this == SubTags
 }
 
 sealed class CreateProblemPhotoState {

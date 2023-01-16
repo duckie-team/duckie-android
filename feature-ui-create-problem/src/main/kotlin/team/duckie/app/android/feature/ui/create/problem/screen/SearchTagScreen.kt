@@ -48,7 +48,7 @@ import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-internal fun SearchScreen(
+internal fun SearchTagScreen(
     modifier: Modifier,
     viewModel: CreateProblemViewModel = activityViewModel(),
 ) {
@@ -60,24 +60,24 @@ internal fun SearchScreen(
     val rootState = viewModel.collectAsState().value
 
     val state = when (rootState.findResultType) {
-        FindResultType.ExamCategory -> rootState.examInformation.searchExamCategory
-        FindResultType.Tag -> rootState.additionalInfo.searchTag
+        FindResultType.MainTag -> rootState.examInformation.searchMainTag
+        FindResultType.SubTags -> rootState.additionalInfo.searchSubTags
     }
 
     val networkErrorMessage = stringResource(id = R.string.network_error)
     val title by remember {
         mutableStateOf(
             when (rootState.findResultType) {
-                FindResultType.ExamCategory -> context.getString(R.string.find_exam_category)
-                FindResultType.Tag -> context.getString(R.string.additional_information_tag_title)
+                FindResultType.MainTag -> context.getString(R.string.find_main_tag)
+                FindResultType.SubTags -> context.getString(R.string.additional_information_sub_tags_title)
             },
         )
     }
     val placeholderText by remember {
         mutableStateOf(
             when (rootState.findResultType) {
-                FindResultType.ExamCategory -> context.getString(R.string.search_exam_category_placeholder)
-                FindResultType.Tag -> context.getString(R.string.additional_information_tag_input_hint)
+                FindResultType.MainTag -> context.getString(R.string.search_main_tag_placeholder)
+                FindResultType.SubTags -> context.getString(R.string.additional_information_sub_tags_placeholder)
             },
         )
     }
