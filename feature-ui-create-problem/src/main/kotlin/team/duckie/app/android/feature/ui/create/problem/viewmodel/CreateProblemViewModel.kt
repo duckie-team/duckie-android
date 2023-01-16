@@ -599,16 +599,9 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    /** 문제 만들기 3단계 화면의 유효성을 체크한다. */
-    private fun additionInfoIsValidate(): Boolean {
-        return with(container.stateFlow.value.additionalInfo) {
-            thumbnail != null && takeTitle.isNotEmpty() && subTags.isNotEmpty()
-        }
-    }
-
     /** 문제 만들기 전체 화면의 유효성을 체크한다. */
     internal fun isAllFieldsNotEmpty(): Boolean {
-        return examInformationIsValidate() && createProblemIsValidate() && additionInfoIsValidate()
+        return examInformationIsValidate() && createProblemIsValidate()
     }
 
     /** 태그 항목들을 등록하기 위한 검색화면으로 진입한다. */
