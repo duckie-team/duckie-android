@@ -211,5 +211,5 @@ private fun searchTextValidate(
     searchTextFieldValue: TextFieldValue,
     state: SearchScreenData?,
 ): Boolean = searchTextFieldValue.text.isNotEmpty() &&
-        (state?.results?.count() ?: 0) <= maximumSubTagCount &&
+        (state?.results?.count() ?: 0) < maximumSubTagCount &&
         state?.results?.fastMap { it.name }?.contains(searchTextFieldValue.text) != true
