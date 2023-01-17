@@ -7,27 +7,26 @@
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
-import android.util.Log
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.feature.ui.solve.problem.common.EachCharTextField
 
 internal const val WhiteSpace = '*'
-
 @Composable
 internal fun ShortAnswerForm(
     answer: Answer,
 ) {
     val shortAnswer = (answer as Answer.Short).answer.text
     var value by remember { mutableStateOf(TextFieldValue()) } // replace '*' to " " 필요
-
     EachCharTextField(
         value = value,
         onValueChanged = { newValue, prevLength ->
@@ -55,5 +54,9 @@ internal fun ShortAnswerForm(
             }
         },
         answer = shortAnswer,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {},
+        )
     )
 }
