@@ -9,7 +9,6 @@
     <string name="permission_needs_for_profile_photo">프로필 사진을 설정하기 위해 이미지/카메라 접근 권한이 필요해요.</string>
     <string name="permission_denied">권한이 거부되어 프로필 사진을 기본 사진으로 사용할게요.</string>
     <string name="bad_internet">인터넷 연결이 불안정해요. 인터넷 연결 상태를 확인해 보세요.</string>
-    <string name="internal_error">요청하신 작업에 문제가 발생했어요.\n잠시 후 다시 시도해 주세요.</string>
 
     <string name="topappbar_trailing_skip">건너뛰기</string>
 
