@@ -19,6 +19,7 @@ android {
 
 dependencies {
     implementations(
+        projects.featureUiHome,
         projects.di,
         projects.domain,
         projects.utilUi,

@@ -43,6 +43,7 @@ import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.changeActivityWithAnimation
 import team.duckie.app.android.util.ui.collectWithLifecycle
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
@@ -122,7 +123,7 @@ class OnboardActivity : BaseActivity() {
             }
 
             launch {
-                // vm.getCategories(withPopularTags = true)
+                vm.getCategories(withPopularTags = true)
             }
         }
 
@@ -190,7 +191,7 @@ class OnboardActivity : BaseActivity() {
                         ignoreThrottle = true,
                     )
                 } else {
-                    // TODO(sungbin): 온보딩 종료
+                    vm.finishOnboard()
                 }
             }
             is OnboardState.CategoriesLoaded -> {
@@ -207,6 +208,9 @@ class OnboardActivity : BaseActivity() {
         when (sideEffect) {
             is OnboardSideEffect.UpdateGalleryImages -> {
                 vm.addGalleryImages(sideEffect.images)
+            }
+            is OnboardSideEffect.FinishOnboard -> {
+                changeActivityWithAnimation<HomeActivity>()
             }
             is OnboardSideEffect.UpdateUser -> {
                 vm.me = sideEffect.user

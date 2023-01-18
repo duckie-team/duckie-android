@@ -240,6 +240,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
+    fun finishOnboard() = intent {
+        postSideEffect(OnboardSideEffect.FinishOnboard)
+    }
+
     /* ----- Permission ----- */
 
     fun updateImagePermissionGrantState(isGranted: Boolean?) {
@@ -248,7 +252,7 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     /* ----- Api ----- */
 
-    suspend fun getKakaoAccessToken() = intent {
+    suspend fun getKakaoAccessTokenAndJoin() = intent {
         getKakaoAccessTokenUseCase()
             .onSuccess { token ->
                 postSideEffect(OnboardSideEffect.DelegateJoin(token))
