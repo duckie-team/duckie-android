@@ -203,7 +203,6 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                         isStartable = startable
                     },
                 )
-                // TODO(sungbin): 로딩 인디케이터
                 QuackLargeButton(
                     modifier = Modifier
                         .layoutId(TagScreenQuackLargeButtonLayoutId)
@@ -233,7 +232,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                             preference[PreferenceKey.Onboard.Finish] = true
                         }
                         isLoadingToFinish = false
-                        toast("온보딩 끝")
+                        vm.finishOnboard()
                     }
                 }
             },
