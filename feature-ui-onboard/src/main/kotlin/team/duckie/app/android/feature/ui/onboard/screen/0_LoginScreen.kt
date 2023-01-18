@@ -16,10 +16,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +43,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
@@ -55,39 +63,61 @@ private val currentStep = OnboardStep.Login
 
 private const val LoginScreenWelcomeLayoutId = "LoginScreenWelcome"
 private const val LoginScreenLoginAreaLayoutId = "LoginScreenLoginArea"
+private const val LoginScreenJoiningIndicatorLayoutId = "LoginScreenJoiningIndicator"
 
 private val LoginScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
     val looseConstraints = constraints.asLoose()
+    val extraLooseConstraints = constraints.asLoose(width = true)
 
     val welcomeMeasurable = measurables.fastFirstOrNull { measurable ->
         measurable.layoutId == LoginScreenWelcomeLayoutId
-    } ?: npe()
+    }
 
     val loginPlaceable = measurables.fastFirstOrNull { measurable ->
         measurable.layoutId == LoginScreenLoginAreaLayoutId
-    }?.measure(looseConstraints) ?: npe()
+    }?.measure(looseConstraints)
 
-    val loginAreaHeight = loginPlaceable.height
-    val welcomeHeight = constraints.maxHeight - loginAreaHeight
+    val joiningIndicatorPlaceable = measurables.fastFirstOrNull { mesaurable ->
+        mesaurable.layoutId == LoginScreenJoiningIndicatorLayoutId
+    }?.measure(extraLooseConstraints)
+
+    val loginAreaHeight = loginPlaceable?.height
+    val welcomeHeight = constraints.maxHeight - (loginAreaHeight ?: 0)
 
     val welcomeConstraints = constraints.copy(
         minHeight = welcomeHeight,
         maxHeight = welcomeHeight,
     )
-    val welcomePlaceable = welcomeMeasurable.measure(welcomeConstraints)
+    val welcomePlaceable = welcomeMeasurable?.measure(welcomeConstraints)
 
     layout(
         width = constraints.maxWidth,
         height = constraints.maxHeight,
     ) {
-        welcomePlaceable.place(
-            x = 0,
-            y = 0,
-        )
-        loginPlaceable.place(
-            x = 0,
-            y = welcomeHeight,
-        )
+        if (joiningIndicatorPlaceable == null) {
+            requireNotNull(welcomePlaceable)
+            requireNotNull(loginPlaceable)
+            welcomePlaceable.place(
+                x = 0,
+                y = 0,
+            )
+            loginPlaceable.place(
+                x = 0,
+                y = welcomeHeight,
+            )
+        } else {
+            joiningIndicatorPlaceable.place(
+                x = Alignment.CenterVertically.align(
+                    size = joiningIndicatorPlaceable.width,
+                    space = constraints.minWidth,
+                ),
+                y = Alignment.CenterHorizontally.align(
+                    size = joiningIndicatorPlaceable.height,
+                    space = constraints.minHeight,
+                    layoutDirection = layoutDirection,
+                ),
+            )
+        }
     }
 }
 
@@ -174,10 +204,12 @@ private val LoginScreenLoginAreaMeasurePolicy = MeasurePolicy { measurables, con
     }
 }
 
-@Suppress("UNUSED_PARAMETER")
 @Composable
 private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    var joining by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.layoutId(LoginScreenLoginAreaLayoutId),
@@ -200,37 +232,51 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                     ),
                 )
                 .clickable {
-                    // TODO(sungbin): 카카오 로그인 백엔드 연결
+                    joining = true
+                    coroutineScope.launch {
+                        vm.getKakaoAccessTokenAndJoin()
+                        joining = false
+                    }
                 },
             content = {
-                Image(
-                    modifier = Modifier
-                        .layoutId(LoginScreenLoginAreaKakaoSymbolLayoutId)
-                        .size(24.dp),
-                    painter = painterResource(R.drawable.ic_kakao_symbol),
-                    colorFilter = ColorFilter.tint(
-                        Color(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.kakao_login_button_symbol_tint,
+                if (!joining) {
+                    Image(
+                        modifier = Modifier
+                            .layoutId(LoginScreenLoginAreaKakaoSymbolLayoutId)
+                            .size(24.dp),
+                        painter = painterResource(R.drawable.ic_kakao_symbol),
+                        colorFilter = ColorFilter.tint(
+                            Color(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.kakao_login_button_symbol_tint,
+                                ),
                             ),
                         ),
-                    ),
-                    contentDescription = null,
-                )
-                // QuackColor 생성자가 internal 이라 BasicText 사용
-                BasicText(
-                    modifier = Modifier.layoutId(LoginScreenLoginAreaKakaoLoginLabelLayoutId),
-                    text = stringResource(R.string.kakaologin_button_label),
-                    style = QuackTextStyle.HeadLine2.asComposeStyle().copy(
-                        color = Color(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.kakao_login_button_label,
+                        contentDescription = null,
+                    )
+                    // QuackColor 생성자가 internal 이라 BasicText 사용
+                    BasicText(
+                        modifier = Modifier.layoutId(LoginScreenLoginAreaKakaoLoginLabelLayoutId),
+                        text = stringResource(R.string.kakaologin_button_label),
+                        style = QuackTextStyle.HeadLine2.asComposeStyle().copy(
+                            color = Color(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.kakao_login_button_label,
+                                ),
                             ),
                         ),
-                    ),
-                )
+                    )
+                } else {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .layoutId(LoginScreenJoiningIndicatorLayoutId)
+                            .requiredSize(16.dp),
+                        color = QuackColor.White.composeColor,
+                        strokeWidth = 1.dp,
+                    )
+                }
             },
             measurePolicy = LoginScreenLoginAreaMeasurePolicy,
         )

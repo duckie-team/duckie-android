@@ -28,7 +28,7 @@ class AuthRepositoryImpl @Inject constructor() : AuthRepository {
     override suspend fun join(kakaoAccessToken: String): JoinResponse {
         val response = client.post("/auth/kakao") {
             jsonBody {
-                "code" withString kakaoAccessToken
+                "accessToken" withString kakaoAccessToken
             }
         }
         return responseCatching(
