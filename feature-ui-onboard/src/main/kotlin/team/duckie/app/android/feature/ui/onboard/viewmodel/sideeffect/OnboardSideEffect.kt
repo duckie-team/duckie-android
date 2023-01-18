@@ -12,6 +12,7 @@ import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.constant.RequiredStep
 
 internal sealed class OnboardSideEffect {
+    object FinishOnboard : OnboardSideEffect()
     class UpdateGalleryImages(val images: List<String>) : OnboardSideEffect()
 
     @RequiredStep(OnboardStep.Login)

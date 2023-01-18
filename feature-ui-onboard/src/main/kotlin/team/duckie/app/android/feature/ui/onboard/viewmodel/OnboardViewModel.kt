@@ -60,10 +60,9 @@ import team.duckie.app.android.util.kotlin.seconds
 private val NextStepNavigateThrottle = 1.seconds
 private const val ProfileImageCompressQuality = 100
 
-@Suppress("UNUSED_VARIABLE")
 internal class OnboardViewModel @AssistedInject constructor(
     application: Application,
-    @Assisted savedStateHandle: SavedStateHandle,
+    @Suppress("UNUSED_PARAMETER") @Assisted savedStateHandle: SavedStateHandle,
     private val nicknameDuplicateCheckUseCase: NicknameDuplicateCheckUseCase,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     private val joinUseCase: JoinUseCase,
@@ -240,6 +239,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
+    fun finishOnboard() = intent {
+        postSideEffect(OnboardSideEffect.FinishOnboard)
+    }
+
     /* ----- Permission ----- */
 
     fun updateImagePermissionGrantState(isGranted: Boolean?) {
@@ -248,7 +251,7 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     /* ----- Api ----- */
 
-    suspend fun getKakaoAccessToken() = intent {
+    suspend fun getKakaoAccessTokenAndJoin() = intent {
         getKakaoAccessTokenUseCase()
             .onSuccess { token ->
                 postSideEffect(OnboardSideEffect.DelegateJoin(token))
