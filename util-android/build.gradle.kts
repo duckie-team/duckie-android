@@ -18,6 +18,8 @@ android {
 dependencies {
     implementations(
         libs.androidx.lifecycle.savedstate,
+        libs.ktx.lifecycle.runtime,
         libs.ktx.lifecycle.viewmodel,
+        libs.compose.ui.activity,
     )
 }
