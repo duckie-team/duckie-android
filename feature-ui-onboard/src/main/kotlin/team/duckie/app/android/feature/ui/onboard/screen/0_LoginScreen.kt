@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
+
 package team.duckie.app.android.feature.ui.onboard.screen
 
 import androidx.compose.foundation.Image
