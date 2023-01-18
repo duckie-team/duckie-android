@@ -17,13 +17,19 @@ class SaveableMutableStateFlow<T>(
     initialValue: T,
 ) : ReadWriteProperty<Any, T> {
     private val state = savedStateHandle.getStateFlow(key, initialValue)
+    var value: T
+        get() = state.value
+        set(value) {
+            savedStateHandle[key] = value
+        }
+
     fun asStateFlow() = state
 
     override fun getValue(thisRef: Any, property: KProperty<*>): T {
-        return state.value
+        return value
     }
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
-        savedStateHandle[key] = value
+        this.value = value
     }
 }
