@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -32,6 +31,8 @@ import team.duckie.app.android.di.usecase.kakao.KakaoUseCaseModule
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.home.screen.HomeActivity
+import team.duckie.app.android.feature.ui.onboard.constant.CollectInStep
+import team.duckie.app.android.feature.ui.onboard.constant.CollectInViewModel
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
 import team.duckie.app.android.feature.ui.onboard.screen.LoginScreen
@@ -40,9 +41,11 @@ import team.duckie.app.android.feature.ui.onboard.screen.TagScreen
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
+import team.duckie.app.android.util.android.lifecycle.repeatOnCreated
 import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.changeActivityWithAnimation
 import team.duckie.app.android.util.ui.collectWithLifecycle
@@ -113,10 +116,9 @@ class OnboardActivity : BaseActivity() {
             sideEffect = ::handleSideEffect,
         )
 
-        // TODO(sungbin): Lifecycle 처리 개선
-        lifecycleScope.launchWhenCreated {
+        repeatOnCreated {
             launch {
-                vm.imagePermissionGrantState.collectWithLifecycle(lifecycle) { isGranted ->
+                vm.imagePermissionGrantState.asStateFlow().collectWithLifecycle(lifecycle) { isGranted ->
                     if (isGranted != null) {
                         handleImageStoragePermissionGrantedState(isGranted)
                     }
@@ -137,7 +139,7 @@ class OnboardActivity : BaseActivity() {
                     targetState = onboardStepState,
                 ) { onboardStep ->
                     when (onboardStep) {
-                        OnboardStep.Login -> LoginScreen()
+                        OnboardStep.Activity, OnboardStep.Login -> LoginScreen()
                         OnboardStep.Profile -> ProfileScreen()
                         OnboardStep.Category -> CategoryScreen()
                         OnboardStep.Tag -> TagScreen()
@@ -175,34 +177,7 @@ class OnboardActivity : BaseActivity() {
     }
 
     private fun handleState(state: OnboardState) {
-        when (state) {
-            OnboardState.Initial -> {
-                vm.navigateStep(
-                    step = OnboardStep.Login,
-                    ignoreThrottle = true,
-                )
-            }
-            is OnboardState.NavigateStep -> {
-                onboardStepState = state.step
-            }
-            is OnboardState.Joined -> {
-                if (state.isNewUser) {
-                    vm.navigateStep(
-                        step = OnboardStep.Profile,
-                        ignoreThrottle = true,
-                    )
-                } else {
-                    vm.finishOnboard()
-                }
-            }
-            is OnboardState.CategoriesLoaded -> {
-                vm.categories = state.catagories
-            }
-            is OnboardState.Error -> {
-                toast(getString(R.string.internal_error))
-            }
-            else -> Unit
-        }
+        onboardStepState = state.step
     }
 
     private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
@@ -210,11 +185,8 @@ class OnboardActivity : BaseActivity() {
             is OnboardSideEffect.UpdateGalleryImages -> {
                 vm.addGalleryImages(sideEffect.images)
             }
-            is OnboardSideEffect.FinishOnboard -> {
-                changeActivityWithAnimation<HomeActivity>()
-            }
-            is OnboardSideEffect.UpdateUser -> {
-                vm.me = sideEffect.user
+            is OnboardSideEffect.DelegateJoin -> {
+                vm.join(sideEffect.kakaoAccessToken)
             }
             is OnboardSideEffect.UpdateAccessToken -> {
                 applicationContext.dataStore.edit { preferences ->
@@ -224,13 +196,27 @@ class OnboardActivity : BaseActivity() {
             is OnboardSideEffect.AttachAccessTokenToHeader -> {
                 vm.attachAccessTokenToHeader(sideEffect.accessToken)
             }
-            is OnboardSideEffect.DelegateJoin -> {
-                vm.join(sideEffect.kakaoAccessToken)
+            is OnboardSideEffect.Joined -> {
+                if (sideEffect.isNewUser) {
+                    vm.navigateStep(
+                        step = OnboardStep.Profile,
+                        ignoreThrottle = true,
+                    )
+                } else {
+                    vm.finishOnboard()
+                }
+            }
+            is OnboardSideEffect.FinishOnboard -> {
+                changeActivityWithAnimation<HomeActivity>()
             }
             is OnboardSideEffect.ReportError -> {
                 sideEffect.exception.printStackTrace()
+                sideEffect.exception.reportToToast()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
+            is OnboardSideEffect.NicknameDuplicateChecked -> CollectInStep
+            is OnboardSideEffect.PrfileImageUploaded -> CollectInViewModel
+            is OnboardSideEffect.TagCreated -> CollectInViewModel
         }
     }
 }

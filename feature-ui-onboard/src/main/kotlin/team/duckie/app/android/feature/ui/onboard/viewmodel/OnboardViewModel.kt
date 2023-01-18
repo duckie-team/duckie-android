@@ -119,12 +119,12 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     val galleryImages: ImmutableList<String> get() = container.stateFlow.value.galleryImages.toImmutableList()
 
-    private var imagePermissionGrantState by SaveableMutableStateFlow<Boolean?>(
+    val imagePermissionGrantState = SaveableMutableStateFlow<Boolean?>(
         savedStateHandle = savedStateHandle,
         key = ImagePermissionGrantStateSavedKey,
         initialValue = null,
     )
-    val isImagePermissionGranted: Boolean? get() = imagePermissionGrantState
+    val isImagePermissionGranted: Boolean? get() = imagePermissionGrantState.value
 
     val imagePermission = PermissionCompat.getImageStoragePermission()
     var isCameraPermissionGranted = false
@@ -140,19 +140,9 @@ internal class OnboardViewModel @AssistedInject constructor(
             return@intent
         }
         lastestUpdateStepMillis = System.currentTimeMillis()
-        postSideEffect(OnboardSideEffect.NavigateStep(step))
-    }
-
-    suspend fun nicknameDuplicateCheck(nickname: String) = intent {
-        nicknameDuplicateCheckUseCase(nickname)
-            .onSuccess { result ->
-                postSideEffect(OnboardSideEffect.NicknameDuplicateChecked(result))
-            }
-            .attachExceptionHandling()
-    }
-
-    fun checkNicknameRuleError(nickname: String): Boolean {
-        return nicknameFilter.containsMatchIn(nickname)
+        reduce {
+            state.copy(step = step)
+        }
     }
 
     fun loadGalleryImages() = intent {
@@ -168,6 +158,38 @@ internal class OnboardViewModel @AssistedInject constructor(
     fun addGalleryImages(images: List<String>) = intent {
         reduce {
             state.copy(galleryImages = images)
+        }
+    }
+
+    fun finishOnboard() = intent {
+        postSideEffect(OnboardSideEffect.FinishOnboard)
+    }
+
+    // validation
+
+    suspend fun nicknameDuplicateCheck(nickname: String) = intent {
+        nicknameDuplicateCheckUseCase(nickname)
+            .onSuccess { result ->
+                postSideEffect(OnboardSideEffect.NicknameDuplicateChecked(result))
+            }
+            .attachExceptionHandling()
+    }
+
+    fun checkNicknameRuleError(nickname: String): Boolean {
+        return nicknameFilter.containsMatchIn(nickname)
+    }
+
+    // user
+
+    fun updateUserNickname(nickname: String) = intent {
+        reduce {
+            state.copy(temporaryNickname = nickname)
+        }
+    }
+
+    fun updateUserSelectCategories(categories: List<Category>) = intent {
+        reduce {
+            state.copy(selectedCategories = categories)
         }
     }
 
@@ -254,14 +276,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    fun finishOnboard() = intent {
-        postSideEffect(OnboardSideEffect.FinishOnboard)
-    }
-
     /* ----- Permission ----- */
 
     fun updateImagePermissionGrantState(isGranted: Boolean?) {
-        imagePermissionGrantState = isGranted
+        imagePermissionGrantState.value = isGranted
     }
 
     /* ----- Api ----- */
@@ -277,7 +295,9 @@ internal class OnboardViewModel @AssistedInject constructor(
     suspend fun join(kakaoAccessToken: String) = intent {
         joinUseCase(kakaoAccessToken)
             .onSuccess { response ->
-                postSideEffect(OnboardSideEffect.UpdateUser(response.user))
+                reduce {
+                    state.copy(me = response.user)
+                }
                 postSideEffect(OnboardSideEffect.UpdateAccessToken(response.accessToken))
                 postSideEffect(OnboardSideEffect.AttachAccessTokenToHeader(response.accessToken))
                 postSideEffect(OnboardSideEffect.Joined(response.isNewUser))
@@ -292,7 +312,9 @@ internal class OnboardViewModel @AssistedInject constructor(
     suspend fun getCategories(withPopularTags: Boolean) = intent {
         getCategoriesUseCase(withPopularTags)
             .onSuccess { categories ->
-                postSideEffect(OnboardSideEffect.CategoriesLoaded(categories))
+                reduce {
+                    state.copy(categories = categories)
+                }
             }
             .attachExceptionHandling()
     }
@@ -328,7 +350,9 @@ internal class OnboardViewModel @AssistedInject constructor(
             favoriteTags = favoriteTags,
         )
             .onSuccess { user ->
-                postSideEffect(OnboardSideEffect.UpdateUser(user))
+                reduce {
+                    state.copy(me = user)
+                }
             }
             .attachExceptionHandling()
     }
