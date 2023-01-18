@@ -60,10 +60,9 @@ import team.duckie.app.android.util.kotlin.seconds
 private val NextStepNavigateThrottle = 1.seconds
 private const val ProfileImageCompressQuality = 100
 
-@Suppress("UNUSED_VARIABLE")
 internal class OnboardViewModel @AssistedInject constructor(
     application: Application,
-    @Assisted savedStateHandle: SavedStateHandle,
+    @Suppress("UNUSED_PARAMETER") @Assisted savedStateHandle: SavedStateHandle,
     private val nicknameDuplicateCheckUseCase: NicknameDuplicateCheckUseCase,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     private val joinUseCase: JoinUseCase,

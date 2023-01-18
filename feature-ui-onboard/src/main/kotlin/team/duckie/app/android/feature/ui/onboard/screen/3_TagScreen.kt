@@ -137,7 +137,6 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     val context = LocalContext.current.applicationContext
     val keyboard = LocalSoftwareKeyboardController.current
-    val toast = rememberToast()
     val coroutineScope = rememberCoroutineScope()
 
     var isLoadingToFinish by remember { mutableStateOf(false) }

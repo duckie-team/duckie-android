@@ -31,6 +31,7 @@ import team.duckie.app.android.di.repository.ProvidesModule
 import team.duckie.app.android.di.usecase.kakao.KakaoUseCaseModule
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
+import team.duckie.app.android.feature.ui.home.screen.HomeActivity
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
 import team.duckie.app.android.feature.ui.onboard.screen.LoginScreen
