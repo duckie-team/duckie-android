@@ -11,6 +11,7 @@ import team.duckie.app.android.util.kotlin.AllowMagicNumber
 
 @AllowMagicNumber
 internal enum class OnboardStep(private val index: Int) {
+    Activity(-1),
     Login(0),
     Profile(1),
     Category(2),
