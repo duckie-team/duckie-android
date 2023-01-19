@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -77,7 +78,8 @@ object PhotoPickerConstants {
 //                이미지 편집 바텀바,
 //                선택한 이미지 미리보기 (full-screen preview),
 //                사진 폴더별로 보기,
-//                퍼포먼스 개선
+//                퍼포먼스 개선 -> RecyclerView 로 마이그레이션 긍정적으로 고려중
+//                https://github.com/duckie-team/quack-quack-android/issues/439
 @Composable
 fun PhotoPicker(
     modifier: Modifier = Modifier,
@@ -89,8 +91,12 @@ fun PhotoPicker(
     onCloseClick: () -> Unit,
     onAddClick: () -> Unit,
 ) {
-    require(imageUris.size == imageSelections.size) {
-        "imageUris.size (${imageUris.size}) != imageSelectionState.size (${imageSelections.size})"
+    // 컴포지션 이전에 동일 조건으로 최초 한 번만 assertion 진행
+    @Suppress("RememberReturnType")
+    remember(imageUris, imageSelections) {
+        require(imageUris.size == imageSelections.size) {
+            "imageUris.size (${imageUris.size}) != imageSelectionState.size (${imageSelections.size})"
+        }
     }
 
     val cameraState = rememberCameraState()
@@ -98,6 +104,10 @@ fun PhotoPicker(
     val sizedModifier = Modifier
         .aspectRatio(1f)
         .fillMaxSize()
+
+    // 매번 리컴포지션마다 Collection#any 를 진행함
+    // List 를 element 가 바뀌어도 동일 인스턴스라 remember 가 불가함
+    // TODO(sungbin): 퍼포먼스 개선 방법을 찾아야 함
     val isAddable = imageSelections.fastAny { it }
 
     Column(modifier = modifier.zIndex(zIndex)) {

@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("PrivatePropertyName")
+
 package team.duckie.app.android.presentation
 
 import android.animation.ObjectAnimator
@@ -14,6 +16,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,11 +25,12 @@ import kotlinx.coroutines.flow.first
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
+import team.duckie.app.android.feature.ui.home.screen.HomeActivity
 import team.duckie.app.android.feature.ui.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
-import team.duckie.app.android.presentation.viewmodel.PresentationViewModel
-import team.duckie.app.android.presentation.viewmodel.sideeffect.PresentationSideEffect
-import team.duckie.app.android.presentation.viewmodel.state.PresentationState
+import team.duckie.app.android.presentation.viewmodel.IntroViewModel
+import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
+import team.duckie.app.android.presentation.viewmodel.state.IntroState
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
@@ -41,7 +45,7 @@ private val SplashScreenFinishDurationMillis = 1.5.seconds
 @AndroidEntryPoint
 class IntroActivity : BaseActivity() {
 
-    private val vm: PresentationViewModel by viewModels()
+    private val vm: IntroViewModel by viewModels()
     private val toast by lazy { ToastWrapper(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,8 +70,47 @@ class IntroActivity : BaseActivity() {
         )
 
         setContent {
+            LaunchedEffect(vm) {
+                delay(SplashScreenFinishDurationMillis)
+                applicationContext.dataStore.data.first().let { preference ->
+                    preference[PreferenceKey.Account.AccessToken]?.let { accessToken ->
+                        vm.attachAccessTokenToHeaderIfValidationPassed(accessToken)
+                    } ?: launchOnboardActivity()
+                }
+            }
+
             QuackTheme {
                 IntroScreen()
+            }
+        }
+    }
+
+    private suspend fun handleState(state: IntroState) {
+        with(state) {
+            when {
+                accessTokenAttachedToHeader -> {
+                    applicationContext.dataStore.data.first().let { preference ->
+                        val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish] ?: false
+                        launchHomeOrOnboardActivity(isOnboardFinsihed)
+                    }
+                }
+                accessTokenValidationFail == true -> {
+                    toast(getString(R.string.expired_access_token_relogin_requried))
+                    launchOnboardActivity()
+                }
+            }
+        }
+    }
+
+    private fun handleSideEffect(sideEffect: IntroSideEffect) {
+        when (sideEffect) {
+            is IntroSideEffect.AttachAccessTokenToHeader -> {
+                vm.attachAccessTokenToHeader(sideEffect.accessToken)
+            }
+            is IntroSideEffect.ReportError -> {
+                sideEffect.exception.printStackTrace()
+                sideEffect.exception.reportToToast()
+                sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
         }
     }
@@ -76,45 +119,16 @@ class IntroActivity : BaseActivity() {
         changeActivityWithAnimation<OnboardActivity>()
     }
 
-    private suspend fun handleState(state: PresentationState) {
-        when (state) {
-            PresentationState.Initial -> {
-                delay(SplashScreenFinishDurationMillis)
-                applicationContext.dataStore.data.first().let { preference ->
-                    preference[PreferenceKey.Account.AccessToken]?.let { accessToken ->
-                        vm.checkAccessToken(accessToken)
-                    } ?: launchOnboardActivity()
-                }
-            }
-            PresentationState.AttachedAccessTokenToHeader -> {
-                applicationContext.dataStore.data.first().let { preference ->
-                    val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish] ?: false
-                    if (isOnboardFinsihed) {
-                        toast("온보딩 과거 마침")
-                    } else {
-                        launchOnboardActivity()
-                    }
-                }
-            }
-            PresentationState.AccessTokenValidationFailed -> {
-                toast(getString(R.string.expired_access_token_relogin_requried))
-                launchOnboardActivity()
-            }
-            is PresentationState.Error -> {
-                state.exception.reportToToast()
-            }
-        }
+    private fun launchHomeActivity() {
+        // TODO(sungbin): 끝낼 때 별다른 메시지를 안하는게 맞을까?
+        changeActivityWithAnimation<HomeActivity>()
     }
 
-    private fun handleSideEffect(sideEffect: PresentationSideEffect) {
-        when (sideEffect) {
-            is PresentationSideEffect.AttachAccessTokenToHeader -> {
-                vm.attachAccessTokenToHeader(sideEffect.accessToken)
-            }
-            is PresentationSideEffect.ReportError -> {
-                sideEffect.exception.printStackTrace()
-                sideEffect.exception.reportToCrashlyticsIfNeeded()
-            }
+    private fun launchHomeOrOnboardActivity(isOnboardFinish: Boolean) {
+        if (isOnboardFinish) {
+            launchHomeActivity()
+        } else {
+            launchOnboardActivity()
         }
     }
 }

@@ -18,7 +18,6 @@ internal fun UserResponse.toDomain() = User(
     nickname = nickName ?: duckieResponseFieldNpe("nickName"),
     profileImageUrl = profileImageUrl ?: duckieResponseFieldNpe("profileImageUrl"),
     tier = tier?.let { DuckieTier.values()[it] } ?: duckieResponseFieldNpe("tier"),
-    favoriteTags = favoriteTags?.filterNotNull()?.toImmutableList() ?: duckieResponseFieldNpe("favoriteTags"),
-    favoriteCategories = favoriteCategories?.filterNotNull()?.toImmutableList()
-        ?: duckieResponseFieldNpe("favoriteCategories"),
+    favoriteTags = favoriteTags?.filterNotNull()?.toImmutableList(),
+    favoriteCategories = favoriteCategories?.filterNotNull()?.toImmutableList(),
 )

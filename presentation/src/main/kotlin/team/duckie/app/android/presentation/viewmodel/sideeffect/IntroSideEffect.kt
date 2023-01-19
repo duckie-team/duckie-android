@@ -7,8 +7,8 @@
 
 package team.duckie.app.android.presentation.viewmodel.sideeffect
 
-internal sealed class PresentationSideEffect {
-    class AttachAccessTokenToHeader(val accessToken: String) : PresentationSideEffect()
+internal sealed class IntroSideEffect {
+    class AttachAccessTokenToHeader(val accessToken: String) : IntroSideEffect()
 
-    class ReportError(val exception: Throwable) : PresentationSideEffect()
+    class ReportError(val exception: Throwable) : IntroSideEffect()
 }

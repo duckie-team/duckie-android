@@ -11,7 +11,6 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import javax.inject.Inject
-import team.duckie.app.android.data._datasource.DuckieHttpHeaders
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.jsonBody
@@ -39,7 +38,9 @@ class AuthRepositoryImpl @Inject constructor() : AuthRepository {
 
     override suspend fun checkAccessToken(token: String): AccessTokenCheckResponse {
         val response = client.get("/auth/token") {
-            headers.append(DuckieHttpHeaders.Authorization, token)
+            // TODO(sungbin): `DuckieHttpHeaders.Authorization` 로 변경
+            // https://sungbinland.slack.com/archives/C046SS32SEQ/p1674118939394629?thread_ts=1674118269.577739&cid=C046SS32SEQ
+            headers.append(/*DuckieHttpHeaders.Authorization*/ "authorization", "Bearer $token")
         }
         return responseCatching(
             response = response.body(),
