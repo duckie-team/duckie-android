@@ -23,7 +23,7 @@ internal enum class OnboardStep(private val index: Int) {
     }
 
     operator fun plus(next: Int): OnboardStep {
-        return  OnboardStep.values().first { it.index == index + next }
+        return OnboardStep.values().first { it.index == index + next }
     }
 }
 
