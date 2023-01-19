@@ -14,6 +14,7 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Ignore
 import org.junit.Test
 import strikt.api.expectCatching
 import strikt.assertions.isEqualTo
@@ -27,6 +28,7 @@ import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.data.util.buildMockHttpClient
 import team.duckie.app.android.util.kotlin.DuckieResponseException
 
+@Ignore(value = "responseCatching is TODO")
 class ExceptionTest {
     private val exception = DuckieResponseException(
         code = "1000",

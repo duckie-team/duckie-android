@@ -13,6 +13,7 @@
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.datastore.preferences.core.edit
 import com.google.accompanist.flowlayout.FlowRow
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -66,6 +68,7 @@ import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.shared.ui.compose.ImeSpacer
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
@@ -215,32 +218,53 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                     enabled = isStartable,
                     isLoading = isLoadingToFinish,
                 ) {
-                    isLoadingToFinish = true
-                    coroutineScope.launch {
-                        val updateUserProfileImageJob = launch {
-                            vm.updateUserProfileImage()
-                        }
-                        val updateUserFavorateTagJob = launch {
-                            vm.updateUserFavorateTags(favorateTagNames = addedTags)
-                        }
-                        joinAll(updateUserProfileImageJob, updateUserFavorateTagJob)
-                        vm.updateUser(
-                            id = vm.me.id,
-                            nickname = onboardState.temporaryNickname,
-                            profileImageUrl = onboardState.temporaryProfileImageUrl,
-                            favoriteCategories = onboardState.selectedCategories,
-                            favoriteTags = onboardState.temporaryFavoriteTags,
-                        )
-                        context.dataStore.edit { preference ->
-                            preference[PreferenceKey.Onboard.Finish] = true
-                        }
-                        isLoadingToFinish = false
-                        vm.finishOnboard()
-                    }
+                    updateUserAndFinishOnboard(
+                        context = context,
+                        coroutineScope = coroutineScope,
+                        vm = vm,
+                        onboardState = onboardState,
+                        addedTags = addedTags,
+                        updateIsLoadingToFinishState = { isLoading ->
+                            isLoadingToFinish = isLoading
+                        },
+                    )
                 }
             },
             measurePolicy = TagScreenMeasurePolicy,
         )
+    }
+}
+
+// FIXME(sungbin): 프로필 사진 업로드 로직 수정 (업로드가 진행되지 않음)
+private fun updateUserAndFinishOnboard(
+    context: Context,
+    coroutineScope: CoroutineScope,
+    vm: OnboardViewModel,
+    onboardState: OnboardState,
+    addedTags: List<String>,
+    updateIsLoadingToFinishState: (isLoading: Boolean) -> Unit,
+) {
+    updateIsLoadingToFinishState(true)
+    coroutineScope.launch {
+        val updateUserProfileImageJob = launch {
+            vm.updateUserProfileImage()
+        }
+        val updateUserFavorateTagJob = launch {
+            vm.updateUserFavorateTags(favorateTagNames = addedTags)
+        }
+        joinAll(updateUserProfileImageJob, updateUserFavorateTagJob)
+        vm.updateUser(
+            id = vm.me.id,
+            nickname = onboardState.temporaryNickname,
+            profileImageUrl = onboardState.temporaryProfileImageUrl,
+            favoriteCategories = onboardState.selectedCategories,
+            favoriteTags = onboardState.temporaryFavoriteTags,
+        )
+        context.dataStore.edit { preference ->
+            preference[PreferenceKey.Onboard.Finish] = true
+        }
+        updateIsLoadingToFinishState(false)
+        vm.finishOnboard()
     }
 }
 
@@ -307,6 +331,7 @@ private fun TagSelection(
                 text = stringResource(R.string.tag_added_tag),
             )
             if (addedTags.isNotEmpty()) {
+                // TODO(sungbin): 반주자 제거 (foundation 으로 합체됨)
                 FlowRow(
                     modifier = Modifier.padding(
                         vertical = 10.dp,
@@ -356,7 +381,7 @@ private fun TagSelection(
         ) {
             onboardState.selectedCategories.fastForEachIndexed { categoryIndex, category ->
                 QuackSingeLazyRowTag(
-                    title = stringResource(R.string.tag_hottest_tag, category),
+                    title = stringResource(R.string.tag_hottest_tag, category.name),
                     items = hottestTags[categoryIndex],
                     itemSelections = hottestTagSelections[categoryIndex],
                     tagType = QuackTagType.Circle(),
@@ -429,6 +454,7 @@ private fun TagScreenModalBottomSheetContent(
                 text = "",
                 isSelected = false,
             )
+            // TODO(sungbin): 애니메이션 출처 밝히기
             FlowRow(
                 modifier = Modifier
                     .zIndex(1f)

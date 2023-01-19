@@ -11,7 +11,7 @@ plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
     id(ConventionEnum.AndroidHilt)
-    id("kotlin-parcelize")
+    `kotlin-parcelize`
 }
 
 android {

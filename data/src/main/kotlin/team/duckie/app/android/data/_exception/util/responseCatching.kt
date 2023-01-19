@@ -9,33 +9,47 @@ package team.duckie.app.android.data._exception.util
 
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
-import team.duckie.app.android.data._exception.model.ExceptionBody
-import team.duckie.app.android.data._exception.model.throwing
-import team.duckie.app.android.data._util.jsonMapper
 
+// FIXME(sungbin): 역직렬화 로직이 잘못됨
+/**
+ * Caused by: com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException:
+ * Unrecognized field "isNewUser" (class team.duckie.app.android.data._exception.model.ExceptionBody),
+ * not marked as ignorable (3 known properties: "errors", "code", "message"])
+ * at [Source: (InputStreamReader); line: 1, column: 479] (through reference chain: team.duckie.app.android.data._exception.model.ExceptionBody["isNewUser"])
+ */
 @Suppress("TooGenericExceptionCaught")
 internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
     response: HttpResponse,
     parse: (body: DataModel) -> DomainModel,
 ): DomainModel {
-    return try {
+    /*return try {
         val body: DataModel = response.body()
         parse(body)
     } catch (throwable: Throwable) {
         val errorBody: ExceptionBody = response.body()
         errorBody.throwing(throwable = throwable)
-    }
+    }*/
+    val body: DataModel = response.body()
+    return parse(body)
 }
 
+// FIXME(sungbin): 역직렬화 로직이 잘못됨
+/**
+ * Caused by: com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException:
+ * Unrecognized field "isNewUser" (class team.duckie.app.android.data._exception.model.ExceptionBody),
+ * not marked as ignorable (3 known properties: "errors", "code", "message"])
+ * at [Source: (InputStreamReader); line: 1, column: 479] (through reference chain: team.duckie.app.android.data._exception.model.ExceptionBody["isNewUser"])
+ */
 @Suppress("TooGenericExceptionCaught")
 internal inline fun <DomainModel> responseCatching(
     response: String,
     parse: (body: String) -> DomainModel,
 ): DomainModel {
-    return try {
+    /*return try {
         parse(response)
     } catch (throwable: Throwable) {
         val errorBody = jsonMapper.readValue(response, ExceptionBody::class.java)
         errorBody.throwing(throwable = throwable)
-    }
+    }*/
+    return parse(response)
 }

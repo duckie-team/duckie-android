@@ -17,7 +17,7 @@ import team.duckie.quackquack.ui.modifier.QuackAlwaysShowRipple
 @HiltAndroidApp
 class App : Application() {
     init {
-        // 인앱에서 250 ms 는 너무 길게 느껴짐
+        // FIXME(sungbin): 인앱에서 250 ms 는 너무 길게 느껴짐
         QuackAnimationMillis = 0.15.seconds.toInt()
         QuackAlwaysShowRipple = BuildConfig.ALWAYS_RIPPLE
     }
