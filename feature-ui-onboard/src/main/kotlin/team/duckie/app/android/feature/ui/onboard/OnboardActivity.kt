@@ -207,6 +207,10 @@ class OnboardActivity : BaseActivity() {
                 }
             }
             is OnboardSideEffect.FinishOnboard -> {
+                applicationContext.dataStore.edit { preference ->
+                    preference[PreferenceKey.Onboard.Finish] = true
+                }
+                // TODO(sungbin): 끝낼 때 별다른 메시지를 안하는게 맞을까?
                 changeActivityWithAnimation<HomeActivity>()
             }
             is OnboardSideEffect.ReportError -> {
