@@ -18,18 +18,18 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.CheckAccessTokenUseCase
-import team.duckie.app.android.presentation.viewmodel.sideeffect.PresentationSideEffect
-import team.duckie.app.android.presentation.viewmodel.state.PresentationState
+import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
+import team.duckie.app.android.presentation.viewmodel.state.IntroState
 
 @HiltViewModel
-internal class PresentationViewModel @Inject constructor(
+internal class IntroViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
     private val attachAccessTokenToHeaderUseCase: AttachAccessTokenToHeaderUseCase,
-) : ContainerHost<PresentationState, PresentationSideEffect>, ViewModel() {
+) : ContainerHost<IntroState, IntroSideEffect>, ViewModel() {
 
-    override val container = container<PresentationState, PresentationSideEffect>(
-        initialState = PresentationState(),
+    override val container = container<IntroState, IntroSideEffect>(
+        initialState = IntroState(),
         savedStateHandle = savedStateHandle,
     )
 
@@ -37,7 +37,7 @@ internal class PresentationViewModel @Inject constructor(
         checkAccessTokenUseCase(accessToken)
             .onSuccess { pass ->
                 if (pass) {
-                    postSideEffect(PresentationSideEffect.AttachAccessTokenToHeader(accessToken))
+                    postSideEffect(IntroSideEffect.AttachAccessTokenToHeader(accessToken))
                 } else {
                     reduce {
                         state.copy(accessTokenValidationFail = true)
@@ -59,7 +59,7 @@ internal class PresentationViewModel @Inject constructor(
 
     private fun Result<*>.attachExceptionHandling() = intent {
         onFailure { exception ->
-            postSideEffect(PresentationSideEffect.ReportError(exception))
+            postSideEffect(IntroSideEffect.ReportError(exception))
         }
     }
 }

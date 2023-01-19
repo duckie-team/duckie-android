@@ -11,7 +11,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-internal data class PresentationState(
+internal data class IntroState(
     val accessTokenValidationFail: Boolean? = null,
     val accessTokenAttachedToHeader: Boolean = false,
 ) : Parcelable
