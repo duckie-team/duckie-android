@@ -91,11 +91,7 @@ class IntroActivity : BaseActivity() {
                 accessTokenAttachedToHeader -> {
                     applicationContext.dataStore.data.first().let { preference ->
                         val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish] ?: false
-                        if (isOnboardFinsihed) {
-                            launchHomeActivity()
-                        } else {
-                            launchOnboardActivity()
-                        }
+                        launchHomeOrOnboardActivity(isOnboardFinsihed)
                     }
                 }
                 accessTokenValidationFail == true -> {
@@ -126,5 +122,13 @@ class IntroActivity : BaseActivity() {
     private fun launchHomeActivity() {
         // TODO(sungbin): 끝낼 때 별다른 메시지를 안하는게 맞을까?
         changeActivityWithAnimation<HomeActivity>()
+    }
+
+    private fun launchHomeOrOnboardActivity(isOnboardFinish: Boolean) {
+        if (isOnboardFinish) {
+            launchHomeActivity()
+        } else {
+            launchOnboardActivity()
+        }
     }
 }
