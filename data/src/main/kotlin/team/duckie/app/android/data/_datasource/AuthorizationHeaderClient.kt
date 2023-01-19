@@ -8,6 +8,7 @@
 package team.duckie.app.android.data._datasource
 
 import android.os.Build
+import com.fasterxml.jackson.databind.DeserializationFeature
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.engine.cio.endpoint
@@ -76,7 +77,9 @@ private object AuthorizationHeaderClient {
             headerKey = DuckieHttpHeaders.Authorization
         }
         install(plugin = ContentNegotiation) {
-            jackson()
+            jackson {
+                disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
+            }
         }
         install(plugin = Logging) {
             logger = Logger.ANDROID
