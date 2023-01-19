@@ -9,6 +9,7 @@
     ExperimentalMaterialApi::class,
     ExperimentalComposeUiApi::class,
 )
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
@@ -43,7 +44,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
@@ -57,6 +57,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
@@ -68,6 +69,7 @@ import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.shared.ui.compose.ImeSpacer
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
+import team.duckie.app.android.util.compose.invisible
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
@@ -141,8 +143,10 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
 
     var isLoadingToFinish by remember { mutableStateOf(false) }
     var isStartable by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val addedTags = remember { mutableStateListOf<String>() }
+
+    val onboardState by vm.collectAsState()
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     LaunchedEffect(sheetState) {
         val sheetStateFlow = snapshotFlow { sheetState.currentValue }
@@ -222,10 +226,10 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                         joinAll(updateUserProfileImageJob, updateUserFavorateTagJob)
                         vm.updateUser(
                             id = vm.me.id,
-                            nickname = vm.me.temporaryNickname,
-                            profileImageUrl = vm.me.temporaryProfileImageUrl,
-                            favoriteCategories = vm.selectedCategories,
-                            favoriteTags = vm.me.temporaryFavoriteTags,
+                            nickname = onboardState.temporaryNickname,
+                            profileImageUrl = onboardState.temporaryProfileImageUrl,
+                            favoriteCategories = onboardState.selectedCategories,
+                            favoriteTags = onboardState.temporaryFavoriteTags,
                         )
                         context.dataStore.edit { preference ->
                             preference[PreferenceKey.Onboard.Finish] = true
@@ -250,17 +254,19 @@ private fun TagSelection(
     vm: OnboardViewModel = activityViewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val hottestTags = remember(vm.selectedCategories) {
+    val onboardState by vm.collectAsState()
+
+    val hottestTags = remember(onboardState.selectedCategories) {
         List(
-            size = vm.selectedCategories.size,
+            size = onboardState.selectedCategories.size,
             init = { index ->
-                vm.selectedCategories[index].popularTags?.fastMap(Tag::name).orEmpty()
+                onboardState.selectedCategories[index].popularTags?.fastMap(Tag::name).orEmpty()
             },
         )
     }
-    val hottestTagSelections = remember(vm.selectedCategories) {
+    val hottestTagSelections = remember(onboardState.selectedCategories) {
         List(
-            size = vm.selectedCategories.size,
+            size = onboardState.selectedCategories.size,
             init = { index ->
                 mutableStateListOf(
                     elements = Array(
@@ -348,7 +354,7 @@ private fun TagSelection(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            vm.selectedCategories.fastForEachIndexed { categoryIndex, category ->
+            onboardState.selectedCategories.fastForEachIndexed { categoryIndex, category ->
                 QuackSingeLazyRowTag(
                     title = stringResource(R.string.tag_hottest_tag, category),
                     items = hottestTags[categoryIndex],
@@ -419,7 +425,7 @@ private fun TagScreenModalBottomSheetContent(
             QuackCircleTag(
                 modifier = Modifier
                     .zIndex(0f)
-                    .drawWithContent { }, // invisible
+                    .invisible(),
                 text = "",
                 isSelected = false,
             )

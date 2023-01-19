@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
+
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
 import android.app.Application
@@ -22,11 +24,8 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import java.io.File
 import kotlin.coroutines.resume
-import kotlin.properties.Delegates
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.apache.commons.io.FileUtils
@@ -45,13 +44,13 @@ import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
-import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.usecase.NicknameDuplicateCheckUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.util.android.permission.PermissionCompat
+import team.duckie.app.android.util.android.savedstate.SaveableMutableStateFlow
 import team.duckie.app.android.util.android.viewmodel.context
 import team.duckie.app.android.util.kotlin.cancelChildrenAndItself
 import team.duckie.app.android.util.kotlin.fastForEach
@@ -60,9 +59,11 @@ import team.duckie.app.android.util.kotlin.seconds
 private val NextStepNavigateThrottle = 1.seconds
 private const val ProfileImageCompressQuality = 100
 
+private const val ImagePermissionGrantStateSavedKey = "ImagePermissionGrantState"
+
 internal class OnboardViewModel @AssistedInject constructor(
     application: Application,
-    @Suppress("UNUSED_PARAMETER") @Assisted savedStateHandle: SavedStateHandle,
+    @Assisted private val savedStateHandle: SavedStateHandle,
     private val nicknameDuplicateCheckUseCase: NicknameDuplicateCheckUseCase,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     private val joinUseCase: JoinUseCase,
@@ -105,27 +106,30 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     /* ----- Variable ----- */
 
-    override val container = container<OnboardState, OnboardSideEffect>(OnboardState.Initial)
+    override val container = container<OnboardState, OnboardSideEffect>(
+        initialState = OnboardState(),
+        savedStateHandle = savedStateHandle,
+    )
 
     private val duckieUserProfileImageTemporaryFile =
-        File.createTempFile("temporary-duckie-user-profile-image", ".png", application.cacheDir)
+        File.createTempFile("temporary-duckie-user-profile-image", ".png", context.cacheDir)
 
     private val nicknameFilter = Regex("[^가-힣a-zA-Z0-9_.]")
     private var lastestUpdateStepMillis = System.currentTimeMillis()
 
-    private var _galleryImages = persistentListOf<String>()
-    val galleryImages: ImmutableList<String> get() = _galleryImages
+    val galleryImages: ImmutableList<String> get() = container.stateFlow.value.galleryImages.toImmutableList()
 
-    private val mutableImagePermissionGrantState = MutableStateFlow<Boolean?>(null)
-    val imagePermissionGrantState = mutableImagePermissionGrantState.asStateFlow()
-    val isImagePermissionGranted get() = imagePermissionGrantState.value
+    val imagePermissionGrantState = SaveableMutableStateFlow<Boolean?>(
+        savedStateHandle = savedStateHandle,
+        key = ImagePermissionGrantStateSavedKey,
+        initialValue = null,
+    )
+    val isImagePermissionGranted: Boolean? get() = imagePermissionGrantState.value
 
     val imagePermission = PermissionCompat.getImageStoragePermission()
     var isCameraPermissionGranted = false
 
-    var me by Delegates.notNull<User>()
-    var categories by Delegates.notNull<ImmutableList<Category>>()
-    var selectedCategories: ImmutableList<Category> = persistentListOf()
+    val me get() = requireNotNull(container.stateFlow.value.me) { "User is not initialized." }
 
     /* ----- Onboard Logic ----- */
 
@@ -137,20 +141,8 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
         lastestUpdateStepMillis = System.currentTimeMillis()
         reduce {
-            OnboardState.NavigateStep(step)
+            state.copy(step = step)
         }
-    }
-
-    suspend fun nicknameDuplicateCheck(nickname: String) = intent {
-        nicknameDuplicateCheckUseCase(nickname)
-            .onSuccess { result ->
-                reduce { OnboardState.NicknameDuplicateChecked(result) }
-            }
-            .attachExceptionHandling()
-    }
-
-    fun checkNicknameRuleError(nickname: String): Boolean {
-        return nicknameFilter.containsMatchIn(nickname)
     }
 
     fun loadGalleryImages() = intent {
@@ -159,38 +151,78 @@ internal class OnboardViewModel @AssistedInject constructor(
                 postSideEffect(OnboardSideEffect.UpdateGalleryImages(images))
             }
             .onFailure { expection ->
-                reduce {
-                    OnboardState.Error(expection)
-                }
                 postSideEffect(OnboardSideEffect.ReportError(expection))
             }
     }
 
-    fun addGalleryImages(images: List<String>) {
-        _galleryImages = _galleryImages.addAll(images)
+    fun addGalleryImages(images: List<String>) = intent {
+        reduce {
+            state.copy(galleryImages = images)
+        }
     }
 
-    fun updateUserProfileImageFile(fileUri: Uri) {
+    fun finishOnboard() = intent {
+        postSideEffect(OnboardSideEffect.FinishOnboard)
+    }
+
+    // validation
+
+    suspend fun nicknameDuplicateCheck(nickname: String) = intent {
+        nicknameDuplicateCheckUseCase(nickname)
+            .onSuccess { result ->
+                postSideEffect(OnboardSideEffect.NicknameDuplicateChecked(result))
+            }
+            .attachExceptionHandling()
+    }
+
+    fun checkNicknameRuleError(nickname: String): Boolean {
+        return nicknameFilter.containsMatchIn(nickname)
+    }
+
+    // user
+
+    fun updateUserNickname(nickname: String) = intent {
+        reduce {
+            state.copy(temporaryNickname = nickname)
+        }
+    }
+
+    fun updateUserSelectCategories(categories: List<Category>) = intent {
+        reduce {
+            state.copy(selectedCategories = categories)
+        }
+    }
+
+    // from Uri
+    fun updateUserProfileImageFile(fileUri: Uri) = intent {
         val file = duckieUserProfileImageTemporaryFile.also { it.delete() }
         val stream = context.contentResolver.openInputStream(fileUri)
         FileUtils.copyInputStreamToFile(stream, file)
-        me.temporaryProfileImageFile = file
+        reduce {
+            state.copy(temporaryProfileImageFile = file)
+        }
     }
 
-    fun updateUserProfileImageFile(imageBitmap: Bitmap) {
+    // from Bitmap
+    fun updateUserProfileImageFile(imageBitmap: Bitmap) = intent {
         val file = duckieUserProfileImageTemporaryFile.also { it.delete() }
         imageBitmap.compress(Bitmap.CompressFormat.PNG, ProfileImageCompressQuality, file.outputStream())
-        me.temporaryProfileImageFile = file
+        reduce {
+            state.copy(temporaryProfileImageFile = file)
+        }
     }
 
-    suspend fun updateUserProfileImage() {
+    suspend fun updateUserProfileImage() = intent {
         suspendCancellableCoroutine { continuation ->
-            val file = me.temporaryProfileImageFile ?: return@suspendCancellableCoroutine continuation.resume(Unit)
+            // 유저가 프사 등록을 건너뛴 경우
+            val file = state.temporaryProfileImageFile ?: return@suspendCancellableCoroutine continuation.resume(Unit)
             val job = viewModelScope.launch {
                 launch {
-                    container.stateFlow.collect { state ->
-                        if (state is OnboardState.PrfileImageUploaded) {
-                            me.temporaryProfileImageUrl = state.url
+                    container.sideEffectFlow.collect { sideEffect ->
+                        if (sideEffect is OnboardSideEffect.PrfileImageUploaded) {
+                            reduce {
+                                state.copy(temporaryProfileImageUrl = sideEffect.url)
+                            }
                             continuation.resume(Unit)
                         }
                     }
@@ -198,7 +230,10 @@ internal class OnboardViewModel @AssistedInject constructor(
 
                 launch {
                     updateProfileImageFile(file)
-                    me.temporaryProfileImageFile?.delete()
+                    state.temporaryProfileImageFile?.delete()
+                    reduce {
+                        state.copy(temporaryProfileImageFile = null)
+                    }
                 }
             }
 
@@ -208,18 +243,20 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    suspend fun updateUserFavorateTags(favorateTagNames: List<String>) {
+    suspend fun updateUserFavorateTags(favorateTagNames: List<String>) = intent {
         suspendCancellableCoroutine { continuation ->
             val favorateTagSize = favorateTagNames.size
             val favorateTags = ArrayList<Tag>(favorateTagSize)
             val job = viewModelScope.launch {
                 launch {
-                    container.stateFlow.collect { state ->
-                        if (state is OnboardState.TagCreated) {
-                            favorateTags.add(state.tag)
+                    container.sideEffectFlow.collect { sideEffect ->
+                        if (sideEffect is OnboardSideEffect.TagCreated) {
+                            favorateTags.add(sideEffect.tag)
 
                             if (favorateTags.size == favorateTagSize) {
-                                me.temporaryFavoriteTags = favorateTags
+                                reduce {
+                                    state.copy(temporaryFavoriteTags = favorateTags)
+                                }
                                 continuation.resume(Unit)
                             }
                         }
@@ -239,14 +276,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    fun finishOnboard() = intent {
-        postSideEffect(OnboardSideEffect.FinishOnboard)
-    }
-
     /* ----- Permission ----- */
 
     fun updateImagePermissionGrantState(isGranted: Boolean?) {
-        mutableImagePermissionGrantState.value = isGranted
+        imagePermissionGrantState.value = isGranted
     }
 
     /* ----- Api ----- */
@@ -262,10 +295,12 @@ internal class OnboardViewModel @AssistedInject constructor(
     suspend fun join(kakaoAccessToken: String) = intent {
         joinUseCase(kakaoAccessToken)
             .onSuccess { response ->
-                reduce { OnboardState.Joined(response.isNewUser) }
-                postSideEffect(OnboardSideEffect.UpdateUser(response.user))
+                reduce {
+                    state.copy(me = response.user)
+                }
                 postSideEffect(OnboardSideEffect.UpdateAccessToken(response.accessToken))
                 postSideEffect(OnboardSideEffect.AttachAccessTokenToHeader(response.accessToken))
+                postSideEffect(OnboardSideEffect.Joined(response.isNewUser))
             }
             .attachExceptionHandling()
     }
@@ -277,7 +312,9 @@ internal class OnboardViewModel @AssistedInject constructor(
     suspend fun getCategories(withPopularTags: Boolean) = intent {
         getCategoriesUseCase(withPopularTags)
             .onSuccess { categories ->
-                reduce { OnboardState.CategoriesLoaded(categories) }
+                reduce {
+                    state.copy(categories = categories)
+                }
             }
             .attachExceptionHandling()
     }
@@ -285,7 +322,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     private suspend fun updateProfileImageFile(file: File) = intent {
         fileUploadUseCase(file, FileType.Profile)
             .onSuccess { url ->
-                reduce { OnboardState.PrfileImageUploaded(url) }
+                postSideEffect(OnboardSideEffect.PrfileImageUploaded(url))
             }
             .attachExceptionHandling()
     }
@@ -293,7 +330,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     private suspend fun createTag(name: String) = intent {
         tagCreateUseCase(name)
             .onSuccess { tag ->
-                reduce { OnboardState.TagCreated(tag) }
+                postSideEffect(OnboardSideEffect.TagCreated(tag))
             }
             .attachExceptionHandling()
     }
@@ -313,7 +350,9 @@ internal class OnboardViewModel @AssistedInject constructor(
             favoriteTags = favoriteTags,
         )
             .onSuccess { user ->
-                postSideEffect(OnboardSideEffect.UpdateUser(user))
+                reduce {
+                    state.copy(me = user)
+                }
             }
             .attachExceptionHandling()
     }
@@ -322,7 +361,6 @@ internal class OnboardViewModel @AssistedInject constructor(
         additinal: (exception: Throwable) -> Unit = {},
     ) = intent {
         onFailure { exception ->
-            reduce { OnboardState.Error(exception) }
             postSideEffect(OnboardSideEffect.ReportError(exception))
             additinal(exception)
         }
