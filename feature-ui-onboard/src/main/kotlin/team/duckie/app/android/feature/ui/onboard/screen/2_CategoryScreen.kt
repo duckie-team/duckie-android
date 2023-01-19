@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
+
 package team.duckie.app.android.feature.ui.onboard.screen
 
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,6 +27,7 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
@@ -96,12 +100,14 @@ private val CategoryScreenMeasurePolicy = MeasurePolicy { measurables, constrain
 
 @Composable
 internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
-    val categoriesSelectedIndex = remember(vm.categories, vm.selectedCategories) {
+    val onboardState by vm.collectAsState()
+
+    val categoriesSelectedIndex = remember(onboardState.categories, onboardState.selectedCategories) {
         mutableStateListOf(
             elements = Array(
-                size = vm.categories.size,
+                size = onboardState.categories.size,
                 init = { index ->
-                    vm.selectedCategories.contains(vm.categories[index])
+                    onboardState.selectedCategories.contains(onboardState.categories[index])
                 },
             ),
         )
@@ -138,7 +144,7 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
                     .fillMaxSize(),
                 verticalSpacing = 24.dp,
                 horizontalSpacing = 10.dp,
-                items = vm.categories,
+                items = onboardState.categories.toImmutableList(),
                 key = { _, category -> category.id },
             ) { index, category ->
                 CategoryItem(
@@ -162,9 +168,11 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
                     enabled = true,
                     text = stringResource(R.string.button_next),
                 ) {
-                    vm.selectedCategories = categoriesSelectedIndex.fastMapIndexedNotNull { index, selected ->
-                        if (selected) vm.categories[index] else null
-                    }.toImmutableList()
+                    vm.updateUserSelectCategories(
+                        categories = categoriesSelectedIndex.fastMapIndexedNotNull { index, selected ->
+                            onboardState.categories[index].takeIf { selected }
+                        },
+                    )
                     vm.navigateStep(currentStep + 1)
                 }
             }

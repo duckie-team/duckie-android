@@ -1,3 +1,5 @@
+import DependencyHandler.Extensions.implementations
+
 /*
  * Designed and developed by Duckie Team, 2022
  *
@@ -14,5 +16,10 @@ android {
 }
 
 dependencies {
-    implementation(libs.ktx.lifecycle.viewmodel)
+    implementations(
+        libs.androidx.lifecycle.savedstate,
+        libs.ktx.lifecycle.runtime,
+        libs.ktx.lifecycle.viewmodel,
+        libs.compose.ui.activity,
+    )
 }

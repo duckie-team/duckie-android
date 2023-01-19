@@ -6,6 +6,7 @@
  */
 
 @file:OptIn(FlowPreview::class, ExperimentalComposeUiApi::class)
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
@@ -48,7 +49,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.compose.collectState
+import org.orbitmvi.orbit.compose.collectSideEffect
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.photopicker.PhotoPickerConstants
 import team.duckie.app.android.feature.ui.onboard.R
@@ -56,7 +57,7 @@ import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
+import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
@@ -198,9 +199,9 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     var nicknameIsUseable by remember { mutableStateOf(false) }
 
     // Collecting in LaunchedEffect
-    vm.collectState { state ->
-        if (state is OnboardState.NicknameDuplicateChecked) {
-            nicknameIsUseable = state.isUsable
+    vm.collectSideEffect { sideEffect ->
+        if (sideEffect is OnboardSideEffect.NicknameDuplicateChecked) {
+            nicknameIsUseable = sideEffect.isUsable
         }
     }
 
@@ -370,7 +371,7 @@ private fun navigateNextStepIfOk(
     nicknameIsUseable: Boolean,
 ) {
     if (debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
-        vm.me.temporaryNickname = nickname
+        vm.updateUserNickname(nickname)
         vm.navigateStep(currentStep + 1)
     }
 }
