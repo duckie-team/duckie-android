@@ -7,11 +7,11 @@
 
 package team.duckie.app.android.presentation.viewmodel.state
 
-internal sealed class PresentationState {
-    object Initial : PresentationState()
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-    object AccessTokenValidationFailed : PresentationState()
-    object AttachedAccessTokenToHeader : PresentationState()
-
-    class Error(val exception: Throwable) : PresentationState()
-}
+@Parcelize
+internal data class PresentationState(
+    val accessTokenValidationFail: Boolean? = null,
+    val accessTokenAttachedToHeader: Boolean = false,
+) : Parcelable

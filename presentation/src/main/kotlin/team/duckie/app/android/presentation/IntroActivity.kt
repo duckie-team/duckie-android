@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("PrivatePropertyName")
+
 package team.duckie.app.android.presentation
 
 import android.animation.ObjectAnimator
@@ -14,6 +16,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.first
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
+import team.duckie.app.android.feature.ui.home.screen.HomeActivity
 import team.duckie.app.android.feature.ui.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.PresentationViewModel
@@ -66,42 +70,38 @@ class IntroActivity : BaseActivity() {
         )
 
         setContent {
+            LaunchedEffect(vm) {
+                delay(SplashScreenFinishDurationMillis)
+                applicationContext.dataStore.data.first().let { preference ->
+                    preference[PreferenceKey.Account.AccessToken]?.let { accessToken ->
+                        vm.attachAccessTokenToHeaderIfValidationPassed(accessToken)
+                    } ?: launchOnboardActivity()
+                }
+            }
+
             QuackTheme {
                 IntroScreen()
             }
         }
     }
 
-    private fun launchOnboardActivity() {
-        changeActivityWithAnimation<OnboardActivity>()
-    }
-
     private suspend fun handleState(state: PresentationState) {
-        when (state) {
-            PresentationState.Initial -> {
-                delay(SplashScreenFinishDurationMillis)
-                applicationContext.dataStore.data.first().let { preference ->
-                    preference[PreferenceKey.Account.AccessToken]?.let { accessToken ->
-                        vm.checkAccessToken(accessToken)
-                    } ?: launchOnboardActivity()
-                }
-            }
-            PresentationState.AttachedAccessTokenToHeader -> {
-                applicationContext.dataStore.data.first().let { preference ->
-                    val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish] ?: false
-                    if (isOnboardFinsihed) {
-                        toast("온보딩 과거 마침")
-                    } else {
-                        launchOnboardActivity()
+        with(state) {
+            when {
+                accessTokenAttachedToHeader -> {
+                    applicationContext.dataStore.data.first().let { preference ->
+                        val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish] ?: false
+                        if (isOnboardFinsihed) {
+                            launchHomeActivity()
+                        } else {
+                            launchOnboardActivity()
+                        }
                     }
                 }
-            }
-            PresentationState.AccessTokenValidationFailed -> {
-                toast(getString(R.string.expired_access_token_relogin_requried))
-                launchOnboardActivity()
-            }
-            is PresentationState.Error -> {
-                state.exception.reportToToast()
+                accessTokenValidationFail == true -> {
+                    toast(getString(R.string.expired_access_token_relogin_requried))
+                    launchOnboardActivity()
+                }
             }
         }
     }
@@ -113,8 +113,17 @@ class IntroActivity : BaseActivity() {
             }
             is PresentationSideEffect.ReportError -> {
                 sideEffect.exception.printStackTrace()
+                sideEffect.exception.reportToToast()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
         }
+    }
+
+    private fun launchOnboardActivity() {
+        changeActivityWithAnimation<OnboardActivity>()
+    }
+
+    private fun launchHomeActivity() {
+        changeActivityWithAnimation<HomeActivity>()
     }
 }
