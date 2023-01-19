@@ -28,9 +28,9 @@ import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.home.screen.HomeActivity
 import team.duckie.app.android.feature.ui.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
-import team.duckie.app.android.presentation.viewmodel.PresentationViewModel
-import team.duckie.app.android.presentation.viewmodel.sideeffect.PresentationSideEffect
-import team.duckie.app.android.presentation.viewmodel.state.PresentationState
+import team.duckie.app.android.presentation.viewmodel.IntroViewModel
+import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
+import team.duckie.app.android.presentation.viewmodel.state.IntroState
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
@@ -45,7 +45,7 @@ private val SplashScreenFinishDurationMillis = 1.5.seconds
 @AndroidEntryPoint
 class IntroActivity : BaseActivity() {
 
-    private val vm: PresentationViewModel by viewModels()
+    private val vm: IntroViewModel by viewModels()
     private val toast by lazy { ToastWrapper(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +85,7 @@ class IntroActivity : BaseActivity() {
         }
     }
 
-    private suspend fun handleState(state: PresentationState) {
+    private suspend fun handleState(state: IntroState) {
         with(state) {
             when {
                 accessTokenAttachedToHeader -> {
@@ -106,12 +106,12 @@ class IntroActivity : BaseActivity() {
         }
     }
 
-    private fun handleSideEffect(sideEffect: PresentationSideEffect) {
+    private fun handleSideEffect(sideEffect: IntroSideEffect) {
         when (sideEffect) {
-            is PresentationSideEffect.AttachAccessTokenToHeader -> {
+            is IntroSideEffect.AttachAccessTokenToHeader -> {
                 vm.attachAccessTokenToHeader(sideEffect.accessToken)
             }
-            is PresentationSideEffect.ReportError -> {
+            is IntroSideEffect.ReportError -> {
                 sideEffect.exception.printStackTrace()
                 sideEffect.exception.reportToToast()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
@@ -124,6 +124,7 @@ class IntroActivity : BaseActivity() {
     }
 
     private fun launchHomeActivity() {
+        // TODO(sungbin): 끝낼 때 별다른 메시지를 안하는게 맞을까?
         changeActivityWithAnimation<HomeActivity>()
     }
 }
