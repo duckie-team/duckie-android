@@ -14,7 +14,7 @@ plugin-code-detekt = "1.22.0"
 plugin-kotlin-ksp = "1.7.20-1.0.8"
 
 # plugin - compose
-plugin-compose-paparazzi = "1.1.0"
+plugin-compose-paparazzi = "1.2.0"
 
 # plugin - ui
 plugin-ui-oss-license = "0.10.5"
