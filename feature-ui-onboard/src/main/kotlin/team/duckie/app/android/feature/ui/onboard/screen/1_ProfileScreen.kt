@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
@@ -47,6 +49,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -169,7 +172,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     var photoPickerVisible by remember { mutableStateOf(false) }
     var profilePhoto by remember { mutableStateOf<Any>(vm.me.profileImageUrl) }
 
-    var profilePhotoLastSelectionIndex by remember { mutableStateOf(0) }
+    var profilePhotoLastSelectionIndex by remember { mutableStateOf<Int?>(null) }
     val profilePhotoSelections = remember {
         mutableStateListOf(
             elements = Array(
@@ -183,9 +186,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     ) { takenPhoto ->
         photoPickerVisible = false
         if (takenPhoto != null) {
-            profilePhoto = takenPhoto.also { photo ->
-                vm.updateUserProfileImageFile(imageBitmap = photo)
-            }
+            profilePhoto = takenPhoto.also(vm::updateUserProfileImageFile)
         } else {
             toast(context.getString(R.string.profile_fail_load_photo))
         }
@@ -199,9 +200,11 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     var nicknameIsUseable by remember { mutableStateOf(false) }
 
     // Collecting in LaunchedEffect
+    // FIXME(sungbin): 최초 컴포지션시에 collect 안됨
     vm.collectSideEffect { sideEffect ->
         if (sideEffect is OnboardSideEffect.NicknameDuplicateChecked) {
             nicknameIsUseable = sideEffect.isUsable
+            println("nicknameIsUseable: ${sideEffect.isUsable}")
         }
     }
 
@@ -210,10 +213,11 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
         nicknameInputFlow
             .onEach { debounceFinish = false }
             .debounce(NicknameInputDebounceSecond)
+            .filterNot(String::isEmpty)
             .collect { nickname ->
                 debounceFinish = true
                 nicknameRuleError = vm.checkNicknameRuleError(nickname)
-                vm.nicknameDuplicateCheck(nickname)
+                if (!nicknameRuleError) vm.nicknameDuplicateCheck(nickname)
             }
     }
 
@@ -252,11 +256,15 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                             bottom = 20.dp,
                         ),
                     profilePhoto = profilePhoto,
-                    updateProfilePhoto = { photo ->
-                        profilePhoto = photo
+                    resetProfilePhoto = {
+                        profilePhoto = QuackIcon.Profile
+                        profilePhotoLastSelectionIndex?.let { lastSelectionIndex ->
+                            profilePhotoSelections[lastSelectionIndex] = false
+                        }
                     },
                     openPhotoPicker = { photoPickerVisible = true }.takeIf { vm.isImagePermissionGranted == true },
                 )
+                // TODO(sungbin): https://github.com/duckie-team/quack-quack-android/issues/438
                 QuackErrorableTextField(
                     modifier = Modifier
                         .layoutId(ProfileScreenNicknameTextFieldLayoutId)
@@ -288,14 +296,12 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                         .padding(horizontal = 20.dp),
                     text = stringResource(R.string.button_next),
                     type = QuackLargeButtonType.Fill,
+                    imeAnimation = true,
                     enabled = debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable,
                 ) {
-                    navigateNextStepIfOk(
+                    navigateNextStep(
                         vm = vm,
-                        debounceFinish = debounceFinish,
                         nickname = nickname,
-                        nicknameRuleError = nicknameRuleError,
-                        nicknameIsUseable = nicknameIsUseable,
                     )
                 }
             },
@@ -304,6 +310,10 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
 
         // TODO(sungbin): 효율적인 애니메이션 (카메라가 로드되면서 생기는 프라임드랍 때문에 애니메이션 제거)
         if (photoPickerVisible) {
+            SideEffect {
+                keyboard?.hide()
+            }
+
             PhotoPicker(
                 modifier = Modifier
                     .padding(top = systemBarPaddings.calculateTopPadding())
@@ -318,8 +328,10 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                 },
                 onImageClick = { index, _ ->
                     profilePhotoSelections[index] = !profilePhotoSelections[index]
-                    if (profilePhotoLastSelectionIndex != index) {
-                        profilePhotoSelections[profilePhotoLastSelectionIndex] = false
+                    profilePhotoLastSelectionIndex?.let { lastSelectionIndex ->
+                        if (lastSelectionIndex != index) {
+                            profilePhotoSelections[lastSelectionIndex] = false
+                        }
                     }
                     profilePhotoLastSelectionIndex = index
                 },
@@ -327,8 +339,8 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                     photoPickerVisible = false
                 },
                 onAddClick = {
-                    profilePhoto = galleryImages[profilePhotoLastSelectionIndex].toUri().also { uri ->
-                        vm.updateUserProfileImageFile(fileUri = uri)
+                    profilePhotoLastSelectionIndex?.let { selectedIndex ->
+                        profilePhoto = galleryImages[selectedIndex].toUri().also(vm::updateUserProfileImageFile)
                     }
                     photoPickerVisible = false
                 },
@@ -344,7 +356,7 @@ private val ProfilePhotoSize = DpSize(all = 80.dp)
 private fun ProfilePhoto(
     modifier: Modifier = Modifier,
     profilePhoto: Any,
-    updateProfilePhoto: (value: Any) -> Unit,
+    resetProfilePhoto: () -> Unit,
     openPhotoPicker: (() -> Unit)?,
 ) {
     QuackAnimatedContent(
@@ -357,21 +369,17 @@ private fun ProfilePhoto(
         QuackImage(
             src = photo,
             size = ProfilePhotoSize,
+            contentScale = ContentScale.Crop,
             onClick = openPhotoPicker ?: {}, // required when onLongClick is used
-            onLongClick = { updateProfilePhoto(QuackIcon.Profile) },
+            onLongClick = resetProfilePhoto,
         )
     }
 }
 
-private fun navigateNextStepIfOk(
+private fun navigateNextStep(
     vm: OnboardViewModel,
-    debounceFinish: Boolean,
     nickname: String,
-    nicknameRuleError: Boolean,
-    nicknameIsUseable: Boolean,
 ) {
-    if (debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable) {
-        vm.updateUserNickname(nickname)
-        vm.navigateStep(currentStep + 1)
-    }
+    vm.updateUserNickname(nickname)
+    vm.navigateStep(currentStep + 1)
 }
