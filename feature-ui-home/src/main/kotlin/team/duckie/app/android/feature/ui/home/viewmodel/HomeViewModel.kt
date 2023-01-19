@@ -10,15 +10,22 @@
 package team.duckie.app.android.feature.ui.home.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.compose.collectAsLazyPagingItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import okhttp3.internal.toImmutableList
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -92,9 +99,13 @@ internal class HomeViewModel @Inject constructor(
     private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,
     private val fetchRecommendFollowingUseCase: FetchRecommendFollowingUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
-    override val container = container<HomeState, HomeSideEffect>(HomeState())
 
-    var pager: Flow<PagingData<RecommendationItem>>? = null
+    override val container = container<HomeState, HomeSideEffect>(HomeState())
+    internal val pagingDataFlow: Flow<PagingData<RecommendationItem>>
+
+    init {
+        pagingDataFlow = fetchRecommendations()
+    }
 
     // TODO(limsaehyun: Request Server
     fun fetchJumbotrons() = intent {
@@ -115,22 +126,9 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
-    suspend fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>? {
+    fun fetchRecommendations() =
         fetchRecommendationsUseCase()
-            .onSuccess {
-                pager = Pager(
-                    pagingSourceFactory = { it },
-                    config = PagingConfig(
-                        pageSize = ITEMS_PER_PAGE,
-                        enablePlaceholders = true,
-                    ),
-                ).flow
-            }.onFailure {
-                // TODO(riflockle7): API 실패 시 케이스 필요
-            }
-        // TODO(riflockle7): 이렇게 구현하면 안됨 일단은 build 성공 이후 작업 다시 진행
-        return pager
-    }
+            .cachedIn(viewModelScope)
 
     // TODO(limsaehyun): Request Server
     fun fetchRecommendFollowingTest() = intent {

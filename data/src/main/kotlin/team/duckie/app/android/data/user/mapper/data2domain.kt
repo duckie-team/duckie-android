@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.data.user.mapper
 
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.user.constant.DuckieTier
@@ -21,4 +22,14 @@ internal fun UserResponse.toDomain() = User(
     favoriteTags = favoriteTags?.filterNotNull()?.toImmutableList() ?: duckieResponseFieldNpe("favoriteTags"),
     favoriteCategories = favoriteCategories?.filterNotNull()?.toImmutableList()
         ?: duckieResponseFieldNpe("favoriteCategories"),
+)
+
+internal fun UserResponse.toDomainForNonProfile() = User(
+    id = id ?: duckieResponseFieldNpe("id"),
+    nickname = nickName ?: duckieResponseFieldNpe("nickName"),
+    profileImageUrl = profileImageUrl ?: "",
+    tier = tier?.let { DuckieTier.values()[it] } ?: DuckieTier.DuckKid,
+    favoriteTags = favoriteTags?.filterNotNull()?.toImmutableList() ?: persistentListOf(),
+    favoriteCategories = favoriteCategories?.filterNotNull()?.toImmutableList()
+        ?: persistentListOf()
 )

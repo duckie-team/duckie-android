@@ -31,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
@@ -58,6 +59,7 @@ import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
+@OptIn(ExperimentalFoundationApi::class, OutOfDateApi::class)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
@@ -67,11 +69,7 @@ internal fun HomeRecommendScreen(
     val state = vm.collectAsState().value
     val pageState = rememberPagerState()
 
-    val lazyRecommendations = vm.pager?.collectAsLazyPagingItems()
-
-    LaunchedEffect(Unit) {
-        vm.fetchRecommendations()
-    }
+    val lazyRecommendations = vm.fetchRecommendations().collectAsLazyPagingItems()
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -117,20 +115,18 @@ internal fun HomeRecommendScreen(
             )
         }
 
-        lazyRecommendations?.let {
-            items(items = lazyRecommendations) { item ->
-                HomeTopicRecommendLayout(
-                    modifier = Modifier
-                        .padding(bottom = 60.dp),
-                    title = item?.title ?: "",
-                    tag = item?.tag?.name ?: "",
-                    exams = item?.exams?.toImmutableList() ?: persistentListOf(),
-                    onClicked = { },
-                    onTagClicked = { tag ->
-                        navigateToSearchResult(tag)
-                    },
-                )
-            }
+        items(items = lazyRecommendations) { item ->
+            HomeTopicRecommendLayout(
+                modifier = Modifier
+                    .padding(bottom = 60.dp),
+                title = item?.title ?: "",
+                tag = item?.tag?.name ?: "",
+                exams = item?.exams?.toImmutableList() ?: persistentListOf(),
+                onClicked = { },
+                onTagClicked = { tag ->
+                    navigateToSearchResult(tag)
+                },
+            )
         }
     }
 }
@@ -210,7 +206,7 @@ private fun HomeTopicRecommendLayout(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = item.id,
                         coverImg = item.thumbnailUrl,
-                        nickname = "item.nickname",
+                        nickname = item.user.nickname,
                         title = item.title,
                         examineeNumber = item.solvedCount,
                     ),

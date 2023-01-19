@@ -22,6 +22,9 @@ import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
+import team.duckie.app.android.data.user.mapper.toDomain
+import team.duckie.app.android.data.user.mapper.toDomainForNonProfile
+import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.Exam
@@ -58,6 +61,31 @@ internal fun ExamData.toDomain() = Exam(
     subTags = subTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
     problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList() ?: persistentListOf(),
     type = type ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
+    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+)
+
+@OutOfDateApi
+internal fun ExamData.toDomainForNonProfile() = Exam(
+    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
+    title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
+    description = description
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.description"),
+    thumbnailUrl = thumbnailUrl,
+    buttonTitle = buttonTitle
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.buttonTitle"),
+    certifyingStatement = certifyingStatement
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.certifyingStatement"),
+    solvedCount = solvedCount
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.solvedCount"),
+    answerRate = answerRate ?: duckieResponseFieldNpe("${this::class.java.simpleName}.answerRate"),
+    category = category?.toDomain()
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.category"),
+    mainTag = mainTag?.toDomain()
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.mainTag"),
+    subTags = subTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
+    problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList() ?: persistentListOf(),
+    type = type ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
+    user = user?.toDomainForNonProfile() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
 )
 
 @OutOfDateApi

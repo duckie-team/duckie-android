@@ -13,6 +13,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @OutOfDateApi
@@ -31,4 +32,5 @@ data class Exam(
     val subTags: ImmutableList<Tag>,
     val problems: ImmutableList<Problem>,
     val type: String,
+    val user: User,
 )

@@ -9,11 +9,15 @@
 
 package team.duckie.app.android.data.recommendation.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.flow.Flow
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.toJsonObject
@@ -26,18 +30,22 @@ import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 
+/**
+ * fetchRecommendatiins 에서 사용되는 paging 단위
+ */
+private const val ITEMS_PER_PAGE = 10
+
 class RecommendationRepositoryImpl : RecommendationRepository {
     @ExperimentalApi
-    override suspend fun fetchRecommendations(): PagingSource<Int, RecommendationItem> {
-        val response = client.get {
-            url("/recommendations")
-        }
-
-        return responseCatching(response.bodyAsText()) { body ->
-            @Suppress("UNUSED_VARIABLE")
-            val recommendations = body.toJsonObject<RecommendationData>().toDomain().recommendations
-            RecommendationPagingSource()
-        }
+    override fun fetchRecommendations(): Flow<PagingData<RecommendationItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = ITEMS_PER_PAGE,
+                enablePlaceholders = true,
+                maxSize = 200,
+            ),
+            pagingSourceFactory = { RecommendationPagingSource() }
+        ).flow
     }
 
     @ExperimentalApi

@@ -8,9 +8,11 @@
 package team.duckie.app.android.feature.ui.home.viewmodel.state
 
 import androidx.compose.runtime.Immutable
+import androidx.paging.PagingData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.recommendation.model.JumbotronType
+import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 
@@ -25,6 +27,8 @@ internal data class HomeState(
 
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
     val recommendFollowingTest: ImmutableList<FollowingTest> = persistentListOf(),
+
+    val recommendations: PagingData<RecommendationItem> = PagingData.empty()
 ) {
     /**
      * 팔로잉의 덕질고사 추천 피드 data class [FollowingTest]
