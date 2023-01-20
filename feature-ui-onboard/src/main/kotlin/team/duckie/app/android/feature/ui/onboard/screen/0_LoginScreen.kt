@@ -59,7 +59,6 @@ private val currentStep = OnboardStep.Login
 
 private const val LoginScreenWelcomeLayoutId = "LoginScreenWelcome"
 private const val LoginScreenLoginAreaLayoutId = "LoginScreenLoginArea"
-private const val LoginScreenJoiningIndicatorLayoutId = "LoginScreenJoiningIndicator"
 
 private val LoginScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
     val looseConstraints = constraints.asLoose()
