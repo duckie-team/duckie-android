@@ -11,7 +11,6 @@ import com.github.kittinunf.fuel.core.FuelManager
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
-import io.ktor.client.utils.EmptyContent.headers
 import javax.inject.Inject
 import team.duckie.app.android.data._datasource.DuckieHttpHeaders
 import team.duckie.app.android.data._datasource.client
