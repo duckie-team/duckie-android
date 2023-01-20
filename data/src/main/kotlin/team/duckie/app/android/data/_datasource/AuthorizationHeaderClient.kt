@@ -26,7 +26,7 @@ import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlugin
 
-@Deprecated(message = "fuel 로 변경 예정 (#180)", level = DeprecationLevel.HIDDEN)
+@Deprecated(message = "fuel 로 변경 예정 (#180)", level = DeprecationLevel.WARNING)
 internal var client = AuthorizationHeaderClient()
     private set
 
