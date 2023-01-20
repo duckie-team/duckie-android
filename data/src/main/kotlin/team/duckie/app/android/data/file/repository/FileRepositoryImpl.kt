@@ -15,6 +15,7 @@ import java.io.File
 import javax.inject.Inject
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.domain.file.repository.FileRepository
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 class FileRepositoryImpl @Inject constructor(private val client: Fuel) : FileRepository {
@@ -27,6 +28,7 @@ class FileRepositoryImpl @Inject constructor(private val client: Fuel) : FileRep
             )
             .add(FileDataPart(name = "file", file = file))
             .progress { readBytes, totalBytes ->
+                @AllowMagicNumber(because = "100")
                 val progress = readBytes.toFloat() / totalBytes.toFloat() * 100
                 println("Uploading... $progress%")
             }
