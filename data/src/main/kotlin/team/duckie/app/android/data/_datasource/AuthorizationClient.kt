@@ -48,8 +48,8 @@ internal object AuthorizationClient {
                 DuckieHttpHeaders.Version to BuildConfig.APP_VERSION_NAME,
                 HttpHeaders.ContentType to HttpHeaders.ContentTypeValues.ApplicationJson,
             )
-            addRequestInterceptor { LogRequestInterceptor }
-            addResponseInterceptor { LogResponseInterceptor }
+            addRequestInterceptor(LogRequestInterceptor)
+            addResponseInterceptor(LogResponseInterceptor)
         }
         return Fuel
     }
