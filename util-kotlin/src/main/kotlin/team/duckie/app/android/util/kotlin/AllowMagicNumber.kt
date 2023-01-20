@@ -12,6 +12,6 @@ package team.duckie.app.android.util.kotlin
  *
  * @param because MagicNumber 을 허용하는 이유
  */
-@Target(AnnotationTarget.EXPRESSION, AnnotationTarget.CLASS, AnnotationTarget.FILE)
+@Target(AnnotationTarget.EXPRESSION, AnnotationTarget.CLASS, AnnotationTarget.FILE, AnnotationTarget.LOCAL_VARIABLE)
 @Retention(AnnotationRetention.SOURCE)
 annotation class AllowMagicNumber(val because: String = "")

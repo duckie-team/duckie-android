@@ -30,12 +30,16 @@ android {
     }
 }
 
+// TODO(sungbin): ktor 의존성 제거 및 mockk 의존성 추가
+// https://github.com/duckie-team/duckie-android/issues/180
 dependencies {
     implementations(
         libs.login.kakao,
         libs.kotlin.coroutines,
         libs.kotlin.collections.immutable,
         libs.paging.runtime,
+        libs.jackson.databind,
+        libs.bundles.fuel,
         libs.bundles.ktor.client,
         projects.domain,
         projects.utilKotlin,
