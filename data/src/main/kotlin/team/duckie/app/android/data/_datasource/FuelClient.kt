@@ -30,7 +30,7 @@ private object HttpHeaders {
 @Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
-internal object AuthorizationClient {
+internal object FuelClient {
     private val MaxTimeoutMillis = 3.seconds
     private const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
 
@@ -55,5 +55,5 @@ internal object AuthorizationClient {
     }
 
     @Provides
-    fun provideHttpClient(): Fuel = this()
+    fun provide(): Fuel = this()
 }
