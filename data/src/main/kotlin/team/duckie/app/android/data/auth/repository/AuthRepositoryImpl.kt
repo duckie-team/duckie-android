@@ -7,10 +7,12 @@
 
 package team.duckie.app.android.data.auth.repository
 
+import com.github.kittinunf.fuel.core.FuelManager
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import javax.inject.Inject
+import team.duckie.app.android.data._datasource.DuckieHttpHeaders
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.jsonBody
@@ -51,5 +53,10 @@ class AuthRepositoryImpl @Inject constructor() : AuthRepository {
     override fun attachAccessTokenToHeader(accessToken: String) {
         DuckieAuthorizationHeader.updateAccessToken(accessToken)
         client.update()
+
+        val baseHeaders = FuelManager.instance.baseHeaders.orEmpty()
+        FuelManager.instance.baseHeaders = baseHeaders.toMutableMap().apply {
+            set(DuckieHttpHeaders.Authorization, "Bearer $accessToken")
+        }
     }
 }
