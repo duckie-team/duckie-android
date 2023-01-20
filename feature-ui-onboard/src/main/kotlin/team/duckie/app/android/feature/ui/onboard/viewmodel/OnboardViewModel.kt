@@ -230,7 +230,6 @@ internal class OnboardViewModel @AssistedInject constructor(
 
                 launch {
                     updateProfileImageFile(file)
-                    state.temporaryProfileImageFile?.delete()
                     reduce {
                         state.copy(temporaryProfileImageFile = null)
                     }

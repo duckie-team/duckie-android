@@ -5,10 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(
-    ExperimentalMaterialApi::class,
-    ExperimentalComposeUiApi::class,
-)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.ui.onboard.screen
@@ -260,6 +257,7 @@ private fun updateUserAndFinishOnboard(
             favoriteCategories = onboardState.selectedCategories,
             favoriteTags = onboardState.temporaryFavoriteTags,
         )
+        onboardState.temporaryProfileImageFile?.delete()
         context.dataStore.edit { preference ->
             preference[PreferenceKey.Onboard.Finish] = true
         }
