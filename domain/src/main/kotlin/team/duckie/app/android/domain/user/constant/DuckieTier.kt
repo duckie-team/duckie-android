@@ -14,4 +14,6 @@ import androidx.compose.runtime.Immutable
 @Immutable
 enum class DuckieTier(val level: Int) {
     DuckKid(0),
+    // TODO(riflockle7): 백앤드에 1000 이 BRONZE 가 맞는지 확인 필요
+    DuckBronze(1000),
 }
