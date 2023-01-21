@@ -18,6 +18,7 @@ import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamInstanceBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
+import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.QuestionData
@@ -31,6 +32,7 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
+import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
@@ -137,6 +139,16 @@ internal fun ExamBody.toData() = ExamBodyData(
     isPublic = isPublic,
     buttonTitle = buttonTitle,
     userId = userId,
+)
+
+@OutOfDateApi
+internal fun ExamThumbnailBody.toData() = ExamThumbnailBodyData(
+    category = category,
+    certifyingStatement = certifyingStatement,
+    mainTag = mainTag,
+    nickName = nickName,
+    title = title,
+    type = type,
 )
 
 internal fun Problem.toData() = ProblemData(

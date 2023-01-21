@@ -13,6 +13,7 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
+import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @Immutable
@@ -22,6 +23,9 @@ interface ExamRepository {
 
     @OutOfDateApi
     suspend fun getExam(id: Int): Exam
+
+    @OutOfDateApi
+    suspend fun getExamThumbnail(examThumbnailBody: ExamThumbnailBody): String
 
     @OutOfDateApi
     suspend fun postExamInstance(examInstanceBody: ExamInstanceBody): Boolean
