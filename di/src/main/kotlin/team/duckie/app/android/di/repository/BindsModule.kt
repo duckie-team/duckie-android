@@ -18,6 +18,7 @@ import team.duckie.app.android.data.category.repository.CategoryRepositoryImpl
 import team.duckie.app.android.data.device.repository.DeviceRepositoryImpl
 import team.duckie.app.android.data.exam.repository.ExamRepositoryImpl
 import team.duckie.app.android.data.file.repository.FileRepositoryImpl
+import team.duckie.app.android.data.follow.repository.FollowsRepositoryImpl
 import team.duckie.app.android.data.gallery.repository.GalleryRepositoryImpl
 import team.duckie.app.android.data.search.repository.SearchRepositoryImpl
 import team.duckie.app.android.data.tag.repository.TagRepositoryImpl
@@ -28,6 +29,7 @@ import team.duckie.app.android.domain.category.repository.CategoryRepository
 import team.duckie.app.android.domain.device.repository.DeviceRepository
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.file.repository.FileRepository
+import team.duckie.app.android.domain.follow.repository.FollowsRepository
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
 import team.duckie.app.android.domain.search.repository.SearchRepository
 import team.duckie.app.android.domain.tag.repository.TagRepository
@@ -51,6 +53,9 @@ abstract class BindsModule {
 
     @Binds
     abstract fun provideFileRepository(impl: FileRepositoryImpl): FileRepository
+
+    @Binds
+    abstract fun provideFollowsRepository(impl: FollowsRepositoryImpl): FollowsRepository
 
     @Binds
     abstract fun provideGalleryRepository(impl: GalleryRepositoryImpl): GalleryRepository

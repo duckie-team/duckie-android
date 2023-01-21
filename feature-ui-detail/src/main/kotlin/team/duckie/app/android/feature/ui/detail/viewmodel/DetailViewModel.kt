@@ -139,6 +139,15 @@ private val dummyExam = Exam(
         ),
     ),
     type = "text",
+    user = User(
+        id = 1,
+        nickname = "doro",
+        profileImageUrl = "",
+        tier = DuckieTier.DuckBronze,
+        favoriteTags = persistentListOf(),
+        favoriteCategories = persistentListOf(),
+    ),
+    status = "PENDING",
 )
 
 private val dummyUser = User(
