@@ -5,15 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.domain.tag.model
+package team.duckie.app.android.presentation.viewmodel.state
 
 import android.os.Parcelable
-import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
 
-@Immutable
 @Parcelize
-data class Tag(
-    val id: Int,
-    val name: String,
+internal data class IntroState(
+    val accessTokenValidationFail: Boolean? = null,
+    val accessTokenAttachedToHeader: Boolean = false,
 ) : Parcelable

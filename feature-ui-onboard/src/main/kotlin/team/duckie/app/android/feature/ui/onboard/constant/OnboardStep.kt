@@ -11,6 +11,7 @@ import team.duckie.app.android.util.kotlin.AllowMagicNumber
 
 @AllowMagicNumber
 internal enum class OnboardStep(private val index: Int) {
+    Activity(-1),
     Login(0),
     Profile(1),
     Category(2),
@@ -18,12 +19,20 @@ internal enum class OnboardStep(private val index: Int) {
     ;
 
     operator fun minus(previous: Int): OnboardStep {
-        return values()[index - previous]
+        return OnboardStep.values().first { it.index == index - previous }
     }
 
     operator fun plus(next: Int): OnboardStep {
-        return values()[index + next]
+        return OnboardStep.values().first { it.index == index + next }
     }
+}
+
+internal annotation class CollectInStep {
+    companion object
+}
+
+internal annotation class CollectInViewModel {
+    companion object
 }
 
 internal annotation class RequiredStep(@Suppress("unused") vararg val step: OnboardStep)

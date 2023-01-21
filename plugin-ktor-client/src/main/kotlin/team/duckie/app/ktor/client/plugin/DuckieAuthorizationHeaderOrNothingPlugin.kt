@@ -28,7 +28,7 @@ val DuckieAuthorizationHeaderOrNothingPlugin = createClientPlugin(
     DuckieAuthorizationHeader.accessToken?.let { accessToken ->
         val headerKey = pluginConfig.headerKey
         onRequest { request, _ ->
-            request.headers.append(headerKey, accessToken)
+            request.headers.append(headerKey, "Bearer $accessToken")
         }
     }
 }

@@ -20,11 +20,13 @@ android {
 dependencies {
     implementations(
         platform(libs.firebase.bom),
+        projects.domain,
         projects.di,
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
         libs.orbit.viewmodel,
+        libs.orbit.compose,
         libs.ktx.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
         libs.compose.lifecycle.runtime,

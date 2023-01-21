@@ -9,6 +9,7 @@ import DependencyHandler.Extensions.implementations
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
+    `kotlin-parcelize`
 }
 
 android {

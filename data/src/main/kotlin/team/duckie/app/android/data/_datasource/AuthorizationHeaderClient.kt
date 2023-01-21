@@ -8,6 +8,7 @@
 package team.duckie.app.android.data._datasource
 
 import android.os.Build
+import com.fasterxml.jackson.databind.DeserializationFeature
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.engine.cio.endpoint
@@ -25,6 +26,7 @@ import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlugin
 
+@Deprecated(message = "fuel 로 변경 예정 (#180)")
 internal var client = AuthorizationHeaderClient()
     private set
 
@@ -40,6 +42,7 @@ internal fun updateClient(
     newBuildModel?.let { DeviceName = it }
 }
 
+// TODO(sungbin): AuthorizationClient.kt 로 이전
 internal object DuckieHttpHeaders {
     const val DeviceName = "x-duckie-device-name"
     const val Version = "x-duckie-version"
@@ -76,7 +79,9 @@ private object AuthorizationHeaderClient {
             headerKey = DuckieHttpHeaders.Authorization
         }
         install(plugin = ContentNegotiation) {
-            jackson()
+            jackson {
+                disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
+            }
         }
         install(plugin = Logging) {
             logger = Logger.ANDROID
