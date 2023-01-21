@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.exam.model
 
-
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class ExamThumbnailBodyData(
@@ -27,5 +26,5 @@ data class ExamThumbnailBodyData(
     val title: String?,
 
     @JsonProperty("type")
-    val type: String?
+    val type: String?,
 )

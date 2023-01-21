@@ -289,7 +289,7 @@ internal class CreateProblemViewModel @Inject constructor(
         }
 
         getExamThumbnailUseCase(
-            examThumbnailBody = container.stateFlow.value.examInformation.examThumbnailBody
+            examThumbnailBody = container.stateFlow.value.examInformation.examThumbnailBody,
         ).onSuccess { thumbnail ->
             reduce {
                 state.copy(
