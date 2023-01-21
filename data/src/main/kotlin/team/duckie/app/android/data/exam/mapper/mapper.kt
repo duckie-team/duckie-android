@@ -9,6 +9,7 @@ package team.duckie.app.android.data.exam.mapper
 
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
@@ -17,11 +18,13 @@ import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamInstanceBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
+import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
+import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.Exam
@@ -29,15 +32,18 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
+import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ShortModel
+import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
 @OutOfDateApi
+@AllowCyclomaticComplexMethod
 internal fun ExamData.toDomain() = Exam(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
@@ -55,9 +61,11 @@ internal fun ExamData.toDomain() = Exam(
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.category"),
     mainTag = mainTag?.toDomain()
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.mainTag"),
-    subTags = subTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
+    subTags = subTags?.fastMap(TagData::toDomain)?.toPersistentList() ?: persistentListOf(),
     problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList() ?: persistentListOf(),
     type = type ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
+    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+    status = status ?: duckieResponseFieldNpe("${this::class.java.simpleName}.status"),
 )
 
 @OutOfDateApi
@@ -133,6 +141,16 @@ internal fun ExamBody.toData() = ExamBodyData(
     isPublic = isPublic,
     buttonTitle = buttonTitle,
     userId = userId,
+)
+
+@OutOfDateApi
+internal fun ExamThumbnailBody.toData() = ExamThumbnailBodyData(
+    category = category,
+    certifyingStatement = certifyingStatement,
+    mainTag = mainTag,
+    nickName = nickName,
+    title = title,
+    type = type,
 )
 
 internal fun Problem.toData() = ProblemData(
