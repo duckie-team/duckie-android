@@ -218,7 +218,7 @@ internal fun ExamInformationScreen(
                 nextButtonText = stringResource(id = R.string.next),
                 nextButtonClick = {
                     coroutineScope.launch {
-                        viewModel.navigateStep(CreateProblemStep.CreateProblem)
+                        viewModel.getExamThumbnail()
                     }
                 },
                 isValidateCheck = viewModel::examInformationIsValidate,

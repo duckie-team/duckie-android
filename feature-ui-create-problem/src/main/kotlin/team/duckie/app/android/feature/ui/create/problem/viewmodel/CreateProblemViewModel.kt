@@ -37,6 +37,7 @@ import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.exam.model.toChoice
 import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
+import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.domain.tag.model.Tag
@@ -54,6 +55,7 @@ import team.duckie.app.android.util.kotlin.fastMapIndexed
 @HiltViewModel
 internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
+    private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val tagRepository: TagRepository,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
@@ -276,6 +278,28 @@ internal class CreateProblemViewModel @Inject constructor(
     internal fun examInformationIsValidate(): Boolean {
         return with(container.stateFlow.value.examInformation) {
             categorySelection >= 0 && isMainTagSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+        }
+    }
+
+    /** 유저가 입력한 정보를 기반으로 Exam 기본 썸네일 이미지를 가져온다. */
+    internal fun getExamThumbnail() = intent {
+        // 이미 썸네일을 서버로부터 가져온 경우 별다른 처리를 하지 않는다.
+        if (container.stateFlow.value.additionalInfo.thumbnail.toString().isNotEmpty()) {
+            return@intent
+        }
+
+        getExamThumbnailUseCase(
+            examThumbnailBody = container.stateFlow.value.examInformation.examThumbnailBody
+        ).onSuccess { thumbnail ->
+            reduce {
+                state.copy(
+                    createProblemStep = CreateProblemStep.CreateProblem,
+                    additionalInfo = state.additionalInfo.copy(thumbnail = thumbnail),
+                    defaultThumbnail = thumbnail,
+                )
+            }
+        }.onFailure {
+            print("getExamThumbnail 실패")
         }
     }
 

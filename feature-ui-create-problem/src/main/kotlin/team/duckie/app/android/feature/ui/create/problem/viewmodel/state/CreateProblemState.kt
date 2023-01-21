@@ -11,19 +11,21 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
 
 internal data class CreateProblemState(
-    val createProblemStep: CreateProblemStep = CreateProblemStep.AdditionalInformation,
+    val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
     val examInformation: ExamInformation = ExamInformation(),
     val createProblem: CreateProblem = CreateProblem(),
     val additionalInfo: AdditionInfo = AdditionInfo(),
     val findResultType: FindResultType = FindResultType.MainTag,
     val error: Error? = null,
     val photoState: CreateProblemPhotoState? = null,
+    val defaultThumbnail: String = "",
 ) {
     data class ExamInformation(
         val isCategoryLoading: Boolean = true,
@@ -39,6 +41,18 @@ internal data class CreateProblemState(
     ) {
         val mainTag: String
             get() = searchMainTag.results.firstOrNull()?.name ?: ""
+
+        val examThumbnailBody: ExamThumbnailBody
+            get() = ExamThumbnailBody(
+                category = categories[categorySelection].name,
+                certifyingStatement = certifyingStatement,
+                mainTag = mainTag,
+                // TODO(riflockle7): 유저 데이터 활용 가능해질 시 처리 필요
+                nickName = "nickname",
+                title = examTitle,
+                // TODO(riflockle7): 기획이 나오는대로 해당 값 처리 방법 구현해야 함
+                type = "text",
+            )
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
