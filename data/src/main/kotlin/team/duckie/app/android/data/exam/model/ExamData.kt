@@ -10,6 +10,7 @@ package team.duckie.app.android.data.exam.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.tag.model.TagData
+import team.duckie.app.android.data.user.model.UserResponse
 
 internal data class ExamData(
     @field:JsonProperty("id")
@@ -50,4 +51,10 @@ internal data class ExamData(
 
     @field:JsonProperty("type")
     val type: String? = null,
+
+    @field:JsonProperty("user")
+    val user: UserResponse? = null,
+
+    @field:JsonProperty("status")
+    val status: String? = null,
 )

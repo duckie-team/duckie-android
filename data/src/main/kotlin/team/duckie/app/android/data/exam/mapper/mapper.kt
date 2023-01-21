@@ -9,6 +9,7 @@ package team.duckie.app.android.data.exam.mapper
 
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
@@ -22,6 +23,7 @@ import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
+import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.Exam
@@ -55,9 +57,11 @@ internal fun ExamData.toDomain() = Exam(
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.category"),
     mainTag = mainTag?.toDomain()
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.mainTag"),
-    subTags = subTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
+    subTags = subTags?.fastMap(TagData::toDomain)?.toPersistentList() ?: persistentListOf(),
     problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList() ?: persistentListOf(),
     type = type ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
+    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+    status = status ?: duckieResponseFieldNpe("${this::class.java.simpleName}.status"),
 )
 
 @OutOfDateApi

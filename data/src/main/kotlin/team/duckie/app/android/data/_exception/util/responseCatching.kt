@@ -48,6 +48,8 @@ internal inline fun <DomainModel> responseCatching(
     /*return try {
         parse(response)
     } catch (throwable: Throwable) {
+        // TODO(riflockle7): 개발 도중 에러를 확인하기 위해 추가한 코드. 추후 논의를 통해 제거 필요
+        throwable.printStackTrace()
         val errorBody = jsonMapper.readValue(response, ExceptionBody::class.java)
         errorBody.throwing(throwable = throwable)
     }*/
