@@ -37,11 +37,13 @@ import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ShortModel
+import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
 @OutOfDateApi
+@AllowCyclomaticComplexMethod
 internal fun ExamData.toDomain() = Exam(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
