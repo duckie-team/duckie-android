@@ -31,6 +31,7 @@ import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigatio
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
+import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
@@ -79,9 +80,9 @@ class HomeActivity : BaseActivity() {
                                     },
                                 )
 
-                                BottomNavigationStep.SearchScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
-                                BottomNavigationStep.RankingScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
-                                BottomNavigationStep.MyPageScreen -> TODO("limsaehyun : 페이지 제작 후 연결 필요")
+                                BottomNavigationStep.SearchScreen -> DuckieTodoScreen()
+                                BottomNavigationStep.RankingScreen -> DuckieTodoScreen()
+                                BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
                             }
                         }
                         // TODO(limsaehyun): 추후에 QuackDivider 로 교체 필요
