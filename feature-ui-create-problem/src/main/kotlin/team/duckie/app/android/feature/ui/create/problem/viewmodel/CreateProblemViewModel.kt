@@ -601,11 +601,11 @@ internal class CreateProblemViewModel @Inject constructor(
 
     // AdditionalInfo
     /** 카테고리 썸네일을 정한다. */
-    internal fun setThumbnail(thumbnail: Any, thumbnailType: ThumbnailType) = intent {
+    internal fun setThumbnail(thumbnail: Any? = null, thumbnailType: ThumbnailType) = intent {
         reduce {
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
-                    thumbnail = thumbnail,
+                    thumbnail = thumbnail ?: state.defaultThumbnail,
                     thumbnailType = thumbnailType,
                 ),
             )

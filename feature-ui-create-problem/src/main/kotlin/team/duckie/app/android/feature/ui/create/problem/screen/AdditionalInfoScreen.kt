@@ -197,15 +197,11 @@ internal fun AdditionalInformationScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     // 기본 썸네일 선택
-                    // TODO(riflockle7): quack_ic_profile_24 -> 백앤드에서 받아온 이미지
                     AdditionalBottomSheetThumbnailLayout(
                         title = "기본 썸네일",
-                        src = team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
+                        src = rootState.defaultThumbnail,
                         onClick = {
-                            vm.setThumbnail(
-                                team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
-                                ThumbnailType.Default,
-                            )
+                            vm.setThumbnail(thumbnailType = ThumbnailType.Default)
                             coroutineScope.launch {
                                 sheetState.hide()
                             }

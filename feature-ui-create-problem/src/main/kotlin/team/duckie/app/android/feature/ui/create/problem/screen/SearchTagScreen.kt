@@ -47,7 +47,7 @@ import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
 
-const val MaximumSubTagCount = 5
+private const val MaximumSubTagCount = 5
 
 @Composable
 internal fun SearchTagScreen(
