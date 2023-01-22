@@ -37,7 +37,6 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
-import team.duckie.app.android.feature.ui.create.problem.common.FadeAnimatedVisibility
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
@@ -46,6 +45,7 @@ import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
@@ -136,7 +136,7 @@ internal fun ExamInformationScreen(
                             onClick = { viewModel.onClickCloseTag() },
                         )
                     }
-                    FadeAnimatedVisibility(visible = !state.isMainTagSelected) {
+                    QuackAnimatedVisibility(visible = !state.isMainTagSelected) {
                         QuackBasicTextField(
                             modifier = Modifier.quackClickable {
                                 viewModel.goToSearchMainTag(lazyListState.firstVisibleItemIndex)
