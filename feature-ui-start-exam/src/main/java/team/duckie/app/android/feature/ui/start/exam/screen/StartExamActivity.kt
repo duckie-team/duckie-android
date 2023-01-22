@@ -8,6 +8,7 @@
 package team.duckie.app.android.feature.ui.start.exam.screen
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -52,8 +53,10 @@ class StartExamActivity : BaseActivity() {
             is StartExamSideEffect.FinishStartExam -> {
                 if (sideEffect.certified) {
                     // TODO(riflockle7): 시험 풀기 화면으로 이동 필요 및 필요 extra 확인 필요
+                    Log.i("riflockle7", "시험 풀기 화면으로 이동")
                     finishWithAnimation()
                 } else {
+                    Log.i("riflockle7", "화면 종료")
                     finishWithAnimation()
                 }
             }

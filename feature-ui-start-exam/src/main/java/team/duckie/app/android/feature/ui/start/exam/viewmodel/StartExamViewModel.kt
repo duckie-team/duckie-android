@@ -16,11 +16,13 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.DuckieClientLogicProblemException
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel
+@AllowMagicNumber
 internal class StartExamViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<StartExamState, StartExamSideEffect>, ViewModel() {

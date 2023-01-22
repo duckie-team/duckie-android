@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.start.exam.screen
 
-import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -86,7 +84,6 @@ private fun StartExamLoadingScreen(modifier: Modifier, viewModel: StartExamViewM
  */
 @Composable
 internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewModel) {
-    val activity = LocalContext.current as Activity
     val state = viewModel.collectAsState().value as StartExamState.Input
 
     val certifyingStatement: String = remember(state.certifyingStatement) {
@@ -100,7 +97,7 @@ internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewMo
         // 상단 탭바
         QuackTopAppBar(
             leadingIcon = QuackIcon.ArrowBack,
-            onLeadingIconClick = { activity.finish() }
+            onLeadingIconClick = viewModel::finishStartExam,
         )
 
         // 제목
