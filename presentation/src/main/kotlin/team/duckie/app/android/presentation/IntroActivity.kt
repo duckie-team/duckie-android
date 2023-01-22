@@ -25,8 +25,8 @@ import kotlinx.coroutines.flow.first
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
+import team.duckie.app.android.feature.ui.home.screen.HomeActivity
 import team.duckie.app.android.feature.ui.onboard.OnboardActivity
-import team.duckie.app.android.feature.ui.start.exam.screen.StartExamActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
@@ -121,7 +121,7 @@ class IntroActivity : BaseActivity() {
 
     private fun launchHomeActivity() {
         // TODO(sungbin): 끝낼 때 별다른 메시지를 안하는게 맞을까?
-        changeActivityWithAnimation<StartExamActivity>()
+        changeActivityWithAnimation<HomeActivity>()
     }
 
     private fun launchHomeOrOnboardActivity(isOnboardFinish: Boolean) {

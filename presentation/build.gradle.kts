@@ -19,7 +19,6 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":feature-ui-start-exam")))
     implementations(
         projects.di,
         projects.utilUi,
