@@ -136,7 +136,7 @@ internal fun CreateProblemBottomLayout(
                     modifier = Modifier
                         .clip(RoundedCornerShape(size = 8.dp))
                         .background(QuackColor.White.composeColor)
-                        .quackClickable { tempSaveButtonClick() }
+                        .quackClickable(onClick = tempSaveButtonClick)
                         .applyAnimatedQuackBorder(
                             QuackBorder(1.dp, QuackColor.Gray3),
                             shape = RoundedCornerShape(size = 8.dp),
