@@ -64,6 +64,7 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.ThumbnailType
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
@@ -400,7 +401,7 @@ private fun AdditionalSubTagsLayout(vm: CreateProblemViewModel = activityViewMod
                 // TODO(riflockle7): 추후 꽥꽥에서, 전체 너비만큼 태그 Composable 을 넣을 수 있는 Composable 적용 필요
                 QuackLazyVerticalGridTag(
                     horizontalSpace = 4.dp,
-                    items = state.subTags.fastMap { it.name },
+                    items = state.subTags.fastMap(Tag::name),
                     tagType = QuackTagType.Circle(QuackIcon.Close),
                     onClick = { vm.onClickCloseTag(it) },
                     itemChunkedSize = 3,
