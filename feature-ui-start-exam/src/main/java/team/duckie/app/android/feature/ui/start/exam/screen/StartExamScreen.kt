@@ -8,57 +8,95 @@
 package team.duckie.app.android.feature.ui.start.exam.screen
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.start.exam.R
+import team.duckie.app.android.feature.ui.start.exam.viewmodel.StartExamState
+import team.duckie.app.android.feature.ui.start.exam.viewmodel.StartExamViewModel
 import team.duckie.app.android.shared.ui.compose.ImeSpacer
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
+import team.duckie.quackquack.ui.component.QuackTitle1
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
-fun StartExamScreen() {
-    val activity = LocalContext.current as Activity
+internal fun StartExamScreen(
+    modifier: Modifier,
+    viewModel: StartExamViewModel = activityViewModel(),
+) = when (viewModel.collectAsState().value) {
+    is StartExamState.Loading -> StartExamLoadingScreen(modifier, viewModel)
+    is StartExamState.Input -> StartExamInputScreen(modifier, viewModel)
+    is StartExamState.Error -> StartExamErrorScreen(modifier, viewModel)
+}
 
-    // TODO(riflockle7): 추후 ViewModel 연동 시 다른 값으로 바꾸어야 함
-    val certifyingStatement: String by remember {
-        mutableStateOf(activity.getString(R.string.certifing_statement_placeholder))
+/**
+ * 시험 시작 Loading 화면
+ * @see [StartExamState.Loading]
+ */
+@Composable
+private fun StartExamLoadingScreen(modifier: Modifier, viewModel: StartExamViewModel) {
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        coroutineScope.launch { viewModel.initState() }
     }
-    // TODO(riflockle7): 추후 ViewModel 연동 시 val 로 바꾸어야 함
-    var certifyingStatementText: String by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(QuackColor.White.composeColor)
-            .systemBarsPadding()
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
+        // TODO(riflockle7): 추후 DuckieCircularProgressIndicator.kt 와 합치거나 꽥꽥 컴포넌트로 필요
+        CircularProgressIndicator(
+            color = QuackColor.DuckieOrange.composeColor,
+        )
+    }
+}
+
+/**
+ * 시험 시작 입력 화면
+ * @see [StartExamState.Input]
+ */
+@Composable
+internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewModel) {
+    val activity = LocalContext.current as Activity
+    val state = viewModel.collectAsState().value as StartExamState.Input
+
+    val certifyingStatement: String = remember(state.certifyingStatement) {
+        state.certifyingStatement
+    }
+    val certifyingStatementText: String = remember(state.certifyingStatementInputText) {
+        state.certifyingStatementInputText
+    }
+
+    Column(modifier = modifier) {
         // 상단 탭바
         QuackTopAppBar(
             leadingIcon = QuackIcon.ArrowBack,
@@ -83,7 +121,7 @@ fun StartExamScreen() {
                 end = 16.dp,
             ),
             text = certifyingStatementText,
-            onTextChanged = { certifyingStatementText = it },
+            onTextChanged = viewModel::inputCertifyingStatement,
             placeholderText = certifyingStatement,
         )
 
@@ -98,12 +136,29 @@ fun StartExamScreen() {
             ),
             type = QuackLargeButtonType.Fill,
             text = stringResource(id = R.string.start_button),
-            enabled = certifyingStatement == certifyingStatementText
-        ) {
-            Log.i("riflockle7", "시험 시작 클릭")
-        }
+            enabled = viewModel.startExamValidate(),
+            onClick = viewModel::finishStartExam,
+        )
 
         ImeSpacer()
+    }
+}
+
+/**
+ * 시험 시작 에러 화면
+ * @see [StartExamState.Error]
+ */
+@Composable
+private fun StartExamErrorScreen(modifier: Modifier, viewModel: StartExamViewModel) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        // TODO(riflockle7): 추후 DuckieCircularProgressIndicator.kt 와 합치거나 꽥꽥 컴포넌트로 필요
+        QuackTitle1(
+            text = "에러입니다\nTODO$viewModel\n추후 데이터 다시 가져오기 로직 넣어야 합니다.",
+        )
     }
 }
 

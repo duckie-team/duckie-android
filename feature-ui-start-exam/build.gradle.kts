@@ -30,6 +30,7 @@ dependencies {
         libs.orbit.compose,
         libs.quack.ui.components,
         libs.compose.lifecycle.runtime,
+        libs.compose.ui.material, // needs for CircularProgressIndicator
         libs.firebase.crashlytics,
     )
 }
