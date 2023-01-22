@@ -9,7 +9,6 @@ package team.duckie.app.android.feature.ui.start.exam.screen
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.quackquack.ui.theme.QuackTheme
 
@@ -19,7 +18,7 @@ class StartExamActivity : BaseActivity() {
 
         setContent {
             QuackTheme {
-                DuckieTodoScreen()
+                StartExamScreen()
             }
         }
     }
