@@ -8,4 +8,5 @@
 <resources>
     <string name="no_idea">모르겠어요</string>
     <string name="previous">이전</string>
+    <string name="current_between_total">%s / %s</string>
 </resources>
