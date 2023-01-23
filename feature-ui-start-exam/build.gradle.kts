@@ -11,26 +11,26 @@ plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
     id(ConventionEnum.AndroidHilt)
-    `kotlin-parcelize`
 }
 
 android {
-    namespace = "team.duckie.app.android.presentation"
+    namespace = "team.duckie.app.android.feature.ui.start.exam"
 }
 
 dependencies {
     implementations(
+        platform(libs.firebase.bom),
         projects.di,
-        projects.utilUi,
-        projects.utilCompose,
-        projects.utilKotlin,
-        projects.featureDatastore,
-        projects.featureUiHome,
-        projects.featureUiOnboard,
-        projects.utilExceptionHandling,
         projects.domain,
+        projects.utilUi,
+        projects.utilKotlin,
+        projects.utilCompose,
+        projects.sharedUiCompose,
         libs.orbit.viewmodel,
-        libs.androidx.splash,
+        libs.orbit.compose,
         libs.quack.ui.components,
+        libs.compose.lifecycle.runtime,
+        libs.compose.ui.material, // needs for CircularProgressIndicator
+        libs.firebase.crashlytics,
     )
 }
