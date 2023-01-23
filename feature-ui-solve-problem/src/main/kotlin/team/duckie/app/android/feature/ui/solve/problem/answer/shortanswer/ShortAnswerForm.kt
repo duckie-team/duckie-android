@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.solve.problem.screen
+package team.duckie.app.android.feature.ui.solve.problem.answer.shortanswer
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,9 +18,9 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import team.duckie.app.android.domain.exam.model.Answer
-import team.duckie.app.android.feature.ui.solve.problem.common.EachCharTextField
 
 internal const val WhiteSpace = '*'
+
 @Composable
 internal fun ShortAnswerForm(
     answer: Answer,

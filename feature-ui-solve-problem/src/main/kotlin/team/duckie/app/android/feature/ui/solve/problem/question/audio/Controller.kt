@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.solve.problem.audio
+package team.duckie.app.android.feature.ui.solve.problem.question.audio
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.layout.Box

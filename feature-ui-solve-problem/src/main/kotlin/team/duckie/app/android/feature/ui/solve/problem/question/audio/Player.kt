@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.solve.problem.audio
+package team.duckie.app.android.feature.ui.solve.problem.question.audio
 
 import android.content.Context
 import android.view.View
@@ -64,7 +64,7 @@ internal fun AudioPlayer(
             exoPlayer.release()
         }
     }
-    Box(){
+    Box() {
         AudioView(
             context = context,
             videoPlayer = exoPlayer,

@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.solve.problem.video
+package team.duckie.app.android.feature.ui.solve.problem.question.video
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -31,8 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.solve.problem.R
-import team.duckie.app.android.feature.ui.solve.problem.common.BottomSlider
-import team.duckie.app.android.feature.ui.solve.problem.common.bufferSliderColors
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3

@@ -5,19 +5,16 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.solve.problem.common
+package team.duckie.app.android.feature.ui.solve.problem.question.video
 
-import androidx.compose.foundation.layout.height
 import androidx.compose.material.Slider
 import androidx.compose.material.SliderColors
 import androidx.compose.material.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import team.duckie.app.android.util.compose.rememberNoRippleInteractionSource
 import team.duckie.quackquack.ui.color.QuackColor
-
 
 @Composable
 internal fun primarySliderColors() = SliderDefaults.colors(
