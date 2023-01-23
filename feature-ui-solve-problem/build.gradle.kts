@@ -34,6 +34,8 @@ dependencies {
         libs.quack.ui.components,
         libs.firebase.crashlytics,
         libs.exoplayer.core,
-        libs.exoplayer.ui
+        libs.exoplayer.ui,
+        libs.compose.ui.coil,
+        libs.compose.ui.coil.gif,
     )
 }
