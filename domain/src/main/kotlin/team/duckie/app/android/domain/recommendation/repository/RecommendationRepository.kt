@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
+import team.duckie.app.android.domain.user.model.UserFollowing
 
 /**
  * 홈 화면에서 활용하는 Repository
@@ -28,7 +29,7 @@ interface RecommendationRepository {
 
     suspend fun fetchFollowingTest()
 
-    suspend fun fetchRecommendFollowing()
+    suspend fun fetchRecommendFollowing(): UserFollowing
 
     suspend fun fetchRecommendTags(
         tag: String,

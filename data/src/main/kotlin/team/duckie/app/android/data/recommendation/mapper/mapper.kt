@@ -55,7 +55,7 @@ internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotro
     thumbnailUrl = thumbnailUrl
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
-    type = type?.let { JumbotronType.valueOf(it) }
+    type = type?.let { JumbotronType.toJumbotronType(it) }
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type")
 )
 

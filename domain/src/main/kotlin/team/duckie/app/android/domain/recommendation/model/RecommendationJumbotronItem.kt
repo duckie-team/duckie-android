@@ -8,6 +8,7 @@
 package team.duckie.app.android.domain.recommendation.model
 
 import androidx.compose.runtime.Immutable
+import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 
@@ -29,12 +30,12 @@ data class RecommendationJumbotronItem(
     val title: String,
     val description: String,
     val thumbnailUrl: String?,
-    val buttonTitle: String,
     val certifyingStatement: String,
     val solvedCount: Int,
+    val buttonTitle: String,
+    val type: JumbotronType,
     val answerRate: Float,
     val category: Category,
     val mainTag: Tag,
     val subTags: List<Tag>,
-    val type: JumbotronType,
 )

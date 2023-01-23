@@ -9,10 +9,18 @@ package team.duckie.app.android.data.user.mapper
 
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.data.category.mapper.toDomain
+import team.duckie.app.android.data.exam.mapper.toDomainForNonProfile
+import team.duckie.app.android.data.user.model.UserFollowingData
+import team.duckie.app.android.data.user.model.UserFollowingRecommendationsData
 import team.duckie.app.android.data.user.model.UserResponse
+import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.user.constant.DuckieTier
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.domain.user.model.UserFollowing
+import team.duckie.app.android.domain.user.model.UserFollowingRecommendations
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.fastMap
 
 internal fun UserResponse.toDomain() = User(
     id = id ?: duckieResponseFieldNpe("id"),
@@ -32,4 +40,14 @@ internal fun UserResponse.toDomainForNonProfile() = User(
     favoriteTags = favoriteTags?.filterNotNull()?.toImmutableList() ?: persistentListOf(),
     favoriteCategories = favoriteCategories?.filterNotNull()?.toImmutableList()
         ?: persistentListOf()
+)
+
+internal fun UserFollowingRecommendationsData.toDomain() = UserFollowingRecommendations(
+    category = category?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.category"),
+    user = user?.fastMap(UserResponse::toDomain) ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+)
+
+internal fun UserFollowingData.toDomain() = UserFollowing(
+    followingRecommendations = followingRecommendations?.fastMap(UserFollowingRecommendationsData::toDomain)
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.followingRecommendations")
 )
