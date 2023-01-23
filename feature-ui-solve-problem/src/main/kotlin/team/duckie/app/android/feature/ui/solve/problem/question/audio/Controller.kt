@@ -8,6 +8,7 @@
 package team.duckie.app.android.feature.ui.solve.problem.question.audio
 
 import android.os.Build.VERSION.SDK_INT
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -38,16 +39,20 @@ internal fun AudioController(
 ) {
     val playing = remember(isPlaying()) { isPlaying() }
     Box(modifier = modifier) {
-        QuackAnimatedVisibility(visible = playing.not()) {
-            LargeButton(
-                text = buttonText,
-                onClick = onClick,
-            )
-        }
-        if (playing) {
-            PlayingGif(
-                model = gifUrl,
-            )
+        Crossfade(targetState = playing) {
+            when(it){
+                true ->{
+                    LargeButton(
+                        text = buttonText,
+                        onClick = onClick,
+                    )
+                }
+                else -> {
+                    PlayingGif(
+                        model = gifUrl,
+                    )
+                }
+            }
         }
     }
 }

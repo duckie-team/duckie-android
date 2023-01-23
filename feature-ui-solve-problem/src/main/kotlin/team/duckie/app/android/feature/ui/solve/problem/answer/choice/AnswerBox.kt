@@ -81,7 +81,7 @@ internal fun ImageAnswerBox(
                     .fillMaxWidth()
                     .padding(
                         horizontal = 12.dp,
-                        vertical = 16.dp,
+                        vertical = 8.dp,
                     ),
                 text = text,
                 selected = selected,

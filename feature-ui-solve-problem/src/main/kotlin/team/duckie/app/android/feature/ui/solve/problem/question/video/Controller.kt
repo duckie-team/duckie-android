@@ -38,7 +38,6 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.modifier.quackClickable
 import java.util.concurrent.TimeUnit
 
-
 @Composable
 internal fun VideoController(
     modifier: Modifier = Modifier,

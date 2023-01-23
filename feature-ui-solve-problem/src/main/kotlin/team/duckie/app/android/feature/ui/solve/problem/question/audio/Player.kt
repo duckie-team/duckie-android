@@ -64,7 +64,7 @@ internal fun AudioPlayer(
             exoPlayer.release()
         }
     }
-    Box() {
+    Box(modifier = modifier) {
         AudioView(
             context = context,
             videoPlayer = exoPlayer,

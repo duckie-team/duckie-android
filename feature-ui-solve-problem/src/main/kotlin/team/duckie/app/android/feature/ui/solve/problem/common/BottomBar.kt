@@ -30,11 +30,14 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
 internal fun DoubleButtonBottomBar(
+    modifier: Modifier= Modifier,
     isFirstPage: Boolean = false,
     onLeftButtonClick: () -> Unit,
     onRightButtonClick: () -> Unit,
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         QuackDivider()
         Row(
             modifier = Modifier
