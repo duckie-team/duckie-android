@@ -70,7 +70,7 @@ fun <T> DuckieGridLayout(
                         Spacer(
                             modifier = Modifier
                                 .weight(1f / spacerCount)
-                                .padding(horizontal = horizontalPadding)
+                                .padding(horizontal = horizontalPadding),
                         )
                     }
                 }

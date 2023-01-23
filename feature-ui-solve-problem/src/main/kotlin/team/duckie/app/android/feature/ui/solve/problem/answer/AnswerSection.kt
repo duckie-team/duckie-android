@@ -35,7 +35,7 @@ internal fun LazyListScope.answerSection(
             item {
                 Column(
                     modifier = Modifier.padding(paddingValues = HorizontalPadding),
-                    verticalArrangement = Arrangement.spacedBy(space = 12.dp)
+                    verticalArrangement = Arrangement.spacedBy(space = 12.dp),
                 ) {
                     answer.choices.forEachIndexed { index, choice ->
                         TextAnswerBox(
@@ -44,7 +44,7 @@ internal fun LazyListScope.answerSection(
                             onClick = {
                                 onClickAnswer(index)
                                 onSolveProblem()
-                            }
+                            },
                         )
                     }
                 }
@@ -67,11 +67,10 @@ internal fun LazyListScope.answerSection(
                         onClick = {
                             onClickAnswer(index)
                             onSolveProblem()
-                        }
+                        },
                     )
                 }
             }
-
         }
 
         is Answer.Short -> {

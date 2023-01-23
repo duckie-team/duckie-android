@@ -27,7 +27,7 @@ internal fun LazyListScope.questionSection(
     item {
         QuackHeadLine2(
             text = "${page + 1}. ${question.text}",
-            padding = HorizontalPadding
+            padding = HorizontalPadding,
         )
     }
     when (question) {
@@ -37,7 +37,7 @@ internal fun LazyListScope.questionSection(
                 QuackImage(
                     src = question.imageUrl,
                     size = DpSize(all = 200.dp),
-                    padding = HorizontalPadding
+                    padding = HorizontalPadding,
                 )
             }
         }
@@ -46,7 +46,7 @@ internal fun LazyListScope.questionSection(
             item {
                 AudioPlayer(
                     modifier = Modifier.padding(paddingValues = HorizontalPadding),
-                    url = question.audioUrl
+                    url = question.audioUrl,
                 )
             }
         }
@@ -57,5 +57,4 @@ internal fun LazyListScope.questionSection(
             }
         }
     }
-
 }

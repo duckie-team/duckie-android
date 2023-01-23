@@ -13,7 +13,7 @@ import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScree
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.quackquack.ui.theme.QuackTheme
 
-class SolveProblemActivity : BaseActivity(){
+class SolveProblemActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

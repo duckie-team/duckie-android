@@ -48,23 +48,23 @@ internal fun ShortAnswerForm(
             value = newValue
             if (
                 newValue.text.isNotEmpty() &&
-                newValue.text.lastIndex < answer.length
-                && answer[newValue.text.lastIndex].isWhitespace()
-                && newValue.text.length > prevLength
+                newValue.text.lastIndex < answer.length &&
+                answer[newValue.text.lastIndex].isWhitespace() &&
+                newValue.text.length > prevLength
             ) {
                 val lastChar = newValue.text.last()
                 value = value.copy(
                     text = newValue.text.dropLast(1).plus(WhiteSpace) + lastChar,
-                    selection = TextRange(value.selection.end + 1)
+                    selection = TextRange(value.selection.end + 1),
                 )
             } else if (
-                newValue.text.lastIndex > 0
-                && answer[newValue.text.lastIndex].isWhitespace()
-                && newValue.text.length < prevLength
+                newValue.text.lastIndex > 0 &&
+                answer[newValue.text.lastIndex].isWhitespace() &&
+                newValue.text.length < prevLength
             ) {
                 value = value.copy(
                     text = newValue.text.dropLast(1),
-                    selection = TextRange(value.selection.end - 1)
+                    selection = TextRange(value.selection.end - 1),
                 )
             }
         },
@@ -75,6 +75,6 @@ internal fun ShortAnswerForm(
                 keyboardController?.hide()
                 onDone()
             },
-        )
+        ),
     )
 }

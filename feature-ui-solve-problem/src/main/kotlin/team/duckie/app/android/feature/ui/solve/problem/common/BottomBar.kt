@@ -30,13 +30,13 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
 internal fun DoubleButtonBottomBar(
-    modifier: Modifier= Modifier,
+    modifier: Modifier = Modifier,
     isFirstPage: Boolean = false,
     onLeftButtonClick: () -> Unit,
     onRightButtonClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         QuackDivider()
         Row(
@@ -67,7 +67,6 @@ internal fun DoubleButtonBottomBar(
 
 @Composable
 private fun MediumButton(
-    modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
 ) {

@@ -82,7 +82,7 @@ internal fun EachCharTextField(
                     }
                 }
             }
-        }
+        },
     )
 }
 
@@ -98,21 +98,21 @@ private fun CharBox(
         ),
         backgroundColor = QuackColor.Gray4,
         shape = RoundedCornerShape(size = 4.dp),
-        border = setCharBoxBorder(isFocused = isFocused)
+        border = setCharBoxBorder(isFocused = isFocused),
     ) {
         QuackBody1(
             padding = PaddingValues(
                 horizontal = 8.dp,
                 vertical = 10.dp,
             ),
-            text = char.toString()
+            text = char.toString(),
         )
     }
 }
 
 @Stable
 private fun setCharBoxBorder(
-    isFocused: Boolean
+    isFocused: Boolean,
 ) = when (isFocused) {
     true -> QuackBorder(
         width = 1.dp,

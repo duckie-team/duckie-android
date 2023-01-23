@@ -70,18 +70,17 @@ internal fun ImageAnswerBox(
     ) {
         Column(
             modifier = Modifier.padding(all = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+            verticalArrangement = Arrangement.spacedBy(space = 8.dp),
         ) {
             QuackImage(
                 src = imageSrc,
-                size = DpSize(all = 136.dp)
+                size = DpSize(all = 136.dp),
             )
             TextAndCheck(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        horizontal = 12.dp,
-                        vertical = 8.dp,
+                        vertical = 2.dp,
                     ),
                 text = text,
                 selected = selected,
@@ -94,7 +93,7 @@ internal fun ImageAnswerBox(
 private fun TextAndCheck(
     modifier: Modifier = Modifier,
     text: String,
-    selected: Boolean
+    selected: Boolean,
 ) {
     Row(
         modifier = modifier,
@@ -116,7 +115,7 @@ private fun TextAndCheck(
             QuackImage(
                 src = QuackIcon.Check,
                 tint = QuackColor.DuckieOrange,
-                size = DpSize(all = 18.dp)
+                size = DpSize(all = 18.dp),
             )
         }
     }

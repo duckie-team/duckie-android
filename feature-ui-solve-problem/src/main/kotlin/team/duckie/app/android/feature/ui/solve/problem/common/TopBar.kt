@@ -23,7 +23,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 internal fun CloseAndPageTopBar(
     onCloseClick: () -> Unit,
     currentPage: Int,
-    totalPage: Int
+    totalPage: Int,
 ) {
     QuackTopAppBar(
         modifier = Modifier
@@ -52,7 +52,7 @@ private fun PageInfo(
         QuackSubtitle2(text = currentPage.toString())
         QuackSubtitle2(
             text = " / ",
-            color = QuackColor.Gray2
+            color = QuackColor.Gray2,
         )
         QuackSubtitle2(
             text = totalPage.toString(),

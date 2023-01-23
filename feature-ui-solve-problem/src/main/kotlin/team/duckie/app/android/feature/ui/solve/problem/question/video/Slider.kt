@@ -37,7 +37,7 @@ internal fun BottomSlider(
     value: Float,
     onValueChanged: (Float) -> Unit,
     colors: SliderColors = primarySliderColors(),
-    range: ClosedFloatingPointRange<Float> = 0f..100f,
+    range: ClosedFloatingPointRange<Float> = PercentRange,
 ) {
     val interactionSource = rememberNoRippleInteractionSource()
     Slider(
@@ -50,3 +50,5 @@ internal fun BottomSlider(
         interactionSource = interactionSource,
     )
 }
+
+private val PercentRange = 0f..100f

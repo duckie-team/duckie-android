@@ -36,6 +36,7 @@ import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.modifier.quackClickable
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 @Composable
@@ -52,24 +53,23 @@ internal fun VideoController(
     var sliderHeight by remember { mutableStateOf(0) }
     QuackAnimatedVisibility(
         modifier = modifier,
-        visible = isVisible()
+        visible = isVisible(),
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             InteractionButton(
                 modifier = Modifier.align(alignment = Alignment.Center),
                 onClick = onToggle,
                 isPlaying = isPlaying,
             )
-            Column(modifier = Modifier
+            Column(
+                modifier = Modifier
                 .align(alignment = Alignment.BottomCenter)
                 .offset {
                     IntOffset(
                         x = 0,
-                        y = sliderHeight / 2
+                        y = sliderHeight / 2,
                     )
-                }
+                },
             ) {
                 QuackBody3(
                     modifier = Modifier.padding(start = 12.dp),
@@ -95,7 +95,6 @@ internal fun VideoController(
     }
 }
 
-
 @Composable
 internal fun InteractionButton(
     modifier: Modifier = Modifier,
@@ -107,7 +106,7 @@ internal fun InteractionButton(
             .size(size = 40.dp)
             .clip(shape = CircleShape)
             .quackClickable(onClick = onClick),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Box(
             modifier = modifier
@@ -132,7 +131,7 @@ internal fun VideoSlider(
     buffedPercentage: () -> Int,
     currentTime: () -> Float,
     totalTime: () -> Float,
-    onTimeChanged: (Float) -> Unit
+    onTimeChanged: (Float) -> Unit,
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         BottomSlider(
@@ -151,7 +150,6 @@ internal fun VideoSlider(
     }
 }
 
-
 /*
 * millisecond 를 MM:SS 로 변환합니다.
 * */
@@ -160,12 +158,13 @@ private fun Long.formatMinSec(): String {
         "..."
     } else {
         String.format(
+            Locale.getDefault(),
             "%02d:%02d",
             TimeUnit.MILLISECONDS.toMinutes(this),
             TimeUnit.MILLISECONDS.toSeconds(this) -
                     TimeUnit.MINUTES.toSeconds(
-                        TimeUnit.MILLISECONDS.toMinutes(this)
-                    )
+                        TimeUnit.MILLISECONDS.toMinutes(this),
+                    ),
         )
     }
 }

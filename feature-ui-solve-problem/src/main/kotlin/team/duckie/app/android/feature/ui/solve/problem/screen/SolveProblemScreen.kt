@@ -53,7 +53,7 @@ internal fun SolveProblemScreen() {
     }
     val onNextPage: () -> Unit = remember {
         {
-            if (currentPageIndex < totalPage-1) {
+            if (currentPageIndex < totalPage - 1) {
                 currentPageIndex = currentPageIndex.plus(1)
             }
         }
@@ -79,13 +79,13 @@ internal fun SolveProblemScreen() {
                 onLeftButtonClick = {
                     currentPageIndex = currentPageIndex.minus(1)
                 },
-                onRightButtonClick = onNextPage
+                onRightButtonClick = onNextPage,
             )
-        }
+        },
     ) { padding ->
         Crossfade(
             modifier = Modifier.padding(padding),
-            targetState = currentPageIndex
+            targetState = currentPageIndex,
         ) { pageIndex ->
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -102,7 +102,7 @@ internal fun SolveProblemScreen() {
                     onClickAnswer = { index ->
                         answerSelections[pageIndex] = index
                     },
-                    onSolveProblem = onNextPage
+                    onSolveProblem = onNextPage,
                 )
             }
         }

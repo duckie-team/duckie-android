@@ -35,13 +35,13 @@ import com.google.android.exoplayer2.ui.StyledPlayerView
 @Composable
 internal fun VideoPlayer(
     modifier: Modifier = Modifier,
-    url: String
+    url: String,
 ) {
     val context = LocalContext.current
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
             setMediaItem(
-                MediaItem.fromUri(url)
+                MediaItem.fromUri(url),
             )
             playWhenReady = true
             prepare()
@@ -58,9 +58,9 @@ internal fun VideoPlayer(
         val playerListener = object : Player.Listener {
             override fun onEvents(player: Player, events: Player.Events) {
                 super.onEvents(player, events)
-                isPlaying = player.isPlaying //실행 중
+                isPlaying = player.isPlaying // 실행 중
                 totalTime = player.duration.coerceAtLeast(0L) // 전체 시간 MS
-                currentTime = player.currentPosition.coerceAtLeast(0L) //현재 시간 MS
+                currentTime = player.currentPosition.coerceAtLeast(0L) // 현재 시간 MS
                 bufferedPercentage = player.bufferedPercentage // Buffering 퍼센테이지
                 playBack = player.playbackState
             }
@@ -77,7 +77,7 @@ internal fun VideoPlayer(
     Box(
         modifier = modifier
             .height(200.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         VideoView(
             modifier = Modifier.fillMaxSize(),
@@ -129,7 +129,7 @@ internal fun VideoView(
         modifier = modifier
             .fillMaxSize()
             .clickable(
-                //TODO(EvergreenTree97) : QuackClickable의 rippleEnabled 적용되지 않음
+                // TODO(EvergreenTree97) : QuackClickable의 rippleEnabled 적용되지 않음
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = onPlayerClick,
@@ -142,9 +142,9 @@ internal fun VideoView(
                 layoutParams =
                     FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
+                        ViewGroup.LayoutParams.MATCH_PARENT,
                     )
             }
-        }
+        },
     )
 }
