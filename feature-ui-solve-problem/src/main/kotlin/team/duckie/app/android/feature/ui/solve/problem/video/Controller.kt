@@ -9,51 +9,91 @@ package team.duckie.app.android.feature.ui.solve.problem.video
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Slider
-import androidx.compose.material.SliderDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.solve.problem.R
+import team.duckie.app.android.feature.ui.solve.problem.common.BottomSlider
+import team.duckie.app.android.feature.ui.solve.problem.common.bufferSliderColors
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.modifier.quackClickable
+import java.util.concurrent.TimeUnit
+
 
 @Composable
 internal fun VideoController(
     modifier: Modifier = Modifier,
     isVisible: () -> Boolean,
     isPlaying: () -> Boolean,
-    progress: () -> Float,
+    totalTime: () -> Long,
+    currentTime: () -> Long,
+    buffedPercentage: () -> Int,
     onToggle: () -> Unit,
-    onProgressChanged: (Float) -> Unit,
+    onTimeChanged: (Float) -> Unit,
 ) {
+    var sliderHeight by remember { mutableStateOf(0) }
     QuackAnimatedVisibility(
         modifier = modifier,
         visible = isVisible()
     ) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
         ) {
             InteractionButton(
                 modifier = Modifier.align(alignment = Alignment.Center),
                 onClick = onToggle,
                 isPlaying = isPlaying,
             )
-            BottomSlider(
-                modifier = Modifier.align(alignment = Alignment.BottomCenter),
-                value = progress,
-                onValueChanged = onProgressChanged,
-            )
+            Column(modifier = Modifier
+                .align(alignment = Alignment.BottomCenter)
+                .offset {
+                    IntOffset(
+                        x = 0,
+                        y = sliderHeight / 2
+                    )
+                }
+            ) {
+                QuackBody3(
+                    modifier = Modifier.padding(start = 12.dp),
+                    text = stringResource(
+                        id = R.string.current_between_total,
+                        currentTime().formatMinSec(),
+                        totalTime().formatMinSec(),
+                    ),
+                    color = QuackColor.Gray3,
+                )
+                VideoSlider(
+                    modifier = Modifier
+                        .onSizeChanged {
+                            sliderHeight = it.height
+                        },
+                    buffedPercentage = buffedPercentage,
+                    currentTime = { currentTime().toFloat() },
+                    totalTime = { totalTime().toFloat() },
+                    onTimeChanged = onTimeChanged,
+                )
+            }
         }
     }
 }
@@ -81,30 +121,54 @@ internal fun InteractionButton(
         QuackImage(
             modifier = modifier,
             src = when (isPlaying()) {
-                false -> R.drawable.video_pause
-                true -> R.drawable.video_play
+                false -> R.drawable.video_play
+                true -> R.drawable.video_pause
             },
-            contentScale = ContentScale.None
+            contentScale = ContentScale.None,
         )
     }
 }
 
 @Composable
-internal fun BottomSlider(
-    modifier: Modifier = Modifier,
-    value: () -> Float,
-    onValueChanged: (Float) -> Unit,
+internal fun VideoSlider(
+    modifier: Modifier,
+    buffedPercentage: () -> Int,
+    currentTime: () -> Float,
+    totalTime: () -> Float,
+    onTimeChanged: (Float) -> Unit
 ) {
-    val mainColor = QuackColor.DuckieOrange.composeColor
-    val inActiveColor = QuackColor.Gray3.composeColor
-    Slider(
-        modifier = modifier,
-        value = value(),
-        onValueChange = onValueChanged,
-        colors = SliderDefaults.colors(
-            thumbColor = mainColor,
-            activeTrackColor = mainColor,
-            inactiveTrackColor = inActiveColor,
+    Box(modifier = modifier.fillMaxWidth()) {
+        BottomSlider(
+            modifier = Modifier.align(alignment = Alignment.BottomCenter),
+            value = buffedPercentage().toFloat(),
+            enabled = false,
+            colors = bufferSliderColors(),
+            onValueChanged = {},
         )
-    )
+        BottomSlider(
+            modifier = Modifier.align(alignment = Alignment.Center),
+            value = currentTime(),
+            range = 0f..totalTime(),
+            onValueChanged = onTimeChanged,
+        )
+    }
+}
+
+
+/*
+* millisecond 를 MM:SS 로 변환합니다.
+* */
+private fun Long.formatMinSec(): String {
+    return if (this == 0L) {
+        "..."
+    } else {
+        String.format(
+            "%02d:%02d",
+            TimeUnit.MILLISECONDS.toMinutes(this),
+            TimeUnit.MILLISECONDS.toSeconds(this) -
+                    TimeUnit.MINUTES.toSeconds(
+                        TimeUnit.MILLISECONDS.toMinutes(this)
+                    )
+        )
+    }
 }
