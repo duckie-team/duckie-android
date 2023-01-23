@@ -78,7 +78,10 @@ internal fun LazyListScope.answerSection(
                 ShortAnswerForm(
                     modifier = Modifier.padding(paddingValues = HorizontalPadding),
                     answer = answer.answer.text,
-                    onDone = onSolveProblem,
+                    onDone = { inputAnswer -> // TODO(EvergreenTree97): 서버에 보낼 정답 text
+                        inputAnswer
+                        onSolveProblem()
+                    },
                 )
             }
         }

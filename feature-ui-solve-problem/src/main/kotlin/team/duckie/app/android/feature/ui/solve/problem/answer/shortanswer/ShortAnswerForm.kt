@@ -31,7 +31,7 @@ internal const val WhiteSpace = '*'
 internal fun ShortAnswerForm(
     modifier: Modifier = Modifier,
     answer: String,
-    onDone: () -> Unit,
+    onDone: (String) -> Unit,
 ) {
     var value by remember { mutableStateOf(TextFieldValue()) } // replace '*' to " " 필요
     val focusRequester = remember { FocusRequester() }
@@ -73,7 +73,7 @@ internal fun ShortAnswerForm(
         keyboardActions = KeyboardActions(
             onDone = {
                 keyboardController?.hide()
-                onDone()
+                onDone(value.text.replace("*", " "))
             },
         ),
     )
