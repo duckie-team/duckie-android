@@ -9,4 +9,6 @@
     <string name="no_idea">모르겠어요</string>
     <string name="previous">이전</string>
     <string name="current_between_total">%s / %s</string>
+    <string name="listen_question">문제 듣기</string>
+    <string name="listen_repeat">다시 듣기</string>
 </resources>
