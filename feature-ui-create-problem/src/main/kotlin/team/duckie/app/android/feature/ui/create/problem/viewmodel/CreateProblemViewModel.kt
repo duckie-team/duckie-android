@@ -12,6 +12,7 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +40,8 @@ import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
+import team.duckie.app.android.domain.file.constant.FileType
+import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
@@ -47,6 +50,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
+import team.duckie.app.android.util.android.image.MediaUtil
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
@@ -57,6 +61,7 @@ internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
     private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val fileUploadUseCase: FileUploadUseCase,
     private val tagRepository: TagRepository,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
@@ -600,12 +605,38 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     // AdditionalInfo
+    /**
+     * 카테고리 썸네일을 선택한다.
+     * 선택 후 동작해야하는 로직 (ex. API 요청 등) 을 수행한다.
+     */
+    internal fun selectThumbnail(
+        thumbnailType: ThumbnailType,
+        thumbnailUri: Uri? = null,
+        applicationContext: Context? = null,
+    ) = intent {
+        if (thumbnailUri != null) {
+            requireNotNull(applicationContext)
+            val tempFile = MediaUtil.getOptimizedBitmapFile(applicationContext, thumbnailUri)
+            fileUploadUseCase(tempFile, FileType.ExamThumbnail)
+                .onSuccess { serverUrl ->
+                    setThumbnailUrl(thumbnailType, serverUrl)
+                }.onFailure { exception ->
+                    postSideEffect(CreateProblemSideEffect.ReportError(exception))
+                }
+        } else {
+            setThumbnailUrl(thumbnailType)
+        }
+    }
+
     /** 카테고리 썸네일을 정한다. */
-    internal fun setThumbnail(thumbnail: Any? = null, thumbnailType: ThumbnailType) = intent {
+    private suspend fun setThumbnailUrl(
+        thumbnailType: ThumbnailType,
+        thumbnailUri: Any? = null,
+    ) = intent {
         reduce {
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
-                    thumbnail = thumbnail ?: state.defaultThumbnail,
+                    thumbnail = thumbnailUri ?: state.defaultThumbnail,
                     thumbnailType = thumbnailType,
                 ),
             )
