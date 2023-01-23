@@ -47,6 +47,7 @@ include(
     ":feature-ui-onboard",
     ":feature-ui-notification",
     ":feature-ui-home",
+    ":feature-ui-start-exam",
     ":feature-ui-solve-problem",
     ":feature-ui-create-problem",
     ":feature-ui-detail",

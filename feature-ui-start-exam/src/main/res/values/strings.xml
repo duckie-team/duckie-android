@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">시험 시작 전, 필적 확인 문구를\n정확히 입력해주세요.</string>
+    <string name="certifing_statement_placeholder">누칼협? 열심히 살지 말자</string>
+    <string name="start_button">시험시작</string>
+</resources>
