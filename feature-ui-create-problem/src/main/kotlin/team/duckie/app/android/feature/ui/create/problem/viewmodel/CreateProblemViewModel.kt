@@ -675,10 +675,10 @@ internal class CreateProblemViewModel @Inject constructor(
         thumbnailUri: Uri? = null,
         applicationContext: Context? = null,
     ) = viewModelScope.launch {
-        thumbnailUri?.let { serverUrl ->
+        thumbnailUri?.let {
             runCatching {
                 requestImage(FileType.ExamThumbnail, thumbnailUri, applicationContext)
-            }.onSuccess {
+            }.onSuccess { serverUrl ->
                 setThumbnailUrl(thumbnailType, serverUrl)
             }.onFailure {
                 intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
@@ -689,7 +689,7 @@ internal class CreateProblemViewModel @Inject constructor(
     /** 카테고리 썸네일을 정한다. */
     private suspend fun setThumbnailUrl(
         thumbnailType: ThumbnailType,
-        thumbnailUri: Any? = null,
+        thumbnailUri: String? = null,
     ) = intent {
         reduce {
             state.copy(
