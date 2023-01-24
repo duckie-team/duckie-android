@@ -17,11 +17,14 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -45,6 +48,8 @@ import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
+import team.duckie.app.android.domain.search.model.Search
+import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
@@ -56,7 +61,9 @@ import team.duckie.app.android.util.android.image.MediaUtil
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
+import javax.inject.Inject
 
 @HiltViewModel
 internal class CreateProblemViewModel @Inject constructor(
@@ -64,6 +71,7 @@ internal class CreateProblemViewModel @Inject constructor(
     private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val fileUploadUseCase: FileUploadUseCase,
+    private val getSearchUseCase: GetSearchUseCase,
     private val tagRepository: TagRepository,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
@@ -83,6 +91,48 @@ internal class CreateProblemViewModel @Inject constructor(
      * `ProfileScreen` 에서 `PhotoPicker` 에 사용할 이미지 목록을 불러오기 위해 사용됩니다.
      */
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
+
+    /** tags 검색 flow. 실질 동작 로직은 apply 내에 명세되어 있다. */
+    private val _getSearchTagsFlow: MutableSharedFlow<String> = MutableSharedFlow<String>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    ).apply {
+        viewModelScope.launch {
+            this@apply.debounce(1500L).collectLatest { query ->
+                val searchResults = getSearchUseCase(query = query, page = 1, type = Search.Tags)
+                    .getOrNull()?.let {
+                        (it as Search.TagSearch).tags.fastMap(Tag::name).take(4).toImmutableList()
+                    } ?: persistentListOf()
+
+                intent {
+                    reduce {
+                        when (state.findResultType) {
+                            FindResultType.MainTag -> {
+                                state.copy(
+                                    examInformation = state.examInformation.copy(
+                                        searchMainTag = state.examInformation.searchMainTag.copy(
+                                            searchResults = searchResults,
+                                        ),
+                                    ),
+                                )
+                            }
+
+                            FindResultType.SubTags -> {
+                                state.copy(
+                                    additionalInfo = state.additionalInfo.copy(
+                                        searchSubTags = state.additionalInfo.searchSubTags.copy(
+                                            searchResults = searchResults
+                                        ),
+                                    ),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // 공통
     /** 시험 컨텐츠를 만든다. */
@@ -735,6 +785,11 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     // Search
+    /** Tag 화면에서 [입력한 값][query] 에 맞는 검색 목록 값을 가져온다. */
+    private suspend fun searchTags(query: String) {
+        _getSearchTagsFlow.emit(query)
+    }
+
     /** 검색 입력 필드의 값을 설정(= 갱신) 한다. */
     internal fun setTextFieldValue(textFieldValue: String) = intent {
         reduce {
@@ -759,7 +814,7 @@ internal class CreateProblemViewModel @Inject constructor(
                     )
                 }
             }
-        }
+        }.run { searchTags(textFieldValue) }
     }
 
     /** 추천 검색 목록에서 헤더(1번째 항목)을 클릭한다. */
