@@ -60,7 +60,7 @@ object MediaUtil {
             fos.flush()
             fos.close()
 
-            return tempFile // 임시파일 저장경로 리턴
+            return tempFile
         } catch (throwable: Throwable) {
             println("FileUtil - ${throwable.message}")
             throw throwable
