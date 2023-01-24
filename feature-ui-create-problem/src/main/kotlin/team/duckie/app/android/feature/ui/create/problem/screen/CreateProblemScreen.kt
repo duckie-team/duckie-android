@@ -524,11 +524,12 @@ internal fun CreateProblemScreen(
                         }
 
                         is CreateProblemPhotoState.AnswerImageType -> {
-                            vm.setAnswer(
+                            vm.setAnswerWithImage(
                                 questionIndex,
                                 answerIndex,
                                 Answer.Type.ImageChoice,
                                 urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
+                                applicationContext = context.applicationContext,
                             )
                             vm.updatePhotoState(null)
                         }

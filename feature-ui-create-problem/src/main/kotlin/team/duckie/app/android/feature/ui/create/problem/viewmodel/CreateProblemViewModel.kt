@@ -459,7 +459,7 @@ internal class CreateProblemViewModel @Inject constructor(
         answerIndex: Int,
         answerType: Answer.Type,
         answer: String? = null,
-        urlSource: Uri? = null,
+        urlSource: String? = null,
     ) = intent {
         val newAnswers = state.createProblem.answers.toMutableList()
 
@@ -482,6 +482,29 @@ internal class CreateProblemViewModel @Inject constructor(
                     correctAnswers = newCorrectAnswers.toPersistentList(),
                 ),
             )
+        }
+    }
+
+    /**
+     * [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 설정합니다.
+     * 이미지 설정이 필요한 경우에만 사용되며, 이미지 설정 이후 로직은 [setAnswer] 와 같습니다.
+     */
+    internal fun setAnswerWithImage(
+        questionIndex: Int,
+        answerIndex: Int,
+        answerType: Answer.Type,
+        answer: String? = null,
+        urlSource: Uri,
+        applicationContext: Context,
+    ) = viewModelScope.launch {
+        urlSource.run {
+            runCatching {
+                requestImage(FileType.ProblemAnswer, urlSource, applicationContext)
+            }.onSuccess { serverUrl ->
+                setAnswer(questionIndex, answerIndex, answerType, answer, serverUrl)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
         }
     }
 
@@ -530,16 +553,12 @@ internal class CreateProblemViewModel @Inject constructor(
         answerIndex: Int,
         answerType: Answer.Type,
         answer: String?,
-        urlSource: Uri?,
+        urlSource: String?,
     ): Answer {
         return when (answerType) {
             Answer.Type.ShortAnswer -> this.toShort(answer)
             Answer.Type.Choice -> this.toChoice(answerIndex, answer)
-            Answer.Type.ImageChoice -> this.toImageChoice(
-                answerIndex,
-                answer,
-                urlSource?.let { "$this" },
-            )
+            Answer.Type.ImageChoice -> this.toImageChoice(answerIndex, answer, urlSource)
         }
     }
 
