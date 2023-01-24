@@ -15,12 +15,14 @@ package team.duckie.app.android.feature.ui.create.problem.viewmodel
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -191,6 +193,17 @@ internal class CreateProblemViewModel @Inject constructor(
                 }
                 postSideEffect(CreateProblemSideEffect.ReportError(exception))
             }
+    }
+
+    /** 서버에 이미지 등록을 요청한다. 요청 결과로 URL 값을 가져온다. */
+    private suspend fun requestImage(
+        fileType: FileType,
+        thumbnailUri: Uri,
+        applicationContext: Context?,
+    ): String {
+        requireNotNull(applicationContext)
+        val tempFile = MediaUtil.getOptimizedBitmapFile(applicationContext, thumbnailUri)
+        return fileUploadUseCase(tempFile, fileType).getOrThrow()
     }
 
     /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트한다. */
@@ -613,19 +626,16 @@ internal class CreateProblemViewModel @Inject constructor(
         thumbnailType: ThumbnailType,
         thumbnailUri: Uri? = null,
         applicationContext: Context? = null,
-    ) = intent {
-        if (thumbnailUri != null) {
-            requireNotNull(applicationContext)
-            val tempFile = MediaUtil.getOptimizedBitmapFile(applicationContext, thumbnailUri)
-            fileUploadUseCase(tempFile, FileType.ExamThumbnail)
-                .onSuccess { serverUrl ->
-                    setThumbnailUrl(thumbnailType, serverUrl)
-                }.onFailure { exception ->
-                    postSideEffect(CreateProblemSideEffect.ReportError(exception))
-                }
-        } else {
-            setThumbnailUrl(thumbnailType)
-        }
+    ) = viewModelScope.launch {
+        thumbnailUri?.let { serverUrl ->
+            runCatching {
+                requestImage(FileType.ExamThumbnail, thumbnailUri, applicationContext)
+            }.onSuccess {
+                setThumbnailUrl(thumbnailType, serverUrl)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
+        } ?: setThumbnailUrl(thumbnailType)
     }
 
     /** 카테고리 썸네일을 정한다. */
