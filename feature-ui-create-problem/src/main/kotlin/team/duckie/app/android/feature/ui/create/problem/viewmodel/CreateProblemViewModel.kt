@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("MaxLineLength")
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 // TODO(riflockle7): OptIn 제거
 @file:OptIn(OutOfDateApi::class)
@@ -65,7 +65,10 @@ import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 import javax.inject.Inject
 
+private const val TagsMaximumCount = 4
+
 @HiltViewModel
+@Suppress("LargeClass")
 internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
     private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
@@ -102,7 +105,10 @@ internal class CreateProblemViewModel @Inject constructor(
             this@apply.debounce(1500L).collectLatest { query ->
                 val searchResults = getSearchUseCase(query = query, page = 1, type = Search.Tags)
                     .getOrNull()?.let {
-                        (it as Search.TagSearch).tags.fastMap(Tag::name).take(4).toImmutableList()
+                        (it as Search.TagSearch).tags
+                            .fastMap(Tag::name)
+                            .take(TagsMaximumCount)
+                            .toImmutableList()
                     } ?: persistentListOf()
 
                 intent {
@@ -122,7 +128,7 @@ internal class CreateProblemViewModel @Inject constructor(
                                 state.copy(
                                     additionalInfo = state.additionalInfo.copy(
                                         searchSubTags = state.additionalInfo.searchSubTags.copy(
-                                            searchResults = searchResults
+                                            searchResults = searchResults,
                                         ),
                                     ),
                                 )
@@ -345,7 +351,11 @@ internal class CreateProblemViewModel @Inject constructor(
     /** 문제 만들기 1단계 화면의 유효성을 체크한다. */
     internal fun examInformationIsValidate(): Boolean {
         return with(container.stateFlow.value.examInformation) {
-            categorySelection >= 0 && isMainTagSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+            categorySelection >= 0 &&
+                    isMainTagSelected &&
+                    examTitle.isNotEmpty() &&
+                    examDescription.isNotEmpty() &&
+                    certifyingStatement.isNotEmpty()
         }
     }
 
@@ -495,7 +505,9 @@ internal class CreateProblemViewModel @Inject constructor(
                         Question.Type.Audio -> FileType.ProblemQuestionAudio
                         Question.Type.Video -> FileType.ProblemQuestionVideo
                         else -> duckieClientLogicProblemException()
-                    }, urlSource, applicationContext
+                    },
+                    urlSource,
+                    applicationContext,
                 )
             }.onSuccess { serverUrl ->
                 setQuestion(questionType, questionIndex, title, serverUrl)

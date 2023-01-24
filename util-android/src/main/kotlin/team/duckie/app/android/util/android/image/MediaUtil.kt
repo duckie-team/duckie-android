@@ -17,6 +17,7 @@ import android.os.Build
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.util.Locale
 import java.util.UUID
 
 /**
@@ -26,6 +27,10 @@ import java.util.UUID
 object MediaUtil {
     private const val maxWidth = 1600
     private const val maxHeight = 1600
+    private const val bitmapQuality = 100
+    private const val rotate90 = 90
+    private const val rotate180 = 180
+    private const val rotate270 = 270
 
     /**
      * 업로드할 이미지를 가져온다.
@@ -40,31 +45,26 @@ object MediaUtil {
         uri: Uri,
         maxSizeLimitEnable: Boolean = false,
     ): File {
-        try {
-            // 임시 파일 경로 및 이름
-            val storage = applicationContext.cacheDir
-            val fileName = String.format("%s.%s", UUID.randomUUID(), "jpg")
+        // 임시 파일 경로 및 이름
+        val storage = applicationContext.cacheDir
+        val fileName = String.format(Locale.ROOT, "%s.%s", UUID.randomUUID(), "jpg")
 
-            // 임시 파일 생성
-            val tempFile = File(storage, fileName)
-            tempFile.createNewFile()
+        // 임시 파일 생성
+        val tempFile = File(storage, fileName)
+        tempFile.createNewFile()
 
-            // 파일 출력 스트림 생성
-            val fos = FileOutputStream(tempFile)
+        // 파일 출력 스트림 생성
+        val fos = FileOutputStream(tempFile)
 
-            decodeBitmapFromUri(uri, applicationContext, maxSizeLimitEnable)?.apply {
-                compress(Bitmap.CompressFormat.JPEG, 100, fos)
-                recycle()
-            } ?: throw NullPointerException()
+        decodeBitmapFromUri(uri, applicationContext, maxSizeLimitEnable)?.apply {
+            compress(Bitmap.CompressFormat.JPEG, bitmapQuality, fos)
+            recycle()
+        } ?: throw NullPointerException("bitmap 생성 오류")
 
-            fos.flush()
-            fos.close()
+        fos.flush()
+        fos.close()
 
-            return tempFile
-        } catch (throwable: Throwable) {
-            println("FileUtil - ${throwable.message}")
-            throw throwable
-        }
+        return tempFile
     }
 
     /** 최적화시킨 bitmap 을 가져온다 */
@@ -124,19 +124,21 @@ object MediaUtil {
     private fun rotateImageIfRequired(context: Context, bitmap: Bitmap, uri: Uri): Bitmap? {
         val input = context.contentResolver.openInputStream(uri) ?: return null
 
-        val exif = if (Build.VERSION.SDK_INT > 23) {
+        val exif = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             ExifInterface(input)
         } else {
             ExifInterface(uri.path!!)
         }
 
-        return when (exif.getAttributeInt(
-            ExifInterface.TAG_ORIENTATION,
-            ExifInterface.ORIENTATION_NORMAL
-        )) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90)
-            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180)
-            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270)
+        return when (
+            exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL,
+            )
+        ) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, rotate90)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, rotate180)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, rotate270)
             else -> bitmap
         }
     }
