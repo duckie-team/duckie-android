@@ -515,10 +515,11 @@ internal fun CreateProblemScreen(
                 with(photoState) {
                     when (this) {
                         is CreateProblemPhotoState.QuestionImageType -> {
-                            vm.setQuestion(
+                            vm.setQuestionWithMedia(
                                 Question.Type.Image,
                                 this.questionIndex,
                                 urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
+                                applicationContext = context.applicationContext,
                             )
                             vm.updatePhotoState(null)
                         }

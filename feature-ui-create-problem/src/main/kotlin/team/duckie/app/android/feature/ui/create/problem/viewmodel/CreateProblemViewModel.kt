@@ -389,7 +389,7 @@ internal class CreateProblemViewModel @Inject constructor(
         questionType: Question.Type?,
         questionIndex: Int,
         title: String? = null,
-        urlSource: Uri? = null,
+        urlSource: String? = null,
     ) = intent {
         val newQuestions = state.createProblem.questions.toMutableList()
         val prevQuestion = newQuestions[questionIndex]
@@ -423,6 +423,35 @@ internal class CreateProblemViewModel @Inject constructor(
                     questions = newQuestions.toPersistentList(),
                 ),
             )
+        }
+    }
+
+    /**
+     * [questionIndex + 1] 번 문제를 설정합니다.
+     * 미디어 설정이 필요한 경우에만 사용되며, 미디어 설정 이후 로직은 [setQuestion] 와 같습니다.
+     */
+    internal fun setQuestionWithMedia(
+        questionType: Question.Type?,
+        questionIndex: Int,
+        title: String? = null,
+        urlSource: Uri,
+        applicationContext: Context,
+    ) = viewModelScope.launch {
+        urlSource.run {
+            runCatching {
+                requestImage(
+                    when (questionType) {
+                        Question.Type.Image -> FileType.ProblemQuestionImage
+                        Question.Type.Audio -> FileType.ProblemQuestionAudio
+                        Question.Type.Video -> FileType.ProblemQuestionVideo
+                        else -> duckieClientLogicProblemException()
+                    }, urlSource, applicationContext
+                )
+            }.onSuccess { serverUrl ->
+                setQuestion(questionType, questionIndex, title, serverUrl)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
         }
     }
 
