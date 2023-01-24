@@ -16,8 +16,8 @@ import team.duckie.app.android.util.kotlin.OutOfDateApi
 @Immutable
 sealed class Search(val type: String, open val page: Int) {
     companion object {
-        const val Exam = "exam"
-        const val User = "user"
+        const val Exam = "EXAM"
+        const val User = "USER"
         const val Tags = "TAGS"
     }
 
