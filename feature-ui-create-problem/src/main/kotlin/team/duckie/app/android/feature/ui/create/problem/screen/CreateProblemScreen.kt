@@ -418,7 +418,7 @@ internal fun CreateProblemScreen(
                                             answer = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
-                                    answerImageClick = { answersNo ->
+                                    answerImageClick = { answersIndex ->
                                         coroutineShape.launch {
                                             val result = imagePermission.check(context)
                                             if (result) {
@@ -426,7 +426,7 @@ internal fun CreateProblemScreen(
                                                 vm.updatePhotoState(
                                                     CreateProblemPhotoState.AnswerImageType(
                                                         questionIndex,
-                                                        answersNo,
+                                                        answersIndex,
                                                         answers,
                                                     ),
                                                 )
@@ -515,20 +515,22 @@ internal fun CreateProblemScreen(
                 with(photoState) {
                     when (this) {
                         is CreateProblemPhotoState.QuestionImageType -> {
-                            vm.setQuestion(
+                            vm.setQuestionWithMedia(
                                 Question.Type.Image,
                                 this.questionIndex,
                                 urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
+                                applicationContext = context.applicationContext,
                             )
                             vm.updatePhotoState(null)
                         }
 
                         is CreateProblemPhotoState.AnswerImageType -> {
-                            vm.setAnswer(
+                            vm.setAnswerWithImage(
                                 questionIndex,
                                 answerIndex,
                                 Answer.Type.ImageChoice,
                                 urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
+                                applicationContext = context.applicationContext,
                             )
                             vm.updatePhotoState(null)
                         }
@@ -758,7 +760,7 @@ private fun ImageChoiceProblemLayout(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             itemContent = { answerIndex ->
                 val answerNo = answerIndex + 1
-                val answerItem = answers.imageChoice[answerNo]
+                val answerItem = answers.imageChoice[answerIndex]
                 val isChecked = correctAnswers == "$answerNo"
 
                 Column(
@@ -796,7 +798,7 @@ private fun ImageChoiceProblemLayout(
 
                         QuackImage(
                             modifier = Modifier.quackClickable(
-                                onClick = { deleteLongClick(answerNo) },
+                                onClick = { deleteLongClick(answerIndex) },
                             ),
                             src = QuackIcon.Close,
                             size = DpSize(20.dp, 20.dp),
@@ -806,7 +808,7 @@ private fun ImageChoiceProblemLayout(
                     if (answerItem.imageUrl.isEmpty()) {
                         Box(
                             modifier = Modifier
-                                .quackClickable { answerImageClick(answerNo) }
+                                .quackClickable { answerImageClick(answerIndex) }
                                 .background(color = QuackColor.Gray4.composeColor)
                                 .padding(52.dp),
                         ) {
@@ -819,15 +821,15 @@ private fun ImageChoiceProblemLayout(
                         QuackImage(
                             src = answerItem.imageUrl,
                             size = DpSize(136.dp, 136.dp),
-                            onClick = { answerImageClick(answerNo) },
-                            onLongClick = { deleteLongClick(answerNo) },
+                            onClick = { answerImageClick(answerIndex) },
+                            onLongClick = { deleteLongClick(answerIndex) },
                         )
                     }
 
                     QuackBasicTextField(
-                        text = answers.imageChoice[answerNo].text,
+                        text = answers.imageChoice[answerIndex].text,
                         onTextChanged = { newAnswer ->
-                            answerTextChanged(newAnswer, answerNo)
+                            answerTextChanged(newAnswer, answerIndex)
                         },
                         placeholderText = stringResource(
                             id = R.string.create_problem_answer_placeholder,

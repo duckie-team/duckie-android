@@ -24,6 +24,7 @@ dependencies {
         projects.domain,
         projects.utilUi,
         projects.utilKotlin,
+        projects.utilAndroid,
         projects.utilCompose,
         projects.featurePhotopicker,
         projects.sharedUiCompose,

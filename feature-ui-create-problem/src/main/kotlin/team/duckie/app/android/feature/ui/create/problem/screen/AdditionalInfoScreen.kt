@@ -202,7 +202,7 @@ internal fun AdditionalInformationScreen(
                         title = "기본 썸네일",
                         src = rootState.defaultThumbnail,
                         onClick = {
-                            vm.setThumbnail(thumbnailType = ThumbnailType.Default)
+                            vm.selectThumbnail(thumbnailType = ThumbnailType.Default)
                             coroutineScope.launch {
                                 sheetState.hide()
                             }
@@ -310,9 +310,10 @@ internal fun AdditionalInformationScreen(
             },
             onAddClick = {
                 coroutineScope.launch {
-                    vm.setThumbnail(
-                        galleryImages[galleryImagesSelectionIndex].toUri(),
+                    vm.selectThumbnail(
                         ThumbnailType.Image,
+                        galleryImages[galleryImagesSelectionIndex].toUri(),
+                        context.applicationContext,
                     )
                     vm.updatePhotoState(null)
                     sheetState.hide()
