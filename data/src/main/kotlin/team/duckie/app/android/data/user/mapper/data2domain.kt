@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.data.user.mapper
 
+import kotlin.random.Random
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.category.mapper.toDomain
@@ -17,12 +18,12 @@ import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.user.constant.DuckieTier
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
+import team.duckie.app.android.util.kotlin.fastMap
 
 internal fun UserResponse.toDomain() = User(
     id = id ?: duckieResponseFieldNpe("id"),
-    nickname = nickName ?: duckieResponseFieldNpe("nickName"),
+    nickname = nickName ?: "덕키즈_${Random.nextInt(10_000).toString().padStart(4, '0')}",
     profileImageUrl = profileImageUrl ?: duckieResponseFieldNpe("profileImageUrl"),
     tier = DuckieTier.values().toList().fastFirstOrNull { it.level == tier } ?: DuckieTier.DuckKid,
     favoriteTags = favoriteTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
