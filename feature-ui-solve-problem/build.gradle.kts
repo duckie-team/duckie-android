@@ -1,3 +1,5 @@
+import DependencyHandler.Extensions.implementations
+
 /*
  * Designed and developed by Duckie Team, 2022
  *
@@ -13,4 +15,27 @@ plugins {
 
 android {
     namespace = "team.duckie.app.android.feature.ui.solve.problem"
+}
+
+dependencies {
+    implementations(
+        platform(libs.firebase.bom),
+        projects.di,
+        projects.domain,
+        projects.utilUi,
+        projects.utilKotlin,
+        projects.utilCompose,
+        projects.sharedUiCompose,
+        libs.orbit.viewmodel,
+        libs.orbit.compose,
+        libs.ktx.lifecycle.runtime,
+        libs.compose.lifecycle.runtime,
+        libs.compose.ui.material, // needs for Scaffold
+        libs.quack.ui.components,
+        libs.firebase.crashlytics,
+        libs.exoplayer.core,
+        libs.exoplayer.ui,
+        libs.compose.ui.coil,
+        libs.compose.ui.coil.gif,
+    )
 }
