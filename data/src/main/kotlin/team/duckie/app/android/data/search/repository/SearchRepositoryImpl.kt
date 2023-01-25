@@ -17,8 +17,9 @@ import team.duckie.app.android.data.search.mapper.toDomain
 import team.duckie.app.android.data.search.model.SearchData
 import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.domain.search.repository.SearchRepository
+import javax.inject.Inject
 
-class SearchRepositoryImpl : SearchRepository {
+class SearchRepositoryImpl @Inject constructor() : SearchRepository {
     override suspend fun getSearch(query: String, page: Int, type: String): Search {
         val response = client.get {
             url("/search")

@@ -5,21 +5,27 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("MaxLineLength")
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 // TODO(riflockle7): OptIn 제거
 @file:OptIn(OutOfDateApi::class)
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -39,7 +45,11 @@ import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
+import team.duckie.app.android.domain.file.constant.FileType
+import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
+import team.duckie.app.android.domain.search.model.Search
+import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
@@ -47,16 +57,24 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
+import team.duckie.app.android.util.android.image.MediaUtil
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
+import javax.inject.Inject
+
+private const val TagsMaximumCount = 4
 
 @HiltViewModel
+@Suppress("LargeClass")
 internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
     private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val fileUploadUseCase: FileUploadUseCase,
+    private val getSearchUseCase: GetSearchUseCase,
     private val tagRepository: TagRepository,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
@@ -76,6 +94,51 @@ internal class CreateProblemViewModel @Inject constructor(
      * `ProfileScreen` 에서 `PhotoPicker` 에 사용할 이미지 목록을 불러오기 위해 사용됩니다.
      */
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
+
+    /** tags 검색 flow. 실질 동작 로직은 apply 내에 명세되어 있다. */
+    private val _getSearchTagsFlow: MutableSharedFlow<String> = MutableSharedFlow<String>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    ).apply {
+        viewModelScope.launch {
+            this@apply.debounce(1500L).collectLatest { query ->
+                val searchResults = getSearchUseCase(query = query, page = 1, type = Search.Tags)
+                    .getOrNull()?.let {
+                        (it as Search.TagSearch).tags
+                            .fastMap(Tag::name)
+                            .take(TagsMaximumCount)
+                            .toImmutableList()
+                    } ?: persistentListOf()
+
+                intent {
+                    reduce {
+                        when (state.findResultType) {
+                            FindResultType.MainTag -> {
+                                state.copy(
+                                    examInformation = state.examInformation.copy(
+                                        searchMainTag = state.examInformation.searchMainTag.copy(
+                                            searchResults = searchResults,
+                                        ),
+                                    ),
+                                )
+                            }
+
+                            FindResultType.SubTags -> {
+                                state.copy(
+                                    additionalInfo = state.additionalInfo.copy(
+                                        searchSubTags = state.additionalInfo.searchSubTags.copy(
+                                            searchResults = searchResults,
+                                        ),
+                                    ),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // 공통
     /** 시험 컨텐츠를 만든다. */
@@ -188,6 +251,17 @@ internal class CreateProblemViewModel @Inject constructor(
             }
     }
 
+    /** 서버에 이미지 등록을 요청한다. 요청 결과로 URL 값을 가져온다. */
+    private suspend fun requestImage(
+        fileType: FileType,
+        thumbnailUri: Uri,
+        applicationContext: Context?,
+    ): String {
+        requireNotNull(applicationContext)
+        val tempFile = MediaUtil.getOptimizedBitmapFile(applicationContext, thumbnailUri)
+        return fileUploadUseCase(tempFile, fileType).getOrThrow()
+    }
+
     /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트한다. */
     internal fun addGalleryImages(images: List<String>) = intent {
         mutableGalleryImages = persistentListOf(*images.toTypedArray())
@@ -277,7 +351,11 @@ internal class CreateProblemViewModel @Inject constructor(
     /** 문제 만들기 1단계 화면의 유효성을 체크한다. */
     internal fun examInformationIsValidate(): Boolean {
         return with(container.stateFlow.value.examInformation) {
-            categorySelection >= 0 && isMainTagSelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+            categorySelection >= 0 &&
+                    isMainTagSelected &&
+                    examTitle.isNotEmpty() &&
+                    examDescription.isNotEmpty() &&
+                    certifyingStatement.isNotEmpty()
         }
     }
 
@@ -371,7 +449,7 @@ internal class CreateProblemViewModel @Inject constructor(
         questionType: Question.Type?,
         questionIndex: Int,
         title: String? = null,
-        urlSource: Uri? = null,
+        urlSource: String? = null,
     ) = intent {
         val newQuestions = state.createProblem.questions.toMutableList()
         val prevQuestion = newQuestions[questionIndex]
@@ -408,6 +486,37 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    /**
+     * [questionIndex + 1] 번 문제를 설정합니다.
+     * 미디어 설정이 필요한 경우에만 사용되며, 미디어 설정 이후 로직은 [setQuestion] 와 같습니다.
+     */
+    internal fun setQuestionWithMedia(
+        questionType: Question.Type?,
+        questionIndex: Int,
+        title: String? = null,
+        urlSource: Uri,
+        applicationContext: Context,
+    ) = viewModelScope.launch {
+        urlSource.run {
+            runCatching {
+                requestImage(
+                    when (questionType) {
+                        Question.Type.Image -> FileType.ProblemQuestionImage
+                        Question.Type.Audio -> FileType.ProblemQuestionAudio
+                        Question.Type.Video -> FileType.ProblemQuestionVideo
+                        else -> duckieClientLogicProblemException()
+                    },
+                    urlSource,
+                    applicationContext,
+                )
+            }.onSuccess { serverUrl ->
+                setQuestion(questionType, questionIndex, title, serverUrl)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
+        }
+    }
+
     /** [questionIndex + 1] 번 문제의 문제 타입을 [특정 답안 타입][answerType]으로 변경합니다. */
     internal fun editAnswersType(
         questionIndex: Int,
@@ -441,7 +550,7 @@ internal class CreateProblemViewModel @Inject constructor(
         answerIndex: Int,
         answerType: Answer.Type,
         answer: String? = null,
-        urlSource: Uri? = null,
+        urlSource: String? = null,
     ) = intent {
         val newAnswers = state.createProblem.answers.toMutableList()
 
@@ -464,6 +573,29 @@ internal class CreateProblemViewModel @Inject constructor(
                     correctAnswers = newCorrectAnswers.toPersistentList(),
                 ),
             )
+        }
+    }
+
+    /**
+     * [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 설정합니다.
+     * 이미지 설정이 필요한 경우에만 사용되며, 이미지 설정 이후 로직은 [setAnswer] 와 같습니다.
+     */
+    internal fun setAnswerWithImage(
+        questionIndex: Int,
+        answerIndex: Int,
+        answerType: Answer.Type,
+        answer: String? = null,
+        urlSource: Uri,
+        applicationContext: Context,
+    ) = viewModelScope.launch {
+        urlSource.run {
+            runCatching {
+                requestImage(FileType.ProblemAnswer, urlSource, applicationContext)
+            }.onSuccess { serverUrl ->
+                setAnswer(questionIndex, answerIndex, answerType, answer, serverUrl)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
         }
     }
 
@@ -512,16 +644,12 @@ internal class CreateProblemViewModel @Inject constructor(
         answerIndex: Int,
         answerType: Answer.Type,
         answer: String?,
-        urlSource: Uri?,
+        urlSource: String?,
     ): Answer {
         return when (answerType) {
             Answer.Type.ShortAnswer -> this.toShort(answer)
             Answer.Type.Choice -> this.toChoice(answerIndex, answer)
-            Answer.Type.ImageChoice -> this.toImageChoice(
-                answerIndex,
-                answer,
-                urlSource?.let { "$this" },
-            )
+            Answer.Type.ImageChoice -> this.toImageChoice(answerIndex, answer, urlSource)
         }
     }
 
@@ -600,12 +728,35 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     // AdditionalInfo
+    /**
+     * 카테고리 썸네일을 선택한다.
+     * 선택 후 동작해야하는 로직 (ex. API 요청 등) 을 수행한다.
+     */
+    internal fun selectThumbnail(
+        thumbnailType: ThumbnailType,
+        thumbnailUri: Uri? = null,
+        applicationContext: Context? = null,
+    ) = viewModelScope.launch {
+        thumbnailUri?.let {
+            runCatching {
+                requestImage(FileType.ExamThumbnail, thumbnailUri, applicationContext)
+            }.onSuccess { serverUrl ->
+                setThumbnailUrl(thumbnailType, serverUrl)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
+        } ?: setThumbnailUrl(thumbnailType)
+    }
+
     /** 카테고리 썸네일을 정한다. */
-    internal fun setThumbnail(thumbnail: Any? = null, thumbnailType: ThumbnailType) = intent {
+    private suspend fun setThumbnailUrl(
+        thumbnailType: ThumbnailType,
+        thumbnailUri: String? = null,
+    ) = intent {
         reduce {
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
-                    thumbnail = thumbnail ?: state.defaultThumbnail,
+                    thumbnail = thumbnailUri ?: state.defaultThumbnail,
                     thumbnailType = thumbnailType,
                 ),
             )
@@ -646,6 +797,11 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     // Search
+    /** Tag 화면에서 [입력한 값][query] 에 맞는 검색 목록 값을 가져온다. */
+    private suspend fun searchTags(query: String) {
+        _getSearchTagsFlow.emit(query)
+    }
+
     /** 검색 입력 필드의 값을 설정(= 갱신) 한다. */
     internal fun setTextFieldValue(textFieldValue: String) = intent {
         reduce {
@@ -670,7 +826,7 @@ internal class CreateProblemViewModel @Inject constructor(
                     )
                 }
             }
-        }
+        }.run { searchTags(textFieldValue) }
     }
 
     /** 추천 검색 목록에서 헤더(1번째 항목)을 클릭한다. */
