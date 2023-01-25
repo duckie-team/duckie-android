@@ -7,14 +7,16 @@
 
 package team.duckie.app.android.data.user.repository
 
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.coroutines.awaitObject
+import com.github.kittinunf.fuel.jackson.jacksonDeserializerOf
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.request.patch
 import io.ktor.client.statement.bodyAsText
 import javax.inject.Inject
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
-import team.duckie.app.android.data._util.jsonBody
+import team.duckie.app.android.data._util.buildJson
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserResponse
@@ -25,7 +27,7 @@ import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.runtimeCheck
 
-class UserRepositoryImpl @Inject constructor() : UserRepository {
+class UserRepositoryImpl @Inject constructor(private val fuel: Fuel) : UserRepository {
     override suspend fun get(id: Int): User {
         val response = client.get("/users/$id")
 
@@ -48,18 +50,18 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
         ) {
             "At least one of the parameters must be non-null"
         }
-        val response = client.patch("/users/$id") {
-            jsonBody {
-                nickname?.let { "nickname" withString nickname }
-                profileImageUrl?.let { "profileImageUrl" withString profileImageUrl }
-                favoriteCategories?.let { "favoriteCategories" withPojos favoriteCategories }
-                favoriteTags?.let { "favoriteTags" withPojos favoriteTags }
-            }
-        }
-        return responseCatching(
-            response = response.body(),
-            parse = UserResponse::toDomain,
-        )
+        val request = fuel
+            .patch("/users/$id")
+            .body(
+                buildJson {
+                    nickname?.let { "nickname" withString nickname }
+                    profileImageUrl?.let { "profileImageUrl" withString profileImageUrl }
+                    favoriteCategories?.let { "favoriteCategories" withPojos favoriteCategories }
+                    favoriteTags?.let { "favoriteTags" withPojos favoriteTags }
+                }
+            )
+        val response = request.awaitObject<UserResponse>(jacksonDeserializerOf())
+        return response.toDomain()
     }
 
     override suspend fun nicknameValidateCheck(nickname: String): Boolean {
