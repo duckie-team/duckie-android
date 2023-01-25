@@ -227,7 +227,6 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     }
 }
 
-// FIXME(sungbin): 프로필 사진 업로드 로직 수정 (업로드가 진행되지 않음)
 private fun updateUserAndFinishOnboard(
     coroutineScope: CoroutineScope,
     vm: OnboardViewModel,
