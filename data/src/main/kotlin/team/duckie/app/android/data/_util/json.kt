@@ -8,9 +8,10 @@
 package team.duckie.app.android.data._util
 
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 
-internal val jsonMapper = ObjectMapper()
+internal val jsonMapper = ObjectMapper().disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
 
 /**
  * 모든 필드가 String 일 때만 사용해야 합니다.
