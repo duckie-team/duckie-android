@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -156,6 +157,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     val toast = rememberToast()
     val context = LocalContext.current
     val keyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
 
     @Suppress("RemoveExplicitTypeArguments")
@@ -313,6 +315,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
         if (photoPickerVisible) {
             SideEffect {
                 keyboard?.hide()
+                focusManager.clearFocus()
             }
 
             PhotoPicker(
