@@ -10,7 +10,6 @@
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
-import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,16 +49,14 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.datastore.preferences.core.edit
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.feature.datastore.PreferenceKey
-import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
@@ -137,7 +134,6 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 
 @Composable
 internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
-    val context = LocalContext.current.applicationContext
     val keyboard = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -216,7 +212,6 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                     isLoading = isLoadingToFinish,
                 ) {
                     updateUserAndFinishOnboard(
-                        context = context,
                         coroutineScope = coroutineScope,
                         vm = vm,
                         onboardState = onboardState,
@@ -232,9 +227,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     }
 }
 
-// FIXME(sungbin): 프로필 사진 업로드 로직 수정 (업로드가 진행되지 않음)
 private fun updateUserAndFinishOnboard(
-    context: Context,
     coroutineScope: CoroutineScope,
     vm: OnboardViewModel,
     onboardState: OnboardState,
@@ -243,26 +236,25 @@ private fun updateUserAndFinishOnboard(
 ) {
     updateIsLoadingToFinishState(true)
     coroutineScope.launch {
-        val updateUserProfileImageJob = launch {
-            vm.updateUserProfileImage()
+        val profileImageUrlDeferred = onboardState.temporaryProfileImageFile?.let {
+            async { vm.uploadProfileImage(file = it) }
         }
-        val updateUserFavorateTagJob = launch {
-            vm.updateUserFavorateTags(favorateTagNames = addedTags)
+        val favoriteTagsDeferred = async {
+            vm.updateUserFavoriteTags(names = addedTags)
         }
-        joinAll(updateUserProfileImageJob, updateUserFavorateTagJob)
+        val (profileImageUrl, favoriteTags) = awaitAll(
+            profileImageUrlDeferred ?: async { "" },
+            favoriteTagsDeferred,
+        )
+        @Suppress("UNCHECKED_CAST")
         vm.updateUser(
             id = vm.me.id,
             nickname = onboardState.temporaryNickname,
-            profileImageUrl = onboardState.temporaryProfileImageUrl,
+            profileImageUrl = (profileImageUrl as String).takeIf { profileImageUrlDeferred != null },
             favoriteCategories = onboardState.selectedCategories,
-            favoriteTags = onboardState.temporaryFavoriteTags,
+            favoriteTags = favoriteTags as List<Tag>,
         )
-        onboardState.temporaryProfileImageFile?.delete()
-        context.dataStore.edit { preference ->
-            preference[PreferenceKey.Onboard.Finish] = true
-        }
         updateIsLoadingToFinishState(false)
-        vm.finishOnboard()
     }
 }
 

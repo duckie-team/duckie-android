@@ -32,7 +32,6 @@ import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.home.screen.HomeActivity
 import team.duckie.app.android.feature.ui.onboard.constant.CollectInStep
-import team.duckie.app.android.feature.ui.onboard.constant.CollectInViewModel
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
 import team.duckie.app.android.feature.ui.onboard.screen.LoginScreen
@@ -99,7 +98,7 @@ class OnboardActivity : BaseActivity() {
         }
 
         onBackPressedDispatcher.addCallback(owner = this) {
-            if (onboardStepState == OnboardStep.Login || onboardStepState == OnboardStep.Tag) {
+            if (onboardStepState == OnboardStep.Login) {
                 finishWithAnimation()
             } else {
                 val onboardStepState = onboardStepState
@@ -178,6 +177,9 @@ class OnboardActivity : BaseActivity() {
 
     private fun handleState(state: OnboardState) {
         onboardStepState = state.step
+        if (state.finishOnboarding) {
+            vm.finishOnboard(userId = vm.me.id.toString())
+        }
     }
 
     private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
@@ -209,6 +211,7 @@ class OnboardActivity : BaseActivity() {
             is OnboardSideEffect.FinishOnboard -> {
                 applicationContext.dataStore.edit { preference ->
                     preference[PreferenceKey.Onboard.Finish] = true
+                    sideEffect.userId?.let { preference[PreferenceKey.User.Id] = it }
                 }
                 // TODO(sungbin): 끝낼 때 별다른 메시지를 안하는게 맞을까?
                 changeActivityWithAnimation<HomeActivity>()
@@ -219,8 +222,6 @@ class OnboardActivity : BaseActivity() {
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
             is OnboardSideEffect.NicknameDuplicateChecked -> CollectInStep
-            is OnboardSideEffect.PrfileImageUploaded -> CollectInViewModel
-            is OnboardSideEffect.TagCreated -> CollectInViewModel
         }
     }
 }

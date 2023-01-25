@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("PrivatePropertyName")
+
 package team.duckie.app.android.data._datasource
 
 import android.os.Build
@@ -14,7 +16,6 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.engine.cio.endpoint
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -81,10 +82,15 @@ private object AuthorizationHeaderClient {
         install(plugin = ContentNegotiation) {
             jackson {
                 disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
+                disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             }
         }
         install(plugin = Logging) {
-            logger = Logger.ANDROID
+            logger = object : Logger {
+                override fun log(message: String) {
+                   println(message)
+                }
+            }
             level = LogLevel.ALL
         }
     }
