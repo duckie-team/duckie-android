@@ -7,9 +7,7 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect
 
-import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.ui.onboard.constant.CollectInStep
-import team.duckie.app.android.feature.ui.onboard.constant.CollectInViewModel
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.constant.RequiredStep
 
@@ -33,16 +31,8 @@ internal sealed class OnboardSideEffect {
     @RequiredStep(OnboardStep.Profile)
     class NicknameDuplicateChecked(val isUsable: Boolean) : OnboardSideEffect()
 
-    @CollectInViewModel
-    @RequiredStep(OnboardStep.Tag)
-    class TagCreated(val tag: Tag) : OnboardSideEffect()
-
-    @CollectInViewModel
-    @RequiredStep(OnboardStep.Tag) // 마지막 단계에서 유저 정보 업데이트함
-    class PrfileImageUploaded(val url: String) : OnboardSideEffect()
-
     @RequiredStep(OnboardStep.Activity, OnboardStep.Tag)
-    object FinishOnboard : OnboardSideEffect()
+    class FinishOnboard(val userId: String?) : OnboardSideEffect()
 
     class ReportError(val exception: Throwable) : OnboardSideEffect()
 }
