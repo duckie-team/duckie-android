@@ -199,7 +199,7 @@ class OnboardActivity : BaseActivity() {
                 vm.attachAccessTokenToHeader(sideEffect.accessToken)
             }
             is OnboardSideEffect.Joined -> {
-                if (sideEffect.isNewUser /*true*/) {
+                if (sideEffect.isNewUser) {
                     vm.navigateStep(
                         step = OnboardStep.Profile,
                         ignoreThrottle = true,
