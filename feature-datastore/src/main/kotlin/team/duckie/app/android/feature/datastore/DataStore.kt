@@ -31,6 +31,10 @@ object PreferenceKey {
     object Account {
         val AccessToken = stringPreferencesKey(buildPreferenceKey(type = "account", token = "access_token"))
     }
+
+    object User {
+        val Id = stringPreferencesKey(buildPreferenceKey(type = "user", token = "id"))
+    }
 }
 
 val Context.dataStore by preferencesDataStore(

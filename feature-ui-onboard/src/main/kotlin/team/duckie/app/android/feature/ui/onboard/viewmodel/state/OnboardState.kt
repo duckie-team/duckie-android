@@ -11,7 +11,6 @@ import android.os.Parcelable
 import java.io.File
 import kotlinx.parcelize.Parcelize
 import team.duckie.app.android.domain.category.model.Category
-import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 
@@ -19,10 +18,9 @@ import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 internal data class OnboardState(
     val step: OnboardStep = OnboardStep.Activity,
     val me: User? = null,
+    val finishOnboarding: Boolean = false,
     val temporaryNickname: String? = null,
     val temporaryProfileImageFile: File? = null,
-    val temporaryProfileImageUrl: String? = null,
-    val temporaryFavoriteTags: List<Tag>? = null,
     val galleryImages: List<String> = emptyList(),
     val categories: List<Category> = emptyList(),
     val selectedCategories: List<Category> = emptyList(),

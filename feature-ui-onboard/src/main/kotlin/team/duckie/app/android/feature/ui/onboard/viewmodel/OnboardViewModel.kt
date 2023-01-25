@@ -24,8 +24,11 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import java.io.File
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.apache.commons.io.FileUtils
@@ -52,8 +55,7 @@ import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.util.android.permission.PermissionCompat
 import team.duckie.app.android.util.android.savedstate.SaveableMutableStateFlow
 import team.duckie.app.android.util.android.viewmodel.context
-import team.duckie.app.android.util.kotlin.cancelChildrenAndItself
-import team.duckie.app.android.util.kotlin.fastForEach
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.seconds
 
 private val NextStepNavigateThrottle = 1.seconds
@@ -161,8 +163,8 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    fun finishOnboard() = intent {
-        postSideEffect(OnboardSideEffect.FinishOnboard)
+    fun finishOnboard(userId: String? = null) = intent {
+        postSideEffect(OnboardSideEffect.FinishOnboard(userId))
     }
 
     // validation
@@ -212,65 +214,13 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    suspend fun updateUserProfileImage() = intent {
-        suspendCancellableCoroutine { continuation ->
-            // 유저가 프사 등록을 건너뛴 경우
-            val file = state.temporaryProfileImageFile ?: return@suspendCancellableCoroutine continuation.resume(Unit)
-            val job = viewModelScope.launch {
-                launch {
-                    container.sideEffectFlow.collect { sideEffect ->
-                        if (sideEffect is OnboardSideEffect.PrfileImageUploaded) {
-                            reduce {
-                                state.copy(temporaryProfileImageUrl = sideEffect.url)
-                            }
-                            continuation.resume(Unit)
-                        }
-                    }
-                }
-
-                launch {
-                    updateProfileImageFile(file)
-                    reduce {
-                        state.copy(temporaryProfileImageFile = null)
-                    }
-                }
-            }
-
-            continuation.invokeOnCancellation {
-                job.cancelChildrenAndItself()
-            }
-        }
-    }
-
-    suspend fun updateUserFavorateTags(favorateTagNames: List<String>) = intent {
-        suspendCancellableCoroutine { continuation ->
-            val favorateTagSize = favorateTagNames.size
-            val favorateTags = ArrayList<Tag>(favorateTagSize)
-            val job = viewModelScope.launch {
-                launch {
-                    container.sideEffectFlow.collect { sideEffect ->
-                        if (sideEffect is OnboardSideEffect.TagCreated) {
-                            favorateTags.add(sideEffect.tag)
-
-                            if (favorateTags.size == favorateTagSize) {
-                                reduce {
-                                    state.copy(temporaryFavoriteTags = favorateTags)
-                                }
-                                continuation.resume(Unit)
-                            }
-                        }
-                    }
-                }
-
-                favorateTagNames.fastForEach { name ->
-                    launch {
-                        createTag(name)
-                    }
-                }
-            }
-
-            continuation.invokeOnCancellation {
-                job.cancelChildrenAndItself()
+    suspend fun updateUserFavoriteTags(names: List<String>): List<Tag> {
+        return suspendCancellableCoroutine { continuation ->
+            viewModelScope.launch {
+                val tags = names.fastMap { name ->
+                    async { createTag(name) }
+                }.awaitAll()
+                continuation.resume(tags)
             }
         }
     }
@@ -318,20 +268,32 @@ internal class OnboardViewModel @AssistedInject constructor(
             .attachExceptionHandling()
     }
 
-    private suspend fun updateProfileImageFile(file: File) = intent {
-        fileUploadUseCase(file, FileType.Profile)
-            .onSuccess { url ->
-                postSideEffect(OnboardSideEffect.PrfileImageUploaded(url))
+    suspend fun uploadProfileImage(file: File): String {
+        return suspendCancellableCoroutine { continuation ->
+            viewModelScope.launch {
+                fileUploadUseCase(file, FileType.Profile)
+                    .onSuccess { url ->
+                        continuation.resume(url)
+                    }
+                    .onFailure { exception ->
+                        continuation.resumeWithException(exception)
+                    }
             }
-            .attachExceptionHandling()
+        }
     }
 
-    private suspend fun createTag(name: String) = intent {
-        tagCreateUseCase(name)
-            .onSuccess { tag ->
-                postSideEffect(OnboardSideEffect.TagCreated(tag))
+    private suspend fun createTag(name: String): Tag {
+        return suspendCancellableCoroutine { continuation ->
+            viewModelScope.launch {
+                tagCreateUseCase(name)
+                    .onSuccess { tag ->
+                        continuation.resume(tag)
+                    }
+                    .onFailure { exeption ->
+                        continuation.resumeWithException(exeption)
+                    }
             }
-            .attachExceptionHandling()
+        }
     }
 
     suspend fun updateUser(
@@ -350,7 +312,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         )
             .onSuccess { user ->
                 reduce {
-                    state.copy(me = user)
+                    state.copy(
+                        me = user,
+                        finishOnboarding = true,
+                    )
                 }
             }
             .attachExceptionHandling()

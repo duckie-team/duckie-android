@@ -31,8 +31,4 @@ internal annotation class CollectInStep {
     companion object
 }
 
-internal annotation class CollectInViewModel {
-    companion object
-}
-
 internal annotation class RequiredStep(@Suppress("unused") vararg val step: OnboardStep)

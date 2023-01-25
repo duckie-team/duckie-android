@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -156,6 +157,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     val toast = rememberToast()
     val context = LocalContext.current
     val keyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
 
     @Suppress("RemoveExplicitTypeArguments")
@@ -188,7 +190,8 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
         if (takenPhoto != null) {
             profilePhoto = takenPhoto.also(vm::updateUserProfileImageFile)
         } else {
-            toast(context.getString(R.string.profile_fail_load_photo))
+            // TODO(sungbin): 유저가 취소했을 때도 표시해야 할까?
+            toast(context.getString(R.string.profile_fail_capture_photo))
         }
     }
 
@@ -198,15 +201,6 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     var debounceFinish by remember { mutableStateOf(false) }
 
     var nicknameIsUseable by remember { mutableStateOf(false) }
-
-    // Collecting in LaunchedEffect
-    // FIXME(sungbin): 최초 컴포지션시에 collect 안됨
-    vm.collectSideEffect { sideEffect ->
-        if (sideEffect is OnboardSideEffect.NicknameDuplicateChecked) {
-            nicknameIsUseable = sideEffect.isUsable
-            println("nicknameIsUseable: ${sideEffect.isUsable}")
-        }
-    }
 
     LaunchedEffect(vm) {
         val nicknameInputFlow = snapshotFlow { nickname }
@@ -219,6 +213,15 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                 nicknameRuleError = vm.checkNicknameRuleError(nickname)
                 if (!nicknameRuleError) vm.nicknameDuplicateCheck(nickname)
             }
+    }
+
+    // FIXME(sungbin): 최초 컴포지션시에 collect 안됨
+    // Collecting in LaunchedEffect
+    vm.collectSideEffect { sideEffect ->
+        if (sideEffect is OnboardSideEffect.NicknameDuplicateChecked) {
+            nicknameIsUseable = sideEffect.isUsable
+            println("nicknameIsUseable: ${sideEffect.isUsable}")
+        }
     }
 
     BackHandler(photoPickerVisible) {
@@ -282,7 +285,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                     errorText = when {
                         nicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
                         !nicknameIsUseable -> stringResource(R.string.profile_nickname_duplicate_error)
-                        else -> lastErrorText
+                        else -> lastErrorText // 안하면 invisible 될 때 갑자기 텍스트가 사라짐 (애니메이션 X)
                     }.also { errorText ->
                         lastErrorText = errorText
                     },
@@ -312,6 +315,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
         if (photoPickerVisible) {
             SideEffect {
                 keyboard?.hide()
+                focusManager.clearFocus()
             }
 
             PhotoPicker(
