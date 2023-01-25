@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("ConstPropertyName")
+
 package team.duckie.app.android.data.user.mapper
 
 import kotlin.random.Random
@@ -21,9 +23,13 @@ import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.fastMap
 
+private const val NicknameSuffixMaxLength = 10_000
+private const val NicknameSuffixLength = 4
+
 internal fun UserResponse.toDomain() = User(
     id = id ?: duckieResponseFieldNpe("id"),
-    nickname = nickName ?: "덕키즈_${Random.nextInt(10_000).toString().padStart(4, '0')}",
+    nickname = nickName
+        ?: "덕키즈_${Random.nextInt(NicknameSuffixMaxLength).toString().padStart(NicknameSuffixLength, '0')}",
     profileImageUrl = profileImageUrl ?: duckieResponseFieldNpe("profileImageUrl"),
     tier = DuckieTier.values().toList().fastFirstOrNull { it.level == tier } ?: DuckieTier.DuckKid,
     favoriteTags = favoriteTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),

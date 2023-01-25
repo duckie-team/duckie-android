@@ -22,9 +22,9 @@ class TagRepositoryImpl @Inject constructor(private val fuel: Fuel) : TagReposit
         val request = fuel
             .post("/tags")
             .body(
-                buildJson {
+                body = buildJson {
                     "name" withString name
-                }
+                },
             )
         val response = request.awaitObject<TagData>(jacksonDeserializerOf())
         return response.toDomain()
