@@ -38,6 +38,7 @@ import team.duckie.app.android.data.recommendation.model.RecommendationData
 import team.duckie.app.android.data.recommendation.model.RecommendationItemData
 import team.duckie.app.android.data.recommendation.model.RecommendationJumbotronItemData
 import team.duckie.app.android.data.tag.model.TagData
+import team.duckie.app.android.data.user.model.DuckPowerResponse
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.util.kotlin.ExperimentalApi
@@ -59,6 +60,15 @@ private suspend fun dummyReturn(a: Int): RecommendationData {
                     user = UserResponse(
                         id = 1,
                         nickName = "faker",
+                        duckPower = DuckPowerResponse(
+                            id = 1,
+                            tier = "덕력 20%",
+                            tag = TagData(
+                                id = 1,
+                                name = "도로패션",
+                            ),
+                        ),
+                        profileImageUrl = "https://img.freepik.com/free-icon/user_318-804790.jpg?w=2000",
                     ),
                     thumbnailUrl = "https://user-images.githubusercontent.com/80076029/206901501-8d8a97ea-b7d8-4f18-84e7-ba593b4c824b.png",
                     buttonTitle = "열심히 풀어주세요",

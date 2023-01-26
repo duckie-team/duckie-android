@@ -19,14 +19,14 @@ import team.duckie.app.android.data.recommendation.model.RecommendationJumbotron
 import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSource
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.mapper.toDomain
-import team.duckie.app.android.data.user.model.UserFollowingData
-import team.duckie.app.android.data.user.model.UserFollowingRecommendationsData
+import team.duckie.app.android.data.user.model.DuckPowerResponse
+import team.duckie.app.android.data.user.model.UserFollowingResponse
+import team.duckie.app.android.data.user.model.UserFollowingRecommendationsResponse
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
-import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.fastMap
@@ -49,6 +49,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         ).flow
     }
 
+    // TODO(limsaehyun): 현재 Mock 으로 구현 / 추후 개선 필요
     @ExperimentalApi
     override suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem> {
 //        val response = client.get {
@@ -59,7 +60,6 @@ class RecommendationRepositoryImpl : RecommendationRepository {
 //        return responseCatching(response.bodyAsText()) { body ->
 //            body.toJsonObject<RecommendationData>().toDomain().jumbotrons
 //        }
-//      TODO(limsaehyun): Server Request 필요
 
         val response = (0..2).map {
             RecommendationJumbotronItemData(
@@ -98,16 +98,12 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         return response.fastMap(RecommendationJumbotronItemData::toDomain)
     }
 
-    @ExperimentalApi
-    override suspend fun fetchFollowingTest() {
-
-    }
-
+    // TODO(limsaehyun): 현재 Mock 으로 구현 / 추후 개선 필요
     @ExperimentalApi
     override suspend fun fetchRecommendFollowing(): UserFollowing {
-        val response = UserFollowingData(
+        val response = UserFollowingResponse(
             followingRecommendations = (0..10).map {
-                UserFollowingRecommendationsData(
+                UserFollowingRecommendationsResponse(
                     category = CategoryData(
                         id = 1,
                         name = "카테고리$it",
@@ -116,17 +112,17 @@ class RecommendationRepositoryImpl : RecommendationRepository {
                     ),
                     user = (0..10).map {
                         UserResponse(
-                            tier = 1,
-                            nickName = "user$it",
-                            id = 1,
-                            profileImageUrl = "https://w7.pngwing.com/pngs/906/222/png-transparent-computer-icons-user-profile-avatar-french-people-computer-network-heroes-black.png",
-                            favoriteTags = (0..3).map {
-                                Tag(
+                            id = it,
+                            nickName = "유저$it",
+                            profileImageUrl = "https://img.freepik.com/free-icon/user_318-804790.jpg?w=2000",
+                            duckPower = DuckPowerResponse(
+                                id = 1,
+                                tier = "덕력 20%",
+                                tag = TagData(
                                     id = 1,
-                                    name = "sub tag",
-                                )
-                            }.toList(),
-                            favoriteCategories = emptyList(),
+                                    name = "도로패션",
+                                ),
+                            )
                         )
                     }
                 )
@@ -136,6 +132,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         return response.toDomain()
     }
 
+    // TODO(limsaehyun): 현재 Mock 으로 구현 / 추후 개선 필요
     @ExperimentalApi
     override suspend fun fetchRecommendTags(
         tag: String,
