@@ -106,8 +106,7 @@ internal fun DetailScreen(
 private fun DetailLoadingScreen(viewModel: DetailViewModel, modifier: Modifier) {
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
-        // TODO(riflockle7): examId, userId 어떻게 가져올 것인지 처리 필요
-        coroutineScope.launch { viewModel.initExamData(1, 1) }
+        coroutineScope.launch { viewModel.initExamData() }
     }
 
     Column(

@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.feature.ui.detail.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
@@ -31,6 +32,7 @@ import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.OutOfDateApi
+import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
 const val DelayTime = 2000L
@@ -39,10 +41,14 @@ const val DelayTime = 2000L
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
     private val userRepository: UserRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
-    suspend fun initExamData(examId: Int, userId: Int) {
+    suspend fun initExamData() {
+        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
+        val userId = savedStateHandle.getStateFlow(Extras.UserId, -1).value
+
         val exam = runCatching { examRepository.getExam(examId) }.getOrNull() ?: dummyExam
         val user = runCatching { userRepository.get(userId) }.getOrNull() ?: dummyUser
         delay(DelayTime)
