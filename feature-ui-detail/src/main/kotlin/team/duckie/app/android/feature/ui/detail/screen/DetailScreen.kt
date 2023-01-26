@@ -134,7 +134,7 @@ private fun DetailSuccessScreen(
         viewModel.container.sideEffectFlow.collect { effect ->
             when (effect) {
                 is DetailSideEffect.SendToast -> toast(effect.message)
-                is DetailSideEffect.Click -> Unit
+                else -> Unit
             }
         }
     }
