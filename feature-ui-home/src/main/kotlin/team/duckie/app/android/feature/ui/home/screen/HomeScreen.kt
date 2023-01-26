@@ -19,6 +19,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.component.DuckieCircularProgressIndicator
 import team.duckie.app.android.feature.ui.home.constants.HomeStep

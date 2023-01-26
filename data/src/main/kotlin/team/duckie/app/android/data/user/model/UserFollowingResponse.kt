@@ -9,7 +9,7 @@ package team.duckie.app.android.data.user.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-internal data class UserFollowingData(
+internal data class UserFollowingResponse(
     @JsonProperty("followingRecommendations")
-    val followingRecommendations: List<UserFollowingRecommendationsData>? = null,
+    val followingRecommendations: List<UserFollowingRecommendationsResponse>? = null,
 )

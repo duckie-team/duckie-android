@@ -40,10 +40,10 @@ private val DummySearchResultForExam = (0..10).map {
 private val DummyResultResultForUser = (0..20).map {
     SearchResultState.User(
         userId = it,
-        profile = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-        name = "user$it",
-        examineeNumber = it,
-        createAt = "1일 전",
+        profileImgUrl = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+        nickname = "user$it",
+        favoriteTag = "도로패션",
+        duckEffort = 30,
         isFollowing = it % 2 == 0,
     )
 }.toPersistentList()

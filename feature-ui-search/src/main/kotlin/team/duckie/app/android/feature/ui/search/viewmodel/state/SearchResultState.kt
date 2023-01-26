@@ -23,10 +23,10 @@ internal data class SearchResultState(
 ) {
     data class User(
         val userId: Int,
-        val profile: String,
-        val name: String,
-        val examineeNumber: Int,
-        val createAt: String,
+        val profileImgUrl: String,
+        val nickname: String,
+        val duckEffort: Int,
+        val favoriteTag: String,
         val isFollowing: Boolean = false,
     )
 }

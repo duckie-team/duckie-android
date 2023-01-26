@@ -7,15 +7,20 @@
 
 package team.duckie.app.android.shared.ui.compose
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.util.compose.asLoose
@@ -38,16 +43,29 @@ private const val UserInfoBlockUserNameLayoutId = "UserInfoBlockUserName"
 private const val UserInfoBlockUserDescriptionLayoutId = "UserInfoBlockUserDescription"
 private const val UserInfoBlockFollowingButtonLayoutId = "UserInfoBlockFollowingButton"
 
+/**
+ * 유저를 추천할 때 사용하는 유저 팔로잉 레이아웃입니다
+ * 유저에 대한 기본적인 정보를 확인할 수 있으며 팔로우/언팔로우 기능이 있습니다.
+ *
+ * @param userId 유저의 id
+ * @param profileImgUrl 유저 프로필 이미지 url
+ * @param nickname 닉네임
+ * @param favoriteTag 관심 태그
+ * @param tier 현재 덕력
+ * @param onClickUserProfile 프로필 사진을 클릭 했을 때 실행되는 람다
+ * @param isFollowing 팔로우 여부
+ * @param onClickFollowing 팔로우 버튼을 클릭 했을 때 실행되는 람다
+ */
 @Composable
 fun UserFollowingLayout(
     modifier: Modifier = Modifier,
     userId: Int,
-    profile: String,
-    name: String,
-    examineeNumber: Int,
-    createAt: String,
-    onClickUserProfile: ((Int) -> Unit)? = null,
+    profileImgUrl: String,
+    nickname: String,
+    favoriteTag: String,
+    tier: String,
     isFollowing: Boolean,
+    onClickUserProfile: ((Int) -> Unit)? = null,
     onClickFollowing: (Boolean) -> Unit,
 ) {
     Layout(
@@ -60,7 +78,7 @@ fun UserFollowingLayout(
         content = {
             QuackImage(
                 modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
-                src = profile,
+                src = profileImgUrl,
                 size = HomeProfileSize,
                 shape = SquircleShape,
                 onClick = {
@@ -73,13 +91,13 @@ fun UserFollowingLayout(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserNameLayoutId)
                     .padding(start = 8.dp, top = 2.dp),
-                text = name,
+                text = nickname,
             )
             QuackBody3(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserDescriptionLayoutId)
                     .padding(start = 8.dp),
-                text = "${stringResource(id = R.string.examinee)} $examineeNumber  ·  $createAt",
+                text = "$tier · $favoriteTag",
             )
             QuackBody2(
                 modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
@@ -135,5 +153,28 @@ fun UserFollowingLayout(
                 ),
             )
         }
+    }
+}
+
+@Preview(
+    showBackground = true,
+)
+@Composable
+fun TestPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(horizontal = 16.dp)
+    ) {
+        UserFollowingLayout(
+            userId = 1,
+            profileImgUrl = "https://img.freepik.com/free-icon/user_318-804790.jpg?w=2000",
+            nickname = "skeat",
+            favoriteTag = "도로패션",
+            tier = "덕력 20%",
+            isFollowing = true,
+            onClickFollowing = {},
+        )
     }
 }

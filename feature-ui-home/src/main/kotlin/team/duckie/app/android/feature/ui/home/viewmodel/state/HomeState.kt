@@ -35,20 +35,22 @@ internal data class HomeState(
      *
      * @param coverUrl 덕질고사 커버 이미지 url
      * @param title 덕질고사 제목
-     * @param examineeNumber 덕질고사 응시자 정보
-     * @param createAt 덕질고사가 만들어진 날짜
+     * @param duckEffort 덕질고사 응시자 정보
+     * @param tier 덕질고사가 만들어진 날짜
      * @param owner 덕질고사 제작자 정보
      */
+    @Immutable
     data class FollowingTest(
         val coverUrl: String,
         val title: String,
-        val examineeNumber: Int,
-        val createAt: String,
         val owner: User,
     ) {
+        @Immutable
         data class User(
             val name: String,
             val profile: String,
+            val favoriteTag: String,
+            val tier: String,
         )
     }
 
@@ -58,16 +60,18 @@ internal data class HomeState(
      * @param topic 덕질고사 주제
      * @param users 추천하는 유저들
      */
+    @Immutable
     data class RecommendUserByTopic(
         val topic: String = "",
         val users: ImmutableList<User> = persistentListOf(),
     ) {
+        @Immutable
         data class User(
             val userId: Int,
-            val profile: String,
-            val name: String,
-            val examineeNumber: Int,
-            val createAt: String,
+            val profileImgUrl: String,
+            val nickname: String,
+            val favoriteTag: String,
+            val tier: String,
             val isFollowing: Boolean = false,
         )
     }
@@ -97,11 +101,13 @@ internal data class HomeState(
      * @param tag 덕질고사 태그
      * @param items 추천하는 덕질고사 정보
      */
+    @Immutable
     data class RecommendTopic(
         val title: String,
         val tag: String,
         val items: ImmutableList<Test>,
     ) {
+        @Immutable
         data class Test(
             val coverImg: String,
             val nickname: String,
