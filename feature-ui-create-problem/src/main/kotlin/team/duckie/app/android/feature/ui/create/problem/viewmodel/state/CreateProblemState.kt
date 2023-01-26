@@ -18,7 +18,7 @@ import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
 
 internal data class CreateProblemState(
-    val createProblemStep: CreateProblemStep = CreateProblemStep.AdditionalInformation,
+    val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
     val examInformation: ExamInformation = ExamInformation(),
     val createProblem: CreateProblem = CreateProblem(),
     val additionalInfo: AdditionInfo = AdditionInfo(),
