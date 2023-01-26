@@ -12,8 +12,6 @@ import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 
 internal data class UserResponse(
-    @field:JsonProperty("tier")
-    val tier: Int? = null,
 
     @field:JsonProperty("nickName")
     val nickName: String? = null,
@@ -23,6 +21,9 @@ internal data class UserResponse(
 
     @field:JsonProperty("profileImageUrl")
     val profileImageUrl: String? = null,
+
+    @field:JsonProperty("duckPower")
+    val duckPower: DuckPowerResponse? = null,
 
     @field:JsonProperty("favoriteTags")
     val favoriteTags: List<Tag?>? = null,

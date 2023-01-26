@@ -11,20 +11,18 @@ import android.service.autofill.UserData
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
-import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
-import kotlinx.collections.immutable.persistentListOf
 import javax.inject.Inject
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.jsonBody
-import team.duckie.app.android.data._util.toJsonObject
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.mapper.toDomain
-import team.duckie.app.android.data.user.model.UserFollowingData
-import team.duckie.app.android.data.user.model.UserFollowingRecommendationsData
+import team.duckie.app.android.data.user.model.DuckPowerResponse
+import team.duckie.app.android.data.user.model.UserFollowingResponse
+import team.duckie.app.android.data.user.model.UserFollowingRecommendationsResponse
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
@@ -32,9 +30,7 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.util.kotlin.ExperimentalApi
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.runtimeCheck
 
 class UserRepositoryImpl @Inject constructor() : UserRepository {
@@ -94,13 +90,13 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
 //        }
 //      TODO(limsaehyun): Server Request 필요
 
-        val mockFollowingResponse = UserFollowingData(
+        val mockFollowingResponse = UserFollowingResponse(
             followingRecommendations = listOf(
-                UserFollowingRecommendationsData(
+                UserFollowingRecommendationsResponse(
                     category = CategoryData(
                         id = 1,
                         name = "닉네임",
-                        thumbnailUrl =  "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
+                        thumbnailUrl = "https://img.freepik.com/free-icon/user_318-804790.jpg?w=2000",
                         popularTags = listOf(
                             TagData(
                                 id = 1,
@@ -118,23 +114,16 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
                     ),
                     user = (0..2).map {
                         UserResponse(
-                            tier = 1,
-                            nickName = "닉네임",
-                            id = 1,
-                            profileImageUrl = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
-                            favoriteTags = (0..2).map {
-                                Tag(
+                            id = it,
+                            nickName = "유저$it",
+                            profileImageUrl = "https://img.freepik.com/free-icon/user_318-804790.jpg?w=2000",
+                            duckPower = DuckPowerResponse(
+                                id = 1,
+                                tier = "덕력 20%",
+                                tag = TagData(
                                     id = 1,
-                                    name = "Tag1"
-                                )
-                            },
-                            favoriteCategories = listOf(
-                                Category(
-                                    id = 1,
-                                    name = "User",
-                                    thumbnailUrl = "",
-                                    popularTags = persistentListOf(),
-                                )
+                                    name = "도로패션",
+                                ),
                             )
                         )
                     }.toList()

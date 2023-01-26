@@ -22,7 +22,7 @@ data class User(
     val id: Int,
     val nickname: String,
     val profileImageUrl: String,
-    val tier: DuckieTier,
+    val duckPower: DuckPower?,
     val favoriteTags: ImmutableList<Tag>?,
     val favoriteCategories: ImmutableList<Category>?,
 ) {
