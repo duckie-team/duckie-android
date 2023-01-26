@@ -14,6 +14,7 @@ package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,6 +45,7 @@ import team.duckie.app.android.domain.exam.model.toChoice
 import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
+import team.duckie.app.android.domain.exam.usecase.GetExamUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
@@ -63,6 +65,7 @@ import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
+import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
 private const val TagsMaximumCount = 4
@@ -71,16 +74,63 @@ private const val TagsMaximumCount = 4
 @Suppress("LargeClass")
 internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
+    private val getExamUseCase: GetExamUseCase,
     private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val fileUploadUseCase: FileUploadUseCase,
     private val getSearchUseCase: GetSearchUseCase,
     private val tagRepository: TagRepository,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
 
     override val container =
         container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
+
+    suspend fun initState() {
+        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
+
+        // TODO(riflockle7): 에러 핸들링 처리, 토큰 처리 필요
+        if (examId == -1) return
+        val exam = getExamUseCase(examId).getOrNull() ?: return
+
+        intent {
+            reduce {
+                val questions = exam.problems.fastMap { it.question }.toImmutableList()
+                val answers = exam.problems.fastMap { it.answer }.toImmutableList()
+                val correctAnswers = exam.problems.fastMap { it.correctAnswer }.toImmutableList()
+                val hints = exam.problems.fastMap { it.hint ?: "" }.toImmutableList()
+                val memos = exam.problems.fastMap { it.memo ?: "" }.toImmutableList()
+
+                state.copy(
+                    examInformation = state.examInformation.copy(
+                        categorySelection = exam.mainTag.id,
+                        isMainTagSelected = true,
+                        examTitle = exam.title,
+                        examDescription = exam.description,
+                        certifyingStatement = exam.certifyingStatement,
+                    ),
+                    createProblem = state.createProblem.copy(
+                        questions = questions,
+                        answers = answers,
+                        correctAnswers = correctAnswers,
+                        hints = hints,
+                        memos = memos,
+                    ),
+                    additionalInfo = state.additionalInfo.copy(
+                        thumbnail = exam.thumbnailUrl ?: "",
+                        // TODO(riflockle7): 썸네일 타입 정보 서버에서 추후 받아야 함
+                        thumbnailType = ThumbnailType.Default,
+                        takeTitle = exam.buttonTitle,
+                        isSubTagsAdded = exam.subTags.isNotEmpty(),
+                        searchSubTags = state.additionalInfo.searchSubTags.copy(
+                            results = exam.subTags,
+                        )
+                    ),
+                )
+            }
+        }
+    }
 
     /**
      * [galleryImages] 의 mutable 한 객체를 나타냅니다.
