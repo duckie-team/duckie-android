@@ -46,14 +46,14 @@ class DetailViewModel @Inject constructor(
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
     suspend fun initExamData() {
+        val appUserId = savedStateHandle.getStateFlow(Extras.AppUserId, -1).value
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        val userId = savedStateHandle.getStateFlow(Extras.UserId, -1).value
 
         val exam = runCatching { examRepository.getExam(examId) }.getOrNull() ?: dummyExam
-        val user = runCatching { userRepository.get(userId) }.getOrNull() ?: dummyUser
+        val appUser = runCatching { userRepository.get(appUserId) }.getOrNull() ?: dummyUser
         delay(DelayTime)
         intent {
-            reduce { DetailState.Success(exam, user) }
+            reduce { DetailState.Success(exam, appUser) }
         }
     }
 }

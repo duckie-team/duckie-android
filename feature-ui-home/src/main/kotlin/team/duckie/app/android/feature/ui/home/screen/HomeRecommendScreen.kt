@@ -52,7 +52,6 @@ import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.OutOfDateApi
-import team.duckie.app.android.util.ui.changeActivityWithAnimation
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.component.QuackBody1
@@ -112,7 +111,7 @@ internal fun HomeRecommendScreen(
                         activity.startActivityWithAnimation<DetailActivity>(
                             intentBuilder = {
                                 putExtra(Extras.ExamId, 1)
-                                putExtra(Extras.UserId, 1)
+                                putExtra(Extras.AppUserId, 2)
                             }
                         )
                         // TODO ("limsaehyun"): 상세보기로 이 필요
