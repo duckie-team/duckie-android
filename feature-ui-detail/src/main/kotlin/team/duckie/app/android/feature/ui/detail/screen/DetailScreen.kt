@@ -285,9 +285,9 @@ private fun DetailProfileLayout(state: DetailState.Success) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // 작성자 프로필 이미지
-        if (state.examPublisher.profileImageUrl.isNotEmpty()) {
+        if (state.exam.user.profileImageUrl.isNotEmpty()) {
             QuackImage(
-                src = state.examPublisher.profileImageUrl,
+                src = state.exam.user.profileImageUrl,
                 shape = SquircleShape,
                 size = DpSize(32.dp, 32.dp),
             )
@@ -307,7 +307,7 @@ private fun DetailProfileLayout(state: DetailState.Success) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임
                 QuackBody3(
-                    text = state.examPublisher.nickname,
+                    text = state.exam.user.nickname,
                     onClick = {},
                     color = QuackColor.Black,
                 )
