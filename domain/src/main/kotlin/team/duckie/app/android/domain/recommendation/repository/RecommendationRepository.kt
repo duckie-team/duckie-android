@@ -27,8 +27,6 @@ interface RecommendationRepository {
 
     suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem>
 
-    suspend fun fetchFollowingTest()
-
     suspend fun fetchRecommendFollowing(): UserFollowing
 
     suspend fun fetchRecommendTags(

@@ -28,8 +28,7 @@ internal enum class BottomNavigationStep(
     HomeScreen(index = 0),
     SearchScreen(index = 1),
     RankingScreen(index = 2),
-    MyPageScreen(index = 3),
-    ;
+    MyPageScreen(index = 3);
 
     companion object {
         fun toStep(value: Int) = BottomNavigationStep.values().first { it.index == value }
