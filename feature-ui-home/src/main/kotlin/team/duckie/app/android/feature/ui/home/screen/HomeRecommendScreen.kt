@@ -41,6 +41,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
 import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
@@ -93,6 +94,13 @@ internal fun HomeRecommendScreen(
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
                 onClickedEdit = {
+                    // TODO(riflockle7): 구현 스펙을 알 수 없어 임시로 처리한 코드. 추후 sideEffect 로 처리 필요
+                    activity.startActivityWithAnimation<CreateProblemActivity>(
+                        intentBuilder = {
+                            putExtra(Extras.ExamId, 1)
+                            putExtra(Extras.AppUserId, 2)
+                        }
+                    )
                     // TODO("limsaehyun"): 수정 페이지로 이동 필요
                 },
             )

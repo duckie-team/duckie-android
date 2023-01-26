@@ -27,6 +27,7 @@ dependencies {
         projects.utilCompose,
         projects.sharedUiCompose,
         projects.featureUiDetail,
+        projects.featureUiCreateProblem,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.quack.ui.components,
