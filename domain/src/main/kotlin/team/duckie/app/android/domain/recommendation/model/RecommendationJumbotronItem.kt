@@ -8,7 +8,6 @@
 package team.duckie.app.android.domain.recommendation.model
 
 import androidx.compose.runtime.Immutable
-import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 

@@ -12,7 +12,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
-import kotlinx.collections.immutable.persistentListOf
 import javax.inject.Inject
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
@@ -21,12 +20,8 @@ import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.exam.mapper.toData
 import team.duckie.app.android.data.exam.mapper.toDomain
-import team.duckie.app.android.data.exam.model.AnswerData
-import team.duckie.app.android.data.exam.model.ChoiceData
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
-import team.duckie.app.android.data.exam.model.ProblemData
-import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.model.DuckPowerResponse
 import team.duckie.app.android.data.user.model.UserResponse
@@ -36,7 +31,6 @@ import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
-import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
@@ -90,7 +84,7 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
         }
     }
 
-    // TODO(limsaehyun): 서버가 불안정한 관계로 Mock으로 구현
+    // TODO(limsaehyun): API 불안정한 상태로 Mock 으로 구현
     @OutOfDateApi
     override suspend fun getExamFollowing(): List<Exam> {
 //        val response = client.get {
@@ -101,7 +95,7 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
 //            body.toJsonObject<List<ExamData>>().fastMap(ExamData::toDomain)
 //        }
 
-        val response = (0..3).map { exam ->
+        val response = (0..6).map { exam ->
             ExamData(
                 id = exam,
                 title = "제 ${exam}회 도로 패션 영역",

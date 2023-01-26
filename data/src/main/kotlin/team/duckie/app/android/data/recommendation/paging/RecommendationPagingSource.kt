@@ -21,7 +21,6 @@ import io.ktor.client.statement.bodyAsText
 import kotlinx.collections.immutable.ImmutableList
 import kotlin.math.max
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import team.duckie.app.android.data._datasource.client
@@ -42,7 +41,6 @@ import team.duckie.app.android.data.user.model.DuckPowerResponse
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.util.kotlin.ExperimentalApi
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
@@ -50,7 +48,7 @@ private suspend fun dummyReturn(a: Int): RecommendationData {
     delay(1000)
     val recommendations = (a..a + 10).map {
         RecommendationItemData(
-            title = "쿠키좀 구워봤어?\n#웹툰 퀴즈${it}",
+            title = "쿠키좀 구워봤어?\n#웹툰 퀴즈$it",
             tag = TagData(3, "#웹툰"),
             exams = (0..3).map { exam ->
                 ExamData(
@@ -77,32 +75,6 @@ private suspend fun dummyReturn(a: Int): RecommendationData {
                     answerRate = 0.17f,
                     category = CategoryData(1, "카테고리"),
                     mainTag = TagData(1, "방탄소년단"),
-                    subTags = persistentListOf(
-                        TagData(2, "블랙핑크"),
-                        TagData(3, "볼빨간사춘기"),
-                        TagData(4, "위너"),
-                    ),
-                    problems = persistentListOf(
-                        ProblemData(
-                            id = 1,
-                            answer = AnswerData.Choice(
-                                type = "choice",
-                                choices = persistentListOf(
-                                    ChoiceData(text = "교촌치킨"),
-                                    ChoiceData(text = "BBQ"),
-                                    ChoiceData(text = "지코바"),
-                                    ChoiceData(text = "엄마가 만들어준 치킨"),
-                                ),
-                            ),
-                            question = QuestionData.Text(
-                                text = "다음 중 도로가 가장 좋아하는 치킨 브랜드는?",
-                                type = "text",
-                            ),
-                            hint = "",
-                            memo = "",
-                            correctAnswer = "지코바",
-                        ),
-                    ),
                     type = "text",
                 )
             },
@@ -119,12 +91,6 @@ private suspend fun dummyReturn(a: Int): RecommendationData {
             solvedCount = 1,
             answerRate = 0.17f,
             category = CategoryData(1, "카테고리"),
-            mainTag = TagData(1, "방탄소년단"),
-            subTags = persistentListOf(
-                TagData(2, "블랙핑크"),
-                TagData(3, "볼빨간사춘기"),
-                TagData(4, "위너"),
-            ),
             type = "type",
         )
     }
@@ -145,6 +111,7 @@ class RecommendationPagingSource : PagingSource<Int, RecommendationItem>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, RecommendationItem> {
         return try {
             val nextPageNumber = params.key ?: STARTING_KEY
+            // TODO(limsaehyun): API가 불안정한 관계로 MockRepository 으로 구현 [fetchRecommendations] 사용해야 함
             val response = dummyReturn(nextPageNumber)
             val range = nextPageNumber.until(nextPageNumber + params.loadSize)
 

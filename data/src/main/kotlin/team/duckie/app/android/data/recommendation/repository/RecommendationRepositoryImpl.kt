@@ -49,7 +49,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         ).flow
     }
 
-    // TODO(limsaehyun): 현재 Mock 으로 구현 / 추후 개선 필요
+    // TODO(limsaehyun): API가 불안정한 관계로 MockRepository 으로 구현
     @ExperimentalApi
     override suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem> {
 //        val response = client.get {
@@ -98,7 +98,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         return response.fastMap(RecommendationJumbotronItemData::toDomain)
     }
 
-    // TODO(limsaehyun): 현재 Mock 으로 구현 / 추후 개선 필요
+    // TODO(limsaehyun): API가 불안정한 관계로 MockRepository 으로 구현
     @ExperimentalApi
     override suspend fun fetchRecommendFollowing(): UserFollowing {
         val response = UserFollowingResponse(
@@ -132,7 +132,6 @@ class RecommendationRepositoryImpl : RecommendationRepository {
         return response.toDomain()
     }
 
-    // TODO(limsaehyun): 현재 Mock 으로 구현 / 추후 개선 필요
     @ExperimentalApi
     override suspend fun fetchRecommendTags(
         tag: String,

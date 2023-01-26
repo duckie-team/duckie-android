@@ -49,8 +49,8 @@ internal fun Exam.toUiModel() =
         coverUrl = thumbnailUrl ?: "",
         title = title,
         owner = HomeState.FollowingTest.User(
-            name = user.nickname,
-            profile = user.profileImageUrl,
+            nickname = user.nickname,
+            profileImgUrl = user.profileImageUrl,
             favoriteTag = user.duckPower?.tag?.name ?: "",
             tier = user.duckPower?.tier ?: "",
         ),

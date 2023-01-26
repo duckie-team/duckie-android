@@ -7,13 +7,16 @@
 
 package team.duckie.app.android.domain.user.model
 
+import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.category.model.Category
 
-data class UserFollowing (
+@Immutable
+data class UserFollowing(
     val followingRecommendations: List<UserFollowingRecommendations>
 )
 
-data class UserFollowingRecommendations (
+@Immutable
+data class UserFollowingRecommendations(
     val category: Category? = null,
     val user: List<User>? = null,
 )

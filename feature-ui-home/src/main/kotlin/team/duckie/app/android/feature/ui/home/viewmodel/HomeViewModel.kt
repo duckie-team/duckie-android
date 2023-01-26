@@ -53,6 +53,10 @@ internal class HomeViewModel @Inject constructor(
         pagingDataFlow = fetchRecommendations()
     }
 
+    fun fetchRecommendations() =
+        fetchRecommendationsUseCase()
+            .cachedIn(viewModelScope)
+
     // TODO(limsaehyun: Request Server
     fun fetchJumbotrons() = intent {
         updateHomeLoading(true)
@@ -71,12 +75,6 @@ internal class HomeViewModel @Inject constructor(
                 updateHomeLoading(false)
             }
     }
-
-    fun fetchRecommendations() =
-        fetchRecommendationsUseCase()
-            .cachedIn(viewModelScope)
-
-    // TODO(limsaehyun): Request Server
 
     @OptIn(OutOfDateApi::class)
     fun fetchRecommendFollowingTest() = intent {
@@ -97,7 +95,6 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
-    // TODO(limsaehyun): Request Server
     fun fetchRecommendFollowing() = intent {
         updateHomeLoading(true)
         fetchRecommendFollowingUseCase()
@@ -116,7 +113,7 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
-    fun updateHomeLoading(
+    private fun updateHomeLoading(
         loading: Boolean
     ) = intent {
         reduce {

@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.user.repository
 
-import android.service.autofill.UserData
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.patch

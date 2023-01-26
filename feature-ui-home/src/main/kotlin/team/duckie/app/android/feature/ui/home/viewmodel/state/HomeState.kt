@@ -35,9 +35,7 @@ internal data class HomeState(
      *
      * @param coverUrl 덕질고사 커버 이미지 url
      * @param title 덕질고사 제목
-     * @param duckEffort 덕질고사 응시자 정보
-     * @param tier 덕질고사가 만들어진 날짜
-     * @param owner 덕질고사 제작자 정보
+     * @param owner 덕질고사 만든이
      */
     @Immutable
     data class FollowingTest(
@@ -45,10 +43,17 @@ internal data class HomeState(
         val title: String,
         val owner: User,
     ) {
+        /**
+         * 덕질고사 만든 유저 정보
+         * @param nickname 닉네임
+         * @param profileImgUrl 프로필 이미지 url
+         * @param favoriteTag 가장 관심 있는 태그의 이름
+         * @param tier 덕질 티어
+         */
         @Immutable
         data class User(
-            val name: String,
-            val profile: String,
+            val nickname: String,
+            val profileImgUrl: String,
             val favoriteTag: String,
             val tier: String,
         )
@@ -65,6 +70,16 @@ internal data class HomeState(
         val topic: String = "",
         val users: ImmutableList<User> = persistentListOf(),
     ) {
+        /**
+         * 추천되는 유저의 정보
+         *
+         * @param userId 유저 id
+         * @param profileImgUrl 프로필 이미지 url
+         * @param nickname 닉네임
+         * @param favoriteTag 가장 관심 있는 태그의 이름
+         * @param tier 덕질 티어
+         * @param isFollowing 팔로잉 여부
+         */
         @Immutable
         data class User(
             val userId: Int,
@@ -107,6 +122,15 @@ internal data class HomeState(
         val tag: String,
         val items: ImmutableList<Test>,
     ) {
+        /**
+         * 덕질고사 정보
+         *
+         * @param coverImg 덕질고사 커버 이미지 url
+         * @param nickname 덕질고사 만든이 닉네임
+         * @param title 덕질고사 제목
+         * @param examineeNumber 덕질고사 응시자 수
+         * @param recommendId 덕질고사 추천 id
+         */
         @Immutable
         data class Test(
             val coverImg: String,

@@ -9,7 +9,6 @@ package team.duckie.app.android.domain.recommendation.usecase
 
 import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.exam.repository.ExamRepository
-import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import javax.inject.Inject
 

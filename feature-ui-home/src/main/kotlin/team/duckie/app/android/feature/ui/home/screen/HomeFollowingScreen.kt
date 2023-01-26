@@ -84,8 +84,8 @@ internal fun HomeRecommendFollowingTestScreen(
             items = state.recommendFollowingTest,
         ) { _, maker ->
             TestCoverWithMaker(
-                profile = maker.owner.profile,
-                name = maker.owner.name,
+                profile = maker.owner.profileImgUrl,
+                name = maker.owner.nickname,
                 title = maker.title,
                 tier = maker.owner.tier,
                 favoriteTag = maker.owner.favoriteTag,

@@ -15,7 +15,6 @@ import team.duckie.app.android.data.user.model.DuckPowerResponse
 import team.duckie.app.android.data.user.model.UserFollowingResponse
 import team.duckie.app.android.data.user.model.UserFollowingRecommendationsResponse
 import team.duckie.app.android.data.user.model.UserResponse
-import team.duckie.app.android.domain.user.constant.DuckieTier
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowing
