@@ -3,6 +3,7 @@ package team.duckie.app.android.feature.ui.detail
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +20,8 @@ class DetailActivity : BaseActivity() {
         setContent {
             QuackTheme {
                 DetailScreen(
-                    modifier = Modifier
+                    Modifier
+                        .fillMaxSize()
                         .background(color = QuackColor.White.composeColor)
                         .systemBarsPadding(),
                 )

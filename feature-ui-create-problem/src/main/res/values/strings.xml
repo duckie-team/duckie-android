@@ -14,8 +14,8 @@
     <string name="ok">확인</string>
     <string name="next">"다음"</string>
     <string name="category_title">"카테고리"</string>
-    <string name="exam_area">"시험 영역"</string>
-    <string name="find_exam_area">"시험 영역 찾기"</string>
+    <string name="exam_category">"시험 영역"</string>
+    <string name="find_exam_category">"시험 영역 찾기"</string>
     <string name="exam_title">"시험 제목"</string>
     <string name="input_exam_title">"시험 제목을 입력해 주세요"</string>
     <string name="exam_description">"설명</string>
@@ -23,7 +23,7 @@
     <string name="certifying_statement">"필적 확인 문구</string>
     <string name="input_certifying_statement">"필적확인 문구를 입력해 주세요"</string>
     <string name="add_also">+%s 추가하기</string>
-    <string name="search_exam_area_tag">"시험 영역으로 설정할 태그를 검색해 주세요."</string>
+    <string name="search_exam_category_placeholder">"시험 영역으로 설정할 태그를 검색해 주세요."</string>
 
     <string name="create_problem_bottom_sheet_title_choice_text">객관식/글</string>
     <string name="create_problem_bottom_sheet_title_choice_media">객관식/사진</string>

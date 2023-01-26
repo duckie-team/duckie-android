@@ -26,9 +26,9 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 internal fun PrevAndNextTopAppBar(
     modifier: Modifier = Modifier,
     onLeadingIconClick: () -> Unit,
-    trailingText: String = stringResource(id = R.string.next),
-    onTrailingTextClick: () -> Unit,
-    trailingTextEnabled: Boolean = true,
+    trailingText: String? = null,
+    onTrailingTextClick: (() -> Unit)? = null,
+    trailingTextEnabled: Boolean = false,
 ) { // TODO(EvergreenTree97): enabled 속성 필요
     QuackTopAppBar(
         modifier = modifier,
@@ -37,7 +37,13 @@ internal fun PrevAndNextTopAppBar(
         onLeadingIconClick = onLeadingIconClick,
         trailingText = trailingText,
         onTrailingTextClick = when (trailingTextEnabled) {
-            true -> onTrailingTextClick
+            true -> {
+                // 클릭 이벤트가 동작해야 하므로 아래 두 개의 값은 절대 null 이 될 수 없음
+                requireNotNull(trailingText)
+                requireNotNull(onTrailingTextClick)
+                onTrailingTextClick
+            }
+
             else -> null
         },
     )

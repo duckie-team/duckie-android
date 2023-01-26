@@ -16,7 +16,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -57,13 +56,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -75,18 +72,17 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
+import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
+import team.duckie.app.android.feature.ui.create.problem.common.getCreateProblemMeasurePolicy
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
-import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
@@ -97,8 +93,6 @@ import team.duckie.quackquack.ui.component.QuackBorderTextField
 import team.duckie.quackquack.ui.component.QuackDialog
 import team.duckie.quackquack.ui.component.QuackDropDownCard
 import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackRoundCheckBox
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -106,45 +100,12 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 
 private const val TopAppBarLayoutId = "CreateProblemScreenTopAppBarLayoutId"
 private const val ContentLayoutId = "CreateProblemScreenContentLayoutId"
+private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
-// private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 
 private const val MaximumChoice = 5
+private const val MaximumProblem = 10
 private const val TextFieldMaxLength = 20
-
-private val createProblemMeasurePolicy = MeasurePolicy { measurableItems, constraints ->
-    // 1. topAppBar, createProblemButton 높이값 측정
-    val looseConstraints = constraints.asLoose()
-
-    val topAppBarMeasurable = measurableItems.fastFirstOrNull { measureItem ->
-        measureItem.layoutId == TopAppBarLayoutId
-    }?.measure(looseConstraints) ?: npe()
-    val topAppBarHeight = topAppBarMeasurable.height
-
-    val contentThresholdHeight = constraints.maxHeight - topAppBarHeight
-    val contentConstraints = constraints.copy(
-        minHeight = contentThresholdHeight,
-        maxHeight = contentThresholdHeight,
-    )
-    val contentMeasurable = measurableItems.fastFirstOrNull { measurable ->
-        measurable.layoutId == ContentLayoutId
-    }?.measure(contentConstraints) ?: npe()
-
-    // 3. 위에서 추출한 값들을 활용해 레이아웃 위치 처리
-    layout(
-        width = constraints.maxWidth,
-        height = constraints.maxHeight,
-    ) {
-        topAppBarMeasurable.place(
-            x = 0,
-            y = 0,
-        )
-        contentMeasurable.place(
-            x = 0,
-            y = topAppBarHeight,
-        )
-    }
-}
 
 /** 문제 만들기 2단계 (문제 만들기) Screen */
 @Composable
@@ -163,6 +124,8 @@ internal fun CreateProblemScreen(
     val permissionErrorMessage =
         stringResource(id = R.string.create_problem_permission_toast_message)
     var selectedQuestionIndex: Int? by remember { mutableStateOf(null) }
+
+    val problemCount = remember(state.questions.size) { state.questions.size }
 
     // Gallery 관련
     val selectedQuestions = remember(state.questions) { state.questions }
@@ -285,9 +248,13 @@ internal fun CreateProblemScreen(
     ) {
         Layout(
             modifier = modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .navigationBarsPadding(),
-            measurePolicy = createProblemMeasurePolicy,
+            measurePolicy = getCreateProblemMeasurePolicy(
+                TopAppBarLayoutId,
+                ContentLayoutId,
+                BottomLayoutId,
+            ),
             content = {
                 // 상단 탭바
                 PrevAndNextTopAppBar(
@@ -298,32 +265,16 @@ internal fun CreateProblemScreen(
                         coroutineShape.launch { vm.navigateStep(CreateProblemStep.ExamInformation) }
                     },
                     trailingText = stringResource(id = R.string.next),
-                    onTrailingTextClick = {
-                        coroutineShape.launch { vm.navigateStep(CreateProblemStep.AdditionalInformation) }
-                    },
+                    onTrailingTextClick = {},
                     trailingTextEnabled = true,
                 )
 
                 // 컨텐츠 Layout
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .layoutId(ContentLayoutId),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = object : Arrangement.Vertical {
-                        override fun Density.arrange(
-                            totalSize: Int,
-                            sizes: IntArray,
-                            outPositions: IntArray,
-                        ) {
-                            var current = 0
-                            sizes.take(sizes.size - 1).forEachIndexed { index, size ->
-                                outPositions[index] = current
-                                current += size
-                            }
-                            outPositions[sizes.lastIndex] = totalSize - sizes.last()
-                        }
-                    },
                     content = {
                         items(selectedQuestions.size) { questionIndex ->
                             val question = selectedQuestions[questionIndex]
@@ -369,7 +320,9 @@ internal fun CreateProblemScreen(
                                             answer = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
-                                    deleteLongClick = { deleteDialogNo = Pair(questionIndex, null) },
+                                    deleteLongClick = {
+                                        deleteDialogNo = Pair(questionIndex, null)
+                                    },
                                 )
 
                                 is Answer.Choice -> ChoiceProblemLayout(
@@ -505,26 +458,30 @@ internal fun CreateProblemScreen(
                                 else -> {}
                             }
                         }
+                    },
+                )
 
-                        item {
-                            QuackLargeButton(
-                                modifier = Modifier.padding(
-                                    start = 20.dp,
-                                    end = 20.dp,
-                                    bottom = 20.dp,
-                                    top = 12.dp,
-                                ),
-                                type = QuackLargeButtonType.Border,
-                                text = stringResource(id = R.string.create_problem_add_problem_button),
-                                leadingIcon = QuackIcon.Plus,
-                            ) {
-                                coroutineShape.launch {
-                                    keyboard?.hide()
-                                    sheetState.animateTo(ModalBottomSheetValue.Expanded)
-                                }
-                            }
+                // 최하단 Layout
+                CreateProblemBottomLayout(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .layoutId(BottomLayoutId),
+                    leftButtonLeadingIcon = QuackIcon.Plus,
+                    leftButtonText = stringResource(id = R.string.create_problem_add_problem_button),
+                    leftButtonClick = {
+                        coroutineShape.launch {
+                            keyboard?.hide()
+                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
                         }
                     },
+                    tempSaveButtonClick = {},
+                    nextButtonClick = {
+                        coroutineShape.launch {
+                            vm.navigateStep(CreateProblemStep.AdditionalInformation)
+                        }
+                    },
+                    isMaximumProblemCount = problemCount >= MaximumProblem,
+                    isValidateCheck = vm::createProblemIsValidate,
                 )
             },
         )
@@ -639,11 +596,9 @@ private fun CreateProblemTitleLayout(
     imageClick: () -> Unit,
     dropDownTitle: String,
     onDropdownItemClick: (Int) -> Unit,
-    deleteLongClick: () -> Unit,
 ) {
     // TODO(riflockle7): 최상단 Line 없는 TextField 필요
     QuackBasic2TextField(
-        modifier = Modifier.quackClickable(onLongClick = { deleteLongClick() }) {},
         text = question?.text ?: "",
         onTextChanged = titleChanged,
         placeholderText = stringResource(
@@ -666,7 +621,9 @@ private fun CreateProblemTitleLayout(
     QuackDropDownCard(
         modifier = Modifier.padding(top = 24.dp),
         text = dropDownTitle,
-        onClick = { onDropdownItemClick(questionIndex) },
+        onClick = {
+            onDropdownItemClick(questionIndex)
+        },
     )
 }
 
@@ -688,7 +645,10 @@ private fun ChoiceProblemLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .quackClickable(
+                onLongClick = { deleteLongClick(null) },
+            ) {},
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -697,10 +657,11 @@ private fun ChoiceProblemLayout(
             imageClick,
             answers.type.title,
             onDropdownItemClick,
-        ) { deleteLongClick(null) }
+        )
 
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
-            // TODO(riflockle7): border 가 존재하는 TextField 필요
+            val answerNo = answerIndex + 1
+            val isChecked = correctAnswers == "$answerNo"
             QuackBorderTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -708,21 +669,22 @@ private fun ChoiceProblemLayout(
                     .applyAnimatedQuackBorder(
                         border = QuackBorder(
                             width = 1.dp,
-                            color = QuackColor.Gray4,
+                            color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4,
                         ),
-                    ),
+                    )
+                    .quackClickable(
+                        onLongClick = { deleteLongClick(answerIndex) },
+                    ) {},
                 text = choiceModel.text,
                 onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
                 placeholderText = stringResource(
                     id = R.string.create_problem_answer_placeholder,
-                    "${answerIndex + 1}",
+                    "$answerNo",
                 ),
                 trailingContent = {
-                    val isChecked = correctAnswers == "$answerIndex"
                     Column(
                         modifier = Modifier.quackClickable(
-                            onLongClick = { deleteLongClick(answerIndex) },
-                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerIndex") },
+                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
                         ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -771,13 +733,13 @@ private fun ImageChoiceProblemLayout(
     setCorrectAnswerClick: (String) -> Unit,
     deleteLongClick: (Int?) -> Unit,
 ) {
-    // TODO(riflockle7): 정답 체크 연동 필요 (failed 를 막기 위해 추가한 코드)
-    Log.i("riflockle7", "$correctAnswers $setCorrectAnswerClick")
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .quackClickable(
+                onLongClick = { deleteLongClick(null) },
+            ) {},
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -786,7 +748,7 @@ private fun ImageChoiceProblemLayout(
             imageClick,
             answers.type.title,
             onDropdownItemClick,
-        ) { deleteLongClick(null) }
+        )
 
         NoLazyGridItems(
             count = answers.imageChoice.size,
@@ -794,18 +756,56 @@ private fun ImageChoiceProblemLayout(
             paddingValues = PaddingValues(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             itemContent = { answerIndex ->
-                val answerItem = answers.imageChoice[answerIndex]
+                val answerNo = answerIndex + 1
+                val answerItem = answers.imageChoice[answerNo]
+                val isChecked = correctAnswers == "$answerNo"
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .applyAnimatedQuackBorder(border = QuackBorder(color = QuackColor.Gray4))
+                        .applyAnimatedQuackBorder(
+                            border = QuackBorder(
+                                width = 1.dp,
+                                color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4,
+                            ),
+                        )
                         .padding(12.dp),
                 ) {
+                    Row(
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        QuackRoundCheckBox(
+                            modifier = Modifier.quackClickable(
+                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
+                            ),
+                            checked = isChecked,
+                        )
+
+                        if (isChecked) {
+                            QuackBody3(
+                                modifier = Modifier.padding(start = 2.dp),
+                                color = QuackColor.DuckieOrange,
+                                text = stringResource(id = R.string.answer),
+                            )
+                        }
+
+                        Spacer(Modifier.weight(1f))
+
+                        QuackImage(
+                            modifier = Modifier.quackClickable(
+                                onClick = { deleteLongClick(answerNo) },
+                            ),
+                            src = QuackIcon.Close,
+                            size = DpSize(20.dp, 20.dp),
+                        )
+                    }
+
                     if (answerItem.imageUrl.isEmpty()) {
                         Box(
                             modifier = Modifier
-                                .quackClickable { answerImageClick(answerIndex) }
+                                .quackClickable { answerImageClick(answerNo) }
                                 .background(color = QuackColor.Gray4.composeColor)
                                 .padding(52.dp),
                         ) {
@@ -818,19 +818,19 @@ private fun ImageChoiceProblemLayout(
                         QuackImage(
                             src = answerItem.imageUrl,
                             size = DpSize(136.dp, 136.dp),
-                            onClick = { answerImageClick(answerIndex) },
-                            onLongClick = { deleteLongClick(answerIndex) },
+                            onClick = { answerImageClick(answerNo) },
+                            onLongClick = { deleteLongClick(answerNo) },
                         )
                     }
 
                     QuackBasicTextField(
-                        text = answers.imageChoice[answerIndex].text,
+                        text = answers.imageChoice[answerNo].text,
                         onTextChanged = { newAnswer ->
-                            answerTextChanged(newAnswer, answerIndex)
+                            answerTextChanged(newAnswer, answerNo)
                         },
                         placeholderText = stringResource(
                             id = R.string.create_problem_answer_placeholder,
-                            "${answerIndex + 1}",
+                            "$answerNo",
                         ),
                     )
                 }
@@ -842,7 +842,7 @@ private fun ImageChoiceProblemLayout(
         if (answers.imageChoice.size < MaximumChoice) {
             QuackSubtitle(
                 modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
-                text = stringResource(id = R.string.create_problem_add_problem_button),
+                text = stringResource(id = R.string.create_problem_add_button),
                 onClick = { addAnswerClick() },
             )
         }
@@ -864,7 +864,10 @@ private fun ShortAnswerProblemLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .quackClickable(
+                onLongClick = { deleteLongClick() },
+            ) {},
     ) {
         CreateProblemTitleLayout(
             questionIndex,
@@ -873,7 +876,7 @@ private fun ShortAnswerProblemLayout(
             imageClick,
             answers.type.title,
             onDropdownItemClick,
-        ) { deleteLongClick() }
+        )
 
         QuackBasicTextField(
             text = answers.answer.text,
