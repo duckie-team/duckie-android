@@ -112,7 +112,7 @@ internal fun HomeRecommendScreen(
                             intentBuilder = {
                                 putExtra(Extras.ExamId, 1)
                                 putExtra(Extras.AppUserId, 2)
-                            }
+                            },
                         )
                         // TODO ("limsaehyun"): 상세보기로 이 필요
                     },

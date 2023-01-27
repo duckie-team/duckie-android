@@ -352,10 +352,11 @@ private fun DetailProfileLayout(
                 bottom = 8.dp,
             ),
             text = stringResource(
-                if (isFollowed.value)
+                if (isFollowed.value) {
                     R.string.detail_follow_cancel
-                else
+                } else {
                     R.string.detail_follow
+                },
             ),
             color = if (isFollowed.value) QuackColor.Gray2 else QuackColor.DuckieOrange,
             onClick = followButtonClick,
