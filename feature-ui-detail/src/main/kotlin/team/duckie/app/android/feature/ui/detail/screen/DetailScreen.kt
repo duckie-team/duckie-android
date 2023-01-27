@@ -29,6 +29,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -106,8 +108,7 @@ internal fun DetailScreen(
 private fun DetailLoadingScreen(viewModel: DetailViewModel, modifier: Modifier) {
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
-        // TODO(riflockle7): examId, userId 어떻게 가져올 것인지 처리 필요
-        coroutineScope.launch { viewModel.initExamData(1, 1) }
+        coroutineScope.launch { viewModel.initExamData() }
     }
 
     Column(
@@ -135,7 +136,7 @@ private fun DetailSuccessScreen(
         viewModel.container.sideEffectFlow.collect { effect ->
             when (effect) {
                 is DetailSideEffect.SendToast -> toast(effect.message)
-                is DetailSideEffect.Click -> Unit
+                else -> Unit
             }
         }
     }
@@ -149,7 +150,9 @@ private fun DetailSuccessScreen(
                 state = state,
             )
             // content Layout
-            DetailContentLayout(state)
+            DetailContentLayout(state) {
+                viewModel.followUser()
+            }
             // 최하단 Layout
             DetailBottomLayout(
                 modifier = Modifier
@@ -208,7 +211,10 @@ private fun DetailSuccessScreen(
 /** 상세 화면 컨텐츠 Layout */
 @Suppress("MagicNumber")
 @Composable
-private fun DetailContentLayout(state: DetailState.Success) {
+private fun DetailContentLayout(
+    state: DetailState.Success,
+    followButtonClick: () -> Unit,
+) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
     val detailImageWidthDp = screenWidthDp - 32.dp
@@ -262,7 +268,7 @@ private fun DetailContentLayout(state: DetailState.Success) {
         // 구분선
         QuackDivider()
         // 프로필 Layout
-        DetailProfileLayout(state)
+        DetailProfileLayout(state, followButtonClick = followButtonClick)
         // 구분선
         QuackDivider()
         // 공백
@@ -277,7 +283,13 @@ private fun DetailContentLayout(state: DetailState.Success) {
  * TODO(riflockle7): 추후 공통화하기
  */
 @Composable
-private fun DetailProfileLayout(state: DetailState.Success) {
+private fun DetailProfileLayout(
+    state: DetailState.Success,
+    followButtonClick: () -> Unit,
+    ) {
+    // TODO(riflockle7): 추후 팔로잉, 팔로잉 취소 스펙 나오면 viewModel 에서 값을 가져오도록 처리해야 함
+    val isFollowed = remember { mutableStateOf(state.isFollowing) }
+
     Row(
         modifier = Modifier.padding(
             horizontal = 16.dp,
@@ -286,9 +298,9 @@ private fun DetailProfileLayout(state: DetailState.Success) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // 작성자 프로필 이미지
-        if (state.examPublisher.profileImageUrl.isNotEmpty()) {
+        if (state.exam.user.profileImageUrl.isNotEmpty()) {
             QuackImage(
-                src = state.examPublisher.profileImageUrl,
+                src = state.exam.user.profileImageUrl,
                 shape = SquircleShape,
                 size = DpSize(32.dp, 32.dp),
             )
@@ -308,7 +320,7 @@ private fun DetailProfileLayout(state: DetailState.Success) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임
                 QuackBody3(
-                    text = state.examPublisher.nickname,
+                    text = state.exam.user.nickname,
                     onClick = {},
                     color = QuackColor.Black,
                 )
@@ -339,9 +351,15 @@ private fun DetailProfileLayout(state: DetailState.Success) {
                 top = 8.dp,
                 bottom = 8.dp,
             ),
-            text = stringResource(R.string.detail_follow),
-            color = QuackColor.DuckieOrange,
-            onClick = { },
+            text = stringResource(
+                if (isFollowed.value) {
+                    R.string.detail_follow_cancel
+                } else {
+                    R.string.detail_follow
+                },
+            ),
+            color = if (isFollowed.value) QuackColor.Gray2 else QuackColor.DuckieOrange,
+            onClick = followButtonClick,
         )
     }
 }
