@@ -23,8 +23,12 @@ sealed class DetailState {
     /** [DetailViewModel] 데이터를 잘 받았을 때의 상태를 나타냅니다. */
     data class Success(
         val exam: Exam,
-        val examPublisher: User,
-    ) : DetailState()
+        val appUser: User,
+        val isFollowing: Boolean = false,
+    ) : DetailState() {
+        val isOwner: Boolean
+            get() = exam.user.id == appUser.id
+    }
 
     /**
      * [DetailViewModel] 의 비즈니스 로직 처리중에 예외가 발생한 상태를 나타냅니다.
