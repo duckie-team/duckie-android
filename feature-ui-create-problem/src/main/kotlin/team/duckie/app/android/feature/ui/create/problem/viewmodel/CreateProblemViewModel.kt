@@ -89,46 +89,74 @@ internal class CreateProblemViewModel @Inject constructor(
 
     suspend fun initState() {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
+        val isEditMode = examId != -1
 
-        // TODO(riflockle7): 에러 핸들링 처리, 토큰 처리 필요
-        if (examId == -1) return
-        val exam = getExamUseCase(examId).getOrNull() ?: return
-
-        intent {
-            reduce {
-                val questions = exam.problems.fastMap { it.question }.toImmutableList()
-                val answers = exam.problems.fastMap { it.answer }.toImmutableList()
-                val correctAnswers = exam.problems.fastMap { it.correctAnswer }.toImmutableList()
-                val hints = exam.problems.fastMap { it.hint ?: "" }.toImmutableList()
-                val memos = exam.problems.fastMap { it.memo ?: "" }.toImmutableList()
-
-                state.copy(
-                    examInformation = state.examInformation.copy(
-                        categorySelection = exam.mainTag.id,
-                        isMainTagSelected = true,
-                        examTitle = exam.title,
-                        examDescription = exam.description,
-                        certifyingStatement = exam.certifyingStatement,
-                    ),
-                    createProblem = state.createProblem.copy(
-                        questions = questions,
-                        answers = answers,
-                        correctAnswers = correctAnswers,
-                        hints = hints,
-                        memos = memos,
-                    ),
-                    additionalInfo = state.additionalInfo.copy(
-                        thumbnail = exam.thumbnailUrl ?: "",
-                        // TODO(riflockle7): 썸네일 타입 정보 서버에서 추후 받아야 함
-                        thumbnailType = ThumbnailType.Default,
-                        takeTitle = exam.buttonTitle,
-                        isSubTagsAdded = exam.subTags.isNotEmpty(),
-                        searchSubTags = state.additionalInfo.searchSubTags.copy(
-                            results = exam.subTags,
-                        )
-                    ),
-                )
+        // 문제 생성 모드
+        if (!isEditMode) {
+            intent {
+                reduce {
+                    state.copy(
+                        isEditMode = false,
+                        createProblemStep = CreateProblemStep.ExamInformation,
+                    )
+                }
             }
+        }
+        // 문제 수정 모드
+        else {
+            getExamUseCase(examId)
+                .onSuccess { exam ->
+                    intent {
+                        reduce {
+                            val questions = exam.problems.fastMap { it.question }.toImmutableList()
+                            val answers = exam.problems.fastMap { it.answer }.toImmutableList()
+                            val correctAnswers =
+                                exam.problems.fastMap { it.correctAnswer }.toImmutableList()
+                            val hints = exam.problems.fastMap { it.hint ?: "" }.toImmutableList()
+                            val memos = exam.problems.fastMap { it.memo ?: "" }.toImmutableList()
+
+                            state.copy(
+                                isEditMode = true,
+                                createProblemStep = CreateProblemStep.ExamInformation,
+                                examInformation = state.examInformation.copy(
+                                    categorySelection = exam.mainTag.id,
+                                    isMainTagSelected = true,
+                                    examTitle = exam.title,
+                                    examDescription = exam.description,
+                                    certifyingStatement = exam.certifyingStatement,
+                                ),
+                                createProblem = state.createProblem.copy(
+                                    questions = questions,
+                                    answers = answers,
+                                    correctAnswers = correctAnswers,
+                                    hints = hints,
+                                    memos = memos,
+                                ),
+                                additionalInfo = state.additionalInfo.copy(
+                                    thumbnail = exam.thumbnailUrl ?: "",
+                                    // TODO(riflockle7): 썸네일 타입 정보 서버에서 추후 받아야 함
+                                    thumbnailType = ThumbnailType.Default,
+                                    takeTitle = exam.buttonTitle,
+                                    isSubTagsAdded = exam.subTags.isNotEmpty(),
+                                    searchSubTags = state.additionalInfo.searchSubTags.copy(
+                                        results = exam.subTags,
+                                    )
+                                ),
+                            )
+                        }
+                    }
+                }
+                .onFailure {
+                    intent {
+                        reduce {
+                            state.copy(
+                                createProblemStep = CreateProblemStep.Error,
+                                isEditMode = true,
+                            )
+                        }
+                        postSideEffect(CreateProblemSideEffect.ReportError(it))
+                    }
+                }
         }
     }
 
@@ -294,9 +322,6 @@ internal class CreateProblemViewModel @Inject constructor(
                 postSideEffect(CreateProblemSideEffect.UpdateGalleryImages(images))
             }
             .onFailure { exception ->
-                reduce {
-                    state.copy(error = Error(exception))
-                }
                 postSideEffect(CreateProblemSideEffect.ReportError(exception))
             }
     }

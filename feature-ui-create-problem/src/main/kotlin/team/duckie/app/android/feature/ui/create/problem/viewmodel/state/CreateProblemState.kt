@@ -18,12 +18,12 @@ import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
 
 internal data class CreateProblemState(
-    val createProblemStep: CreateProblemStep = CreateProblemStep.ExamInformation,
+    val isEditMode: Boolean = false,
+    val createProblemStep: CreateProblemStep = CreateProblemStep.Loading,
     val examInformation: ExamInformation = ExamInformation(),
     val createProblem: CreateProblem = CreateProblem(),
     val additionalInfo: AdditionInfo = AdditionInfo(),
     val findResultType: FindResultType = FindResultType.MainTag,
-    val error: Error? = null,
     val photoState: CreateProblemPhotoState? = null,
     val defaultThumbnail: String = "",
 ) {
