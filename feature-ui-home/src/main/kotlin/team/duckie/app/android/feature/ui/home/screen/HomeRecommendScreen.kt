@@ -99,7 +99,7 @@ internal fun HomeRecommendScreen(
                         intentBuilder = {
                             putExtra(Extras.ExamId, 1)
                             putExtra(Extras.AppUserId, 2)
-                        }
+                        },
                     )
                     // TODO("limsaehyun"): 수정 페이지로 이동 필요
                 },

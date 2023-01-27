@@ -16,7 +16,7 @@ enum class CreateProblemStep(private val index: Int) {
     CreateProblem(2),
     AdditionalInformation(3),
     Search(4),
-    Error(5)
+    Error(5),
     ;
 
     operator fun minus(previous: Int): CreateProblemStep {

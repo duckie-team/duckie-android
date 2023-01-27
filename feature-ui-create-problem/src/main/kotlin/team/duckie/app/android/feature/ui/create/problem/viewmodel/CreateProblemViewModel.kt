@@ -140,7 +140,7 @@ internal class CreateProblemViewModel @Inject constructor(
                                     isSubTagsAdded = exam.subTags.isNotEmpty(),
                                     searchSubTags = state.additionalInfo.searchSubTags.copy(
                                         results = exam.subTags,
-                                    )
+                                    ),
                                 ),
                             )
                         }
