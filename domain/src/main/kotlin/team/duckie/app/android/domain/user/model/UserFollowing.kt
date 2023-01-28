@@ -12,7 +12,7 @@ import team.duckie.app.android.domain.category.model.Category
 
 @Immutable
 data class UserFollowing(
-    val followingRecommendations: List<UserFollowingRecommendations>
+    val followingRecommendations: List<UserFollowingRecommendations>,
 )
 
 @Immutable

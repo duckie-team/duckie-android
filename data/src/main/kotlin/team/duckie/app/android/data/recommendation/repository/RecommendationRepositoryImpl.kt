@@ -45,7 +45,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
                 enablePlaceholders = true,
                 maxSize = 200,
             ),
-            pagingSourceFactory = { RecommendationPagingSource() }
+            pagingSourceFactory = { RecommendationPagingSource() },
         ).flow
     }
 

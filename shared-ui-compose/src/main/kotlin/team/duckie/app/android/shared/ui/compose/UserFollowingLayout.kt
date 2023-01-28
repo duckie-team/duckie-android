@@ -155,26 +155,3 @@ fun UserFollowingLayout(
         }
     }
 }
-
-@Preview(
-    showBackground = true,
-)
-@Composable
-fun TestPreview() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(horizontal = 16.dp)
-    ) {
-        UserFollowingLayout(
-            userId = 1,
-            profileImgUrl = "https://img.freepik.com/free-icon/user_318-804790.jpg?w=2000",
-            nickname = "skeat",
-            favoriteTag = "도로패션",
-            tier = "덕력 20%",
-            isFollowing = true,
-            onClickFollowing = {},
-        )
-    }
-}

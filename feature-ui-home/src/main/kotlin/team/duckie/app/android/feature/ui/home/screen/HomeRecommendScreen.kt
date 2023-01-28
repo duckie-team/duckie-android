@@ -49,7 +49,6 @@ import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.OutOfDateApi
-import team.duckie.quackquack.ui.component.QuackAnnotatedBody2
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1
@@ -166,7 +165,7 @@ private fun HomeRecommendJumbotronLayout(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        when(recommendItem.type) {
+        when (recommendItem.type) {
             ExamType.Text -> {
                 QuackBody3(
                     text = stringResource(id = R.string.home_volume_control_message),
