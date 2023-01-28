@@ -11,13 +11,20 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 
-enum class JumbotronType(
+/**
+ * 덕질고사 타입
+ *
+ * [Text] 텍스트로 이루어진 타입
+ *
+ * TODO(limsaehyun): 백엔드 문서가 나오면 업데이트 필요
+ */
+enum class ExamType(
     val original: String,
 ) {
     Text("text");
 
     companion object {
-        fun toJumbotronType(type: String): JumbotronType {
+        fun toExamType(type: String): ExamType {
             return values().firstOrNull { it.original == type } ?: Text
         }
     }
@@ -32,7 +39,7 @@ data class RecommendationJumbotronItem(
     val certifyingStatement: String,
     val solvedCount: Int,
     val buttonTitle: String,
-    val type: JumbotronType,
+    val type: ExamType,
     val answerRate: Float,
     val category: Category,
     val mainTag: Tag,

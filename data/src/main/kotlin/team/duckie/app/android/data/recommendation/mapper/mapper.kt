@@ -12,13 +12,12 @@ import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.recommendation.model.RecommendationJumbotronItemData
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
-import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.mapper.toDomainForNonProfile
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.recommendation.model.RecommendationData
 import team.duckie.app.android.data.recommendation.model.RecommendationItemData
 import team.duckie.app.android.data.tag.mapper.toDomain
-import team.duckie.app.android.domain.recommendation.model.JumbotronType
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.util.kotlin.OutOfDateApi
@@ -55,7 +54,7 @@ internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotro
     thumbnailUrl = thumbnailUrl
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
-    type = type?.let { JumbotronType.toJumbotronType(it) }
+    type = type?.let { ExamType.toExamType(it) }
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type")
 )
 

@@ -38,6 +38,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
@@ -48,6 +49,7 @@ import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.OutOfDateApi
+import team.duckie.quackquack.ui.component.QuackAnnotatedBody2
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1
@@ -163,9 +165,14 @@ private fun HomeRecommendJumbotronLayout(
             enabled = true,
         )
         Spacer(modifier = Modifier.height(8.dp))
-        QuackBody3(
-            text = stringResource(id = R.string.home_volume_control_message),
-        )
+
+        when(recommendItem.type) {
+            ExamType.Text -> {
+                QuackBody3(
+                    text = stringResource(id = R.string.home_volume_control_message),
+                )
+            }
+        }
     }
 }
 
@@ -182,6 +189,8 @@ private fun HomeTopicRecommendLayout(
     Column(
         modifier = modifier,
     ) {
+        // TODO(limsaehyun): QuackAnnotatedHeadLine2로 교체 필요
+        // https://github.com/duckie-team/quack-quack-android/issues/442
         QuackUnderlineHeadLine2(
             modifier = Modifier.padding(HomeHorizontalPadding),
             text = title,
@@ -191,7 +200,6 @@ private fun HomeTopicRecommendLayout(
             },
         )
         Spacer(modifier = Modifier.height(16.dp))
-
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(
