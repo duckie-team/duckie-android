@@ -11,7 +11,6 @@ package team.duckie.app.android.data
 
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -37,7 +36,6 @@ class ExceptionTest {
         code = "1000",
         serverMessage = "error",
         errors = listOf("awesome-error"),
-        throwable = Throwable("ExceptionTest"),
     )
     private val exceptionContent = jsonMapper.writeValueAsString(
         ExceptionBody(
@@ -75,7 +73,7 @@ class ExceptionTest {
         val response = client.get("")
 
         expectCatching {
-            responseCatching(response.bodyAsText()) { body ->
+            responseCatching(response.status.value, response.bodyAsText()) { body ->
                 body.toStringJsonMap()["hi"]
             }
         }

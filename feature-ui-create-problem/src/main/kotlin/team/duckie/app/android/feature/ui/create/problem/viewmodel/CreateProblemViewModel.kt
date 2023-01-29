@@ -153,13 +153,14 @@ internal class CreateProblemViewModel @Inject constructor(
                         if (
                             it is DuckieResponseException &&
                             it.statusCode == DuckieStatusCode.UnAuthorized
-                        )
+                        ) {
                             reduce {
                                 state.copy(
                                     createProblemStep = CreateProblemStep.Error,
                                     isEditMode = true,
                                 )
                             }
+                        }
 
                         postSideEffect(CreateProblemSideEffect.ReportError(it))
                     }

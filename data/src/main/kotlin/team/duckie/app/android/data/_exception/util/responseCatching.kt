@@ -12,6 +12,7 @@ import io.ktor.client.statement.HttpResponse
 import team.duckie.app.android.data._exception.model.ExceptionBody
 import team.duckie.app.android.data._exception.model.throwing
 import team.duckie.app.android.data._util.jsonMapper
+import team.duckie.app.android.util.kotlin.ApiErrorThreshold
 import team.duckie.app.android.util.kotlin.toDuckieStatusCode
 
 @Suppress("TooGenericExceptionCaught")
@@ -19,7 +20,7 @@ internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
     response: HttpResponse,
     parse: (body: DataModel) -> DomainModel,
 ): DomainModel {
-    if(response.status.value < 400) {
+    if (response.status.value < ApiErrorThreshold) {
         val body: DataModel = response.body()
         return parse(body)
     } else {
@@ -37,7 +38,7 @@ internal inline fun <DomainModel> responseCatching(
     response: String,
     parse: (body: String) -> DomainModel,
 ): DomainModel {
-    if(statusCode < 400) {
+    if (statusCode < ApiErrorThreshold) {
         return parse(response)
     } else {
         jsonMapper.readValue(response, ExceptionBody::class.java)
