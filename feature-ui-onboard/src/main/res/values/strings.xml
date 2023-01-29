@@ -9,7 +9,6 @@
     <string name="permission_needs_for_profile_photo">프로필 사진을 설정하기 위해 이미지/카메라 접근 권한이 필요해요.</string>
     <string name="permission_denied">권한이 거부되어 프로필 사진을 기본 사진으로 사용할게요.</string>
     <string name="bad_internet">인터넷 연결이 불안정해요. 인터넷 연결 상태를 확인해 보세요.</string>
-    <string name="internal_error">요청하신 작업에 문제가 발생했어요.\n잠시 후 다시 시도해 주세요.</string>
 
     <string name="topappbar_trailing_skip">건너뛰기</string>
 
@@ -25,7 +24,7 @@
 
     <string name="profile_title">프로필을 설정해주세요!</string>
     <string name="profile_description">언제든 변경할 수 있어요. 나만의 이름을 지어봐요 :)</string>
-    <string name="profile_fail_load_photo">사진을 가져오는데 실패했어요.\n다른 사진으로 다시 시도해 보세요.</string>
+    <string name="profile_fail_capture_photo">사진을 가져오는데 실패했어요.</string>
     <string name="profile_nickname_placeholder">닉네임 입력</string>
     <string name="profile_nickname_rule_error">이름에는 문자, 숫자, 밑줄, 마침표만\n사용할 수 있어요.</string>
     <string name="profile_nickname_duplicate_error">이미 있는 이름이에요</string>

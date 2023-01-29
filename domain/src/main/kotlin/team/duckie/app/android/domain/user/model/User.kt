@@ -9,14 +9,14 @@
 
 package team.duckie.app.android.domain.user.model
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
-import com.fasterxml.jackson.annotation.JsonIgnore
-import java.io.File
-import kotlinx.collections.immutable.ImmutableList
+import kotlinx.parcelize.Parcelize
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 
 @Immutable
+@Parcelize
 data class User(
     val id: Int,
     val nickname: String,
@@ -27,13 +27,3 @@ data class User(
 ) {
     @JsonIgnore
     var temporaryNickname: String? = null
-
-    @JsonIgnore
-    var temporaryProfileImageFile: File? = null
-
-    @JsonIgnore
-    var temporaryProfileImageUrl: String? = null
-
-    @JsonIgnore
-    var temporaryFavoriteTags: List<Tag>? = null
-}

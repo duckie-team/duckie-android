@@ -8,9 +8,10 @@
 package team.duckie.app.android.feature.ui.create.problem.screen
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -20,56 +21,65 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.R
+import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.ui.create.problem.common.ExitAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.SearchResultText
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.SearchScreenData
+import team.duckie.app.android.shared.ui.compose.ImeSpacer
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.compose.rememberToast
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackBasicTextField
-import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
+import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
 
+private const val MaximumSubTagCount = 5
+
 @Composable
-internal fun SearchScreen(
+internal fun SearchTagScreen(
     modifier: Modifier,
     viewModel: CreateProblemViewModel = activityViewModel(),
 ) {
     val context = LocalContext.current
 
+    val coroutineScope = rememberCoroutineScope()
+    val toast = rememberToast()
+
     val rootState = viewModel.collectAsState().value
 
     val state = when (rootState.findResultType) {
-        FindResultType.ExamCategory -> rootState.examInformation.searchExamCategory
-        FindResultType.Tag -> rootState.additionalInfo.searchTag
+        FindResultType.MainTag -> rootState.examInformation.searchMainTag
+        FindResultType.SubTags -> rootState.additionalInfo.searchSubTags
     }
 
+    val networkErrorMessage = stringResource(id = R.string.network_error)
     val title by remember {
         mutableStateOf(
             when (rootState.findResultType) {
-                FindResultType.ExamCategory -> context.getString(R.string.find_exam_category)
-                FindResultType.Tag -> context.getString(R.string.additional_information_tag_title)
+                FindResultType.MainTag -> context.getString(R.string.find_main_tag)
+                FindResultType.SubTags -> context.getString(R.string.additional_information_sub_tags_title)
             },
         )
     }
     val placeholderText by remember {
         mutableStateOf(
             when (rootState.findResultType) {
-                FindResultType.ExamCategory -> context.getString(R.string.search_exam_category_placeholder)
-                FindResultType.Tag -> context.getString(R.string.additional_information_tag_input_hint)
+                FindResultType.MainTag -> context.getString(R.string.search_main_tag_placeholder)
+                FindResultType.SubTags -> context.getString(R.string.additional_information_sub_tags_placeholder)
             },
         )
     }
@@ -78,14 +88,7 @@ internal fun SearchScreen(
         remember(rootState.findResultType) { rootState.findResultType.isMultiMode() }
 
     val focusRequester = remember { FocusRequester() }
-    var searchTextFieldValue by remember {
-        mutableStateOf(
-            TextFieldValue(
-                text = state.textFieldValue,
-                selection = TextRange(state.cursorPosition),
-            ),
-        )
-    }
+    var searchTextFieldValue = remember(state.textFieldValue) { state.textFieldValue }
 
     BackHandler {
         viewModel.exitSearchScreen()
@@ -95,51 +98,64 @@ internal fun SearchScreen(
         focusRequester.requestFocus()
     }
 
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
+    Column(modifier = modifier.navigationBarsPadding()) {
         ExitAppBar(
             leadingText = title,
             onTrailingIconClick = { viewModel.exitSearchScreen() },
         )
 
         if (multiSelectMode) {
-            QuackSingeLazyRowTag(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+            // TODO(riflockle7): 추후 꽥꽥에서, 전체 너비만큼 태그 Composable 을 넣을 수 있는 Composable 적용 필요
+            QuackLazyVerticalGridTag(
+                contentPadding = PaddingValues(
+                    top = 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                ),
                 horizontalSpace = 4.dp,
-                items = state.results,
+                items = state.results.fastMap { it.name },
                 tagType = QuackTagType.Circle(QuackIcon.Close),
                 onClick = { viewModel.onClickCloseTag(it) },
+                itemChunkedSize = 3,
             )
         }
 
         QuackBasicTextField(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(
+                    top = 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                )
                 .focusRequester(focusRequester),
             leadingIcon = QuackIcon.Search,
-            value = searchTextFieldValue,
-            onValueChanged = { textFieldValue ->
+            text = searchTextFieldValue,
+            onTextChanged = { textFieldValue ->
                 searchTextFieldValue = textFieldValue
-                viewModel.setTextFieldValue(
-                    textFieldValue = textFieldValue.text,
-                    cursorPosition = textFieldValue.selection.end,
-                )
+                viewModel.setTextFieldValue(textFieldValue = textFieldValue)
             },
             placeholderText = placeholderText,
             keyboardActions = KeyboardActions(
                 onDone = {
                     if (searchTextValidate(searchTextFieldValue, state)) {
-                        viewModel.onClickSearchListHeader()
-                        searchTextFieldValue = TextFieldValue()
+                        coroutineScope.launch {
+                            if (viewModel.onClickSearchListHeader()) {
+                                searchTextFieldValue = ""
+                            } else {
+                                toast(networkErrorMessage)
+                            }
+                        }
                     }
                 },
             ),
         )
 
         QuackAnimatedVisibility(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(
+                top = 8.dp,
+                start = 16.dp,
+                end = 16.dp,
+            ),
             visible = state.textFieldValue.isNotEmpty(),
         ) {
             LazyColumn {
@@ -151,8 +167,13 @@ internal fun SearchScreen(
                         ),
                         onClick = {
                             if (searchTextValidate(searchTextFieldValue, state)) {
-                                viewModel.onClickSearchListHeader()
-                                searchTextFieldValue = TextFieldValue()
+                                coroutineScope.launch {
+                                    if (viewModel.onClickSearchListHeader()) {
+                                        searchTextFieldValue = ""
+                                    } else {
+                                        toast(networkErrorMessage)
+                                    }
+                                }
                             }
                         },
                     )
@@ -165,20 +186,43 @@ internal fun SearchScreen(
                         text = item,
                         onClick = {
                             if (searchTextValidate(searchTextFieldValue, state)) {
-                                viewModel.onClickSearchList(index)
-                                searchTextFieldValue = TextFieldValue()
+                                coroutineScope.launch {
+                                    if (viewModel.onClickSearchList(index)) {
+                                        searchTextFieldValue = ""
+                                    } else {
+                                        toast(networkErrorMessage)
+                                    }
+                                }
                             }
                         },
                     )
                 }
             }
         }
+
+        if (multiSelectMode) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            CreateProblemBottomLayout(
+                modifier = Modifier,
+                nextButtonText = stringResource(id = R.string.complete),
+                nextButtonClick = {
+                    viewModel.exitSearchScreen(true)
+                },
+                isValidateCheck = {
+                    return@CreateProblemBottomLayout state.results.isNotEmpty()
+                },
+            )
+
+            ImeSpacer()
+        }
     }
 }
 
 /** 현재 입력한 내용이 추가하기 적합한 내용인지 확인한다. */
 private fun searchTextValidate(
-    searchTextFieldValue: TextFieldValue,
+    searchTextFieldValue: String,
     state: SearchScreenData?,
-): Boolean = searchTextFieldValue.text.isNotEmpty() &&
-        state?.results?.contains(searchTextFieldValue.text) != true
+): Boolean = searchTextFieldValue.isNotEmpty() &&
+        (state?.results?.count() ?: 0) < MaximumSubTagCount &&
+        state?.results?.fastMap { it.name }?.contains(searchTextFieldValue) != true

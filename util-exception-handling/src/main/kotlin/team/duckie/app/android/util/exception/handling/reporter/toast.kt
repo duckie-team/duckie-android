@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("PrivatePropertyName")
+
 package team.duckie.app.android.util.exception.handling.reporter
 
 import android.app.Activity

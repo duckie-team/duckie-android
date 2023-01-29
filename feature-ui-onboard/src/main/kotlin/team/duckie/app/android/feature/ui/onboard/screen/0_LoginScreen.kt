@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
+
 package team.duckie.app.android.feature.ui.onboard.screen
 
 import androidx.compose.foundation.Image
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +39,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
@@ -174,10 +178,10 @@ private val LoginScreenLoginAreaMeasurePolicy = MeasurePolicy { measurables, con
     }
 }
 
-@Suppress("UNUSED_PARAMETER")
 @Composable
 private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.layoutId(LoginScreenLoginAreaLayoutId),
@@ -200,7 +204,9 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                     ),
                 )
                 .clickable {
-                    // TODO(sungbin): 카카오 로그인 백엔드 연결
+                    coroutineScope.launch {
+                        vm.getKakaoAccessTokenAndJoin()
+                    }
                 },
             content = {
                 Image(

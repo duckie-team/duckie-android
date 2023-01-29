@@ -8,8 +8,8 @@
 package team.duckie.app.android.data.user.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import team.duckie.app.android.domain.category.model.Category
-import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.data.category.model.CategoryData
+import team.duckie.app.android.data.tag.model.TagData
 
 internal data class UserResponse(
 
@@ -26,8 +26,8 @@ internal data class UserResponse(
     val duckPower: DuckPowerResponse? = null,
 
     @field:JsonProperty("favoriteTags")
-    val favoriteTags: List<Tag?>? = null,
+    val favoriteTags: List<TagData>? = null,
 
     @field:JsonProperty("favoriteCategories")
-    val favoriteCategories: List<Category?>? = null,
+    val favoriteCategories: List<CategoryData>? = null,
 )

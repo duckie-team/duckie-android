@@ -54,4 +54,13 @@ internal data class ExamData(
 
     @field:JsonProperty("problems")
     val problems: List<ProblemData>? = null,
+
+    @field:JsonProperty("type")
+    val type: String? = null,
+
+    @field:JsonProperty("user")
+    val user: UserResponse? = null,
+
+    @field:JsonProperty("status")
+    val status: String? = null,
 )

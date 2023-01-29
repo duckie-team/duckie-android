@@ -9,12 +9,16 @@
 
 package team.duckie.app.android.feature.ui.detail.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.category.model.Category
@@ -24,6 +28,8 @@ import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ShortModel
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.domain.follow.model.FollowBody
+import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.constant.DuckieTier
 import team.duckie.app.android.domain.user.model.User
@@ -31,6 +37,7 @@ import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.OutOfDateApi
+import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
 const val DelayTime = 2000L
@@ -39,15 +46,40 @@ const val DelayTime = 2000L
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
     private val userRepository: UserRepository,
+    private val followUseCase: FollowUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
-    suspend fun initExamData(examId: Int, userId: Int) {
+    suspend fun initExamData() {
+        val appUserId = savedStateHandle.getStateFlow(Extras.AppUserId, -1).value
+        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
+
         val exam = runCatching { examRepository.getExam(examId) }.getOrNull() ?: dummyExam
-        val user = runCatching { userRepository.get(userId) }.getOrNull() ?: dummyUser
+        val appUser = runCatching { userRepository.get(appUserId) }.getOrNull() ?: dummyUser
         delay(DelayTime)
         intent {
-            reduce { DetailState.Success(exam, user) }
+            reduce { DetailState.Success(exam, appUser) }
+        }
+    }
+
+    fun followUser() = viewModelScope.launch {
+        val detailState = container.stateFlow.value
+        require(detailState is DetailState.Success)
+
+        followUseCase(
+            FollowBody(detailState.appUser.id, detailState.exam.user.id),
+            !detailState.isFollowing,
+        ).onSuccess { apiResult ->
+            if (apiResult) {
+                intent {
+                    reduce {
+                        (state as DetailState.Success).run { copy(isFollowing = !isFollowing) }
+                    }
+                }
+            }
+        }.onFailure {
+            intent { postSideEffect(DetailSideEffect.ReportError(it)) }
         }
     }
 }
@@ -139,6 +171,15 @@ private val dummyExam = Exam(
         ),
     ),
     type = "text",
+    user = User(
+        id = 1,
+        nickname = "doro",
+        profileImageUrl = "",
+        tier = DuckieTier.DuckBronze,
+        favoriteTags = persistentListOf(),
+        favoriteCategories = persistentListOf(),
+    ),
+    status = "PENDING",
 )
 
 private val dummyUser = User(

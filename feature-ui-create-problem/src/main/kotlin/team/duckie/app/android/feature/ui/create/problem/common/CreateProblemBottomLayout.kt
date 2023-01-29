@@ -20,10 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
@@ -93,7 +91,9 @@ internal fun CreateProblemBottomLayout(
     leftButtonLeadingIcon: QuackIcon? = null,
     leftButtonText: String? = null,
     leftButtonClick: (() -> Unit)? = null,
-    tempSaveButtonClick: () -> Unit,
+    tempSaveButtonText: String? = null,
+    tempSaveButtonClick: (() -> Unit)? = null,
+    nextButtonText: String,
     nextButtonClick: () -> Unit,
     isMaximumProblemCount: Boolean? = null,
     isValidateCheck: () -> Boolean,
@@ -130,19 +130,22 @@ internal fun CreateProblemBottomLayout(
             Spacer(modifier = Modifier.weight(1f))
 
             // 임시저장 버튼
-            QuackSubtitle(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(size = 8.dp))
-                    .background(QuackColor.White.composeColor)
-                    .quackClickable { tempSaveButtonClick() }
-                    .applyAnimatedQuackBorder(
-                        QuackBorder(1.dp, QuackColor.Gray3),
-                        shape = RoundedCornerShape(size = 8.dp),
-                    )
-                    .padding(vertical = 12.dp, horizontal = 19.dp),
-                color = QuackColor.Black,
-                text = stringResource(id = R.string.create_problem_temp_save_button),
-            )
+            tempSaveButtonClick?.let {
+                requireNotNull(tempSaveButtonText)
+                QuackSubtitle(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(size = 8.dp))
+                        .background(QuackColor.White.composeColor)
+                        .quackClickable(onClick = tempSaveButtonClick)
+                        .applyAnimatedQuackBorder(
+                            QuackBorder(1.dp, QuackColor.Gray3),
+                            shape = RoundedCornerShape(size = 8.dp),
+                        )
+                        .padding(vertical = 12.dp, horizontal = 19.dp),
+                    color = QuackColor.Black,
+                    text = tempSaveButtonText,
+                )
+            }
 
             // 다음 버튼
             QuackSubtitle(
@@ -176,7 +179,7 @@ internal fun CreateProblemBottomLayout(
                         horizontal = 19.dp,
                     ),
                 color = QuackColor.White,
-                text = stringResource(id = R.string.next),
+                text = nextButtonText,
             )
         }
 

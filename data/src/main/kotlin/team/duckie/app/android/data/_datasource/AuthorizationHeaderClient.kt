@@ -5,15 +5,17 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("PrivatePropertyName")
+
 package team.duckie.app.android.data._datasource
 
 import android.os.Build
+import com.fasterxml.jackson.databind.DeserializationFeature
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.engine.cio.endpoint
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -25,6 +27,7 @@ import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlugin
 
+@Deprecated(message = "fuel 로 변경 예정 (#180)")
 internal var client = AuthorizationHeaderClient()
     private set
 
@@ -40,6 +43,7 @@ internal fun updateClient(
     newBuildModel?.let { DeviceName = it }
 }
 
+// TODO(sungbin): AuthorizationClient.kt 로 이전
 internal object DuckieHttpHeaders {
     const val DeviceName = "x-duckie-device-name"
     const val Version = "x-duckie-version"
@@ -76,10 +80,17 @@ private object AuthorizationHeaderClient {
             headerKey = DuckieHttpHeaders.Authorization
         }
         install(plugin = ContentNegotiation) {
-            jackson()
+            jackson {
+                disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
+                disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            }
         }
         install(plugin = Logging) {
-            logger = Logger.ANDROID
+            logger = object : Logger {
+                override fun log(message: String) {
+                   println(message)
+                }
+            }
             level = LogLevel.ALL
         }
     }

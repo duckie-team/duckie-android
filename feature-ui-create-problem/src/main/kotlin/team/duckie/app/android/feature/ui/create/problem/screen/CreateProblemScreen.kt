@@ -23,7 +23,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -44,7 +43,6 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,6 +71,7 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
+import team.duckie.app.android.feature.ui.create.problem.common.NoLazyGridItems
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.getCreateProblemMeasurePolicy
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
@@ -419,7 +418,7 @@ internal fun CreateProblemScreen(
                                             answer = newTitle.take(TextFieldMaxLength),
                                         )
                                     },
-                                    answerImageClick = { answersNo ->
+                                    answerImageClick = { answersIndex ->
                                         coroutineShape.launch {
                                             val result = imagePermission.check(context)
                                             if (result) {
@@ -427,7 +426,7 @@ internal fun CreateProblemScreen(
                                                 vm.updatePhotoState(
                                                     CreateProblemPhotoState.AnswerImageType(
                                                         questionIndex,
-                                                        answersNo,
+                                                        answersIndex,
                                                         answers,
                                                     ),
                                                 )
@@ -474,7 +473,9 @@ internal fun CreateProblemScreen(
                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                         }
                     },
+                    tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
                     tempSaveButtonClick = {},
+                    nextButtonText = stringResource(id = R.string.next),
                     nextButtonClick = {
                         coroutineShape.launch {
                             vm.navigateStep(CreateProblemStep.AdditionalInformation)
@@ -514,20 +515,22 @@ internal fun CreateProblemScreen(
                 with(photoState) {
                     when (this) {
                         is CreateProblemPhotoState.QuestionImageType -> {
-                            vm.setQuestion(
+                            vm.setQuestionWithMedia(
                                 Question.Type.Image,
                                 this.questionIndex,
                                 urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
+                                applicationContext = context.applicationContext,
                             )
                             vm.updatePhotoState(null)
                         }
 
                         is CreateProblemPhotoState.AnswerImageType -> {
-                            vm.setAnswer(
+                            vm.setAnswerWithImage(
                                 questionIndex,
                                 answerIndex,
                                 Answer.Type.ImageChoice,
                                 urlSource = galleryImages[galleryImagesSelectionIndex].toUri(),
+                                applicationContext = context.applicationContext,
                             )
                             vm.updatePhotoState(null)
                         }
@@ -757,7 +760,7 @@ private fun ImageChoiceProblemLayout(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             itemContent = { answerIndex ->
                 val answerNo = answerIndex + 1
-                val answerItem = answers.imageChoice[answerNo]
+                val answerItem = answers.imageChoice[answerIndex]
                 val isChecked = correctAnswers == "$answerNo"
 
                 Column(
@@ -795,7 +798,7 @@ private fun ImageChoiceProblemLayout(
 
                         QuackImage(
                             modifier = Modifier.quackClickable(
-                                onClick = { deleteLongClick(answerNo) },
+                                onClick = { deleteLongClick(answerIndex) },
                             ),
                             src = QuackIcon.Close,
                             size = DpSize(20.dp, 20.dp),
@@ -805,7 +808,7 @@ private fun ImageChoiceProblemLayout(
                     if (answerItem.imageUrl.isEmpty()) {
                         Box(
                             modifier = Modifier
-                                .quackClickable { answerImageClick(answerNo) }
+                                .quackClickable { answerImageClick(answerIndex) }
                                 .background(color = QuackColor.Gray4.composeColor)
                                 .padding(52.dp),
                         ) {
@@ -818,15 +821,15 @@ private fun ImageChoiceProblemLayout(
                         QuackImage(
                             src = answerItem.imageUrl,
                             size = DpSize(136.dp, 136.dp),
-                            onClick = { answerImageClick(answerNo) },
-                            onLongClick = { deleteLongClick(answerNo) },
+                            onClick = { answerImageClick(answerIndex) },
+                            onLongClick = { deleteLongClick(answerIndex) },
                         )
                     }
 
                     QuackBasicTextField(
-                        text = answers.imageChoice[answerNo].text,
+                        text = answers.imageChoice[answerIndex].text,
                         onTextChanged = { newAnswer ->
-                            answerTextChanged(newAnswer, answerNo)
+                            answerTextChanged(newAnswer, answerIndex)
                         },
                         placeholderText = stringResource(
                             id = R.string.create_problem_answer_placeholder,
@@ -900,77 +903,4 @@ private val imagePermission
 /** 한 개의 권한을 체크한다. */
 private fun String.check(context: Context): Boolean {
     return ContextCompat.checkSelfPermission(context, this) == PackageManager.PERMISSION_GRANTED
-}
-
-/**
- * Lazy 하지 않은 그리드 목록 빌더 (개수로 계산)
- * (https://stackoverflow.com/questions/69336555/fixed-grid-inside-lazycolumn-in-jetpack-compose)
- *
- * @param count 전체 아이템 개수
- * @param nColumns 한 행의 개수
- * @param paddingValues 그리드 목록 패딩
- * @param horizontalArrangement 정렬 방향
- * @param itemContent index 기반으로 만들어지는 아이템 컨텐츠 빌더
- */
-@Composable
-fun NoLazyGridItems(
-    count: Int,
-    nColumns: Int,
-    paddingValues: PaddingValues = PaddingValues(0.dp),
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    itemContent: @Composable BoxScope.(Int) -> Unit,
-) {
-    NoLazyGridItems(
-        data = List(count) { it },
-        nColumns = nColumns,
-        paddingValues = paddingValues,
-        horizontalArrangement = horizontalArrangement,
-        itemContent = itemContent,
-    )
-}
-
-/**
- * Lazy 하지 않은 그리드 목록 빌더 (개수로 계산)
- * (https://stackoverflow.com/questions/69336555/fixed-grid-inside-lazycolumn-in-jetpack-compose)
- *
- * @param data 전체 아이템
- * @param nColumns 한 행의 개수
- * @param paddingValues 그리드 목록 패딩
- * @param horizontalArrangement 정렬 방향
- * @param key 사전 실행 로직 함수?
- * @param itemContent data[`index`] 기반으로 만들어지는 아이템 컨텐츠 빌더
- */
-@Composable
-fun <T> NoLazyGridItems(
-    data: List<T>,
-    nColumns: Int,
-    paddingValues: PaddingValues = PaddingValues(0.dp),
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    key: ((item: T) -> Any)? = null,
-    itemContent: @Composable BoxScope.(T) -> Unit,
-) {
-    val rows = if (data.isEmpty()) 0 else 1 + (data.count() - 1) / nColumns
-    for (rowIndex in 0 until rows) {
-        Row(
-            modifier = Modifier.padding(paddingValues),
-            horizontalArrangement = horizontalArrangement,
-        ) {
-            for (columnIndex in 0 until nColumns) {
-                val itemIndex = rowIndex * nColumns + columnIndex
-                if (itemIndex < data.count()) {
-                    val item = data[itemIndex]
-                    key(key?.invoke(item)) {
-                        Box(
-                            modifier = Modifier.weight(1f, fill = true),
-                            propagateMinConstraints = true,
-                        ) {
-                            itemContent.invoke(this, item)
-                        }
-                    }
-                } else {
-                    Spacer(Modifier.weight(1f, fill = true))
-                }
-            }
-        }
-    }
 }

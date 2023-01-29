@@ -11,6 +11,7 @@ plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
     id(ConventionEnum.AndroidHilt)
+    `kotlin-parcelize`
 }
 
 android {
@@ -19,6 +20,7 @@ android {
 
 dependencies {
     implementations(
+        projects.featureUiHome,
         projects.di,
         projects.domain,
         projects.utilUi,

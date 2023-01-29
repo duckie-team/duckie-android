@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalLifecycleComposeApi::class)
-
 package team.duckie.app.android.feature.ui.create.problem.screen
 
 import androidx.compose.animation.AnimatedVisibility
@@ -35,21 +33,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
-import team.duckie.app.android.feature.ui.create.problem.common.FadeAnimatedVisibility
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
 import team.duckie.app.android.feature.ui.create.problem.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.ui.create.problem.common.TitleAndComponent
 import team.duckie.app.android.feature.ui.create.problem.common.getCreateProblemMeasurePolicy
 import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
-import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
@@ -103,7 +99,7 @@ internal fun ExamInformationScreen(
                 modifier = Modifier.layoutId(TopAppBarLayoutId),
                 trailingText = stringResource(id = R.string.next),
                 onLeadingIconClick = {
-                    coroutineScope.launch { viewModel.onClickArrowBack() }
+                    coroutineScope.launch { viewModel.finishCreateProblem() }
                 },
             )
 
@@ -131,24 +127,24 @@ internal fun ExamInformationScreen(
                         }
                     }
                 }
-                TitleAndComponent(stringResource = R.string.exam_category) {
-                    if (state.isExamCategorySelected) {
+                TitleAndComponent(stringResource = R.string.main_tag) {
+                    if (state.isMainTagSelected) {
                         QuackCircleTag(
-                            text = state.examCategory,
+                            text = state.mainTag,
                             trailingIcon = QuackIcon.Close,
                             isSelected = false,
                             onClick = { viewModel.onClickCloseTag() },
                         )
                     }
-                    FadeAnimatedVisibility(visible = !state.isExamCategorySelected) {
+                    QuackAnimatedVisibility(visible = !state.isMainTagSelected) {
                         QuackBasicTextField(
                             modifier = Modifier.quackClickable {
-                                viewModel.onClickExamCategory(lazyListState.firstVisibleItemIndex)
+                                viewModel.goToSearchMainTag(lazyListState.firstVisibleItemIndex)
                             },
                             leadingIcon = QuackIcon.Search,
-                            text = state.examCategory,
+                            text = state.mainTag,
                             onTextChanged = {},
-                            placeholderText = stringResource(id = R.string.search_exam_category_placeholder),
+                            placeholderText = stringResource(id = R.string.search_main_tag_placeholder),
                             enabled = false,
                         )
                     }
@@ -216,10 +212,12 @@ internal fun ExamInformationScreen(
                     .fillMaxWidth()
                     .layoutId(BottomLayoutId),
                 leftButtonText = stringResource(id = R.string.additional_information_next),
+                tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
                 tempSaveButtonClick = {},
+                nextButtonText = stringResource(id = R.string.next),
                 nextButtonClick = {
                     coroutineScope.launch {
-                        viewModel.navigateStep(CreateProblemStep.CreateProblem)
+                        viewModel.getExamThumbnail()
                     }
                 },
                 isValidateCheck = viewModel::examInformationIsValidate,

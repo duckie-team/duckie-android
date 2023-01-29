@@ -7,4 +7,10 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <application>
+        <activity
+            android:name="team.duckie.app.android.feature.ui.solve.problem.SolveProblemActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+    </application>
 </manifest>

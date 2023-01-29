@@ -6,6 +6,7 @@
  */
 
 @file:OptIn(ExperimentalCoroutinesApi::class)
+@file:Suppress("ConstPropertyName")
 
 package team.duckie.app.ktor.client.plugin.e2e_test
 
@@ -26,8 +27,9 @@ import team.duckie.app.ktor.client.plugin.util.LoggingRequestHeadersPlugin
 
 private const val DuckieAuthorizationHeaderKey = "authorization"
 private const val DuckieAuthorizationHeaderValue = "TEST"
-private const val DuckieAuthorizationHeaderLog = "-> $DuckieAuthorizationHeaderKey: $DuckieAuthorizationHeaderValue;"
+private const val DuckieAuthorizationHeaderLog = "-> $DuckieAuthorizationHeaderKey: Bearer $DuckieAuthorizationHeaderValue;"
 
+// TODO(sungbin): `runApplication` 테스트로 변경
 class DuckieAuthorizationHeaderOrNothingTest {
     private val headers = mutableListOf<String>()
     private lateinit var client: HttpClient

@@ -33,4 +33,5 @@ data class Exam(
     val problems: ImmutableList<Problem>,
     val type: String,
     val user: User,
+    val status: String,
 )

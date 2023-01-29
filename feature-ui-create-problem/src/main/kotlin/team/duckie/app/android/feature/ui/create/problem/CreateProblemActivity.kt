@@ -29,8 +29,10 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.screen.AdditionalInformationScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.CreateProblemScreen
+import team.duckie.app.android.feature.ui.create.problem.screen.ErrorScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.ExamInformationScreen
-import team.duckie.app.android.feature.ui.create.problem.screen.SearchScreen
+import team.duckie.app.android.feature.ui.create.problem.screen.LoadingScreen
+import team.duckie.app.android.feature.ui.create.problem.screen.SearchTagScreen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
@@ -52,9 +54,10 @@ class CreateProblemActivity : BaseActivity() {
 
             BackHandler {
                 when (createProblemStep) {
-                    CreateProblemStep.ExamInformation -> finishWithAnimation()
-                    CreateProblemStep.Search -> viewModel.navigateStep(CreateProblemStep.ExamInformation)
-                    else -> viewModel.navigateStep(createProblemStep.minus(1))
+                    CreateProblemStep.CreateProblem, CreateProblemStep.AdditionalInformation ->
+                        viewModel.navigateStep(createProblemStep.minus(1))
+                    CreateProblemStep.Loading, CreateProblemStep.Error -> finishWithAnimation()
+                    else -> {}
                 }
             }
 
@@ -62,6 +65,8 @@ class CreateProblemActivity : BaseActivity() {
                 viewModel.container.sideEffectFlow
                     .onEach(::handleSideEffect)
                     .launchIn(this)
+
+                viewModel.initState()
             }
 
             QuackTheme {
@@ -72,12 +77,17 @@ class CreateProblemActivity : BaseActivity() {
                     targetState = createProblemStep,
                 ) { step: CreateProblemStep ->
                     when (step) {
+                        CreateProblemStep.Loading -> LoadingScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .statusBarsPadding(),
+                        )
                         CreateProblemStep.ExamInformation -> ExamInformationScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
                         )
-                        CreateProblemStep.Search -> SearchScreen(
+                        CreateProblemStep.Search -> SearchTagScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
@@ -88,6 +98,11 @@ class CreateProblemActivity : BaseActivity() {
                                 .statusBarsPadding(),
                         )
                         CreateProblemStep.AdditionalInformation -> AdditionalInformationScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .statusBarsPadding(),
+                        )
+                        CreateProblemStep.Error -> ErrorScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),

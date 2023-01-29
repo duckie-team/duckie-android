@@ -10,4 +10,7 @@
     <string name="follow">팔로우</string>
     <string name="examinee">응시자</string>
     <string name="recommend">추천</string>
+
+    <string name="todo_title">해당 기능은 개발 예정입니다.\n기대해주세요</string>
+    <string name="require_columns">최소 2 이상의 columns가 필요합니다.</string>
 </resources>

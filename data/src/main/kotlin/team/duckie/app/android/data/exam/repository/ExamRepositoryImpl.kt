@@ -30,6 +30,7 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
+import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
@@ -55,6 +56,18 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
         }
         return responseCatching(response.bodyAsText()) { body ->
             body.toJsonObject<ExamData>().toDomain()
+        }
+    }
+
+    @OutOfDateApi
+    override suspend fun getExamThumbnail(examThumbnailBody: ExamThumbnailBody): String {
+        val response = client.post {
+            url("/exams/thumbnail")
+            setBody(examThumbnailBody.toData())
+        }
+        return responseCatching(response.bodyAsText()) { body ->
+            val json = body.toStringJsonMap()
+            json["url"] ?: duckieResponseFieldNpe("url")
         }
     }
 

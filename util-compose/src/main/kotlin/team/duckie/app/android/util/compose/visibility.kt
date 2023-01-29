@@ -5,4 +5,9 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.solve.problem
+package team.duckie.app.android.util.compose
+
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+
+fun Modifier.invisible() = drawWithContent { }

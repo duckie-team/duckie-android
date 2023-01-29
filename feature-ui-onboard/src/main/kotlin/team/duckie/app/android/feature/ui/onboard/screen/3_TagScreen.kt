@@ -5,10 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(
-    ExperimentalMaterialApi::class,
-    ExperimentalComposeUiApi::class,
-)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
@@ -43,7 +41,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
@@ -52,22 +49,24 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.datastore.preferences.core.edit
 import com.google.accompanist.flowlayout.FlowRow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.feature.datastore.PreferenceKey
-import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.onboard.R
 import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.shared.ui.compose.ImeSpacer
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
+import team.duckie.app.android.util.compose.invisible
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
@@ -135,15 +134,15 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 
 @Composable
 internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
-    val context = LocalContext.current.applicationContext
     val keyboard = LocalSoftwareKeyboardController.current
-    val toast = rememberToast()
     val coroutineScope = rememberCoroutineScope()
 
     var isLoadingToFinish by remember { mutableStateOf(false) }
     var isStartable by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val addedTags = remember { mutableStateListOf<String>() }
+
+    val onboardState by vm.collectAsState()
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     LaunchedEffect(sheetState) {
         val sheetStateFlow = snapshotFlow { sheetState.currentValue }
@@ -203,7 +202,6 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                         isStartable = startable
                     },
                 )
-                // TODO(sungbin): 로딩 인디케이터
                 QuackLargeButton(
                     modifier = Modifier
                         .layoutId(TagScreenQuackLargeButtonLayoutId)
@@ -213,32 +211,50 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                     enabled = isStartable,
                     isLoading = isLoadingToFinish,
                 ) {
-                    isLoadingToFinish = true
-                    coroutineScope.launch {
-                        val updateUserProfileImageJob = launch {
-                            vm.updateUserProfileImage()
-                        }
-                        val updateUserFavorateTagJob = launch {
-                            vm.updateUserFavorateTags(favorateTagNames = addedTags)
-                        }
-                        joinAll(updateUserProfileImageJob, updateUserFavorateTagJob)
-                        vm.updateUser(
-                            id = vm.me.id,
-                            nickname = vm.me.temporaryNickname,
-                            profileImageUrl = vm.me.temporaryProfileImageUrl,
-                            favoriteCategories = vm.selectedCategories,
-                            favoriteTags = vm.me.temporaryFavoriteTags,
-                        )
-                        context.dataStore.edit { preference ->
-                            preference[PreferenceKey.Onboard.Finish] = true
-                        }
-                        isLoadingToFinish = false
-                        toast("온보딩 끝")
-                    }
+                    updateUserAndFinishOnboard(
+                        coroutineScope = coroutineScope,
+                        vm = vm,
+                        onboardState = onboardState,
+                        addedTags = addedTags,
+                        updateIsLoadingToFinishState = { isLoading ->
+                            isLoadingToFinish = isLoading
+                        },
+                    )
                 }
             },
             measurePolicy = TagScreenMeasurePolicy,
         )
+    }
+}
+
+private fun updateUserAndFinishOnboard(
+    coroutineScope: CoroutineScope,
+    vm: OnboardViewModel,
+    onboardState: OnboardState,
+    addedTags: List<String>,
+    updateIsLoadingToFinishState: (isLoading: Boolean) -> Unit,
+) {
+    updateIsLoadingToFinishState(true)
+    coroutineScope.launch {
+        val profileImageUrlDeferred = onboardState.temporaryProfileImageFile?.let {
+            async { vm.uploadProfileImage(file = it) }
+        }
+        val favoriteTagsDeferred = async {
+            vm.updateUserFavoriteTags(names = addedTags)
+        }
+        val (profileImageUrl, favoriteTags) = awaitAll(
+            profileImageUrlDeferred ?: async { "" },
+            favoriteTagsDeferred,
+        )
+        @Suppress("UNCHECKED_CAST")
+        vm.updateUser(
+            id = vm.me.id,
+            nickname = onboardState.temporaryNickname,
+            profileImageUrl = (profileImageUrl as String).takeIf { profileImageUrlDeferred != null },
+            favoriteCategories = onboardState.selectedCategories,
+            favoriteTags = favoriteTags as List<Tag>,
+        )
+        updateIsLoadingToFinishState(false)
     }
 }
 
@@ -252,17 +268,19 @@ private fun TagSelection(
     vm: OnboardViewModel = activityViewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val hottestTags = remember(vm.selectedCategories) {
+    val onboardState by vm.collectAsState()
+
+    val hottestTags = remember(onboardState.selectedCategories) {
         List(
-            size = vm.selectedCategories.size,
+            size = onboardState.selectedCategories.size,
             init = { index ->
-                vm.selectedCategories[index].popularTags?.fastMap(Tag::name).orEmpty()
+                onboardState.selectedCategories[index].popularTags?.fastMap(Tag::name).orEmpty()
             },
         )
     }
-    val hottestTagSelections = remember(vm.selectedCategories) {
+    val hottestTagSelections = remember(onboardState.selectedCategories) {
         List(
-            size = vm.selectedCategories.size,
+            size = onboardState.selectedCategories.size,
             init = { index ->
                 mutableStateListOf(
                     elements = Array(
@@ -303,6 +321,7 @@ private fun TagSelection(
                 text = stringResource(R.string.tag_added_tag),
             )
             if (addedTags.isNotEmpty()) {
+                // TODO(sungbin): 반주자 제거 (foundation 으로 합체됨)
                 FlowRow(
                     modifier = Modifier.padding(
                         vertical = 10.dp,
@@ -350,9 +369,9 @@ private fun TagSelection(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            vm.selectedCategories.fastForEachIndexed { categoryIndex, category ->
+            onboardState.selectedCategories.fastForEachIndexed { categoryIndex, category ->
                 QuackSingeLazyRowTag(
-                    title = stringResource(R.string.tag_hottest_tag, category),
+                    title = stringResource(R.string.tag_hottest_tag, category.name),
                     items = hottestTags[categoryIndex],
                     itemSelections = hottestTagSelections[categoryIndex],
                     tagType = QuackTagType.Circle(),
@@ -421,10 +440,11 @@ private fun TagScreenModalBottomSheetContent(
             QuackCircleTag(
                 modifier = Modifier
                     .zIndex(0f)
-                    .drawWithContent { }, // invisible
+                    .invisible(),
                 text = "",
                 isSelected = false,
             )
+            // TODO(sungbin): 애니메이션 출처 밝히기
             FlowRow(
                 modifier = Modifier
                     .zIndex(1f)

@@ -23,7 +23,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -64,6 +63,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.domain.exam.model.ThumbnailType
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
@@ -79,12 +80,13 @@ import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
+import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -196,12 +198,11 @@ internal fun AdditionalInformationScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     // 기본 썸네일 선택
-                    // TODO(riflockle7): quack_ic_profile_24 -> 백앤드에서 받아온 이미지
                     AdditionalBottomSheetThumbnailLayout(
                         title = "기본 썸네일",
-                        src = team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24,
+                        src = rootState.defaultThumbnail,
                         onClick = {
-                            vm.setThumbnail(team.duckie.quackquack.ui.R.drawable.quack_ic_profile_24)
+                            vm.selectThumbnail(thumbnailType = ThumbnailType.Default)
                             coroutineScope.launch {
                                 sheetState.hide()
                             }
@@ -261,7 +262,7 @@ internal fun AdditionalInformationScreen(
                     AdditionalTakeLayout()
 
                     // 시험 태그 추가 (태그 추가) Layout
-                    AdditionalTagLayout()
+                    AdditionalSubTagsLayout()
                 }
 
                 // 최하단 Layout
@@ -269,9 +270,14 @@ internal fun AdditionalInformationScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .layoutId(BottomLayoutId),
+                    tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
                     tempSaveButtonClick = {},
+                    nextButtonText = stringResource(id = R.string.next),
                     nextButtonClick = {
-                        coroutineScope.launch { vm.onClickArrowBack() }
+                        coroutineScope.launch {
+                            vm.makeExam()
+                            vm.finishCreateProblem()
+                        }
                     },
                     isValidateCheck = vm::isAllFieldsNotEmpty,
                 )
@@ -304,7 +310,11 @@ internal fun AdditionalInformationScreen(
             },
             onAddClick = {
                 coroutineScope.launch {
-                    vm.setThumbnail(galleryImages[galleryImagesSelectionIndex].toUri())
+                    vm.selectThumbnail(
+                        ThumbnailType.Image,
+                        galleryImages[galleryImagesSelectionIndex].toUri(),
+                        context.applicationContext,
+                    )
                     vm.updatePhotoState(null)
                     sheetState.hide()
                 }
@@ -370,31 +380,32 @@ private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel(
 
 /** 시험 태그 추가 (태그 추가) Layout */
 @Composable
-private fun AdditionalTagLayout(vm: CreateProblemViewModel = activityViewModel()) {
+private fun AdditionalSubTagsLayout(vm: CreateProblemViewModel = activityViewModel()) {
     val state = vm.collectAsState().value.additionalInfo
 
     TitleAndComponent(
         modifier = Modifier.padding(top = 48.dp),
-        stringResource = R.string.additional_information_tag_title,
+        stringResource = R.string.additional_information_sub_tags_title,
     ) {
         QuackBasicTextField(
             modifier = Modifier.quackClickable {
-                vm.onClickTag()
+                vm.goToSearchSubTags()
             },
             text = "",
             onTextChanged = {},
-            placeholderText = stringResource(id = R.string.additional_information_tag_input_hint),
+            placeholderText = stringResource(id = R.string.additional_information_sub_tags_placeholder),
             enabled = false,
         )
 
-        if (state.isTagsAdded) {
-            FadeAnimatedVisibility(visible = false) {
-                QuackSingeLazyRowTag(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+        if (state.isSubTagsAdded) {
+            FadeAnimatedVisibility(visible = true) {
+                // TODO(riflockle7): 추후 꽥꽥에서, 전체 너비만큼 태그 Composable 을 넣을 수 있는 Composable 적용 필요
+                QuackLazyVerticalGridTag(
                     horizontalSpace = 4.dp,
-                    items = state.tags,
-                    tagType = QuackTagType.Grayscale(""),
+                    items = state.subTags.fastMap(Tag::name),
+                    tagType = QuackTagType.Circle(QuackIcon.Close),
                     onClick = { vm.onClickCloseTag(it) },
+                    itemChunkedSize = 3,
                 )
             }
         }

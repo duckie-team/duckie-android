@@ -5,21 +5,28 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("MaxLineLength")
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
-// TODO(문제만들기 담당자): OptIn 제거
+// TODO(riflockle7): OptIn 제거
 @file:OptIn(OutOfDateApi::class)
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -32,32 +39,126 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.domain.exam.model.ShortModel
 import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.exam.model.toChoice
 import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
+import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
+import team.duckie.app.android.domain.exam.usecase.GetExamUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
+import team.duckie.app.android.domain.file.constant.FileType
+import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
+import team.duckie.app.android.domain.search.model.Search
+import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
+import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.domain.tag.repository.TagRepository
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
+import team.duckie.app.android.util.android.image.MediaUtil
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.util.kotlin.fastMapIndexed
+import team.duckie.app.android.util.ui.const.Extras
+import javax.inject.Inject
+
+private const val TagsMaximumCount = 4
 
 @HiltViewModel
+@Suppress("LargeClass")
 internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
+    private val getExamUseCase: GetExamUseCase,
+    private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val fileUploadUseCase: FileUploadUseCase,
+    private val getSearchUseCase: GetSearchUseCase,
+    private val tagRepository: TagRepository,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
 
     override val container =
         container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
+
+    suspend fun initState() {
+        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
+        val isEditMode = examId != -1
+
+        // 문제 생성 모드
+        if (!isEditMode) {
+            intent {
+                reduce {
+                    state.copy(
+                        isEditMode = false,
+                        createProblemStep = CreateProblemStep.ExamInformation,
+                    )
+                }
+            }
+        }
+        // 문제 수정 모드
+        else {
+            getExamUseCase(examId)
+                .onSuccess { exam ->
+                    intent {
+                        reduce {
+                            val questions = exam.problems.fastMap { it.question }.toImmutableList()
+                            val answers = exam.problems.fastMap { it.answer }.toImmutableList()
+                            val correctAnswers =
+                                exam.problems.fastMap { it.correctAnswer }.toImmutableList()
+                            val hints = exam.problems.fastMap { it.hint ?: "" }.toImmutableList()
+                            val memos = exam.problems.fastMap { it.memo ?: "" }.toImmutableList()
+
+                            state.copy(
+                                isEditMode = true,
+                                createProblemStep = CreateProblemStep.ExamInformation,
+                                examInformation = state.examInformation.copy(
+                                    categorySelection = exam.mainTag.id,
+                                    isMainTagSelected = true,
+                                    examTitle = exam.title,
+                                    examDescription = exam.description,
+                                    certifyingStatement = exam.certifyingStatement,
+                                ),
+                                createProblem = state.createProblem.copy(
+                                    questions = questions,
+                                    answers = answers,
+                                    correctAnswers = correctAnswers,
+                                    hints = hints,
+                                    memos = memos,
+                                ),
+                                additionalInfo = state.additionalInfo.copy(
+                                    thumbnail = exam.thumbnailUrl ?: "",
+                                    // TODO(riflockle7): 썸네일 타입 정보 서버에서 추후 받아야 함
+                                    thumbnailType = ThumbnailType.Default,
+                                    takeTitle = exam.buttonTitle,
+                                    isSubTagsAdded = exam.subTags.isNotEmpty(),
+                                    searchSubTags = state.additionalInfo.searchSubTags.copy(
+                                        results = exam.subTags,
+                                    ),
+                                ),
+                            )
+                        }
+                    }
+                }
+                .onFailure {
+                    intent {
+                        reduce {
+                            state.copy(
+                                createProblemStep = CreateProblemStep.Error,
+                                isEditMode = true,
+                            )
+                        }
+                        postSideEffect(CreateProblemSideEffect.ReportError(it))
+                    }
+                }
+        }
+    }
 
     /**
      * [galleryImages] 의 mutable 한 객체를 나타냅니다.
@@ -72,15 +173,185 @@ internal class CreateProblemViewModel @Inject constructor(
      */
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
 
-    fun makeExam() = intent {
-        makeExamUseCase(dummyParam).onSuccess { isSuccess: Boolean ->
-            print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
-        }.onFailure {
-            it.printStackTrace()
+    /** tags 검색 flow. 실질 동작 로직은 apply 내에 명세되어 있다. */
+    private val _getSearchTagsFlow: MutableSharedFlow<String> = MutableSharedFlow<String>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    ).apply {
+        viewModelScope.launch {
+            this@apply.debounce(1500L).collectLatest { query ->
+                val searchResults = getSearchUseCase(query = query, page = 1, type = Search.Tags)
+                    .getOrNull()?.let {
+                        (it as Search.TagSearch).tags
+                            .fastMap(Tag::name)
+                            .take(TagsMaximumCount)
+                            .toImmutableList()
+                    } ?: persistentListOf()
+
+                intent {
+                    reduce {
+                        when (state.findResultType) {
+                            FindResultType.MainTag -> {
+                                state.copy(
+                                    examInformation = state.examInformation.copy(
+                                        searchMainTag = state.examInformation.searchMainTag.copy(
+                                            searchResults = searchResults,
+                                        ),
+                                    ),
+                                )
+                            }
+
+                            FindResultType.SubTags -> {
+                                state.copy(
+                                    additionalInfo = state.additionalInfo.copy(
+                                        searchSubTags = state.additionalInfo.searchSubTags.copy(
+                                            searchResults = searchResults,
+                                        ),
+                                    ),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    fun getCategories() = intent {
+    // 공통
+    /** 시험 컨텐츠를 만든다. */
+    internal fun makeExam() = intent {
+        makeExamUseCase(generateExamBody()).onSuccess { isSuccess: Boolean ->
+            print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
+        }.onFailure {
+            it.printStackTrace()
+            throw it
+        }
+    }
+
+    /** request 를 위해 필요한 [ExamBody] 를 생성한다. */
+    private fun generateExamBody(): ExamBody {
+        val examInformationState = container.stateFlow.value.examInformation
+        val createProblemState = container.stateFlow.value.createProblem
+        val additionalInfoState = container.stateFlow.value.additionalInfo
+
+        val problems = createProblemState.questions.fastMapIndexed { index, question ->
+            Problem(
+                index,
+                question,
+                createProblemState.answers[index],
+                createProblemState.correctAnswers[index],
+                createProblemState.hints[index],
+                createProblemState.memos[index],
+            )
+        }.toPersistentList()
+
+        return ExamBody(
+            title = examInformationState.examTitle,
+            description = examInformationState.examDescription,
+            mainTagId = examInformationState.categories.first().id,
+            subTagIds = additionalInfoState.subTags.map { it.id }.toPersistentList(),
+            categoryId = examInformationState.categorySelection,
+            certifyingStatement = examInformationState.certifyingStatement,
+            thumbnailImageUrl = "${additionalInfoState.thumbnail}",
+            thumbnailType = additionalInfoState.thumbnailType,
+            problems = problems,
+            isPublic = true,
+            buttonTitle = additionalInfoState.takeTitle,
+            // TODO(riflockle7): userId 추후 확인 필요
+            userId = 1,
+        )
+    }
+
+    /** 문제 만들기 화면을 종료한다. */
+    internal fun finishCreateProblem() = intent {
+        postSideEffect(CreateProblemSideEffect.FinishActivity)
+    }
+
+    /** 특정 태그의 닫기 버튼을 클릭한다. 대체로 삭제 로직이 실행된다. */
+    internal fun onClickCloseTag(index: Int = 0) = intent {
+        reduce {
+            when (state.createProblemStep) {
+                CreateProblemStep.ExamInformation -> {
+                    state.copy(
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isMainTagSelected = false,
+                                searchMainTag = searchMainTag.copy(
+                                    results = persistentListOf(),
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    )
+                }
+
+                CreateProblemStep.Search, CreateProblemStep.AdditionalInformation -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newSearchResults = searchSubTags.results
+                                .copy { removeAt(index) }
+                                .toPersistentList()
+                            copy(
+                                isSubTagsAdded = newSearchResults.isNotEmpty(),
+                                searchSubTags = searchSubTags.copy(
+                                    results = persistentListOf(),
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    )
+                }
+
+                else -> duckieClientLogicProblemException(message = "이 화면에는 해당 기능이 없습니다.")
+            }
+        }
+    }
+
+    /** 사진 추가를 위한 작업을 시작 또는 종료한다. */
+    internal fun updatePhotoState(photoState: CreateProblemPhotoState?) = intent {
+        reduce {
+            state.copy(photoState = photoState)
+        }
+    }
+
+    /** 갤러리에서 이미지 목록을 조회한다. */
+    internal fun loadGalleryImages() = intent {
+        loadGalleryImagesUseCase()
+            .onSuccess { images ->
+                postSideEffect(CreateProblemSideEffect.UpdateGalleryImages(images))
+            }
+            .onFailure { exception ->
+                postSideEffect(CreateProblemSideEffect.ReportError(exception))
+            }
+    }
+
+    /** 서버에 이미지 등록을 요청한다. 요청 결과로 URL 값을 가져온다. */
+    private suspend fun requestImage(
+        fileType: FileType,
+        thumbnailUri: Uri,
+        applicationContext: Context?,
+    ): String {
+        requireNotNull(applicationContext)
+        val tempFile = MediaUtil.getOptimizedBitmapFile(applicationContext, thumbnailUri)
+        return fileUploadUseCase(tempFile, fileType).getOrThrow()
+    }
+
+    /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트한다. */
+    internal fun addGalleryImages(images: List<String>) = intent {
+        mutableGalleryImages = persistentListOf(*images.toTypedArray())
+    }
+
+    /** 특정 화면으로 이동한다. */
+    internal fun navigateStep(step: CreateProblemStep) = intent {
+        reduce {
+            state.copy(createProblemStep = step)
+        }
+    }
+
+    // ExamInformation
+    /** 카테고리 정보를 가져온다. */
+    internal fun getCategories() = intent {
         getCategoriesUseCase(false).onSuccess { categories ->
             reduce {
                 state.copy(
@@ -95,17 +366,8 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onClickArrowBack() = intent {
-        postSideEffect(CreateProblemSideEffect.FinishActivity)
-    }
-
-    fun updatePhotoState(photoState: CreateProblemPhotoState?) = intent {
-        reduce {
-            state.copy(photoState = photoState)
-        }
-    }
-
-    fun onClickCategory(index: Int) = intent {
+    /** 카테고리 항목을 클릭한다. */
+    internal fun onClickCategory(index: Int) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -115,11 +377,12 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun onClickExamCategory(scrollPosition: Int) = intent {
+    /** 시험 영역 항목을 등록하기 위한 검색화면으로 진입한다. */
+    internal fun goToSearchMainTag(scrollPosition: Int) = intent {
         reduce {
             state.copy(
                 createProblemStep = CreateProblemStep.Search,
-                findResultType = FindResultType.ExamCategory,
+                findResultType = FindResultType.MainTag,
                 examInformation = state.examInformation.copy(
                     scrollPosition = scrollPosition,
                 ),
@@ -127,13 +390,8 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun navigateStep(step: CreateProblemStep) = intent {
-        reduce {
-            state.copy(createProblemStep = step)
-        }
-    }
-
-    fun setExamTitle(examTitle: String) = intent {
+    /** 시험 제목을 작성한다. */
+    internal fun setExamTitle(examTitle: String) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -143,7 +401,8 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun setExamDescription(examDescription: String) = intent {
+    /** 설명을 작성한다. */
+    internal fun setExamDescription(examDescription: String) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -153,7 +412,8 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun setCertifyingStatement(certifyingStatement: String) = intent {
+    /** 필적 확인 문구를 작성한다. */
+    internal fun setCertifyingStatement(certifyingStatement: String) = intent {
         reduce {
             state.copy(
                 examInformation = state.examInformation.copy(
@@ -163,160 +423,36 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun setTextFieldValue(textFieldValue: String, cursorPosition: Int) = intent {
-        reduce {
-            when (state.findResultType) {
-                FindResultType.ExamCategory -> {
-                    state.copy(
-                        examInformation = state.examInformation.copy(
-                            searchExamCategory = state.examInformation.searchExamCategory.copy(
-                                textFieldValue = textFieldValue,
-                                cursorPosition = cursorPosition,
-                            ),
-                        ),
-                    )
-                }
-
-                FindResultType.Tag -> {
-                    state.copy(
-                        additionalInfo = state.additionalInfo.copy(
-                            searchTag = state.additionalInfo.searchTag.copy(
-                                textFieldValue = textFieldValue,
-                                cursorPosition = cursorPosition,
-                            ),
-                        ),
-                    )
-                }
-            }
-        }
-    }
-
-    fun onClickSearchListHeader() = intent {
-        reduce {
-            when (state.findResultType) {
-                FindResultType.ExamCategory -> {
-                    state.copy(
-                        examInformation = state.examInformation.run {
-                            copy(
-                                isExamCategorySelected = true,
-                                searchExamCategory = searchExamCategory.copy(
-                                    results = persistentListOf(searchExamCategory.textFieldValue),
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    ).also { navigateStep(CreateProblemStep.ExamInformation) }
-                }
-
-                FindResultType.Tag -> {
-                    state.copy(
-                        additionalInfo = state.additionalInfo.run {
-                            val newSearchResults = searchTag.results
-                                .copy { add(searchTag.textFieldValue) }
-                                .toPersistentList()
-                            copy(
-                                isTagsAdded = true,
-                                searchTag = searchTag.copy(
-                                    results = newSearchResults,
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    )
-                }
-            }
-        }
-    }
-
-    fun onClickSearchList(index: Int) = intent {
-        reduce {
-            when (state.findResultType) {
-                FindResultType.ExamCategory -> {
-                    state.copy(
-                        createProblemStep = CreateProblemStep.ExamInformation,
-                        examInformation = state.examInformation.run {
-                            copy(
-                                isExamCategorySelected = true,
-                                searchExamCategory = searchExamCategory.copy(
-                                    results =
-                                    persistentListOf(searchExamCategory.searchResults[index]),
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    )
-                }
-
-                FindResultType.Tag -> {
-                    state.copy(
-                        additionalInfo = state.additionalInfo.run {
-                            val newSearchResults = searchTag.results
-                                .copy { add(searchTag.searchResults[index]) }
-                                .toPersistentList()
-                            copy(
-                                isTagsAdded = true,
-                                searchTag = searchTag.copy(
-                                    results = newSearchResults,
-                                    textFieldValue = "",
-                                ),
-                            )
-                        },
-                    )
-                }
-            }
-        }
-    }
-
-    fun onClickCloseTag(index: Int = 0) = intent {
-        reduce {
-            when (state.createProblemStep) {
-                CreateProblemStep.ExamInformation -> {
-                    state.copy(
-                        examInformation = state.examInformation.run {
-                            copy(
-                                isExamCategorySelected = false,
-                                searchExamCategory = searchExamCategory.copy(
-                                    results = persistentListOf(),
-                                ),
-                            )
-                        },
-                    )
-                }
-
-                CreateProblemStep.Search, CreateProblemStep.AdditionalInformation -> {
-                    state.copy(
-                        additionalInfo = state.additionalInfo.run {
-                            val newSearchResults = searchTag.results
-                                .copy { removeAt(index) }
-                                .toPersistentList()
-                            copy(
-                                isTagsAdded = newSearchResults.isNotEmpty(),
-                                searchTag = searchTag.copy(
-                                    results = newSearchResults,
-                                ),
-                            )
-                        },
-                    )
-                }
-
-                else -> duckieClientLogicProblemException(message = "이 화면에는 해당 기능이 없습니다.")
-            }
-        }
-    }
-
-    fun onSearchTextFocusChanged(isFocused: Boolean) = intent {
-        reduce {
-            state.copy(
-                examInformation = state.examInformation.copy(
-                    examDescriptionFocused = isFocused,
-                ),
-            )
-        }
-    }
-
-    fun examInformationIsValidate(): Boolean {
+    /** 문제 만들기 1단계 화면의 유효성을 체크한다. */
+    internal fun examInformationIsValidate(): Boolean {
         return with(container.stateFlow.value.examInformation) {
-            categorySelection >= 0 && isExamCategorySelected && examTitle.isNotEmpty() && examDescription.isNotEmpty() && certifyingStatement.isNotEmpty()
+            categorySelection >= 0 &&
+                    isMainTagSelected &&
+                    examTitle.isNotEmpty() &&
+                    examDescription.isNotEmpty() &&
+                    certifyingStatement.isNotEmpty()
+        }
+    }
+
+    /** 유저가 입력한 정보를 기반으로 Exam 기본 썸네일 이미지를 가져온다. */
+    internal fun getExamThumbnail() = intent {
+        // 이미 썸네일을 서버로부터 가져온 경우 별다른 처리를 하지 않는다.
+        if (container.stateFlow.value.additionalInfo.thumbnail.toString().isNotEmpty()) {
+            return@intent
+        }
+
+        getExamThumbnailUseCase(
+            examThumbnailBody = container.stateFlow.value.examInformation.examThumbnailBody,
+        ).onSuccess { thumbnail ->
+            reduce {
+                state.copy(
+                    createProblemStep = CreateProblemStep.CreateProblem,
+                    additionalInfo = state.additionalInfo.copy(thumbnail = thumbnail),
+                    defaultThumbnail = thumbnail,
+                )
+            }
+        }.onFailure {
+            print("getExamThumbnail 실패")
         }
     }
 
@@ -330,7 +466,7 @@ internal class CreateProblemViewModel @Inject constructor(
      * [Problem.hint]: 처음 문제를 만들 때 기본 값은 null 값이다.
      * [Problem.memo]: 처음 문제를 만들 때 기본 값은 null 값이다.
      */
-    fun addProblem(answerType: Answer.Type) = intent {
+    internal fun addProblem(answerType: Answer.Type) = intent {
         val newQuestion = Question.Text(text = "")
         val newAnswer = answerType.getDefaultAnswer()
 
@@ -356,7 +492,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** [questionIndex + 1] 번 문제를 삭제한다. */
-    fun removeProblem(questionIndex: Int) = intent {
+    internal fun removeProblem(questionIndex: Int) = intent {
         with(state.createProblem) {
             val newQuestions = questions.copy { removeAt(questionIndex) }
             val newAnswers = answers.copy { removeAt(questionIndex) }
@@ -384,11 +520,11 @@ internal class CreateProblemViewModel @Inject constructor(
      * [특정 문제 타입][questionType]으로 설정되며
      * [텍스트][title], [이미지 소스 목록][urlSource]을 추가적으로 받아 해당 문제를 특정 값으로 초기 설정합니다.
      */
-    fun setQuestion(
+    internal fun setQuestion(
         questionType: Question.Type?,
         questionIndex: Int,
         title: String? = null,
-        urlSource: Uri? = null,
+        urlSource: String? = null,
     ) = intent {
         val newQuestions = state.createProblem.questions.toMutableList()
         val prevQuestion = newQuestions[questionIndex]
@@ -425,8 +561,39 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    /**
+     * [questionIndex + 1] 번 문제를 설정합니다.
+     * 미디어 설정이 필요한 경우에만 사용되며, 미디어 설정 이후 로직은 [setQuestion] 와 같습니다.
+     */
+    internal fun setQuestionWithMedia(
+        questionType: Question.Type?,
+        questionIndex: Int,
+        title: String? = null,
+        urlSource: Uri,
+        applicationContext: Context,
+    ) = viewModelScope.launch {
+        urlSource.run {
+            runCatching {
+                requestImage(
+                    when (questionType) {
+                        Question.Type.Image -> FileType.ProblemQuestionImage
+                        Question.Type.Audio -> FileType.ProblemQuestionAudio
+                        Question.Type.Video -> FileType.ProblemQuestionVideo
+                        else -> duckieClientLogicProblemException()
+                    },
+                    urlSource,
+                    applicationContext,
+                )
+            }.onSuccess { serverUrl ->
+                setQuestion(questionType, questionIndex, title, serverUrl)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
+        }
+    }
+
     /** [questionIndex + 1] 번 문제의 문제 타입을 [특정 답안 타입][answerType]으로 변경합니다. */
-    fun editAnswersType(
+    internal fun editAnswersType(
         questionIndex: Int,
         answerType: Answer.Type,
     ) = intent {
@@ -453,12 +620,12 @@ internal class CreateProblemViewModel @Inject constructor(
      * [특정 답안 타입][answerType]으로 설정되며,
      * [텍스트][answer], [이미지 소스][urlSource]을 추가적으로 받아 특정 답안을 해당 값으로 초기 설정합니다.
      */
-    fun setAnswer(
+    internal fun setAnswer(
         questionIndex: Int,
         answerIndex: Int,
         answerType: Answer.Type,
         answer: String? = null,
-        urlSource: Uri? = null,
+        urlSource: String? = null,
     ) = intent {
         val newAnswers = state.createProblem.answers.toMutableList()
 
@@ -484,8 +651,31 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    /**
+     * [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 설정합니다.
+     * 이미지 설정이 필요한 경우에만 사용되며, 이미지 설정 이후 로직은 [setAnswer] 와 같습니다.
+     */
+    internal fun setAnswerWithImage(
+        questionIndex: Int,
+        answerIndex: Int,
+        answerType: Answer.Type,
+        answer: String? = null,
+        urlSource: Uri,
+        applicationContext: Context,
+    ) = viewModelScope.launch {
+        urlSource.run {
+            runCatching {
+                requestImage(FileType.ProblemAnswer, urlSource, applicationContext)
+            }.onSuccess { serverUrl ->
+                setAnswer(questionIndex, answerIndex, answerType, answer, serverUrl)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
+        }
+    }
+
     /** [questionIndex + 1] 번 문제의 [answerIndex + 1] 번 답안을 삭제 합니다. */
-    fun removeAnswer(
+    internal fun removeAnswer(
         questionIndex: Int,
         answerIndex: Int,
     ) = intent {
@@ -529,21 +719,17 @@ internal class CreateProblemViewModel @Inject constructor(
         answerIndex: Int,
         answerType: Answer.Type,
         answer: String?,
-        urlSource: Uri?,
+        urlSource: String?,
     ): Answer {
         return when (answerType) {
             Answer.Type.ShortAnswer -> this.toShort(answer)
             Answer.Type.Choice -> this.toChoice(answerIndex, answer)
-            Answer.Type.ImageChoice -> this.toImageChoice(
-                answerIndex,
-                answer,
-                urlSource?.let { "$this" },
-            )
+            Answer.Type.ImageChoice -> this.toImageChoice(answerIndex, answer, urlSource)
         }
     }
 
     /** [questionIndex + 1] 번 문제의 [정답][correctAnswer]을 설정합니다. */
-    fun setCorrectAnswer(
+    internal fun setCorrectAnswer(
         questionIndex: Int,
         correctAnswer: String,
     ) = intent {
@@ -563,7 +749,7 @@ internal class CreateProblemViewModel @Inject constructor(
      * [questionIndex + 1] 번 문제의 답안을 추가합니다.
      * [답안의 유형][answerType]에 맞춰 값이 추가 됩니다.
      */
-    fun addAnswer(
+    internal fun addAnswer(
         questionIndex: Int,
         answerType: Answer.Type,
     ) = intent {
@@ -599,7 +785,8 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    fun createProblemIsValidate(): Boolean {
+    /** 문제 만들기 2단계 화면의 유효성을 체크한다. */
+    internal fun createProblemIsValidate(): Boolean {
         return with(container.stateFlow.value.createProblem) {
             val questionsValidate = this.questions.asSequence()
                 .map { it.validate() }
@@ -616,17 +803,43 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     // AdditionalInfo
-    fun setThumbnail(thumbnail: Any?) = intent {
+    /**
+     * 카테고리 썸네일을 선택한다.
+     * 선택 후 동작해야하는 로직 (ex. API 요청 등) 을 수행한다.
+     */
+    internal fun selectThumbnail(
+        thumbnailType: ThumbnailType,
+        thumbnailUri: Uri? = null,
+        applicationContext: Context? = null,
+    ) = viewModelScope.launch {
+        thumbnailUri?.let {
+            runCatching {
+                requestImage(FileType.ExamThumbnail, thumbnailUri, applicationContext)
+            }.onSuccess { serverUrl ->
+                setThumbnailUrl(thumbnailType, serverUrl)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
+        } ?: setThumbnailUrl(thumbnailType)
+    }
+
+    /** 카테고리 썸네일을 정한다. */
+    private suspend fun setThumbnailUrl(
+        thumbnailType: ThumbnailType,
+        thumbnailUri: String? = null,
+    ) = intent {
         reduce {
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
-                    thumbnail = thumbnail,
+                    thumbnail = thumbnailUri ?: state.defaultThumbnail,
+                    thumbnailType = thumbnailType,
                 ),
             )
         }
     }
 
-    fun setButtonTitle(buttonTitle: String) = intent {
+    /** 시험 응시하기 버튼 제목을 정한다. */
+    internal fun setButtonTitle(buttonTitle: String) = intent {
         reduce {
             state.copy(
                 additionalInfo = state.additionalInfo.copy(
@@ -636,132 +849,177 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
-    /** 갤러리에서 이미지 목록을 조회합니다. */
-    fun loadGalleryImages() = intent {
-        loadGalleryImagesUseCase()
-            .onSuccess { images ->
-                postSideEffect(CreateProblemSideEffect.UpdateGalleryImages(images))
-            }
-            .onFailure { exception ->
-                reduce {
-                    state.copy(error = Error(exception))
-                }
-                postSideEffect(CreateProblemSideEffect.ReportError(exception))
-            }
-    }
-
-    /** `PhotoPicker` 에서 표시할 이미지 목록을 업데이트합니다. */
-    internal fun addGalleryImages(images: List<String>) = intent {
-        mutableGalleryImages = persistentListOf(*images.toTypedArray())
-    }
-
+    /** 문제 만들기 3단계 화면의 유효성을 체크한다. */
     private fun additionInfoIsValidate(): Boolean {
         return with(container.stateFlow.value.additionalInfo) {
-            thumbnail != null && takeTitle.isNotEmpty() && tags.isNotEmpty()
+            thumbnail.toString().isNotEmpty()
         }
     }
 
-    fun isAllFieldsNotEmpty(): Boolean {
+    /** 문제 만들기 전체 화면의 유효성을 체크한다. */
+    internal fun isAllFieldsNotEmpty(): Boolean {
         return examInformationIsValidate() && createProblemIsValidate() && additionInfoIsValidate()
     }
 
-    fun onClickTag() = intent {
+    /** 태그 항목들을 등록하기 위한 검색화면으로 진입한다. */
+    internal fun goToSearchSubTags() = intent {
         reduce {
             state.copy(
                 createProblemStep = CreateProblemStep.Search,
-                findResultType = FindResultType.Tag,
+                findResultType = FindResultType.SubTags,
             )
         }
     }
 
-    fun exitSearchScreen() = intent {
+    // Search
+    /** Tag 화면에서 [입력한 값][query] 에 맞는 검색 목록 값을 가져온다. */
+    private suspend fun searchTags(query: String) {
+        _getSearchTagsFlow.emit(query)
+    }
+
+    /** 검색 입력 필드의 값을 설정(= 갱신) 한다. */
+    internal fun setTextFieldValue(textFieldValue: String) = intent {
         reduce {
             when (state.findResultType) {
-                FindResultType.ExamCategory -> state.copy(
+                FindResultType.MainTag -> {
+                    state.copy(
+                        examInformation = state.examInformation.copy(
+                            searchMainTag = state.examInformation.searchMainTag.copy(
+                                textFieldValue = textFieldValue,
+                            ),
+                        ),
+                    )
+                }
+
+                FindResultType.SubTags -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.copy(
+                            searchSubTags = state.additionalInfo.searchSubTags.copy(
+                                textFieldValue = textFieldValue,
+                            ),
+                        ),
+                    )
+                }
+            }
+        }.run { searchTags(textFieldValue) }
+    }
+
+    /** 추천 검색 목록에서 헤더(1번째 항목)을 클릭한다. */
+    internal suspend fun onClickSearchListHeader(): Boolean {
+        val state = container.stateFlow.value
+        val tagText = when (state.findResultType) {
+            FindResultType.MainTag -> state.examInformation.searchMainTag.textFieldValue
+            FindResultType.SubTags -> state.additionalInfo.searchSubTags.textFieldValue
+        }
+
+        runCatching { tagRepository.create(tagText) }.getOrNull()?.run {
+            exitSearchScreenAfterAddTag(this)
+            return true
+        } ?: return false
+    }
+
+    /** 추천 검색 목록에서 1번째 이외의 항목을 클릭한다. */
+    internal suspend fun onClickSearchList(index: Int): Boolean {
+        val state = container.stateFlow.value
+        val tagText = when (state.findResultType) {
+            FindResultType.MainTag ->
+                state.examInformation.searchMainTag.searchResults[index]
+            FindResultType.SubTags -> state.additionalInfo.searchSubTags.searchResults[index]
+        }
+
+        runCatching { tagRepository.create(tagText) }.getOrNull()?.run {
+            exitSearchScreenAfterAddTag(this)
+            return true
+        } ?: return false
+    }
+
+    /**
+     * 검색 화면을 종료한다. 태그 추가를 완료한 후 실행되어야 한다.
+     * // TODO(riflockle7): 추후 [exitSearchScreen] 와 합칠 수 있을지 확인하기
+     */
+    private fun exitSearchScreenAfterAddTag(newTag: Tag) = intent {
+        reduce {
+            when (state.findResultType) {
+                FindResultType.MainTag -> {
+                    state.copy(
+                        createProblemStep = CreateProblemStep.ExamInformation,
+                        examInformation = state.examInformation.run {
+                            copy(
+                                isMainTagSelected = true,
+                                searchMainTag = searchMainTag.copy(
+                                    results = persistentListOf(newTag),
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    )
+                }
+
+                FindResultType.SubTags -> {
+                    state.copy(
+                        additionalInfo = state.additionalInfo.run {
+                            val newSearchResults = searchSubTags.results
+                                .copy { add(newTag) }
+                                .toPersistentList()
+                            copy(
+                                isSubTagsAdded = true,
+                                searchSubTags = searchSubTags.copy(
+                                    results = newSearchResults,
+                                    textFieldValue = "",
+                                ),
+                            )
+                        },
+                    )
+                }
+            }
+        }
+    }
+
+    /** 검색 입력 필드의 focus 를 변경한다. */
+    internal fun onSearchTextFocusChanged(isFocused: Boolean) = intent {
+        reduce {
+            state.copy(
+                examInformation = state.examInformation.copy(
+                    examDescriptionFocused = isFocused,
+                ),
+            )
+        }
+    }
+
+    /** 검색 화면을 종료한다. */
+    internal fun exitSearchScreen(isComplete: Boolean = false) = intent {
+        reduce {
+            when (state.findResultType) {
+                FindResultType.MainTag -> state.copy(
                     createProblemStep = CreateProblemStep.ExamInformation,
+                    examInformation = state.examInformation.run {
+                        copy(
+                            isMainTagSelected = false,
+                            searchMainTag = searchMainTag.copy(
+                                results = persistentListOf(),
+                                textFieldValue = "",
+                            ),
+                        )
+                    },
                 )
 
-                FindResultType.Tag -> state.copy(
+                FindResultType.SubTags -> state.copy(
                     createProblemStep = CreateProblemStep.AdditionalInformation,
+                    additionalInfo = state.additionalInfo.run {
+                        copy(
+                            isSubTagsAdded = isComplete,
+                            searchSubTags = searchSubTags.copy(
+                                results = if (isComplete) {
+                                    searchSubTags.results
+                                } else {
+                                    persistentListOf()
+                                },
+                                textFieldValue = "",
+                            ),
+                        )
+                    },
                 )
             }
         }
     }
 }
-
-private val dummyParam = ExamBody(
-    // TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
-    title = "제 1회 도로 패션영역",
-    description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
-    mainTagId = 3,
-    subTagIds = persistentListOf(5, 15, 2, 3, 4),
-    categoryId = 3,
-    thumbnailImageUrl = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1669793968813",
-    certifyingStatement = "열심히 살지 말라고 하셨다",
-    thumbnailType = ThumbnailType.Image,
-    buttonTitle = "TestText",
-    isPublic = true,
-    problems = persistentListOf(
-        Problem(
-            id = 1,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 2,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 3,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 4,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 5,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-    ),
-    userId = 1,
-)

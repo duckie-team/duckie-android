@@ -21,6 +21,8 @@ plugins {
 android {
     namespace = "team.duckie.app.android"
 
+    // TODO(sungbin): release signing key 등록
+
     buildFeatures {
         buildConfig = true
     }

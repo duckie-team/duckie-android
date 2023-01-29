@@ -10,6 +10,8 @@ package team.duckie.app.android.data.search.mapper
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.search.model.SearchData
+import team.duckie.app.android.data.tag.mapper.toDomain
+import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.search.model.Search
@@ -28,6 +30,12 @@ internal fun SearchData.toDomain() = when (this) {
     is SearchData.UserSearchData -> Search.UserSearch(
         users = users?.fastMap(UserResponse::toDomain)
             ?: duckieResponseFieldNpe("${this::class.java.simpleName}.users"),
+        page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
+    )
+
+    is SearchData.TagSearchData -> Search.TagSearch(
+        tags = tags?.fastMap(TagData::toDomain)
+            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tags"),
         page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
     )
 }

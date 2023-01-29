@@ -7,15 +7,19 @@
 
 <resources>
     <string name="create_problem_permission_toast_message">접근 권한이 없습니다.\n앱 설정에서 갤러리 권한을 허용해 주세요.</string>
+    <string name="network_error">일시적인 오류가 발생했습니다. 관리자에게 문의해주세요.</string>
+    <string name="get_exam_authorized_error">해당 시험을 수정할 수 있는 권한이 없습니다.</string>
+    <string name="get_exam_not_found_error">찾을 수 없는 시험입니다.</string>
 
     <string name="create_problem">"문제 만들기"</string>
     <string name="cancel">취소</string>
     <string name="answer">정답</string>
     <string name="ok">확인</string>
     <string name="next">"다음"</string>
+    <string name="complete">완료</string>
     <string name="category_title">"카테고리"</string>
-    <string name="exam_category">"시험 영역"</string>
-    <string name="find_exam_category">"시험 영역 찾기"</string>
+    <string name="main_tag">"시험 영역"</string>
+    <string name="find_main_tag">"시험 영역 찾기"</string>
     <string name="exam_title">"시험 제목"</string>
     <string name="input_exam_title">"시험 제목을 입력해 주세요"</string>
     <string name="exam_description">"설명</string>
@@ -23,7 +27,7 @@
     <string name="certifying_statement">"필적 확인 문구</string>
     <string name="input_certifying_statement">"필적확인 문구를 입력해 주세요"</string>
     <string name="add_also">+%s 추가하기</string>
-    <string name="search_exam_category_placeholder">"시험 영역으로 설정할 태그를 검색해 주세요."</string>
+    <string name="search_main_tag_placeholder">"시험 영역으로 설정할 태그를 검색해 주세요."</string>
 
     <string name="create_problem_bottom_sheet_title_choice_text">객관식/글</string>
     <string name="create_problem_bottom_sheet_title_choice_media">객관식/사진</string>
@@ -41,6 +45,6 @@
     <string name="additional_information_thumbnail_select">썸네일 종류 선택</string>
     <string name="additional_information_take_title">시험 응시하기 버튼</string>
     <string name="additional_information_take_input_hint">응시버튼 커스텀을 해보세요</string>
-    <string name="additional_information_tag_title">태그 추가</string>
-    <string name="additional_information_tag_input_hint"># 태그입력</string>
+    <string name="additional_information_sub_tags_title">태그 추가</string>
+    <string name="additional_information_sub_tags_placeholder"># 태그입력</string>
 </resources>
