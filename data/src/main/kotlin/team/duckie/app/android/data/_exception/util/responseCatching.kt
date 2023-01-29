@@ -18,15 +18,18 @@ internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
     response: HttpResponse,
     parse: (body: DataModel) -> DomainModel,
 ): DomainModel {
-    return try {
+    if(response.status.value < 400) {
         val body: DataModel = response.body()
-        parse(body)
-    } catch (throwable: Throwable) {
-        val errorBody: ExceptionBody = response.body()
-        errorBody.throwing(throwable = throwable)
+        return parse(body)
+    } else {
+        val statusCode = response.status.value
+        val errorBody: ExceptionBody = response.body<ExceptionBody>().copy(statusCode = statusCode)
+        // TODO(riflockle7): 의미없는 Throwable 생성인 듯 하여 제거 고민
+        errorBody.throwing(throwable = Throwable("response status error ${errorBody.statusCode}"))
     }
 }
 
+// TODO(riflockle7): statusCode 에 따라 에러 핸들링 또는 데이터 반환하도록 해주어야 함
 @Suppress("TooGenericExceptionCaught")
 internal inline fun <DomainModel> responseCatching(
     response: String,
