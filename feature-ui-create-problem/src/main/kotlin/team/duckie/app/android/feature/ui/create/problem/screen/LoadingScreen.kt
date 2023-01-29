@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
@@ -25,9 +23,8 @@ internal fun LoadingScreen(
     viewModel: CreateProblemViewModel = activityViewModel(),
     modifier: Modifier,
 ) {
-    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
-        coroutineScope.launch { viewModel.initState() }
+        viewModel.initState()
     }
 
     Column(
