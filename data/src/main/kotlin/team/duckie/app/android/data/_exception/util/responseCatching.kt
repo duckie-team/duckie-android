@@ -34,6 +34,7 @@ internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
 // TODO(riflockle7): statusCode 에 따라 에러 핸들링 또는 데이터 반환하도록 해주어야 함
 @Suppress("TooGenericExceptionCaught")
 internal inline fun <DomainModel> responseCatching(
+    statusCode: Int,
     response: String,
     parse: (body: String) -> DomainModel,
 ): DomainModel {
@@ -43,6 +44,7 @@ internal inline fun <DomainModel> responseCatching(
         // TODO(riflockle7): 개발 도중 에러를 확인하기 위해 추가한 코드. 추후 논의를 통해 제거 필요
         throwable.printStackTrace()
         val errorBody = jsonMapper.readValue(response, ExceptionBody::class.java)
+            .copy(statusCode = statusCode.toDuckieStatusCode())
         errorBody.throwing(throwable = throwable)
     }
 }
