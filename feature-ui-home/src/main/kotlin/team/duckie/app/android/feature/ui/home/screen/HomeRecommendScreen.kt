@@ -40,6 +40,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
 import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R

@@ -9,10 +9,10 @@ package team.duckie.app.android.data.recommendation.mapper
 
 import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.data.category.mapper.toDomain
+import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.recommendation.model.RecommendationJumbotronItemData
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
-import team.duckie.app.android.data.exam.mapper.toDomainForNonProfile
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.recommendation.model.RecommendationData
 import team.duckie.app.android.data.recommendation.model.RecommendationItemData
@@ -62,6 +62,6 @@ internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotro
 internal fun RecommendationItemData.toDomain() = RecommendationItem(
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
     tag = tag?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tag"),
-    exams = exams?.fastMap(ExamData::toDomainForNonProfile)
+    exams = exams?.fastMap(ExamData::toDomain)
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.items"),
 )

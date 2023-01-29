@@ -68,30 +68,6 @@ internal fun ExamData.toDomain() = Exam(
 )
 
 @OutOfDateApi
-internal fun ExamData.toDomainForNonProfile() = Exam(
-    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
-    title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
-    description = description
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.description"),
-    thumbnailUrl = thumbnailUrl,
-    buttonTitle = buttonTitle
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.buttonTitle"),
-    certifyingStatement = certifyingStatement
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.certifyingStatement"),
-    solvedCount = solvedCount
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.solvedCount"),
-    answerRate = answerRate ?: duckieResponseFieldNpe("${this::class.java.simpleName}.answerRate"),
-    category = category?.toDomain()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.category"),
-    mainTag = mainTag?.toDomain()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.mainTag"),
-    subTags = subTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
-    problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList() ?: persistentListOf(),
-    type = type ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
-    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
-)
-
-@OutOfDateApi
 internal fun ProblemData.toDomain() = Problem(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     question = question?.toDomain()

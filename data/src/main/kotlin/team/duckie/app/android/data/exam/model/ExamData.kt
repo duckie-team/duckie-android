@@ -25,9 +25,6 @@ internal data class ExamData(
     @field:JsonProperty("thumbnailUrl")
     val thumbnailUrl: String? = null,
 
-    @field:JsonProperty("type")
-    val type: String? = null,
-
     @field:JsonProperty("buttonTitle")
     val buttonTitle: String? = null,
 
@@ -39,9 +36,6 @@ internal data class ExamData(
 
     @field:JsonProperty("answerRate")
     val answerRate: Float? = null,
-
-    @field:JsonProperty("user")
-    val user: UserResponse? = null,
 
     @field:JsonProperty("category")
     val category: CategoryData? = null,

@@ -22,8 +22,6 @@ data class User(
     val nickname: String,
     val profileImageUrl: String,
     val duckPower: DuckPower?,
-    val favoriteTags: ImmutableList<Tag>?,
-    val favoriteCategories: ImmutableList<Category>?,
-) {
-    @JsonIgnore
-    var temporaryNickname: String? = null
+    val favoriteTags: List<Tag>?,
+    val favoriteCategories: List<Category>?,
+) : Parcelable

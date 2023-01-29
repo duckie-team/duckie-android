@@ -16,13 +16,15 @@ import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
+import team.duckie.app.android.data.user.model.DuckPowerResponse
+import team.duckie.app.android.data.user.model.UserFollowingRecommendationsResponse
+import team.duckie.app.android.data.user.model.UserFollowingResponse
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.model.UserFollowingRecommendations
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.fastMap
 
 private const val NicknameSuffixMaxLength = 10_000
@@ -33,7 +35,7 @@ internal fun UserResponse.toDomain() = User(
     nickname = nickName
         ?: "덕키즈_${Random.nextInt(NicknameSuffixMaxLength).toString().padStart(NicknameSuffixLength, '0')}",
     profileImageUrl = profileImageUrl ?: duckieResponseFieldNpe("profileImageUrl"),
-    tier = DuckieTier.values().toList().fastFirstOrNull { it.level == tier } ?: DuckieTier.DuckKid,
+    duckPower = duckPower?.toDomain() ?: duckieResponseFieldNpe("duckPower"),
     favoriteTags = favoriteTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
     favoriteCategories = favoriteCategories?.fastMap(CategoryData::toDomain)?.toImmutableList()
         ?: persistentListOf(),
