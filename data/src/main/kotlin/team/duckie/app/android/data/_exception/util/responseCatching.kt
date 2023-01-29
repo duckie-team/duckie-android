@@ -38,13 +38,12 @@ internal inline fun <DomainModel> responseCatching(
     response: String,
     parse: (body: String) -> DomainModel,
 ): DomainModel {
-    return try {
-        parse(response)
-    } catch (throwable: Throwable) {
-        // TODO(riflockle7): 개발 도중 에러를 확인하기 위해 추가한 코드. 추후 논의를 통해 제거 필요
-        throwable.printStackTrace()
+    if(statusCode < 400) {
+        return parse(response)
+    } else {
         val errorBody = jsonMapper.readValue(response, ExceptionBody::class.java)
             .copy(statusCode = statusCode.toDuckieStatusCode())
-        errorBody.throwing(throwable = throwable)
+        // TODO(riflockle7): 의미없는 Throwable 생성인 듯 하여 제거 고민
+        errorBody.throwing(throwable = Throwable("response status error ${errorBody.statusCode}"))
     }
 }
