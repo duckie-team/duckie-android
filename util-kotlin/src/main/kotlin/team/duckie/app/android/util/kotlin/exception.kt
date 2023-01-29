@@ -24,6 +24,7 @@ private const val BadRequestCode = 400
 private const val UnAuthorizedCode = 401
 private const val ForbiddenCode = 403
 private const val NotFoundCode = 404
+private const val ConflictCode = 409
 private const val InternalServerCode = 500
 
 /** 서버 응답 StatusCode */
@@ -34,6 +35,7 @@ enum class DuckieStatusCode {
     UnAuthorized,
     Forbidden,
     NotFound,
+    Conflict,
     InternalServer,
 }
 
@@ -43,6 +45,7 @@ fun Int.toDuckieStatusCode(): DuckieStatusCode = when (this) {
     UnAuthorizedCode -> DuckieStatusCode.UnAuthorized
     ForbiddenCode -> DuckieStatusCode.Forbidden
     NotFoundCode -> DuckieStatusCode.NotFound
+    ConflictCode -> DuckieStatusCode.Conflict
     InternalServerCode -> DuckieStatusCode.InternalServer
     else -> DuckieStatusCode.Unknown
 }
