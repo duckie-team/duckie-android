@@ -49,9 +49,7 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
         val response = client.get {
             url("/exams/$id")
         }
-        return responseCatching(response.bodyAsText()) { body ->
-            body.toJsonObject<ExamData>().toDomain()
-        }
+        return responseCatching(response, ExamData::toDomain)
     }
 
     @OutOfDateApi

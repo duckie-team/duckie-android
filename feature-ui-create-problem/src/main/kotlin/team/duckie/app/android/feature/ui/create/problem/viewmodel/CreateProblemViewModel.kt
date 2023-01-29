@@ -60,6 +60,8 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.util.android.image.MediaUtil
+import team.duckie.app.android.util.kotlin.DuckieResponseException
+import team.duckie.app.android.util.kotlin.DuckieStatusCode
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
@@ -148,12 +150,17 @@ internal class CreateProblemViewModel @Inject constructor(
                 }
                 .onFailure {
                     intent {
-                        reduce {
-                            state.copy(
-                                createProblemStep = CreateProblemStep.Error,
-                                isEditMode = true,
-                            )
-                        }
+                        if (
+                            it is DuckieResponseException &&
+                            it.statusCode == DuckieStatusCode.UnAuthorized
+                        )
+                            reduce {
+                                state.copy(
+                                    createProblemStep = CreateProblemStep.Error,
+                                    isEditMode = true,
+                                )
+                            }
+
                         postSideEffect(CreateProblemSideEffect.ReportError(it))
                     }
                 }

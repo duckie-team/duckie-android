@@ -65,8 +65,6 @@ class CreateProblemActivity : BaseActivity() {
                 viewModel.container.sideEffectFlow
                     .onEach(::handleSideEffect)
                     .launchIn(this)
-
-                viewModel.initState()
             }
 
             QuackTheme {
