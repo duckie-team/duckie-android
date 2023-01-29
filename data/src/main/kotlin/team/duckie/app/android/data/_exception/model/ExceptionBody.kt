@@ -9,12 +9,13 @@ package team.duckie.app.android.data._exception.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import team.duckie.app.android.util.kotlin.DuckieStatusCode
 import team.duckie.app.android.util.kotlin.duckieResponseException
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 internal data class ExceptionBody(
     @JsonIgnore
-    val statusCode: Int? = null,
+    val statusCode: DuckieStatusCode = DuckieStatusCode.Unknown,
 
     @field:JsonProperty("code")
     val code: String? = null,
@@ -28,8 +29,8 @@ internal data class ExceptionBody(
 
 internal fun ExceptionBody.throwing(throwable: Throwable): Nothing {
     duckieResponseException(
-        statusCode = statusCode ?: duckieResponseFieldNpe("statusCode"),
-        message = message,
+        statusCode = statusCode,
+        serverMessage = message,
         code = code ?: duckieResponseFieldNpe("code"),
         errors = errors?.filterNotNull(),
         throwable = throwable,

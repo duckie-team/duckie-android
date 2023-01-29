@@ -12,6 +12,7 @@ import io.ktor.client.statement.HttpResponse
 import team.duckie.app.android.data._exception.model.ExceptionBody
 import team.duckie.app.android.data._exception.model.throwing
 import team.duckie.app.android.data._util.jsonMapper
+import team.duckie.app.android.util.kotlin.toDuckieStatusCode
 
 @Suppress("TooGenericExceptionCaught")
 internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
@@ -23,7 +24,8 @@ internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
         return parse(body)
     } else {
         val statusCode = response.status.value
-        val errorBody: ExceptionBody = response.body<ExceptionBody>().copy(statusCode = statusCode)
+        val errorBody: ExceptionBody = response.body<ExceptionBody>()
+            .copy(statusCode = statusCode.toDuckieStatusCode())
         // TODO(riflockle7): 의미없는 Throwable 생성인 듯 하여 제거 고민
         errorBody.throwing(throwable = Throwable("response status error ${errorBody.statusCode}"))
     }
