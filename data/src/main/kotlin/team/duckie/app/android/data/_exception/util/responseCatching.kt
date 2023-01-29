@@ -24,10 +24,9 @@ internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
         return parse(body)
     } else {
         val statusCode = response.status.value
-        val errorBody: ExceptionBody = response.body<ExceptionBody>()
+        response.body<ExceptionBody>()
             .copy(statusCode = statusCode.toDuckieStatusCode())
-        // TODO(riflockle7): 의미없는 Throwable 생성인 듯 하여 제거 고민
-        errorBody.throwing(throwable = Throwable("response status error ${errorBody.statusCode}"))
+            .throwing()
     }
 }
 
@@ -41,9 +40,8 @@ internal inline fun <DomainModel> responseCatching(
     if(statusCode < 400) {
         return parse(response)
     } else {
-        val errorBody = jsonMapper.readValue(response, ExceptionBody::class.java)
+        jsonMapper.readValue(response, ExceptionBody::class.java)
             .copy(statusCode = statusCode.toDuckieStatusCode())
-        // TODO(riflockle7): 의미없는 Throwable 생성인 듯 하여 제거 고민
-        errorBody.throwing(throwable = Throwable("response status error ${errorBody.statusCode}"))
+            .throwing()
     }
 }

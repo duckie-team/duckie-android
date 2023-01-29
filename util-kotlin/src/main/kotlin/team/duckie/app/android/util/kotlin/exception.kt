@@ -46,14 +46,12 @@ fun Int.toDuckieStatusCode(): DuckieStatusCode = when (this) {
  * @param serverMessage 예외 메시지. 선택으로 값을 받습니다.
  * @param code 예외 코드. 필수로 값을 받습니다.
  * @param errors 발생한 에러 목록. 선택으로 값을 받습니다
- * @param throwable 실제로 앱 내에서 발생한 throwable 원본
  */
 class DuckieResponseException(
     serverMessage: String? = null,
     val statusCode: DuckieStatusCode,
     val code: String,
     val errors: List<String>? = null,
-    val throwable: Throwable,
 ) : DuckieException(code) {
     override val message = "DuckieResponseException: $code".runIf(serverMessage != null) { plus(" - $serverMessage") }
     override fun toString(): String {
@@ -66,14 +64,12 @@ fun duckieResponseException(
     serverMessage: String? = null,
     code: String,
     errors: List<String>? = null,
-    throwable: Throwable,
 ): Nothing {
     throw DuckieResponseException(
         statusCode = statusCode,
         serverMessage = serverMessage,
         code = code,
         errors = errors,
-        throwable = throwable,
     )
 }
 
