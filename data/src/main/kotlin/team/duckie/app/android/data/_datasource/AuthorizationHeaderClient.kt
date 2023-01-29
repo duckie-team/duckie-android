@@ -60,7 +60,6 @@ private object AuthorizationHeaderClient {
     private const val ClientName = "android"
 
     operator fun invoke() = HttpClient(engineFactory = CIO) {
-        expectSuccess = true
         engine {
             endpoint {
                 connectTimeout = MaxTimeoutMillis
