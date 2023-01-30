@@ -104,7 +104,7 @@ internal fun SearchResultScreen(
                         profileImgUrl = item.profileImgUrl,
                         nickname = item.nickname,
                         favoriteTag = item.favoriteTag,
-                        tier = item.duckEffort,
+                        tier = item.tier,
                         isFollowing = item.isFollowing,
                         onClickFollowing = {
                             // TODO(limsaehyun): following request

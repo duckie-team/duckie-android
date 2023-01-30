@@ -50,7 +50,7 @@ internal fun UserFollowingRecommendationsResponse.toDomain() = UserFollowingReco
 
 internal fun UserFollowingResponse.toDomain() = UserFollowing(
     followingRecommendations = followingRecommendations?.fastMap(UserFollowingRecommendationsResponse::toDomain)
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.followingRecommendations")
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.followingRecommendations"),
 )
 
 internal fun DuckPowerResponse.toDomain() = DuckPower(

@@ -21,7 +21,9 @@ import team.duckie.app.android.domain.tag.model.Tag
 enum class ExamType(
     val original: String,
 ) {
-    Text("text");
+    Text(
+        original = "text",
+    );
 
     companion object {
         fun toExamType(type: String): ExamType {

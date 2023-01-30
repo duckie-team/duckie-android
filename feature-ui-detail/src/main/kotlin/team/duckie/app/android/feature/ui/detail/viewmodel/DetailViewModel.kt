@@ -31,7 +31,6 @@ import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.constant.DuckieTier
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.repository.UserRepository
@@ -65,6 +64,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    @OptIn(OutOfDateApi::class)
     fun followUser() = viewModelScope.launch {
         val detailState = container.stateFlow.value
         require(detailState is DetailState.Success)

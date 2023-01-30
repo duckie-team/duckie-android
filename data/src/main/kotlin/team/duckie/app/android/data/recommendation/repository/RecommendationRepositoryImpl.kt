@@ -28,6 +28,7 @@ import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotr
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import team.duckie.app.android.domain.user.model.UserFollowing
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.fastMap
 
@@ -99,6 +100,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
     }
 
     // TODO(limsaehyun): API가 불안정한 관계로 MockRepository 으로 구현
+    @AllowMagicNumber
     @ExperimentalApi
     override suspend fun fetchRecommendFollowing(): UserFollowing {
         val response = UserFollowingResponse(
@@ -122,11 +124,11 @@ class RecommendationRepositoryImpl : RecommendationRepository {
                                     id = 1,
                                     name = "도로패션",
                                 ),
-                            )
+                            ),
                         )
-                    }
+                    },
                 )
-            }
+            },
         )
 
         return response.toDomain()

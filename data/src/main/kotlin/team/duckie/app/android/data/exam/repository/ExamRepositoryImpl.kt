@@ -32,6 +32,7 @@ import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
@@ -97,7 +98,8 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
         }
     }
 
-    // TODO(limsaehyun): API 불안정한 상태로 Mock 으로 구현
+    // TODO(limsaehyun): API 불안정하여 Mock 으로 구현
+    @AllowMagicNumber
     @OutOfDateApi
     override suspend fun getExamFollowing(): List<Exam> {
 //        val response = client.get {

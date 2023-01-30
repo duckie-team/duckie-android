@@ -25,7 +25,7 @@ internal data class SearchResultState(
         val userId: Int,
         val profileImgUrl: String,
         val nickname: String,
-        val duckEffort: Int,
+        val tier: String,
         val favoriteTag: String,
         val isFollowing: Boolean = false,
     )

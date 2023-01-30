@@ -12,10 +12,8 @@ import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import team.duckie.app.android.data._util.buildJson
-import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.constant.DuckieTier
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 

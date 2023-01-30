@@ -8,23 +8,16 @@
 @file:Suppress(
     "MaxLineLength",
     "MagicNumber",
+    "TooGenericExceptionCaught",
 ) // TODO(limsaehyun): 더미데이터를 위해 임시로 구현, 추후에 삭제 필요
 
 package team.duckie.app.android.data.recommendation.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.client.request.url
-import io.ktor.client.statement.bodyAsText
-import kotlinx.collections.immutable.ImmutableList
 import kotlin.math.max
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
-import team.duckie.app.android.data._datasource.client
-import team.duckie.app.android.data._exception.util.responseCatching
-import team.duckie.app.android.data._util.toJsonObject
 import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.recommendation.mapper.toDomain
@@ -136,17 +129,4 @@ class RecommendationPagingSource : PagingSource<Int, RecommendationItem>() {
     }
 
     private fun ensureValidKey(key: Int) = max(STARTING_KEY, key)
-
-    @ExperimentalApi
-    private suspend fun fetchRecommendations(page: Int): ImmutableList<RecommendationItem> {
-        return dummyReturn(page).toDomain().recommendations
-        val response = client.get {
-            url("/recommendations")
-            parameter("page", page)
-        }
-
-        return responseCatching(response.bodyAsText()) { body ->
-            body.toJsonObject<RecommendationData>().toDomain().recommendations
-        }
-    }
 }

@@ -99,17 +99,17 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
                         popularTags = listOf(
                             TagData(
                                 id = 1,
-                                name = "Tag1"
+                                name = "Tag1",
                             ),
                             TagData(
                                 id = 1,
-                                name = "Tag1"
+                                name = "Tag1",
                             ),
                             TagData(
                                 id = 1,
-                                name = "Tag1"
-                            )
-                        )
+                                name = "Tag1",
+                            ),
+                        ),
                     ),
                     user = (0..2).map {
                         UserResponse(
@@ -123,11 +123,11 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
                                     id = 1,
                                     name = "도로패션",
                                 ),
-                            )
+                            ),
                         )
-                    }.toList()
-                )
-            )
+                    }.toList(),
+                ),
+            ),
         )
 
         return mockFollowingResponse.toDomain()

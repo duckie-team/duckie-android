@@ -55,7 +55,7 @@ internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotro
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
     type = type?.let { ExamType.toExamType(it) }
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type")
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
 )
 
 @OptIn(OutOfDateApi::class)

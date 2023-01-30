@@ -18,4 +18,4 @@ data class DuckPower(
     val id: Int,
     val tier: String,
     val tag: Tag,
-): Parcelable
+) : Parcelable

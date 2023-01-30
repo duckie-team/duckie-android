@@ -43,7 +43,7 @@ private val DummyResultResultForUser = (0..20).map {
         profileImgUrl = "https://www.pngitem.com/pimgs/m/80-800194_transparent-users-icon-png-flat-user-icon-png.png",
         nickname = "user$it",
         favoriteTag = "도로패션",
-        duckEffort = 30,
+        tier = "덕력 20%",
         isFollowing = it % 2 == 0,
     )
 }.toPersistentList()
@@ -58,11 +58,7 @@ internal class SearchResultViewModel @Inject constructor(
 
     // TODO(limsaehyun): Request Server
     fun fetchSearchResultForExam(tag: String) = intent {
-        reduce {
-            state.copy(
-                isSearchResultLoading = true,
-            )
-        }
+        updateSearchResultLoading(true)
         delay(2.seconds)
         fetchSearchResultForExamUseCase(
             tag = tag,
@@ -75,22 +71,13 @@ internal class SearchResultViewModel @Inject constructor(
         }.onFailure { exception ->
             postSideEffect(SearchResultSideEffect.ReportError(exception))
         }.also {
-            reduce {
-                state.copy(
-                    isSearchResultLoading = false,
-                )
-            }
+            updateSearchResultLoading(false)
         }
     }
 
     // TODO(limsaehyun): Request Server
     fun fetchSearchResultForUser(tag: String) = intent {
-        reduce {
-            state.copy(
-                isSearchResultLoading = true,
-            )
-        }
-        delay(2.seconds)
+        updateSearchResultLoading(true)
         fetchSearchResultForUserUseCase(
             tag = tag,
         ).onSuccess {
@@ -102,11 +89,15 @@ internal class SearchResultViewModel @Inject constructor(
         }.onFailure { exception ->
             postSideEffect(SearchResultSideEffect.ReportError(exception))
         }.also {
-            reduce {
-                state.copy(
-                    isSearchResultLoading = false,
-                )
-            }
+            updateSearchResultLoading(false)
+        }
+    }
+
+    private fun updateSearchResultLoading(loading: Boolean) = intent {
+        reduce {
+            state.copy(
+                isSearchResultLoading = loading,
+            )
         }
     }
 
