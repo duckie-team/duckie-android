@@ -39,7 +39,6 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindRes
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.SearchScreenData
 import team.duckie.app.android.shared.ui.compose.ImeSpacer
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackBasicTextField
@@ -57,7 +56,6 @@ internal fun SearchTagScreen(
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
-    val toast = rememberToast()
 
     val rootState = viewModel.collectAsState().value
 
@@ -66,7 +64,6 @@ internal fun SearchTagScreen(
         FindResultType.SubTags -> rootState.additionalInfo.searchSubTags
     }
 
-    val networkErrorMessage = stringResource(id = R.string.network_error)
     val title by remember {
         mutableStateOf(
             when (rootState.findResultType) {
@@ -88,7 +85,7 @@ internal fun SearchTagScreen(
         remember(rootState.findResultType) { rootState.findResultType.isMultiMode() }
 
     val focusRequester = remember { FocusRequester() }
-    var searchTextFieldValue = remember(state.textFieldValue) { state.textFieldValue }
+    val searchTextFieldValue = remember(state.textFieldValue) { state.textFieldValue }
 
     BackHandler {
         viewModel.exitSearchScreen()
@@ -131,20 +128,13 @@ internal fun SearchTagScreen(
             leadingIcon = QuackIcon.Search,
             text = searchTextFieldValue,
             onTextChanged = { textFieldValue ->
-                searchTextFieldValue = textFieldValue
                 viewModel.setTextFieldValue(textFieldValue = textFieldValue)
             },
             placeholderText = placeholderText,
             keyboardActions = KeyboardActions(
                 onDone = {
                     if (searchTextValidate(searchTextFieldValue, state)) {
-                        coroutineScope.launch {
-                            if (viewModel.onClickSearchListHeader()) {
-                                searchTextFieldValue = ""
-                            } else {
-                                toast(networkErrorMessage)
-                            }
-                        }
+                        coroutineScope.launch { viewModel.onClickSearchListHeader() }
                     }
                 },
             ),
@@ -167,13 +157,7 @@ internal fun SearchTagScreen(
                         ),
                         onClick = {
                             if (searchTextValidate(searchTextFieldValue, state)) {
-                                coroutineScope.launch {
-                                    if (viewModel.onClickSearchListHeader()) {
-                                        searchTextFieldValue = ""
-                                    } else {
-                                        toast(networkErrorMessage)
-                                    }
-                                }
+                                coroutineScope.launch { viewModel.onClickSearchListHeader() }
                             }
                         },
                     )
@@ -186,13 +170,7 @@ internal fun SearchTagScreen(
                         text = item,
                         onClick = {
                             if (searchTextValidate(searchTextFieldValue, state)) {
-                                coroutineScope.launch {
-                                    if (viewModel.onClickSearchList(index)) {
-                                        searchTextFieldValue = ""
-                                    } else {
-                                        toast(networkErrorMessage)
-                                    }
-                                }
+                                coroutineScope.launch { viewModel.onClickSearchList(index) }
                             }
                         },
                     )

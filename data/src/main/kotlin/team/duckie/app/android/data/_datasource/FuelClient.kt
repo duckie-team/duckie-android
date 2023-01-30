@@ -10,6 +10,8 @@ package team.duckie.app.android.data._datasource
 import android.os.Build
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.Headers
+import com.github.kittinunf.fuel.core.Response
 import com.github.kittinunf.fuel.core.interceptors.LogRequestInterceptor
 import com.github.kittinunf.fuel.core.interceptors.LogResponseInterceptor
 import dagger.Module
@@ -57,3 +59,6 @@ internal object FuelClient {
     @Provides
     fun provide(): Fuel = this()
 }
+
+/** [Response] -> [String] */
+fun Response.bodyAsText() = this.body().asString(headers[Headers.CONTENT_TYPE].lastOrNull())
