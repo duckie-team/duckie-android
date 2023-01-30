@@ -20,6 +20,7 @@ sealed class DuckieException(code: String) : IllegalStateException("DuckieExcept
 
 /** API 에러로 인지되는 임계점. 아래 선언 값은 에러로 포함된다. */
 const val ApiErrorThreshold = 400
+private const val UnknownCode = -1
 private const val BadRequestCode = 400
 private const val UnAuthorizedCode = 401
 private const val ForbiddenCode = 403
@@ -29,15 +30,20 @@ private const val InternalServerCode = 500
 
 /** 서버 응답 StatusCode */
 @AllowMagicNumber("Server statusCode 구분 값 MagicNumber 허용해야 함")
-enum class DuckieStatusCode {
-    Unknown,
-    BadRequest,
-    UnAuthorized,
-    Forbidden,
-    NotFound,
-    Conflict,
-    InternalServer,
+enum class DuckieStatusCode(val statusCode: Int) {
+    Unknown(UnknownCode),
+    BadRequest(BadRequestCode),
+    UnAuthorized(UnAuthorizedCode),
+    Forbidden(ForbiddenCode),
+    NotFound(NotFoundCode),
+    Conflict(ConflictCode),
+    InternalServer(InternalServerCode),
 }
+
+/** API 오류인지 체크한다. */
+@Suppress("unused")
+val DuckieStatusCode.isApiError: Boolean
+    get() = this.statusCode >= ApiErrorThreshold
 
 /** [Int] -> [DuckieStatusCode] */
 fun Int.toDuckieStatusCode(): DuckieStatusCode = when (this) {
