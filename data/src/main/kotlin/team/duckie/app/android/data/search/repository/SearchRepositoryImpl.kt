@@ -24,7 +24,7 @@ class SearchRepositoryImpl @Inject constructor() : SearchRepository {
         val response = client.get {
             url("/search")
         }
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             body.toJsonObject<SearchData>().toDomain()
         }
     }

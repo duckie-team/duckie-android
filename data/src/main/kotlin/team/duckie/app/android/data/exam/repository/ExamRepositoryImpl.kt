@@ -38,7 +38,7 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
             url("/exams")
             setBody(exam.toData())
         }
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
             json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
         }
@@ -49,9 +49,7 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
         val response = client.get {
             url("/exams/$id")
         }
-        return responseCatching(response.bodyAsText()) { body ->
-            body.toJsonObject<ExamData>().toDomain()
-        }
+        return responseCatching(response, ExamData::toDomain)
     }
 
     @OutOfDateApi
@@ -60,7 +58,7 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
             url("/exams/thumbnail")
             setBody(examThumbnailBody.toData())
         }
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
             json["url"] ?: duckieResponseFieldNpe("url")
         }
@@ -72,7 +70,7 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
             url("/exam-instance")
             setBody(examInstanceBody.toData())
         }
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
             json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
         }
@@ -87,7 +85,7 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
             url("/exam-instance/$id/submit")
             setBody(examInstanceSubmitBody.toData())
         }
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             body.toJsonObject<ExamInstanceSubmitData>().toDomain()
         }
     }

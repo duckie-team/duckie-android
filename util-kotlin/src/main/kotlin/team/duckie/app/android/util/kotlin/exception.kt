@@ -18,40 +18,76 @@ package team.duckie.app.android.util.kotlin
  */
 sealed class DuckieException(code: String) : IllegalStateException("DuckieException: $code")
 
+/** API 에러로 인지되는 임계점. 아래 선언 값은 에러로 포함된다. */
+const val ApiErrorThreshold = 400
+private const val UnknownCode = -1
+private const val BadRequestCode = 400
+private const val UnAuthorizedCode = 401
+private const val ForbiddenCode = 403
+private const val NotFoundCode = 404
+private const val ConflictCode = 409
+private const val InternalServerCode = 500
+
+/** 서버 응답 StatusCode */
+@AllowMagicNumber("Server statusCode 구분 값 MagicNumber 허용해야 함")
+enum class DuckieStatusCode(val statusCode: Int) {
+    Unknown(UnknownCode),
+    BadRequest(BadRequestCode),
+    UnAuthorized(UnAuthorizedCode),
+    Forbidden(ForbiddenCode),
+    NotFound(NotFoundCode),
+    Conflict(ConflictCode),
+    InternalServer(InternalServerCode),
+}
+
+/** API 오류인지 체크한다. */
+@Suppress("unused")
+val DuckieStatusCode.isApiError: Boolean
+    get() = this.statusCode >= ApiErrorThreshold
+
+/** [Int] -> [DuckieStatusCode] */
+fun Int.toDuckieStatusCode(): DuckieStatusCode = when (this) {
+    BadRequestCode -> DuckieStatusCode.BadRequest
+    UnAuthorizedCode -> DuckieStatusCode.UnAuthorized
+    ForbiddenCode -> DuckieStatusCode.Forbidden
+    NotFoundCode -> DuckieStatusCode.NotFound
+    ConflictCode -> DuckieStatusCode.Conflict
+    InternalServerCode -> DuckieStatusCode.InternalServer
+    else -> DuckieStatusCode.Unknown
+}
+
 /**
  * 덕키 API 의 response 가 정상적으로 처리되지 않았을 때 [DuckieException] 을 나타냅니다.
  *
  * 백엔드의 [에러 처리 규칙](https://www.notion.so/jisungbin/6487a9d604e14375bc02df6fd8397f15) 을 따릅니다.
  *
- * @param message 예외 메시지. 선택으로 값을 받습니다.
+ * @param serverMessage 예외 메시지. 선택으로 값을 받습니다.
  * @param code 예외 코드. 필수로 값을 받습니다.
  * @param errors 발생한 에러 목록. 선택으로 값을 받습니다
- * @param throwable 실제로 앱 내에서 발생한 throwable 원본
  */
 class DuckieResponseException(
-    message: String? = null,
+    serverMessage: String? = null,
+    val statusCode: DuckieStatusCode,
     val code: String,
     val errors: List<String>? = null,
-    val throwable: Throwable,
 ) : DuckieException(code) {
-    val originalMessage = message
-    override val message = "DuckieResponseException: $code".runIf(message != null) { plus(" - $message") }
+    override val message = "DuckieResponseException: $code".runIf(serverMessage != null) { plus(" - $serverMessage") }
     override fun toString(): String {
-        return "DuckieApiException(message=$message, code=$code, errors=$errors, throwable=$throwable)"
+        return "DuckieApiException(message=$message, statusCode=$statusCode, code=$code, errors=$errors)"
     }
 }
 
 fun duckieResponseException(
-    message: String? = null,
+    statusCode: DuckieStatusCode,
+    serverMessage: String? = null,
     code: String,
     errors: List<String>? = null,
-    throwable: Throwable,
 ): Nothing {
     throw DuckieResponseException(
-        message = message,
+        statusCode = statusCode,
+        serverMessage = serverMessage,
         code = code,
         errors = errors,
-        throwable = throwable,
     )
 }
 
@@ -71,17 +107,16 @@ fun duckieResponseFieldNpe(field: String): Nothing {
 /**
  * 클라이언트 내부 오류를 표현하고 싶을 때 나타냅니다.
  *
- * @param message 예외 메시지. 선택으로 값을 받습니다.
+ * @param serverMessage 예외 메시지. 선택으로 값을 받습니다.
  * @param code 예외 코드. 필수로 값을 받습니다.
  * @param errors 발생한 에러 목록. 선택으로 값을 받습니다
  */
 class DuckieClientLogicProblemException(
-    message: String? = null,
+    serverMessage: String? = null,
     val code: String,
     val errors: List<String>? = null,
 ) : DuckieException(code) {
-    val originalMessage = message
-    override val message = "DuckieResponseException: $code".runIf(message != null) { plus(" - $message") }
+    override val message = "DuckieResponseException: $code".runIf(serverMessage != null) { plus(" - $serverMessage") }
     override fun toString(): String {
         return "DuckieApiException(message=$message, code=$code, errors=$errors)"
     }
@@ -93,7 +128,7 @@ fun duckieClientLogicProblemException(
     errors: List<String>? = null,
 ): Nothing {
     throw DuckieClientLogicProblemException(
-        message = message,
+        serverMessage = message,
         code = code,
         errors = errors,
     )

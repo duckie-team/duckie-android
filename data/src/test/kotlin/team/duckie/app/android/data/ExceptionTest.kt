@@ -27,19 +27,21 @@ import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.data.util.buildMockHttpClient
 import team.duckie.app.android.util.kotlin.DuckieResponseException
+import team.duckie.app.android.util.kotlin.DuckieStatusCode
 
-@Ignore(value = "responseCatching is TODO")
+@Ignore("statusCode 400 이상의 dummy HttpResponse 만들기 전까지는 비활성화")
 class ExceptionTest {
     private val exception = DuckieResponseException(
+        statusCode = DuckieStatusCode.Unknown,
         code = "1000",
-        message = "error",
+        serverMessage = "error",
         errors = listOf("awesome-error"),
-        throwable = Throwable("ExceptionTest"),
     )
     private val exceptionContent = jsonMapper.writeValueAsString(
         ExceptionBody(
+            statusCode = DuckieStatusCode.BadRequest,
             code = exception.code,
-            message = exception.originalMessage,
+            message = "error",
             errors = exception.errors,
         ),
     )
@@ -58,6 +60,7 @@ class ExceptionTest {
             .isFailure()
             .run {
                 with(subject as DuckieResponseException) {
+                    get { statusCode } isEqualTo exception.statusCode
                     get { code } isEqualTo exception.code
                     get { message } isEqualTo exception.message
                     get { errors } isEqualTo exception.errors
@@ -70,13 +73,14 @@ class ExceptionTest {
         val response = client.get("")
 
         expectCatching {
-            responseCatching(response.bodyAsText()) { body ->
+            responseCatching(response.status.value, response.bodyAsText()) { body ->
                 body.toStringJsonMap()["hi"]
             }
         }
             .isFailure()
             .run {
                 with(subject as DuckieResponseException) {
+                    get { statusCode } isEqualTo exception.statusCode
                     get { code } isEqualTo exception.code
                     get { message } isEqualTo exception.message
                     get { errors } isEqualTo exception.errors

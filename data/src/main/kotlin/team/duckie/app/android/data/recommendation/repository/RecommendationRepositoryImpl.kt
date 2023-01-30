@@ -29,7 +29,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
             url("/recommendations")
         }
 
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             @Suppress("UNUSED_VARIABLE")
             val recommendations = body.toJsonObject<RecommendationData>().toDomain().recommendations
             RecommendationPagingSource()

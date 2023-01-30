@@ -28,7 +28,7 @@ class CategoryRepositoryImpl @Inject constructor() : CategoryRepository {
             url("/categories")
             parameter("withPopularTags", withPopularTags)
         }
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json: Map<String, List<CategoryData>> = body.toJsonMap()
             json["categories"]?.fastMap(CategoryData::toDomain) ?: duckieResponseFieldNpe("categories")
         }
