@@ -23,6 +23,9 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
+import team.duckie.app.android.domain.heart.model.HeartBody
+import team.duckie.app.android.domain.heart.usecase.HeartUseCase
+import team.duckie.app.android.domain.heart.usecase.UnHeartUseCase
 import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
@@ -38,6 +41,8 @@ class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
     private val userRepository: UserRepository,
     private val followUseCase: FollowUseCase,
+    private val heartUseCase: HeartUseCase,
+    private val unHeartUseCase: UnHeartUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
@@ -78,6 +83,35 @@ class DetailViewModel @Inject constructor(
             }
         }.onFailure {
             intent { postSideEffect(DetailSideEffect.ReportError(it)) }
+        }
+    }
+
+    fun heartExam() = viewModelScope.launch {
+        val detailState = container.stateFlow.value
+        require(detailState is DetailState.Success)
+
+        intent {
+            if (!detailState.isHeart) {
+                heartUseCase(detailState.exam.id)
+                    .onSuccess { heartId ->
+                        reduce {
+                            (state as DetailState.Success).run { copy(heartId = heartId) }
+                        }
+                    }.onFailure {
+                        postSideEffect(DetailSideEffect.ReportError(it))
+                    }
+            } else {
+                unHeartUseCase(HeartBody(detailState.exam.id, detailState.heartId))
+                    .onSuccess { apiResult ->
+                        if (apiResult) {
+                            reduce {
+                                (state as DetailState.Success).run { copy(heartId = null) }
+                            }
+                        }
+                    }.onFailure {
+                        postSideEffect(DetailSideEffect.ReportError(it))
+                    }
+            }
         }
     }
 }

@@ -158,8 +158,8 @@ private fun DetailSuccessScreen(
                     .layoutId(DetailScreenBottomBarLayoutId)
                     .background(color = QuackColor.White.composeColor),
                 state,
-                onHeartClick = { },
-                onChallengeClick = { },
+                onHeartClick = viewModel::heartExam,
+                onChallengeClick = {  },
             )
         },
     ) { measurableItems, constraints ->
