@@ -106,9 +106,8 @@ internal fun DetailScreen(
 
 @Composable
 private fun DetailLoadingScreen(viewModel: DetailViewModel, modifier: Modifier) {
-    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
-        coroutineScope.launch { viewModel.initExamData() }
+        viewModel.initState()
     }
 
     Column(
