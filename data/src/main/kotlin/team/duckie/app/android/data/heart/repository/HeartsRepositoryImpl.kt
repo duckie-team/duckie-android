@@ -11,11 +11,10 @@ import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._datasource.bodyAsText
+import team.duckie.app.android.data._exception.util.responseCatchingGet
 import team.duckie.app.android.data._util.buildJson
-import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.domain.heart.model.HeartBody
 import team.duckie.app.android.domain.heart.repository.HeartsRepository
-import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import javax.inject.Inject
 
 class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
@@ -28,9 +27,10 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
                 },
             ).responseString()
 
-        val jsonResponse = response.bodyAsText().toStringJsonMap()
-        // TODO(riflockle7): 에러 핸들링 처리 필요
-        return@withContext jsonResponse["id"]?.toInt() ?: duckieResponseFieldNpe("id")
+
+        return@withContext responseCatchingGet(
+            response.statusCode, "id", response.bodyAsText()
+        ).toInt()
     }
 
     override suspend fun unHeart(heartsBody: HeartBody): Boolean = withContext(Dispatchers.IO) {
@@ -44,8 +44,8 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
                 },
             ).responseString()
 
-        val jsonResponse = response.bodyAsText().toStringJsonMap()
-        // TODO(riflockle7): 에러 핸들링 처리 필요
-        return@withContext jsonResponse["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
+        return@withContext responseCatchingGet(
+            response.statusCode, "success", response.bodyAsText()
+        ).toBoolean()
     }
 }
