@@ -9,49 +9,40 @@ package team.duckie.app.android.data._exception.util
 
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
+import team.duckie.app.android.data._exception.model.ExceptionBody
+import team.duckie.app.android.data._exception.model.throwing
+import team.duckie.app.android.data._util.jsonMapper
+import team.duckie.app.android.util.kotlin.ApiErrorThreshold
+import team.duckie.app.android.util.kotlin.toDuckieStatusCode
 
-// FIXME(sungbin): 역직렬화 로직이 잘못됨
-/**
- * Caused by: com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException:
- * Unrecognized field "isNewUser" (class team.duckie.app.android.data._exception.model.ExceptionBody),
- * not marked as ignorable (3 known properties: "errors", "code", "message"])
- * at [Source: (InputStreamReader); line: 1, column: 479] (through reference chain: team.duckie.app.android.data._exception.model.ExceptionBody["isNewUser"])
- */
 @Suppress("TooGenericExceptionCaught")
 internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
     response: HttpResponse,
     parse: (body: DataModel) -> DomainModel,
 ): DomainModel {
-    /*return try {
+    if (response.status.value < ApiErrorThreshold) {
         val body: DataModel = response.body()
-        parse(body)
-    } catch (throwable: Throwable) {
-        val errorBody: ExceptionBody = response.body()
-        errorBody.throwing(throwable = throwable)
-    }*/
-    val body: DataModel = response.body()
-    return parse(body)
+        return parse(body)
+    } else {
+        val statusCode = response.status.value
+        response.body<ExceptionBody>()
+            .copy(statusCode = statusCode.toDuckieStatusCode())
+            .throwing()
+    }
 }
 
-// FIXME(sungbin): 역직렬화 로직이 잘못됨
-/**
- * Caused by: com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException:
- * Unrecognized field "isNewUser" (class team.duckie.app.android.data._exception.model.ExceptionBody),
- * not marked as ignorable (3 known properties: "errors", "code", "message"])
- * at [Source: (InputStreamReader); line: 1, column: 479] (through reference chain: team.duckie.app.android.data._exception.model.ExceptionBody["isNewUser"])
- */
+// TODO(riflockle7): statusCode 에 따라 에러 핸들링 또는 데이터 반환하도록 해주어야 함
 @Suppress("TooGenericExceptionCaught")
 internal inline fun <DomainModel> responseCatching(
+    statusCode: Int,
     response: String,
     parse: (body: String) -> DomainModel,
 ): DomainModel {
-    /*return try {
-        parse(response)
-    } catch (throwable: Throwable) {
-        // TODO(riflockle7): 개발 도중 에러를 확인하기 위해 추가한 코드. 추후 논의를 통해 제거 필요
-        throwable.printStackTrace()
-        val errorBody = jsonMapper.readValue(response, ExceptionBody::class.java)
-        errorBody.throwing(throwable = throwable)
-    }*/
-    return parse(response)
+    if (statusCode < ApiErrorThreshold) {
+        return parse(response)
+    } else {
+        jsonMapper.readValue(response, ExceptionBody::class.java)
+            .copy(statusCode = statusCode.toDuckieStatusCode())
+            .throwing()
+    }
 }

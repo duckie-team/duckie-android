@@ -72,7 +72,7 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
     override suspend fun nicknameValidateCheck(nickname: String): Boolean {
         val response = client.get("/users/$nickname/duplicate-check")
 
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
             json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
         }

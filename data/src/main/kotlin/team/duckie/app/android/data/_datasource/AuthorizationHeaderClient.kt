@@ -27,8 +27,15 @@ import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlugin
 
+/** token 이 필요한 HttpClient */
 @Deprecated(message = "fuel 로 변경 예정 (#180)")
 internal var client = AuthorizationHeaderClient()
+    private set
+
+/** token 이 필요 없는 HttpClient */
+@Deprecated(message = "fuel 로 변경 예정 (#180)")
+@Suppress("unused")
+internal var noAuthClient = AuthorizationHeaderClient(false)
     private set
 
 // [DuckieHttpHeaders.DeviceName] 을 대체한다.
@@ -59,8 +66,7 @@ private object AuthorizationHeaderClient {
     private const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
     private const val ClientName = "android"
 
-    operator fun invoke() = HttpClient(engineFactory = CIO) {
-        expectSuccess = true
+    operator fun invoke(authorizationCheck: Boolean = true) = HttpClient(engineFactory = CIO) {
         engine {
             endpoint {
                 connectTimeout = MaxTimeoutMillis
@@ -76,8 +82,10 @@ private object AuthorizationHeaderClient {
                 append(DuckieHttpHeaders.Client, ClientName)
             }
         }
-        install(plugin = DuckieAuthorizationHeaderOrNothingPlugin) {
-            headerKey = DuckieHttpHeaders.Authorization
+        if (authorizationCheck) {
+            install(plugin = DuckieAuthorizationHeaderOrNothingPlugin) {
+                headerKey = DuckieHttpHeaders.Authorization
+            }
         }
         install(plugin = ContentNegotiation) {
             jackson {

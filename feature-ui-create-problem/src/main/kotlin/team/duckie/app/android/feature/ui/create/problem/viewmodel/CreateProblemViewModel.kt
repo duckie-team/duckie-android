@@ -60,6 +60,8 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.util.android.image.MediaUtil
+import team.duckie.app.android.util.kotlin.DuckieResponseException
+import team.duckie.app.android.util.kotlin.DuckieStatusCode
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
@@ -148,12 +150,18 @@ internal class CreateProblemViewModel @Inject constructor(
                 }
                 .onFailure {
                     intent {
-                        reduce {
-                            state.copy(
-                                createProblemStep = CreateProblemStep.Error,
-                                isEditMode = true,
-                            )
+                        if (
+                            it is DuckieResponseException &&
+                            it.statusCode == DuckieStatusCode.UnAuthorized
+                        ) {
+                            reduce {
+                                state.copy(
+                                    createProblemStep = CreateProblemStep.Error,
+                                    isEditMode = true,
+                                )
+                            }
                         }
+
                         postSideEffect(CreateProblemSideEffect.ReportError(it))
                     }
                 }
@@ -905,21 +913,23 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 추천 검색 목록에서 헤더(1번째 항목)을 클릭한다. */
-    internal suspend fun onClickSearchListHeader(): Boolean {
+    internal suspend fun onClickSearchListHeader() {
         val state = container.stateFlow.value
         val tagText = when (state.findResultType) {
             FindResultType.MainTag -> state.examInformation.searchMainTag.textFieldValue
             FindResultType.SubTags -> state.additionalInfo.searchSubTags.textFieldValue
         }
 
-        runCatching { tagRepository.create(tagText) }.getOrNull()?.run {
-            exitSearchScreenAfterAddTag(this)
-            return true
-        } ?: return false
+        runCatching { tagRepository.create(tagText) }
+            .onSuccess {
+                exitSearchScreenAfterAddTag(it)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
     }
 
-    /** 추천 검색 목록에서 1번째 이외의 항목을 클릭한다. */
-    internal suspend fun onClickSearchList(index: Int): Boolean {
+    /** 추천 검색 목록에서 헤더(1번째 항목) 이외의 항목을 클릭한다. */
+    internal suspend fun onClickSearchList(index: Int) {
         val state = container.stateFlow.value
         val tagText = when (state.findResultType) {
             FindResultType.MainTag ->
@@ -927,10 +937,12 @@ internal class CreateProblemViewModel @Inject constructor(
             FindResultType.SubTags -> state.additionalInfo.searchSubTags.searchResults[index]
         }
 
-        runCatching { tagRepository.create(tagText) }.getOrNull()?.run {
-            exitSearchScreenAfterAddTag(this)
-            return true
-        } ?: return false
+        runCatching { tagRepository.create(tagText) }
+            .onSuccess {
+                exitSearchScreenAfterAddTag(it)
+            }.onFailure {
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+            }
     }
 
     /**

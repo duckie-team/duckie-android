@@ -25,7 +25,7 @@ class FollowsRepositoryImpl @Inject constructor() : FollowsRepository {
         val response = client.post("/follows") {
             setBody(followsBody.toData())
         }
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
             json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
         }
@@ -35,7 +35,7 @@ class FollowsRepositoryImpl @Inject constructor() : FollowsRepository {
         val response = client.delete("/follows") {
             setBody(followsBody.toData())
         }
-        return responseCatching(response.bodyAsText()) { body ->
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
             json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
         }
