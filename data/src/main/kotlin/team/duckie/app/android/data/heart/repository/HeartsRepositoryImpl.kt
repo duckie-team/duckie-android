@@ -27,9 +27,10 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
                 },
             ).responseString()
 
-
         return@withContext responseCatchingGet(
-            response.statusCode, "id", response.bodyAsText()
+            response.statusCode,
+            "id",
+            response.bodyAsText(),
         ).toInt()
     }
 
@@ -45,7 +46,9 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
             ).responseString()
 
         return@withContext responseCatchingGet(
-            response.statusCode, "success", response.bodyAsText()
+            response.statusCode,
+            "success",
+            response.bodyAsText(),
         ).toBoolean()
     }
 }

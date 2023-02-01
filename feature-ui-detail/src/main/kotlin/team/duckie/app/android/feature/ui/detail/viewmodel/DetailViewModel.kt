@@ -120,8 +120,11 @@ class DetailViewModel @Inject constructor(
             require(state is DetailState.Success)
             postSideEffect(
                 (state as DetailState.Success).run {
-                    DetailSideEffect.StartExam(exam.id, exam.certifyingStatement)
-                }
+                    DetailSideEffect.StartExam(
+                        exam.id,
+                        exam.certifyingStatement,
+                    )
+                },
             )
         }
     }
