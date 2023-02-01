@@ -8,12 +8,10 @@
 package team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect
 
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
-import team.duckie.app.android.feature.ui.detail.viewmodel.state.ClickEvent
 
 /** [DetailViewModel] 에서 사용되는 SideEffect 모음 */
 sealed class DetailSideEffect {
     class SendToast(val message: String) : DetailSideEffect()
-    class Click(val event: ClickEvent) : DetailSideEffect()
 
     /**
      * [DetailViewModel] 의 비즈니스 로직 처리 중에 발생한 예외를 [exception] 으로 받고
