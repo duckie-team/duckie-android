@@ -114,4 +114,15 @@ class DetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun startExam() = viewModelScope.launch {
+        intent {
+            require(state is DetailState.Success)
+            postSideEffect(
+                (state as DetailState.Success).run {
+                    DetailSideEffect.StartExam(exam.id, exam.certifyingStatement)
+                }
+            )
+        }
+    }
 }

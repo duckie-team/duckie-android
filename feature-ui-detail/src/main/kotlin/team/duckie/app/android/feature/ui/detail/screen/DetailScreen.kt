@@ -159,7 +159,7 @@ private fun DetailSuccessScreen(
                     .background(color = QuackColor.White.composeColor),
                 state,
                 onHeartClick = viewModel::heartExam,
-                onChallengeClick = {  },
+                onChallengeClick = viewModel::startExam,
             )
         },
     ) { measurableItems, constraints ->
@@ -260,7 +260,9 @@ private fun DetailContentLayout(
             horizontalSpace = 4.dp,
             items = state.exam.subTags.copy { add(0, state.exam.mainTag) }.fastMap { it.name },
             tagType = QuackTagType.Grayscale(""),
-            onClick = {},
+            onClick = {
+                // TODO(riflockle7): 태그 검색 화면으로 이동
+            },
         )
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
@@ -320,7 +322,9 @@ private fun DetailProfileLayout(
                 // 댓글 작성자 닉네임
                 QuackBody3(
                     text = state.exam.user.nickname,
-                    onClick = {},
+                    onClick = {
+                        // TODO(riflockle7): 마이페이지로 이동
+                    },
                     color = QuackColor.Black,
                 )
 
