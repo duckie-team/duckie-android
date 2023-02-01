@@ -64,6 +64,7 @@ private suspend fun dummyReturn(a: Int): RecommendationData {
                     category = CategoryData(1, "카테고리"),
                     mainTag = TagData(1, "방탄소년단"),
                     type = "text",
+                    status = "open",
                 )
             },
         )

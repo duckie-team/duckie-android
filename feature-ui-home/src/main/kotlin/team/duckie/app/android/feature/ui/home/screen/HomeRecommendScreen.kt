@@ -9,7 +9,6 @@
 
 package team.duckie.app.android.feature.ui.home.screen
 
-import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,8 +39,6 @@ import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
-import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
-import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
@@ -53,8 +49,6 @@ import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.OutOfDateApi
-import team.duckie.app.android.util.ui.const.Extras
-import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1
@@ -69,9 +63,7 @@ private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
     vm: HomeViewModel = activityViewModel(),
-    navigateToSearchResult: (String) -> Unit,
 ) {
-    val activity = LocalContext.current as Activity
     val state = vm.collectAsState().value
     val pageState = rememberPagerState()
 
@@ -90,15 +82,8 @@ internal fun HomeRecommendScreen(
                 onTabSelected = { step ->
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
-                onClickedEdit = {
-                    // TODO(riflockle7): 구현 스펙을 알 수 없어 임시로 처리한 코드. 추후 sideEffect 로 처리 필요
-                    activity.startActivityWithAnimation<CreateProblemActivity>(
-                        intentBuilder = {
-                            putExtra(Extras.ExamId, 1)
-                            putExtra(Extras.AppUserId, 2)
-                        },
-                    )
-                    // TODO("limsaehyun"): 수정 페이지로 이동 필요
+                onClickedCreate = {
+                    vm.navigateToCreateProblem()
                 },
             )
         }
@@ -111,15 +96,10 @@ internal fun HomeRecommendScreen(
                 HomeRecommendJumbotronLayout(
                     modifier = Modifier.padding(HomeHorizontalPadding),
                     recommendItem = state.jumbotrons[page],
-                    onStartClicked = {
-                        // TODO(riflockle7): 구현 스펙을 알 수 없어 임시로 처리한 코드. 추후 sideEffect 로 처리 필요
-                        activity.startActivityWithAnimation<DetailActivity>(
-                            intentBuilder = {
-                                putExtra(Extras.ExamId, 1)
-                                putExtra(Extras.AppUserId, 2)
-                            },
+                    onStartClicked = { examId ->
+                        vm.navigateToHomeDetail(
+                            examId = examId,
                         )
-                        // TODO ("limsaehyun"): 상세보기로 이 필요
                     },
                 )
             }
@@ -144,7 +124,7 @@ internal fun HomeRecommendScreen(
                 exams = item?.exams?.toImmutableList() ?: persistentListOf(),
                 onClicked = { },
                 onTagClicked = { tag ->
-                    navigateToSearchResult(tag)
+                    vm.navigateToSearchResult(tag)
                 },
             )
         }
@@ -155,7 +135,7 @@ internal fun HomeRecommendScreen(
 private fun HomeRecommendJumbotronLayout(
     modifier: Modifier = Modifier,
     recommendItem: HomeState.HomeRecommendJumbotron,
-    onStartClicked: () -> Unit,
+    onStartClicked: (Int) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -181,7 +161,7 @@ private fun HomeRecommendJumbotronLayout(
         QuackLargeButton(
             type = QuackLargeButtonType.Fill,
             text = recommendItem.buttonContent,
-            onClick = onStartClicked,
+            onClick = { onStartClicked(recommendItem.id) },
             enabled = true,
         )
         Spacer(modifier = Modifier.height(8.dp))

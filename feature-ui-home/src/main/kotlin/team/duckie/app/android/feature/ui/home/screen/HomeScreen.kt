@@ -28,7 +28,6 @@ private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 @Composable
 internal fun DuckieHomeScreen(
     vm: HomeViewModel = activityViewModel(),
-    navigateToSearchResult: (String) -> Unit,
 ) {
     val state = vm.collectAsState().value
 
@@ -50,9 +49,7 @@ internal fun DuckieHomeScreen(
         ) { page ->
             when (page) {
                 HomeStep.HomeRecommendScreen -> {
-                    HomeRecommendScreen(
-                        navigateToSearchResult = navigateToSearchResult,
-                    )
+                    HomeRecommendScreen()
                 }
                 HomeStep.HomeFollowingScreen -> {
                     if (state.recommendFollowingTest.isNotEmpty()) {

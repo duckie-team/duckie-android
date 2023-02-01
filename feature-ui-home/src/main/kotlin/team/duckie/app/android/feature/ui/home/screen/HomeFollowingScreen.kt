@@ -74,7 +74,7 @@ internal fun HomeRecommendFollowingTestScreen(
                 onTabSelected = { step ->
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
-                onClickedEdit = {
+                onClickedCreate = {
                     // TODO(limsaehyun): 수정 페이지로 이동 필요
                 },
             )
@@ -121,7 +121,7 @@ internal fun HomeRecommendFollowingScreen(
                 onTabSelected = { step ->
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
-                onClickedEdit = {
+                onClickedCreate = {
                     // TODO(limsaehyun): 수정 페이지로 이동 필요
                 },
             )

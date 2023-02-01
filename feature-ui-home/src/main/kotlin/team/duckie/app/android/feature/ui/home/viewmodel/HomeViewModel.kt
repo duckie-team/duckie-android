@@ -142,4 +142,26 @@ internal class HomeViewModel @Inject constructor(
             )
         }
     }
+
+    fun navigateToSearchResult(
+        searchTag: String,
+    ) = intent {
+        postSideEffect(HomeSideEffect.NavigateToSearchResult(searchTag))
+    }
+
+    fun navigateToHomeDetail(
+        examId: Int,
+    ) = intent {
+        postSideEffect(
+            HomeSideEffect.NavigateToHomeDetail(
+                examId = examId,
+            ),
+        )
+    }
+
+    fun navigateToCreateProblem() = intent {
+        postSideEffect(
+            HomeSideEffect.NavigateToCreateProblem(),
+        )
+    }
 }

@@ -16,4 +16,19 @@ internal sealed class HomeSideEffect {
      * @param exception 발생한 예외
      */
     class ReportError(val exception: Throwable) : HomeSideEffect()
+
+    /**
+     * [SearchResultActivity] 로 이동하는 SideEffect 입니다.
+     */
+    class NavigateToSearchResult(val searchTag: String) : HomeSideEffect()
+
+    /**
+     * [HomeDetailActivity] 로 이동하는 SideEffect 입니다.
+     */
+    class NavigateToHomeDetail(val examId: Int) : HomeSideEffect()
+
+    /**
+     * [CreateProblemActivity] 로 이동하는 SideEffect 입니다.
+     */
+    class NavigateToCreateProblem : HomeSideEffect()
 }
