@@ -183,7 +183,7 @@ private val dummyExam = Exam(
             tag = Tag(
                 id = 1,
                 name = "도로록Main1",
-            )
+            ),
         ),
         favoriteTags = persistentListOf(),
         favoriteCategories = persistentListOf(),
@@ -201,7 +201,7 @@ private val dummyUser = User(
         tag = Tag(
             id = 1,
             name = "도로록Main1",
-        )
+        ),
     ),
     favoriteTags = persistentListOf(
         Tag(2, "도로록Sub1"),

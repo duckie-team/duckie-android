@@ -100,7 +100,8 @@ class JsonBuilderTest {
 
         val expected = "{\"name\":\"duckie\",\"age\":1,\"isDuck\":true," +
                 "\"friends\":[{\"id\":0,\"nickname\":\"test\",\"profileImageUrl\":\"test\"," +
-                "\"tier\":\"DuckKid\",\"favoriteTags\":[{\"id\":1,\"name\":\"tag\"}]," +
+                "\"duckPower\":{\"id\":1,\"tier\":\"도로 패션 20%\",\"tag\":{\"id\":1,\"name\":\"도로패션\"}}," +
+                "\"favoriteTags\":[{\"id\":1,\"name\":\"tag\"}]," +
                 "\"favoriteCategories\":[{\"id\":1,\"name\":\"1\",\"thumbnailUrl\":\"thumbnailUrl\"," +
                 "\"popularTags\":[{\"id\":1,\"name\":\"tag\"}]}]}]}"
 

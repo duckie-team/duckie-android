@@ -28,7 +28,7 @@ internal data class HomeState(
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
     val recommendFollowingTest: ImmutableList<FollowingTest> = persistentListOf(),
 
-    val recommendations: PagingData<RecommendationItem> = PagingData.empty()
+    val recommendations: PagingData<RecommendationItem> = PagingData.empty(),
 ) {
     /**
      * 팔로잉의 덕질고사 추천 피드 data class [FollowingTest]

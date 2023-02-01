@@ -23,7 +23,8 @@ enum class ExamType(
 ) {
     Text(
         original = "text",
-    );
+    ),
+    ;
 
     companion object {
         fun toExamType(type: String): ExamType {

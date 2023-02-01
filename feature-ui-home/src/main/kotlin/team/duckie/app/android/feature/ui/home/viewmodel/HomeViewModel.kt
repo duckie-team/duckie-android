@@ -66,7 +66,7 @@ internal class HomeViewModel @Inject constructor(
                     state.copy(
                         jumbotrons = jumbotrons
                             .fastMap(RecommendationJumbotronItem::toUiModel)
-                            .toPersistentList()
+                            .toPersistentList(),
                     )
                 }
             }.onFailure { exception ->
@@ -102,7 +102,7 @@ internal class HomeViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         recommendFollowing = userFollowing.followingRecommendations.fastMap(
-                            UserFollowingRecommendations::toUiModel
+                            UserFollowingRecommendations::toUiModel,
                         ).toPersistentList(),
                     )
                 }
@@ -114,11 +114,11 @@ internal class HomeViewModel @Inject constructor(
     }
 
     private fun updateHomeLoading(
-        loading: Boolean
+        loading: Boolean,
     ) = intent {
         reduce {
             state.copy(
-                isHomeLoading = loading
+                isHomeLoading = loading,
             )
         }
     }
