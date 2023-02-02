@@ -6,7 +6,7 @@
  */
 
 @file:OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
-@file:Suppress("ConstPropertyName", "PrivatePropertyName")
+@file:Suppress("ConstPropertyName", "PrivatePropertyName", "SpacingBetweenDeclarationsWithAnnotations")
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
