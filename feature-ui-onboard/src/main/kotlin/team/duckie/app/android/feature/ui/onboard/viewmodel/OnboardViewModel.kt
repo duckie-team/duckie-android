@@ -214,7 +214,7 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    suspend fun updateUserFavoriteTags(names: List<String>): List<Tag> {
+    suspend fun updateUserFavoriteTags(names: List<String>): List<Result<Tag>> {
         return suspendCancellableCoroutine { continuation ->
             viewModelScope.launch {
                 val tags = names.fastMap { name ->
@@ -282,15 +282,15 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun createTag(name: String): Tag {
+    private suspend fun createTag(name: String): Result<Tag> {
         return suspendCancellableCoroutine { continuation ->
             viewModelScope.launch {
                 tagCreateUseCase(name)
                     .onSuccess { tag ->
-                        continuation.resume(tag)
+                        continuation.resume(Result.success(tag))
                     }
-                    .onFailure { exeption ->
-                        continuation.resumeWithException(exeption)
+                    .onFailure { exception ->
+                        continuation.resume(Result.failure(exception))
                     }
             }
         }

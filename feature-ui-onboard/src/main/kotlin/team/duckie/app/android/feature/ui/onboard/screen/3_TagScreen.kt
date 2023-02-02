@@ -64,6 +64,7 @@ import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.shared.ui.compose.ImeSpacer
+import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.invisible
@@ -136,6 +137,7 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     val keyboard = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
+    val toast = rememberToast()
 
     var isLoadingToFinish by remember { mutableStateOf(false) }
     var isStartable by remember { mutableStateOf(false) }
@@ -213,6 +215,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                 ) {
                     updateUserAndFinishOnboard(
                         coroutineScope = coroutineScope,
+                        toast = toast,
                         vm = vm,
                         onboardState = onboardState,
                         addedTags = addedTags,
@@ -229,6 +232,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
 
 private fun updateUserAndFinishOnboard(
     coroutineScope: CoroutineScope,
+    toast: ToastWrapper,
     vm: OnboardViewModel,
     onboardState: OnboardState,
     addedTags: List<String>,
@@ -242,19 +246,27 @@ private fun updateUserAndFinishOnboard(
         val favoriteTagsDeferred = async {
             vm.updateUserFavoriteTags(names = addedTags)
         }
-        val (profileImageUrl, favoriteTags) = awaitAll(
+        val (profileImageUrl, favoriteTagsResult) = awaitAll(
             profileImageUrlDeferred ?: async { "" },
             favoriteTagsDeferred,
         )
         @Suppress("UNCHECKED_CAST")
-        vm.updateUser(
-            id = vm.me.id,
-            nickname = onboardState.temporaryNickname,
-            profileImageUrl = (profileImageUrl as String).takeIf { profileImageUrlDeferred != null },
-            favoriteCategories = onboardState.selectedCategories,
-            favoriteTags = favoriteTags as List<Tag>,
-        )
-        updateIsLoadingToFinishState(false)
+        val favoriteTags = (favoriteTagsResult as List<Result<Tag>>).mapNotNull(Result<Tag>::getOrNull)
+        if (favoriteTags.size == addedTags.size) {
+            vm.updateUser(
+                id = vm.me.id,
+                nickname = onboardState.temporaryNickname,
+                profileImageUrl = (profileImageUrl as String).takeIf { profileImageUrlDeferred != null },
+                favoriteCategories = onboardState.selectedCategories,
+                favoriteTags = favoriteTags,
+            )
+            updateIsLoadingToFinishState(false)
+        } else {
+            val favoriteTagNames = favoriteTags.fastMap(Tag::name)
+            val createFailedTags = addedTags.dropWhile(favoriteTagNames::contains)
+            toast(stringRes = R.string.tag_toast_create_failed, createFailedTags.joinToString(", "))
+            updateIsLoadingToFinishState(false)
+        }
     }
 }
 
