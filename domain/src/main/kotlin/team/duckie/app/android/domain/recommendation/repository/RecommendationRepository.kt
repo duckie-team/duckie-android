@@ -8,9 +8,12 @@
 package team.duckie.app.android.domain.recommendation.repository
 
 import androidx.compose.runtime.Immutable
-import androidx.paging.PagingSource
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
+import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
+import team.duckie.app.android.domain.user.model.UserFollowing
 
 /**
  * 홈 화면에서 활용하는 Repository
@@ -19,13 +22,11 @@ import team.duckie.app.android.domain.recommendation.model.SearchType
  */
 @Immutable
 interface RecommendationRepository {
-    suspend fun fetchRecommendations(): PagingSource<Int, RecommendationItem>
+    fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>
 
-    suspend fun fetchJumbotrons()
+    suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem>
 
-    suspend fun fetchFollowingTest()
-
-    suspend fun fetchRecommendFollowing()
+    suspend fun fetchRecommendFollowing(): UserFollowing
 
     suspend fun fetchRecommendTags(
         tag: String,

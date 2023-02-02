@@ -5,9 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-// TODO(limsaehyun): 더미 데이터 때문에 MaxLineHeight 발생 추후에 제거 필요
-@file:Suppress("MaxLineLength")
-
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.animation.Crossfade
@@ -26,14 +23,11 @@ import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 
-private val HomeHorizontalPadding = PaddingValues(
-    horizontal = 16.dp,
-)
+private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
 @Composable
 internal fun DuckieHomeScreen(
     vm: HomeViewModel = activityViewModel(),
-    navigateToSearchResult: (String) -> Unit,
 ) {
     val state = vm.collectAsState().value
 
@@ -55,9 +49,7 @@ internal fun DuckieHomeScreen(
         ) { page ->
             when (page) {
                 HomeStep.HomeRecommendScreen -> {
-                    HomeRecommendScreen(
-                        navigateToSearchResult = navigateToSearchResult,
-                    )
+                    HomeRecommendScreen()
                 }
                 HomeStep.HomeFollowingScreen -> {
                     if (state.recommendFollowingTest.isNotEmpty()) {

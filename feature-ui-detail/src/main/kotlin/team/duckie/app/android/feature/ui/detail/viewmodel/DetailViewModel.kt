@@ -31,7 +31,7 @@ import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.constant.DuckieTier
+import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
@@ -51,6 +51,7 @@ class DetailViewModel @Inject constructor(
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
+    @OptIn(OutOfDateApi::class)
     suspend fun initExamData() {
         val appUserId = savedStateHandle.getStateFlow(Extras.AppUserId, -1).value
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
@@ -63,6 +64,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    @OptIn(OutOfDateApi::class)
     fun followUser() = viewModelScope.launch {
         val detailState = container.stateFlow.value
         require(detailState is DetailState.Success)
@@ -175,7 +177,14 @@ private val dummyExam = Exam(
         id = 1,
         nickname = "doro",
         profileImageUrl = "",
-        tier = DuckieTier.DuckBronze,
+        duckPower = DuckPower(
+            id = 123,
+            tier = "덕력 20%",
+            tag = Tag(
+                id = 1,
+                name = "도로록Main1",
+            ),
+        ),
         favoriteTags = persistentListOf(),
         favoriteCategories = persistentListOf(),
     ),
@@ -186,7 +195,14 @@ private val dummyUser = User(
     id = 1,
     nickname = "도로롥",
     profileImageUrl = "",
-    tier = DuckieTier.DuckKid,
+    duckPower = DuckPower(
+        id = 123,
+        tier = "덕력 20%",
+        tag = Tag(
+            id = 1,
+            name = "도로록Main1",
+        ),
+    ),
     favoriteTags = persistentListOf(
         Tag(2, "도로록Sub1"),
         Tag(3, "도로록Sub2"),

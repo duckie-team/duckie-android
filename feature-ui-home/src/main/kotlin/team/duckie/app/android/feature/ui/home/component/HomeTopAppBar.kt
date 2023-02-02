@@ -31,7 +31,7 @@ internal fun HomeTopAppBar(
     modifier: Modifier = Modifier,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
-    onClickedEdit: () -> Unit,
+    onClickedCreate: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -56,7 +56,7 @@ internal fun HomeTopAppBar(
         )
         QuackImage(
             src = R.drawable.home_ic_create_24,
-            onClick = onClickedEdit,
+            onClick = onClickedCreate,
             size = HomeIconSize,
         )
     }

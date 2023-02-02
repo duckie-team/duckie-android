@@ -101,10 +101,10 @@ internal fun SearchResultScreen(
                 items(state.searchResultForUser) { item ->
                     UserFollowingLayout(
                         userId = item.userId,
-                        profile = item.profile,
-                        name = item.name,
-                        examineeNumber = item.examineeNumber,
-                        createAt = item.createAt,
+                        profileImgUrl = item.profileImgUrl,
+                        nickname = item.nickname,
+                        favoriteTag = item.favoriteTag,
+                        tier = item.tier,
                         isFollowing = item.isFollowing,
                         onClickFollowing = {
                             // TODO(limsaehyun): following request

@@ -9,45 +9,132 @@
 
 package team.duckie.app.android.data.recommendation.repository
 
-import androidx.paging.PagingSource
-import io.ktor.client.request.get
-import io.ktor.client.request.url
-import io.ktor.client.statement.bodyAsText
-import team.duckie.app.android.data._datasource.client
-import team.duckie.app.android.data._exception.util.responseCatching
-import team.duckie.app.android.data._util.toJsonObject
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
+import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.recommendation.mapper.toDomain
-import team.duckie.app.android.data.recommendation.model.RecommendationData
+import team.duckie.app.android.data.recommendation.model.RecommendationJumbotronItemData
 import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSource
+import team.duckie.app.android.data.tag.model.TagData
+import team.duckie.app.android.data.user.mapper.toDomain
+import team.duckie.app.android.data.user.model.DuckPowerResponse
+import team.duckie.app.android.data.user.model.UserFollowingResponse
+import team.duckie.app.android.data.user.model.UserFollowingRecommendationsResponse
+import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
+import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
+import team.duckie.app.android.domain.user.model.UserFollowing
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
+import team.duckie.app.android.util.kotlin.ExperimentalApi
+import team.duckie.app.android.util.kotlin.fastMap
+
+/**
+ * fetchRecommendatiins 에서 사용되는 paging 단위
+ */
+private const val ITEMS_PER_PAGE = 10
 
 class RecommendationRepositoryImpl : RecommendationRepository {
-    override suspend fun fetchRecommendations(): PagingSource<Int, RecommendationItem> {
-        val response = client.get {
-            url("/recommendations")
-        }
-
-        return responseCatching(response.status.value, response.bodyAsText()) { body ->
-            @Suppress("UNUSED_VARIABLE")
-            val recommendations = body.toJsonObject<RecommendationData>().toDomain().recommendations
-            RecommendationPagingSource()
-        }
+    @ExperimentalApi
+    override fun fetchRecommendations(): Flow<PagingData<RecommendationItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = ITEMS_PER_PAGE,
+                enablePlaceholders = true,
+                maxSize = 200,
+            ),
+            pagingSourceFactory = { RecommendationPagingSource() },
+        ).flow
     }
 
-    override suspend fun fetchJumbotrons() {
-        // TODO(limsaehyun): repository 작업 필요
+    // TODO(limsaehyun): API가 불안정한 관계로 MockRepository 으로 구현
+    @ExperimentalApi
+    override suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem> {
+//        val response = client.get {
+//            url("/recommendations")
+//            parameter("page", 1)
+//        }
+//
+//        return responseCatching(response.bodyAsText()) { body ->
+//            body.toJsonObject<RecommendationData>().toDomain().jumbotrons
+//        }
+
+        val response = (0..2).map {
+            RecommendationJumbotronItemData(
+                id = 1,
+                title = "제 1회 도로 셀카영역",
+                description = "아 저 근데 재밌어요 같아요\n내 시험 최고",
+                thumbnailUrl = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1673924133028",
+                certifyingStatement = "Love Doro",
+                solvedCount = 3,
+                buttonTitle = "도로 덕질하러 가기",
+                type = "text",
+                answerRate = 0.123.toFloat(),
+                category = CategoryData(
+                    id = 1,
+                    name = "카테고리",
+                    thumbnailUrl = "",
+                    popularTags = null,
+                ),
+                mainTag = TagData(
+                    id = 1,
+                    name = "sub tag",
+                ),
+                subTags = listOf(
+                    TagData(
+                        id = 1,
+                        name = "main tag1",
+                    ),
+                    TagData(
+                        id = 2,
+                        name = "main tag2",
+                    ),
+                ),
+            )
+        }.toList()
+
+        return response.fastMap(RecommendationJumbotronItemData::toDomain)
     }
 
-    override suspend fun fetchFollowingTest() {
-        // TODO(limsaehyun): repository 작업 필요
+    // TODO(limsaehyun): API가 불안정한 관계로 MockRepository 으로 구현
+    @AllowMagicNumber
+    @ExperimentalApi
+    override suspend fun fetchRecommendFollowing(): UserFollowing {
+        val response = UserFollowingResponse(
+            followingRecommendations = (0..10).map {
+                UserFollowingRecommendationsResponse(
+                    category = CategoryData(
+                        id = 1,
+                        name = "카테고리$it",
+                        thumbnailUrl = "",
+                        popularTags = emptyList(),
+                    ),
+                    user = (0..10).map {
+                        UserResponse(
+                            id = it,
+                            nickName = "유저$it",
+                            profileImageUrl = "https://img.freepik.com/free-icon/user_318-804790.jpg?w=2000",
+                            duckPower = DuckPowerResponse(
+                                id = 1,
+                                tier = "덕력 20%",
+                                tag = TagData(
+                                    id = 1,
+                                    name = "도로패션",
+                                ),
+                            ),
+                        )
+                    },
+                )
+            },
+        )
+
+        return response.toDomain()
     }
 
-    override suspend fun fetchRecommendFollowing() {
-        // TODO(limsaehyun): repository 작업 필요
-    }
-
+    @ExperimentalApi
     override suspend fun fetchRecommendTags(
         tag: String,
         type: SearchType,
