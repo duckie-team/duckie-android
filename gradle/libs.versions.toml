@@ -96,7 +96,7 @@ ktor-core = "2.2.3"
 fuel-core = "2.3.1"
 
 # jackson
-jackson-core = "2.14.1"
+jackson-core = "2.14.2"
 
 # orbit
 orbit-core = "4.5.0"
