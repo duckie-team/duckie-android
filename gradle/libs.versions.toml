@@ -90,7 +90,7 @@ di-hilt = "2.44.2"
 di-inject = "1"
 
 # ktor
-ktor-core = "2.2.2"
+ktor-core = "2.2.3"
 
 # fuel
 fuel-core = "2.3.1"
