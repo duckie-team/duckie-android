@@ -17,7 +17,7 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.constant.DuckieTier
+import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 
@@ -82,7 +82,14 @@ object ExamDummyResponse {
                 "id": 1,
                 "nickName": "doro",
                 "profileImageUrl": "",
-                "tier": 1000
+                "duckPower" : {
+                    "id": 1,
+                    "tier": "덕력 20%",
+                    "tag": {
+                        "id": 1,
+                        "name": "doro"
+                    }
+                }
             },
             "status": "PENDING"
         }
@@ -124,7 +131,14 @@ object ExamDummyResponse {
             id = 1,
             nickname = "doro",
             profileImageUrl = "",
-            tier = DuckieTier.DuckBronze,
+            duckPower = DuckPower(
+                id = 1,
+                tier = "덕력 20%",
+                tag = Tag(
+                    id = 1,
+                    name = "doro",
+                ),
+            ),
             favoriteTags = persistentListOf(),
             favoriteCategories = persistentListOf(),
         ),

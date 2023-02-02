@@ -27,16 +27,21 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
+import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
+import team.duckie.app.android.feature.ui.search.screen.SearchResultActivity
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 
@@ -74,12 +79,7 @@ class HomeActivity : BaseActivity() {
                             targetState = state.step,
                         ) { page ->
                             when (page) {
-                                BottomNavigationStep.HomeScreen -> DuckieHomeScreen(
-                                    navigateToSearchResult = {
-                                        // TODO(limsaehyun): navigate to search result screen
-                                    },
-                                )
-
+                                BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
                                 BottomNavigationStep.SearchScreen -> DuckieTodoScreen()
                                 BottomNavigationStep.RankingScreen -> DuckieTodoScreen()
                                 BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
@@ -153,6 +153,23 @@ class HomeActivity : BaseActivity() {
         when (sideEffect) {
             is HomeSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
+            }
+            is HomeSideEffect.NavigateToSearchResult -> {
+                startActivityWithAnimation<SearchResultActivity>(
+                    intentBuilder = {
+                        putExtra(Extras.SearchTag, sideEffect.searchTag)
+                    },
+                )
+            }
+            is HomeSideEffect.NavigateToHomeDetail -> {
+                startActivityWithAnimation<DetailActivity>(
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                    },
+                )
+            }
+            is HomeSideEffect.NavigateToCreateProblem -> {
+                startActivityWithAnimation<CreateProblemActivity>()
             }
         }
     }

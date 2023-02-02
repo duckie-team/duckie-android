@@ -74,7 +74,7 @@ internal fun HomeRecommendFollowingTestScreen(
                 onTabSelected = { step ->
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
-                onClickedEdit = {
+                onClickedCreate = {
                     // TODO(limsaehyun): 수정 페이지로 이동 필요
                 },
             )
@@ -84,16 +84,16 @@ internal fun HomeRecommendFollowingTestScreen(
             items = state.recommendFollowingTest,
         ) { _, maker ->
             TestCoverWithMaker(
-                profile = maker.owner.profile,
-                name = maker.owner.name,
+                profile = maker.owner.profileImgUrl,
+                name = maker.owner.nickname,
                 title = maker.title,
-                takers = maker.examineeNumber,
-                createAt = maker.createAt,
+                tier = maker.owner.tier,
+                favoriteTag = maker.owner.favoriteTag,
                 onClickUserProfile = {
-                    // TODO(limsaehyun): 추후에 유저의 profile로 이동 필요
+                    // TODO(limsaehyun): 유저의 profile 로 이동
                 },
                 onClickTestCover = {
-                    // TODO(limsaehyun): 상세보기로 이동
+                    // TODO(limsaehyun): home detail 로 이동
                 },
                 cover = maker.coverUrl,
             )
@@ -121,7 +121,7 @@ internal fun HomeRecommendFollowingScreen(
                 onTabSelected = { step ->
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
-                onClickedEdit = {
+                onClickedCreate = {
                     // TODO(limsaehyun): 수정 페이지로 이동 필요
                 },
             )
@@ -179,10 +179,10 @@ private fun HomeFollowingInitialRecommendUsers(
 
             UserFollowingLayout(
                 userId = user.userId,
-                profile = user.profile,
-                examineeNumber = user.examineeNumber,
-                name = user.name,
-                createAt = user.createAt,
+                profileImgUrl = user.profileImgUrl,
+                nickname = user.nickname,
+                favoriteTag = user.favoriteTag,
+                tier = user.tier,
                 isFollowing = following,
                 onClickFollowing = {
                     following = !following
@@ -200,8 +200,8 @@ private fun TestCoverWithMaker(
     profile: String,
     title: String,
     name: String,
-    takers: Int,
-    createAt: String,
+    tier: String,
+    favoriteTag: String,
     onClickTestCover: () -> Unit,
     onClickUserProfile: () -> Unit,
 ) {
@@ -223,8 +223,8 @@ private fun TestCoverWithMaker(
             profile = profile,
             title = title,
             name = name,
-            takers = takers,
-            createAt = createAt,
+            tier = tier,
+            favoriteTag = favoriteTag,
             onClickUserProfile = onClickUserProfile,
         )
     }
@@ -240,8 +240,8 @@ private fun TestMakerLayout(
     profile: String,
     title: String,
     name: String,
-    takers: Int,
-    createAt: String,
+    tier: String,
+    favoriteTag: String,
     onClickUserProfile: (() -> Unit)? = null,
 ) {
     Row(
@@ -264,7 +264,7 @@ private fun TestMakerLayout(
                 QuackBody3(text = name)
                 Spacer(modifier = Modifier.width(8.dp))
                 QuackBody3(
-                    text = "${stringResource(id = R.string.examinee)} $takers  ·  $createAt",
+                    text = "$tier · $favoriteTag",
                     color = QuackColor.Gray2,
                 )
             }

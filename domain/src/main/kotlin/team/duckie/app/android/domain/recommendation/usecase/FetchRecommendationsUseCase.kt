@@ -15,7 +15,6 @@ import javax.inject.Inject
 class FetchRecommendationsUseCase @Inject constructor(
     private val repository: RecommendationRepository,
 ) {
-    suspend operator fun invoke() = runCatching {
+    operator fun invoke() =
         repository.fetchRecommendations()
-    }
 }

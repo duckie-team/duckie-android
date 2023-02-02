@@ -35,4 +35,7 @@ interface ExamRepository {
         id: Int,
         examInstanceSubmitBody: ExamInstanceSubmitBody,
     ): ExamInstanceSubmit
+
+    @OutOfDateApi
+    suspend fun getExamFollowing(): List<Exam>
 }

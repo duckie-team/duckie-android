@@ -22,10 +22,13 @@ internal data class RecommendationJumbotronItemData(
     val description: String? = null,
 
     @JsonProperty("thumbnailUrl")
-    val thumbnailUrl: Any? = null,
+    val thumbnailUrl: String? = null,
 
     @JsonProperty("buttonTitle")
     val buttonTitle: String? = null,
+
+    @JsonProperty("type")
+    val type: String? = null,
 
     @JsonProperty("certifyingStatement")
     val certifyingStatement: String? = null,

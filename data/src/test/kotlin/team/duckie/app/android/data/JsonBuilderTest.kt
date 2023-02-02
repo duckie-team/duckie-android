@@ -14,7 +14,7 @@ import strikt.assertions.isEqualTo
 import team.duckie.app.android.data._util.buildJson
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.constant.DuckieTier
+import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 
 class JsonBuilderTest {
@@ -77,7 +77,14 @@ class JsonBuilderTest {
                     id = 0,
                     nickname = "test",
                     profileImageUrl = "test",
-                    tier = DuckieTier.DuckKid,
+                    duckPower = DuckPower(
+                        id = 1,
+                        tier = "도로 패션 20%",
+                        tag = Tag(
+                            id = 1,
+                            name = "도로패션",
+                        ),
+                    ),
                     favoriteTags = tags,
                     favoriteCategories = persistentListOf(
                         Category(
@@ -93,7 +100,8 @@ class JsonBuilderTest {
 
         val expected = "{\"name\":\"duckie\",\"age\":1,\"isDuck\":true," +
                 "\"friends\":[{\"id\":0,\"nickname\":\"test\",\"profileImageUrl\":\"test\"," +
-                "\"tier\":\"DuckKid\",\"favoriteTags\":[{\"id\":1,\"name\":\"tag\"}]," +
+                "\"duckPower\":{\"id\":1,\"tier\":\"도로 패션 20%\",\"tag\":{\"id\":1,\"name\":\"도로패션\"}}," +
+                "\"favoriteTags\":[{\"id\":1,\"name\":\"tag\"}]," +
                 "\"favoriteCategories\":[{\"id\":1,\"name\":\"1\",\"thumbnailUrl\":\"thumbnailUrl\"," +
                 "\"popularTags\":[{\"id\":1,\"name\":\"tag\"}]}]}]}"
 

@@ -12,19 +12,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
-import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RecommendationUseCaseModule {
-    @Provides
-    fun provideFetchFollowingTestUseCase(
-        repository: RecommendationRepository,
-    ): FetchFollowingTestUseCase {
-        return FetchFollowingTestUseCase(repository)
-    }
 
     @Provides
     fun provideFetchRecommendFollowingUseCase(

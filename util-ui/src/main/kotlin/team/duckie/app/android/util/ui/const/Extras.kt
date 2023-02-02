@@ -13,4 +13,6 @@ object Extras {
     const val AppUserId = "ExtraAppUserId"
     const val ExamId = "ExtraExamId"
     const val CertifyingStatement = "ExtraCertifyingStatement"
+
+    const val SearchTag = "ExtraSearchTag"
 }

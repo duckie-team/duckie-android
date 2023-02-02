@@ -38,16 +38,29 @@ private const val UserInfoBlockUserNameLayoutId = "UserInfoBlockUserName"
 private const val UserInfoBlockUserDescriptionLayoutId = "UserInfoBlockUserDescription"
 private const val UserInfoBlockFollowingButtonLayoutId = "UserInfoBlockFollowingButton"
 
+/**
+ * 유저를 추천할 때 사용하는 유저 팔로잉 레이아웃입니다
+ * 유저에 대한 기본적인 정보를 확인할 수 있으며 팔로우/언팔로우 기능이 있습니다.
+ *
+ * @param userId 유저의 id
+ * @param profileImgUrl 유저 프로필 이미지 url
+ * @param nickname 닉네임
+ * @param favoriteTag 관심 태그
+ * @param tier 현재 덕력
+ * @param onClickUserProfile 프로필 사진을 클릭 했을 때 실행되는 람다
+ * @param isFollowing 팔로우 여부
+ * @param onClickFollowing 팔로우 버튼을 클릭 했을 때 실행되는 람다
+ */
 @Composable
 fun UserFollowingLayout(
     modifier: Modifier = Modifier,
     userId: Int,
-    profile: String,
-    name: String,
-    examineeNumber: Int,
-    createAt: String,
-    onClickUserProfile: ((Int) -> Unit)? = null,
+    profileImgUrl: String,
+    nickname: String,
+    favoriteTag: String,
+    tier: String,
     isFollowing: Boolean,
+    onClickUserProfile: ((Int) -> Unit)? = null,
     onClickFollowing: (Boolean) -> Unit,
 ) {
     Layout(
@@ -60,7 +73,7 @@ fun UserFollowingLayout(
         content = {
             QuackImage(
                 modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
-                src = profile,
+                src = profileImgUrl,
                 size = HomeProfileSize,
                 shape = SquircleShape,
                 onClick = {
@@ -73,13 +86,13 @@ fun UserFollowingLayout(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserNameLayoutId)
                     .padding(start = 8.dp, top = 2.dp),
-                text = name,
+                text = nickname,
             )
             QuackBody3(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserDescriptionLayoutId)
                     .padding(start = 8.dp),
-                text = "${stringResource(id = R.string.examinee)} $examineeNumber  ·  $createAt",
+                text = "$tier · $favoriteTag",
             )
             QuackBody2(
                 modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),

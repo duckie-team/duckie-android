@@ -11,6 +11,8 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.domain.user.model.UserFollowing
+import team.duckie.app.android.util.kotlin.ExperimentalApi
 
 @Immutable
 interface UserRepository {
@@ -25,4 +27,7 @@ interface UserRepository {
     ): User
 
     suspend fun nicknameValidateCheck(nickname: String): Boolean
+
+    @ExperimentalApi
+    suspend fun getUserFollowing(): UserFollowing
 }

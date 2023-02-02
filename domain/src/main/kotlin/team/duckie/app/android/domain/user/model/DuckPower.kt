@@ -5,23 +5,17 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("unused")
-
 package team.duckie.app.android.domain.user.model
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
-import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 
 @Immutable
 @Parcelize
-data class User(
+data class DuckPower(
     val id: Int,
-    val nickname: String,
-    val profileImageUrl: String,
-    val duckPower: DuckPower?,
-    val favoriteTags: List<Tag>?,
-    val favoriteCategories: List<Category>?,
+    val tier: String,
+    val tag: Tag,
 ) : Parcelable
