@@ -12,7 +12,9 @@ import io.ktor.client.statement.HttpResponse
 import team.duckie.app.android.data._exception.model.ExceptionBody
 import team.duckie.app.android.data._exception.model.throwing
 import team.duckie.app.android.data._util.jsonMapper
+import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.util.kotlin.ApiErrorThreshold
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.toDuckieStatusCode
 
 @Suppress("TooGenericExceptionCaught")
@@ -42,6 +44,23 @@ internal inline fun <DomainModel> responseCatching(
         return parse(response)
     } else {
         jsonMapper.readValue(response, ExceptionBody::class.java)
+            .copy(statusCode = statusCode.toDuckieStatusCode())
+            .throwing()
+    }
+}
+
+/** response json 문자열에서 특정 [key] 에 대응하는 값을 문자열 형태로 반환합니다. */
+@Suppress("TooGenericExceptionCaught")
+internal fun responseCatchingGet(
+    statusCode: Int,
+    key: String,
+    responseJsonString: String,
+): String {
+    if (statusCode < ApiErrorThreshold) {
+        val map = responseJsonString.toStringJsonMap()
+        return map[key] ?: duckieResponseFieldNpe(key)
+    } else {
+        jsonMapper.readValue(responseJsonString, ExceptionBody::class.java)
             .copy(statusCode = statusCode.toDuckieStatusCode())
             .throwing()
     }

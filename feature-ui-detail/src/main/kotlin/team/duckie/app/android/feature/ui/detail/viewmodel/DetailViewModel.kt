@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
@@ -21,21 +20,16 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import team.duckie.app.android.domain.category.model.Category
-import team.duckie.app.android.domain.exam.model.Answer
-import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.exam.model.Problem
-import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.domain.exam.model.ShortModel
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
-import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.model.DuckPower
-import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.domain.heart.model.HeartsBody
+import team.duckie.app.android.domain.heart.usecase.HeartsUseCase
+import team.duckie.app.android.domain.heart.usecase.UnHeartsUseCase
 import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
+import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
@@ -47,20 +41,27 @@ class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
     private val userRepository: UserRepository,
     private val followUseCase: FollowUseCase,
+    private val heartsUseCase: HeartsUseCase,
+    private val unHeartsUseCase: UnHeartsUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
-    @OptIn(OutOfDateApi::class)
-    suspend fun initExamData() {
+    suspend fun initState() {
         val appUserId = savedStateHandle.getStateFlow(Extras.AppUserId, -1).value
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
 
-        val exam = runCatching { examRepository.getExam(examId) }.getOrNull() ?: dummyExam
-        val appUser = runCatching { userRepository.get(appUserId) }.getOrNull() ?: dummyUser
+        val exam = runCatching { examRepository.getExam(examId) }.getOrNull()
+        val appUser = runCatching { userRepository.get(appUserId) }.getOrNull()
         delay(DelayTime)
         intent {
-            reduce { DetailState.Success(exam, appUser) }
+            reduce {
+                if (exam != null && appUser != null) {
+                    DetailState.Success(exam, appUser)
+                } else {
+                    DetailState.Error(DuckieResponseFieldNPE("exam or appUser is Null"))
+                }
+            }
         }
     }
 
@@ -84,138 +85,47 @@ class DetailViewModel @Inject constructor(
             intent { postSideEffect(DetailSideEffect.ReportError(it)) }
         }
     }
+
+    fun heartExam() = viewModelScope.launch {
+        val detailState = container.stateFlow.value
+        require(detailState is DetailState.Success)
+
+        intent {
+            if (!detailState.isHeart) {
+                heartsUseCase(detailState.exam.id)
+                    .onSuccess { heartId ->
+                        reduce {
+                            (state as DetailState.Success).run { copy(heartId = heartId) }
+                        }
+                    }.onFailure {
+                        postSideEffect(DetailSideEffect.ReportError(it))
+                    }
+            } else {
+                unHeartsUseCase(HeartsBody(detailState.exam.id, detailState.heartId))
+                    .onSuccess { apiResult ->
+                        if (apiResult) {
+                            reduce {
+                                (state as DetailState.Success).run { copy(heartId = null) }
+                            }
+                        }
+                    }.onFailure {
+                        postSideEffect(DetailSideEffect.ReportError(it))
+                    }
+            }
+        }
+    }
+
+    fun startExam() = viewModelScope.launch {
+        intent {
+            require(state is DetailState.Success)
+            postSideEffect(
+                (state as DetailState.Success).run {
+                    DetailSideEffect.StartExam(
+                        exam.id,
+                        exam.certifyingStatement,
+                    )
+                },
+            )
+        }
+    }
 }
-
-private val dummyExam = Exam(
-    id = 1,
-    // TODO(EvergreenTree97): 문제 만들기 3단계 작업 시 테스트 후 삭제 필요
-    title = "제 1회 도로 패션영역",
-    description = "도로의 패션을 파헤쳐보자 ㅋㅋ",
-    thumbnailUrl = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1669793968813",
-    buttonTitle = "TestText",
-    certifyingStatement = "열심히 살지 말라고 하셨다",
-    solvedCount = 1,
-    answerRate = 0.66f,
-    category = Category(
-        id = 1,
-        name = "test",
-        thumbnailUrl = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1669793968813",
-        popularTags = persistentListOf(
-            Tag(4, "도로록PopularTag1"),
-            Tag(5, "도로록PopularTag2"),
-        ),
-    ),
-    mainTag = Tag(1, "도로록Main1"),
-    subTags = persistentListOf(
-        Tag(2, "도로록Sub1"),
-        Tag(3, "도로록Sub2"),
-    ),
-    problems = persistentListOf(
-        Problem(
-            id = 1,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 2,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 3,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 4,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-        Problem(
-            id = 5,
-            question = Question.Text(
-                text = "",
-            ),
-            answer = Answer.Short(
-                answer = ShortModel("바보"),
-            ),
-            memo = "test memo 1",
-            hint = "test hint 1",
-            correctAnswer = "3",
-        ),
-    ),
-    type = "text",
-    user = User(
-        id = 1,
-        nickname = "doro",
-        profileImageUrl = "",
-        duckPower = DuckPower(
-            id = 123,
-            tier = "덕력 20%",
-            tag = Tag(
-                id = 1,
-                name = "도로록Main1",
-            ),
-        ),
-        favoriteTags = persistentListOf(),
-        favoriteCategories = persistentListOf(),
-    ),
-    status = "PENDING",
-)
-
-private val dummyUser = User(
-    id = 1,
-    nickname = "도로롥",
-    profileImageUrl = "",
-    duckPower = DuckPower(
-        id = 123,
-        tier = "덕력 20%",
-        tag = Tag(
-            id = 1,
-            name = "도로록Main1",
-        ),
-    ),
-    favoriteTags = persistentListOf(
-        Tag(2, "도로록Sub1"),
-        Tag(3, "도로록Sub2"),
-    ),
-    favoriteCategories = persistentListOf(
-        Category(
-            id = 1,
-            name = "test",
-            thumbnailUrl = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1669793968813",
-            popularTags = persistentListOf(
-                Tag(4, "도로록PopularTag1"),
-                Tag(5, "도로록PopularTag2"),
-            ),
-        ),
-    ),
-)
