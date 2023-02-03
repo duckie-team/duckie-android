@@ -7,6 +7,9 @@
 
 package team.duckie.app.android.util.kotlin
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
+
 /**
  * To efficiently import a list of other players with a list of players and updated elements,
  * one simple solution is to copy the list to a changeable list, update the desired element,
@@ -14,4 +17,19 @@ package team.duckie.app.android.util.kotlin
  */
 inline fun <T> List<T>.copy(mutator: MutableList<T>.() -> Unit): List<T> {
     return toMutableList().apply(mutator)
+}
+
+/**
+ * [ImmutableList] 의 팩토리 함수입니다
+ *
+ * @param size 리스트의 크기
+ * @param init 초기화 빌더
+ *
+ * @return [ImmutableList]를 반환합니다.
+ */
+inline fun <T> ImmutableList(
+    size: Int,
+    init: (Int) -> T
+): ImmutableList<T> {
+    return List(size, init).toImmutableList()
 }
