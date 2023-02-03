@@ -19,27 +19,29 @@ import team.duckie.app.android.feature.ui.solve.problem.dummyList
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
 import javax.inject.Inject
 
 @HiltViewModel
-internal class SolveProblemViewModel @Inject constructor(
-
-) : ViewModel(),
+internal class SolveProblemViewModel @Inject constructor() :
+    ViewModel(),
     ContainerHost<SolveProblemState, SolveProblemSideEffect> {
     override val container: Container<SolveProblemState, SolveProblemSideEffect> = container(
-        SolveProblemState()
+        SolveProblemState(),
     )
 
+    @AllowMagicNumber
     fun getProblems() = intent {
         reduce { state.copy(isProblemsLoading = true) }
-        delay(1000)
+        delay(1000L)
         reduce {
-            state.copy( // TODO(EvergreenTree97): 네트워크 통신으로 변경 필요
+            state.copy(
+                // TODO(EvergreenTree97): 네트워크 통신으로 변경 필요
                 isProblemsLoading = false,
                 problems = dummyList,
-                inputAnswers = ImmutableList(dummyList.size) { InputAnswer() }
+                inputAnswers = ImmutableList(dummyList.size) { InputAnswer() },
             )
         }
     }
@@ -48,7 +50,7 @@ internal class SolveProblemViewModel @Inject constructor(
         if (state.currentPageIndex < state.totalPage - 1) {
             reduce {
                 state.copy(
-                    currentPageIndex = state.currentPageIndex.plus(1)
+                    currentPageIndex = state.currentPageIndex.plus(1),
                 )
             }
         }
@@ -58,7 +60,7 @@ internal class SolveProblemViewModel @Inject constructor(
         if (state.currentPageIndex > 0) {
             reduce {
                 state.copy(
-                    currentPageIndex = state.currentPageIndex.minus(1)
+                    currentPageIndex = state.currentPageIndex.minus(1),
                 )
             }
         }
@@ -66,13 +68,13 @@ internal class SolveProblemViewModel @Inject constructor(
 
     fun inputAnswer(
         pageIndex: Int,
-        inputAnswer: InputAnswer
+        inputAnswer: InputAnswer,
     ) = intent {
         reduce {
             state.copy(
                 inputAnswers = state.inputAnswers.copy {
                     this[pageIndex] = inputAnswer
-                }
+                },
             )
         }
     }

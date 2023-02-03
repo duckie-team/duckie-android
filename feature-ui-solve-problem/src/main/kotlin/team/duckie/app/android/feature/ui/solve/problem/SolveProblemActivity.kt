@@ -35,7 +35,7 @@ class SolveProblemActivity : BaseActivity() {
             QuackTheme {
                 val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
-                LaunchedEffect(Unit){
+                LaunchedEffect(Unit) {
                     viewModel.getProblems()
                 }
 

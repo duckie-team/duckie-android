@@ -34,9 +34,10 @@ inline fun <T> ImmutableList<T>.copy(mutator: MutableList<T>.() -> Unit): Immuta
  *
  * @return [ImmutableList]를 반환합니다.
  */
+@Suppress("FunctionNaming")
 inline fun <T> ImmutableList(
     size: Int,
-    init: (Int) -> T
+    init: (Int) -> T,
 ): ImmutableList<T> {
     return List(size, init).toImmutableList()
 }

@@ -48,7 +48,6 @@ internal fun AudioController(
                 }
 
                 else -> {
-
                     LargeButton(
                         text = buttonText,
                         onClick = onClick,

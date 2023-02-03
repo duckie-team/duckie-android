@@ -48,7 +48,7 @@ internal fun LazyListScope.answerSection(
                                     InputAnswer(
                                         number = index,
                                         answer = choice.text,
-                                    )
+                                    ),
                                 )
                                 onSolveProblem()
                             },
@@ -77,7 +77,7 @@ internal fun LazyListScope.answerSection(
                                 InputAnswer(
                                     number = index,
                                     answer = imageChoice.text,
-                                )
+                                ),
                             )
                             onSolveProblem()
                         },
@@ -97,7 +97,7 @@ internal fun LazyListScope.answerSection(
                             InputAnswer(
                                 number = 0,
                                 answer = inputText,
-                            )
+                            ),
                         )
                         onSolveProblem()
                     },

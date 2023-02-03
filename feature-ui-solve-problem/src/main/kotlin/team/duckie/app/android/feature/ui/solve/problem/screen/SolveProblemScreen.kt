@@ -37,7 +37,7 @@ import team.duckie.app.android.util.ui.finishWithAnimation
 
 @Composable
 internal fun SolveProblemScreen(
-    viewModel: SolveProblemViewModel = activityViewModel()
+    viewModel: SolveProblemViewModel = activityViewModel(),
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val totalPage = remember { state.totalPage }
