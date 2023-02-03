@@ -31,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,7 +42,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
@@ -106,9 +104,8 @@ internal fun DetailScreen(
 
 @Composable
 private fun DetailLoadingScreen(viewModel: DetailViewModel, modifier: Modifier) {
-    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
-        coroutineScope.launch { viewModel.initExamData() }
+        viewModel.initState()
     }
 
     Column(
@@ -159,8 +156,8 @@ private fun DetailSuccessScreen(
                     .layoutId(DetailScreenBottomBarLayoutId)
                     .background(color = QuackColor.White.composeColor),
                 state,
-                onHeartClick = { },
-                onChallengeClick = { },
+                onHeartClick = viewModel::heartExam,
+                onChallengeClick = viewModel::startExam,
             )
         },
     ) { measurableItems, constraints ->
@@ -261,7 +258,9 @@ private fun DetailContentLayout(
             horizontalSpace = 4.dp,
             items = state.exam.subTags.copy { add(0, state.exam.mainTag) }.fastMap { it.name },
             tagType = QuackTagType.Grayscale(""),
-            onClick = {},
+            onClick = {
+                // TODO(riflockle7): 태그 검색 화면으로 이동
+            },
         )
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
@@ -321,7 +320,9 @@ private fun DetailProfileLayout(
                 // 댓글 작성자 닉네임
                 QuackBody3(
                     text = state.exam.user.nickname,
-                    onClick = {},
+                    onClick = {
+                        // TODO(riflockle7): 마이페이지로 이동
+                    },
                     color = QuackColor.Black,
                 )
 

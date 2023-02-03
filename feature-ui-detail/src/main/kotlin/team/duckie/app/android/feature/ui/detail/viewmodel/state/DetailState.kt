@@ -24,10 +24,14 @@ sealed class DetailState {
     data class Success(
         val exam: Exam,
         val appUser: User,
+        val heartId: Int? = null,
         val isFollowing: Boolean = false,
     ) : DetailState() {
         val isOwner: Boolean
             get() = exam.user.id == appUser.id
+
+        val isHeart: Boolean
+            get() = heartId != null
     }
 
     /**

@@ -12,9 +12,12 @@ import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.detail.screen.DetailScreen
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
+import team.duckie.app.android.feature.ui.start.exam.screen.StartExamActivity
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 
@@ -49,6 +52,12 @@ class DetailActivity : BaseActivity() {
                 sideEffect.exception.reportToToast()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
+            is DetailSideEffect.StartExam -> startActivityWithAnimation<StartExamActivity>(
+                intentBuilder = {
+                    putExtra(Extras.ExamId, sideEffect.examId)
+                    putExtra(Extras.CertifyingStatement, sideEffect.certifyingStatement)
+                },
+            )
             else -> {}
         }
     }
