@@ -12,7 +12,7 @@ import javax.inject.Inject
 import team.duckie.app.android.domain.heart.repository.HeartsRepository
 
 @Immutable
-class HeartUseCase @Inject constructor(
+class HeartsUseCase @Inject constructor(
     private val heartsRepository: HeartsRepository,
 ) {
     suspend operator fun invoke(examId: Int) = runCatching {

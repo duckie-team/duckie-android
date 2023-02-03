@@ -12,19 +12,19 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.heart.repository.HeartsRepository
-import team.duckie.app.android.domain.heart.usecase.HeartUseCase
-import team.duckie.app.android.domain.heart.usecase.UnHeartUseCase
+import team.duckie.app.android.domain.heart.usecase.HeartsUseCase
+import team.duckie.app.android.domain.heart.usecase.UnHeartsUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
 object HeartsUseCaseModule {
     @Provides
-    fun provideUnHeartsUseCase(repository: HeartsRepository): UnHeartUseCase {
-        return UnHeartUseCase(repository)
+    fun provideUnHeartsUseCase(repository: HeartsRepository): UnHeartsUseCase {
+        return UnHeartsUseCase(repository)
     }
 
     @Provides
-    fun provideHeartsUseCase(repository: HeartsRepository): HeartUseCase {
-        return HeartUseCase(repository)
+    fun provideHeartsUseCase(repository: HeartsRepository): HeartsUseCase {
+        return HeartsUseCase(repository)
     }
 }

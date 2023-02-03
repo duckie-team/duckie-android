@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._datasource.bodyAsText
 import team.duckie.app.android.data._exception.util.responseCatchingGet
 import team.duckie.app.android.data._util.buildJson
-import team.duckie.app.android.domain.heart.model.HeartBody
+import team.duckie.app.android.domain.heart.model.HeartsBody
 import team.duckie.app.android.domain.heart.repository.HeartsRepository
 import javax.inject.Inject
 
@@ -34,7 +34,7 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
         ).toInt()
     }
 
-    override suspend fun unHeart(heartsBody: HeartBody): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun unHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
         requireNotNull(heartsBody.heartId)
         val (_, response) = fuel
             .delete("/hearts")
