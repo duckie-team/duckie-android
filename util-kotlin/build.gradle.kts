@@ -13,4 +13,5 @@ plugins {
 dependencies {
     detektPlugins(libs.detekt.plugin.formatting)
     implementation(libs.kotlin.coroutines)
+    implementation(libs.kotlin.collections.immutable)
 }

@@ -73,7 +73,7 @@ val dummyList = persistentListOf(
             imageChoice = persistentListOf(
                 ImageChoiceModel(
                     text = "젤다",
-                    imageUrl = "https://media.w3.org/2010/05/sintel/poster.png",
+                    imageUrl = "https://images.unsplash.com/photo-1566577134657-a8b2da3b4dcb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
                 ),
                 ImageChoiceModel(
                     text = "너의 이름은",
