@@ -20,6 +20,13 @@ inline fun <T> List<T>.copy(mutator: MutableList<T>.() -> Unit): List<T> {
 }
 
 /**
+ * Mutable builder for ImmutableList
+ */
+inline fun <T> ImmutableList<T>.copy(mutator: MutableList<T>.() -> Unit): ImmutableList<T> {
+    return toMutableList().apply(mutator).toImmutableList()
+}
+
+/**
  * [ImmutableList] 의 팩토리 함수입니다
  *
  * @param size 리스트의 크기
