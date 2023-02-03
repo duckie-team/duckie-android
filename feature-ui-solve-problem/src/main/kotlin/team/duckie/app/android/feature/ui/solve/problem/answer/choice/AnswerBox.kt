@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -64,24 +66,27 @@ internal fun ImageAnswerBox(
     onClick: () -> Unit,
 ) {
     GraySurface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxSize(),
         selected = selected,
         onClick = onClick,
     ) {
         Column(
-            modifier = Modifier.padding(all = 12.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(all = 12.dp),
             verticalArrangement = Arrangement.spacedBy(space = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             QuackImage(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .aspectRatio(ratio = 1f),
                 src = imageSrc,
-                size = DpSize(all = 136.dp),
             )
             TextAndCheck(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        vertical = 2.dp,
-                    ),
+                    .padding(vertical = 2.dp),
                 text = text,
                 selected = selected,
             )
