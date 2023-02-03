@@ -5,12 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalLifecycleComposeApi::class)
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -21,43 +20,28 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.toImmutableList
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.solve.problem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.solve.problem.answer.answerSection
 import team.duckie.app.android.feature.ui.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.ui.solve.problem.common.DoubleButtonBottomBar
-import team.duckie.app.android.feature.ui.solve.problem.dummyList
 import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.ui.finishWithAnimation
 
 @Composable
-internal fun SolveProblemScreen() {
-    val problems by remember { mutableStateOf(dummyList) }
-    val totalPage = remember { problems.size }
-    var currentPageIndex by remember { mutableStateOf(0) }
+internal fun SolveProblemScreen(
+    viewModel: SolveProblemViewModel = activityViewModel()
+) {
+    val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
+    val totalPage = remember { state.totalPage }
     val activity = LocalContext.current as SolveProblemActivity
-    val answerSelections = remember {
-        mutableStateListOf(
-            elements = Array(
-                size = problems.size,
-                init = { -1 },
-            ),
-        )
-    }
-    val onNextPage: () -> Unit = remember {
-        {
-            if (currentPageIndex < totalPage - 1) {
-                currentPageIndex = currentPageIndex.plus(1)
-            }
-        }
-    }
 
     Scaffold(
         modifier = Modifier
@@ -69,23 +53,21 @@ internal fun SolveProblemScreen() {
                 onCloseClick = {
                     activity.finishWithAnimation()
                 },
-                currentPage = currentPageIndex + 1,
-                totalPage = problems.size,
+                currentPage = state.currentPageIndex + 1,
+                totalPage = totalPage,
             )
         },
         bottomBar = {
             DoubleButtonBottomBar(
-                isFirstPage = currentPageIndex == 0,
-                onLeftButtonClick = {
-                    currentPageIndex = currentPageIndex.minus(1)
-                },
-                onRightButtonClick = onNextPage,
+                isFirstPage = state.currentPageIndex == 0,
+                onLeftButtonClick = viewModel::movePreviousPage,
+                onRightButtonClick = viewModel::moveNextPage,
             )
         },
     ) { padding ->
         Crossfade(
             modifier = Modifier.padding(padding),
-            targetState = currentPageIndex,
+            targetState = state.currentPageIndex,
         ) { pageIndex ->
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -93,16 +75,14 @@ internal fun SolveProblemScreen() {
             ) {
                 questionSection(
                     page = pageIndex,
-                    question = problems[pageIndex].question,
+                    question = state.problems[pageIndex].question,
                 )
                 answerSection(
                     page = pageIndex,
-                    answer = problems[pageIndex].answer,
-                    answerSelections = answerSelections.toImmutableList(),
-                    onClickAnswer = { index ->
-                        answerSelections[pageIndex] = index
-                    },
-                    onSolveProblem = onNextPage,
+                    answer = state.problems[pageIndex].answer,
+                    inputAnswers = state.inputAnswers,
+                    onClickAnswer = viewModel::inputAnswer,
+                    onSolveProblem = viewModel::moveNextPage,
                 )
             }
         }

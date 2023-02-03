@@ -42,15 +42,16 @@ internal fun AudioController(
         Crossfade(targetState = playing) {
             when (it) {
                 true -> {
-                    LargeButton(
-                        text = buttonText,
-                        onClick = onClick,
+                    PlayingGif(
+                        model = gifUrl,
                     )
                 }
 
                 else -> {
-                    PlayingGif(
-                        model = gifUrl,
+
+                    LargeButton(
+                        text = buttonText,
+                        onClick = onClick,
                     )
                 }
             }

@@ -19,6 +19,7 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.feature.ui.solve.problem.answer.choice.ImageAnswerBox
 import team.duckie.app.android.feature.ui.solve.problem.answer.choice.TextAnswerBox
 import team.duckie.app.android.feature.ui.solve.problem.answer.shortanswer.ShortAnswerForm
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 
 private val HorizontalPadding = PaddingValues(horizontal = 16.dp)
@@ -26,9 +27,9 @@ private val HorizontalPadding = PaddingValues(horizontal = 16.dp)
 internal fun LazyListScope.answerSection(
     page: Int,
     answer: Answer,
-    answerSelections: ImmutableList<Int>,
+    inputAnswers: ImmutableList<InputAnswer>,
     onSolveProblem: () -> Unit,
-    onClickAnswer: (index: Int) -> Unit,
+    onClickAnswer: (page: Int, inputAnswer: InputAnswer) -> Unit,
 ) {
     when (answer) {
         is Answer.Choice -> {
@@ -40,9 +41,15 @@ internal fun LazyListScope.answerSection(
                     answer.choices.forEachIndexed { index, choice ->
                         TextAnswerBox(
                             text = choice.text,
-                            selected = index == answerSelections[page],
+                            selected = index != -1 && index == inputAnswers[page].number,
                             onClick = {
-                                onClickAnswer(index)
+                                onClickAnswer(
+                                    page,
+                                    InputAnswer(
+                                        number = index,
+                                        answer = choice.text,
+                                    )
+                                )
                                 onSolveProblem()
                             },
                         )
@@ -57,15 +64,21 @@ internal fun LazyListScope.answerSection(
                     modifier = Modifier.padding(paddingValues = HorizontalPadding),
                     items = answer.imageChoice,
                     columns = 2,
-                    verticalPadding = 8.dp,
-                    horizontalPadding = 24.dp,
+                    verticalPadding = 24.dp,
+                    horizontalPadding = 8.dp,
                 ) { index, imageChoice ->
                     ImageAnswerBox(
                         imageSrc = imageChoice.imageUrl,
                         text = imageChoice.text,
-                        selected = index == answerSelections[page],
+                        selected = index != -1 && index == inputAnswers[page].number,
                         onClick = {
-                            onClickAnswer(index)
+                            onClickAnswer(
+                                page,
+                                InputAnswer(
+                                    number = index,
+                                    answer = imageChoice.text,
+                                )
+                            )
                             onSolveProblem()
                         },
                     )
@@ -78,8 +91,14 @@ internal fun LazyListScope.answerSection(
                 ShortAnswerForm(
                     modifier = Modifier.padding(paddingValues = HorizontalPadding),
                     answer = answer.answer.text,
-                    onDone = { inputAnswer -> // TODO(EvergreenTree97): 서버에 보낼 정답 text
-                        inputAnswer
+                    onDone = { inputText -> // TODO(EvergreenTree97): 서버에 보낼 정답 text
+                        onClickAnswer(
+                            page,
+                            InputAnswer(
+                                number = 0,
+                                answer = inputText,
+                            )
+                        )
                         onSolveProblem()
                     },
                 )
