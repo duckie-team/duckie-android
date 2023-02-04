@@ -33,13 +33,13 @@ import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
+import team.duckie.app.android.feature.datastore.me
 
 const val DelayTime = 2000L
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
-    private val userRepository: UserRepository,
     private val followUseCase: FollowUseCase,
     private val heartsUseCase: HeartsUseCase,
     private val unHeartsUseCase: UnHeartsUseCase,
@@ -48,18 +48,16 @@ class DetailViewModel @Inject constructor(
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
     suspend fun initState() {
-        val appUserId = savedStateHandle.getStateFlow(Extras.AppUserId, -1).value
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
 
         val exam = runCatching { examRepository.getExam(examId) }.getOrNull()
-        val appUser = runCatching { userRepository.get(appUserId) }.getOrNull()
         delay(DelayTime)
         intent {
             reduce {
-                if (exam != null && appUser != null) {
-                    DetailState.Success(exam, appUser)
+                if (exam != null) {
+                    DetailState.Success(exam, me)
                 } else {
-                    DetailState.Error(DuckieResponseFieldNPE("exam or appUser is Null"))
+                    DetailState.Error(DuckieResponseFieldNPE("exam is Null"))
                 }
             }
         }
