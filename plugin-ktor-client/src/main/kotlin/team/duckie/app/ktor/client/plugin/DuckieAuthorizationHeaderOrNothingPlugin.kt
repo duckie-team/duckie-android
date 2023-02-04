@@ -33,6 +33,12 @@ val DuckieAuthorizationHeaderOrNothingPlugin = createClientPlugin(
     }
 }
 
+// TODO(riflockle7): 의존 관계가 꼬여있는듯한 느낌이 있음. Api Header 명세 내용을 해당 모듈로 옮길 필요가 있음
+//   일단은 하드코딩으로 처리
+fun MutableMap<String, String>.addDuckieAuthorizationHeader() = this.apply {
+    DuckieAuthorizationHeader.accessToken?.let { put("Authorization", "Bearer $it") }
+}
+
 class DuckieAuthorizationHeaderConfig {
     var headerKey: String = "authorization"
 }
