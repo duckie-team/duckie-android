@@ -74,7 +74,7 @@ class IntroActivity : BaseActivity() {
                 delay(SplashScreenFinishDurationMillis)
                 applicationContext.dataStore.data.first().let { preference ->
                     preference[PreferenceKey.Account.AccessToken]?.let { accessToken ->
-                        vm.attachAccessTokenToHeaderIfValidationPassed(accessToken)
+                        vm.attachAccessTokenToHeaderAndSetMeInstanceIfValidationPassed(accessToken)
                     } ?: launchOnboardActivity()
                 }
             }
@@ -88,7 +88,7 @@ class IntroActivity : BaseActivity() {
     private suspend fun handleState(state: IntroState) {
         with(state) {
             when {
-                accessTokenAttachedToHeader -> {
+                setMeInstance && accessTokenAttachedToHeader -> {
                     applicationContext.dataStore.data.first().let { preference ->
                         val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish] ?: false
                         launchHomeOrOnboardActivity(isOnboardFinsihed)
@@ -104,6 +104,9 @@ class IntroActivity : BaseActivity() {
 
     private fun handleSideEffect(sideEffect: IntroSideEffect) {
         when (sideEffect) {
+            is IntroSideEffect.SetMeInstance -> {
+                vm.setMeInstance(sideEffect.userId)
+            }
             is IntroSideEffect.AttachAccessTokenToHeader -> {
                 vm.attachAccessTokenToHeader(sideEffect.accessToken)
             }
@@ -120,7 +123,6 @@ class IntroActivity : BaseActivity() {
     }
 
     private fun launchHomeActivity() {
-        // TODO(sungbin): 끝낼 때 별다른 메시지를 안하는게 맞을까?
         changeActivityWithAnimation<HomeActivity>()
     }
 

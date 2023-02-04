@@ -18,6 +18,8 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.CheckAccessTokenUseCase
+import team.duckie.app.android.domain.user.usecase.GetUserUseCase
+import team.duckie.app.android.feature.datastore.me
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.app.android.presentation.viewmodel.state.IntroState
 
@@ -26,6 +28,7 @@ internal class IntroViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
     private val attachAccessTokenToHeaderUseCase: AttachAccessTokenToHeaderUseCase,
+    private val getUserUseCase: GetUserUseCase,
 ) : ContainerHost<IntroState, IntroSideEffect>, ViewModel() {
 
     override val container = container<IntroState, IntroSideEffect>(
@@ -33,11 +36,12 @@ internal class IntroViewModel @Inject constructor(
         savedStateHandle = savedStateHandle,
     )
 
-    suspend fun attachAccessTokenToHeaderIfValidationPassed(accessToken: String) = intent {
+    suspend fun attachAccessTokenToHeaderAndSetMeInstanceIfValidationPassed(accessToken: String) = intent {
         checkAccessTokenUseCase(accessToken)
-            .onSuccess { pass ->
-                if (pass) {
+            .onSuccess { validation ->
+                if (validation.passed) {
                     postSideEffect(IntroSideEffect.AttachAccessTokenToHeader(accessToken))
+                    postSideEffect(IntroSideEffect.SetMeInstance(validation.requireUserId))
                 } else {
                     reduce {
                         state.copy(accessTokenValidationFail = true)
@@ -52,6 +56,17 @@ internal class IntroViewModel @Inject constructor(
             .onSuccess {
                 reduce {
                     state.copy(accessTokenAttachedToHeader = true)
+                }
+            }
+            .attachExceptionHandling()
+    }
+
+    fun setMeInstance(userId: Int) = intent {
+        getUserUseCase(userId)
+            .onSuccess { user ->
+                me = user
+                reduce {
+                    state.copy(setMeInstance = true)
                 }
             }
             .attachExceptionHandling()
