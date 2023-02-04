@@ -23,7 +23,7 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
             .post("/hearts")
             .body(
                 body = buildJson {
-                    "examId" withString "$examId"
+                    "examId" withInt  examId
                 },
             ).responseString()
 
@@ -36,12 +36,14 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
 
     override suspend fun unHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
         requireNotNull(heartsBody.heartId)
+        val (examId, heartId) = heartsBody.examId to heartsBody.heartId!!
+
         val (_, response) = fuel
             .delete("/hearts")
             .body(
                 body = buildJson {
-                    "examId" withString "${heartsBody.examId}"
-                    "heartId" withString "${heartsBody.heartId}"
+                    "examId" withInt examId
+                    "heartId" withInt heartId
                 },
             ).responseString()
 
