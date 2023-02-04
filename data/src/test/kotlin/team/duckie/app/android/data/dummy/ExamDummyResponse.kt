@@ -139,8 +139,8 @@ object ExamDummyResponse {
                     name = "doro",
                 ),
             ),
-            favoriteTags = persistentListOf(),
-            favoriteCategories = persistentListOf(),
+            favoriteTags = null,
+            favoriteCategories = null,
         ),
         status = "PENDING",
     )
