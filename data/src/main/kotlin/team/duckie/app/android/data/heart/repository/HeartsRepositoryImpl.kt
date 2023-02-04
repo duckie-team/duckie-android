@@ -10,6 +10,8 @@ package team.duckie.app.android.data.heart.repository
 import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import team.duckie.app.android.data._datasource.AuthInterceptorFuelClient
+import team.duckie.app.android.data._datasource.DuckieHttpHeaders
 import team.duckie.app.android.data._datasource.bodyAsText
 import team.duckie.app.android.data._exception.util.responseCatchingGet
 import team.duckie.app.android.data._util.buildJson
@@ -17,7 +19,9 @@ import team.duckie.app.android.domain.heart.model.HeartsBody
 import team.duckie.app.android.domain.heart.repository.HeartsRepository
 import javax.inject.Inject
 
-class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
+class HeartsRepositoryImpl @Inject constructor(
+    @AuthInterceptorFuelClient private val fuel: Fuel,
+) : HeartsRepository {
     override suspend fun heart(examId: Int): Int = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .post("/hearts")

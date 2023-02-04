@@ -10,6 +10,8 @@ package team.duckie.app.android.data.tag.repository
 import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import team.duckie.app.android.data._datasource.AuthInterceptorFuelClient
+import team.duckie.app.android.data._datasource.UnAuthorInterceptorFuelClient
 import team.duckie.app.android.data._datasource.bodyAsText
 import team.duckie.app.android.data._exception.util.responseCatching
 import javax.inject.Inject
@@ -20,7 +22,9 @@ import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
 
-class TagRepositoryImpl @Inject constructor(private val fuel: Fuel) : TagRepository {
+class TagRepositoryImpl @Inject constructor(
+    @UnAuthorInterceptorFuelClient private val fuel: Fuel,
+) : TagRepository {
     override suspend fun create(name: String): Tag = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .post("/tags")
