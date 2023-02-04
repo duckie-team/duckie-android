@@ -310,7 +310,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             profileImageUrl = profileImageUrl,
             favoriteCategories = favoriteCategories,
             favoriteTags = favoriteTags,
-            updateMeInstance = { user -> MeInstance = user }
+            updateMeInstance = { user -> MeInstance = user },
         )
             .onSuccess { user ->
                 reduce {
