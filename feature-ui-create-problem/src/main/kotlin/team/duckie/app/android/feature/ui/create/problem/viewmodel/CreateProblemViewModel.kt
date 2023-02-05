@@ -232,6 +232,7 @@ internal class CreateProblemViewModel @Inject constructor(
     internal fun makeExam() = intent {
         makeExamUseCase(generateExamBody()).onSuccess { isSuccess: Boolean ->
             print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
+            finishCreateProblem()
         }.onFailure {
             it.printStackTrace()
             throw it
