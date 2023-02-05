@@ -10,7 +10,6 @@ package team.duckie.app.android.data.tag.repository
 import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import team.duckie.app.android.data._datasource.AuthInterceptorFuelClient
 import team.duckie.app.android.data._datasource.UnAuthorInterceptorFuelClient
 import team.duckie.app.android.data._datasource.bodyAsText
 import team.duckie.app.android.data._exception.util.responseCatching
