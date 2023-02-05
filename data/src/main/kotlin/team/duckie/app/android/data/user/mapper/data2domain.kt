@@ -5,12 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("ConstPropertyName")
+@file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.data.user.mapper
 
 import kotlin.random.Random
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.category.model.CategoryData
@@ -29,16 +28,21 @@ import team.duckie.app.android.util.kotlin.fastMap
 
 private const val NicknameSuffixMaxLength = 10_000
 private const val NicknameSuffixLength = 4
+private val DuckieDefaultNickname: String
+    get() {
+        val suffix = Random.nextInt(NicknameSuffixMaxLength)
+            .toString()
+            .padStart(NicknameSuffixLength, '0')
+        return "덕키즈_$suffix"
+    }
 
 internal fun UserResponse.toDomain() = User(
     id = id ?: duckieResponseFieldNpe("id"),
-    nickname = nickName
-        ?: "덕키즈_${Random.nextInt(NicknameSuffixMaxLength).toString().padStart(NicknameSuffixLength, '0')}",
+    nickname = nickName ?: DuckieDefaultNickname,
     profileImageUrl = profileImageUrl ?: duckieResponseFieldNpe("profileImageUrl"),
-    duckPower = duckPower?.toDomain() ?: duckieResponseFieldNpe("duckPower"),
-    favoriteTags = favoriteTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
-    favoriteCategories = favoriteCategories?.fastMap(CategoryData::toDomain)?.toImmutableList()
-        ?: persistentListOf(),
+    duckPower = duckPower?.toDomain(),
+    favoriteTags = favoriteTags?.fastMap(TagData::toDomain)?.toImmutableList(),
+    favoriteCategories = favoriteCategories?.fastMap(CategoryData::toDomain)?.toImmutableList(),
 )
 
 internal fun UserFollowingRecommendationsResponse.toDomain() = UserFollowingRecommendations(
@@ -53,8 +57,10 @@ internal fun UserFollowingResponse.toDomain() = UserFollowing(
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.followingRecommendations"),
 )
 
-internal fun DuckPowerResponse.toDomain() = DuckPower(
-    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
-    tier = tier ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tier"),
-    tag = tag?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tag"),
-)
+internal fun DuckPowerResponse.toDomain(): DuckPower? {
+    return DuckPower(
+        id = id ?: return null,
+        tier = tier ?: return null,
+        tag = tag?.toDomain() ?: return null,
+    )
+}

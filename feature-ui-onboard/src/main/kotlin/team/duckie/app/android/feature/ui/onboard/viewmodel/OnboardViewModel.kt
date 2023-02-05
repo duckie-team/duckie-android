@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
+import team.duckie.app.android.feature.datastore.me as MeInstance
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
@@ -249,7 +250,7 @@ internal class OnboardViewModel @AssistedInject constructor(
                 }
                 postSideEffect(OnboardSideEffect.UpdateAccessToken(response.accessToken))
                 postSideEffect(OnboardSideEffect.AttachAccessTokenToHeader(response.accessToken))
-                postSideEffect(OnboardSideEffect.Joined(response.isNewUser))
+                postSideEffect(OnboardSideEffect.Joined(isNewUser = response.isNewUser, me = response.user))
             }
             .attachExceptionHandling()
     }
@@ -309,6 +310,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             profileImageUrl = profileImageUrl,
             favoriteCategories = favoriteCategories,
             favoriteTags = favoriteTags,
+            updateMeInstance = { user -> MeInstance = user },
         )
             .onSuccess { user ->
                 reduce {
