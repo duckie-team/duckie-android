@@ -54,6 +54,7 @@ import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
+import team.duckie.app.android.feature.datastore.me
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
@@ -87,7 +88,7 @@ internal class CreateProblemViewModel @Inject constructor(
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
 
     override val container =
-        container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
+        container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState(me))
 
     suspend fun initState() {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value

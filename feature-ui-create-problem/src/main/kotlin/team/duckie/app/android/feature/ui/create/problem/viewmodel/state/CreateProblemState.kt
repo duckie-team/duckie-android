@@ -16,8 +16,10 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.domain.user.model.User
 
 internal data class CreateProblemState(
+    val me: User,
     val isEditMode: Boolean = false,
     val createProblemStep: CreateProblemStep = CreateProblemStep.Loading,
     val examInformation: ExamInformation = ExamInformation(),
