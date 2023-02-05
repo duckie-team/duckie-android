@@ -7,9 +7,10 @@
 
 package team.duckie.app.android.data._exception.util
 
-import com.github.kittinunf.fuel.core.Response
+import com.github.kittinunf.fuel.core.ResponseOf
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
+import team.duckie.app.android.data._datasource.bodyAsText
 import team.duckie.app.android.data._exception.model.ExceptionBody
 import team.duckie.app.android.data._exception.model.throwing
 import team.duckie.app.android.data._util.jsonMapper
@@ -33,17 +34,17 @@ internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
     }
 }
 
-// TODO(riflockle7): 추후 responseCatching 과 합칠 수 있는 방법이 있을지 고민 필요
+// TODO(riflockle7, sungbin): 추후 responseCatching 과 합칠 수 있는 방법이 있을지 고민 필요
 @Suppress("TooGenericExceptionCaught")
-internal inline fun <reified DataModel, DomainModel> responseCatchingFuel(
-    response: Response,
-    parse: (body: DataModel) -> DomainModel,
+internal inline fun <reified DataModel, DomainModel> responseCatchingFuelObject(
+    rawResponse: ResponseOf<DataModel>,
+    parse: (result: DataModel) -> DomainModel,
 ): DomainModel {
+    val (_, response, result) = rawResponse
     if (response.statusCode < ApiErrorThreshold) {
-        val body: DataModel = jsonMapper.readValue(response.data, DataModel::class.java)
-        return parse(body)
+        return parse(result)
     } else {
-        jsonMapper.readValue(response.data, ExceptionBody::class.java)
+        jsonMapper.readValue(response.bodyAsText(), ExceptionBody::class.java)
             .copy(statusCode = response.statusCode.toDuckieStatusCode())
             .throwing()
     }

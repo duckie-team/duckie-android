@@ -8,36 +8,32 @@
 package team.duckie.app.android.data.heart.repository
 
 import com.github.kittinunf.fuel.Fuel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import team.duckie.app.android.data._datasource.AuthInterceptorFuelClient
+import com.github.kittinunf.fuel.coroutines.awaitStringResponse
+import javax.inject.Inject
 import team.duckie.app.android.data._datasource.bodyAsText
 import team.duckie.app.android.data._exception.util.responseCatchingGet
 import team.duckie.app.android.data._util.buildJson
 import team.duckie.app.android.domain.heart.model.HeartsBody
 import team.duckie.app.android.domain.heart.repository.HeartsRepository
-import javax.inject.Inject
 
-class HeartsRepositoryImpl @Inject constructor(
-    @AuthInterceptorFuelClient private val fuel: Fuel,
-) : HeartsRepository {
-    override suspend fun heart(examId: Int): Int = withContext(Dispatchers.IO) {
+class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
+    override suspend fun heart(examId: Int): Int {
         val (_, response) = fuel
             .post("/hearts")
             .body(
                 body = buildJson {
                     "examId" withString "$examId"
                 },
-            ).responseString()
+            ).awaitStringResponse()
 
-        return@withContext responseCatchingGet(
+        return responseCatchingGet(
             response.statusCode,
             "id",
             response.bodyAsText(),
         ).toInt()
     }
 
-    override suspend fun unHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun unHeart(heartsBody: HeartsBody): Boolean {
         requireNotNull(heartsBody.heartId)
         val (_, response) = fuel
             .delete("/hearts")
@@ -46,9 +42,9 @@ class HeartsRepositoryImpl @Inject constructor(
                     "examId" withString "${heartsBody.examId}"
                     "heartId" withString "${heartsBody.heartId}"
                 },
-            ).responseString()
+            ).awaitStringResponse()
 
-        return@withContext responseCatchingGet(
+        return responseCatchingGet(
             response.statusCode,
             "success",
             response.bodyAsText(),

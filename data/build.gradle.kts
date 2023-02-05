@@ -40,6 +40,7 @@ dependencies {
         libs.paging.runtime,
         libs.jackson.databind,
         libs.bundles.fuel,
+        libs.bundles.moshi,
         libs.bundles.ktor.client,
         projects.domain,
         projects.utilKotlin,

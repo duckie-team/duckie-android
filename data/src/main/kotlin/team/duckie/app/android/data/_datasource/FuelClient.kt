@@ -20,15 +20,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.util.kotlin.seconds
-import team.duckie.app.ktor.client.plugin.addDuckieAuthorizationHeader
-import javax.inject.Qualifier
+import team.duckie.app.ktor.client.plugin.addDuckieAuthorizationHeaderIfNeeded
 
-private object HttpHeaders {
-    const val ContentType = "Content-Type"
-
-    object ContentTypeValues {
-        const val ApplicationJson = "application/json"
-    }
+private object ContentTypeValues {
+    const val ApplicationJson = "application/json"
 }
 
 @Suppress("unused")
@@ -41,7 +36,7 @@ internal object FuelClient {
     private var DeviceName = Build.MODEL
     private const val ClientName = "android"
 
-    private operator fun invoke(authorizationCheck: Boolean): Fuel {
+    private operator fun invoke(): Fuel {
         with(FuelManager.instance) {
             basePath = BaseUrl
             timeoutInMillisecond = MaxTimeoutMillis.toInt()
@@ -50,11 +45,9 @@ internal object FuelClient {
                 DuckieHttpHeaders.Client to ClientName,
                 DuckieHttpHeaders.DeviceName to DeviceName,
                 DuckieHttpHeaders.Version to BuildConfig.APP_VERSION_NAME,
-                HttpHeaders.ContentType to HttpHeaders.ContentTypeValues.ApplicationJson,
+                Headers.CONTENT_TYPE to ContentTypeValues.ApplicationJson,
             ).apply {
-                if (authorizationCheck) {
-                    this.addDuckieAuthorizationHeader()
-                }
+                addDuckieAuthorizationHeaderIfNeeded(headerKey = DuckieHttpHeaders.Authorization)
             }
             addRequestInterceptor(LogRequestInterceptor)
             addResponseInterceptor(LogResponseInterceptor)
@@ -62,23 +55,9 @@ internal object FuelClient {
         return Fuel
     }
 
-    @AuthInterceptorFuelClient
     @Provides
-    fun provideAuthorizationClient(): Fuel = this(true)
-
-    // TODO(riflockle7): 테스트 필요
-    @UnAuthorInterceptorFuelClient
-    @Provides
-    fun provideUnAuthorizationClient(): Fuel = this(false)
+    fun provide(): Fuel = this()
 }
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AuthInterceptorFuelClient
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class UnAuthorInterceptorFuelClient
-
 /** [Response] -> [String] */
-fun Response.bodyAsText() = this.body().asString(headers[Headers.CONTENT_TYPE].lastOrNull())
+internal fun Response.bodyAsText() = body().asString(headers[Headers.CONTENT_TYPE].lastOrNull())
