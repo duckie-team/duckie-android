@@ -46,7 +46,7 @@ internal data class CreateProblemState(
 
         val examThumbnailBody: ExamThumbnailBody
             get() = ExamThumbnailBody(
-                category = categories[categorySelection].name,
+                category = selectedCategory.name,
                 certifyingStatement = certifyingStatement,
                 mainTag = mainTag,
                 // TODO(riflockle7): 유저 데이터 활용 가능해질 시 처리 필요
@@ -55,6 +55,9 @@ internal data class CreateProblemState(
                 // TODO(riflockle7): 기획이 나오는대로 해당 값 처리 방법 구현해야 함
                 type = "text",
             )
+
+        val selectedCategory: Category
+            get() = categories[categorySelection]
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */

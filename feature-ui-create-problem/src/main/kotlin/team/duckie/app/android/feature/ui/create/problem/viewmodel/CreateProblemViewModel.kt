@@ -230,13 +230,20 @@ internal class CreateProblemViewModel @Inject constructor(
     // 공통
     /** 시험 컨텐츠를 만든다. */
     internal fun makeExam() = intent {
-        makeExamUseCase(generateExamBody()).onSuccess { isSuccess: Boolean ->
-            print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
-            finishCreateProblem()
-        }.onFailure {
-            it.printStackTrace()
-            throw it
-        }
+        runCatching { generateExamBody() }
+            .onSuccess { examBody ->
+                makeExamUseCase(examBody)
+                    .onSuccess { isSuccess: Boolean ->
+                        print(isSuccess)
+                        finishCreateProblem()
+                    }.onFailure {
+                        it.printStackTrace()
+                        postSideEffect(CreateProblemSideEffect.ReportError(it))
+                    }
+            }.onFailure {
+                it.printStackTrace()
+                postSideEffect(CreateProblemSideEffect.ReportError(it))
+            }
     }
 
     /** request 를 위해 필요한 [ExamBody] 를 생성한다. */
@@ -244,6 +251,9 @@ internal class CreateProblemViewModel @Inject constructor(
         val examInformationState = container.stateFlow.value.examInformation
         val createProblemState = container.stateFlow.value.createProblem
         val additionalInfoState = container.stateFlow.value.additionalInfo
+
+        // 카테고리는 선택 되어 있어야 함
+        require(examInformationState.categorySelection != -1)
 
         val problems = createProblemState.questions.fastMapIndexed { index, question ->
             Problem(
@@ -261,7 +271,7 @@ internal class CreateProblemViewModel @Inject constructor(
             description = examInformationState.examDescription,
             mainTagId = examInformationState.categories.first().id,
             subTagIds = additionalInfoState.subTags.map { it.id }.toPersistentList(),
-            categoryId = examInformationState.categorySelection,
+            categoryId = examInformationState.selectedCategory.id,
             certifyingStatement = examInformationState.certifyingStatement,
             thumbnailImageUrl = "${additionalInfoState.thumbnail}",
             thumbnailType = additionalInfoState.thumbnailType,
