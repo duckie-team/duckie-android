@@ -24,6 +24,7 @@ class UserUpdateUseCase @Inject constructor(
         profileImageUrl: String?,
         favoriteCategories: List<Category>?,
         favoriteTags: List<Tag>?,
+        updateMeInstance: (me: User) -> Unit = {},
     ): Result<User> {
         return runCatching {
             repository.update(
@@ -33,6 +34,10 @@ class UserUpdateUseCase @Inject constructor(
                 favoriteCategories = favoriteCategories,
                 favoriteTags = favoriteTags,
             )
+        }.also { result ->
+            result.getOrNull()?.let { user ->
+                updateMeInstance(user)
+            }
         }
     }
 }
