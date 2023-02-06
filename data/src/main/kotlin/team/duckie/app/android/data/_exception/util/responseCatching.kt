@@ -7,8 +7,11 @@
 
 package team.duckie.app.android.data._exception.util
 
+import com.github.kittinunf.fuel.core.Response
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
+import team.duckie.app.android.data._datasource.MoshiBuilder
+import team.duckie.app.android.data._datasource.bodyAsText
 import team.duckie.app.android.data._exception.model.ExceptionBody
 import team.duckie.app.android.data._exception.model.throwing
 import team.duckie.app.android.data._util.jsonMapper
@@ -26,9 +29,26 @@ internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
         val body: DataModel = response.body()
         return parse(body)
     } else {
-        val statusCode = response.status.value
         response.body<ExceptionBody>()
-            .copy(statusCode = statusCode.toDuckieStatusCode())
+            .copy(statusCode = response.status.value.toDuckieStatusCode())
+            .throwing()
+    }
+}
+
+// TODO(riflockle7, sungbin): 추후 responseCatching 과 합칠 수 있는 방법이 있을지 고민 필요
+//   잘 동작하는지 다른 PR 에서 확인 필요
+@Suppress("TooGenericExceptionCaught")
+internal inline fun <reified DataModel, DomainModel> responseCatchingFuelObject(
+    response: Response,
+    parse: (DataModel) -> DomainModel,
+): DomainModel {
+    if (response.statusCode < ApiErrorThreshold) {
+        val responseData = MoshiBuilder.adapter(DataModel::class.java)
+            .fromJsonValue(response.bodyAsText())
+        return parse(responseData ?: duckieResponseFieldNpe("moshi responseData is Null"))
+    } else {
+        jsonMapper.readValue(response.bodyAsText(), ExceptionBody::class.java)
+            .copy(statusCode = response.statusCode.toDuckieStatusCode())
             .throwing()
     }
 }
