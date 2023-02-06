@@ -33,6 +33,12 @@ val DuckieAuthorizationHeaderOrNothingPlugin = createClientPlugin(
     }
 }
 
+fun MutableMap<String, String>.addDuckieAuthorizationHeaderIfNeeded(headerKey: String) = apply {
+    DuckieAuthorizationHeader.accessToken?.let { accessToken ->
+        set(headerKey, "Bearer $accessToken")
+    }
+}
+
 class DuckieAuthorizationHeaderConfig {
     var headerKey: String = "authorization"
 }
