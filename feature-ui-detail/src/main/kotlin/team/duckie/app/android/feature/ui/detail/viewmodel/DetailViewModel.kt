@@ -90,24 +90,30 @@ class DetailViewModel @Inject constructor(
         intent {
             if (!detailState.isHeart) {
                 postHeartsUseCase(detailState.exam.id)
-                    .onSuccess { heartId ->
+                    .onSuccess { hearts ->
                         reduce {
-                            (state as DetailState.Success).run { copy(heartId = heartId) }
-                        }
-                    }.onFailure {
-                        postSideEffect(DetailSideEffect.ReportError(it))
-                    }
-            } else {
-                deleteHeartsUseCase(HeartsBody(detailState.exam.id, detailState.heartId))
-                    .onSuccess { apiResult ->
-                        if (apiResult) {
-                            reduce {
-                                (state as DetailState.Success).run { copy(heartId = null) }
+                            (state as DetailState.Success).run {
+                                copy(exam = exam.copy(heart = hearts))
                             }
                         }
                     }.onFailure {
                         postSideEffect(DetailSideEffect.ReportError(it))
                     }
+            } else {
+                detailState.exam.heart?.id?.also { heartId ->
+                    deleteHeartsUseCase(HeartsBody(detailState.exam.id, heartId))
+                        .onSuccess { apiResult ->
+                            if (apiResult) {
+                                reduce {
+                                    (state as DetailState.Success).run {
+                                        copy(exam = exam.copy(heart = null))
+                                    }
+                                }
+                            }
+                        }.onFailure {
+                            postSideEffect(DetailSideEffect.ReportError(it))
+                        }
+                }
             }
         }
     }

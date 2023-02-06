@@ -285,7 +285,7 @@ private fun DetailContentLayout(
 private fun DetailProfileLayout(
     state: DetailState.Success,
     followButtonClick: () -> Unit,
-    ) {
+) {
     // TODO(riflockle7): 추후 팔로잉, 팔로잉 취소 스펙 나오면 viewModel 에서 값을 가져오도록 처리해야 함
     val isFollowed = remember { mutableStateOf(state.isFollowing) }
 
@@ -418,7 +418,11 @@ private fun DetailBottomLayout(
         ) {
             // 좋아요 버튼
             QuackImage(
-                src = team.duckie.quackquack.ui.R.drawable.quack_ic_heart_24,
+                src = if (state.isHeart) {
+                    team.duckie.quackquack.ui.R.drawable.quack_ic_heart_filled_24
+                } else {
+                    team.duckie.quackquack.ui.R.drawable.quack_ic_heart_24
+                },
                 size = DpSize(24.dp, 24.dp),
                 onClick = onHeartClick,
             )
