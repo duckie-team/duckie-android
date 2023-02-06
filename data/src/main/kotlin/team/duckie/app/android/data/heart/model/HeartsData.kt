@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.heart.model
 
-
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class HeartsData(

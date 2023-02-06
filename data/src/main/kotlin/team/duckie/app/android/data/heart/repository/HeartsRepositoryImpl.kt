@@ -11,27 +11,30 @@ import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._datasource.bodyAsText
+import team.duckie.app.android.data._exception.util.responseCatchingFuelObject
 import team.duckie.app.android.data._exception.util.responseCatchingGet
 import team.duckie.app.android.data._util.buildJson
+import team.duckie.app.android.data.heart.mapper.toDomain
+import team.duckie.app.android.data.heart.model.HeartsData
+import team.duckie.app.android.domain.heart.model.Hearts
 import team.duckie.app.android.domain.heart.model.HeartsBody
 import team.duckie.app.android.domain.heart.repository.HeartsRepository
 import javax.inject.Inject
 
 class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
-    override suspend fun postHeart(examId: Int): Int = withContext(Dispatchers.IO) {
+    override suspend fun postHeart(examId: Int): Hearts = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .post("/hearts")
             .body(
                 body = buildJson {
-                    "examId" withInt  examId
+                    "examId" withInt examId
                 },
-            ).responseString()
+            ).response()
 
-        return@withContext responseCatchingGet(
-            response.statusCode,
-            "id",
-            response.bodyAsText(),
-        ).toInt()
+        return@withContext responseCatchingFuelObject(
+            response,
+            HeartsData::toDomain,
+        )
     }
 
     override suspend fun deleteHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {

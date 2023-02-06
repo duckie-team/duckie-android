@@ -91,7 +91,8 @@ object ExamDummyResponse {
                     }
                 }
             },
-            "status": "PENDING"
+            "status": "PENDING",
+            "heart": null
         }
     """
 
@@ -143,5 +144,6 @@ object ExamDummyResponse {
             favoriteCategories = null,
         ),
         status = "PENDING",
+        heart = null,
     )
 }
