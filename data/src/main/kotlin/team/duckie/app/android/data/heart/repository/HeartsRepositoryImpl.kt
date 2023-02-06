@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
     override suspend fun postHeart(examId: Int): Hearts = withContext(Dispatchers.IO) {
-        val (_, response, result) = fuel
+        val (_, response) = fuel
             .post("/hearts")
             .body(
                 body = buildJson {
