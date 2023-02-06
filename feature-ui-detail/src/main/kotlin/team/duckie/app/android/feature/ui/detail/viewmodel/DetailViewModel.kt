@@ -24,42 +24,39 @@ import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.heart.model.HeartsBody
-import team.duckie.app.android.domain.heart.usecase.HeartsUseCase
-import team.duckie.app.android.domain.heart.usecase.UnHeartsUseCase
-import team.duckie.app.android.domain.user.repository.UserRepository
+import team.duckie.app.android.domain.heart.usecase.PostHeartsUseCase
+import team.duckie.app.android.domain.heart.usecase.DeleteHeartsUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
+import team.duckie.app.android.feature.datastore.me
 
 const val DelayTime = 2000L
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
-    private val userRepository: UserRepository,
     private val followUseCase: FollowUseCase,
-    private val heartsUseCase: HeartsUseCase,
-    private val unHeartsUseCase: UnHeartsUseCase,
+    private val postHeartsUseCase: PostHeartsUseCase,
+    private val deleteHeartsUseCase: DeleteHeartsUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
     suspend fun initState() {
-        val appUserId = savedStateHandle.getStateFlow(Extras.AppUserId, -1).value
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
 
         val exam = runCatching { examRepository.getExam(examId) }.getOrNull()
-        val appUser = runCatching { userRepository.get(appUserId) }.getOrNull()
         delay(DelayTime)
         intent {
             reduce {
-                if (exam != null && appUser != null) {
-                    DetailState.Success(exam, appUser)
+                if (exam != null) {
+                    DetailState.Success(exam, me)
                 } else {
-                    DetailState.Error(DuckieResponseFieldNPE("exam or appUser is Null"))
+                    DetailState.Error(DuckieResponseFieldNPE("exam is Null"))
                 }
             }
         }
@@ -92,25 +89,31 @@ class DetailViewModel @Inject constructor(
 
         intent {
             if (!detailState.isHeart) {
-                heartsUseCase(detailState.exam.id)
-                    .onSuccess { heartId ->
+                postHeartsUseCase(detailState.exam.id)
+                    .onSuccess { hearts ->
                         reduce {
-                            (state as DetailState.Success).run { copy(heartId = heartId) }
-                        }
-                    }.onFailure {
-                        postSideEffect(DetailSideEffect.ReportError(it))
-                    }
-            } else {
-                unHeartsUseCase(HeartsBody(detailState.exam.id, detailState.heartId))
-                    .onSuccess { apiResult ->
-                        if (apiResult) {
-                            reduce {
-                                (state as DetailState.Success).run { copy(heartId = null) }
+                            (state as DetailState.Success).run {
+                                copy(exam = exam.copy(heart = hearts))
                             }
                         }
                     }.onFailure {
                         postSideEffect(DetailSideEffect.ReportError(it))
                     }
+            } else {
+                detailState.exam.heart?.id?.also { heartId ->
+                    deleteHeartsUseCase(HeartsBody(detailState.exam.id, heartId))
+                        .onSuccess { apiResult ->
+                            if (apiResult) {
+                                reduce {
+                                    (state as DetailState.Success).run {
+                                        copy(exam = exam.copy(heart = null))
+                                    }
+                                }
+                            }
+                        }.onFailure {
+                            postSideEffect(DetailSideEffect.ReportError(it))
+                        }
+                }
             }
         }
     }

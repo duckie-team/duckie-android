@@ -11,37 +11,41 @@ import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._datasource.bodyAsText
+import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data._exception.util.responseCatchingGet
 import team.duckie.app.android.data._util.buildJson
+import team.duckie.app.android.data.heart.mapper.toDomain
+import team.duckie.app.android.data.heart.model.HeartsData
+import team.duckie.app.android.domain.heart.model.Hearts
 import team.duckie.app.android.domain.heart.model.HeartsBody
 import team.duckie.app.android.domain.heart.repository.HeartsRepository
 import javax.inject.Inject
 
 class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
-    override suspend fun heart(examId: Int): Int = withContext(Dispatchers.IO) {
+    override suspend fun postHeart(examId: Int): Hearts = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .post("/hearts")
             .body(
                 body = buildJson {
-                    "examId" withString "$examId"
+                    "examId" withInt examId
                 },
             ).responseString()
 
-        return@withContext responseCatchingGet(
-            response.statusCode,
-            "id",
-            response.bodyAsText(),
-        ).toInt()
+        return@withContext responseCatchingFuel(
+            response,
+            HeartsData::toDomain,
+        )
     }
 
-    override suspend fun unHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun deleteHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
         requireNotNull(heartsBody.heartId)
+        val (examId, heartId) = heartsBody.examId to heartsBody.heartId!!
+
         val (_, response) = fuel
-            .delete("/hearts")
+            .delete("/hearts/$heartId")
             .body(
                 body = buildJson {
-                    "examId" withString "${heartsBody.examId}"
-                    "heartId" withString "${heartsBody.heartId}"
+                    "examId" withInt examId
                 },
             ).responseString()
 
