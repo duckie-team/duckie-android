@@ -12,6 +12,7 @@ package team.duckie.app.android.domain.exam.model
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.category.model.Category
+import team.duckie.app.android.domain.heart.model.Hearts
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.util.kotlin.OutOfDateApi
@@ -34,4 +35,5 @@ data class Exam(
     val type: String,
     val user: User,
     val status: String,
+    val heart: Hearts?,
 )

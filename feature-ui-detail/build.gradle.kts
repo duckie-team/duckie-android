@@ -23,6 +23,7 @@ dependencies {
         projects.domain,
         projects.di,
         projects.utilUi,
+        projects.featureDatastore,
         projects.utilKotlin,
         projects.utilExceptionHandling,
         projects.utilCompose,

@@ -8,11 +8,12 @@
 package team.duckie.app.android.domain.heart.repository
 
 import androidx.compose.runtime.Immutable
+import team.duckie.app.android.domain.heart.model.Hearts
 import team.duckie.app.android.domain.heart.model.HeartsBody
 
 @Immutable
 interface HeartsRepository {
-    suspend fun heart(examId: Int): Int
+    suspend fun postHeart(examId: Int): Hearts
 
-    suspend fun unHeart(heartsBody: HeartsBody): Boolean
+    suspend fun deleteHeart(heartsBody: HeartsBody): Boolean
 }

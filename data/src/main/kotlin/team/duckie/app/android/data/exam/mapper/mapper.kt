@@ -21,6 +21,7 @@ import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.QuestionData
+import team.duckie.app.android.data.heart.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.mapper.toDomain
@@ -65,6 +66,7 @@ internal fun ExamData.toDomain() = Exam(
     type = type ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
     user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
     status = status ?: duckieResponseFieldNpe("${this::class.java.simpleName}.status"),
+    heart = heart?.toDomain(),
 )
 
 @OutOfDateApi
