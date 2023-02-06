@@ -10,10 +10,8 @@ package team.duckie.app.android.data.tag.repository
 import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import com.github.kittinunf.fuel.moshi.moshiDeserializerOf
 import javax.inject.Inject
-import team.duckie.app.android.data._datasource.MoshiBuilder
-import team.duckie.app.android.data._exception.util.responseCatchingFuelObject
+import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data._util.buildJson
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
@@ -29,12 +27,9 @@ class TagRepositoryImpl @Inject constructor(private val fuel: Fuel) : TagReposit
                 body = buildJson {
                     "name" withString name
                 },
-            )
-            .responseObject<TagData>(
-                deserializer = moshiDeserializerOf(MoshiBuilder.adapter(TagData::class.java)),
-            )
+            ).responseString()
 
-        return@withContext responseCatchingFuelObject(
+        return@withContext responseCatchingFuel(
             response = response,
             parse = TagData::toDomain,
         )

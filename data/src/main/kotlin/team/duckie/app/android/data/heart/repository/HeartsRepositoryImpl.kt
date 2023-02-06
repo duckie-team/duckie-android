@@ -11,7 +11,7 @@ import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._datasource.bodyAsText
-import team.duckie.app.android.data._exception.util.responseCatchingFuelObject
+import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data._exception.util.responseCatchingGet
 import team.duckie.app.android.data._util.buildJson
 import team.duckie.app.android.data.heart.mapper.toDomain
@@ -23,15 +23,15 @@ import javax.inject.Inject
 
 class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
     override suspend fun postHeart(examId: Int): Hearts = withContext(Dispatchers.IO) {
-        val (_, response) = fuel
+        val (_, response, result) = fuel
             .post("/hearts")
             .body(
                 body = buildJson {
                     "examId" withInt examId
                 },
-            ).response()
+            ).responseString()
 
-        return@withContext responseCatchingFuelObject(
+        return@withContext responseCatchingFuel(
             response,
             HeartsData::toDomain,
         )
