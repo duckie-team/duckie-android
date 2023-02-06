@@ -8,7 +8,8 @@
 package team.duckie.app.android.data.tag.repository
 
 import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.coroutines.awaitObjectResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import com.github.kittinunf.fuel.moshi.moshiDeserializerOf
 import javax.inject.Inject
 import team.duckie.app.android.data._datasource.MoshiBuilder
@@ -20,17 +21,22 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
 
 class TagRepositoryImpl @Inject constructor(private val fuel: Fuel) : TagRepository {
-    override suspend fun create(name: String): Tag {
-        val request = fuel
+    // TODO(riflockle7): 문제 만들기 화면에서 잘 동작하는지 확인 필요
+    override suspend fun create(name: String): Tag = withContext(Dispatchers.IO) {
+        val (_, response) = fuel
             .post("/tags")
             .body(
                 body = buildJson {
                     "name" withString name
                 },
             )
-        val deserializer = moshiDeserializerOf(MoshiBuilder.adapter(TagData::class.java))
-        val response = request.awaitObjectResponse(deserializer)
+            .responseObject<TagData>(
+                deserializer = moshiDeserializerOf(MoshiBuilder.adapter(TagData::class.java)),
+            )
 
-        return responseCatchingFuelObject(rawResponse = response, parse = TagData::toDomain)
+        return@withContext responseCatchingFuelObject(
+            response = response,
+            parse = TagData::toDomain,
+        )
     }
 }
