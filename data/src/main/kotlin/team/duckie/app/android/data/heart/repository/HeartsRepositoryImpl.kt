@@ -18,7 +18,7 @@ import team.duckie.app.android.domain.heart.repository.HeartsRepository
 import javax.inject.Inject
 
 class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
-    override suspend fun heart(examId: Int): Int = withContext(Dispatchers.IO) {
+    override suspend fun postHeart(examId: Int): Int = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .post("/hearts")
             .body(
@@ -34,7 +34,7 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
         ).toInt()
     }
 
-    override suspend fun unHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun deleteHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
         requireNotNull(heartsBody.heartId)
         val (examId, heartId) = heartsBody.examId to heartsBody.heartId!!
 

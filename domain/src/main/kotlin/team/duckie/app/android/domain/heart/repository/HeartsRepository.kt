@@ -12,7 +12,7 @@ import team.duckie.app.android.domain.heart.model.HeartsBody
 
 @Immutable
 interface HeartsRepository {
-    suspend fun heart(examId: Int): Int
+    suspend fun postHeart(examId: Int): Int
 
-    suspend fun unHeart(heartsBody: HeartsBody): Boolean
+    suspend fun deleteHeart(heartsBody: HeartsBody): Boolean
 }

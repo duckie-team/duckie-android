@@ -24,9 +24,8 @@ import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.heart.model.HeartsBody
-import team.duckie.app.android.domain.heart.usecase.HeartsUseCase
-import team.duckie.app.android.domain.heart.usecase.UnHeartsUseCase
-import team.duckie.app.android.domain.user.repository.UserRepository
+import team.duckie.app.android.domain.heart.usecase.PostHeartsUseCase
+import team.duckie.app.android.domain.heart.usecase.DeleteHeartsUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
@@ -41,8 +40,8 @@ const val DelayTime = 2000L
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
     private val followUseCase: FollowUseCase,
-    private val heartsUseCase: HeartsUseCase,
-    private val unHeartsUseCase: UnHeartsUseCase,
+    private val postHeartsUseCase: PostHeartsUseCase,
+    private val deleteHeartsUseCase: DeleteHeartsUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
@@ -90,7 +89,7 @@ class DetailViewModel @Inject constructor(
 
         intent {
             if (!detailState.isHeart) {
-                heartsUseCase(detailState.exam.id)
+                postHeartsUseCase(detailState.exam.id)
                     .onSuccess { heartId ->
                         reduce {
                             (state as DetailState.Success).run { copy(heartId = heartId) }
@@ -99,7 +98,7 @@ class DetailViewModel @Inject constructor(
                         postSideEffect(DetailSideEffect.ReportError(it))
                     }
             } else {
-                unHeartsUseCase(HeartsBody(detailState.exam.id, detailState.heartId))
+                deleteHeartsUseCase(HeartsBody(detailState.exam.id, detailState.heartId))
                     .onSuccess { apiResult ->
                         if (apiResult) {
                             reduce {
