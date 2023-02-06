@@ -42,11 +42,10 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
         val (examId, heartId) = heartsBody.examId to heartsBody.heartId!!
 
         val (_, response) = fuel
-            .delete("/hearts")
+            .delete("/hearts/$heartId")
             .body(
                 body = buildJson {
                     "examId" withInt examId
-                    "heartId" withInt heartId
                 },
             ).responseString()
 
