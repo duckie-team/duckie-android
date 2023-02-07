@@ -10,6 +10,7 @@
 package team.duckie.app.android.feature.ui.solve.problem
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
@@ -17,11 +18,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.feature.ui.exam.result.ExamResultActivity
 import team.duckie.app.android.feature.ui.solve.problem.common.LoadingIndicator
 import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScreen
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
@@ -50,6 +59,28 @@ class SolveProblemActivity : BaseActivity() {
                         }
                     }
                 }
+            }
+        }
+
+        viewModel.observe(
+            lifecycleOwner = this,
+            sideEffect = ::handleSideEffect
+        )
+    }
+
+    private fun handleSideEffect(sideEffect: SolveProblemSideEffect) {
+        when (sideEffect) {
+            is SolveProblemSideEffect.FinishSolveProblem -> {
+                startActivityWithAnimation<ExamResultActivity>(
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                        putExtra(Extras.Submitted, sideEffect.answers.toTypedArray())
+                    },
+                )
+            }
+
+            is SolveProblemSideEffect.ReportError -> {
+                Firebase.crashlytics.recordException(sideEffect.exception)
             }
         }
     }
