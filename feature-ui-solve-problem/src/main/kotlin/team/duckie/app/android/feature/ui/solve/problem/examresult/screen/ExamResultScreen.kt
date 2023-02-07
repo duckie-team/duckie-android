@@ -73,7 +73,7 @@ internal fun ExamResultScreen(
                 leadingIcon = QuackIcon.ArrowBack,
                 onLeadingIconClick = {
                     activity.finishWithAnimation()
-                }
+                },
             )
         },
         bottomBar = {
@@ -85,7 +85,7 @@ internal fun ExamResultScreen(
                         vertical = 12.dp,
                     ),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(space = 8.dp)
+                horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
             ) {
                 GrayBorderSmallButton(
                     modifier = Modifier
@@ -108,7 +108,7 @@ internal fun ExamResultScreen(
                     },
                 )
             }
-        }
+        },
     ) { padding ->
         Crossfade(targetState = state.isReportLoading) {
             when (it) {

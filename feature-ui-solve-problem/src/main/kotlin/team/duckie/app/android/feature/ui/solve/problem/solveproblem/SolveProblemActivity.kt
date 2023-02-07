@@ -5,7 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-
 @file:OptIn(ExperimentalLifecycleComposeApi::class)
 
 package team.duckie.app.android.feature.ui.solve.problem.solveproblem
@@ -63,7 +62,7 @@ class SolveProblemActivity : BaseActivity() {
 
         viewModel.observe(
             lifecycleOwner = this,
-            sideEffect = ::handleSideEffect
+            sideEffect = ::handleSideEffect,
         )
     }
 

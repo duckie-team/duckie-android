@@ -9,7 +9,6 @@ package team.duckie.app.android.feature.ui.solve.problem.examresult.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -18,14 +17,14 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class ExamResultViewModel @Inject constructor() : ViewModel(),
+class ExamResultViewModel @Inject constructor() :
+    ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
     override val container: Container<ExamResultState, ExamResultSideEffect> = container(
-        ExamResultState()
+        ExamResultState(),
     )
 
     fun getReport() = intent {
-        delay(1000L)
         reduce {
             state.copy(
                 isReportLoading = false,

@@ -59,7 +59,8 @@ internal class SolveProblemViewModel @Inject constructor() :
             postSideEffect(
                 SolveProblemSideEffect.FinishSolveProblem(
                     examId = "",
-                    answers = state.inputAnswers.fastMap { it.answer }),
+                    answers = state.inputAnswers.fastMap { it.answer },
+                ),
             )
         }
     }
