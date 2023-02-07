@@ -13,6 +13,7 @@ import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.dummyList
@@ -22,6 +23,7 @@ import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.s
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
+import team.duckie.app.android.util.kotlin.fastMap
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,6 +55,12 @@ internal class SolveProblemViewModel @Inject constructor() :
                     currentPageIndex = state.currentPageIndex.plus(1),
                 )
             }
+        } else {
+            postSideEffect(
+                SolveProblemSideEffect.FinishSolveProblem(
+                    examId = "",
+                    answers = state.inputAnswers.fastMap { it.answer }),
+            )
         }
     }
 
