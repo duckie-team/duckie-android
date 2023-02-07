@@ -14,7 +14,7 @@ plugins {
 }
 
 android {
-    namespace = "team.duckie.app.android.feature.ui.solve.problem"
+    namespace = "team.duckie.app.android.feature.ui.exam.result"
 }
 
 dependencies {
@@ -26,7 +26,7 @@ dependencies {
         projects.utilKotlin,
         projects.utilCompose,
         projects.sharedUiCompose,
-        projects.featureUiExamResult,
+
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,
@@ -34,9 +34,5 @@ dependencies {
         libs.compose.ui.material, // needs for Scaffold
         libs.quack.ui.components,
         libs.firebase.crashlytics,
-        libs.exoplayer.core,
-        libs.exoplayer.ui,
-        libs.compose.ui.coil,
-        libs.compose.ui.coil.gif,
     )
 }
