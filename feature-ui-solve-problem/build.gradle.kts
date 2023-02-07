@@ -26,7 +26,7 @@ dependencies {
         projects.utilKotlin,
         projects.utilCompose,
         projects.sharedUiCompose,
-        projects.featureUiExamResult,
+        projects.featureUiHome,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,
