@@ -54,6 +54,7 @@ import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
+import team.duckie.app.android.feature.datastore.me
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
@@ -65,6 +66,7 @@ import team.duckie.app.android.util.kotlin.DuckieStatusCode
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 import team.duckie.app.android.util.ui.const.Extras
@@ -87,7 +89,7 @@ internal class CreateProblemViewModel @Inject constructor(
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
 
     override val container =
-        container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
+        container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState(me))
 
     suspend fun initState() {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
@@ -229,12 +231,20 @@ internal class CreateProblemViewModel @Inject constructor(
     // 공통
     /** 시험 컨텐츠를 만든다. */
     internal fun makeExam() = intent {
-        makeExamUseCase(generateExamBody()).onSuccess { isSuccess: Boolean ->
-            print(isSuccess) // TODO(EvergreenTree97) 문제 만들기 3단계에서 사용 가능
-        }.onFailure {
-            it.printStackTrace()
-            throw it
-        }
+        runCatching { generateExamBody() }
+            .onSuccess { examBody ->
+                makeExamUseCase(examBody)
+                    .onSuccess { isSuccess: Boolean ->
+                        print(isSuccess)
+                        finishCreateProblem()
+                    }.onFailure {
+                        it.printStackTrace()
+                        postSideEffect(CreateProblemSideEffect.ReportError(it))
+                    }
+            }.onFailure {
+                it.printStackTrace()
+                postSideEffect(CreateProblemSideEffect.ReportError(it))
+            }
     }
 
     /** request 를 위해 필요한 [ExamBody] 를 생성한다. */
@@ -259,7 +269,8 @@ internal class CreateProblemViewModel @Inject constructor(
             description = examInformationState.examDescription,
             mainTagId = examInformationState.categories.first().id,
             subTagIds = additionalInfoState.subTags.map { it.id }.toPersistentList(),
-            categoryId = examInformationState.categorySelection,
+            categoryId = examInformationState.selectedCategory?.id
+                ?: duckieResponseFieldNpe("선택된 카테고리가 있어야 합니다."),
             certifyingStatement = examInformationState.certifyingStatement,
             thumbnailImageUrl = "${additionalInfoState.thumbnail}",
             thumbnailType = additionalInfoState.thumbnailType,

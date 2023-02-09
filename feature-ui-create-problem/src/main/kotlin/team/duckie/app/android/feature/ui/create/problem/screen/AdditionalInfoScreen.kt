@@ -276,7 +276,6 @@ internal fun AdditionalInformationScreen(
                     nextButtonClick = {
                         coroutineScope.launch {
                             vm.makeExam()
-                            vm.finishCreateProblem()
                         }
                     },
                     isValidateCheck = vm::isAllFieldsNotEmpty,
