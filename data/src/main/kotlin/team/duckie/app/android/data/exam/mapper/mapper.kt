@@ -69,11 +69,10 @@ internal fun ProblemData.toDomain() = Problem(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     question = question?.toDomain()
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.question"),
-    answer = answer?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.answer"),
-    correctAnswer = correctAnswer
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.correctAnswer"),
-    hint = hint ?: duckieResponseFieldNpe("${this::class.java.simpleName}.hint"),
-    memo = memo ?: duckieResponseFieldNpe("${this::class.java.simpleName}.memo"),
+    answer = answer?.toDomain(),
+    correctAnswer = correctAnswer,
+    hint = hint,
+    memo = memo,
 )
 
 internal fun QuestionData.toDomain() = when (this) {
@@ -176,7 +175,7 @@ internal fun Problem.toData() = ProblemData(
             )
         }
     },
-    answer = answer.let { answer ->
+    answer = answer?.let { answer ->
         when (answer) {
             is Answer.Short -> AnswerData.ShortAnswer(
                 shortAnswer = answer.answer.text,

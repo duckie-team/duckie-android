@@ -19,8 +19,8 @@ import team.duckie.app.android.util.kotlin.fastMapIndexed
 data class Problem(
     val id: Int,
     val question: Question,
-    val answer: Answer,
-    val correctAnswer: String,
+    val answer: Answer?,
+    val correctAnswer: String?,
     val hint: String?,
     val memo: String?,
 )
