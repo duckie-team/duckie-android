@@ -45,13 +45,14 @@ internal fun User.toUiModel() =
 
 @OptIn(OutOfDateApi::class)
 internal fun Exam.toUiModel() =
+    // TODO(riflockle7): exam 엔티티 commit
     HomeState.FollowingTest(
-        coverUrl = thumbnailUrl ?: "",
+        coverUrl = thumbnailUrl,
         title = title,
         owner = HomeState.FollowingTest.User(
-            nickname = user.nickname,
-            profileImgUrl = user.profileImageUrl,
-            favoriteTag = user.duckPower?.tag?.name ?: "",
-            tier = user.duckPower?.tier ?: "",
+            nickname = user?.nickname ?: "",
+            profileImgUrl = user?.profileImageUrl ?: "",
+            favoriteTag = user?.duckPower?.tag?.name ?: "",
+            tier = user?.duckPower?.tier ?: "",
         ),
     )

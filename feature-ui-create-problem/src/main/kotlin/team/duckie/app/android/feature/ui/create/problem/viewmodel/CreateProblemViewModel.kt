@@ -45,7 +45,6 @@ import team.duckie.app.android.domain.exam.model.toChoice
 import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
-import team.duckie.app.android.domain.exam.usecase.GetExamUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
@@ -61,8 +60,6 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.util.android.image.MediaUtil
-import team.duckie.app.android.util.kotlin.DuckieResponseException
-import team.duckie.app.android.util.kotlin.DuckieStatusCode
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
@@ -78,7 +75,6 @@ private const val TagsMaximumCount = 4
 @Suppress("LargeClass")
 internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
-    private val getExamUseCase: GetExamUseCase,
     private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val fileUploadUseCase: FileUploadUseCase,
@@ -108,65 +104,8 @@ internal class CreateProblemViewModel @Inject constructor(
         }
         // 문제 수정 모드
         else {
-            getExamUseCase(examId)
-                .onSuccess { exam ->
-                    intent {
-                        reduce {
-                            val questions = exam.problems.fastMap { it.question }.toImmutableList()
-                            val answers = exam.problems.fastMap { it.answer }.toImmutableList()
-                            val correctAnswers =
-                                exam.problems.fastMap { it.correctAnswer }.toImmutableList()
-                            val hints = exam.problems.fastMap { it.hint ?: "" }.toImmutableList()
-                            val memos = exam.problems.fastMap { it.memo ?: "" }.toImmutableList()
-
-                            state.copy(
-                                isEditMode = true,
-                                createProblemStep = CreateProblemStep.ExamInformation,
-                                examInformation = state.examInformation.copy(
-                                    categorySelection = exam.mainTag.id,
-                                    isMainTagSelected = true,
-                                    examTitle = exam.title,
-                                    examDescription = exam.description,
-                                    certifyingStatement = exam.certifyingStatement,
-                                ),
-                                createProblem = state.createProblem.copy(
-                                    questions = questions,
-                                    answers = answers,
-                                    correctAnswers = correctAnswers,
-                                    hints = hints,
-                                    memos = memos,
-                                ),
-                                additionalInfo = state.additionalInfo.copy(
-                                    thumbnail = exam.thumbnailUrl ?: "",
-                                    // TODO(riflockle7): 썸네일 타입 정보 서버에서 추후 받아야 함
-                                    thumbnailType = ThumbnailType.Default,
-                                    takeTitle = exam.buttonTitle,
-                                    isSubTagsAdded = exam.subTags.isNotEmpty(),
-                                    searchSubTags = state.additionalInfo.searchSubTags.copy(
-                                        results = exam.subTags,
-                                    ),
-                                ),
-                            )
-                        }
-                    }
-                }
-                .onFailure {
-                    intent {
-                        if (
-                            it is DuckieResponseException &&
-                            it.statusCode == DuckieStatusCode.UnAuthorized
-                        ) {
-                            reduce {
-                                state.copy(
-                                    createProblemStep = CreateProblemStep.Error,
-                                    isEditMode = true,
-                                )
-                            }
-                        }
-
-                        postSideEffect(CreateProblemSideEffect.ReportError(it))
-                    }
-                }
+            // TODO(riflockle7): 추후 기능 제공 시 구현 필요
+            intent { postSideEffect(CreateProblemSideEffect.ReportError(Throwable("미지원 기능"))) }
         }
     }
 

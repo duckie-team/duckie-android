@@ -33,6 +33,7 @@ import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 import team.duckie.app.android.feature.datastore.me
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 const val DelayTime = 2000L
 
@@ -68,7 +69,10 @@ class DetailViewModel @Inject constructor(
         require(detailState is DetailState.Success)
 
         followUseCase(
-            FollowBody(detailState.appUser.id, detailState.exam.user.id),
+            FollowBody(
+                detailState.appUser.id,
+                detailState.exam.user?.id ?: duckieResponseFieldNpe("문제를 등록한 유저는 반드시 있어야 합니다."),
+            ),
             !detailState.isFollowing,
         ).onSuccess { apiResult ->
             if (apiResult) {
@@ -125,7 +129,7 @@ class DetailViewModel @Inject constructor(
                 (state as DetailState.Success).run {
                     DetailSideEffect.StartExam(
                         exam.id,
-                        exam.certifyingStatement,
+                        certifyingStatement,
                     )
                 },
             )

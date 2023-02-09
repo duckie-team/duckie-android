@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.exam.mapper
 
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.exam.model.AnswerData
@@ -47,26 +46,22 @@ import team.duckie.app.android.util.kotlin.fastMap
 internal fun ExamData.toDomain() = Exam(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
-    description = description
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.description"),
-    thumbnailUrl = thumbnailUrl,
-    buttonTitle = buttonTitle
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.buttonTitle"),
-    certifyingStatement = certifyingStatement
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.certifyingStatement"),
-    solvedCount = solvedCount
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.solvedCount"),
-    answerRate = answerRate ?: duckieResponseFieldNpe("${this::class.java.simpleName}.answerRate"),
-    category = category?.toDomain()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.category"),
-    mainTag = mainTag?.toDomain()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.mainTag"),
-    subTags = subTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
-    problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList() ?: persistentListOf(),
-    type = type ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
-    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
-    status = status ?: duckieResponseFieldNpe("${this::class.java.simpleName}.status"),
+    description = description,
+    thumbnailUrl = thumbnailUrl
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
+    thumbnailType = thumbnailType,
+    type = type,
+    buttonTitle = buttonTitle,
+    certifyingStatement = certifyingStatement,
+    solvedCount = solvedCount,
+    answerRate = answerRate,
+    user = user?.toDomain(),
+    category = category?.toDomain(),
+    mainTag = mainTag?.toDomain(),
+    subTags = subTags?.fastMap(TagData::toDomain)?.toImmutableList(),
+    status = status,
     heart = heart?.toDomain(),
+    heartCount = heartCount,
 )
 
 @OutOfDateApi

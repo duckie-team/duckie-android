@@ -26,6 +26,12 @@ internal data class ExamData(
     @field:JsonProperty("thumbnailUrl")
     val thumbnailUrl: String? = null,
 
+    @field:JsonProperty("thumbnailType")
+    val thumbnailType: String? = null,
+
+    @field:JsonProperty("type")
+    val type: String? = null,
+
     @field:JsonProperty("buttonTitle")
     val buttonTitle: String? = null,
 
@@ -38,6 +44,9 @@ internal data class ExamData(
     @field:JsonProperty("answerRate")
     val answerRate: Float? = null,
 
+    @field:JsonProperty("user")
+    val user: UserResponse? = null,
+
     @field:JsonProperty("category")
     val category: CategoryData? = null,
 
@@ -47,18 +56,12 @@ internal data class ExamData(
     @field:JsonProperty("subTags")
     val subTags: List<TagData>? = null,
 
-    @field:JsonProperty("problems")
-    val problems: List<ProblemData>? = null,
-
-    @field:JsonProperty("type")
-    val type: String? = null,
-
-    @field:JsonProperty("user")
-    val user: UserResponse? = null,
-
     @field:JsonProperty("status")
     val status: String? = null,
 
     @field:JsonProperty("heart")
     val heart: HeartsData? = null,
+
+    @field:JsonProperty("heartCount")
+    val heartCount: Int? = null,
 )

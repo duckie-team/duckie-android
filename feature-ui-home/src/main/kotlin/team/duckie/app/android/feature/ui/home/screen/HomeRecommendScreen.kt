@@ -208,13 +208,14 @@ private fun HomeTopicRecommendLayout(
             ),
         ) {
             items(items = exams) { item ->
+                // TODO(riflockle7): exam 엔티티 commit
                 DuckTestSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = item.id,
                         coverImg = item.thumbnailUrl,
-                        nickname = item.user.nickname,
+                        nickname = item.user?.nickname ?: "",
                         title = item.title,
-                        examineeNumber = item.solvedCount,
+                        examineeNumber = item.solvedCount ?: 0,
                     ),
                     onClick = {
                         onClicked(it)
