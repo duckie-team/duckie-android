@@ -30,8 +30,6 @@ internal fun RecommendationData.toDomain() = RecommendationFeeds(
     recommendations = recommendations?.fastMap(RecommendationItemData::toDomain)?.toPersistentList()
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.recommendations"),
     page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
-    offset = offset ?: duckieResponseFieldNpe("${this::class.java.simpleName}.offset"),
-    limit = limit ?: duckieResponseFieldNpe("${this::class.java.simpleName}.limit"),
 )
 
 internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotronItem(

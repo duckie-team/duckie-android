@@ -15,7 +15,7 @@ import team.duckie.app.android.domain.tag.model.Tag
 @Immutable
 @Parcelize
 data class DuckPower(
-    val id: Int,
-    val tier: String,
-    val tag: Tag,
+    val id: Int? = null,
+    val tier: String? = null,
+    val tag: Tag? = null,
 ) : Parcelable

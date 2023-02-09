@@ -20,6 +20,7 @@ import team.duckie.app.android.data.user.model.DuckPowerResponse
 import team.duckie.app.android.data.user.model.UserFollowingRecommendationsResponse
 import team.duckie.app.android.data.user.model.UserFollowingResponse
 import team.duckie.app.android.data.user.model.UserResponse
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowing
@@ -35,7 +36,7 @@ internal fun UserResponse.toDomain() = User(
     nickname = nickName
         ?: "덕키즈_${Random.nextInt(NicknameSuffixMaxLength).toString().padStart(NicknameSuffixLength, '0')}",
     profileImageUrl = profileImageUrl ?: duckieResponseFieldNpe("profileImageUrl"),
-    duckPower = duckPower?.toDomain() ?: duckieResponseFieldNpe("duckPower"),
+    duckPower = duckPower?.toDomain() ?: DuckPower(),
     favoriteTags = favoriteTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
     favoriteCategories = favoriteCategories?.fastMap(CategoryData::toDomain)?.toImmutableList()
         ?: persistentListOf(),
@@ -54,7 +55,7 @@ internal fun UserFollowingResponse.toDomain() = UserFollowing(
 )
 
 internal fun DuckPowerResponse.toDomain() = DuckPower(
-    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
-    tier = tier ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tier"),
-    tag = tag?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tag"),
+    id = id ?: 0,
+    tier = tier ?: "",
+    tag = tag?.toDomain() ?: Tag(0, ""),
 )

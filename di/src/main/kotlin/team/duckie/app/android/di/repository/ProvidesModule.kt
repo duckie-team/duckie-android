@@ -26,9 +26,4 @@ object ProvidesModule {
     fun provideKakaoRepository(activityContext: Activity): KakaoRepository {
         return KakaoRepositoryImpl(activityContext)
     }
-
-    @Provides
-    fun provideRecommendationRepository(): RecommendationRepository {
-        return RecommendationRepositoryImpl()
-    }
 }

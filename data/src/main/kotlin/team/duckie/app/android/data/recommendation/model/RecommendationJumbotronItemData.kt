@@ -7,7 +7,11 @@
 
 package team.duckie.app.android.data.recommendation.model
 
+import android.os.Parcelable
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.github.kittinunf.fuel.core.ResponseDeserializable
+import com.google.gson.Gson
+import kotlinx.android.parcel.Parcelize
 import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.tag.model.TagData
 
