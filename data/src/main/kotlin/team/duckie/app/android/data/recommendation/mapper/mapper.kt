@@ -60,6 +60,7 @@ internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotro
 
 @OptIn(OutOfDateApi::class)
 internal fun RecommendationItemData.toDomain() = RecommendationItem(
+    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
     tag = tag?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tag"),
     exams = exams?.fastMap(ExamData::toDomain)

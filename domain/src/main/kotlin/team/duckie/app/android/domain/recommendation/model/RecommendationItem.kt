@@ -15,7 +15,8 @@ import team.duckie.app.android.util.kotlin.OutOfDateApi
 @OptIn(OutOfDateApi::class)
 @Immutable
 data class RecommendationItem(
+    val id: Int,
     val title: String,
-    val tag: Tag,
+    val tag: Tag?,
     val exams: List<Exam>,
 )
