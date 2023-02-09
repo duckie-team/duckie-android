@@ -57,10 +57,10 @@ internal fun UserFollowingResponse.toDomain() = UserFollowing(
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.followingRecommendations"),
 )
 
-internal fun DuckPowerResponse.toDomain(): DuckPower? {
+internal fun DuckPowerResponse.toDomain(): DuckPower {
     return DuckPower(
-        id = id ?: return null,
-        tier = tier ?: return null,
-        tag = tag?.toDomain() ?: return null,
+        id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
+        tier = tier ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tier"),
+        tag = tag?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tag"),
     )
 }
