@@ -21,9 +21,9 @@ import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import javax.inject.Inject
 
 class FollowRepositoryImpl @Inject constructor() : FollowRepository {
-    override suspend fun follow(followsBody: FollowBody): Boolean {
+    override suspend fun follow(followBody: FollowBody): Boolean {
         val response = client.post("/follows") {
-            setBody(followsBody.toData())
+            setBody(followBody.toData())
         }
         return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
@@ -31,9 +31,9 @@ class FollowRepositoryImpl @Inject constructor() : FollowRepository {
         }
     }
 
-    override suspend fun unFollow(followsBody: FollowBody): Boolean {
+    override suspend fun unFollow(followBody: FollowBody): Boolean {
         val response = client.delete("/follows") {
-            setBody(followsBody.toData())
+            setBody(followBody.toData())
         }
         return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()

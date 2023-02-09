@@ -20,7 +20,7 @@ import team.duckie.app.android.data.exam.repository.ExamRepositoryImpl
 import team.duckie.app.android.data.file.repository.FileRepositoryImpl
 import team.duckie.app.android.data.follow.repository.FollowRepositoryImpl
 import team.duckie.app.android.data.gallery.repository.GalleryRepositoryImpl
-import team.duckie.app.android.data.heart.repository.HeartsRepositoryImpl
+import team.duckie.app.android.data.heart.repository.HeartRepositoryImpl
 import team.duckie.app.android.data.search.repository.SearchRepositoryImpl
 import team.duckie.app.android.data.tag.repository.TagRepositoryImpl
 import team.duckie.app.android.data.terms.repository.TermsRepositoryImpl
@@ -32,7 +32,7 @@ import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.file.repository.FileRepository
 import team.duckie.app.android.domain.follow.repository.FollowRepository
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
-import team.duckie.app.android.domain.heart.repository.HeartsRepository
+import team.duckie.app.android.domain.heart.repository.HeartRepository
 import team.duckie.app.android.domain.search.repository.SearchRepository
 import team.duckie.app.android.domain.tag.repository.TagRepository
 import team.duckie.app.android.domain.terms.repository.TermsRepository
@@ -60,7 +60,7 @@ abstract class BindsModule {
     abstract fun provideFollowsRepository(impl: FollowRepositoryImpl): FollowRepository
 
     @Binds
-    abstract fun provideHeartsRepository(impl: HeartsRepositoryImpl): HeartsRepository
+    abstract fun provideHeartsRepository(impl: HeartRepositoryImpl): HeartRepository
 
     @Binds
     abstract fun provideGalleryRepository(impl: GalleryRepositoryImpl): GalleryRepository

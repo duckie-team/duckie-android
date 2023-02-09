@@ -18,10 +18,10 @@ import team.duckie.app.android.data.heart.mapper.toDomain
 import team.duckie.app.android.data.heart.model.HeartsData
 import team.duckie.app.android.domain.heart.model.Hearts
 import team.duckie.app.android.domain.heart.model.HeartsBody
-import team.duckie.app.android.domain.heart.repository.HeartsRepository
+import team.duckie.app.android.domain.heart.repository.HeartRepository
 import javax.inject.Inject
 
-class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
+class HeartRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartRepository {
     override suspend fun postHeart(examId: Int): Hearts = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .post("/hearts")
@@ -37,9 +37,9 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
         )
     }
 
-    override suspend fun deleteHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
-        requireNotNull(heartsBody.heartId)
-        val (examId, heartId) = heartsBody.examId to heartsBody.heartId!!
+    override suspend fun deleteHeart(heartBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
+        requireNotNull(heartBody.heartId)
+        val (examId, heartId) = heartBody.examId to heartBody.heartId!!
 
         val (_, response) = fuel
             .delete("/hearts/$heartId")

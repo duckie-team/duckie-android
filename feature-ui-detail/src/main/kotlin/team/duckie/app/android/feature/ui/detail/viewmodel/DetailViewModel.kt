@@ -24,8 +24,8 @@ import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.heart.model.HeartsBody
-import team.duckie.app.android.domain.heart.usecase.PostHeartsUseCase
-import team.duckie.app.android.domain.heart.usecase.DeleteHeartsUseCase
+import team.duckie.app.android.domain.heart.usecase.PostHeartUseCase
+import team.duckie.app.android.domain.heart.usecase.DeleteHeartUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
@@ -41,8 +41,8 @@ const val DelayTime = 2000L
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
     private val followUseCase: FollowUseCase,
-    private val postHeartsUseCase: PostHeartsUseCase,
-    private val deleteHeartsUseCase: DeleteHeartsUseCase,
+    private val postHeartsUseCase: PostHeartUseCase,
+    private val deleteHeartsUseCase: DeleteHeartUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
@@ -94,10 +94,10 @@ class DetailViewModel @Inject constructor(
         intent {
             if (!detailState.isHeart) {
                 postHeartsUseCase(detailState.exam.id)
-                    .onSuccess { hearts ->
+                    .onSuccess { heart ->
                         reduce {
                             (state as DetailState.Success).run {
-                                copy(exam = exam.copy(heart = hearts))
+                                copy(exam = exam.copy(heart = heart))
                             }
                         }
                     }.onFailure {
