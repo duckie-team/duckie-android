@@ -59,10 +59,11 @@ internal data class CreateProblemState(
 
         // TODO(riflockle7):
         val selectedCategory: Category?
-            get() = if (categorySelection == -1)
+            get() = if (categorySelection == -1) {
                 null
-            else
+            } else {
                 categories[categorySelection]
+            }
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
