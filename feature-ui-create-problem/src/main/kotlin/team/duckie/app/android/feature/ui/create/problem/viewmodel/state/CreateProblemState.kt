@@ -16,8 +16,11 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 internal data class CreateProblemState(
+    val me: User,
     val isEditMode: Boolean = false,
     val createProblemStep: CreateProblemStep = CreateProblemStep.Loading,
     val examInformation: ExamInformation = ExamInformation(),
@@ -44,7 +47,7 @@ internal data class CreateProblemState(
 
         val examThumbnailBody: ExamThumbnailBody
             get() = ExamThumbnailBody(
-                category = categories[categorySelection].name,
+                category = selectedCategory?.name ?: duckieResponseFieldNpe("선택된 카테고리가 있어야 합니다."),
                 certifyingStatement = certifyingStatement,
                 mainTag = mainTag,
                 // TODO(riflockle7): 유저 데이터 활용 가능해질 시 처리 필요
@@ -53,6 +56,14 @@ internal data class CreateProblemState(
                 // TODO(riflockle7): 기획이 나오는대로 해당 값 처리 방법 구현해야 함
                 type = "text",
             )
+
+        // TODO(riflockle7):
+        val selectedCategory: Category?
+            get() = if (categorySelection == -1) {
+                null
+            } else {
+                categories[categorySelection]
+            }
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */
