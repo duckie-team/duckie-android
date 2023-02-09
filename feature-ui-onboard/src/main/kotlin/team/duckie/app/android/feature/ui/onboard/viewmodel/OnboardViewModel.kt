@@ -134,6 +134,9 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     val me get() = requireNotNull(container.stateFlow.value.me) { "User is not initialized." }
 
+    // TODO(riflockle7): user 엔티티 commit
+    val profileImageUrl get() = requireNotNull(container.stateFlow.value.me?.profileImageUrl) { "User.profileImageUrl is not initialized." }
+
     /* ----- Onboard Logic ----- */
 
     fun navigateStep(step: OnboardStep, ignoreThrottle: Boolean = false) = intent {
@@ -209,7 +212,11 @@ internal class OnboardViewModel @AssistedInject constructor(
     // from Bitmap
     fun updateUserProfileImageFile(imageBitmap: Bitmap) = intent {
         val file = duckieUserProfileImageTemporaryFile.also { it.delete() }
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, ProfileImageCompressQuality, file.outputStream())
+        imageBitmap.compress(
+            Bitmap.CompressFormat.PNG,
+            ProfileImageCompressQuality,
+            file.outputStream(),
+        )
         reduce {
             state.copy(temporaryProfileImageFile = file)
         }
@@ -250,7 +257,12 @@ internal class OnboardViewModel @AssistedInject constructor(
                 }
                 postSideEffect(OnboardSideEffect.UpdateAccessToken(response.accessToken))
                 postSideEffect(OnboardSideEffect.AttachAccessTokenToHeader(response.accessToken))
-                postSideEffect(OnboardSideEffect.Joined(isNewUser = response.isNewUser, me = response.user))
+                postSideEffect(
+                    OnboardSideEffect.Joined(
+                        isNewUser = response.isNewUser,
+                        me = response.user,
+                    ),
+                )
             }
             .attachExceptionHandling()
     }

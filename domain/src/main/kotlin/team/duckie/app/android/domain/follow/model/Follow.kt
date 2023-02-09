@@ -7,7 +7,10 @@
 
 package team.duckie.app.android.domain.follow.model
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import kotlinx.parcelize.Parcelize
 
 @Immutable
-data class Follow(val id: Int)
+@Parcelize
+class Follow(val id: Int) : Parcelable

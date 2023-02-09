@@ -172,7 +172,8 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     }
 
     var photoPickerVisible by remember { mutableStateOf(false) }
-    var profilePhoto by remember { mutableStateOf<Any>(vm.me.profileImageUrl) }
+    // TODO(riflockle7): user 엔티티 commit
+    var profilePhoto by remember { mutableStateOf<Any>(vm.profileImageUrl) }
 
     var profilePhotoLastSelectionIndex by remember { mutableStateOf<Int?>(null) }
     val profilePhotoSelections = remember {

@@ -50,6 +50,7 @@ object ExamDummyResponse {
                 "id": 1,
                 "nickName": "doro",
                 "profileImageUrl": "",
+                "status": "NEW",
                 "duckPower" : {
                     "id": 1,
                     "tier": "덕력 20%",
@@ -80,6 +81,7 @@ object ExamDummyResponse {
             id = 1,
             nickname = "doro",
             profileImageUrl = "",
+            status = "NEW",
             duckPower = DuckPower(
                 id = 1,
                 tier = "덕력 20%",
@@ -88,8 +90,10 @@ object ExamDummyResponse {
                     name = "doro",
                 ),
             ),
+            follow = null,
             favoriteTags = null,
             favoriteCategories = null,
+            permissions = null,
         ),
         category = Category(1, "연예인", "https://duckie", null),
         mainTag = Tag(1, "doro"),

@@ -13,6 +13,7 @@ import kotlin.random.Random
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.category.model.CategoryData
+import team.duckie.app.android.data.follow.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.model.DuckPowerResponse
@@ -39,10 +40,13 @@ private val DuckieDefaultNickname: String
 internal fun UserResponse.toDomain() = User(
     id = id ?: duckieResponseFieldNpe("id"),
     nickname = nickName ?: DuckieDefaultNickname,
-    profileImageUrl = profileImageUrl ?: duckieResponseFieldNpe("profileImageUrl"),
+    profileImageUrl = profileImageUrl,
+    status = status,
     duckPower = duckPower?.toDomain(),
+    follow = follow?.toDomain(),
     favoriteTags = favoriteTags?.fastMap(TagData::toDomain)?.toImmutableList(),
     favoriteCategories = favoriteCategories?.fastMap(CategoryData::toDomain)?.toImmutableList(),
+    permissions = permissions,
 )
 
 internal fun UserFollowingRecommendationsResponse.toDomain() = UserFollowingRecommendations(

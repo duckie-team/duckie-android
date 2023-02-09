@@ -35,9 +35,10 @@ internal fun RecommendationJumbotronItem.toUiModel() =
     )
 
 internal fun User.toUiModel() =
+    // TODO(riflockle7): user 엔티티 commit
     HomeState.RecommendUserByTopic.User(
         userId = id,
-        profileImgUrl = profileImageUrl,
+        profileImgUrl = profileImageUrl ?: "",
         nickname = nickname,
         favoriteTag = duckPower?.tag?.name ?: "",
         tier = duckPower?.tier ?: "",
