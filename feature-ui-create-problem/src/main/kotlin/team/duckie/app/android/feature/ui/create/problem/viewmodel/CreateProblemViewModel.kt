@@ -66,6 +66,7 @@ import team.duckie.app.android.util.kotlin.DuckieStatusCode
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 import team.duckie.app.android.util.ui.const.Extras
@@ -252,9 +253,6 @@ internal class CreateProblemViewModel @Inject constructor(
         val createProblemState = container.stateFlow.value.createProblem
         val additionalInfoState = container.stateFlow.value.additionalInfo
 
-        // 카테고리는 선택 되어 있어야 함
-        require(examInformationState.categorySelection != -1)
-
         val problems = createProblemState.questions.fastMapIndexed { index, question ->
             Problem(
                 index,
@@ -271,7 +269,8 @@ internal class CreateProblemViewModel @Inject constructor(
             description = examInformationState.examDescription,
             mainTagId = examInformationState.categories.first().id,
             subTagIds = additionalInfoState.subTags.map { it.id }.toPersistentList(),
-            categoryId = examInformationState.selectedCategory.id,
+            categoryId = examInformationState.selectedCategory?.id
+                ?: duckieResponseFieldNpe("선택된 카테고리가 있어야 합니다."),
             certifyingStatement = examInformationState.certifyingStatement,
             thumbnailImageUrl = "${additionalInfoState.thumbnail}",
             thumbnailType = additionalInfoState.thumbnailType,
