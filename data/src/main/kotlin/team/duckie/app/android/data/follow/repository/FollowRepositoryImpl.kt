@@ -16,11 +16,11 @@ import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.follow.mapper.toData
 import team.duckie.app.android.domain.follow.model.FollowBody
-import team.duckie.app.android.domain.follow.repository.FollowsRepository
+import team.duckie.app.android.domain.follow.repository.FollowRepository
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import javax.inject.Inject
 
-class FollowsRepositoryImpl @Inject constructor() : FollowsRepository {
+class FollowRepositoryImpl @Inject constructor() : FollowRepository {
     override suspend fun follow(followsBody: FollowBody): Boolean {
         val response = client.post("/follows") {
             setBody(followsBody.toData())

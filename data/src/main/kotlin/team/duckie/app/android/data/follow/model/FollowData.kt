@@ -9,10 +9,7 @@ package team.duckie.app.android.data.follow.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-internal data class FollowBodyData(
-    @field:JsonProperty("userId")
-    val userId: Int? = null,
-
-    @field:JsonProperty("followingId")
-    val followingId: Int? = null,
+internal data class FollowData(
+    @field:JsonProperty("id")
+    val id: Int? = null,
 )

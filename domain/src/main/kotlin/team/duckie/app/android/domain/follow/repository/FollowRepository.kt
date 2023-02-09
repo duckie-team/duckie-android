@@ -11,8 +11,8 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.follow.model.FollowBody
 
 @Immutable
-interface FollowsRepository {
-    suspend fun follow(followsBody: FollowBody): Boolean
+interface FollowRepository {
+    suspend fun follow(followBody: FollowBody): Boolean
 
-    suspend fun unFollow(followsBody: FollowBody): Boolean
+    suspend fun unFollow(followBody: FollowBody): Boolean
 }
