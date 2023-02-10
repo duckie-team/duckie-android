@@ -60,6 +60,7 @@ internal class HomeViewModel @Inject constructor(
     // TODO(limsaehyun: Request Server
     fun fetchJumbotrons() = intent {
         updateHomeLoading(true)
+        // TODO(riflockle7): GET /recommendations API commit (params)
         fetchJumbotronsUseCase()
             .onSuccess { jumbotrons ->
                 reduce {

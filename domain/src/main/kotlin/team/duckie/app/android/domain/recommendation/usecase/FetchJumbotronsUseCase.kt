@@ -15,7 +15,7 @@ import javax.inject.Inject
 class FetchJumbotronsUseCase @Inject constructor(
     private val repository: RecommendationRepository,
 ) {
-    suspend operator fun invoke() = runCatching {
-        repository.fetchJumbotrons()
+    suspend operator fun invoke(page: Int = 1) = runCatching {
+        repository.fetchJumbotrons(page = page)
     }
 }

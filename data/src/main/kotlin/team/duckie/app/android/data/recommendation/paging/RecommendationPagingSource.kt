@@ -87,8 +87,6 @@ private suspend fun dummyReturn(a: Int): RecommendationData {
         jumbotrons = jumbotrons,
         recommendations = recommendations,
         page = a,
-        offset = 1,
-        limit = 1,
     )
 }
 

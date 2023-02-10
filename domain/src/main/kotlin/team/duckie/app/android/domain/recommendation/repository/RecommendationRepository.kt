@@ -24,7 +24,7 @@ import team.duckie.app.android.domain.user.model.UserFollowing
 interface RecommendationRepository {
     fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>
 
-    suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem>
+    suspend fun fetchJumbotrons(page: Int): List<RecommendationJumbotronItem>
 
     suspend fun fetchRecommendFollowing(): UserFollowing
 

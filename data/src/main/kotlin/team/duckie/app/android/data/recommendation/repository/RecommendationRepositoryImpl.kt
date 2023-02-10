@@ -12,7 +12,10 @@ package team.duckie.app.android.data.recommendation.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.github.kittinunf.fuel.Fuel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.recommendation.mapper.toDomain
 import team.duckie.app.android.data.recommendation.model.RecommendationJumbotronItemData
@@ -20,8 +23,8 @@ import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSo
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.DuckPowerResponse
-import team.duckie.app.android.data.user.model.UserFollowingResponse
 import team.duckie.app.android.data.user.model.UserFollowingRecommendationsResponse
+import team.duckie.app.android.data.user.model.UserFollowingResponse
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
@@ -31,13 +34,16 @@ import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.fastMap
+import javax.inject.Inject
 
 /**
  * fetchRecommendatiins 에서 사용되는 paging 단위
  */
 private const val ITEMS_PER_PAGE = 10
 
-class RecommendationRepositoryImpl : RecommendationRepository {
+class RecommendationRepositoryImpl @Inject constructor(
+    private val fuel: Fuel,
+) : RecommendationRepository {
     @ExperimentalApi
     override fun fetchRecommendations(): Flow<PagingData<RecommendationItem>> {
         return Pager(
@@ -51,16 +57,23 @@ class RecommendationRepositoryImpl : RecommendationRepository {
     }
 
     // TODO(limsaehyun): API가 불안정한 관계로 MockRepository 으로 구현
+    // TODO(riflockle7): GET /recommendations API commit
     @ExperimentalApi
-    override suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem> {
-//        val response = client.get {
-//            url("/recommendations")
-//            parameter("page", 1)
-//        }
+    override suspend fun fetchJumbotrons(page: Int): List<RecommendationJumbotronItem> =
+        withContext(Dispatchers.IO) {
+//        val (_, response) = fuel
+//            .post(
+//                "/recommendations",
+//                listOf("page" to page),
+//            )
+//            .responseString()
 //
-//        return responseCatching(response.bodyAsText()) { body ->
-//            body.toJsonObject<RecommendationData>().toDomain().jumbotrons
-//        }
+//        val apiResponse = responseCatchingFuel(
+//            response = response,
+//            parse = RecommendationData::toDomain,
+//        )
+//
+//        return@withContext apiResponse.jumbotrons
 
         val response = (0..2).map {
             RecommendationJumbotronItemData(
@@ -96,7 +109,7 @@ class RecommendationRepositoryImpl : RecommendationRepository {
             )
         }.toList()
 
-        return response.fastMap(RecommendationJumbotronItemData::toDomain)
+        return@withContext response.fastMap(RecommendationJumbotronItemData::toDomain)
     }
 
     // TODO(limsaehyun): API가 불안정한 관계로 MockRepository 으로 구현
