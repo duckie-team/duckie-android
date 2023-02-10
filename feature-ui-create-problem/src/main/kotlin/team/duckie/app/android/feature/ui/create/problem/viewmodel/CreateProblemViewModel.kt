@@ -7,9 +7,6 @@
 
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
-// TODO(riflockle7): OptIn 제거
-@file:OptIn(OutOfDateApi::class)
-
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
 import android.content.Context
@@ -60,7 +57,6 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.util.android.image.MediaUtil
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe

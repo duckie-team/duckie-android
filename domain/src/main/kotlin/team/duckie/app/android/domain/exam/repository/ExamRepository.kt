@@ -11,19 +11,14 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @Immutable
 interface ExamRepository {
-    @OutOfDateApi
     suspend fun makeExam(exam: ExamBody): Boolean
 
-    @OutOfDateApi
     suspend fun getExam(id: Int): Exam
 
-    @OutOfDateApi
     suspend fun getExamThumbnail(examThumbnailBody: ExamThumbnailBody): String
 
-    @OutOfDateApi
     suspend fun getExamFollowing(page: Int): List<Exam>
 }

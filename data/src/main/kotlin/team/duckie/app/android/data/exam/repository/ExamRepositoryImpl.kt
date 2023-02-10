@@ -28,13 +28,11 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import javax.inject.Inject
 
 // TODO(riflockle7): GET /exams/me/following API commit
 class ExamRepositoryImpl @Inject constructor(private val fuel: Fuel) : ExamRepository {
-    @OutOfDateApi
     override suspend fun makeExam(exam: ExamBody): Boolean {
         val response = client.post {
             url("/exams")
@@ -46,7 +44,6 @@ class ExamRepositoryImpl @Inject constructor(private val fuel: Fuel) : ExamRepos
         }
     }
 
-    @OutOfDateApi
     override suspend fun getExam(id: Int): Exam {
         val response = client.get {
             url("/exams/$id")
@@ -54,7 +51,6 @@ class ExamRepositoryImpl @Inject constructor(private val fuel: Fuel) : ExamRepos
         return responseCatching(response, ExamData::toDomain)
     }
 
-    @OutOfDateApi
     override suspend fun getExamThumbnail(examThumbnailBody: ExamThumbnailBody): String {
         val response = client.post {
             url("/exams/thumbnail")
@@ -68,7 +64,6 @@ class ExamRepositoryImpl @Inject constructor(private val fuel: Fuel) : ExamRepos
 
     // TODO(riflockle7): GET /exams/me/following API commit
     @AllowMagicNumber
-    @OutOfDateApi
     override suspend fun getExamFollowing(page: Int): List<Exam> = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .post(

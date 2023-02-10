@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(OutOfDateApi::class)
-
 package team.duckie.app.android.data.dummy
 
 import kotlinx.collections.immutable.persistentListOf
@@ -15,9 +13,7 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 
-@OutOfDateApi
 object ExamDummyResponse {
     const val RawData = """
         {

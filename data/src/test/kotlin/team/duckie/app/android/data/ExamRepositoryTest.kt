@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.data
 
+import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -19,13 +20,11 @@ import team.duckie.app.android.data.exam.repository.ExamRepositoryImpl
 import team.duckie.app.android.data.util.ApiTest
 import team.duckie.app.android.data.util.buildMockHttpClient
 import team.duckie.app.android.domain.exam.repository.ExamRepository
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 
-@OutOfDateApi
 class ExamRepositoryTest : ApiTest(
     client = buildMockHttpClient(content = ExamDummyResponse.RawData),
 ) {
-    private val repository: ExamRepository by lazy { ExamRepositoryImpl(/*fuel = Fuel*/) }
+    private val repository: ExamRepository by lazy { ExamRepositoryImpl(fuel = Fuel) }
 
     @Test
     fun response_to_domain_model() = runTest {

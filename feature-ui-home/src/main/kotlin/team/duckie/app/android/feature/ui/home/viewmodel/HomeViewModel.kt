@@ -36,7 +36,6 @@ import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.fastMap
 
 @HiltViewModel
@@ -78,7 +77,6 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
-    @OptIn(OutOfDateApi::class)
     fun fetchRecommendFollowingTest() = intent {
         updateHomeLoading(true)
         // TODO(riflockle7): GET /exams/me/following API commit (params)

@@ -39,11 +39,9 @@ import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ShortModel
 import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
-@OutOfDateApi
 @AllowCyclomaticComplexMethod
 internal fun ExamData.toDomain() = Exam(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
@@ -66,7 +64,6 @@ internal fun ExamData.toDomain() = Exam(
     heartCount = heartCount,
 )
 
-@OutOfDateApi
 internal fun ProblemData.toDomain() = Problem(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     question = question?.toDomain()
@@ -124,7 +121,6 @@ internal fun ImageChoiceData.toDomain() = ImageChoiceModel(
     imageUrl = imageUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.imageUrl"),
 )
 
-@OutOfDateApi
 internal fun ExamBody.toData() = ExamBodyData(
     title = title,
     description = description,
@@ -139,7 +135,6 @@ internal fun ExamBody.toData() = ExamBodyData(
     status = status,
 )
 
-@OutOfDateApi
 internal fun ExamThumbnailBody.toData() = ExamThumbnailBodyData(
     title = title,
     mainTag = mainTag,
@@ -210,12 +205,10 @@ internal fun ImageChoiceModel.toData() = ImageChoiceData(
     imageUrl = imageUrl,
 )
 
-@OutOfDateApi
 internal fun ExamInstanceBody.toData() = ExamInstanceBodyData(
     examId = this.examId,
 )
 
-@OutOfDateApi
 internal fun ExamInstanceSubmitBody.toData() = ExamInstanceSubmitBodyData(
     submitted = this.submitted,
 )
@@ -225,7 +218,6 @@ internal fun ExamInstanceSubmitData.toDomain() = ExamInstanceSubmit(
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.examScoreImageUrl"),
 )
 
-@OptIn(OutOfDateApi::class)
 internal fun ExamMeFollowingResponseData.toDomain() = ExamMeFollowingResponse(
     exams = exams?.fastMap { it.toDomain() }
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams"),

@@ -11,7 +11,6 @@ package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @Immutable
 enum class ThumbnailType(val value: String) {
@@ -19,7 +18,6 @@ enum class ThumbnailType(val value: String) {
     Image("image"),
 }
 
-@OutOfDateApi
 @Immutable
 data class ExamBody(
     val title: String,
@@ -35,13 +33,11 @@ data class ExamBody(
     val status: String?,
 )
 
-@OutOfDateApi
 @Immutable
 data class ExamInstanceBody(
     val examId: Int,
 )
 
-@OutOfDateApi
 @Immutable
 data class ExamInstanceSubmitBody(
     val submitted: ImmutableList<String>,

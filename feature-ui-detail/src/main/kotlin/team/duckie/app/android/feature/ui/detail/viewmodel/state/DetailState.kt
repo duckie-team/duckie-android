@@ -5,14 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(OutOfDateApi::class)
-
 package team.duckie.app.android.feature.ui.detail.viewmodel.state
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.fastMap
 
 /**

@@ -16,9 +16,7 @@ package team.duckie.app.android.domain.examInstance.model
 
 import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 
-@OutOfDateApi
 @Immutable
 data class ExamInstance(
     val id: Int,

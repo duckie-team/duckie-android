@@ -12,11 +12,9 @@ import team.duckie.app.android.data.examInstance.model.ExamInstanceData
 import team.duckie.app.android.data.examInstance.model.ProblemInstanceData
 import team.duckie.app.android.domain.examInstance.model.ExamInstance
 import team.duckie.app.android.domain.examInstance.model.ProblemInstance
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
-@OptIn(OutOfDateApi::class)
 internal fun ExamInstanceData.toDomain() = ExamInstance(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     exam = exam?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exam"),
@@ -24,7 +22,6 @@ internal fun ExamInstanceData.toDomain() = ExamInstance(
     status = status ?: duckieResponseFieldNpe("${this::class.java.simpleName}.status"),
 )
 
-@OptIn(OutOfDateApi::class)
 internal fun ProblemInstanceData.toDomain() = ProblemInstance(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     problem = problem?.toDomain()

@@ -6,7 +6,6 @@
  */
 
 @file:AllowMagicNumber
-@file:OptIn(OutOfDateApi::class)
 
 package team.duckie.app.android.feature.ui.detail.screen
 
@@ -52,7 +51,6 @@ import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.kotlin.percents

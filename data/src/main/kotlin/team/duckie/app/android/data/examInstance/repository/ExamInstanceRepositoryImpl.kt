@@ -30,14 +30,12 @@ import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.model.ExamInstance
 import team.duckie.app.android.domain.examInstance.repository.ExamInstanceRepository
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 class ExamInstanceRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
 ) : ExamInstanceRepository {
     // TODO(riflockle7): GET /exam-instance/:id API commit
-    @OutOfDateApi
     override suspend fun getExamInstance(
         examInstanceId: Int,
     ): ExamInstance = withContext(Dispatchers.IO) {
@@ -51,7 +49,6 @@ class ExamInstanceRepositoryImpl @Inject constructor(
         )
     }
 
-    @OutOfDateApi
     override suspend fun postExamInstance(examInstanceBody: ExamInstanceBody): Boolean {
         val response = client.post {
             url("/exam-instance")
@@ -63,7 +60,6 @@ class ExamInstanceRepositoryImpl @Inject constructor(
         }
     }
 
-    @OutOfDateApi
     override suspend fun postExamInstanceSubmit(
         id: Int,
         examInstanceSubmitBody: ExamInstanceSubmitBody,

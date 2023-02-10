@@ -14,7 +14,6 @@ import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotr
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.fastMap
 
 // TODO(riflockle7): GET /users/following API commit
@@ -45,7 +44,6 @@ internal fun User.toUiModel() =
         tier = duckPower?.tier ?: "",
     )
 
-@OptIn(OutOfDateApi::class)
 internal fun Exam.toUiModel() =
     // TODO(riflockle7): exam 엔티티 commit
     HomeState.FollowingTest(

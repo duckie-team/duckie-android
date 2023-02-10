@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(OutOfDateApi::class)
-
 package team.duckie.app.android.feature.ui.detail.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -28,7 +26,6 @@ import team.duckie.app.android.domain.heart.usecase.DeleteHeartUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 import team.duckie.app.android.feature.datastore.me
@@ -62,7 +59,6 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    @OptIn(OutOfDateApi::class)
     fun followUser() = viewModelScope.launch {
         val detailState = container.stateFlow.value
         require(detailState is DetailState.Success)

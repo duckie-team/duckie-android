@@ -20,7 +20,6 @@ import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
@@ -56,7 +55,6 @@ internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotro
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
 )
 
-@OptIn(OutOfDateApi::class)
 internal fun RecommendationItemData.toDomain() = RecommendationItem(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
