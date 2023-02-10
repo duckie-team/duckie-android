@@ -139,11 +139,11 @@ internal fun ExamBody.toData() = ExamBodyData(
 
 @OutOfDateApi
 internal fun ExamThumbnailBody.toData() = ExamThumbnailBodyData(
-    category = category,
-    certifyingStatement = certifyingStatement,
-    mainTag = mainTag,
-    nickName = nickName,
     title = title,
+    mainTag = mainTag,
+    category = category,
+    nickName = nickName,
+    certifyingStatement = certifyingStatement,
     type = type,
 )
 
