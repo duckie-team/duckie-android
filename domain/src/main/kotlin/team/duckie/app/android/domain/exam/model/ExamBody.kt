@@ -24,16 +24,15 @@ enum class ThumbnailType(val value: String) {
 data class ExamBody(
     val title: String,
     val description: String,
+    val thumbnailUrl: String,
+    val thumbnailType: ThumbnailType,
     val mainTagId: Int,
-    val subTagIds: ImmutableList<Int>?,
     val categoryId: Int,
+    val subTagIds: ImmutableList<Int>?,
     val certifyingStatement: String,
-    val thumbnailImageUrl: String?,
-    val thumbnailType: ThumbnailType?,
+    val buttonTitle: String,
     val problems: ImmutableList<Problem>,
-    val isPublic: Boolean?,
-    val buttonTitle: String?,
-    val userId: Int,
+    val status: String?,
 )
 
 @OutOfDateApi

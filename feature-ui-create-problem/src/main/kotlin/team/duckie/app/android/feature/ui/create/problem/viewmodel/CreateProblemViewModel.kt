@@ -203,21 +203,24 @@ internal class CreateProblemViewModel @Inject constructor(
             )
         }.toPersistentList()
 
+        val subTagIds = additionalInfoState.subTags.map { it.id }.toPersistentList()
         return ExamBody(
             title = examInformationState.examTitle,
             description = examInformationState.examDescription,
             mainTagId = examInformationState.categories.first().id,
-            subTagIds = additionalInfoState.subTags.map { it.id }.toPersistentList(),
+            subTagIds = if (subTagIds.isEmpty()) {
+                null
+            } else {
+                subTagIds
+            },
             categoryId = examInformationState.selectedCategory?.id
                 ?: duckieResponseFieldNpe("선택된 카테고리가 있어야 합니다."),
             certifyingStatement = examInformationState.certifyingStatement,
-            thumbnailImageUrl = "${additionalInfoState.thumbnail}",
+            thumbnailUrl = "${additionalInfoState.thumbnail}",
             thumbnailType = additionalInfoState.thumbnailType,
             problems = problems,
-            isPublic = true,
             buttonTitle = additionalInfoState.takeTitle,
-            // TODO(riflockle7): userId 추후 확인 필요
-            userId = 1,
+            status = null, // 운영용
         )
     }
 
@@ -884,6 +887,7 @@ internal class CreateProblemViewModel @Inject constructor(
         val tagText = when (state.findResultType) {
             FindResultType.MainTag ->
                 state.examInformation.searchMainTag.searchResults[index]
+
             FindResultType.SubTags -> state.additionalInfo.searchSubTags.searchResults[index]
         }
 

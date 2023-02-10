@@ -126,16 +126,15 @@ internal fun ImageChoiceData.toDomain() = ImageChoiceModel(
 internal fun ExamBody.toData() = ExamBodyData(
     title = title,
     description = description,
+    thumbnailUrl = thumbnailUrl,
+    thumbnailType = thumbnailType.value,
     mainTagId = mainTagId,
-    subTagIds = subTagIds,
     categoryId = categoryId,
+    subTagIds = subTagIds,
     certifyingStatement = certifyingStatement,
-    thumbnailImageUrl = thumbnailImageUrl,
-    thumbnailType = thumbnailType?.value,
-    problems = problems.fastMap(Problem::toData),
-    isPublic = isPublic,
     buttonTitle = buttonTitle,
-    userId = userId,
+    problems = problems.fastMap(Problem::toData),
+    status = status,
 )
 
 @OutOfDateApi
