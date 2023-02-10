@@ -9,14 +9,13 @@ package team.duckie.app.android.domain.heart.usecase
 
 import androidx.compose.runtime.Immutable
 import javax.inject.Inject
-import team.duckie.app.android.domain.heart.model.HeartsBody
 import team.duckie.app.android.domain.heart.repository.HeartRepository
 
 @Immutable
 class DeleteHeartUseCase @Inject constructor(
     private val heartRepository: HeartRepository,
 ) {
-    suspend operator fun invoke(heartBody: HeartsBody) = runCatching {
-        heartRepository.deleteHeart(heartBody)
+    suspend operator fun invoke(heartId: Int) = runCatching {
+        heartRepository.deleteHeart(heartId)
     }
 }

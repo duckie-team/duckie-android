@@ -60,7 +60,7 @@ abstract class BindsModule {
     abstract fun provideFollowsRepository(impl: FollowRepositoryImpl): FollowRepository
 
     @Binds
-    abstract fun provideHeartsRepository(impl: HeartRepositoryImpl): HeartRepository
+    abstract fun provideHeartRepository(impl: HeartRepositoryImpl): HeartRepository
 
     @Binds
     abstract fun provideGalleryRepository(impl: GalleryRepositoryImpl): GalleryRepository

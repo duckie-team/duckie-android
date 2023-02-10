@@ -23,7 +23,6 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
-import team.duckie.app.android.domain.heart.model.HeartsBody
 import team.duckie.app.android.domain.heart.usecase.PostHeartUseCase
 import team.duckie.app.android.domain.heart.usecase.DeleteHeartUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
@@ -41,8 +40,8 @@ const val DelayTime = 2000L
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
     private val followUseCase: FollowUseCase,
-    private val postHeartsUseCase: PostHeartUseCase,
-    private val deleteHeartsUseCase: DeleteHeartUseCase,
+    private val postHeartUseCase: PostHeartUseCase,
+    private val deleteHeartUseCase: DeleteHeartUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
@@ -92,7 +91,7 @@ class DetailViewModel @Inject constructor(
 
         intent {
             if (!detailState.isHeart) {
-                postHeartsUseCase(detailState.exam.id)
+                postHeartUseCase(detailState.exam.id)
                     .onSuccess { heart ->
                         reduce {
                             (state as DetailState.Success).run {
@@ -104,7 +103,7 @@ class DetailViewModel @Inject constructor(
                     }
             } else {
                 detailState.exam.heart?.id?.also { heartId ->
-                    deleteHeartsUseCase(HeartsBody(detailState.exam.id, heartId))
+                    deleteHeartUseCase(heartId)
                         .onSuccess { apiResult ->
                             if (apiResult) {
                                 reduce {

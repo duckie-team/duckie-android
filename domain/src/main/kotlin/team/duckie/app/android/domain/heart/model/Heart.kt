@@ -7,10 +7,4 @@
 
 package team.duckie.app.android.domain.heart.model
 
-import androidx.compose.runtime.Immutable
-
-@Immutable
-data class HeartsBody(
-    val examId: Int,
-    val heartId: Int? = null,
-)
+data class Heart(val id: Int)

@@ -19,12 +19,12 @@ import team.duckie.app.android.domain.heart.usecase.DeleteHeartUseCase
 @InstallIn(SingletonComponent::class)
 object HeartUseCaseModule {
     @Provides
-    fun provideUnHeartsUseCase(repository: HeartRepository): DeleteHeartUseCase {
+    fun provideUnHeartUseCase(repository: HeartRepository): DeleteHeartUseCase {
         return DeleteHeartUseCase(repository)
     }
 
     @Provides
-    fun provideHeartsUseCase(repository: HeartRepository): PostHeartUseCase {
+    fun provideHeartUseCase(repository: HeartRepository): PostHeartUseCase {
         return PostHeartUseCase(repository)
     }
 }
