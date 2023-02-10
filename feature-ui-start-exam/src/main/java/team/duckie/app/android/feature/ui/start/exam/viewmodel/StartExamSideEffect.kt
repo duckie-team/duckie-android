@@ -8,5 +8,10 @@
 package team.duckie.app.android.feature.ui.start.exam.viewmodel
 
 internal sealed class StartExamSideEffect {
-    data class FinishStartExam(val certified: Boolean) : StartExamSideEffect()
+    data class FinishStartExam(
+        val certified: Boolean,
+        val examId: Int,
+    ) : StartExamSideEffect()
+
+    data class ReportError(val exception: Throwable) : StartExamSideEffect()
 }

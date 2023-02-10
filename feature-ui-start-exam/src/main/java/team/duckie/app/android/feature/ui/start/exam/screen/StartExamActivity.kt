@@ -17,10 +17,13 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.feature.ui.solve.problem.solveproblem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.start.exam.viewmodel.StartExamSideEffect
 import team.duckie.app.android.feature.ui.start.exam.viewmodel.StartExamViewModel
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 
@@ -52,9 +55,9 @@ class StartExamActivity : BaseActivity() {
         when (sideEffect) {
             is StartExamSideEffect.FinishStartExam -> {
                 if (sideEffect.certified) {
-                    // TODO(riflockle7): 시험 풀기 화면으로 이동 필요 및 필요 extra 확인 필요
-                    Log.i("riflockle7", "시험 풀기 화면으로 이동")
-                    finishWithAnimation()
+                    startActivityWithAnimation<SolveProblemActivity>(
+                        intentBuilder = { putExtra(Extras.ExamId, sideEffect.examId) },
+                    )
                 } else {
                     Log.i("riflockle7", "화면 종료")
                     finishWithAnimation()
