@@ -10,8 +10,8 @@ package team.duckie.app.android.data.examInstance.mapper
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.examInstance.model.ExamInstanceData
 import team.duckie.app.android.data.examInstance.model.ProblemInstanceData
-import team.duckie.app.android.domain.examInstance.ExamInstance
-import team.duckie.app.android.domain.examInstance.ProblemInstance
+import team.duckie.app.android.domain.examInstance.model.ExamInstance
+import team.duckie.app.android.domain.examInstance.model.ProblemInstance
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap

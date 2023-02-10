@@ -17,6 +17,7 @@ import team.duckie.app.android.data.auth.repository.AuthRepositoryImpl
 import team.duckie.app.android.data.category.repository.CategoryRepositoryImpl
 import team.duckie.app.android.data.device.repository.DeviceRepositoryImpl
 import team.duckie.app.android.data.exam.repository.ExamRepositoryImpl
+import team.duckie.app.android.data.examInstance.repository.ExamInstanceRepositoryImpl
 import team.duckie.app.android.data.file.repository.FileRepositoryImpl
 import team.duckie.app.android.data.follow.repository.FollowRepositoryImpl
 import team.duckie.app.android.data.gallery.repository.GalleryRepositoryImpl
@@ -30,6 +31,7 @@ import team.duckie.app.android.domain.auth.repository.AuthRepository
 import team.duckie.app.android.domain.category.repository.CategoryRepository
 import team.duckie.app.android.domain.device.repository.DeviceRepository
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.domain.examInstance.repository.ExamInstanceRepository
 import team.duckie.app.android.domain.file.repository.FileRepository
 import team.duckie.app.android.domain.follow.repository.FollowRepository
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
@@ -54,6 +56,9 @@ abstract class BindsModule {
 
     @Binds
     abstract fun provideExamRepository(impl: ExamRepositoryImpl): ExamRepository
+
+    @Binds
+    abstract fun provideExamInstanceRepository(impl: ExamInstanceRepositoryImpl): ExamInstanceRepository
 
     @Binds
     abstract fun provideRecommendationRepository(impl: RecommendationRepositoryImpl): RecommendationRepository
