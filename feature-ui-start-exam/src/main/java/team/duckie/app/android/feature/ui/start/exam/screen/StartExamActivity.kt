@@ -15,6 +15,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.SolveProblemActivity
@@ -62,6 +64,11 @@ class StartExamActivity : BaseActivity() {
                     Log.i("riflockle7", "화면 종료")
                     finishWithAnimation()
                 }
+            }
+
+            is StartExamSideEffect.ReportError -> {
+                Firebase.crashlytics.recordException(sideEffect.exception)
+                // TODO(EvergreenTree97): 에러 처리 관련 사항 결정되면 토스트 뿌려줘야함
             }
         }
     }
