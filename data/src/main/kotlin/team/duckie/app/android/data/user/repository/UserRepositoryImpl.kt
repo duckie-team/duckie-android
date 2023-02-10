@@ -30,7 +30,7 @@ import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.runtimeCheck
+import team.duckie.app.android.util.kotlin.fastMap
 
 class UserRepositoryImpl @Inject constructor() : UserRepository {
     override suspend fun get(id: Int): User {
@@ -44,23 +44,19 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
 
     override suspend fun update(
         id: Int,
-        nickname: String?,
+        categories: List<Category>?,
+        tags: List<Tag>?,
         profileImageUrl: String?,
-        favoriteCategories: List<Category>?,
-        favoriteTags: List<Tag>?,
+        nickname: String?,
+        status: String?,
     ): User {
-        runtimeCheck(
-            nickname != null || profileImageUrl != null ||
-                    favoriteCategories != null || favoriteTags != null,
-        ) {
-            "At least one of the parameters must be non-null"
-        }
         val response = client.patch("/users/$id") {
             jsonBody {
-                nickname?.let { "nickname" withString nickname }
+                categories?.let { "favoriteCategories" withInts categories.fastMap { it.id } }
+                tags?.let { "favoriteTags" withInts tags.fastMap { it.id } }
                 profileImageUrl?.let { "profileImageUrl" withString profileImageUrl }
-                favoriteCategories?.let { "favoriteCategories" withPojos favoriteCategories }
-                favoriteTags?.let { "favoriteTags" withPojos favoriteTags }
+                nickname?.let { "nickname" withString nickname }
+                status?.let { "status" withString status }
             }
         }
         return responseCatching(

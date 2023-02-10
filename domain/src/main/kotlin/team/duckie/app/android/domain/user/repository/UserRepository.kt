@@ -20,10 +20,11 @@ interface UserRepository {
 
     suspend fun update(
         id: Int,
-        nickname: String?,
+        categories: List<Category>?,
+        tags: List<Tag>?,
         profileImageUrl: String?,
-        favoriteCategories: List<Category>?,
-        favoriteTags: List<Tag>?,
+        nickname: String?,
+        status: String?,
     ): User
 
     suspend fun nicknameValidateCheck(nickname: String): Boolean

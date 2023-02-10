@@ -309,19 +309,22 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
+    // TODO(riflockle7): PATCH /users/:id API commit
     suspend fun updateUser(
         id: Int,
-        nickname: String?,
-        profileImageUrl: String?,
         favoriteCategories: List<Category>?,
         favoriteTags: List<Tag>?,
+        profileImageUrl: String?,
+        nickname: String?,
     ) = intent {
         userUpdateUseCase(
             id = id,
-            nickname = nickname,
+            categories = favoriteCategories,
+            tags = favoriteTags,
             profileImageUrl = profileImageUrl,
-            favoriteCategories = favoriteCategories,
-            favoriteTags = favoriteTags,
+            nickname = nickname,
+            // TODO(riflockle7): 온보딩 완료 시에는 무조건 NEW -> READY 로 바꿔줘야 함
+            status = "READY",
             updateMeInstance = { user -> MeInstance = user },
         )
             .onSuccess { user ->
