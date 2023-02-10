@@ -41,3 +41,9 @@ internal data class UserResponse(
     @field:JsonProperty("permissions")
     val permissions: List<String>? = null,
 )
+
+internal data class UsersResponse(
+
+    @field:JsonProperty("users")
+    val users: List<UserResponse>? = null,
+)

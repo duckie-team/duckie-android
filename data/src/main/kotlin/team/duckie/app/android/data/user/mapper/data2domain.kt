@@ -20,6 +20,7 @@ import team.duckie.app.android.data.user.model.DuckPowerResponse
 import team.duckie.app.android.data.user.model.UserFollowingResponse
 import team.duckie.app.android.data.user.model.UserFollowingsResponse
 import team.duckie.app.android.data.user.model.UserResponse
+import team.duckie.app.android.data.user.model.UsersResponse
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
@@ -48,6 +49,9 @@ internal fun UserResponse.toDomain() = User(
     favoriteCategories = favoriteCategories?.fastMap(CategoryData::toDomain)?.toImmutableList(),
     permissions = permissions,
 )
+
+internal fun UsersResponse.toDomain() = users?.fastMap { user -> user.toDomain() }
+    ?: duckieResponseFieldNpe("${this::class.java.simpleName}.users")
 
 internal fun UserFollowingResponse.toDomain() = UserFollowing(
     category = category?.toDomain()

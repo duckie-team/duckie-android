@@ -22,6 +22,7 @@ import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserFollowingsResponse
 import team.duckie.app.android.data.user.model.UserResponse
+import team.duckie.app.android.data.user.model.UsersResponse
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
@@ -92,4 +93,26 @@ class UserRepositoryImpl @Inject constructor(private val fuel: Fuel) : UserRepos
                 parse = UserFollowingsResponse::toDomain,
             )
         }
+
+    override suspend fun fetchMeFollowers(): List<User> {
+        val (_, response) = fuel
+            .get("/users/me/followers")
+            .responseString()
+
+        return responseCatchingFuel(
+            response = response,
+            parse = UsersResponse::toDomain,
+        )
+    }
+
+    override suspend fun fetchMeFollowings(): List<User> {
+        val (_, response) = fuel
+            .get("/users/me/followings")
+            .responseString()
+
+        return responseCatchingFuel(
+            response = response,
+            parse = UsersResponse::toDomain,
+        )
+    }
 }
