@@ -17,4 +17,4 @@ internal fun FollowData.toDomain() = Follow(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
 )
 
-internal fun FollowBody.toData() = FollowBodyData(userId = userId, followingId = followingId)
+internal fun FollowBody.toData() = FollowBodyData(followingId = followingId)

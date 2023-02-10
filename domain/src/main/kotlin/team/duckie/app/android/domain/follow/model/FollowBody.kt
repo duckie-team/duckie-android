@@ -11,6 +11,5 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class FollowBody(
-    val userId: Int,
     val followingId: Int,
 )

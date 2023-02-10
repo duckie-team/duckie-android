@@ -70,8 +70,7 @@ class DetailViewModel @Inject constructor(
 
         followUseCase(
             FollowBody(
-                detailState.appUser.id,
-                detailState.exam.user?.id ?: duckieResponseFieldNpe("문제를 등록한 유저는 반드시 있어야 합니다."),
+                detailState.exam.user?.id ?: duckieResponseFieldNpe("팔로우할 유저는 반드시 있어야 합니다."),
             ),
             !detailState.isFollowing,
         ).onSuccess { apiResult ->
