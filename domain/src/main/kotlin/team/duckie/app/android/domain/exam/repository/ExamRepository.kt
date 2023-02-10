@@ -37,5 +37,5 @@ interface ExamRepository {
     ): ExamInstanceSubmit
 
     @OutOfDateApi
-    suspend fun getExamFollowing(): List<Exam>
+    suspend fun getExamFollowing(page: Int): List<Exam>
 }

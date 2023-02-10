@@ -12,6 +12,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
@@ -37,7 +39,8 @@ import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
-class ExamRepositoryImpl @Inject constructor() : ExamRepository {
+// TODO(riflockle7): GET /exams/me/following API commit
+class ExamRepositoryImpl @Inject constructor(/*private val fuel: Fuel*/) : ExamRepository {
     @OutOfDateApi
     override suspend fun makeExam(exam: ExamBody): Boolean {
         val response = client.post {
@@ -97,16 +100,23 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
     }
 
     // TODO(limsaehyun): API 불안정하여 Mock 으로 구현
+    // TODO(riflockle7): GET /exams/me/following API commit
     @AllowMagicNumber
     @OutOfDateApi
-    override suspend fun getExamFollowing(): List<Exam> {
-//        val response = client.get {
-//            url("/exams/following")
-//        }
+    override suspend fun getExamFollowing(page: Int): List<Exam> = withContext(Dispatchers.IO) {
+//        val (_, response) = fuel
+//            .post(
+//                "/exams/me/following",
+//                listOf("page" to page),
+//            )
+//            .responseString()
 //
-//        return responseCatching(response.bodyAsText()) { body ->
-//            body.toJsonObject<List<ExamData>>().fastMap(ExamData::toDomain)
-//        }
+//        val examMeFollowingResponse = responseCatchingFuel(
+//            response = response,
+//            parse = ExamMeFollowingResponseData::toDomain,
+//        )
+//
+//        return@withContext examMeFollowingResponse.exams
 
         val response = (0..6).map { exam ->
             ExamData(
@@ -137,6 +147,6 @@ class ExamRepositoryImpl @Inject constructor() : ExamRepository {
             )
         }
 
-        return response.fastMap(ExamData::toDomain)
+        return@withContext response.fastMap(ExamData::toDomain)
     }
 }

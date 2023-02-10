@@ -16,6 +16,7 @@ import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamInstanceBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
+import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
 import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
@@ -31,6 +32,7 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
+import team.duckie.app.android.domain.exam.model.ExamMeFollowingResponse
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
@@ -221,4 +223,11 @@ internal fun ExamInstanceSubmitBody.toData() = ExamInstanceSubmitBodyData(
 internal fun ExamInstanceSubmitData.toDomain() = ExamInstanceSubmit(
     examScoreImageUrl = examScoreImageUrl
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.examScoreImageUrl"),
+)
+
+@OptIn(OutOfDateApi::class)
+internal fun ExamMeFollowingResponseData.toDomain() = ExamMeFollowingResponse(
+    exams = exams?.fastMap { it.toDomain() }
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams"),
+    page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
 )

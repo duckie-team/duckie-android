@@ -17,7 +17,7 @@ class FetchFollowingTestUseCase @Inject constructor(
     private val repository: ExamRepository,
 ) {
     @OutOfDateApi
-    suspend operator fun invoke() = runCatching {
-        repository.getExamFollowing()
+    suspend operator fun invoke(page: Int = 1) = runCatching {
+        repository.getExamFollowing(page = page)
     }
 }

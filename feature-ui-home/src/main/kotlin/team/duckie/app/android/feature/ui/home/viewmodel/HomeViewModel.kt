@@ -79,6 +79,7 @@ internal class HomeViewModel @Inject constructor(
     @OptIn(OutOfDateApi::class)
     fun fetchRecommendFollowingTest() = intent {
         updateHomeLoading(true)
+        // TODO(riflockle7): GET /exams/me/following API commit (params)
         fetchFollowingTestUseCase()
             .onSuccess { exams ->
                 reduce {
