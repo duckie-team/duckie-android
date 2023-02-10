@@ -27,9 +27,10 @@ import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
-import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendFollowingUseCase
+import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
-import team.duckie.app.android.domain.user.model.UserFollowingRecommendations
+import team.duckie.app.android.domain.user.model.UserFollowing
+import team.duckie.app.android.feature.datastore.me
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
@@ -43,10 +44,10 @@ internal class HomeViewModel @Inject constructor(
     private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
     private val fetchJumbotronsUseCase: FetchJumbotronsUseCase,
     private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,
-    private val fetchRecommendFollowingUseCase: FetchRecommendFollowingUseCase,
+    private val fetchUserFollowingUseCase: FetchUserFollowingUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
-    override val container = container<HomeState, HomeSideEffect>(HomeState())
+    override val container = container<HomeState, HomeSideEffect>(HomeState(me))
     internal val pagingDataFlow: Flow<PagingData<RecommendationItem>>
 
     init {
@@ -99,12 +100,13 @@ internal class HomeViewModel @Inject constructor(
 
     fun fetchRecommendFollowing() = intent {
         updateHomeLoading(true)
-        fetchRecommendFollowingUseCase()
+        // TODO(riflockle7): GET /users/following API commit (params)
+        fetchUserFollowingUseCase(state.me.id)
             .onSuccess { userFollowing ->
                 reduce {
                     state.copy(
                         recommendFollowing = userFollowing.followingRecommendations.fastMap(
-                            UserFollowingRecommendations::toUiModel,
+                            UserFollowing::toUiModel,
                         ).toPersistentList(),
                     )
                 }

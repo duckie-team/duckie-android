@@ -12,15 +12,16 @@ import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.domain.user.model.UserFollowingRecommendations
+import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.fastMap
 
-internal fun UserFollowingRecommendations.toUiModel() =
+// TODO(riflockle7): GET /users/following API commit
+internal fun UserFollowing.toUiModel() =
     HomeState.RecommendUserByTopic(
-        topic = category?.name ?: "",
-        users = user?.fastMap(User::toUiModel)?.toPersistentList()
+        topic = category.name,
+        users = users?.fastMap(User::toUiModel)?.toPersistentList()
             ?: persistentListOf(),
     )
 

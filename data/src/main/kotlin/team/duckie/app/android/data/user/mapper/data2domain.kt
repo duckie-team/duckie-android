@@ -17,13 +17,13 @@ import team.duckie.app.android.data.follow.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.model.DuckPowerResponse
-import team.duckie.app.android.data.user.model.UserFollowingRecommendationsResponse
 import team.duckie.app.android.data.user.model.UserFollowingResponse
+import team.duckie.app.android.data.user.model.UserFollowingsResponse
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.model.UserFollowing
-import team.duckie.app.android.domain.user.model.UserFollowingRecommendations
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
@@ -49,15 +49,18 @@ internal fun UserResponse.toDomain() = User(
     permissions = permissions,
 )
 
-internal fun UserFollowingRecommendationsResponse.toDomain() = UserFollowingRecommendations(
+internal fun UserFollowingResponse.toDomain() = UserFollowing(
     category = category?.toDomain()
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.category"),
-    user = user?.fastMap(UserResponse::toDomain)
+    users = users?.fastMap(UserResponse::toDomain)
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+    duckPower = duckPower?.toDomain()
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.duckPower"),
+    follow = follow?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.follow"),
 )
 
-internal fun UserFollowingResponse.toDomain() = UserFollowing(
-    followingRecommendations = followingRecommendations?.fastMap(UserFollowingRecommendationsResponse::toDomain)
+internal fun UserFollowingsResponse.toDomain() = UserFollowings(
+    followingRecommendations = userRecommendations?.fastMap(UserFollowingResponse::toDomain)
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.followingRecommendations"),
 )
 
