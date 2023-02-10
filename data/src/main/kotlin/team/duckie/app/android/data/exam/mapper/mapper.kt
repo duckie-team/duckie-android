@@ -220,6 +220,6 @@ internal fun ExamInstanceSubmitBody.toData() = ExamInstanceSubmitBodyData(
 )
 
 internal fun ExamInstanceSubmitData.toDomain() = ExamInstanceSubmit(
-    message = message ?: duckieResponseFieldNpe("${this::class.java.simpleName}.message"),
-    results = results ?: duckieResponseFieldNpe("${this::class.java.simpleName}.results"),
+    examScoreImageUrl = examScoreImageUrl
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.examScoreImageUrl"),
 )

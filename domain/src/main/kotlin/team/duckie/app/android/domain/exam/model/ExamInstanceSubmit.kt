@@ -11,6 +11,5 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class ExamInstanceSubmit(
-    val message: String,
-    val results: List<String>,
+    val examScoreImageUrl: String,
 )
