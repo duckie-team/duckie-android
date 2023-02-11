@@ -96,6 +96,8 @@ private const val TopAppBarLayoutId = "AdditionalInfoScreenTopAppBarLayoutId"
 private const val ContentLayoutId = "AdditionalInfoScreenContentLayoutId"
 private const val BottomLayoutId = "AdditionalInfoScreenBottomLayoutId"
 
+private const val TakeTitleMaxLength = 12;
+
 /** 문제 만들기 3단계 (추가정보 입력) Screen */
 @Composable
 internal fun AdditionalInformationScreen(
@@ -370,7 +372,13 @@ private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel(
     ) {
         QuackBasicTextField(
             text = state.takeTitle,
-            onTextChanged = vm::setButtonTitle,
+            onTextChanged = { newText ->
+                if (state.takeTitle.length <= TakeTitleMaxLength) {
+                    vm.setButtonTitle(newText)
+                } else {
+                    vm.setButtonTitle(state.takeTitle)
+                }
+            },
             placeholderText = stringResource(id = R.string.additional_information_take_input_hint),
             keyboardOptions = ImeActionNext,
         )
