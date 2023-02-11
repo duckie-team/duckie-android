@@ -7,11 +7,13 @@
 
 package team.duckie.app.android.data.exam.model
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 
 internal data class ProblemData(
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @field:JsonProperty("id")
     val id: Int? = null,
 
