@@ -31,7 +31,7 @@ private object ContentTypeValues {
 @InstallIn(SingletonComponent::class)
 internal object FuelClient {
     private val MaxTimeoutMillis = 3.seconds
-    private const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
+    private const val BaseUrl = "https://api-staging.goose-duckie.com:3000"
 
     private var DeviceName = Build.MODEL
     private const val ClientName = "android"
