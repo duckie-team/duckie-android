@@ -13,7 +13,6 @@ import team.duckie.app.android.data.follow.model.FollowData
 import team.duckie.app.android.data.tag.model.TagData
 
 internal data class UserResponse(
-
     @field:JsonProperty("id")
     val id: Int? = null,
 
@@ -42,8 +41,8 @@ internal data class UserResponse(
     val permissions: List<String>? = null,
 )
 
-internal data class UsersResponse(
-
+@JvmInline
+internal value class UsersResponse(
     @field:JsonProperty("users")
     val users: List<UserResponse>? = null,
 )

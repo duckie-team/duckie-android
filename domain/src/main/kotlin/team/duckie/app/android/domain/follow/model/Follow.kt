@@ -11,6 +11,7 @@ import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
 
+@JvmInline
 @Immutable
 @Parcelize
-class Follow(val id: Int) : Parcelable
+value class Follow(val id: Int) : Parcelable

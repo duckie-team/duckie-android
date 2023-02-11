@@ -7,4 +7,8 @@
 
 package team.duckie.app.android.domain.heart.model
 
-data class Heart(val id: Int)
+import androidx.compose.runtime.Immutable
+
+@JvmInline
+@Immutable
+value class Heart(val id: Int)

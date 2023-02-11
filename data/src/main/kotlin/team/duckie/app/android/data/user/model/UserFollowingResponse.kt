@@ -25,7 +25,8 @@ internal data class UserFollowingResponse(
     val follow: FollowData? = null,
 )
 
-internal data class UserFollowingsResponse(
+@JvmInline
+internal value class UserFollowingsResponse(
     @field:JsonProperty("userRecommendations")
     val userRecommendations: List<UserFollowingResponse>? = null,
 )

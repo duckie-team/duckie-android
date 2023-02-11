@@ -9,7 +9,8 @@ package team.duckie.app.android.domain.follow.model
 
 import androidx.compose.runtime.Immutable
 
+@JvmInline
 @Immutable
-data class FollowBody(
+value class FollowBody(
     val followingId: Int,
 )

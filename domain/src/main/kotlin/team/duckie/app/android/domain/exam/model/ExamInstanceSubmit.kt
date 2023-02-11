@@ -9,7 +9,8 @@ package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
 
+@JvmInline
 @Immutable
-data class ExamInstanceSubmit(
+value class ExamInstanceSubmit(
     val examScoreImageUrl: String,
 )

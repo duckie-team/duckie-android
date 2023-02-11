@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.exam.model.ProblemData
 
 internal data class ProblemInstanceData(
-    @JsonProperty("message")
+    @JsonProperty("id")
     val id: Int? = null,
 
     @JsonProperty("problem")

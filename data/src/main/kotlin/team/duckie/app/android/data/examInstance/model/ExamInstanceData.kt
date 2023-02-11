@@ -11,13 +11,13 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.exam.model.ExamData
 
 internal data class ExamInstanceData(
-    @JsonProperty("message")
+    @JsonProperty("id")
     val id: Int? = null,
 
     @JsonProperty("exam")
     val exam: ExamData? = null,
 
-    @JsonProperty("results")
+    @JsonProperty("problemInstances")
     val problemInstances: List<ProblemInstanceData>? = null,
 
     @JsonProperty("status")
