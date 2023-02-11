@@ -45,6 +45,7 @@ import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.kotlin.takeBy
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
@@ -153,9 +154,12 @@ internal fun ExamInformationScreen(
                     QuackBasicTextField(
                         text = state.examTitle,
                         onTextChanged = {
-                            if (state.examTitle.length <= ExamTitleMaxLength) {
-                                viewModel.setExamTitle(it)
-                            }
+                            viewModel.setExamTitle(
+                                it.takeBy(
+                                    ExamTitleMaxLength,
+                                    state.examTitle,
+                                ),
+                            )
                         },
                         placeholderText = stringResource(id = R.string.input_exam_title),
                         keyboardOptions = ImeActionNext,
@@ -172,9 +176,12 @@ internal fun ExamInformationScreen(
                             },
                         text = state.examDescription,
                         onTextChanged = {
-                            if (state.examDescription.length <= ExamDescriptionMaxLength) {
-                                viewModel.setExamDescription(it)
-                            }
+                            viewModel.setExamDescription(
+                                it.takeBy(
+                                    ExamDescriptionMaxLength,
+                                    state.examDescription,
+                                ),
+                            )
                         },
                         placeholderText = stringResource(id = R.string.input_exam_description),
                         imeAction = ImeAction.Next,
@@ -187,9 +194,12 @@ internal fun ExamInformationScreen(
                         modifier = Modifier.padding(bottom = 16.dp),
                         text = state.certifyingStatement,
                         onTextChanged = {
-                            if (state.certifyingStatement.length <= CertifyingStatementMaxLength) {
-                                viewModel.setCertifyingStatement(it)
-                            }
+                            viewModel.setCertifyingStatement(
+                                it.takeBy(
+                                    CertifyingStatementMaxLength,
+                                    state.certifyingStatement,
+                                ),
+                            )
                         },
                         placeholderText = stringResource(id = R.string.input_certifying_statement),
                         keyboardActions = KeyboardActions(

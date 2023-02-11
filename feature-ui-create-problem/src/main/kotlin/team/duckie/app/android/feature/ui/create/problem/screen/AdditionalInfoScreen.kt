@@ -81,6 +81,7 @@ import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.util.kotlin.takeBy
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackImage
@@ -96,7 +97,7 @@ private const val TopAppBarLayoutId = "AdditionalInfoScreenTopAppBarLayoutId"
 private const val ContentLayoutId = "AdditionalInfoScreenContentLayoutId"
 private const val BottomLayoutId = "AdditionalInfoScreenBottomLayoutId"
 
-private const val TakeTitleMaxLength = 12;
+private const val TakeTitleMaxLength = 12
 
 /** 문제 만들기 3단계 (추가정보 입력) Screen */
 @Composable
@@ -372,12 +373,13 @@ private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel(
     ) {
         QuackBasicTextField(
             text = state.takeTitle,
-            onTextChanged = { newText ->
-                if (state.takeTitle.length <= TakeTitleMaxLength) {
-                    vm.setButtonTitle(newText)
-                } else {
-                    vm.setButtonTitle(state.takeTitle)
-                }
+            onTextChanged = {
+                vm.setButtonTitle(
+                    it.takeBy(
+                        TakeTitleMaxLength,
+                        state.takeTitle,
+                    ),
+                )
             },
             placeholderText = stringResource(id = R.string.additional_information_take_input_hint),
             keyboardOptions = ImeActionNext,

@@ -82,6 +82,7 @@ import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
+import team.duckie.app.android.util.kotlin.takeBy
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
@@ -288,7 +289,10 @@ internal fun CreateProblemScreen(
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle.take(TextFieldMaxLength),
+                                            title = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                question.text,
+                                            ),
                                         )
                                     },
                                     imageClick = {
@@ -316,7 +320,10 @@ internal fun CreateProblemScreen(
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.ShortAnswer,
-                                            answer = newTitle.take(TextFieldMaxLength),
+                                            answer = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                answers.answer.text,
+                                            ),
                                         )
                                     },
                                     deleteLongClick = {
@@ -331,7 +338,10 @@ internal fun CreateProblemScreen(
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle.take(TextFieldMaxLength),
+                                            title = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                question.text,
+                                            ),
                                         )
                                     },
                                     imageClick = {
@@ -359,7 +369,10 @@ internal fun CreateProblemScreen(
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.Choice,
-                                            answer = newTitle.take(TextFieldMaxLength),
+                                            answer = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                answers.choices[answerIndex].text,
+                                            ),
                                         )
                                     },
                                     addAnswerClick = {
@@ -387,7 +400,10 @@ internal fun CreateProblemScreen(
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle.take(TextFieldMaxLength),
+                                            title = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                question.text,
+                                            ),
                                         )
                                     },
                                     imageClick = {
@@ -415,7 +431,10 @@ internal fun CreateProblemScreen(
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.ImageChoice,
-                                            answer = newTitle.take(TextFieldMaxLength),
+                                            answer = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                answers.imageChoice[answerIndex].text,
+                                            ),
                                         )
                                     },
                                     answerImageClick = { answersIndex ->
