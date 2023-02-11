@@ -15,7 +15,7 @@ import javax.inject.Inject
 class FetchFollowingTestUseCase @Inject constructor(
     private val repository: ExamRepository,
 ) {
-    suspend operator fun invoke(page: Int = 1) = runCatching {
+    suspend operator fun invoke(page: Int? = null) = runCatching {
         repository.getExamFollowing(page = page)
     }
 }

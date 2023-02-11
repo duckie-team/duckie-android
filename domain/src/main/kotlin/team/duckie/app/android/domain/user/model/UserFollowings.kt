@@ -11,8 +11,9 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.follow.model.Follow
 
+@JvmInline
 @Immutable
-data class UserFollowings(
+value class UserFollowings(
     val followingRecommendations: List<UserFollowing>,
 )
 
