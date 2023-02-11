@@ -52,7 +52,7 @@ class RecommendationRepositoryImpl @Inject constructor(
     override suspend fun fetchJumbotrons(page: Int): List<RecommendationJumbotronItem> =
         withContext(Dispatchers.IO) {
         val (_, response) = fuel
-            .post(
+            .get(
                 "/recommendations",
                 listOf("page" to page),
             )

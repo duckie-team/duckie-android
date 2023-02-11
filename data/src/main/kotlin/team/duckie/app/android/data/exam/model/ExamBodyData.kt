@@ -16,7 +16,7 @@ internal data class ExamBodyData(
     @field:JsonProperty("description")
     val description: String? = null,
 
-    @field:JsonProperty("thumbnailImageUrl")
+    @field:JsonProperty("thumbnailUrl")
     val thumbnailUrl: String? = null,
 
     @field:JsonProperty("thumbnailType")
