@@ -9,8 +9,7 @@ package team.duckie.app.android.data.exam.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-@JvmInline
-internal value class ExamInstanceSubmitData(
+internal data class ExamInstanceSubmitData(
     @JsonProperty("examScoreImageUrl")
     val examScoreImageUrl: String? = null,
 )
