@@ -32,6 +32,7 @@ import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.util.kotlin.runtimeCheck
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(private val fuel: Fuel) : UserRepository {
@@ -52,6 +53,13 @@ class UserRepositoryImpl @Inject constructor(private val fuel: Fuel) : UserRepos
         nickname: String?,
         status: String?,
     ): User {
+        runtimeCheck(
+            nickname != null || profileImageUrl != null || categories != null
+                    || tags != null || status != null,
+        ) {
+            "At least one of the parameters must be non-null"
+        }
+
         val response = client.patch("/users/$id") {
             jsonBody {
                 categories?.let { "favoriteCategories" withInts categories.fastMap { it.id } }
