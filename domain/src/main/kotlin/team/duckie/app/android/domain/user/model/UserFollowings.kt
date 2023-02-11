@@ -11,9 +11,9 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.follow.model.Follow
 
-@JvmInline
+// TODO(riflockle7): value class 적용 검토하기
 @Immutable
-value class UserFollowings(
+data class UserFollowings(
     val followingRecommendations: List<UserFollowing>,
 )
 

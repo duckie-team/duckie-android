@@ -11,7 +11,7 @@ import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
 
-@JvmInline
+// TODO(riflockle7): value class 적용 검토하기
 @Immutable
 @Parcelize
-value class Follow(val id: Int) : Parcelable
+data class Follow(val id: Int) : Parcelable

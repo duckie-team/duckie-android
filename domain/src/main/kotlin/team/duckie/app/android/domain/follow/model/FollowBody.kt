@@ -9,8 +9,8 @@ package team.duckie.app.android.domain.follow.model
 
 import androidx.compose.runtime.Immutable
 
-@JvmInline
+// TODO(riflockle7): value class 적용 검토하기
 @Immutable
-value class FollowBody(
+data class FollowBody(
     val followingId: Int,
 )

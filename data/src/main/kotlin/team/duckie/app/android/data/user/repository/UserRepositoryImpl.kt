@@ -54,8 +54,8 @@ class UserRepositoryImpl @Inject constructor(private val fuel: Fuel) : UserRepos
         status: String?,
     ): User {
         runtimeCheck(
-            nickname != null || profileImageUrl != null || categories != null
-                    || tags != null || status != null,
+            nickname != null || profileImageUrl != null || categories != null ||
+                    tags != null || status != null,
         ) {
             "At least one of the parameters must be non-null"
         }

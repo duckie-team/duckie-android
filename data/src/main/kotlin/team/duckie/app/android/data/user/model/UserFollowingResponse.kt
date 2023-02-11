@@ -25,6 +25,7 @@ internal data class UserFollowingResponse(
     val follow: FollowData? = null,
 )
 
+// TODO(riflockle7): value class 적용 검토하기
 internal data class UserFollowingsResponse(
     @field:JsonProperty("userRecommendations")
     val userRecommendations: List<UserFollowingResponse>? = null,

@@ -9,6 +9,6 @@ package team.duckie.app.android.domain.heart.model
 
 import androidx.compose.runtime.Immutable
 
-@JvmInline
+// TODO(riflockle7): value class 적용 검토하기
 @Immutable
-value class Heart(val id: Int)
+data class Heart(val id: Int)

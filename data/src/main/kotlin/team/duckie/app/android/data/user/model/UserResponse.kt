@@ -41,6 +41,7 @@ internal data class UserResponse(
     val permissions: List<String>? = null,
 )
 
+// TODO(riflockle7): value class 적용 검토하기
 internal data class UsersResponse(
     @field:JsonProperty("users")
     val users: List<UserResponse>? = null,
