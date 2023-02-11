@@ -488,6 +488,12 @@ internal class CreateProblemViewModel @Inject constructor(
     ) = intent {
         val newQuestions = state.createProblem.questions.toMutableList()
         val prevQuestion = newQuestions[questionIndex]
+        val prevQuestionUrlSource = when (prevQuestion) {
+            is Question.Text -> ""
+            is Question.Image -> prevQuestion.imageUrl
+            is Question.Audio -> prevQuestion.audioUrl
+            is Question.Video -> prevQuestion.videoUrl
+        }
         val newQuestion = when (questionType) {
             Question.Type.Text -> Question.Text(
                 title ?: (prevQuestion.text),
@@ -495,17 +501,17 @@ internal class CreateProblemViewModel @Inject constructor(
 
             Question.Type.Image -> Question.Image(
                 title ?: prevQuestion.text,
-                "${urlSource ?: prevQuestion}",
+                urlSource ?: prevQuestionUrlSource,
             )
 
             Question.Type.Audio -> Question.Audio(
                 title ?: prevQuestion.text,
-                "${urlSource ?: prevQuestion}",
+                urlSource ?: prevQuestionUrlSource,
             )
 
             Question.Type.Video -> Question.Video(
                 title ?: prevQuestion.text,
-                "${urlSource ?: prevQuestion}",
+                urlSource ?: prevQuestionUrlSource,
             )
 
             else -> null
