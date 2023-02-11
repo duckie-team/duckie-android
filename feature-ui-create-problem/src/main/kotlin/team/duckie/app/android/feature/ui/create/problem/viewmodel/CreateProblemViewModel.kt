@@ -395,6 +395,9 @@ internal class CreateProblemViewModel @Inject constructor(
     internal fun getExamThumbnail() = intent {
         // 이미 썸네일을 서버로부터 가져온 경우 별다른 처리를 하지 않는다.
         if (container.stateFlow.value.additionalInfo.thumbnail.toString().isNotEmpty()) {
+            reduce {
+                state.copy(createProblemStep = CreateProblemStep.CreateProblem)
+            }
             return@intent
         }
 
