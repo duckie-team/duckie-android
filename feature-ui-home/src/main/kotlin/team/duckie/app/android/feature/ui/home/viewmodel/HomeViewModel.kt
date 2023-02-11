@@ -25,7 +25,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
-import team.duckie.app.android.domain.recommendation.usecase.FetchFollowingTestUseCase
+import team.duckie.app.android.domain.recommendation.usecase.FetchExamMeFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
@@ -42,7 +42,7 @@ import team.duckie.app.android.util.kotlin.fastMap
 internal class HomeViewModel @Inject constructor(
     private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
     private val fetchJumbotronsUseCase: FetchJumbotronsUseCase,
-    private val fetchFollowingTestUseCase: FetchFollowingTestUseCase,
+    private val fetchExamMeFollowingUseCase: FetchExamMeFollowingUseCase,
     private val fetchUserFollowingUseCase: FetchUserFollowingUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
@@ -80,7 +80,7 @@ internal class HomeViewModel @Inject constructor(
     fun fetchRecommendFollowingTest() = intent {
         updateHomeLoading(true)
         // TODO(riflockle7): GET /exams/me/following API commit (params)
-        fetchFollowingTestUseCase()
+        fetchExamMeFollowingUseCase()
             .onSuccess { exams ->
                 reduce {
                     state.copy(

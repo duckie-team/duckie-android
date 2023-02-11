@@ -64,7 +64,7 @@ class ExamRepositoryImpl @Inject constructor(private val fuel: Fuel) : ExamRepos
 
     // TODO(riflockle7): GET /exams/me/following API commit
     @AllowMagicNumber
-    override suspend fun getExamFollowing(page: Int?): List<Exam> = withContext(Dispatchers.IO) {
+    override suspend fun getExamMeFollowing(page: Int?): List<Exam> = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .get(
                 "/exams/me/following",

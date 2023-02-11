@@ -20,5 +20,5 @@ interface ExamRepository {
 
     suspend fun getExamThumbnail(examThumbnailBody: ExamThumbnailBody): String
 
-    suspend fun getExamFollowing(page: Int?): List<Exam>
+    suspend fun getExamMeFollowing(page: Int?): List<Exam>
 }

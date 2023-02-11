@@ -12,10 +12,10 @@ import team.duckie.app.android.domain.exam.repository.ExamRepository
 import javax.inject.Inject
 
 @Immutable
-class FetchFollowingTestUseCase @Inject constructor(
+class FetchExamMeFollowingUseCase @Inject constructor(
     private val repository: ExamRepository,
 ) {
     suspend operator fun invoke(page: Int? = null) = runCatching {
-        repository.getExamFollowing(page = page)
+        repository.getExamMeFollowing(page = page)
     }
 }
