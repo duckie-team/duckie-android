@@ -18,9 +18,7 @@ import java.lang.ref.WeakReference
 class ToastWrapper(context: Context) {
     private val _context = WeakReference(context)
     private val context get() = _context.get()!!
-
-    private val _toast = WeakReference(Toast.makeText(this.context, "", Toast.LENGTH_SHORT))
-    private val toast get() = _toast.get()!!
+    private val toast = Toast.makeText(context, "", Toast.LENGTH_SHORT)
 
     operator fun invoke(message: Any, length: Int = Toast.LENGTH_SHORT) {
         toast.run {
