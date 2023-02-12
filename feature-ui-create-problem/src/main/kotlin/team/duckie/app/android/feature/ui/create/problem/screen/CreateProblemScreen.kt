@@ -314,7 +314,7 @@ internal fun CreateProblemScreen(
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
-                                    answers = answers,
+                                    answer = correctAnswer,
                                     answerTextChanged = { newTitle, answerIndex ->
                                         vm.setAnswer(
                                             questionIndex,
@@ -322,7 +322,7 @@ internal fun CreateProblemScreen(
                                             Answer.Type.ShortAnswer,
                                             answer = newTitle.takeBy(
                                                 TextFieldMaxLength,
-                                                answers.answer.text,
+                                                state.correctAnswers[answerIndex],
                                             ),
                                         )
                                     },
@@ -879,7 +879,7 @@ private fun ShortAnswerProblemLayout(
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
     onDropdownItemClick: (Int) -> Unit,
-    answers: Answer.Short,
+    answer: String,
     answerTextChanged: (String, Int) -> Unit,
     deleteLongClick: () -> Unit,
 ) {
@@ -896,12 +896,12 @@ private fun ShortAnswerProblemLayout(
             question,
             titleChanged,
             imageClick,
-            answers.type.title,
+            Answer.Type.ShortAnswer.title,
             onDropdownItemClick,
         )
 
         QuackBasicTextField(
-            text = answers.answer.text,
+            text = answer,
             onTextChanged = { newAnswer -> answerTextChanged(newAnswer, 0) },
             placeholderText = stringResource(id = R.string.create_problem_short_answer_placeholder),
         )

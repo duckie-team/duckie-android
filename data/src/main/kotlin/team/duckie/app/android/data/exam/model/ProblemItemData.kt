@@ -91,10 +91,7 @@ internal sealed class QuestionData(
 internal sealed class AnswerData(
     open val type: String? = null,
 ) {
-    internal data class ShortAnswer(
-        @field:JsonProperty("shortAnswer")
-        val shortAnswer: String? = null,
-    ) : AnswerData("shortAnswer")
+    internal class ShortAnswer : AnswerData("shortAnswer")
 
     internal data class Choice(
         @field:JsonProperty("choices")

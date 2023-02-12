@@ -93,7 +93,7 @@ internal data class CreateProblemState(
 }
 
 data class SearchScreenData(
-    val searchResults: ImmutableList<String> = persistentListOf(),
+    val searchResults: ImmutableList<Tag> = persistentListOf(),
     val textFieldValue: String = "",
     val results: ImmutableList<Tag> = persistentListOf(),
 )

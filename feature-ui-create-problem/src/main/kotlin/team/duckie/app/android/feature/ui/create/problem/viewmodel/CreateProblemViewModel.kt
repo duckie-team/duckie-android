@@ -682,7 +682,7 @@ internal class CreateProblemViewModel @Inject constructor(
         urlSource: String?,
     ): Answer {
         return when (answerType) {
-            Answer.Type.ShortAnswer -> this.toShort(answer)
+            Answer.Type.ShortAnswer -> this.toShort()
             Answer.Type.Choice -> this.toChoice(answerIndex, answer)
             Answer.Type.ImageChoice -> this.toImageChoice(answerIndex, answer, urlSource)
         }

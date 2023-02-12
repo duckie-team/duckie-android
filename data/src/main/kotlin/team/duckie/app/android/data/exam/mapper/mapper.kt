@@ -37,7 +37,6 @@ import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.domain.exam.model.ShortModel
 import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
@@ -96,11 +95,7 @@ internal fun QuestionData.toDomain() = when (this) {
 }
 
 internal fun AnswerData.toDomain(): Answer = when (this) {
-    is AnswerData.ShortAnswer -> Answer.Short(
-        answer = ShortModel(
-            shortAnswer ?: duckieResponseFieldNpe("${this::class.java.simpleName}.shortAnswer"),
-        ),
-    )
+    is AnswerData.ShortAnswer -> Answer.Short()
 
     is AnswerData.Choice -> Answer.Choice(
         choices = choices?.fastMap(ChoiceData::toDomain)?.toImmutableList()
@@ -169,9 +164,7 @@ internal fun Problem.toData() = ProblemData(
     },
     answer = answer?.let { answer ->
         when (answer) {
-            is Answer.Short -> AnswerData.ShortAnswer(
-                shortAnswer = answer.answer.text,
-            )
+            is Answer.Short -> AnswerData.ShortAnswer()
 
             is Answer.Choice -> AnswerData.Choice(
                 choices = answer.choices.map {

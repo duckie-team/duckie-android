@@ -96,7 +96,10 @@ sealed class Answer(val type: Type) {
     }
 
     @Immutable
-    class Short(val answer: ShortModel) : Answer(type = Type.ShortAnswer)
+    class Short(
+        /** [correctAnswer] 는 문제 풀기 화면에서만 사용된다. */
+        val correctAnswer: String = "",
+    ) : Answer(type = Type.ShortAnswer)
 
     @Immutable
     class Choice(val choices: ImmutableList<ChoiceModel>) : Answer(type = Type.Choice)
@@ -111,7 +114,7 @@ sealed class Answer(val type: Type) {
         if (type != other.type) return false
 
         if (this is Short && other is Short) {
-            return this.answer.text == other.answer.text
+            return this.correctAnswer == other.correctAnswer
         }
         if (this is Choice && other is Choice) {
             return this.choices == other.choices
@@ -128,8 +131,7 @@ sealed class Answer(val type: Type) {
     }
 
     fun validate(): Boolean = when (this) {
-        is Short ->
-            this.answer.text.isNotEmpty()
+        is Short -> true
 
         is Choice ->
             this.choices
@@ -147,7 +149,7 @@ sealed class Answer(val type: Type) {
 
 /** [문제 타입][Answer.Type]에 맞는 기본 [답안][Answer] 를 가져옵니다. */
 fun Answer.Type.getDefaultAnswer(): Answer = when (this) {
-    Answer.Type.ShortAnswer -> Answer.Short(getDefaultAnswerModel())
+    Answer.Type.ShortAnswer -> Answer.Short()
     Answer.Type.Choice -> Answer.Choice(
         persistentListOf(
             getDefaultAnswerModel(),
@@ -168,7 +170,7 @@ interface AnswerModel
 
 // TODO(riflockle7): value class 적용 검토하기
 @Immutable
-data class ShortModel(val text: String) : AnswerModel
+object ShortModel : AnswerModel
 
 // TODO(riflockle7): value class 적용 검토하기
 @Immutable
@@ -183,19 +185,13 @@ data class ImageChoiceModel(
 /** [문제 타입][Answer.Type]에 맞는 기본 [답안 모델][AnswerModel]을 가져옵니다. */
 @Suppress("UNCHECKED_CAST")
 fun <T : AnswerModel> Answer.Type.getDefaultAnswerModel(): T = when (this) {
-    Answer.Type.ShortAnswer -> ShortModel("") as T
+    Answer.Type.ShortAnswer -> ShortModel as T
     Answer.Type.Choice -> ChoiceModel("") as T
     Answer.Type.ImageChoice -> ImageChoiceModel("", "") as T
 }
 
 /** [Answer] -> [Answer.Short] */
-fun Answer.toShort(newAnswer: String? = null) = Answer.Short(
-    when (this) {
-        is Answer.Short -> ShortModel(newAnswer ?: this.answer.text)
-        is Answer.Choice -> ShortModel(newAnswer ?: this.choices.firstOrNull()?.text ?: "")
-        is Answer.ImageChoice -> ShortModel(newAnswer ?: this.imageChoice.firstOrNull()?.text ?: "")
-    },
-)
+fun Answer.toShort() = Answer.Short()
 
 /** [Answer] -> [Answer.Choice] */
 fun Answer.toChoice(answerIndex: Int? = null, newAnswer: String? = null) = when (this) {
