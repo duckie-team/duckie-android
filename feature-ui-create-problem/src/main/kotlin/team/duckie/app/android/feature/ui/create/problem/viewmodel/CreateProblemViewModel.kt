@@ -129,7 +129,9 @@ internal class CreateProblemViewModel @Inject constructor(
                 intent {
                     getSearchUseCase(query = query, page = 1, type = Search.Tags)
                         .onSuccess {
-                            val searchResults = (it as Search.TagSearch).tags.toImmutableList()
+                            val searchResults = (it as Search.TagSearch).tags
+                                .take(TagsMaximumCount)
+                                .toImmutableList()
 
                             reduce {
                                 when (state.findResultType) {
