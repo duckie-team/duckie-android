@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
+import team.duckie.app.android.feature.datastore.me as MeInstance
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
@@ -133,6 +134,9 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     val me get() = requireNotNull(container.stateFlow.value.me) { "User is not initialized." }
 
+    // TODO(riflockle7): user 엔티티 commit
+    val profileImageUrl get() = requireNotNull(container.stateFlow.value.me?.profileImageUrl) { "User.profileImageUrl is not initialized." }
+
     /* ----- Onboard Logic ----- */
 
     fun navigateStep(step: OnboardStep, ignoreThrottle: Boolean = false) = intent {
@@ -208,7 +212,11 @@ internal class OnboardViewModel @AssistedInject constructor(
     // from Bitmap
     fun updateUserProfileImageFile(imageBitmap: Bitmap) = intent {
         val file = duckieUserProfileImageTemporaryFile.also { it.delete() }
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, ProfileImageCompressQuality, file.outputStream())
+        imageBitmap.compress(
+            Bitmap.CompressFormat.PNG,
+            ProfileImageCompressQuality,
+            file.outputStream(),
+        )
         reduce {
             state.copy(temporaryProfileImageFile = file)
         }
@@ -249,7 +257,12 @@ internal class OnboardViewModel @AssistedInject constructor(
                 }
                 postSideEffect(OnboardSideEffect.UpdateAccessToken(response.accessToken))
                 postSideEffect(OnboardSideEffect.AttachAccessTokenToHeader(response.accessToken))
-                postSideEffect(OnboardSideEffect.Joined(response.isNewUser))
+                postSideEffect(
+                    OnboardSideEffect.Joined(
+                        isNewUser = response.isNewUser,
+                        me = response.user,
+                    ),
+                )
             }
             .attachExceptionHandling()
     }
@@ -296,19 +309,23 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
+    // TODO(riflockle7): PATCH /users/:id API commit
     suspend fun updateUser(
         id: Int,
-        nickname: String?,
-        profileImageUrl: String?,
         favoriteCategories: List<Category>?,
         favoriteTags: List<Tag>?,
+        profileImageUrl: String?,
+        nickname: String?,
     ) = intent {
         userUpdateUseCase(
             id = id,
-            nickname = nickname,
+            categories = favoriteCategories,
+            tags = favoriteTags,
             profileImageUrl = profileImageUrl,
-            favoriteCategories = favoriteCategories,
-            favoriteTags = favoriteTags,
+            nickname = nickname,
+            // TODO(riflockle7): 온보딩 완료 시에는 무조건 NEW -> READY 로 바꿔줘야 함
+            status = "READY",
+            updateMeInstance = { user -> MeInstance = user },
         )
             .onSuccess { user ->
                 reduce {

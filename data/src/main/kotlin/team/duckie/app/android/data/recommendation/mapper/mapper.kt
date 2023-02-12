@@ -20,7 +20,6 @@ import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
@@ -29,7 +28,7 @@ internal fun RecommendationData.toDomain() = RecommendationFeeds(
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.jumbotrons"),
     recommendations = recommendations?.fastMap(RecommendationItemData::toDomain)?.toPersistentList()
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.recommendations"),
-    page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
+    page = page,
 )
 
 internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotronItem(
@@ -56,10 +55,10 @@ internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotro
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
 )
 
-@OptIn(OutOfDateApi::class)
 internal fun RecommendationItemData.toDomain() = RecommendationItem(
+    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
-    tag = tag?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tag"),
+    tag = tag?.toDomain(),
     exams = exams?.fastMap(ExamData::toDomain)
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.items"),
 )

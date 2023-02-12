@@ -20,13 +20,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.util.kotlin.seconds
+import team.duckie.app.ktor.client.plugin.addDuckieAuthorizationHeaderIfNeeded
 
-private object HttpHeaders {
-    const val ContentType = "Content-Type"
-
-    object ContentTypeValues {
-        const val ApplicationJson = "application/json"
-    }
+private object ContentTypeValues {
+    const val ApplicationJson = "application/json"
 }
 
 @Suppress("unused")
@@ -34,7 +31,7 @@ private object HttpHeaders {
 @InstallIn(SingletonComponent::class)
 internal object FuelClient {
     private val MaxTimeoutMillis = 3.seconds
-    private const val BaseUrl = "http://api-staging.goose-duckie.com:3000"
+    private const val BaseUrl = "https://api-staging.goose-duckie.com:3000"
 
     private var DeviceName = Build.MODEL
     private const val ClientName = "android"
@@ -44,12 +41,14 @@ internal object FuelClient {
             basePath = BaseUrl
             timeoutInMillisecond = MaxTimeoutMillis.toInt()
             timeoutReadInMillisecond = MaxTimeoutMillis.toInt()
-            baseHeaders = mapOf(
+            baseHeaders = mutableMapOf(
                 DuckieHttpHeaders.Client to ClientName,
                 DuckieHttpHeaders.DeviceName to DeviceName,
                 DuckieHttpHeaders.Version to BuildConfig.APP_VERSION_NAME,
-                HttpHeaders.ContentType to HttpHeaders.ContentTypeValues.ApplicationJson,
-            )
+                Headers.CONTENT_TYPE to ContentTypeValues.ApplicationJson,
+            ).apply {
+                addDuckieAuthorizationHeaderIfNeeded(headerKey = DuckieHttpHeaders.Authorization)
+            }
             addRequestInterceptor(LogRequestInterceptor)
             addResponseInterceptor(LogResponseInterceptor)
         }
@@ -61,4 +60,4 @@ internal object FuelClient {
 }
 
 /** [Response] -> [String] */
-fun Response.bodyAsText() = this.body().asString(headers[Headers.CONTENT_TYPE].lastOrNull())
+internal fun Response.bodyAsText() = body().asString(headers[Headers.CONTENT_TYPE].lastOrNull())

@@ -10,17 +10,17 @@ package team.duckie.app.android.domain.follow.usecase
 import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.follow.model.FollowBody
 import javax.inject.Inject
-import team.duckie.app.android.domain.follow.repository.FollowsRepository
+import team.duckie.app.android.domain.follow.repository.FollowRepository
 
 @Immutable
 class FollowUseCase @Inject constructor(
-    private val followsRepository: FollowsRepository,
+    private val followRepository: FollowRepository,
 ) {
-    suspend operator fun invoke(followsBody: FollowBody, isFollowing: Boolean) = runCatching {
+    suspend operator fun invoke(followBody: FollowBody, isFollowing: Boolean) = runCatching {
         if (isFollowing) {
-            followsRepository.follow(followsBody)
+            followRepository.follow(followBody)
         } else {
-            followsRepository.unFollow(followsBody)
+            followRepository.unFollow(followBody)
         }
     }
 }

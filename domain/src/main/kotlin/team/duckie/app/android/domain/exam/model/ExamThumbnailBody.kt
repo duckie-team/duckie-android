@@ -7,11 +7,14 @@
 
 package team.duckie.app.android.domain.exam.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class ExamThumbnailBody(
-    val category: String,
-    val certifyingStatement: String,
-    val mainTag: String,
-    val nickName: String,
     val title: String,
+    val mainTag: String,
+    val category: String,
+    val nickName: String,
+    val certifyingStatement: String,
     val type: String,
 )

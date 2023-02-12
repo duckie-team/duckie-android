@@ -20,19 +20,26 @@ class UserUpdateUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         id: Int,
-        nickname: String?,
+        categories: List<Category>?,
+        tags: List<Tag>?,
         profileImageUrl: String?,
-        favoriteCategories: List<Category>?,
-        favoriteTags: List<Tag>?,
+        nickname: String?,
+        status: String?,
+        updateMeInstance: (me: User) -> Unit = {},
     ): Result<User> {
         return runCatching {
             repository.update(
                 id = id,
-                nickname = nickname,
+                categories = categories,
+                tags = tags,
                 profileImageUrl = profileImageUrl,
-                favoriteCategories = favoriteCategories,
-                favoriteTags = favoriteTags,
+                nickname = nickname,
+                status = status,
             )
+        }.also { result ->
+            result.getOrNull()?.let { user ->
+                updateMeInstance(user)
+            }
         }
     }
 }

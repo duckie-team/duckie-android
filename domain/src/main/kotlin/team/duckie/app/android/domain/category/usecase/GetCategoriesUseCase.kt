@@ -16,7 +16,7 @@ import team.duckie.app.android.domain.category.repository.CategoryRepository
 class GetCategoriesUseCase @Inject constructor(
     private val repository: CategoryRepository,
 ) {
-    suspend operator fun invoke(withPopularTags: Boolean) = runCatching {
+    suspend operator fun invoke(withPopularTags: Boolean?) = runCatching {
         repository.getCategories(withPopularTags).toImmutableList()
     }
 }

@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.onboard
 
+import team.duckie.app.android.feature.datastore.me as MeInstance
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -205,6 +206,7 @@ class OnboardActivity : BaseActivity() {
                         ignoreThrottle = true,
                     )
                 } else {
+                    MeInstance = sideEffect.me
                     vm.finishOnboard()
                 }
             }
@@ -213,7 +215,6 @@ class OnboardActivity : BaseActivity() {
                     preference[PreferenceKey.Onboard.Finish] = true
                     sideEffect.userId?.let { preference[PreferenceKey.User.Id] = it }
                 }
-                // TODO(sungbin): 끝낼 때 별다른 메시지를 안하는게 맞을까?
                 changeActivityWithAnimation<HomeActivity>()
             }
             is OnboardSideEffect.ReportError -> {

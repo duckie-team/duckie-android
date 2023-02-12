@@ -1,6 +1,6 @@
 [versions]
 # plugin - build
-plugin-build-gradle-android = "8.1.0-alpha02"
+plugin-build-gradle-android = "8.0.0-alpha08"
 plugin-build-google-service = "4.3.15"
 
 # plugin - code
@@ -38,7 +38,7 @@ kotlin-collections-immutable = "0.3.5"
 apache-commons-io = "2.11.0"
 
 # androidx
-androidx-appcompat = "1.6.0" # needs for oss license activity
+androidx-appcompat = "1.6.1" # needs for oss license activity
 androidx-lifecycle-savedstate = "2.5.1"
 androidx-splash = "1.0.0"
 androidx-datastore = "1.0.0"
@@ -79,7 +79,7 @@ analytics-anrwatchdog = "1.4.0"
 
 # firebase
 firebase-bom = "31.2.0"
-firebase-plugin-crashlytics = "2.9.2"
+firebase-plugin-crashlytics = "2.9.4"
 firebase-plugin-performance = "1.4.2"
 
 # login
@@ -97,6 +97,9 @@ fuel-core = "2.3.1"
 
 # jackson
 jackson-core = "2.14.2"
+
+# moshi
+moshi-core = "1.14.0"
 
 # orbit
 orbit-core = "4.5.0"
@@ -223,11 +226,14 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-client-engine = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-core" }
 
 fuel-core = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuel-core" }
-fuel-jackson = { module = "com.github.kittinunf.fuel:fuel-jackson", version.ref = "fuel-core" }
+fuel-moshi = { module = "com.github.kittinunf.fuel:fuel-moshi", version.ref = "fuel-core" }
 fuel-coroutines = { module = "com.github.kittinunf.fuel:fuel-coroutines", version.ref = "fuel-core" }
 
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson-core" }
 jackson-annotation = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson-core" }
+
+moshi-core = { module = "com.squareup.moshi:moshi", version.ref = "moshi-core" }
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi-core" }
 
 orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit-core" }
 orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit-core" }
@@ -256,6 +262,9 @@ detekt-plugin-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-format
 [bundles]
 compose-core = ["compose-runtime", "compose-ui-foundation", "compose-ui-activity", "compose-util-tooling-preview"]
 compose-debug = ["compose-util-tooling-core", "compose-util-customview-pooling-container"] # debugImplementation
-fuel = ["fuel-core", "fuel-jackson", "fuel-coroutines"]
+
 ktor-client = ["ktor-jackson", "ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-client-engine"]
+fuel = ["fuel-core", "fuel-moshi", "fuel-coroutines"]
+moshi = ["moshi-core", "moshi-kotlin"]
+
 quack-lint = ["quack-lint-core", "quack-lint-quack", "quack-lint-compose"]

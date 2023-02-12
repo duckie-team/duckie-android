@@ -9,8 +9,8 @@ package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
 
+// TODO(riflockle7): value class 적용 검토하기
 @Immutable
 data class ExamInstanceSubmit(
-    val message: String,
-    val results: List<String>,
+    val examScoreImageUrl: String,
 )

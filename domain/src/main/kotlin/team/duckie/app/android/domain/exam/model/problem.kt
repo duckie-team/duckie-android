@@ -19,8 +19,8 @@ import team.duckie.app.android.util.kotlin.fastMapIndexed
 data class Problem(
     val id: Int,
     val question: Question,
-    val answer: Answer,
-    val correctAnswer: String,
+    val answer: Answer?,
+    val correctAnswer: String?,
     val hint: String?,
     val memo: String?,
 )
@@ -158,13 +158,13 @@ fun Answer.Type.getDefaultAnswer(): Answer = when (this) {
 @Immutable
 interface AnswerModel
 
-@JvmInline
+// TODO(riflockle7): value class 적용 검토하기
 @Immutable
-value class ShortModel(val text: String) : AnswerModel
+data class ShortModel(val text: String) : AnswerModel
 
-@JvmInline
+// TODO(riflockle7): value class 적용 검토하기
 @Immutable
-value class ChoiceModel(val text: String) : AnswerModel
+data class ChoiceModel(val text: String) : AnswerModel
 
 @Immutable
 data class ImageChoiceModel(

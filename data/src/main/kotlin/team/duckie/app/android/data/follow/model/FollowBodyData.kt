@@ -9,10 +9,8 @@ package team.duckie.app.android.data.follow.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-internal data class FollowsBodyData(
-    @field:JsonProperty("userId")
-    val userId: Int? = null,
-
+// TODO(riflockle7): value class 적용 검토하기
+internal data class FollowBodyData(
     @field:JsonProperty("followingId")
     val followingId: Int? = null,
 )

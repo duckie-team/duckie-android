@@ -13,10 +13,12 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
+import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 
 internal data class HomeState(
+    val me: User,
     val isHomeLoading: Boolean = false,
 
     val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,

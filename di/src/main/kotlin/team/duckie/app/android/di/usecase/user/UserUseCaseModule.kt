@@ -12,6 +12,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.user.repository.UserRepository
+import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
+import team.duckie.app.android.domain.user.usecase.FetchUserMeFollowersUseCase
+import team.duckie.app.android.domain.user.usecase.FetchUserMeFollowingsUseCase
 import team.duckie.app.android.domain.user.usecase.GetUserUseCase
 import team.duckie.app.android.domain.user.usecase.NicknameDuplicateCheckUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
@@ -32,5 +35,20 @@ object UserUseCaseModule {
     @Provides
     fun provideUserNicknameValidateCheckUseCase(repository: UserRepository): NicknameDuplicateCheckUseCase {
         return NicknameDuplicateCheckUseCase(repository)
+    }
+
+    @Provides
+    fun provideUserFollowingUseCase(repository: UserRepository): FetchUserFollowingUseCase {
+        return FetchUserFollowingUseCase(repository)
+    }
+
+    @Provides
+    fun provideUserMeFollowingsUseCase(repository: UserRepository): FetchUserMeFollowingsUseCase {
+        return FetchUserMeFollowingsUseCase(repository)
+    }
+
+    @Provides
+    fun provideUserMeFollowersUseCase(repository: UserRepository): FetchUserMeFollowersUseCase {
+        return FetchUserMeFollowersUseCase(repository)
     }
 }
