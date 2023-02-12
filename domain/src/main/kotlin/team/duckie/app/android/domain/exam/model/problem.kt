@@ -55,6 +55,14 @@ sealed class Question(val type: Type, open val text: String) {
         text = text,
     )
 
+    val mediaUri: String
+        get() = when (this) {
+            is Text -> ""
+            is Image -> this.imageUrl
+            is Audio -> this.audioUrl
+            is Video -> this.videoUrl
+        }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Question) return false
