@@ -97,8 +97,8 @@ internal sealed class AnswerData(
     ) : AnswerData(type)
 
     internal data class ImageChoice(
-        @field:JsonProperty("imageChoice")
-        val imageChoice: List<ImageChoiceData>? = null,
+        @field:JsonProperty("choices")
+        val choices: List<ImageChoiceData>? = null,
         override val type: String? = null,
     ) : AnswerData(type)
 }

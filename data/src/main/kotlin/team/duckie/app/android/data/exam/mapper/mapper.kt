@@ -108,7 +108,7 @@ internal fun AnswerData.toDomain(): Answer = when (this) {
     )
 
     is AnswerData.ImageChoice -> Answer.ImageChoice(
-        imageChoice = imageChoice?.fastMap(ImageChoiceData::toDomain)?.toImmutableList()
+        imageChoice = choices?.fastMap(ImageChoiceData::toDomain)?.toImmutableList()
             ?: duckieResponseFieldNpe("${this::class.java.simpleName}.imageChoice"),
     )
 }
@@ -186,7 +186,7 @@ internal fun Problem.toData() = ProblemData(
             )
 
             is Answer.ImageChoice -> AnswerData.ImageChoice(
-                imageChoice = answer.imageChoice.map {
+                choices = answer.imageChoice.map {
                     it.toData()
                 }.toList(),
                 type = answer.type.key,
