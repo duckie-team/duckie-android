@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.Flow
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
-import team.duckie.app.android.domain.user.model.UserFollowing
 
 /**
  * 홈 화면에서 활용하는 Repository
@@ -24,9 +23,7 @@ import team.duckie.app.android.domain.user.model.UserFollowing
 interface RecommendationRepository {
     fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>
 
-    suspend fun fetchJumbotrons(): List<RecommendationJumbotronItem>
-
-    suspend fun fetchRecommendFollowing(): UserFollowing
+    suspend fun fetchJumbotrons(page: Int): List<RecommendationJumbotronItem>
 
     suspend fun fetchRecommendTags(
         tag: String,

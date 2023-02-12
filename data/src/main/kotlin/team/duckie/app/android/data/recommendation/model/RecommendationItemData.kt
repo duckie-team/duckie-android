@@ -12,6 +12,9 @@ import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.tag.model.TagData
 
 internal data class RecommendationItemData(
+    @JsonProperty("id")
+    val id: Int? = null,
+
     @JsonProperty("title")
     val title: String? = null,
 

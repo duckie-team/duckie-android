@@ -147,14 +147,17 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
                 items = onboardState.categories.toImmutableList(),
                 key = { _, category -> category.id },
             ) { index, category ->
-                CategoryItem(
-                    imageUrl = category.thumbnailUrl,
-                    name = category.name,
-                    isSelected = categoriesSelectedIndex[index],
-                    onClick = {
-                        categoriesSelectedIndex[index] = !categoriesSelectedIndex[index]
-                    },
-                )
+                // TODO(riflockle7): category 엔티티 commit
+                category.thumbnailUrl?.run {
+                    CategoryItem(
+                        imageUrl = this,
+                        name = category.name,
+                        isSelected = categoriesSelectedIndex[index],
+                        onClick = {
+                            categoriesSelectedIndex[index] = !categoriesSelectedIndex[index]
+                        },
+                    )
+                }
             }
             QuackAnimatedVisibility(
                 modifier = Modifier

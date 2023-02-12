@@ -14,7 +14,5 @@ import kotlinx.collections.immutable.ImmutableList
 data class RecommendationFeeds(
     val jumbotrons: ImmutableList<RecommendationJumbotronItem>,
     val recommendations: ImmutableList<RecommendationItem>,
-    val page: Int,
-    val offset: Int,
-    val limit: Int,
+    val page: Int?,
 )

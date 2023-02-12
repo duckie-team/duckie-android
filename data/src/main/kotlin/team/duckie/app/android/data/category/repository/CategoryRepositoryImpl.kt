@@ -23,10 +23,10 @@ import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
 class CategoryRepositoryImpl @Inject constructor() : CategoryRepository {
-    override suspend fun getCategories(withPopularTags: Boolean): List<Category> {
+    override suspend fun getCategories(withPopularTags: Boolean?): List<Category> {
         val response = client.get {
             url("/categories")
-            parameter("withPopularTags", withPopularTags)
+            withPopularTags?.run { parameter("withPopularTags", this) }
         }
         return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json: Map<String, List<CategoryData>> = body.toJsonMap()

@@ -10,13 +10,11 @@ package team.duckie.app.android.domain.exam.usecase
 import androidx.compose.runtime.Immutable
 import javax.inject.Inject
 import team.duckie.app.android.domain.exam.repository.ExamRepository
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @Immutable
 class GetExamUseCase @Inject constructor(
     private val examRepository: ExamRepository,
 ) {
-    @OptIn(OutOfDateApi::class)
     suspend operator fun invoke(id: Int) = runCatching {
         examRepository.getExam(id)
     }

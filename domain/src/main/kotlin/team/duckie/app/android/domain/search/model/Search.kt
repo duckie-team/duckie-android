@@ -11,7 +11,6 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 
 @Immutable
 sealed class Search(val type: String, open val page: Int) {
@@ -21,7 +20,6 @@ sealed class Search(val type: String, open val page: Int) {
         const val Tags = "TAGS"
     }
 
-    @OptIn(OutOfDateApi::class)
     @Immutable
     data class ExamSearch(
         val exams: List<Exam>,

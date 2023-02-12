@@ -18,10 +18,4 @@ internal data class RecommendationData(
 
     @JsonProperty("page")
     val page: Int? = null,
-
-    @JsonProperty("offset")
-    val offset: Int? = null,
-
-    @JsonProperty("limit")
-    val limit: Int? = null,
 )

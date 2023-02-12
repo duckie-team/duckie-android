@@ -33,6 +33,7 @@ import team.duckie.app.android.feature.ui.solve.problem.solveproblem.common.Doub
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.question.questionSection
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.SolveProblemViewModel
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.ui.finishWithAnimation
 
 @Composable
@@ -77,9 +78,11 @@ internal fun SolveProblemScreen(
                     page = pageIndex,
                     question = state.problems[pageIndex].question,
                 )
+                // TODO(riflockle7): problem 엔티티 commit
                 answerSection(
                     page = pageIndex,
-                    answer = state.problems[pageIndex].answer,
+                    answer = state.problems[pageIndex].answer
+                        ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
                     inputAnswers = state.inputAnswers,
                     onClickAnswer = viewModel::inputAnswer,
                     onSolveProblem = viewModel::moveNextPage,

@@ -6,7 +6,6 @@
  */
 
 @file:AllowMagicNumber
-@file:OptIn(OutOfDateApi::class)
 
 package team.duckie.app.android.feature.ui.detail.screen
 
@@ -52,10 +51,7 @@ import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
-import team.duckie.app.android.util.kotlin.OutOfDateApi
-import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
-import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.kotlin.percents
 import team.duckie.quackquack.ui.color.QuackColor
@@ -246,17 +242,19 @@ private fun DetailContentLayout(
         // 공백
         Spacer(modifier = Modifier.height(8.dp))
         // 내용
-        QuackBody2(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = state.exam.description,
-        )
+        state.exam.description?.run {
+            QuackBody2(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = this,
+            )
+        }
         // 공백
         Spacer(modifier = Modifier.height(12.dp))
         // 태그 목록
         QuackSingeLazyRowTag(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
             horizontalSpace = 4.dp,
-            items = state.exam.subTags.copy { add(0, state.exam.mainTag) }.fastMap { it.name },
+            items = state.tagNames,
             tagType = QuackTagType.Grayscale(""),
             onClick = {
                 // TODO(riflockle7): 태그 검색 화면으로 이동
@@ -297,9 +295,9 @@ private fun DetailProfileLayout(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // 작성자 프로필 이미지
-        if (state.exam.user.profileImageUrl.isNotEmpty()) {
+        if (state.profileImageUrl.isNotEmpty()) {
             QuackImage(
-                src = state.exam.user.profileImageUrl,
+                src = state.profileImageUrl,
                 shape = SquircleShape,
                 size = DpSize(32.dp, 32.dp),
             )
@@ -319,7 +317,7 @@ private fun DetailProfileLayout(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임
                 QuackBody3(
-                    text = state.exam.user.nickname,
+                    text = state.nickname,
                     onClick = {
                         // TODO(riflockle7): 마이페이지로 이동
                     },
@@ -378,13 +376,15 @@ private fun DetailScoreDistributionLayout(state: DetailState.Success) {
         // 공백
         Spacer(modifier = Modifier.weight(1f))
         // 정답률 텍스트
-        QuackText(
-            text = stringResource(
-                R.string.detail_right_percent,
-                state.exam.answerRate.percents,
-            ),
-            style = QuackTextStyle.Body2,
-        )
+        state.exam.answerRate?.percents?.run {
+            QuackText(
+                text = stringResource(
+                    R.string.detail_right_percent,
+                    this,
+                ),
+                style = QuackTextStyle.Body2,
+            )
+        }
     }
     // 공백
     Spacer(modifier = Modifier.height(8.dp))
@@ -429,7 +429,7 @@ private fun DetailBottomLayout(
 
             // 버튼
             QuackSmallButton(
-                text = state.exam.buttonTitle,
+                text = state.buttonTitle,
                 type = QuackSmallButtonType.Fill,
                 enabled = true,
                 onClick = onChallengeClick,
@@ -477,7 +477,7 @@ private fun TopAppCustomBar(modifier: Modifier, state: DetailState.Success) {
         )
 
         QuackCircleTag(
-            text = state.exam.mainTag.name,
+            text = state.mainTagNames,
             trailingIcon = QuackIcon.ArrowRight,
             isSelected = false,
         )

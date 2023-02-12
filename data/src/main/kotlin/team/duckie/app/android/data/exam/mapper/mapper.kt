@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.exam.mapper
 
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.exam.model.AnswerData
@@ -17,6 +16,7 @@ import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamInstanceBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
+import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
 import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
@@ -32,53 +32,46 @@ import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
+import team.duckie.app.android.domain.exam.model.ExamMeFollowingResponse
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ShortModel
 import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
-@OutOfDateApi
 @AllowCyclomaticComplexMethod
 internal fun ExamData.toDomain() = Exam(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
-    description = description
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.description"),
-    thumbnailUrl = thumbnailUrl,
-    buttonTitle = buttonTitle
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.buttonTitle"),
-    certifyingStatement = certifyingStatement
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.certifyingStatement"),
-    solvedCount = solvedCount
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.solvedCount"),
-    answerRate = answerRate ?: duckieResponseFieldNpe("${this::class.java.simpleName}.answerRate"),
-    category = category?.toDomain()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.category"),
-    mainTag = mainTag?.toDomain()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.mainTag"),
-    subTags = subTags?.fastMap(TagData::toDomain)?.toImmutableList() ?: persistentListOf(),
-    problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList() ?: persistentListOf(),
-    type = type ?: duckieResponseFieldNpe("${this::class.java.simpleName}.type"),
-    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
-    status = status ?: duckieResponseFieldNpe("${this::class.java.simpleName}.status"),
+    description = description,
+    thumbnailUrl = thumbnailUrl
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
+    thumbnailType = thumbnailType,
+    type = type,
+    buttonTitle = buttonTitle,
+    certifyingStatement = certifyingStatement,
+    solvedCount = solvedCount,
+    answerRate = answerRate,
+    user = user?.toDomain(),
+    category = category?.toDomain(),
+    mainTag = mainTag?.toDomain(),
+    subTags = subTags?.fastMap(TagData::toDomain)?.toImmutableList(),
+    status = status,
     heart = heart?.toDomain(),
+    heartCount = heartCount,
 )
 
-@OutOfDateApi
 internal fun ProblemData.toDomain() = Problem(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     question = question?.toDomain()
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.question"),
-    answer = answer?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.answer"),
-    correctAnswer = correctAnswer
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.correctAnswer"),
-    hint = hint ?: duckieResponseFieldNpe("${this::class.java.simpleName}.hint"),
-    memo = memo ?: duckieResponseFieldNpe("${this::class.java.simpleName}.memo"),
+    answer = answer?.toDomain(),
+    correctAnswer = correctAnswer,
+    hint = hint,
+    memo = memo,
 )
 
 internal fun QuestionData.toDomain() = when (this) {
@@ -128,29 +121,26 @@ internal fun ImageChoiceData.toDomain() = ImageChoiceModel(
     imageUrl = imageUrl ?: duckieResponseFieldNpe("${this::class.java.simpleName}.imageUrl"),
 )
 
-@OutOfDateApi
 internal fun ExamBody.toData() = ExamBodyData(
     title = title,
     description = description,
+    thumbnailUrl = thumbnailUrl,
+    thumbnailType = thumbnailType.value,
     mainTagId = mainTagId,
-    subTagIds = subTagIds,
     categoryId = categoryId,
+    subTagIds = subTagIds,
     certifyingStatement = certifyingStatement,
-    thumbnailImageUrl = thumbnailImageUrl,
-    thumbnailType = thumbnailType?.value,
-    problems = problems.fastMap(Problem::toData),
-    isPublic = isPublic,
     buttonTitle = buttonTitle,
-    userId = userId,
+    problems = problems.fastMap(Problem::toData),
+    status = status,
 )
 
-@OutOfDateApi
 internal fun ExamThumbnailBody.toData() = ExamThumbnailBodyData(
-    category = category,
-    certifyingStatement = certifyingStatement,
-    mainTag = mainTag,
-    nickName = nickName,
     title = title,
+    mainTag = mainTag,
+    category = category,
+    nickName = nickName,
+    certifyingStatement = certifyingStatement,
     type = type,
 )
 
@@ -181,7 +171,7 @@ internal fun Problem.toData() = ProblemData(
             )
         }
     },
-    answer = answer.let { answer ->
+    answer = answer?.let { answer ->
         when (answer) {
             is Answer.Short -> AnswerData.ShortAnswer(
                 shortAnswer = answer.answer.text,
@@ -215,17 +205,21 @@ internal fun ImageChoiceModel.toData() = ImageChoiceData(
     imageUrl = imageUrl,
 )
 
-@OutOfDateApi
 internal fun ExamInstanceBody.toData() = ExamInstanceBodyData(
     examId = this.examId,
 )
 
-@OutOfDateApi
 internal fun ExamInstanceSubmitBody.toData() = ExamInstanceSubmitBodyData(
     submitted = this.submitted,
 )
 
 internal fun ExamInstanceSubmitData.toDomain() = ExamInstanceSubmit(
-    message = message ?: duckieResponseFieldNpe("${this::class.java.simpleName}.message"),
-    results = results ?: duckieResponseFieldNpe("${this::class.java.simpleName}.results"),
+    examScoreImageUrl = examScoreImageUrl
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.examScoreImageUrl"),
+)
+
+internal fun ExamMeFollowingResponseData.toDomain() = ExamMeFollowingResponse(
+    exams = exams?.fastMap { it.toDomain() }
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams"),
+    page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
 )

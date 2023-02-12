@@ -7,9 +7,6 @@
 
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
-// TODO(riflockle7): OptIn 제거
-@file:OptIn(OutOfDateApi::class)
-
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
 import android.content.Context
@@ -45,7 +42,6 @@ import team.duckie.app.android.domain.exam.model.toChoice
 import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
-import team.duckie.app.android.domain.exam.usecase.GetExamUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
@@ -61,9 +57,6 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.util.android.image.MediaUtil
-import team.duckie.app.android.util.kotlin.DuckieResponseException
-import team.duckie.app.android.util.kotlin.DuckieStatusCode
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
@@ -78,7 +71,6 @@ private const val TagsMaximumCount = 4
 @Suppress("LargeClass")
 internal class CreateProblemViewModel @Inject constructor(
     private val makeExamUseCase: MakeExamUseCase,
-    private val getExamUseCase: GetExamUseCase,
     private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val fileUploadUseCase: FileUploadUseCase,
@@ -108,65 +100,8 @@ internal class CreateProblemViewModel @Inject constructor(
         }
         // 문제 수정 모드
         else {
-            getExamUseCase(examId)
-                .onSuccess { exam ->
-                    intent {
-                        reduce {
-                            val questions = exam.problems.fastMap { it.question }.toImmutableList()
-                            val answers = exam.problems.fastMap { it.answer }.toImmutableList()
-                            val correctAnswers =
-                                exam.problems.fastMap { it.correctAnswer }.toImmutableList()
-                            val hints = exam.problems.fastMap { it.hint ?: "" }.toImmutableList()
-                            val memos = exam.problems.fastMap { it.memo ?: "" }.toImmutableList()
-
-                            state.copy(
-                                isEditMode = true,
-                                createProblemStep = CreateProblemStep.ExamInformation,
-                                examInformation = state.examInformation.copy(
-                                    categorySelection = exam.mainTag.id,
-                                    isMainTagSelected = true,
-                                    examTitle = exam.title,
-                                    examDescription = exam.description,
-                                    certifyingStatement = exam.certifyingStatement,
-                                ),
-                                createProblem = state.createProblem.copy(
-                                    questions = questions,
-                                    answers = answers,
-                                    correctAnswers = correctAnswers,
-                                    hints = hints,
-                                    memos = memos,
-                                ),
-                                additionalInfo = state.additionalInfo.copy(
-                                    thumbnail = exam.thumbnailUrl ?: "",
-                                    // TODO(riflockle7): 썸네일 타입 정보 서버에서 추후 받아야 함
-                                    thumbnailType = ThumbnailType.Default,
-                                    takeTitle = exam.buttonTitle,
-                                    isSubTagsAdded = exam.subTags.isNotEmpty(),
-                                    searchSubTags = state.additionalInfo.searchSubTags.copy(
-                                        results = exam.subTags,
-                                    ),
-                                ),
-                            )
-                        }
-                    }
-                }
-                .onFailure {
-                    intent {
-                        if (
-                            it is DuckieResponseException &&
-                            it.statusCode == DuckieStatusCode.UnAuthorized
-                        ) {
-                            reduce {
-                                state.copy(
-                                    createProblemStep = CreateProblemStep.Error,
-                                    isEditMode = true,
-                                )
-                            }
-                        }
-
-                        postSideEffect(CreateProblemSideEffect.ReportError(it))
-                    }
-                }
+            // TODO(riflockle7): 추후 기능 제공 시 구현 필요
+            intent { postSideEffect(CreateProblemSideEffect.ReportError(Throwable("미지원 기능"))) }
         }
     }
 
@@ -264,21 +199,24 @@ internal class CreateProblemViewModel @Inject constructor(
             )
         }.toPersistentList()
 
+        val subTagIds = additionalInfoState.subTags.map { it.id }.toPersistentList()
         return ExamBody(
             title = examInformationState.examTitle,
             description = examInformationState.examDescription,
             mainTagId = examInformationState.categories.first().id,
-            subTagIds = additionalInfoState.subTags.map { it.id }.toPersistentList(),
+            subTagIds = if (subTagIds.isEmpty()) {
+                null
+            } else {
+                subTagIds
+            },
             categoryId = examInformationState.selectedCategory?.id
                 ?: duckieResponseFieldNpe("선택된 카테고리가 있어야 합니다."),
             certifyingStatement = examInformationState.certifyingStatement,
-            thumbnailImageUrl = "${additionalInfoState.thumbnail}",
+            thumbnailUrl = "${additionalInfoState.thumbnail}",
             thumbnailType = additionalInfoState.thumbnailType,
             problems = problems,
-            isPublic = true,
             buttonTitle = additionalInfoState.takeTitle,
-            // TODO(riflockle7): userId 추후 확인 필요
-            userId = 1,
+            status = null, // 운영용
         )
     }
 
@@ -945,6 +883,7 @@ internal class CreateProblemViewModel @Inject constructor(
         val tagText = when (state.findResultType) {
             FindResultType.MainTag ->
                 state.examInformation.searchMainTag.searchResults[index]
+
             FindResultType.SubTags -> state.additionalInfo.searchSubTags.searchResults[index]
         }
 

@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class, OutOfDateApi::class)
+@file:OptIn(ExperimentalFoundationApi::class)
 
 package team.duckie.app.android.feature.ui.home.screen
 
@@ -48,7 +48,6 @@ import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1
@@ -58,7 +57,6 @@ import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
-@OptIn(ExperimentalFoundationApi::class, OutOfDateApi::class)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
@@ -176,7 +174,6 @@ private fun HomeRecommendJumbotronLayout(
     }
 }
 
-@OptIn(OutOfDateApi::class)
 @Composable
 private fun HomeTopicRecommendLayout(
     modifier: Modifier = Modifier,
@@ -208,13 +205,14 @@ private fun HomeTopicRecommendLayout(
             ),
         ) {
             items(items = exams) { item ->
+                // TODO(riflockle7): exam 엔티티 commit
                 DuckTestSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = item.id,
                         coverImg = item.thumbnailUrl,
-                        nickname = item.user.nickname,
+                        nickname = item.user?.nickname ?: "",
                         title = item.title,
-                        examineeNumber = item.solvedCount,
+                        examineeNumber = item.solvedCount ?: 0,
                     ),
                     onClick = {
                         onClicked(it)
