@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.create.problem.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -35,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
 import team.duckie.app.android.feature.ui.create.problem.R
 import team.duckie.app.android.feature.ui.create.problem.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.ui.create.problem.common.ImeActionNext
@@ -46,6 +49,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblem
 import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.takeBy
+import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
@@ -72,11 +76,17 @@ internal fun ExamInformationScreen(
     viewModel: CreateProblemViewModel = activityViewModel(),
     modifier: Modifier,
 ) {
+    val activity = LocalContext.current as CreateProblemActivity
     val state = viewModel.collectAsState().value.examInformation
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val lazyListState = rememberLazyListState()
     val focusRequester = remember { FocusRequester() }
+
+    BackHandler {
+        // TODO(riflockle7): 다이얼로그가 필요할 듯 하여 TODO 남김
+        activity.finishWithAnimation()
+    }
 
     LaunchedEffect(Unit) {
         viewModel.getCategories()

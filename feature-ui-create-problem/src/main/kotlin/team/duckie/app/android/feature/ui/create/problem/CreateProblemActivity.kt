@@ -56,8 +56,6 @@ class CreateProblemActivity : BaseActivity() {
 
             BackHandler {
                 when (createProblemStep) {
-                    CreateProblemStep.CreateProblem, CreateProblemStep.AdditionalInformation ->
-                        viewModel.navigateStep(createProblemStep.minus(1))
                     CreateProblemStep.Loading, CreateProblemStep.Error -> finishWithAnimation()
                     else -> {}
                 }
