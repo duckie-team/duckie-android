@@ -233,6 +233,7 @@ jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", ver
 jackson-annotation = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson-core" }
 
 moshi-core = { module = "com.squareup.moshi:moshi", version.ref = "moshi-core" }
+moshi-adapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "moshi-core" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi-core" }
 
 orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit-core" }
@@ -265,6 +266,6 @@ compose-debug = ["compose-util-tooling-core", "compose-util-customview-pooling-c
 
 ktor-client = ["ktor-jackson", "ktor-client-core", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-client-engine"]
 fuel = ["fuel-core", "fuel-moshi", "fuel-coroutines"]
-moshi = ["moshi-core", "moshi-kotlin"]
+moshi = ["moshi-core", "moshi-kotlin", "moshi-adapters"]
 
 quack-lint = ["quack-lint-core", "quack-lint-quack", "quack-lint-compose"]
