@@ -8,15 +8,14 @@
 package team.duckie.app.android.domain.recommendation.usecase
 
 import androidx.compose.runtime.Immutable
-import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
+import team.duckie.app.android.domain.exam.repository.ExamRepository
 import javax.inject.Inject
 
 @Immutable
-class FetchRecommendFollowingUseCase @Inject constructor(
-    private val repository: RecommendationRepository,
+class FetchExamMeFollowingUseCase @Inject constructor(
+    private val repository: ExamRepository,
 ) {
-
-    suspend operator fun invoke() = runCatching {
-        repository.fetchRecommendFollowing()
+    suspend operator fun invoke(page: Int? = null) = runCatching {
+        repository.getExamMeFollowing(page = page)
     }
 }

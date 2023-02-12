@@ -77,6 +77,7 @@ class JsonBuilderTest {
                     id = 0,
                     nickname = "test",
                     profileImageUrl = "test",
+                    status = "NEW",
                     duckPower = DuckPower(
                         id = 1,
                         tier = "도로 패션 20%",
@@ -85,6 +86,7 @@ class JsonBuilderTest {
                             name = "도로패션",
                         ),
                     ),
+                    follow = null,
                     favoriteTags = tags,
                     favoriteCategories = persistentListOf(
                         Category(
@@ -94,16 +96,19 @@ class JsonBuilderTest {
                             popularTags = tags,
                         ),
                     ),
+                    permissions = null,
                 ),
             )
         }
 
         val expected = "{\"name\":\"duckie\",\"age\":1,\"isDuck\":true," +
-                "\"friends\":[{\"id\":0,\"nickname\":\"test\",\"profileImageUrl\":\"test\"," +
+                "\"friends\":[{\"id\":0,\"nickname\":\"test\",\"profileImageUrl\":\"test\",\"status\":\"NEW\"," +
                 "\"duckPower\":{\"id\":1,\"tier\":\"도로 패션 20%\",\"tag\":{\"id\":1,\"name\":\"도로패션\"}}," +
+                "\"follow\":null," +
                 "\"favoriteTags\":[{\"id\":1,\"name\":\"tag\"}]," +
                 "\"favoriteCategories\":[{\"id\":1,\"name\":\"1\",\"thumbnailUrl\":\"thumbnailUrl\"," +
-                "\"popularTags\":[{\"id\":1,\"name\":\"tag\"}]}]}]}"
+                "\"popularTags\":[{\"id\":1,\"name\":\"tag\"}]}]," +
+                "\"permissions\":null}]}"
 
         expectThat(actual).isEqualTo(expected)
     }

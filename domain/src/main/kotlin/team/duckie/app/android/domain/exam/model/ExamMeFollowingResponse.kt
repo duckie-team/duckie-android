@@ -5,12 +5,12 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.domain.heart.model
+package team.duckie.app.android.domain.exam.model
 
 import androidx.compose.runtime.Immutable
 
 @Immutable
-data class HeartsBody(
-    val examId: Int,
-    val heartId: Int? = null,
+data class ExamMeFollowingResponse(
+    val exams: List<Exam>,
+    val page: Int,
 )

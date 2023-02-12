@@ -12,5 +12,5 @@ import team.duckie.app.android.domain.category.model.Category
 
 @Immutable
 interface CategoryRepository {
-    suspend fun getCategories(withPopularTags: Boolean): List<Category>
+    suspend fun getCategories(withPopularTags: Boolean?): List<Category>
 }

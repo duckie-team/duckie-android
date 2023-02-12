@@ -29,6 +29,7 @@ dependencies {
         projects.featureUiDetail,
         projects.featureUiCreateProblem,
         projects.featureUiSearch,
+        projects.featureDatastore,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.quack.ui.components,

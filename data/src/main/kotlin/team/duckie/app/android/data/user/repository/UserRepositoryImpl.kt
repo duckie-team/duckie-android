@@ -7,32 +7,35 @@
 
 package team.duckie.app.android.data.user.repository
 
+import com.github.kittinunf.fuel.Fuel
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
 import io.ktor.client.statement.bodyAsText
-import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
+import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data._util.jsonBody
 import team.duckie.app.android.data._util.toStringJsonMap
-import team.duckie.app.android.data.category.model.CategoryData
-import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.mapper.toDomain
-import team.duckie.app.android.data.user.model.DuckPowerResponse
-import team.duckie.app.android.data.user.model.UserFollowingResponse
-import team.duckie.app.android.data.user.model.UserFollowingRecommendationsResponse
+import team.duckie.app.android.data.user.model.UserFollowingsResponse
 import team.duckie.app.android.data.user.model.UserResponse
+import team.duckie.app.android.data.user.model.UsersResponse
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.domain.user.model.UserFollowing
+import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.repository.UserRepository
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.runtimeCheck
+import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor() : UserRepository {
+class UserRepositoryImpl @Inject constructor(private val fuel: Fuel) : UserRepository {
     override suspend fun get(id: Int): User {
         val response = client.get("/users/$id")
 
@@ -44,23 +47,26 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
 
     override suspend fun update(
         id: Int,
-        nickname: String?,
+        categories: List<Category>?,
+        tags: List<Tag>?,
         profileImageUrl: String?,
-        favoriteCategories: List<Category>?,
-        favoriteTags: List<Tag>?,
+        nickname: String?,
+        status: String?,
     ): User {
         runtimeCheck(
-            nickname != null || profileImageUrl != null ||
-                    favoriteCategories != null || favoriteTags != null,
+            nickname != null || profileImageUrl != null || categories != null ||
+                    tags != null || status != null,
         ) {
             "At least one of the parameters must be non-null"
         }
+
         val response = client.patch("/users/$id") {
             jsonBody {
-                nickname?.let { "nickname" withString nickname }
+                categories?.let { "favoriteCategories" withInts categories.fastMap { it.id } }
+                tags?.let { "favoriteTags" withInts tags.fastMap { it.id } }
                 profileImageUrl?.let { "profileImageUrl" withString profileImageUrl }
-                favoriteCategories?.let { "favoriteCategories" withPojos favoriteCategories }
-                favoriteTags?.let { "favoriteTags" withPojos favoriteTags }
+                nickname?.let { "nickname" withString nickname }
+                status?.let { "status" withString status }
             }
         }
         return responseCatching(
@@ -78,58 +84,43 @@ class UserRepositoryImpl @Inject constructor() : UserRepository {
         }
     }
 
+    // TODO(riflockle7): GET /users/following API commit (변경점이 많아 TODO 적음)
+    @AllowMagicNumber
     @ExperimentalApi
-    override suspend fun getUserFollowing(): UserFollowing {
-//        val response = client.get {
-//            url("/users/following")
-//        }
-//
-//        return responseCatching(response.bodyAsText()) { body ->
-//            body.toJsonObject<List<UserResponse>>().fastMap(UserResponse::toDomain)
-//        }
-//      TODO(limsaehyun): Server Request 필요
+    override suspend fun fetchUserFollowing(userId: Int): UserFollowings =
+        withContext(Dispatchers.IO) {
+            val (_, response) = fuel
+                .post(
+                    "/users/following",
+                    listOf("userId" to userId),
+                )
+                .responseString()
 
-        val mockFollowingResponse = UserFollowingResponse(
-            followingRecommendations = listOf(
-                UserFollowingRecommendationsResponse(
-                    category = CategoryData(
-                        id = 1,
-                        name = "닉네임",
-                        thumbnailUrl = "https://img.freepik.com/free-icon/user_318-804790.jpg?w=2000",
-                        popularTags = listOf(
-                            TagData(
-                                id = 1,
-                                name = "Tag1",
-                            ),
-                            TagData(
-                                id = 1,
-                                name = "Tag1",
-                            ),
-                            TagData(
-                                id = 1,
-                                name = "Tag1",
-                            ),
-                        ),
-                    ),
-                    user = (0..2).map {
-                        UserResponse(
-                            id = it,
-                            nickName = "유저$it",
-                            profileImageUrl = "https://img.freepik.com/free-icon/user_318-804790.jpg?w=2000",
-                            duckPower = DuckPowerResponse(
-                                id = 1,
-                                tier = "덕력 20%",
-                                tag = TagData(
-                                    id = 1,
-                                    name = "도로패션",
-                                ),
-                            ),
-                        )
-                    }.toList(),
-                ),
-            ),
+            return@withContext responseCatchingFuel(
+                response = response,
+                parse = UserFollowingsResponse::toDomain,
+            )
+        }
+
+    override suspend fun fetchMeFollowers(): List<User> {
+        val (_, response) = fuel
+            .get("/users/me/followers")
+            .responseString()
+
+        return responseCatchingFuel(
+            response = response,
+            parse = UsersResponse::toDomain,
         )
+    }
 
-        return mockFollowingResponse.toDomain()
+    override suspend fun fetchMeFollowings(): List<User> {
+        val (_, response) = fuel
+            .get("/users/me/followings")
+            .responseString()
+
+        return responseCatchingFuel(
+            response = response,
+            parse = UsersResponse::toDomain,
+        )
     }
 }

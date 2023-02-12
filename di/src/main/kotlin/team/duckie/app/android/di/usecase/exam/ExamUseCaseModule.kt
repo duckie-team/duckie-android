@@ -14,8 +14,6 @@ import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
 import team.duckie.app.android.domain.exam.usecase.GetExamUseCase
-import team.duckie.app.android.domain.exam.usecase.MakeExamInstanceSubmitUseCase
-import team.duckie.app.android.domain.exam.usecase.MakeExamInstanceUseCase
 import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 
 @Module
@@ -34,15 +32,5 @@ object ExamUseCaseModule {
     @Provides
     fun provideGetExamThumbnailUseCase(repository: ExamRepository): GetExamThumbnailUseCase {
         return GetExamThumbnailUseCase(repository)
-    }
-
-    @Provides
-    fun provideMakeExamInstanceSubmitUseCase(repository: ExamRepository): MakeExamInstanceSubmitUseCase {
-        return MakeExamInstanceSubmitUseCase(repository)
-    }
-
-    @Provides
-    fun provideMakeExamInstanceUseCase(repository: ExamRepository): MakeExamInstanceUseCase {
-        return MakeExamInstanceUseCase(repository)
     }
 }

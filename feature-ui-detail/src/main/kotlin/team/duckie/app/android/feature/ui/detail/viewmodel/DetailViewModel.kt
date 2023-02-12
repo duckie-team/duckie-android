@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(OutOfDateApi::class)
-
 package team.duckie.app.android.feature.ui.detail.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -23,16 +21,15 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
-import team.duckie.app.android.domain.heart.model.HeartsBody
-import team.duckie.app.android.domain.heart.usecase.PostHeartsUseCase
-import team.duckie.app.android.domain.heart.usecase.DeleteHeartsUseCase
+import team.duckie.app.android.domain.heart.usecase.PostHeartUseCase
+import team.duckie.app.android.domain.heart.usecase.DeleteHeartUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 import team.duckie.app.android.feature.datastore.me
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 const val DelayTime = 2000L
 
@@ -40,8 +37,8 @@ const val DelayTime = 2000L
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
     private val followUseCase: FollowUseCase,
-    private val postHeartsUseCase: PostHeartsUseCase,
-    private val deleteHeartsUseCase: DeleteHeartsUseCase,
+    private val postHeartUseCase: PostHeartUseCase,
+    private val deleteHeartUseCase: DeleteHeartUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
@@ -62,13 +59,14 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    @OptIn(OutOfDateApi::class)
     fun followUser() = viewModelScope.launch {
         val detailState = container.stateFlow.value
         require(detailState is DetailState.Success)
 
         followUseCase(
-            FollowBody(detailState.appUser.id, detailState.exam.user.id),
+            FollowBody(
+                detailState.exam.user?.id ?: duckieResponseFieldNpe("팔로우할 유저는 반드시 있어야 합니다."),
+            ),
             !detailState.isFollowing,
         ).onSuccess { apiResult ->
             if (apiResult) {
@@ -89,11 +87,11 @@ class DetailViewModel @Inject constructor(
 
         intent {
             if (!detailState.isHeart) {
-                postHeartsUseCase(detailState.exam.id)
-                    .onSuccess { hearts ->
+                postHeartUseCase(detailState.exam.id)
+                    .onSuccess { heart ->
                         reduce {
                             (state as DetailState.Success).run {
-                                copy(exam = exam.copy(heart = hearts))
+                                copy(exam = exam.copy(heart = heart))
                             }
                         }
                     }.onFailure {
@@ -101,7 +99,7 @@ class DetailViewModel @Inject constructor(
                     }
             } else {
                 detailState.exam.heart?.id?.also { heartId ->
-                    deleteHeartsUseCase(HeartsBody(detailState.exam.id, heartId))
+                    deleteHeartUseCase(heartId)
                         .onSuccess { apiResult ->
                             if (apiResult) {
                                 reduce {
@@ -125,7 +123,7 @@ class DetailViewModel @Inject constructor(
                 (state as DetailState.Success).run {
                     DetailSideEffect.StartExam(
                         exam.id,
-                        exam.certifyingStatement,
+                        certifyingStatement,
                     )
                 },
             )

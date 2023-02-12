@@ -15,14 +15,13 @@ import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data._exception.util.responseCatchingGet
 import team.duckie.app.android.data._util.buildJson
 import team.duckie.app.android.data.heart.mapper.toDomain
-import team.duckie.app.android.data.heart.model.HeartsData
-import team.duckie.app.android.domain.heart.model.Hearts
-import team.duckie.app.android.domain.heart.model.HeartsBody
-import team.duckie.app.android.domain.heart.repository.HeartsRepository
+import team.duckie.app.android.data.heart.model.HeartData
+import team.duckie.app.android.domain.heart.model.Heart
+import team.duckie.app.android.domain.heart.repository.HeartRepository
 import javax.inject.Inject
 
-class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsRepository {
-    override suspend fun postHeart(examId: Int): Hearts = withContext(Dispatchers.IO) {
+class HeartRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartRepository {
+    override suspend fun postHeart(examId: Int): Heart = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .post("/hearts")
             .body(
@@ -33,21 +32,14 @@ class HeartsRepositoryImpl @Inject constructor(private val fuel: Fuel) : HeartsR
 
         return@withContext responseCatchingFuel(
             response,
-            HeartsData::toDomain,
+            HeartData::toDomain,
         )
     }
 
-    override suspend fun deleteHeart(heartsBody: HeartsBody): Boolean = withContext(Dispatchers.IO) {
-        requireNotNull(heartsBody.heartId)
-        val (examId, heartId) = heartsBody.examId to heartsBody.heartId!!
-
+    override suspend fun deleteHeart(heartId: Int): Boolean = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .delete("/hearts/$heartId")
-            .body(
-                body = buildJson {
-                    "examId" withInt examId
-                },
-            ).responseString()
+            .responseString()
 
         return@withContext responseCatchingGet(
             response.statusCode,

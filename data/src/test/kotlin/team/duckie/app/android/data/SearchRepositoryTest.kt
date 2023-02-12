@@ -17,9 +17,7 @@ import strikt.assertions.isTrue
 import team.duckie.app.android.data.dummy.SearchDummyResponse
 import team.duckie.app.android.data.util.ApiTest
 import team.duckie.app.android.data.util.buildMockHttpClient
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 
-@OutOfDateApi
 class SearchRepositoryTest : ApiTest(
     client = buildMockHttpClient(content = SearchDummyResponse.RawData),
     isMock = true,
