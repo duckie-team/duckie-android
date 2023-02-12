@@ -126,38 +126,38 @@ internal class CreateProblemViewModel @Inject constructor(
     ).apply {
         viewModelScope.launch {
             this@apply.debounce(1500L).collectLatest { query ->
-                val searchResults = getSearchUseCase(query = query, page = 1, type = Search.Tags)
-                    .getOrNull()?.let {
-                        (it as Search.TagSearch).tags
-                            .fastMap(Tag::name)
-                            .take(TagsMaximumCount)
-                            .toImmutableList()
-                    } ?: persistentListOf()
-
                 intent {
-                    reduce {
-                        when (state.findResultType) {
-                            FindResultType.MainTag -> {
-                                state.copy(
-                                    examInformation = state.examInformation.copy(
-                                        searchMainTag = state.examInformation.searchMainTag.copy(
-                                            searchResults = searchResults,
-                                        ),
-                                    ),
-                                )
-                            }
+                    getSearchUseCase(query = query, page = 1, type = Search.Tags)
+                        .onSuccess {
+                            val searchResults = (it as Search.TagSearch).tags.toImmutableList()
 
-                            FindResultType.SubTags -> {
-                                state.copy(
-                                    additionalInfo = state.additionalInfo.copy(
-                                        searchSubTags = state.additionalInfo.searchSubTags.copy(
-                                            searchResults = searchResults,
-                                        ),
-                                    ),
-                                )
+                            reduce {
+                                when (state.findResultType) {
+                                    FindResultType.MainTag -> {
+                                        state.copy(
+                                            examInformation = state.examInformation.copy(
+                                                searchMainTag = state.examInformation.searchMainTag.copy(
+                                                    searchResults = searchResults,
+                                                ),
+                                            ),
+                                        )
+                                    }
+
+                                    FindResultType.SubTags -> {
+                                        state.copy(
+                                            additionalInfo = state.additionalInfo.copy(
+                                                searchSubTags = state.additionalInfo.searchSubTags.copy(
+                                                    searchResults = searchResults,
+                                                ),
+                                            ),
+                                        )
+                                    }
+                                }
                             }
                         }
-                    }
+                        .onFailure {
+                            postSideEffect(CreateProblemSideEffect.ReportError(it))
+                        }
                 }
             }
         }
@@ -881,7 +881,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 추천 검색 목록에서 헤더(1번째 항목) 이외의 항목을 클릭한다. */
-    internal suspend fun onClickSearchList(index: Int) {
+    internal fun onClickSearchList(index: Int) {
         val state = container.stateFlow.value
         val tagText = when (state.findResultType) {
             FindResultType.MainTag ->
@@ -890,12 +890,7 @@ internal class CreateProblemViewModel @Inject constructor(
             FindResultType.SubTags -> state.additionalInfo.searchSubTags.searchResults[index]
         }
 
-        runCatching { tagRepository.create(tagText) }
-            .onSuccess {
-                exitSearchScreenAfterAddTag(it)
-            }.onFailure {
-                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
-            }
+        exitSearchScreenAfterAddTag(tagText)
     }
 
     /**

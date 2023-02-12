@@ -7,25 +7,34 @@
 
 package team.duckie.app.android.data.search.repository
 
-import io.ktor.client.request.get
-import io.ktor.client.request.url
-import io.ktor.client.statement.bodyAsText
-import team.duckie.app.android.data._datasource.client
-import team.duckie.app.android.data._exception.util.responseCatching
-import team.duckie.app.android.data._util.toJsonObject
+import com.github.kittinunf.fuel.Fuel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data.search.mapper.toDomain
 import team.duckie.app.android.data.search.model.SearchData
 import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.domain.search.repository.SearchRepository
 import javax.inject.Inject
 
-class SearchRepositoryImpl @Inject constructor() : SearchRepository {
-    override suspend fun getSearch(query: String, page: Int, type: String): Search {
-        val response = client.get {
-            url("/search")
-        }
-        return responseCatching(response.status.value, response.bodyAsText()) { body ->
-            body.toJsonObject<SearchData>().toDomain()
-        }
+class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchRepository {
+    override suspend fun getSearch(
+        query: String,
+        page: Int,
+        type: String,
+    ): Search = withContext(Dispatchers.IO) {
+        val (_, response) = fuel.get(
+            "/search",
+            listOf(
+                "query" to query,
+                "page" to page,
+                "type" to type,
+            ),
+        ).responseString()
+
+        return@withContext responseCatchingFuel(
+            response,
+            SearchData::toDomain,
+        )
     }
 }

@@ -20,20 +20,17 @@ import team.duckie.app.android.util.kotlin.fastMap
 
 internal fun SearchData.toDomain() = when (this) {
     is SearchData.ExamSearchData -> Search.ExamSearch(
-        exams = exams?.fastMap(ExamData::toDomain)
-            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams"),
-        page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
+        exams = result?.fastMap(ExamData::toDomain)
+            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.result"),
     )
 
     is SearchData.UserSearchData -> Search.UserSearch(
-        users = users?.fastMap(UserResponse::toDomain)
-            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.users"),
-        page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
+        users = result?.fastMap(UserResponse::toDomain)
+            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.result"),
     )
 
     is SearchData.TagSearchData -> Search.TagSearch(
-        tags = tags?.fastMap(TagData::toDomain)
-            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tags"),
-        page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
+        tags = result?.fastMap(TagData::toDomain)
+            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.result"),
     )
 }
