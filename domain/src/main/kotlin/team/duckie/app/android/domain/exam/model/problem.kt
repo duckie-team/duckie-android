@@ -247,3 +247,12 @@ fun Answer.toImageChoice(
         }.toPersistentList(),
     )
 }
+
+/** client 용 correctAnswer (index) -> 백앤드용 correctAnswer (answerValue) */
+fun String.toCorrectAnswerData(answers: Answer) = when (answers) {
+    is Answer.ImageChoice -> answers.imageChoice[this.toInt()].text
+
+    is Answer.Choice -> answers.choices[this.toInt()].text
+
+    else -> this
+}

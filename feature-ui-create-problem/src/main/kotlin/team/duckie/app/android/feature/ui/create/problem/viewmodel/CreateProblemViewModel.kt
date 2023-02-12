@@ -39,6 +39,7 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.exam.model.toChoice
+import team.duckie.app.android.domain.exam.model.toCorrectAnswerData
 import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
@@ -60,7 +61,6 @@ import team.duckie.app.android.util.android.image.MediaUtil
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
@@ -188,12 +188,16 @@ internal class CreateProblemViewModel @Inject constructor(
         val createProblemState = container.stateFlow.value.createProblem
         val additionalInfoState = container.stateFlow.value.additionalInfo
 
+        val serverCorrectAnswers =
+            createProblemState.correctAnswers.fastMapIndexed { index, correctAnswer ->
+                correctAnswer.toCorrectAnswerData(createProblemState.answers[index])
+            }
         val problems = createProblemState.questions.fastMapIndexed { index, question ->
             Problem(
                 index,
                 question,
                 createProblemState.answers[index],
-                createProblemState.correctAnswers[index],
+                serverCorrectAnswers[index],
                 createProblemState.hints[index],
                 createProblemState.memos[index],
             )
