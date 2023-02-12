@@ -33,7 +33,11 @@ internal data class ProblemData(
     val memo: String? = null,
 )
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+    property = "type",
+)
 @JsonSubTypes(
     JsonSubTypes.Type(value = QuestionData.Text::class, name = "text"),
     JsonSubTypes.Type(value = QuestionData.Image::class, name = "image"),
@@ -41,66 +45,66 @@ internal data class ProblemData(
     JsonSubTypes.Type(value = QuestionData.Video::class, name = "video"),
 )
 internal sealed class QuestionData(
-    @field:JsonProperty("type")
     open val type: String? = null,
-
-    @field:JsonProperty("text")
     open val text: String? = null,
 ) {
     internal data class Text(
-        override val type: String? = null,
+        @field:JsonProperty("text")
         override val text: String? = null,
-    ) : QuestionData(type, text)
+    ) : QuestionData("text", text)
 
     internal data class Image(
         @field:JsonProperty("imageUrl")
         val imageUrl: String? = null,
-        override val type: String? = null,
+
+        @field:JsonProperty("text")
         override val text: String? = null,
-    ) : QuestionData(type, text)
+    ) : QuestionData("image", text)
 
     internal data class Audio(
         @field:JsonProperty("audioUrl")
         val audioUrl: String? = null,
-        override val type: String? = null,
+
+        @field:JsonProperty("text")
         override val text: String? = null,
-    ) : QuestionData(type, text)
+    ) : QuestionData("audio", text)
 
     internal data class Video(
         @field:JsonProperty("videoUrl")
         val videoUrl: String? = null,
-        override val type: String? = null,
+
+        @field:JsonProperty("text")
         override val text: String? = null,
-    ) : QuestionData(type, text)
+    ) : QuestionData("video", text)
 }
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+    property = "type",
+)
 @JsonSubTypes(
     JsonSubTypes.Type(value = AnswerData.ShortAnswer::class, name = "shortAnswer"),
     JsonSubTypes.Type(value = AnswerData.Choice::class, name = "choice"),
     JsonSubTypes.Type(value = AnswerData.ImageChoice::class, name = "imageChoice"),
 )
 internal sealed class AnswerData(
-    @field:JsonProperty("type")
     open val type: String? = null,
 ) {
     internal data class ShortAnswer(
         @field:JsonProperty("shortAnswer")
         val shortAnswer: String? = null,
-        override val type: String? = null,
-    ) : AnswerData(type)
+    ) : AnswerData("shortAnswer")
 
     internal data class Choice(
         @field:JsonProperty("choices")
         val choices: List<ChoiceData>? = null,
-        override val type: String? = null,
-    ) : AnswerData(type)
+    ) : AnswerData("choice")
 
     internal data class ImageChoice(
         @field:JsonProperty("choices")
         val choices: List<ImageChoiceData>? = null,
-        override val type: String? = null,
-    ) : AnswerData(type)
+    ) : AnswerData("imageChoice")
 }
 
 internal data class ChoiceData(

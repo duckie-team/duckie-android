@@ -15,7 +15,11 @@ import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.search.model.Search
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+    property = "type",
+)
 @JsonSubTypes(
     JsonSubTypes.Type(value = SearchData.ExamSearchData::class, name = Search.Exam),
     JsonSubTypes.Type(value = SearchData.UserSearchData::class, name = Search.User),

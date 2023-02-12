@@ -148,25 +148,21 @@ internal fun Problem.toData() = ProblemData(
     question = question.let { question ->
         when (question) {
             is Question.Text -> QuestionData.Text(
-                type = question.type.key,
                 text = question.text,
             )
 
             is Question.Video -> QuestionData.Video(
                 videoUrl = question.videoUrl,
-                type = question.type.key,
                 text = question.text,
             )
 
             is Question.Image -> QuestionData.Image(
                 imageUrl = question.imageUrl,
-                type = question.type.key,
                 text = question.text,
             )
 
             is Question.Audio -> QuestionData.Audio(
                 audioUrl = question.audioUrl,
-                type = question.type.key,
                 text = question.text,
             )
         }
@@ -175,21 +171,18 @@ internal fun Problem.toData() = ProblemData(
         when (answer) {
             is Answer.Short -> AnswerData.ShortAnswer(
                 shortAnswer = answer.answer.text,
-                type = answer.type.key,
             )
 
             is Answer.Choice -> AnswerData.Choice(
                 choices = answer.choices.map {
                     it.toData()
                 }.toList(),
-                type = answer.type.key,
             )
 
             is Answer.ImageChoice -> AnswerData.ImageChoice(
                 choices = answer.imageChoice.map {
                     it.toData()
                 }.toList(),
-                type = answer.type.key,
             )
         }
     },
