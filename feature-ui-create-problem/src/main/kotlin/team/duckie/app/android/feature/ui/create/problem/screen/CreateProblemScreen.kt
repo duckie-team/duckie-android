@@ -683,7 +683,7 @@ private fun ChoiceProblemLayout(
 
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
             val answerNo = answerIndex + 1
-            val isChecked = correctAnswers == "$answerNo"
+            val isChecked = correctAnswers == "$answerIndex"
             QuackBorderTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -706,7 +706,9 @@ private fun ChoiceProblemLayout(
                 trailingContent = {
                     Column(
                         modifier = Modifier.quackClickable(
-                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
+                            onClick = {
+                                setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
+                            },
                         ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -780,7 +782,7 @@ private fun ImageChoiceProblemLayout(
             itemContent = { answerIndex ->
                 val answerNo = answerIndex + 1
                 val answerItem = answers.imageChoice[answerIndex]
-                val isChecked = correctAnswers == "$answerNo"
+                val isChecked = correctAnswers == "$answerIndex"
 
                 Column(
                     modifier = Modifier
@@ -789,7 +791,11 @@ private fun ImageChoiceProblemLayout(
                         .applyAnimatedQuackBorder(
                             border = QuackBorder(
                                 width = 1.dp,
-                                color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4,
+                                color = if (isChecked) {
+                                    QuackColor.DuckieOrange
+                                } else {
+                                    QuackColor.Gray4
+                                },
                             ),
                         )
                         .padding(12.dp),
@@ -800,7 +806,9 @@ private fun ImageChoiceProblemLayout(
                     ) {
                         QuackRoundCheckBox(
                             modifier = Modifier.quackClickable(
-                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
+                                onClick = {
+                                    setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
+                                },
                             ),
                             checked = isChecked,
                         )
