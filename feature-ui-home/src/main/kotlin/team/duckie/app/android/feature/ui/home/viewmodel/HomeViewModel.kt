@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:Suppress("MaxLineLength") // TODO(limsaehyun): 더미데이터를 위해 임시로 구현, 추후에 제거 필요
-
 package team.duckie.app.android.feature.ui.home.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -126,6 +124,14 @@ internal class HomeViewModel @Inject constructor(
                         )
                     }
                 }.onFailure { exception ->
+                    if ((exception as? DuckieResponseException)?.code == "FOLLOWING_ALREADY_EXISTS") {
+                        reduce {
+                            state.copy(
+                                isFollowingExist = true,
+                            )
+                        }
+                        return@onFailure
+                    }
                     postSideEffect(HomeSideEffect.ReportError(exception))
                 }.also {
                     updateHomeLoading(false)
@@ -140,9 +146,7 @@ internal class HomeViewModel @Inject constructor(
                     followingId = userId,
                 ),
                 isFollowing = isFollowing,
-            ).onSuccess {
-                fetchRecommendFollowing()
-            }.onFailure { exception ->
+            ).onFailure { exception ->
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }
         }
