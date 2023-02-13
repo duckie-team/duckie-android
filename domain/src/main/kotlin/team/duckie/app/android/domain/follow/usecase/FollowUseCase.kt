@@ -18,9 +18,9 @@ class FollowUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(followBody: FollowBody, isFollowing: Boolean) = runCatching {
         if (isFollowing) {
-            followRepository.follow(followBody)
-        } else {
             followRepository.unFollow(followBody)
+        } else {
+            followRepository.follow(followBody)
         }
     }
 }
