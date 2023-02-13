@@ -78,7 +78,7 @@ analytics-leakcanary = "2.10"
 analytics-anrwatchdog = "1.4.0"
 
 # firebase
-firebase-bom = "31.2.0"
+firebase-bom = "31.2.1"
 firebase-plugin-crashlytics = "2.9.4"
 firebase-plugin-performance = "1.4.2"
 
