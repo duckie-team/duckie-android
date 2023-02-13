@@ -34,11 +34,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.solve.problem.R
 import team.duckie.app.android.feature.ui.solve.problem.examresult.ExamResultActivity
 import team.duckie.app.android.feature.ui.solve.problem.examresult.viewmodel.ExamResultViewModel
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.common.LoadingIndicator
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.ui.finishWithAnimation
-import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage

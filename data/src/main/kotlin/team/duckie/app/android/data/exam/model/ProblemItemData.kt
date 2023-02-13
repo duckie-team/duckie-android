@@ -98,9 +98,6 @@ internal sealed class QuestionData(
 internal sealed class AnswerData(
     open val type: String? = null,
 ) {
-    companion object{
-
-    }
     @JsonClass(generateAdapter = true)
     internal class ShortAnswer : AnswerData("shortAnswer")
 

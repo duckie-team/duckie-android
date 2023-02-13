@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ExamResultViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val makeExamInstanceSubmitUseCase: MakeExamInstanceSubmitUseCase
+    private val makeExamInstanceSubmitUseCase: MakeExamInstanceSubmitUseCase,
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
     override val container: Container<ExamResultState, ExamResultSideEffect> = container(
@@ -36,7 +36,8 @@ class ExamResultViewModel @Inject constructor(
 
     fun initState() {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        val submitted = savedStateHandle.getStateFlow(Extras.Submitted, emptyArray<String>()).value.toList()
+        val submitted =
+            savedStateHandle.getStateFlow(Extras.Submitted, emptyArray<String>()).value.toList()
 
         if (examId == -1 || submitted.isEmpty()) {
             throw DuckieClientLogicProblemException(code = "")
@@ -68,7 +69,7 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
-    fun clickRetry(message: String) = intent{
+    fun clickRetry(message: String) = intent {
         postSideEffect(ExamResultSideEffect.SendToast(message))
     }
 }

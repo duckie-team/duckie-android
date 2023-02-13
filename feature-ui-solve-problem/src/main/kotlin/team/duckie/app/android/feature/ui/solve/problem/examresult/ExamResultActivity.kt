@@ -17,13 +17,10 @@ import team.duckie.app.android.feature.ui.solve.problem.examresult.screen.ExamRe
 import team.duckie.app.android.feature.ui.solve.problem.examresult.viewmodel.ExamResultSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.examresult.viewmodel.ExamResultViewModel
 import team.duckie.app.android.util.compose.ToastWrapper
-import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
-import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
@@ -42,7 +39,7 @@ class ExamResultActivity : BaseActivity() {
 
             viewModel.observe(
                 lifecycleOwner = this,
-                sideEffect = ::handleSideEffect
+                sideEffect = ::handleSideEffect,
             )
         }
     }

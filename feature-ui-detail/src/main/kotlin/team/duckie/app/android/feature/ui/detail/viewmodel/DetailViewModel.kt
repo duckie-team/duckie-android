@@ -125,7 +125,7 @@ class DetailViewModel @Inject constructor(
                             DetailSideEffect.StartExam(
                                 exam.id,
                                 certifyingStatement,
-                            )
+                            ),
                         )
                     }
                 }.onFailure {
