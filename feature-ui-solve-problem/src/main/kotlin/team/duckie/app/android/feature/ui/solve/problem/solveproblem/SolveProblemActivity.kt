@@ -74,6 +74,7 @@ class SolveProblemActivity : BaseActivity() {
                         putExtra(Extras.ExamId, sideEffect.examId)
                         putExtra(Extras.Submitted, sideEffect.answers.toTypedArray())
                     },
+                    withFinish = true,
                 )
             }
 

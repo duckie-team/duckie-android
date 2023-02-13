@@ -19,7 +19,6 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.dummyList
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.state.SolveProblemState
@@ -54,11 +53,11 @@ internal class SolveProblemViewModel @Inject constructor(
         reduce { state.copy(isProblemsLoading = true) }
         getExamInstanceUseCase(id = examId).onSuccess { examInstance ->
             reduce {
+                val problemInstances = examInstance.problemInstances?.toImmutableList() ?: persistentListOf()
                 state.copy(
                     isProblemsLoading = false,
-                    problems = examInstance.problemInstances?.toImmutableList()
-                        ?: persistentListOf(),
-                    inputAnswers = ImmutableList(dummyList.size) { InputAnswer() },
+                    problems = problemInstances,
+                    inputAnswers = ImmutableList(problemInstances.size) { InputAnswer() },
                 )
             }
         }.onFailure {
@@ -77,7 +76,7 @@ internal class SolveProblemViewModel @Inject constructor(
         } else {
             postSideEffect(
                 SolveProblemSideEffect.FinishSolveProblem(
-                    examId = "",
+                    examId = state.examId,
                     answers = state.inputAnswers.fastMap { it.answer },
                 ),
             )
