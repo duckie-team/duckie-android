@@ -13,7 +13,7 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 
 @Immutable
-sealed class Search(val type: String, open val page: Int) {
+sealed class Search(val type: String) {
     companion object {
         const val Exam = "EXAM"
         const val User = "USER"
@@ -23,18 +23,15 @@ sealed class Search(val type: String, open val page: Int) {
     @Immutable
     data class ExamSearch(
         val exams: List<Exam>,
-        override val page: Int,
-    ) : Search(Exam, page)
+    ) : Search(Exam)
 
     @Immutable
     data class UserSearch(
         val users: List<User>,
-        override val page: Int,
-    ) : Search(User, page)
+    ) : Search(User)
 
     @Immutable
     data class TagSearch(
         val tags: List<Tag>,
-        override val page: Int,
-    ) : Search(Tags, page)
+    ) : Search(Tags)
 }

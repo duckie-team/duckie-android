@@ -56,8 +56,6 @@ class CreateProblemActivity : BaseActivity() {
 
             BackHandler {
                 when (createProblemStep) {
-                    CreateProblemStep.CreateProblem, CreateProblemStep.AdditionalInformation ->
-                        viewModel.navigateStep(createProblemStep.minus(1))
                     CreateProblemStep.Loading, CreateProblemStep.Error -> finishWithAnimation()
                     else -> {}
                 }
@@ -82,26 +80,31 @@ class CreateProblemActivity : BaseActivity() {
                                 .fillMaxSize()
                                 .statusBarsPadding(),
                         )
+
                         CreateProblemStep.ExamInformation -> ExamInformationScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
                         )
+
                         CreateProblemStep.Search -> SearchTagScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
                         )
+
                         CreateProblemStep.CreateProblem -> CreateProblemScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
                         )
+
                         CreateProblemStep.AdditionalInformation -> AdditionalInformationScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
                         )
+
                         CreateProblemStep.Error -> ErrorScreen(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -118,6 +121,7 @@ class CreateProblemActivity : BaseActivity() {
             CreateProblemSideEffect.FinishActivity -> {
                 finishWithAnimation()
             }
+
             is CreateProblemSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
 
@@ -128,6 +132,7 @@ class CreateProblemActivity : BaseActivity() {
                     sideEffect.exception.reportToToast(getString(R.string.network_error))
                 }
             }
+
             is CreateProblemSideEffect.UpdateGalleryImages -> {
                 viewModel.addGalleryImages(sideEffect.images)
             }

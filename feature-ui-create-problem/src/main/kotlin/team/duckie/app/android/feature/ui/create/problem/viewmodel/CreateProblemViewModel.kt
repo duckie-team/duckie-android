@@ -39,6 +39,7 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.exam.model.toChoice
+import team.duckie.app.android.domain.exam.model.toCorrectAnswerData
 import team.duckie.app.android.domain.exam.model.toImageChoice
 import team.duckie.app.android.domain.exam.model.toShort
 import team.duckie.app.android.domain.exam.usecase.GetExamThumbnailUseCase
@@ -60,7 +61,6 @@ import team.duckie.app.android.util.android.image.MediaUtil
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
@@ -126,38 +126,40 @@ internal class CreateProblemViewModel @Inject constructor(
     ).apply {
         viewModelScope.launch {
             this@apply.debounce(1500L).collectLatest { query ->
-                val searchResults = getSearchUseCase(query = query, page = 1, type = Search.Tags)
-                    .getOrNull()?.let {
-                        (it as Search.TagSearch).tags
-                            .fastMap(Tag::name)
-                            .take(TagsMaximumCount)
-                            .toImmutableList()
-                    } ?: persistentListOf()
-
                 intent {
-                    reduce {
-                        when (state.findResultType) {
-                            FindResultType.MainTag -> {
-                                state.copy(
-                                    examInformation = state.examInformation.copy(
-                                        searchMainTag = state.examInformation.searchMainTag.copy(
-                                            searchResults = searchResults,
-                                        ),
-                                    ),
-                                )
-                            }
+                    getSearchUseCase(query = query, page = 1, type = Search.Tags)
+                        .onSuccess {
+                            val searchResults = (it as Search.TagSearch).tags
+                                .take(TagsMaximumCount)
+                                .toImmutableList()
 
-                            FindResultType.SubTags -> {
-                                state.copy(
-                                    additionalInfo = state.additionalInfo.copy(
-                                        searchSubTags = state.additionalInfo.searchSubTags.copy(
-                                            searchResults = searchResults,
-                                        ),
-                                    ),
-                                )
+                            reduce {
+                                when (state.findResultType) {
+                                    FindResultType.MainTag -> {
+                                        state.copy(
+                                            examInformation = state.examInformation.copy(
+                                                searchMainTag = state.examInformation.searchMainTag.copy(
+                                                    searchResults = searchResults,
+                                                ),
+                                            ),
+                                        )
+                                    }
+
+                                    FindResultType.SubTags -> {
+                                        state.copy(
+                                            additionalInfo = state.additionalInfo.copy(
+                                                searchSubTags = state.additionalInfo.searchSubTags.copy(
+                                                    searchResults = searchResults,
+                                                ),
+                                            ),
+                                        )
+                                    }
+                                }
                             }
                         }
-                    }
+                        .onFailure {
+                            postSideEffect(CreateProblemSideEffect.ReportError(it))
+                        }
                 }
             }
         }
@@ -188,12 +190,16 @@ internal class CreateProblemViewModel @Inject constructor(
         val createProblemState = container.stateFlow.value.createProblem
         val additionalInfoState = container.stateFlow.value.additionalInfo
 
+        val serverCorrectAnswers =
+            createProblemState.correctAnswers.fastMapIndexed { index, correctAnswer ->
+                correctAnswer.toCorrectAnswerData(createProblemState.answers[index])
+            }
         val problems = createProblemState.questions.fastMapIndexed { index, question ->
             Problem(
                 index,
                 question,
                 createProblemState.answers[index],
-                createProblemState.correctAnswers[index],
+                serverCorrectAnswers[index],
                 createProblemState.hints[index],
                 createProblemState.memos[index],
             )
@@ -395,6 +401,9 @@ internal class CreateProblemViewModel @Inject constructor(
     internal fun getExamThumbnail() = intent {
         // 이미 썸네일을 서버로부터 가져온 경우 별다른 처리를 하지 않는다.
         if (container.stateFlow.value.additionalInfo.thumbnail.toString().isNotEmpty()) {
+            reduce {
+                state.copy(createProblemStep = CreateProblemStep.CreateProblem)
+            }
             return@intent
         }
 
@@ -492,17 +501,17 @@ internal class CreateProblemViewModel @Inject constructor(
 
             Question.Type.Image -> Question.Image(
                 title ?: prevQuestion.text,
-                "${urlSource ?: prevQuestion}",
+                urlSource ?: prevQuestion.mediaUri,
             )
 
             Question.Type.Audio -> Question.Audio(
                 title ?: prevQuestion.text,
-                "${urlSource ?: prevQuestion}",
+                urlSource ?: prevQuestion.mediaUri,
             )
 
             Question.Type.Video -> Question.Video(
                 title ?: prevQuestion.text,
-                "${urlSource ?: prevQuestion}",
+                urlSource ?: prevQuestion.mediaUri,
             )
 
             else -> null
@@ -679,7 +688,7 @@ internal class CreateProblemViewModel @Inject constructor(
         urlSource: String?,
     ): Answer {
         return when (answerType) {
-            Answer.Type.ShortAnswer -> this.toShort(answer)
+            Answer.Type.ShortAnswer -> this.toShort()
             Answer.Type.Choice -> this.toChoice(answerIndex, answer)
             Answer.Type.ImageChoice -> this.toImageChoice(answerIndex, answer, urlSource)
         }
@@ -878,7 +887,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 추천 검색 목록에서 헤더(1번째 항목) 이외의 항목을 클릭한다. */
-    internal suspend fun onClickSearchList(index: Int) {
+    internal fun onClickSearchList(index: Int) {
         val state = container.stateFlow.value
         val tagText = when (state.findResultType) {
             FindResultType.MainTag ->
@@ -887,12 +896,7 @@ internal class CreateProblemViewModel @Inject constructor(
             FindResultType.SubTags -> state.additionalInfo.searchSubTags.searchResults[index]
         }
 
-        runCatching { tagRepository.create(tagText) }
-            .onSuccess {
-                exitSearchScreenAfterAddTag(it)
-            }.onFailure {
-                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
-            }
+        exitSearchScreenAfterAddTag(tagText)
     }
 
     /**

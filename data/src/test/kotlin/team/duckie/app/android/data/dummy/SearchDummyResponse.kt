@@ -14,7 +14,6 @@ object SearchDummyResponse {
     const val RawData = ""
 
     val DomainData = Search.TagSearch(
-        page = 1,
         tags = persistentListOf(),
     )
 }

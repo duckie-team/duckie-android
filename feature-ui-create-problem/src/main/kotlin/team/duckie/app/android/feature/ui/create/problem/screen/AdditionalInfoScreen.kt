@@ -81,6 +81,7 @@ import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.util.kotlin.takeBy
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackImage
@@ -95,6 +96,8 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 private const val TopAppBarLayoutId = "AdditionalInfoScreenTopAppBarLayoutId"
 private const val ContentLayoutId = "AdditionalInfoScreenContentLayoutId"
 private const val BottomLayoutId = "AdditionalInfoScreenBottomLayoutId"
+
+private const val TakeTitleMaxLength = 12
 
 /** 문제 만들기 3단계 (추가정보 입력) Screen */
 @Composable
@@ -202,7 +205,7 @@ internal fun AdditionalInformationScreen(
                         title = "기본 썸네일",
                         src = rootState.defaultThumbnail,
                         onClick = {
-                            vm.selectThumbnail(thumbnailType = ThumbnailType.Default)
+                            vm.selectThumbnail(thumbnailType = ThumbnailType.Text)
                             coroutineScope.launch {
                                 sheetState.hide()
                             }
@@ -370,7 +373,14 @@ private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel(
     ) {
         QuackBasicTextField(
             text = state.takeTitle,
-            onTextChanged = vm::setButtonTitle,
+            onTextChanged = {
+                vm.setButtonTitle(
+                    it.takeBy(
+                        TakeTitleMaxLength,
+                        state.takeTitle,
+                    ),
+                )
+            },
             placeholderText = stringResource(id = R.string.additional_information_take_input_hint),
             keyboardOptions = ImeActionNext,
         )

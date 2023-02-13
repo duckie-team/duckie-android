@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.data.exam.model
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
 internal data class ExamBodyData(
@@ -40,6 +41,7 @@ internal data class ExamBodyData(
     @field:JsonProperty("problems")
     val problems: List<ProblemData>? = null,
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @field:JsonProperty("status")
     val status: String? = null,
 )

@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.answer.answerSection
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.common.CloseAndPageTopBar
@@ -79,10 +80,17 @@ internal fun SolveProblemScreen(
                     question = state.problems[pageIndex].question,
                 )
                 // TODO(riflockle7): problem 엔티티 commit
+                val answer = state.problems[pageIndex].answer
                 answerSection(
                     page = pageIndex,
-                    answer = state.problems[pageIndex].answer
-                        ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
+                    answer = when (answer) {
+                        is Answer.Short -> Answer.Short(
+                            state.problems[pageIndex].correctAnswer
+                                ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
+                        )
+                        is Answer.Choice, is Answer.ImageChoice -> answer
+                        else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
+                    },
                     inputAnswers = state.inputAnswers,
                     onClickAnswer = viewModel::inputAnswer,
                     onSolveProblem = viewModel::moveNextPage,

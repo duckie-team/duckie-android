@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel.mapper
 
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
@@ -20,8 +19,7 @@ import team.duckie.app.android.util.kotlin.fastMap
 internal fun UserFollowing.toUiModel() =
     HomeState.RecommendUserByTopic(
         topic = category.name,
-        users = users?.fastMap(User::toUiModel)?.toPersistentList()
-            ?: persistentListOf(),
+        users = users.fastMap(User::toUiModel).toPersistentList(),
     )
 
 internal fun RecommendationJumbotronItem.toUiModel() =

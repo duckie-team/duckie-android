@@ -14,7 +14,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
 enum class ThumbnailType(val value: String) {
-    Default("default"),
+    Text("text"),
     Image("image"),
 }
 

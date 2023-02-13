@@ -17,6 +17,7 @@ import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.feature.datastore.me
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 internal data class CreateProblemState(
@@ -50,14 +51,11 @@ internal data class CreateProblemState(
                 category = selectedCategory?.name ?: duckieResponseFieldNpe("선택된 카테고리가 있어야 합니다."),
                 certifyingStatement = certifyingStatement,
                 mainTag = mainTag,
-                // TODO(riflockle7): 유저 데이터 활용 가능해질 시 처리 필요
-                nickName = "nickname",
+                nickName = me.nickname,
                 title = examTitle,
-                // TODO(riflockle7): 기획이 나오는대로 해당 값 처리 방법 구현해야 함
-                type = "text",
+                type = ThumbnailType.Text.value,
             )
 
-        // TODO(riflockle7):
         val selectedCategory: Category?
             get() = if (categorySelection == -1) {
                 null
@@ -84,7 +82,7 @@ internal data class CreateProblemState(
     /** 문제 만들기 3단계 화면에서 사용하는 data 모음 */
     data class AdditionInfo(
         val thumbnail: Any = "",
-        val thumbnailType: ThumbnailType = ThumbnailType.Default,
+        val thumbnailType: ThumbnailType = ThumbnailType.Text,
         val takeTitle: String = "",
         val isSubTagsAdded: Boolean = false,
         val searchSubTags: SearchScreenData = SearchScreenData(),
@@ -95,13 +93,7 @@ internal data class CreateProblemState(
 }
 
 data class SearchScreenData(
-    val searchResults: ImmutableList<String> = persistentListOf(
-        // TODO(EvergreenTree97): Server Request
-        "도로",
-        "도로 주행",
-        "도로 셀카",
-        "도로 패션",
-    ),
+    val searchResults: ImmutableList<Tag> = persistentListOf(),
     val textFieldValue: String = "",
     val results: ImmutableList<Tag> = persistentListOf(),
 )
