@@ -27,6 +27,7 @@ internal data class HomeState(
     val jumbotrons: ImmutableList<HomeRecommendJumbotron> = persistentListOf(),
     val recommendTopics: ImmutableList<RecommendTopic> = persistentListOf(),
 
+    val isFollowingExist: Boolean = true,
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
     val recommendFollowingTest: ImmutableList<FollowingTest> = persistentListOf(),
 

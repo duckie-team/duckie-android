@@ -7,35 +7,31 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel.mapper
 
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.kotlin.fastMap
 
-// TODO(riflockle7): GET /users/following API commit
 internal fun UserFollowing.toUiModel() =
     HomeState.RecommendUserByTopic(
         topic = category.name,
-        users = users?.fastMap(User::toUiModel)?.toPersistentList()
-            ?: persistentListOf(),
+        users = users.fastMap(User::toUiModel).toPersistentList(),
     )
 
-internal fun RecommendationJumbotronItem.toUiModel() =
+internal fun Exam.toJumbotronModel() =
     HomeState.HomeRecommendJumbotron(
         id = id,
         coverUrl = thumbnailUrl,
         title = title,
-        content = description,
-        buttonContent = buttonTitle,
-        type = type,
+        content = description ?: "",
+        buttonContent = buttonTitle ?: "",
+        type = ExamType.toExamType(type ?: ""),
     )
 
 internal fun User.toUiModel() =
-    // TODO(riflockle7): user 엔티티 commit
     HomeState.RecommendUserByTopic.User(
         userId = id,
         profileImgUrl = profileImageUrl ?: "",
@@ -44,8 +40,7 @@ internal fun User.toUiModel() =
         tier = duckPower?.tier ?: "",
     )
 
-internal fun Exam.toUiModel() =
-    // TODO(riflockle7): exam 엔티티 commit
+internal fun Exam.toFollowingModel() =
     HomeState.FollowingTest(
         coverUrl = thumbnailUrl,
         title = title,

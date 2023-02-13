@@ -171,6 +171,9 @@ class HomeActivity : BaseActivity() {
             is HomeSideEffect.NavigateToCreateProblem -> {
                 startActivityWithAnimation<CreateProblemActivity>()
             }
+            is HomeSideEffect.NavigateToNonFollowingPage -> {
+
+            }
         }
     }
 }

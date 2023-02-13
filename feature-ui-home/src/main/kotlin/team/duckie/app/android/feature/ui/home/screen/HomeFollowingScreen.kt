@@ -63,6 +63,10 @@ internal fun HomeRecommendFollowingTestScreen(
 ) {
     val state = vm.collectAsState().value
 
+    LaunchedEffect(Unit) {
+        vm.fetchRecommendFollowingTest()
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(24.dp),
@@ -148,8 +152,14 @@ internal fun HomeRecommendFollowingScreen(
                 modifier = Modifier.padding(bottom = 16.dp),
                 topic = categories.topic,
                 recommendUser = categories.users,
-                onClickFollowing = {
-                    // TODO (limsaehyun): viewModel에서 Following 필요
+                onClickFollowing = { userId ->
+                   vm.followingUser(
+                       userId = userId,
+                       isFollowing = state.recommendFollowing
+                           .flatMap { it.users }
+                           .first { it.userId == userId }
+                           .isFollowing,
+                   )
                 },
             )
         }
@@ -175,17 +185,14 @@ private fun HomeFollowingInitialRecommendUsers(
             text = topic,
         )
         recommendUser.fastForEach { user ->
-            var following by remember { mutableStateOf(false) }
-
             UserFollowingLayout(
                 userId = user.userId,
                 profileImgUrl = user.profileImgUrl,
                 nickname = user.nickname,
                 favoriteTag = user.favoriteTag,
                 tier = user.tier,
-                isFollowing = following,
-                onClickFollowing = {
-                    following = !following
+                isFollowing = user.isFollowing,
+                onClickFollowing = { userId ->
                     onClickFollowing(user.userId)
                 },
             )

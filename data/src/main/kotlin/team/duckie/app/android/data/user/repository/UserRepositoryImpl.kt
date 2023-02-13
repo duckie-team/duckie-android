@@ -90,9 +90,8 @@ class UserRepositoryImpl @Inject constructor(private val fuel: Fuel) : UserRepos
     override suspend fun fetchUserFollowing(userId: Int): UserFollowings =
         withContext(Dispatchers.IO) {
             val (_, response) = fuel
-                .post(
+                .get(
                     "/users/following",
-                    listOf("userId" to userId),
                 )
                 .responseString()
 

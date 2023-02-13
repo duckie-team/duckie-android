@@ -17,6 +17,7 @@ import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.recommendation.model.RecommendationData
 import team.duckie.app.android.data.recommendation.model.RecommendationItemData
 import team.duckie.app.android.data.tag.mapper.toDomain
+import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
@@ -24,8 +25,7 @@ import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
 internal fun RecommendationData.toDomain() = RecommendationFeeds(
-    jumbotrons = jumbotrons?.fastMap(RecommendationJumbotronItemData::toDomain)?.toPersistentList()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.jumbotrons"),
+    jumbotrons = jumbotrons?.fastMap(ExamData::toDomain)?.toPersistentList(),
     recommendations = recommendations?.fastMap(RecommendationItemData::toDomain)?.toPersistentList()
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.recommendations"),
     page = page,

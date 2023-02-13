@@ -58,9 +58,6 @@ internal fun UserFollowingResponse.toDomain() = UserFollowing(
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.category"),
     users = users?.fastMap(UserResponse::toDomain)
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
-    duckPower = duckPower?.toDomain()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.duckPower"),
-    follow = follow?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.follow"),
 )
 
 internal fun UserFollowingsResponse.toDomain() = UserFollowings(

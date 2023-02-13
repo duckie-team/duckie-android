@@ -31,11 +31,6 @@ internal fun DuckieHomeScreen(
 ) {
     val state = vm.collectAsState().value
 
-    LaunchedEffect(Unit) {
-        vm.fetchRecommendFollowingTest()
-        vm.fetchJumbotrons()
-    }
-
     Box(
         modifier = Modifier,
         contentAlignment = Alignment.Center,
@@ -52,7 +47,7 @@ internal fun DuckieHomeScreen(
                     HomeRecommendScreen()
                 }
                 HomeStep.HomeFollowingScreen -> {
-                    if (state.recommendFollowingTest.isNotEmpty()) {
+                    if (state.isFollowingExist) {
                         HomeRecommendFollowingTestScreen(
                             modifier = Modifier.padding(HomeHorizontalPadding),
                         )

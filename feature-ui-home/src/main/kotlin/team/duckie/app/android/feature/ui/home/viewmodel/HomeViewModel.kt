@@ -14,17 +14,20 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import javax.inject.Inject
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.follow.model.FollowBody
+import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
-import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.usecase.FetchExamMeFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
@@ -33,9 +36,13 @@ import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.feature.datastore.me
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
+import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toFollowingModel
+import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.util.kotlin.DuckieResponseException
+import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
 
 @HiltViewModel
@@ -44,75 +51,103 @@ internal class HomeViewModel @Inject constructor(
     private val fetchJumbotronsUseCase: FetchJumbotronsUseCase,
     private val fetchExamMeFollowingUseCase: FetchExamMeFollowingUseCase,
     private val fetchUserFollowingUseCase: FetchUserFollowingUseCase,
+    private val followUseCase: FollowUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
     override val container = container<HomeState, HomeSideEffect>(HomeState(me))
     internal val pagingDataFlow: Flow<PagingData<RecommendationItem>>
 
     init {
+        fetchJumbotrons()
         pagingDataFlow = fetchRecommendations()
     }
 
-    fun fetchRecommendations() =
+    private fun fetchRecommendations() =
         fetchRecommendationsUseCase()
             .cachedIn(viewModelScope)
 
-    // TODO(limsaehyun: Request Server
-    fun fetchJumbotrons() = intent {
-        updateHomeLoading(true)
-        // TODO(riflockle7): GET /recommendations API commit (params)
-        fetchJumbotronsUseCase()
-            .onSuccess { jumbotrons ->
-                reduce {
-                    state.copy(
-                        jumbotrons = jumbotrons
-                            .fastMap(RecommendationJumbotronItem::toUiModel)
-                            .toPersistentList(),
-                    )
+    private fun fetchJumbotrons() = intent {
+        viewModelScope.launch {
+            updateHomeLoading(true)
+            fetchJumbotronsUseCase()
+                .onSuccess { jumbotrons ->
+                    reduce {
+                        state.copy(
+                            jumbotrons = jumbotrons
+                                .fastMap(Exam::toJumbotronModel)
+                                .toPersistentList(),
+                        )
+                    }
+                }.onFailure { exception ->
+                    postSideEffect(HomeSideEffect.ReportError(exception))
+                }.also {
+                    updateHomeLoading(false)
                 }
-            }.onFailure { exception ->
-                postSideEffect(HomeSideEffect.ReportError(exception))
-            }.also {
-                updateHomeLoading(false)
-            }
+        }
     }
 
     fun fetchRecommendFollowingTest() = intent {
-        updateHomeLoading(true)
-        // TODO(riflockle7): GET /exams/me/following API commit (params)
-        fetchExamMeFollowingUseCase()
-            .onSuccess { exams ->
-                reduce {
-                    state.copy(
-                        recommendFollowingTest = exams
-                            .fastMap(Exam::toUiModel)
-                            .toPersistentList(),
-                    )
+        viewModelScope.launch {
+            updateHomeLoading(true)
+            fetchExamMeFollowingUseCase()
+                .onSuccess { exams ->
+                    reduce {
+                        state.copy(
+                            recommendFollowingTest = exams
+                                .fastMap(Exam::toFollowingModel)
+                                .toPersistentList(),
+                        )
+                    }
                 }
-            }.onFailure { exception ->
-                postSideEffect(HomeSideEffect.ReportError(exception))
-            }.also {
-                updateHomeLoading(false)
-            }
+                .onFailure { exception ->
+                    if ((exception as? DuckieResponseException)?.code == "FOLLOWING_NOT_FOUND") {
+                        reduce {
+                            state.copy(
+                                isFollowingExist = false,
+                            )
+                        }
+                        return@onFailure
+                    }
+                    postSideEffect(HomeSideEffect.ReportError(exception))
+                }.also {
+                    updateHomeLoading(false)
+                }
+        }
     }
 
     fun fetchRecommendFollowing() = intent {
-        updateHomeLoading(true)
-        // TODO(riflockle7): GET /users/following API commit (params)
-        fetchUserFollowingUseCase(state.me.id)
-            .onSuccess { userFollowing ->
-                reduce {
-                    state.copy(
-                        recommendFollowing = userFollowing.followingRecommendations.fastMap(
-                            UserFollowing::toUiModel,
-                        ).toPersistentList(),
-                    )
+        viewModelScope.launch {
+            updateHomeLoading(true)
+            fetchUserFollowingUseCase(state.me.id)
+                .onSuccess { userFollowing ->
+                    reduce {
+                        state.copy(
+                            recommendFollowing = userFollowing.followingRecommendations.fastMap(
+                                UserFollowing::toUiModel,
+                            ).toPersistentList(),
+                        )
+                    }
+                }.onFailure { exception ->
+                    postSideEffect(HomeSideEffect.ReportError(exception))
+                }.also {
+                    updateHomeLoading(false)
                 }
+        }
+    }
+
+    fun followingUser(userId: Int, isFollowing: Boolean) = intent {
+        viewModelScope.launch {
+            followUseCase(
+                followBody = FollowBody(
+                    followingId = userId,
+                ),
+                isFollowing = isFollowing,
+            ).onSuccess {
+                fetchRecommendFollowing()
             }.onFailure { exception ->
                 postSideEffect(HomeSideEffect.ReportError(exception))
-            }.also {
-                updateHomeLoading(false)
             }
+        }
     }
 
     private fun updateHomeLoading(
@@ -163,7 +198,7 @@ internal class HomeViewModel @Inject constructor(
 
     fun navigateToCreateProblem() = intent {
         postSideEffect(
-            HomeSideEffect.NavigateToCreateProblem(),
+            HomeSideEffect.NavigateToCreateProblem,
         )
     }
 }

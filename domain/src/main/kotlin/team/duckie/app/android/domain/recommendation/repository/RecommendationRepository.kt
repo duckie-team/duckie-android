@@ -9,7 +9,9 @@ package team.duckie.app.android.domain.recommendation.repository
 
 import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
+import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
@@ -23,7 +25,7 @@ import team.duckie.app.android.domain.recommendation.model.SearchType
 interface RecommendationRepository {
     fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>
 
-    suspend fun fetchJumbotrons(page: Int): List<RecommendationJumbotronItem>
+    suspend fun fetchJumbotrons(page: Int): ImmutableList<Exam>
 
     suspend fun fetchRecommendTags(
         tag: String,

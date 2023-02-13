@@ -13,6 +13,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.github.kittinunf.fuel.Fuel
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -20,12 +21,14 @@ import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data.recommendation.mapper.toDomain
 import team.duckie.app.android.data.recommendation.model.RecommendationData
 import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSource
+import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import team.duckie.app.android.util.kotlin.ExperimentalApi
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import javax.inject.Inject
 
 /**
@@ -36,6 +39,7 @@ internal const val ITEMS_PER_PAGE = 16
 class RecommendationRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
 ) : RecommendationRepository {
+
     @ExperimentalApi
     override fun fetchRecommendations(): Flow<PagingData<RecommendationItem>> {
         return Pager(
@@ -70,22 +74,23 @@ class RecommendationRepositoryImpl @Inject constructor(
 
     // TODO(riflockle7): GET /recommendations API commit
     @ExperimentalApi
-    override suspend fun fetchJumbotrons(page: Int): List<RecommendationJumbotronItem> =
+    override suspend fun fetchJumbotrons(page: Int): ImmutableList<Exam> =
         withContext(Dispatchers.IO) {
-        val (_, response) = fuel
-            .get(
-                "/recommendations",
-                listOf("page" to page),
+            val (_, response) = fuel
+                .get(
+                    "/recommendations",
+                    listOf("page" to 1),
+                )
+                .responseString()
+
+            val apiResponse = responseCatchingFuel(
+                response = response,
+                parse = RecommendationData::toDomain,
             )
-            .responseString()
 
-        val apiResponse = responseCatchingFuel(
-            response = response,
-            parse = RecommendationData::toDomain,
-        )
-
-        return@withContext apiResponse.jumbotrons
-    }
+            // 예외적으로 page가 1일 경우에는 jumbotrons이 누락되면 안된다.
+            return@withContext apiResponse.jumbotrons ?: duckieResponseFieldNpe("jumbotron")
+        }
 
     @ExperimentalApi
     override suspend fun fetchRecommendTags(

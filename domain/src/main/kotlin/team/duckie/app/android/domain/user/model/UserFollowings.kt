@@ -21,6 +21,4 @@ data class UserFollowings(
 data class UserFollowing(
     val category: Category,
     val users: List<User>,
-    val duckPower: DuckPower,
-    val follow: Follow,
 )
