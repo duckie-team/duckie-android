@@ -36,8 +36,7 @@ class ExamResultViewModel @Inject constructor(
 
     fun initState() {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        val submitted = savedStateHandle
-            .getStateFlow(Extras.Submitted, emptyList<String>()).value
+        val submitted = savedStateHandle.getStateFlow(Extras.Submitted, emptyArray<String>()).value.toList()
 
         if (examId == -1 || submitted.isEmpty()) {
             throw DuckieClientLogicProblemException(code = "")
@@ -46,7 +45,7 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
-    fun getReport(
+    private fun getReport(
         examId: Int,
         submitted: ExamInstanceSubmitBody,
     ) = intent {
@@ -58,7 +57,6 @@ class ExamResultViewModel @Inject constructor(
             body = submitted,
         ).onSuccess { submit: ExamInstanceSubmit ->
             reduce {
-                makeExamInstanceSubmitUseCase
                 state.copy(
                     isReportLoading = false,
                     reportUrl = submit.examScoreImageUrl,
@@ -68,5 +66,9 @@ class ExamResultViewModel @Inject constructor(
             it.printStackTrace()
             postSideEffect(ExamResultSideEffect.ReportError(it))
         }
+    }
+
+    fun clickRetry(message: String) = intent{
+        postSideEffect(ExamResultSideEffect.SendToast(message))
     }
 }
