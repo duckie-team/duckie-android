@@ -60,11 +60,11 @@ internal class StartExamViewModel @Inject constructor(
         return (container.stateFlow.value as? StartExamState.Input)?.isCertified == true
     }
 
-    /** 시험 시작 화면을 종료한다. */
-    fun finishStartExam() = intent {
+    /** 문제 풀기 화면을 실행한다 */
+    fun startSolveProblem() = intent {
         val inputState = state as StartExamState.Input
         postSideEffect(
-            StartExamSideEffect.FinishStartExam(
+            StartExamSideEffect.NavigateToSolveProblem(
                 startExamValidate(),
                 inputState.examId,
             )
@@ -72,13 +72,7 @@ internal class StartExamViewModel @Inject constructor(
     }
 
     /** 시험 시작 화면을 종료한다. */
-    fun clickStartExam() = intent {
-        val inputState = state as StartExamState.Input
-        makeExamInstanceUseCase(body = ExamInstanceBody(inputState.examId)).onSuccess {
-            finishStartExam()
-        }.onFailure {
-            it.printStackTrace()
-            postSideEffect(StartExamSideEffect.ReportError(it))
-        }
+    fun finishStartExam() = intent {
+        postSideEffect(StartExamSideEffect.FinishStartExam)
     }
 }

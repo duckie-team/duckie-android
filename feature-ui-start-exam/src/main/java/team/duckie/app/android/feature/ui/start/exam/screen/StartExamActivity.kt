@@ -55,15 +55,18 @@ class StartExamActivity : BaseActivity() {
 
     private fun handleSideEffect(sideEffect: StartExamSideEffect) {
         when (sideEffect) {
-            is StartExamSideEffect.FinishStartExam -> {
+            is StartExamSideEffect.NavigateToSolveProblem -> {
                 if (sideEffect.certified) {
                     startActivityWithAnimation<SolveProblemActivity>(
                         intentBuilder = { putExtra(Extras.ExamId, sideEffect.examId) },
                     )
                 } else {
-                    Log.i("riflockle7", "화면 종료")
                     finishWithAnimation()
                 }
+            }
+
+            StartExamSideEffect.FinishStartExam -> {
+                finishWithAnimation()
             }
 
             is StartExamSideEffect.ReportError -> {
