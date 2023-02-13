@@ -16,10 +16,9 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
-import team.duckie.app.android.domain.exam.usecase.MakeExamInstanceUseCase
+import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceUseCase
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.DuckieClientLogicProblemException
-import team.duckie.app.android.util.kotlin.OutOfDateApi
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -73,7 +72,6 @@ internal class StartExamViewModel @Inject constructor(
     }
 
     /** 시험 시작 화면을 종료한다. */
-    @OptIn(OutOfDateApi::class)
     fun clickStartExam() = intent {
         val inputState = state as StartExamState.Input
         makeExamInstanceUseCase(body = ExamInstanceBody(inputState.examId)).onSuccess {
