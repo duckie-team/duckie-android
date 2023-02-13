@@ -14,7 +14,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.persistentListOf
 import javax.inject.Inject
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
@@ -42,7 +41,6 @@ import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.kotlin.DuckieResponseException
-import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
 
 @HiltViewModel
@@ -135,7 +133,7 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    fun followingUser(userId: Int, isFollowing: Boolean) = intent {
+    fun followUser(userId: Int, isFollowing: Boolean) = intent {
         viewModelScope.launch {
             followUseCase(
                 followBody = FollowBody(

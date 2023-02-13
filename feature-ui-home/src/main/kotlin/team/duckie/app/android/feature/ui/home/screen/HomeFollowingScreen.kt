@@ -23,10 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -152,14 +148,8 @@ internal fun HomeRecommendFollowingScreen(
                 modifier = Modifier.padding(bottom = 16.dp),
                 topic = categories.topic,
                 recommendUser = categories.users,
-                onClickFollowing = { userId ->
-                   vm.followingUser(
-                       userId = userId,
-                       isFollowing = state.recommendFollowing
-                           .flatMap { it.users }
-                           .first { it.userId == userId }
-                           .isFollowing,
-                   )
+                onClickFollowing = { userId, isFollowing ->
+                    vm.followUser(userId, isFollowing)
                 },
             )
         }
@@ -171,7 +161,7 @@ private fun HomeFollowingInitialRecommendUsers(
     modifier: Modifier = Modifier,
     topic: String,
     recommendUser: ImmutableList<HomeState.RecommendUserByTopic.User>,
-    onClickFollowing: (Int) -> Unit,
+    onClickFollowing: (Int, Boolean) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -192,8 +182,8 @@ private fun HomeFollowingInitialRecommendUsers(
                 favoriteTag = user.favoriteTag,
                 tier = user.tier,
                 isFollowing = user.isFollowing,
-                onClickFollowing = { userId ->
-                    onClickFollowing(user.userId)
+                onClickFollowing = {
+                    onClickFollowing(user.userId, user.isFollowing)
                 },
             )
         }

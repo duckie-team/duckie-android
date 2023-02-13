@@ -17,7 +17,6 @@ import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.recommendation.model.RecommendationData
 import team.duckie.app.android.data.recommendation.model.RecommendationItemData
 import team.duckie.app.android.data.tag.mapper.toDomain
-import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem

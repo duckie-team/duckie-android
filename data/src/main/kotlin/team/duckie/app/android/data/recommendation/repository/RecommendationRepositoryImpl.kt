@@ -24,8 +24,6 @@ import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSo
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
-import team.duckie.app.android.domain.recommendation.model.RecommendationJumbotronItem
-import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe

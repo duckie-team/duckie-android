@@ -33,8 +33,8 @@ internal class RecommendationPagingSource(
             val response = fetchRecommendations(currentPage)
             LoadResult.Page(
                 data = response.recommendations,
-                prevKey = if(currentPage == STARTING_KEY) null else currentPage - 1,
-                nextKey = if(response.recommendations.isEmpty() || response.recommendations.size < ITEMS_PER_PAGE) null else currentPage + 1,
+                prevKey = if (currentPage == STARTING_KEY) null else currentPage - 1,
+                nextKey = if (response.recommendations.isEmpty() || response.recommendations.size < ITEMS_PER_PAGE) null else currentPage + 1,
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

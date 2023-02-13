@@ -9,7 +9,6 @@ package team.duckie.app.android.data.user.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.category.model.CategoryData
-import team.duckie.app.android.data.follow.model.FollowData
 
 internal data class UserFollowingResponse(
     @field:JsonProperty("category")
