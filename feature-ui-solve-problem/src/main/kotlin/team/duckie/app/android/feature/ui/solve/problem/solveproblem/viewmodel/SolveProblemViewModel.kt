@@ -7,44 +7,63 @@
 
 package team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.dummyList
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.state.SolveProblemState
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
+import team.duckie.app.android.util.kotlin.DuckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel
-internal class SolveProblemViewModel @Inject constructor() :
-    ViewModel(),
+internal class SolveProblemViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+    private val getExamInstanceUseCase: GetExamInstanceUseCase,
+) : ViewModel(),
     ContainerHost<SolveProblemState, SolveProblemSideEffect> {
     override val container: Container<SolveProblemState, SolveProblemSideEffect> = container(
         SolveProblemState(),
     )
 
-    @AllowMagicNumber
-    fun getProblems() = intent {
+    suspend fun initState() = intent {
+        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
+        if (examId != -1) {
+            reduce { state.copy(examId = examId) }
+            getProblems(examId)
+        } else {
+            throw DuckieClientLogicProblemException(code = "")
+        }
+    }
+
+    private suspend fun getProblems(examId: Int) = intent {
         reduce { state.copy(isProblemsLoading = true) }
-        delay(1000L)
-        reduce {
-            state.copy(
-                // TODO(EvergreenTree97): 네트워크 통신으로 변경 필요
-                isProblemsLoading = false,
-                problems = dummyList,
-                inputAnswers = ImmutableList(dummyList.size) { InputAnswer() },
-            )
+        getExamInstanceUseCase(id = examId).onSuccess { examInstance ->
+            reduce {
+                state.copy(
+                    isProblemsLoading = false,
+                    problems = examInstance.problemInstances?.toImmutableList()
+                        ?: persistentListOf(),
+                    inputAnswers = ImmutableList(dummyList.size) { InputAnswer() },
+                )
+            }
+        }.onFailure {
+            it.printStackTrace()
+            postSideEffect(SolveProblemSideEffect.ReportError(it))
         }
     }
 

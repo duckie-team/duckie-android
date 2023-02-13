@@ -43,7 +43,7 @@ class SolveProblemActivity : BaseActivity() {
                 val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
                 LaunchedEffect(Unit) {
-                    viewModel.getProblems()
+                    viewModel.initState()
                 }
 
                 Crossfade(targetState = state.isProblemsLoading) { isLoading ->
