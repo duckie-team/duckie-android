@@ -31,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import team.duckie.app.android.feature.ui.home.screen.HomeActivity
 import team.duckie.app.android.feature.ui.solve.problem.R
 import team.duckie.app.android.feature.ui.solve.problem.examresult.ExamResultActivity
 import team.duckie.app.android.feature.ui.solve.problem.examresult.viewmodel.ExamResultViewModel
@@ -58,7 +57,7 @@ internal fun ExamResultScreen(
     val activity = LocalContext.current as ExamResultActivity
 
     LaunchedEffect(Unit) {
-        viewModel.getReport()
+        viewModel.initState()
     }
 
     Scaffold(
@@ -104,7 +103,7 @@ internal fun ExamResultScreen(
                     text = stringResource(id = R.string.exit_exam),
                     enabled = true,
                     onClick = {
-                        activity.startActivityWithAnimation<HomeActivity>(withFinish = true)
+                        // activity.startActivityWithAnimation<HomeActivity>(withFinish = true)
                     },
                 )
             }
