@@ -91,8 +91,8 @@ internal fun ExamResultScreen(
                         .heightIn(min = 44.dp)
                         .weight(1f),
                     text = stringResource(id = R.string.solve_retry),
-                    onClick = {
-                        activity.startActivityWithAnimation<SolveProblemActivity>()
+                    onClick = { // TODO(EvergreenTree97) 해당 시험 본 적 있는지 플래그 생기면 enabled 설정 해야함
+                        viewModel.clickRetry(activity.getString(R.string.feature_prepare))
                     },
                 )
                 QuackSmallButton(
