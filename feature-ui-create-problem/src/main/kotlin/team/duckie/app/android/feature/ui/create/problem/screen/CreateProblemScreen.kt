@@ -82,6 +82,7 @@ import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
+import team.duckie.app.android.util.kotlin.takeBy
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
@@ -103,6 +104,7 @@ private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
 
 private const val MaximumChoice = 5
+private const val MinimumProblem = 5
 private const val MaximumProblem = 10
 private const val TextFieldMaxLength = 20
 
@@ -288,7 +290,10 @@ internal fun CreateProblemScreen(
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle.take(TextFieldMaxLength),
+                                            title = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                question.text,
+                                            ),
                                         )
                                     },
                                     imageClick = {
@@ -310,13 +315,16 @@ internal fun CreateProblemScreen(
                                             sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
-                                    answers = answers,
+                                    answer = correctAnswer,
                                     answerTextChanged = { newTitle, answerIndex ->
                                         vm.setAnswer(
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.ShortAnswer,
-                                            answer = newTitle.take(TextFieldMaxLength),
+                                            answer = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                state.correctAnswers[answerIndex],
+                                            ),
                                         )
                                     },
                                     deleteLongClick = {
@@ -331,7 +339,10 @@ internal fun CreateProblemScreen(
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle.take(TextFieldMaxLength),
+                                            title = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                question.text,
+                                            ),
                                         )
                                     },
                                     imageClick = {
@@ -359,7 +370,10 @@ internal fun CreateProblemScreen(
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.Choice,
-                                            answer = newTitle.take(TextFieldMaxLength),
+                                            answer = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                answers.choices[answerIndex].text,
+                                            ),
                                         )
                                     },
                                     addAnswerClick = {
@@ -387,7 +401,10 @@ internal fun CreateProblemScreen(
                                         vm.setQuestion(
                                             question.type,
                                             questionIndex,
-                                            title = newTitle.take(TextFieldMaxLength),
+                                            title = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                question.text,
+                                            ),
                                         )
                                     },
                                     imageClick = {
@@ -415,7 +432,10 @@ internal fun CreateProblemScreen(
                                             questionIndex,
                                             answerIndex,
                                             Answer.Type.ImageChoice,
-                                            answer = newTitle.take(TextFieldMaxLength),
+                                            answer = newTitle.takeBy(
+                                                TextFieldMaxLength,
+                                                answers.imageChoice[answerIndex].text,
+                                            ),
                                         )
                                     },
                                     answerImageClick = { answersIndex ->
@@ -481,7 +501,7 @@ internal fun CreateProblemScreen(
                             vm.navigateStep(CreateProblemStep.AdditionalInformation)
                         }
                     },
-                    isMaximumProblemCount = problemCount >= MaximumProblem,
+                    isProblemCountValidate = problemCount in MinimumProblem..MaximumProblem,
                     isValidateCheck = vm::createProblemIsValidate,
                 )
             },
@@ -664,7 +684,7 @@ private fun ChoiceProblemLayout(
 
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
             val answerNo = answerIndex + 1
-            val isChecked = correctAnswers == "$answerNo"
+            val isChecked = correctAnswers == "$answerIndex"
             QuackBorderTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -687,7 +707,9 @@ private fun ChoiceProblemLayout(
                 trailingContent = {
                     Column(
                         modifier = Modifier.quackClickable(
-                            onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
+                            onClick = {
+                                setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
+                            },
                         ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -761,7 +783,7 @@ private fun ImageChoiceProblemLayout(
             itemContent = { answerIndex ->
                 val answerNo = answerIndex + 1
                 val answerItem = answers.imageChoice[answerIndex]
-                val isChecked = correctAnswers == "$answerNo"
+                val isChecked = correctAnswers == "$answerIndex"
 
                 Column(
                     modifier = Modifier
@@ -770,7 +792,11 @@ private fun ImageChoiceProblemLayout(
                         .applyAnimatedQuackBorder(
                             border = QuackBorder(
                                 width = 1.dp,
-                                color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4,
+                                color = if (isChecked) {
+                                    QuackColor.DuckieOrange
+                                } else {
+                                    QuackColor.Gray4
+                                },
                             ),
                         )
                         .padding(12.dp),
@@ -781,7 +807,9 @@ private fun ImageChoiceProblemLayout(
                     ) {
                         QuackRoundCheckBox(
                             modifier = Modifier.quackClickable(
-                                onClick = { setCorrectAnswerClick(if (isChecked) "" else "$answerNo") },
+                                onClick = {
+                                    setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
+                                },
                             ),
                             checked = isChecked,
                         )
@@ -860,7 +888,7 @@ private fun ShortAnswerProblemLayout(
     titleChanged: (String) -> Unit,
     imageClick: () -> Unit,
     onDropdownItemClick: (Int) -> Unit,
-    answers: Answer.Short,
+    answer: String,
     answerTextChanged: (String, Int) -> Unit,
     deleteLongClick: () -> Unit,
 ) {
@@ -877,12 +905,12 @@ private fun ShortAnswerProblemLayout(
             question,
             titleChanged,
             imageClick,
-            answers.type.title,
+            Answer.Type.ShortAnswer.title,
             onDropdownItemClick,
         )
 
         QuackBasicTextField(
-            text = answers.answer.text,
+            text = answer,
             onTextChanged = { newAnswer -> answerTextChanged(newAnswer, 0) },
             placeholderText = stringResource(id = R.string.create_problem_short_answer_placeholder),
         )

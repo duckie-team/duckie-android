@@ -17,13 +17,12 @@ import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.domain.exam.model.ShortModel
 
 val dummyList = persistentListOf(
     Problem(
         id = 0,
         question = Question.Text(text = "신카이 마코토 명작"),
-        answer = Answer.Short(answer = ShortModel("너의 이름은")), // TODO(EvergreenTree97) : shortModel의 text 사라질 예정 https://sungbinland.slack.com/archives/C046SS32SEQ/p1674473739721859?thread_ts=1674472301.086009&cid=C046SS32SEQ
+        answer = Answer.Short(),
         hint = null,
         memo = null,
         correctAnswer = "너의 이름은",

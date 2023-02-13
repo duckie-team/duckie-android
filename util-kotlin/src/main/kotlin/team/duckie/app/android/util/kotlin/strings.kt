@@ -19,3 +19,15 @@ inline val Number.percents: String
         this is Double -> "${(this * 100).toInt()}%"
         else -> "$this%"
     }
+
+/**
+ * 현재 문자열에서 [최대 허용 길이][maximumLength] 만큼의 문자열을 반환한다.
+ * [최대 허용 길이][maximumLength] 를 넘을 시 [이전 값][prevValue]을 반환한다.
+ */
+fun String.takeBy(maximumLength: Int, prevValue: String): String {
+    return if (this.length > maximumLength) {
+        prevValue
+    } else {
+        this.take(maximumLength)
+    }
+}

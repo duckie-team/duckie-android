@@ -163,7 +163,7 @@ internal fun SearchTagScreen(
                     )
                 }
                 itemsIndexed(
-                    items = state.searchResults,
+                    items = state.searchResults.fastMap { it.name },
                     key = { _, item -> item },
                 ) { index: Int, item: String ->
                     SearchResultText(
