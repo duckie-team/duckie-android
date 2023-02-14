@@ -86,7 +86,7 @@ firebase-plugin-performance = "1.4.2"
 login-kakao = "2.12.1"
 
 # di
-di-hilt = "2.44.2"
+di-hilt = "2.45"
 di-inject = "1"
 
 # ktor
