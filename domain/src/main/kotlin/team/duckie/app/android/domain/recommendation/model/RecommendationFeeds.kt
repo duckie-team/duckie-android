@@ -9,10 +9,11 @@ package team.duckie.app.android.domain.recommendation.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.domain.exam.model.Exam
 
 @Immutable
 data class RecommendationFeeds(
-    val jumbotrons: ImmutableList<RecommendationJumbotronItem>,
+    val jumbotrons: ImmutableList<Exam>?,
     val recommendations: ImmutableList<RecommendationItem>,
     val page: Int?,
 )

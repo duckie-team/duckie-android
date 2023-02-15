@@ -23,10 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -62,6 +58,10 @@ internal fun HomeRecommendFollowingTestScreen(
     vm: HomeViewModel = activityViewModel(),
 ) {
     val state = vm.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        vm.fetchRecommendFollowingTest()
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -148,8 +148,8 @@ internal fun HomeRecommendFollowingScreen(
                 modifier = Modifier.padding(bottom = 16.dp),
                 topic = categories.topic,
                 recommendUser = categories.users,
-                onClickFollowing = {
-                    // TODO (limsaehyun): viewModel에서 Following 필요
+                onClickFollowing = { userId, isFollowing ->
+                    vm.followUser(userId, isFollowing)
                 },
             )
         }
@@ -161,7 +161,7 @@ private fun HomeFollowingInitialRecommendUsers(
     modifier: Modifier = Modifier,
     topic: String,
     recommendUser: ImmutableList<HomeState.RecommendUserByTopic.User>,
-    onClickFollowing: (Int) -> Unit,
+    onClickFollowing: (Int, Boolean) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -175,18 +175,15 @@ private fun HomeFollowingInitialRecommendUsers(
             text = topic,
         )
         recommendUser.fastForEach { user ->
-            var following by remember { mutableStateOf(false) }
-
             UserFollowingLayout(
                 userId = user.userId,
                 profileImgUrl = user.profileImgUrl,
                 nickname = user.nickname,
                 favoriteTag = user.favoriteTag,
                 tier = user.tier,
-                isFollowing = following,
-                onClickFollowing = {
-                    following = !following
-                    onClickFollowing(user.userId)
+                initalFollow = user.isFollowing,
+                onClickFollow = {
+                    onClickFollowing(user.userId, it)
                 },
             )
         }

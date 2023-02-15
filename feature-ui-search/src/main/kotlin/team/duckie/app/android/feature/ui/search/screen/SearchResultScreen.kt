@@ -105,8 +105,8 @@ internal fun SearchResultScreen(
                         nickname = item.nickname,
                         favoriteTag = item.favoriteTag,
                         tier = item.tier,
-                        isFollowing = item.isFollowing,
-                        onClickFollowing = {
+                        initalFollow = item.isFollowing,
+                        onClickFollow = {
                             // TODO(limsaehyun): following request
                         },
                     )

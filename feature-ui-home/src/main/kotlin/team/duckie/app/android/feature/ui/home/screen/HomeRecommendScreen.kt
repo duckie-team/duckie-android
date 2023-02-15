@@ -65,11 +65,10 @@ internal fun HomeRecommendScreen(
     val state = vm.collectAsState().value
     val pageState = rememberPagerState()
 
-    val lazyRecommendations = vm.fetchRecommendations().collectAsLazyPagingItems()
+    val lazyRecommendations = vm.pagingDataFlow.collectAsLazyPagingItems()
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
             HomeTopAppBar(

@@ -9,7 +9,6 @@ package team.duckie.app.android.data.user.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.category.model.CategoryData
-import team.duckie.app.android.data.follow.model.FollowData
 
 internal data class UserFollowingResponse(
     @field:JsonProperty("category")
@@ -17,12 +16,6 @@ internal data class UserFollowingResponse(
 
     @field:JsonProperty("users")
     val users: List<UserResponse>? = null,
-
-    @field:JsonProperty("duckPower")
-    val duckPower: DuckPowerResponse? = null,
-
-    @field:JsonProperty("follow")
-    val follow: FollowData? = null,
 )
 
 // TODO(riflockle7): value class 적용 검토하기
