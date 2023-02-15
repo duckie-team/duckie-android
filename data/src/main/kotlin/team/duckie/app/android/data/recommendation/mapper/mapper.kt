@@ -24,8 +24,7 @@ import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
 internal fun RecommendationData.toDomain() = RecommendationFeeds(
-    jumbotrons = jumbotrons?.fastMap(RecommendationJumbotronItemData::toDomain)?.toPersistentList()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.jumbotrons"),
+    jumbotrons = jumbotrons?.fastMap(ExamData::toDomain)?.toPersistentList(),
     recommendations = recommendations?.fastMap(RecommendationItemData::toDomain)?.toPersistentList()
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.recommendations"),
     page = page,

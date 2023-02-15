@@ -15,8 +15,6 @@ import team.duckie.app.android.domain.tag.model.Tag
  * 덕질고사 타입
  *
  * [Text] 텍스트로 이루어진 타입
- *
- * TODO(limsaehyun): 백엔드 문서가 나오면 업데이트 필요
  */
 enum class ExamType(
     val original: String,

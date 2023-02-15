@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,11 +30,6 @@ internal fun DuckieHomeScreen(
 ) {
     val state = vm.collectAsState().value
 
-    LaunchedEffect(Unit) {
-        vm.fetchRecommendFollowingTest()
-        vm.fetchJumbotrons()
-    }
-
     Box(
         modifier = Modifier,
         contentAlignment = Alignment.Center,
@@ -52,7 +46,7 @@ internal fun DuckieHomeScreen(
                     HomeRecommendScreen()
                 }
                 HomeStep.HomeFollowingScreen -> {
-                    if (state.recommendFollowingTest.isNotEmpty()) {
+                    if (state.isFollowingExist) {
                         HomeRecommendFollowingTestScreen(
                             modifier = Modifier.padding(HomeHorizontalPadding),
                         )

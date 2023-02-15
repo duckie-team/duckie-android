@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -48,8 +52,8 @@ private const val UserInfoBlockFollowingButtonLayoutId = "UserInfoBlockFollowing
  * @param favoriteTag 관심 태그
  * @param tier 현재 덕력
  * @param onClickUserProfile 프로필 사진을 클릭 했을 때 실행되는 람다
- * @param isFollowing 팔로우 여부
- * @param onClickFollowing 팔로우 버튼을 클릭 했을 때 실행되는 람다
+ * @param initalFollow 팔로우 여부
+ * @param onClickFollow 팔로우 버튼을 클릭 했을 때 실행되는 람다
  */
 @Composable
 fun UserFollowingLayout(
@@ -59,10 +63,12 @@ fun UserFollowingLayout(
     nickname: String,
     favoriteTag: String,
     tier: String,
-    isFollowing: Boolean,
+    initalFollow: Boolean,
     onClickUserProfile: ((Int) -> Unit)? = null,
-    onClickFollowing: (Boolean) -> Unit,
+    onClickFollow: (Boolean) -> Unit,
 ) {
+    var isFollowing by remember { mutableStateOf(initalFollow) }
+
     Layout(
         modifier = modifier
             .fillMaxWidth()
@@ -98,7 +104,10 @@ fun UserFollowingLayout(
                 modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
                 text = if (isFollowing) stringResource(id = R.string.follow) else stringResource(id = R.string.following),
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
-                onClick = { onClickFollowing(!isFollowing) },
+                onClick = {
+                    isFollowing = !isFollowing
+                    onClickFollow(isFollowing)
+                },
                 rippleEnabled = false,
             )
         },
