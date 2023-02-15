@@ -32,7 +32,7 @@ inline fun <reified T : Activity> Activity.changeActivityWithAnimation(
  * @param intentBuilder 새로 시작할 액티비티의 [Intent]
  * @param withFinish 현재 액티비티를 종료할지 여부
  */
-inline fun <reified T : Activity> Activity. startActivityWithAnimation(
+inline fun <reified T : Activity> Activity.startActivityWithAnimation(
     intentBuilder: Intent.() -> Intent = { this },
     withFinish: Boolean = false,
 ) {

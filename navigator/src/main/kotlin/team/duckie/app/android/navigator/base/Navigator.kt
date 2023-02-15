@@ -7,9 +7,13 @@
 
 package team.duckie.app.android.navigator.base
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 
 interface Navigator {
-    fun intent(context: Context): Intent
+    fun navigateFrom(
+        activity: Activity,
+        intentBuilder: Intent.() -> Intent = { this },
+        withFinish: Boolean = false,
+    )
 }

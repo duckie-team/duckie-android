@@ -21,13 +21,13 @@ android {
 dependencies {
     implementations(
         projects.di,
+        projects.navigator,
         projects.utilUi,
         projects.utilCompose,
         projects.utilKotlin,
         projects.featureDatastore,
         projects.featureUiHome,
         projects.featureUiOnboard,
-        projects.featureUiSolveProblem,
         projects.utilExceptionHandling,
         projects.domain,
         libs.orbit.viewmodel,
