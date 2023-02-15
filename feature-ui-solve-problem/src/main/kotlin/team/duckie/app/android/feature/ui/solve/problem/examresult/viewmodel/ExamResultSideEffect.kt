@@ -8,5 +8,7 @@
 package team.duckie.app.android.feature.ui.solve.problem.examresult.viewmodel
 
 sealed class ExamResultSideEffect {
-    data class ReportError(val exception: Exception) : ExamResultSideEffect()
+    object FinishExamResult : ExamResultSideEffect()
+    data class SendToast(val message: String) : ExamResultSideEffect()
+    data class ReportError(val exception: Throwable) : ExamResultSideEffect()
 }

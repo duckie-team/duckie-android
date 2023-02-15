@@ -49,15 +49,17 @@ class DetailActivity : BaseActivity() {
         when (sideEffect) {
             is DetailSideEffect.ReportError -> {
                 sideEffect.exception.printStackTrace()
-                sideEffect.exception.reportToToast()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
+                sideEffect.exception.reportToToast()
             }
+
             is DetailSideEffect.StartExam -> startActivityWithAnimation<StartExamActivity>(
                 intentBuilder = {
                     putExtra(Extras.ExamId, sideEffect.examId)
                     putExtra(Extras.CertifyingStatement, sideEffect.certifyingStatement)
                 },
             )
+
             else -> {}
         }
     }

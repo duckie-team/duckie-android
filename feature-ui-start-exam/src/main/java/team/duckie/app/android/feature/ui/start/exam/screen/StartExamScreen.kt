@@ -131,7 +131,7 @@ internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewMo
             type = QuackLargeButtonType.Fill,
             text = stringResource(id = R.string.start_button),
             enabled = viewModel.startExamValidate(),
-            onClick = viewModel::finishStartExam,
+            onClick = viewModel::startSolveProblem,
         )
 
         ImeSpacer()

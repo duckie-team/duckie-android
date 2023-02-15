@@ -77,15 +77,15 @@ internal fun SolveProblemScreen(
             ) {
                 questionSection(
                     page = pageIndex,
-                    question = state.problems[pageIndex].question,
+                    question = state.problems[pageIndex].problem.question,
                 )
                 // TODO(riflockle7): problem 엔티티 commit
-                val answer = state.problems[pageIndex].answer
+                val answer = state.problems[pageIndex].problem.answer
                 answerSection(
                     page = pageIndex,
                     answer = when (answer) {
                         is Answer.Short -> Answer.Short(
-                            state.problems[pageIndex].correctAnswer
+                            state.problems[pageIndex].problem.correctAnswer
                                 ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
                         )
                         is Answer.Choice, is Answer.ImageChoice -> answer

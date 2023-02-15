@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.squareup.moshi.JsonClass
 
 internal data class ProblemData(
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -44,15 +45,18 @@ internal data class ProblemData(
     JsonSubTypes.Type(value = QuestionData.Audio::class, name = "audio"),
     JsonSubTypes.Type(value = QuestionData.Video::class, name = "video"),
 )
+@JsonClass(generateAdapter = true)
 internal sealed class QuestionData(
     open val type: String? = null,
     open val text: String? = null,
 ) {
+    @JsonClass(generateAdapter = true)
     internal data class Text(
         @field:JsonProperty("text")
         override val text: String? = null,
     ) : QuestionData("text", text)
 
+    @JsonClass(generateAdapter = true)
     internal data class Image(
         @field:JsonProperty("imageUrl")
         val imageUrl: String? = null,
@@ -61,6 +65,7 @@ internal sealed class QuestionData(
         override val text: String? = null,
     ) : QuestionData("image", text)
 
+    @JsonClass(generateAdapter = true)
     internal data class Audio(
         @field:JsonProperty("audioUrl")
         val audioUrl: String? = null,
@@ -69,6 +74,7 @@ internal sealed class QuestionData(
         override val text: String? = null,
     ) : QuestionData("audio", text)
 
+    @JsonClass(generateAdapter = true)
     internal data class Video(
         @field:JsonProperty("videoUrl")
         val videoUrl: String? = null,
@@ -88,16 +94,20 @@ internal sealed class QuestionData(
     JsonSubTypes.Type(value = AnswerData.Choice::class, name = "choice"),
     JsonSubTypes.Type(value = AnswerData.ImageChoice::class, name = "imageChoice"),
 )
+@JsonClass(generateAdapter = true)
 internal sealed class AnswerData(
     open val type: String? = null,
 ) {
+    @JsonClass(generateAdapter = true)
     internal class ShortAnswer : AnswerData("shortAnswer")
 
+    @JsonClass(generateAdapter = true)
     internal data class Choice(
         @field:JsonProperty("choices")
         val choices: List<ChoiceData>? = null,
     ) : AnswerData("choice")
 
+    @JsonClass(generateAdapter = true)
     internal data class ImageChoice(
         @field:JsonProperty("choices")
         val choices: List<ImageChoiceData>? = null,
