@@ -7,5 +7,10 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <application>
+        <activity
+            android:name="team.duckie.app.android.feature.ui.exam.result.ExamResultActivity"
+            android:exported="false">
+        </activity>
+    </application>
 </manifest>

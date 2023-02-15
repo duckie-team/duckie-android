@@ -21,20 +21,24 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
-import team.duckie.app.android.feature.ui.solve.problem.examresult.ExamResultActivity
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.common.LoadingIndicator
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.screen.SolveProblemScreen
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.SolveProblemViewModel
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.sideeffect.SolveProblemSideEffect
+import team.duckie.app.android.feature.ui.solve.problem.common.LoadingIndicator
+import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScreen
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
+import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SolveProblemActivity : BaseActivity() {
 
     private val viewModel: SolveProblemViewModel by viewModels()
+
+    @Inject
+    lateinit var examResultNavigator: ExamResultNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
