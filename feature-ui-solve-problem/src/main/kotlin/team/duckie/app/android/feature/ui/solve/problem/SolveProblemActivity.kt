@@ -7,7 +7,7 @@
 
 @file:OptIn(ExperimentalLifecycleComposeApi::class)
 
-package team.duckie.app.android.feature.ui.solve.problem.solveproblem
+package team.duckie.app.android.feature.ui.solve.problem
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -69,7 +69,8 @@ class SolveProblemActivity : BaseActivity() {
     private fun handleSideEffect(sideEffect: SolveProblemSideEffect) {
         when (sideEffect) {
             is SolveProblemSideEffect.FinishSolveProblem -> {
-                startActivityWithAnimation<ExamResultActivity>(
+                examResultNavigator.navigateFrom(
+                    activity = this,
                     intentBuilder = {
                         putExtra(Extras.ExamId, sideEffect.examId)
                         putExtra(Extras.Submitted, sideEffect.answers.toTypedArray())

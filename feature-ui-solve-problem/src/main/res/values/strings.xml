@@ -6,15 +6,9 @@
   -->
 
 <resources>
-    <!-- 문제 풀기 화면 -->
     <string name="no_idea">모르겠어요</string>
     <string name="previous">이전</string>
     <string name="current_between_total">%s / %s</string>
     <string name="listen_question">문제 듣기</string>
     <string name="listen_repeat">다시 듣기</string>
-
-    <!-- 문제 결과 화면 -->
-    <string name="solve_retry">다시 풀기</string>
-    <string name="exit_exam">시험 끝내기</string>
-    <string name="feature_prepare">준비 중인 기능입니다.</string>
 </resources>
