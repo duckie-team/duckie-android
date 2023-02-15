@@ -34,5 +34,6 @@ internal sealed class HomeSideEffect {
 
     /**
      * 팔로잉이 없을 떄 팔로워 추천 페이지로 이동하는 SideEffect 입니다.
+     * TODO(limsaehyun): 추후 구현 예정 (추측)
      */
 }
