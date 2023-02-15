@@ -10,7 +10,6 @@ package team.duckie.app.android.feature.ui.start.exam.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -35,8 +34,6 @@ internal class StartExamViewModel @Inject constructor(
             .getStateFlow(Extras.CertifyingStatement, "").value
 
         intent {
-            delay(2000L)
-
             reduce {
                 if (examId == -1 || certifyingStatement == "") {
                     StartExamState.Error(DuckieClientLogicProblemException(code = ""))
@@ -60,8 +57,19 @@ internal class StartExamViewModel @Inject constructor(
         return (container.stateFlow.value as? StartExamState.Input)?.isCertified == true
     }
 
+    /** 문제 풀기 화면을 실행한다 */
+    fun startSolveProblem() = intent {
+        val inputState = state as StartExamState.Input
+        postSideEffect(
+            StartExamSideEffect.NavigateToSolveProblem(
+                startExamValidate(),
+                inputState.examId,
+            ),
+        )
+    }
+
     /** 시험 시작 화면을 종료한다. */
     fun finishStartExam() = intent {
-        postSideEffect(StartExamSideEffect.FinishStartExam(startExamValidate()))
+        postSideEffect(StartExamSideEffect.FinishStartExam)
     }
 }

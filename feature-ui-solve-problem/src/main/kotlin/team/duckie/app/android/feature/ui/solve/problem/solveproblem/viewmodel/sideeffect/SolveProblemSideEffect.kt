@@ -9,7 +9,7 @@ package team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.
 
 internal sealed class SolveProblemSideEffect {
     class FinishSolveProblem(
-        val examId: String,
+        val examId: Int,
         val answers: List<String>,
     ) : SolveProblemSideEffect()
     class ReportError(val exception: Throwable) : SolveProblemSideEffect()

@@ -31,15 +31,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import team.duckie.app.android.feature.ui.home.screen.HomeActivity
 import team.duckie.app.android.feature.ui.solve.problem.R
 import team.duckie.app.android.feature.ui.solve.problem.examresult.ExamResultActivity
 import team.duckie.app.android.feature.ui.solve.problem.examresult.viewmodel.ExamResultViewModel
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.solve.problem.solveproblem.common.LoadingIndicator
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.ui.finishWithAnimation
-import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
@@ -58,7 +55,7 @@ internal fun ExamResultScreen(
     val activity = LocalContext.current as ExamResultActivity
 
     LaunchedEffect(Unit) {
-        viewModel.getReport()
+        viewModel.initState()
     }
 
     Scaffold(
@@ -92,8 +89,8 @@ internal fun ExamResultScreen(
                         .heightIn(min = 44.dp)
                         .weight(1f),
                     text = stringResource(id = R.string.solve_retry),
-                    onClick = {
-                        activity.startActivityWithAnimation<SolveProblemActivity>()
+                    onClick = { // TODO(EvergreenTree97) 해당 시험 본 적 있는지 플래그 생기면 enabled 설정 해야함
+                        viewModel.clickRetry(activity.getString(R.string.feature_prepare))
                     },
                 )
                 QuackSmallButton(
@@ -104,7 +101,7 @@ internal fun ExamResultScreen(
                     text = stringResource(id = R.string.exit_exam),
                     enabled = true,
                     onClick = {
-                        activity.startActivityWithAnimation<HomeActivity>(withFinish = true)
+                        // activity.startActivityWithAnimation<HomeActivity>(withFinish = true)
                     },
                 )
             }
