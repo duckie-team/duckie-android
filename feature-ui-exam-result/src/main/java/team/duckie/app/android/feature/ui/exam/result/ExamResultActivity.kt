@@ -32,7 +32,7 @@ class ExamResultActivity : BaseActivity() {
                 ExamResultScreen(
                     navigateToHome = {
                         homeNavigator.navigateFrom(this)
-                    }
+                    },
                 )
             }
         }

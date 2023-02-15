@@ -18,11 +18,11 @@ internal class HomeNavigatorImpl @Inject constructor() : HomeNavigator {
     override fun navigateFrom(
         activity: Activity,
         intentBuilder: Intent.() -> Intent,
-        withFinish: Boolean
+        withFinish: Boolean,
     ) {
         activity.startActivityWithAnimation<HomeActivity>(
             intentBuilder = intentBuilder,
-            withFinish = withFinish
+            withFinish = withFinish,
         )
     }
 }

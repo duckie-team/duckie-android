@@ -28,7 +28,6 @@ import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.Sol
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
-import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 

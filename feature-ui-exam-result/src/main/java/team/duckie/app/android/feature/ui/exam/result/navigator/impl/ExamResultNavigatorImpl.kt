@@ -18,11 +18,11 @@ internal class ExamResultNavigatorImpl @Inject constructor() : ExamResultNavigat
     override fun navigateFrom(
         activity: Activity,
         intentBuilder: Intent.() -> Intent,
-        withFinish: Boolean
+        withFinish: Boolean,
     ) {
         activity.startActivityWithAnimation<ExamResultActivity>(
             intentBuilder = intentBuilder,
-            withFinish = withFinish
+            withFinish = withFinish,
         )
     }
 }
