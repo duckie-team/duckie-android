@@ -22,20 +22,20 @@ internal val MoshiBuilder = Moshi.Builder()
     .addLast(KotlinJsonAdapterFactory())
     .build()
 
-internal val searchDataFactory
+private val searchDataFactory
     get() = PolymorphicJsonAdapterFactory.of(SearchData::class.java, "type")
         .withSubtype(SearchData.ExamSearchData::class.java, Search.Exam)
         .withSubtype(SearchData.TagSearchData::class.java, Search.Tags)
         .withSubtype(SearchData.UserSearchData::class.java, Search.User)
 
-internal val questionDataFactory
+private val questionDataFactory
     get() = PolymorphicJsonAdapterFactory.of(QuestionData::class.java, "type")
         .withSubtype(QuestionData.Text::class.java, "text")
         .withSubtype(QuestionData.Image::class.java, "image")
         .withSubtype(QuestionData.Audio::class.java, "audio")
         .withSubtype(QuestionData.Video::class.java, "video")
 
-internal val answerDataFactory
+private val answerDataFactory
     get() = PolymorphicJsonAdapterFactory.of(AnswerData::class.java, "type")
         .withSubtype(AnswerData.ShortAnswer::class.java, "shortAnswer")
         .withSubtype(AnswerData.Choice::class.java, "choice")
