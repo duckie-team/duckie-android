@@ -27,6 +27,7 @@ dependencies {
         projects.utilCompose,
         projects.utilExceptionHandling,
         projects.sharedUiCompose,
+        projects.navigator,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,

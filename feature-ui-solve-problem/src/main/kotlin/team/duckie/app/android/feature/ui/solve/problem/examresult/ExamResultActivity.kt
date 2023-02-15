@@ -19,18 +19,24 @@ import team.duckie.app.android.feature.ui.solve.problem.examresult.viewmodel.Exa
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
+import team.duckie.app.android.navigator.feature.home.HomeNavigator
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ExamResultActivity : BaseActivity() {
     private val viewModel: ExamResultViewModel by viewModels()
+
+    @Inject
+    lateinit var homeNavigator: HomeNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BackHandler {
-                finishWithAnimation()
+                startActivity(homeNavigator.intent(this))
             }
 
             QuackTheme {
@@ -55,7 +61,7 @@ class ExamResultActivity : BaseActivity() {
             }
 
             ExamResultSideEffect.FinishExamResult -> {
-                finishWithAnimation()
+                startActivity(homeNavigator.intent(this))
             }
 
             is ExamResultSideEffect.SendToast -> {

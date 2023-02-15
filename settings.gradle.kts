@@ -51,6 +51,7 @@ include(
     ":feature-ui-solve-problem",
     ":feature-ui-create-problem",
     ":feature-ui-detail",
+    ":navigator",
     ":shared-ui-compose",
     ":util-ui",
     ":util-kotlin",

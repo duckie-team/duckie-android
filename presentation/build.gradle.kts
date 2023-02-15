@@ -27,6 +27,7 @@ dependencies {
         projects.featureDatastore,
         projects.featureUiHome,
         projects.featureUiOnboard,
+        projects.featureUiSolveProblem,
         projects.utilExceptionHandling,
         projects.domain,
         libs.orbit.viewmodel,
