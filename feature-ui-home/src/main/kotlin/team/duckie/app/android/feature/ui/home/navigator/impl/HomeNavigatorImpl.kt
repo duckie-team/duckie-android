@@ -7,14 +7,22 @@
 
 package team.duckie.app.android.feature.ui.home.navigator.impl
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import team.duckie.app.android.feature.ui.home.screen.HomeActivity
 import team.duckie.app.android.navigator.feature.home.HomeNavigator
+import team.duckie.app.android.util.ui.startActivityWithAnimation
 import javax.inject.Inject
 
 internal class HomeNavigatorImpl @Inject constructor() : HomeNavigator {
-    override fun intent(context: Context): Intent {
-        return Intent(context, HomeActivity::class.java)
+    override fun navigateFrom(
+        activity: Activity,
+        intentBuilder: Intent.() -> Intent,
+        withFinish: Boolean
+    ) {
+        activity.startActivityWithAnimation<HomeActivity>(
+            intentBuilder = intentBuilder,
+            withFinish = withFinish
+        )
     }
 }

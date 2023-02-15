@@ -7,7 +7,7 @@
 
 @file:OptIn(ExperimentalLifecycleComposeApi::class)
 
-package team.duckie.app.android.feature.ui.solve.problem.examresult.screen
+package team.duckie.app.android.feature.ui.exam.result.screen
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,10 +32,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import team.duckie.app.android.feature.ui.solve.problem.R
-import team.duckie.app.android.feature.ui.solve.problem.examresult.ExamResultActivity
-import team.duckie.app.android.feature.ui.solve.problem.examresult.viewmodel.ExamResultViewModel
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.common.LoadingIndicator
+import team.duckie.app.android.feature.ui.exam.result.ExamResultActivity
+import team.duckie.app.android.feature.ui.exam.result.R
+import team.duckie.app.android.feature.ui.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.border.QuackBorder
@@ -153,5 +153,16 @@ private fun GrayBorderSmallButton(
             text = text,
             singleLine = true,
         )
+    }
+}
+
+// TODO(EvergreenTree97): QuackLoadingIndicator로 통합 필요
+@Composable
+private fun LoadingIndicator() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator(color = QuackColor.DuckieOrange.composeColor)
     }
 }

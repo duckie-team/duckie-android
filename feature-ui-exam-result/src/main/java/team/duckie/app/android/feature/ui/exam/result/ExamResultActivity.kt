@@ -13,17 +13,27 @@ import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import team.duckie.app.android.feature.ui.exam.result.screen.ExamResultScreen
 import team.duckie.app.android.feature.ui.exam.result.viewmodel.ExamResultViewModel
+import team.duckie.app.android.navigator.feature.home.HomeNavigator
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ExamResultActivity : BaseActivity() {
     val viewModel: ExamResultViewModel by viewModels()
+
+    @Inject
+    lateinit var homeNavigator: HomeNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             QuackTheme {
-                ExamResultScreen()
+                ExamResultScreen(
+                    navigateToHome = {
+                        homeNavigator.navigateFrom(this)
+                    }
+                )
             }
         }
     }

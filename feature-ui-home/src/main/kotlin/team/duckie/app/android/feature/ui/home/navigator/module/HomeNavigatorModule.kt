@@ -13,11 +13,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.feature.ui.home.navigator.impl.HomeNavigatorImpl
 import team.duckie.app.android.navigator.feature.home.HomeNavigator
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class HomeNavigatorModule {
 
+    @Singleton
     @Binds
     abstract fun bindHomeNavigator(navigator: HomeNavigatorImpl): HomeNavigator
 }

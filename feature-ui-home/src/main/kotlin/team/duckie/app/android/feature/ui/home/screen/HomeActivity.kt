@@ -27,10 +27,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
+import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
+import team.duckie.app.android.feature.ui.search.screen.SearchResultActivity
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -151,13 +154,15 @@ class HomeActivity : BaseActivity() {
             is HomeSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
-           /* is HomeSideEffect.NavigateToSearchResult -> {
+
+            is HomeSideEffect.NavigateToSearchResult -> {
                 startActivityWithAnimation<SearchResultActivity>(
                     intentBuilder = {
                         putExtra(Extras.SearchTag, sideEffect.searchTag)
                     },
                 )
             }
+
             is HomeSideEffect.NavigateToHomeDetail -> {
                 startActivityWithAnimation<DetailActivity>(
                     intentBuilder = {
@@ -165,10 +170,10 @@ class HomeActivity : BaseActivity() {
                     },
                 )
             }
+
             is HomeSideEffect.NavigateToCreateProblem -> {
                 startActivityWithAnimation<CreateProblemActivity>()
-            }*/
-            else -> {}
+            }
         }
     }
 }
