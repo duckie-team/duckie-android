@@ -45,7 +45,7 @@ internal class SolveProblemViewModel @Inject constructor(
             reduce { state.copy(examId = examId) }
             getProblems(examId)
         } else {
-            throw DuckieClientLogicProblemException(code = "")
+            throw DuckieClientLogicProblemException(code = "failed_import_extra")
         }
     }
 
@@ -53,7 +53,8 @@ internal class SolveProblemViewModel @Inject constructor(
         reduce { state.copy(isProblemsLoading = true) }
         getExamInstanceUseCase(id = examId).onSuccess { examInstance ->
             reduce {
-                val problemInstances = examInstance.problemInstances?.toImmutableList() ?: persistentListOf()
+                val problemInstances =
+                    examInstance.problemInstances?.toImmutableList() ?: persistentListOf()
                 state.copy(
                     isProblemsLoading = false,
                     problems = problemInstances,
