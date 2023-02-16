@@ -26,7 +26,7 @@ internal fun primarySliderColors() = SliderDefaults.colors(
 @Composable
 internal fun bufferSliderColors() = SliderDefaults.colors(
     disabledThumbColor = Color.Transparent,
-    disabledActiveTrackColor = QuackColor.Gray2.composeColor,
+    disabledActiveTrackColor = QuackColor.Gray2.composeColor.copy(alpha = 0.5f),
     disabledInactiveTrackColor = QuackColor.Gray3.composeColor,
 )
 
