@@ -34,6 +34,10 @@ class ExamResultActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.observe(
+            lifecycleOwner = this,
+            sideEffect = ::handleSideEffect,
+        )
         setContent {
             BackHandler {
                 finishWithAnimation()
@@ -42,11 +46,6 @@ class ExamResultActivity : BaseActivity() {
             QuackTheme {
                 ExamResultScreen()
             }
-
-            viewModel.observe(
-                lifecycleOwner = this,
-                sideEffect = ::handleSideEffect,
-            )
         }
     }
 
