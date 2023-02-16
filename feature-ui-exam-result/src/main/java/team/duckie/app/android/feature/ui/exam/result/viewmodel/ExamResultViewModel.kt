@@ -72,4 +72,8 @@ class ExamResultViewModel @Inject constructor(
     fun clickRetry(message: String) = intent {
         postSideEffect(ExamResultSideEffect.SendToast(message))
     }
+
+    fun exitExam() = intent {
+        postSideEffect(ExamResultSideEffect.FinishExamResult)
+    }
 }

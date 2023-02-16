@@ -40,7 +40,10 @@ class ExamResultActivity : BaseActivity() {
         )
         setContent {
             BackHandler {
-                finishWithAnimation()
+                homeNavigator.navigateFrom(
+                    activity = this,
+                    withFinish = true,
+                )
             }
 
             QuackTheme {
@@ -60,7 +63,10 @@ class ExamResultActivity : BaseActivity() {
             }
 
             ExamResultSideEffect.FinishExamResult -> {
-                finishWithAnimation()
+                homeNavigator.navigateFrom(
+                    activity = this,
+                    withFinish = true,
+                )
             }
 
             is ExamResultSideEffect.SendToast -> {

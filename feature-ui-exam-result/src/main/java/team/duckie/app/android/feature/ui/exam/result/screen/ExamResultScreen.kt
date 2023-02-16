@@ -101,7 +101,7 @@ internal fun ExamResultScreen(
                     text = stringResource(id = R.string.exit_exam),
                     enabled = true,
                     onClick = {
-                        // activity.startActivityWithAnimation<HomeActivity>(withFinish = true)
+                        viewModel.exitExam()
                     },
                 )
             }
