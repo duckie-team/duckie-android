@@ -7,12 +7,16 @@
 
 package team.duckie.app.android.data.user.repository
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import com.github.kittinunf.fuel.Fuel
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
@@ -28,6 +32,7 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.repository.UserRepository
+import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
@@ -35,7 +40,36 @@ import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.runtimeCheck
 import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor(private val fuel: Fuel) : UserRepository {
+class UserRepositoryImpl @Inject constructor(
+    private val fuel: Fuel,
+    private val dataStore: DataStore<Preferences>,
+) : UserRepository {
+    private var me: User? = null
+
+    override suspend fun getMe(): User? {
+        return me ?: getMeId()?.let {
+            val user = get(it)
+            setMe(user)
+
+            return@let user
+        }
+    }
+
+    override suspend fun setMe(newMe: User) {
+        me = newMe
+        dataStore.edit { preferences ->
+            preferences[PreferenceKey.User.Id] ?: kotlin.run {
+                preferences[PreferenceKey.User.Id] = "${newMe.id}"
+            }
+        }
+    }
+
+    private suspend fun getMeId(): Int? {
+        // TODO(riflockle7): 더 좋은 구현 방법이 있을까?
+        // ref: https://medium.com/androiddevelopers/datastore-and-synchronous-work-576f3869ec4c
+        return dataStore.data.first()[PreferenceKey.User.Id]?.toInt()
+    }
+
     override suspend fun get(id: Int): User {
         val response = client.get("/users/$id")
 

@@ -15,6 +15,10 @@ import team.duckie.app.android.domain.user.model.UserFollowings
 
 @Immutable
 interface UserRepository {
+    suspend fun getMe(): User?
+
+    suspend fun setMe(newMe: User)
+
     suspend fun get(id: Int): User
 
     suspend fun update(

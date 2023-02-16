@@ -15,13 +15,23 @@ import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserMeFollowersUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserMeFollowingsUseCase
+import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.domain.user.usecase.GetUserUseCase
 import team.duckie.app.android.domain.user.usecase.NicknameDuplicateCheckUseCase
+import team.duckie.app.android.domain.user.usecase.SetMeUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
 object UserUseCaseModule {
+    @Provides
+    fun provideGetMeUseCase(repository: UserRepository): GetMeUseCase {
+        return GetMeUseCase(repository)
+    }
+    @Provides
+    fun provideSetMeUseCase(repository: UserRepository): SetMeUseCase {
+        return SetMeUseCase(repository)
+    }
     @Provides
     fun provideGetUserUseCase(repository: UserRepository): GetUserUseCase {
         return GetUserUseCase(repository)
