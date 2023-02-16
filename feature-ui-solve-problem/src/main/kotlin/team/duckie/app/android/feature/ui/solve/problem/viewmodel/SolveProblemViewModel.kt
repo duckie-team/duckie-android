@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel
+package team.duckie.app.android.feature.ui.solve.problem.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -19,9 +19,9 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.sideeffect.SolveProblemSideEffect
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.state.InputAnswer
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.viewmodel.state.SolveProblemState
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.util.kotlin.DuckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy

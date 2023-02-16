@@ -49,7 +49,6 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun ExamResultScreen(
-    navigateToHome: () -> Unit,
     viewModel: ExamResultViewModel = activityViewModel(),
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
