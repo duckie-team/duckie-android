@@ -107,7 +107,7 @@ internal fun HomeRecommendScreen(
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center,
-            ){
+            ) {
                 DuckieHorizontalPagerIndicator(
                     modifier = Modifier
                         .padding(top = 24.dp, bottom = 60.dp),

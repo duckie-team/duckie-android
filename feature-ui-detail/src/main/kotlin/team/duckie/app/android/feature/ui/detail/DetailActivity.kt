@@ -16,7 +16,6 @@ import team.duckie.app.android.feature.ui.start.exam.screen.StartExamActivity
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.kotlin.DuckieResponseException
-import team.duckie.app.android.util.kotlin.DuckieStatusCode
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation
