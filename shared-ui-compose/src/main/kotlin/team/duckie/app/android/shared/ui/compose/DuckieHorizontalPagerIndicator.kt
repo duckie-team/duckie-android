@@ -49,7 +49,7 @@ fun DuckieHorizontalPagerIndicator(
     inactiveColor: Color = QuackColor.Gray3.composeColor,
     indicatorWidth: Dp = 4.dp,
     indicatorHeight: Dp = indicatorWidth,
-    spacing: Dp = indicatorWidth,
+    spacing: Dp = 4.dp,
     indicatorShape: Shape = CircleShape,
 ) {
     val indicatorWidthPx = LocalDensity.current.run { indicatorWidth.roundToPx() }

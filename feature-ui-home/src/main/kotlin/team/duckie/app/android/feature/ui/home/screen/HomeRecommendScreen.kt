@@ -11,6 +11,7 @@ package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -103,13 +104,18 @@ internal fun HomeRecommendScreen(
         }
 
         item {
-            DuckieHorizontalPagerIndicator(
-                modifier = Modifier
-                    .padding(top = 24.dp, bottom = 60.dp),
-                pagerState = pageState,
-                pageCount = state.jumbotrons.size,
-                spacing = 6.dp,
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ){
+                DuckieHorizontalPagerIndicator(
+                    modifier = Modifier
+                        .padding(top = 24.dp, bottom = 60.dp),
+                    pagerState = pageState,
+                    pageCount = state.jumbotrons.size,
+                    spacing = 6.dp,
+                )
+            }
         }
 
         items(items = lazyRecommendations) { item ->
