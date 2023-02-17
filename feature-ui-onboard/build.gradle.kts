@@ -23,6 +23,7 @@ dependencies {
         projects.featureUiHome,
         projects.di,
         projects.domain,
+        projects.navigator,
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,

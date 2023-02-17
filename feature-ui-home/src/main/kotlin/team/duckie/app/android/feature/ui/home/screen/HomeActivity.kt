@@ -154,6 +154,7 @@ class HomeActivity : BaseActivity() {
             is HomeSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
+
             is HomeSideEffect.NavigateToSearchResult -> {
                 startActivityWithAnimation<SearchResultActivity>(
                     intentBuilder = {
@@ -161,6 +162,7 @@ class HomeActivity : BaseActivity() {
                     },
                 )
             }
+
             is HomeSideEffect.NavigateToHomeDetail -> {
                 startActivityWithAnimation<DetailActivity>(
                     intentBuilder = {
@@ -168,6 +170,7 @@ class HomeActivity : BaseActivity() {
                     },
                 )
             }
+
             is HomeSideEffect.NavigateToCreateProblem -> {
                 startActivityWithAnimation<CreateProblemActivity>()
             }

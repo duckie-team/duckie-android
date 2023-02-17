@@ -9,9 +9,8 @@
 
     <application>
         <activity
-            android:name="team.duckie.app.android.feature.ui.solve.problem.solveproblem.SolveProblemActivity"
+            android:name="team.duckie.app.android.feature.ui.solve.problem.SolveProblemActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".examresult.ExamResultActivity" />
     </application>
 </manifest>
