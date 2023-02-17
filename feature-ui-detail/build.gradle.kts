@@ -22,6 +22,7 @@ dependencies {
         platform(libs.firebase.bom),
         projects.domain,
         projects.di,
+        projects.navigator,
         projects.utilUi,
         projects.featureDatastore,
         projects.utilKotlin,

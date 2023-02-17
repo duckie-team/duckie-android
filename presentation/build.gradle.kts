@@ -21,6 +21,7 @@ android {
 dependencies {
     implementations(
         projects.di,
+        projects.navigator,
         projects.utilUi,
         projects.utilCompose,
         projects.utilKotlin,

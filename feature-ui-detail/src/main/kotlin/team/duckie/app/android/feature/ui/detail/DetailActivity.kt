@@ -15,6 +15,7 @@ import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSide
 import team.duckie.app.android.feature.ui.start.exam.screen.StartExamActivity
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
+import team.duckie.app.android.util.kotlin.DuckieResponseException
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation
@@ -50,7 +51,11 @@ class DetailActivity : BaseActivity() {
             is DetailSideEffect.ReportError -> {
                 sideEffect.exception.printStackTrace()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
-                sideEffect.exception.reportToToast()
+                if (sideEffect.exception is DuckieResponseException) {
+                    if (sideEffect.exception.code == "CAN_NOT_RETRY_EXAM") {
+                        sideEffect.exception.reportToToast(getString(R.string.exam_already))
+                    }
+                }
             }
 
             is DetailSideEffect.StartExam -> startActivityWithAnimation<StartExamActivity>(

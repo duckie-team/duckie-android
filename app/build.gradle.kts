@@ -52,6 +52,8 @@ dependencies {
         libs.quack.ui.components, // for debug setting
         projects.presentation, // for launch IntroActivity
         projects.utilKotlin,
+        projects.featureUiExamResult,
+        projects.navigator,
     )
     debugImplementation(libs.analytics.leakcanary)
 }

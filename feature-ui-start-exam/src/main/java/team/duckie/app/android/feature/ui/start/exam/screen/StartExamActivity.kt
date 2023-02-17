@@ -18,7 +18,7 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
-import team.duckie.app.android.feature.ui.solve.problem.solveproblem.SolveProblemActivity
+import team.duckie.app.android.feature.ui.solve.problem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.start.exam.viewmodel.StartExamSideEffect
 import team.duckie.app.android.feature.ui.start.exam.viewmodel.StartExamViewModel
 import team.duckie.app.android.util.ui.BaseActivity
