@@ -9,6 +9,8 @@
 
 package team.duckie.app.android.util.kotlin
 
+import kotlinx.collections.immutable.persistentListOf
+
 /**
  * 덕키 API 에서 발생하는 [Exception] 을 정의합니다.
  *
@@ -16,7 +18,8 @@ package team.duckie.app.android.util.kotlin
  *
  * @param code 예외 코드
  */
-sealed class DuckieException(code: String) : IllegalStateException("DuckieException: $code")
+sealed class DuckieException(open val code: String) :
+    IllegalStateException("DuckieException: $code")
 
 /** API 에러로 인지되는 임계점. 아래 선언 값은 에러로 포함된다. */
 const val ApiErrorThreshold = 400
@@ -68,10 +71,12 @@ fun Int.toDuckieStatusCode(): DuckieStatusCode = when (this) {
 class DuckieResponseException(
     serverMessage: String? = null,
     val statusCode: DuckieStatusCode,
-    val code: String,
+    override val code: String,
     val errors: List<String>? = null,
 ) : DuckieException(code) {
-    override val message = "DuckieResponseException: $code".runIf(serverMessage != null) { plus(" - $serverMessage") }
+    override val message =
+        "DuckieResponseException: $code".runIf(serverMessage != null) { plus(" - $serverMessage") }
+
     override fun toString(): String {
         return "DuckieApiException(message=$message, statusCode=$statusCode, code=$code, errors=$errors)"
     }
@@ -113,10 +118,12 @@ fun duckieResponseFieldNpe(field: String): Nothing {
  */
 class DuckieClientLogicProblemException(
     serverMessage: String? = null,
-    val code: String,
+    override val code: String,
     val errors: List<String>? = null,
 ) : DuckieException(code) {
-    override val message = "DuckieResponseException: $code".runIf(serverMessage != null) { plus(" - $serverMessage") }
+    override val message =
+        "DuckieResponseException: $code".runIf(serverMessage != null) { plus(" - $serverMessage") }
+
     override fun toString(): String {
         return "DuckieApiException(message=$message, code=$code, errors=$errors)"
     }
@@ -134,6 +141,12 @@ fun duckieClientLogicProblemException(
     )
 }
 
+/** 앱 내에서 로그인이 필요한 [코드값][DuckieException.code]인 경우인지 체크한다. */
+fun DuckieException.isLoginRequireCode() =
+    this.code in persistentListOf(ClientMeIdNull, ClientMeTokenNull, ServerUserIdStrange)
+
 // TODO(riflockle7): exception 관련 모듈로 옮김 고려 필요
 const val ClientMeIdNull = "client_me_id_null"
 const val ClientMeTokenNull = "client_me_token_null"
+
+const val ServerUserIdStrange = "server_user_id_strange"
