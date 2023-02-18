@@ -40,9 +40,7 @@ class AuthRepositoryImpl @Inject constructor() : AuthRepository {
 
     override suspend fun checkAccessToken(token: String): AccessTokenCheckResponse {
         val response = client.get("/auth/token") {
-            // TODO(sungbin): `DuckieHttpHeaders.Authorization` 로 변경
-            // https://sungbinland.slack.com/archives/C046SS32SEQ/p1674118939394629?thread_ts=1674118269.577739&cid=C046SS32SEQ
-            headers.append(/*DuckieHttpHeaders.Authorization*/ "authorization", "Bearer $token")
+            headers.append(DuckieHttpHeaders.Authorization, "Bearer $token")
         }
         return responseCatching(
             response = response.body(),
