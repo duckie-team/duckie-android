@@ -39,7 +39,9 @@ import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.runtimeCheck
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
     private val dataStore: DataStore<Preferences>,
