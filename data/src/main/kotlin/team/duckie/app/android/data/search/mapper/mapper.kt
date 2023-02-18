@@ -18,19 +18,21 @@ import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
-internal fun SearchData.toDomain() = when (this) {
-    is SearchData.ExamSearchData -> Search.ExamSearch(
-        exams = result?.fastMap(ExamData::toDomain)
-            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.result"),
+internal fun SearchData.toDomain() = when (this.type) {
+    Search.Exams -> Search.ExamSearch(
+        exams = result?.exams?.fastMap(ExamData::toDomain)
+            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.result.exams"),
     )
 
-    is SearchData.UserSearchData -> Search.UserSearch(
-        users = result?.fastMap(UserResponse::toDomain)
-            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.result"),
+    Search.Users -> Search.UserSearch(
+        users = result?.users?.fastMap(UserResponse::toDomain)
+            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.result.users"),
     )
 
-    is SearchData.TagSearchData -> Search.TagSearch(
-        tags = result?.fastMap(TagData::toDomain)
-            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.result"),
+    Search.Tags -> Search.TagSearch(
+        tags = result?.tags?.fastMap(TagData::toDomain)
+            ?: duckieResponseFieldNpe("${this::class.java.simpleName}.result.tags"),
     )
+
+    else -> duckieResponseFieldNpe("${this::class.java.simpleName}.result.${this.type}")
 }
