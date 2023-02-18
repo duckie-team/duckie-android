@@ -25,17 +25,6 @@ import javax.inject.Singleton
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
 ) : UserRepository {
-    private var me: User? = null
-
-    // TODO(riflockle7): 로그인 화면으로 넘겨주는 flow 필요 (throw Error 할지 고민 중)
-    override suspend fun getMe(): User? {
-        return userDataSource.getMe()
-    }
-
-    override suspend fun setMe(newMe: User) {
-        return userDataSource.setMe(newMe)
-    }
-
     override suspend fun get(id: Int): User {
         return userDataSource.get(id)
     }

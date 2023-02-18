@@ -17,7 +17,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
 ) : AuthRepository {
     override suspend fun join(kakaoAccessToken: String): JoinResponse {
-        return authDataSource.join(kakaoAccessToken);
+        return authDataSource.join(kakaoAccessToken)
     }
 
     override suspend fun checkAccessToken(token: String): AccessTokenCheckResponse {

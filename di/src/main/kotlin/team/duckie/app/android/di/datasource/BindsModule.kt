@@ -21,6 +21,7 @@ import team.duckie.app.android.domain.user.datasource.UserDataSource
 abstract class BindsModule {
     @Binds
     abstract fun provideAuthRemoteDataSource(impl: AuthRemoteDataSourceImpl): AuthDataSource
+
     @Binds
     abstract fun provideUserRemoteDataSourceImpl(impl: UserRemoteDataSourceImpl): UserDataSource
 }

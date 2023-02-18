@@ -13,12 +13,6 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
 
 interface UserDataSource {
-    // TODO(riflockle7): MeRepository, MeDataSource 만들면서 없어질 예정
-    suspend fun getMe(): User?
-
-    // TODO(riflockle7): MeRepository, MeDataSource 만들면서 없어질 예정
-    suspend fun setMe(newMe: User)
-
     suspend fun get(id: Int): User
 
     suspend fun update(

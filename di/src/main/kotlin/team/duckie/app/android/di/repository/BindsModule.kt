@@ -22,6 +22,7 @@ import team.duckie.app.android.data.file.repository.FileRepositoryImpl
 import team.duckie.app.android.data.follow.repository.FollowRepositoryImpl
 import team.duckie.app.android.data.gallery.repository.GalleryRepositoryImpl
 import team.duckie.app.android.data.heart.repository.HeartRepositoryImpl
+import team.duckie.app.android.data.me.repository.MeRepositoryImpl
 import team.duckie.app.android.data.recommendation.repository.RecommendationRepositoryImpl
 import team.duckie.app.android.data.search.repository.SearchRepositoryImpl
 import team.duckie.app.android.data.tag.repository.TagRepositoryImpl
@@ -36,6 +37,7 @@ import team.duckie.app.android.domain.file.repository.FileRepository
 import team.duckie.app.android.domain.follow.repository.FollowRepository
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
 import team.duckie.app.android.domain.heart.repository.HeartRepository
+import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import team.duckie.app.android.domain.search.repository.SearchRepository
 import team.duckie.app.android.domain.tag.repository.TagRepository
@@ -71,6 +73,9 @@ abstract class BindsModule {
 
     @Binds
     abstract fun provideHeartRepository(impl: HeartRepositoryImpl): HeartRepository
+
+    @Binds
+    abstract fun provideMeRepository(impl: MeRepositoryImpl): MeRepository
 
     @Binds
     abstract fun provideGalleryRepository(impl: GalleryRepositoryImpl): GalleryRepository

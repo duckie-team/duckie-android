@@ -11,6 +11,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserMeFollowersUseCase
@@ -25,12 +26,12 @@ import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 @InstallIn(SingletonComponent::class)
 object UserUseCaseModule {
     @Provides
-    fun provideGetMeUseCase(repository: UserRepository): GetMeUseCase {
+    fun provideGetMeUseCase(repository: MeRepository): GetMeUseCase {
         return GetMeUseCase(repository)
     }
 
     @Provides
-    fun provideSetMeUseCase(repository: UserRepository): SetMeUseCase {
+    fun provideSetMeUseCase(repository: MeRepository): SetMeUseCase {
         return SetMeUseCase(repository)
     }
 

@@ -29,10 +29,7 @@ import team.duckie.app.android.domain.user.datasource.UserDataSource
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
-import team.duckie.app.android.util.kotlin.ClientMeIdNull
-import team.duckie.app.android.util.kotlin.ClientMeTokenNull
 import team.duckie.app.android.util.kotlin.ExperimentalApi
-import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.runtimeCheck
@@ -41,44 +38,6 @@ import javax.inject.Inject
 class UserRemoteDataSourceImpl @Inject constructor(
     private val fuel: Fuel,
 ) : UserDataSource {
-    // TODO(riflockle7): MeRepository, MeDataSource 만들면서 없어질 예정
-    override suspend fun getMe(): User? {
-        // 1. 토큰 값이 등록되어 있는지 먼저 확인한다 (이게 없으면 유저 정보 가져오는 거 자체가 안됨)
-        val meToken = getMeToken()
-
-        // TODO 토큰이 없다면, 로그인 화면으로 보내주어야 한다 (해결책 생각하면 meToken 선언부로 처리 옮길 예정)
-        meToken ?: duckieClientLogicProblemException(code = ClientMeTokenNull)
-
-        // 2. 토큰이 있다면 토큰 검증한다.
-        val accessTokenValid = authDataSource.checkAccessToken(meToken).userId > 0
-
-        if (accessTokenValid) {
-            // 3. id 값이 등록되어 있는지 확인한다.
-            val meId = getMeId()
-
-            // TODO id 가 없다면, 로그인 화면으로 보내주어야 한다 (해결책 생각하면 meId 선언부로 처리 옮길 예정)
-            meId ?: duckieClientLogicProblemException(code = ClientMeIdNull)
-
-            // 4. me 객체값이 있는지 확인한다
-            return me ?: kotlin.run {
-                // 5. accessToken 관련 설정
-                authDataSource.attachAccessTokenToHeader(meToken)
-
-                // 6. me 객체가 없다면, id 기반으로 유저 정보를 가져온 후 setMe 를 통해 설정 뒤 반환한다.
-                val user = get(meId)
-                setMe(user)
-
-                return user
-            }
-        } else {
-            // TODO token 문제가 있다면, 로그인 화면으로 보내주어야 한다 (해결책 생각하면 아래 코드 수정 예정)
-            return me
-        }
-    }
-
-    // TODO(riflockle7): MeRepository, MeDataSource 만들면서 없어질 예정
-    override suspend fun setMe(newMe: User) {}
-
     override suspend fun get(id: Int): User {
         val response = client.get("/users/$id")
 

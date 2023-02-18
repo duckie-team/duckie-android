@@ -8,13 +8,13 @@
 package team.duckie.app.android.domain.user.usecase
 
 import androidx.compose.runtime.Immutable
+import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.domain.user.repository.UserRepository
 import javax.inject.Inject
 
 @Immutable
 class SetMeUseCase @Inject constructor(
-    private val repository: UserRepository,
+    private val repository: MeRepository,
 ) {
     suspend operator fun invoke(newMe: User): Result<Unit> {
         return runCatching { repository.setMe(newMe) }
