@@ -35,6 +35,7 @@ internal data class CreateProblemState(
         val categories: ImmutableList<Category> = persistentListOf(),
         val categorySelection: Int = -1,
         val isMainTagSelected: Boolean = false,
+        val prevExamTitle: String = "",
         val examTitle: String = "",
         val examDescription: String = "",
         val certifyingStatement: String = "",

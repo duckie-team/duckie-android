@@ -406,8 +406,8 @@ internal class CreateProblemViewModel @Inject constructor(
     /** 유저가 입력한 정보를 기반으로 Exam 기본 썸네일 이미지를 가져온다. */
     internal fun getExamThumbnail() = intent {
         val state = container.stateFlow.value
-        // 이미 썸네일을 서버로부터 가져온 경우 별다른 처리를 하지 않는다.
-        if (state.additionalInfo.thumbnail.toString().isNotEmpty()) {
+        // 이전에 등록된 제목과 동일한 경우 별다른 처리를 하지 않는다.
+        if (state.examInformation.prevExamTitle == state.examInformation.examTitle) {
             reduce {
                 state.copy(createProblemStep = CreateProblemStep.CreateProblem)
             }
@@ -420,6 +420,9 @@ internal class CreateProblemViewModel @Inject constructor(
             reduce {
                 state.copy(
                     createProblemStep = CreateProblemStep.CreateProblem,
+                    examInformation = state.examInformation.copy(
+                        prevExamTitle = state.examInformation.examTitle,
+                    ),
                     additionalInfo = state.additionalInfo.copy(thumbnail = thumbnail),
                     defaultThumbnail = thumbnail,
                 )
