@@ -28,10 +28,12 @@ object UserUseCaseModule {
     fun provideGetMeUseCase(repository: UserRepository): GetMeUseCase {
         return GetMeUseCase(repository)
     }
+
     @Provides
     fun provideSetMeUseCase(repository: UserRepository): SetMeUseCase {
         return SetMeUseCase(repository)
     }
+
     @Provides
     fun provideGetUserUseCase(repository: UserRepository): GetUserUseCase {
         return GetUserUseCase(repository)

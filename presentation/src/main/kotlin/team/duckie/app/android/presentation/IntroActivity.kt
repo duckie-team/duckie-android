@@ -80,26 +80,25 @@ class IntroActivity : BaseActivity() {
     }
 
     private suspend fun handleSideEffect(sideEffect: IntroSideEffect) {
-        applicationContext.dataStore.data.first().let { preference ->
-            val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish]
-            if (isOnboardFinsihed == null) {
-                launchOnboardActivity()
-            } else {
-                when (sideEffect) {
-                    is IntroSideEffect.GetUserFinished -> {
-                        if (sideEffect.user != null) {
-                            launchHomeOrOnboardActivity(isOnboardFinsihed)
-                        } else {
-                            toast(getString(R.string.expired_access_token_relogin_requried))
-                            launchOnboardActivity()
-                        }
+        val preference = applicationContext.dataStore.data.first()
+        val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish]
+        if (isOnboardFinsihed == null) {
+            launchOnboardActivity()
+        } else {
+            when (sideEffect) {
+                is IntroSideEffect.GetUserFinished -> {
+                    if (sideEffect.user != null) {
+                        launchHomeOrOnboardActivity(isOnboardFinsihed)
+                    } else {
+                        toast(getString(R.string.expired_access_token_relogin_requried))
+                        launchOnboardActivity()
                     }
+                }
 
-                    is IntroSideEffect.ReportError -> {
-                        sideEffect.exception.printStackTrace()
-                        sideEffect.exception.reportToToast()
-                        sideEffect.exception.reportToCrashlyticsIfNeeded()
-                    }
+                is IntroSideEffect.ReportError -> {
+                    sideEffect.exception.printStackTrace()
+                    sideEffect.exception.reportToToast()
+                    sideEffect.exception.reportToCrashlyticsIfNeeded()
                 }
             }
         }

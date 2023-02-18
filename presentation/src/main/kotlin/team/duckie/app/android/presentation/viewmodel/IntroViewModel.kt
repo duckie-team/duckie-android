@@ -37,7 +37,7 @@ internal class IntroViewModel @Inject constructor(
         getMeUseCase()
             .onSuccess { user ->
                 postSideEffect(
-                    IntroSideEffect.GetUserFinished(user)
+                    IntroSideEffect.GetUserFinished(user),
                 )
             }
             .attachExceptionHandling()

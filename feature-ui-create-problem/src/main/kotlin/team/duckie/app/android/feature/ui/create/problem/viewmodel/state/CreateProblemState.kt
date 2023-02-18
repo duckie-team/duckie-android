@@ -60,7 +60,7 @@ internal data class CreateProblemState(
                 nickName = me.nickname,
                 title = examTitle,
                 type = ThumbnailType.Text.value,
-            );
+            )
         }
     }
 
