@@ -133,3 +133,7 @@ fun duckieClientLogicProblemException(
         errors = errors,
     )
 }
+
+// TODO(riflockle7): exception 관련 모듈로 옮김 고려 필요
+const val ClientMeIdNull = "client_me_id_null"
+const val ClientMeTokenNull = "client_me_token_null"
