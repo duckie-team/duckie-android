@@ -26,8 +26,7 @@ import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserFollowingsResponse
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.data.user.model.UsersResponse
-import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
-import team.duckie.app.android.domain.auth.usecase.CheckAccessTokenUseCase
+import team.duckie.app.android.domain.auth.datasource.AuthDataSource
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
@@ -51,8 +50,7 @@ import javax.inject.Singleton
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
-    private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
-    private val attachAccessTokenToHeaderUseCase: AttachAccessTokenToHeaderUseCase,
+    private val authDataSource: AuthDataSource,
     private val dataStore: DataStore<Preferences>,
 ) : UserRepository {
     private var me: User? = null
@@ -66,9 +64,9 @@ class UserRepositoryImpl @Inject constructor(
         meToken ?: duckieClientLogicProblemException(code = ClientMeTokenNull)
 
         // 2. 토큰이 있다면 토큰 검증한다.
-        val accessTokenValid = checkAccessTokenUseCase(meToken).getOrNull()
+        val accessTokenValid = authDataSource.checkAccessToken(meToken).userId > 0
 
-        if (accessTokenValid?.passed == true) {
+        if (accessTokenValid) {
             // 3. id 값이 등록되어 있는지 확인한다.
             val meId = getMeId()
 
@@ -78,7 +76,7 @@ class UserRepositoryImpl @Inject constructor(
             // 4. me 객체값이 있는지 확인한다
             return me ?: kotlin.run {
                 // 5. accessToken 관련 설정
-                attachAccessTokenToHeaderUseCase(accessToken = meToken)
+                authDataSource.attachAccessTokenToHeader(meToken)
 
                 // 6. me 객체가 없다면, id 기반으로 유저 정보를 가져온 후 setMe 를 통해 설정 뒤 반환한다.
                 val user = get(meId)
