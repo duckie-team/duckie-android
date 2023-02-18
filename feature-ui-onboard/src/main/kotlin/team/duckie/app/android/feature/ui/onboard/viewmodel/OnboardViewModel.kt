@@ -9,7 +9,6 @@
 
 package team.duckie.app.android.feature.ui.onboard.viewmodel
 
-import team.duckie.app.android.feature.datastore.me as MeInstance
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
@@ -48,7 +47,9 @@ import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
+import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.usecase.NicknameDuplicateCheckUseCase
+import team.duckie.app.android.domain.user.usecase.SetMeUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
@@ -75,6 +76,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     private val fileUploadUseCase: FileUploadUseCase,
     private val tagCreateUseCase: TagCreateUseCase,
     private val userUpdateUseCase: UserUpdateUseCase,
+    private val setMeUseCase: SetMeUseCase,
     @Assisted private val getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
 ) : ContainerHost<OnboardState, OnboardSideEffect>, AndroidViewModel(application) {
     /* ----- Assisted ----- */
@@ -167,8 +169,9 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    fun finishOnboard(userId: String? = null) = intent {
-        postSideEffect(OnboardSideEffect.FinishOnboard(userId))
+    fun finishOnboard(newMe: User) = intent {
+        setMeUseCase(newMe)
+        postSideEffect(OnboardSideEffect.FinishOnboard("${newMe.id}"))
     }
 
     // validation
@@ -325,7 +328,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             nickname = nickname,
             // TODO(riflockle7): 온보딩 완료 시에는 무조건 NEW -> READY 로 바꿔줘야 함
             status = "READY",
-            updateMeInstance = { user -> MeInstance = user },
+            updateMeInstance = { user -> viewModelScope.launch { setMeUseCase(user) } },
         )
             .onSuccess { user ->
                 reduce {

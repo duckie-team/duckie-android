@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.onboard
 
-import team.duckie.app.android.feature.datastore.me as MeInstance
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -179,7 +178,7 @@ class OnboardActivity : BaseActivity() {
     private fun handleState(state: OnboardState) {
         onboardStepState = state.step
         if (state.finishOnboarding) {
-            vm.finishOnboard(userId = vm.me.id.toString())
+            vm.finishOnboard(vm.me)
         }
     }
 
@@ -206,8 +205,7 @@ class OnboardActivity : BaseActivity() {
                         ignoreThrottle = true,
                     )
                 } else {
-                    MeInstance = sideEffect.me
-                    vm.finishOnboard()
+                    vm.finishOnboard(sideEffect.me)
                 }
             }
             is OnboardSideEffect.FinishOnboard -> {

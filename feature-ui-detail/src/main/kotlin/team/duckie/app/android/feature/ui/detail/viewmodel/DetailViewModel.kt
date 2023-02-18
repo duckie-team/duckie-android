@@ -24,7 +24,7 @@ import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.heart.usecase.DeleteHeartUseCase
 import team.duckie.app.android.domain.heart.usecase.PostHeartUseCase
-import team.duckie.app.android.feature.datastore.me
+import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
@@ -35,6 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
+    private val getMeUseCase: GetMeUseCase,
     private val followUseCase: FollowUseCase,
     private val postHeartUseCase: PostHeartUseCase,
     private val deleteHeartUseCase: DeleteHeartUseCase,
@@ -48,13 +49,18 @@ class DetailViewModel @Inject constructor(
 
         val exam = runCatching { examRepository.getExam(examId) }.getOrNull()
         intent {
-            reduce {
-                if (exam != null) {
-                    DetailState.Success(exam, me)
-                } else {
-                    DetailState.Error(DuckieResponseFieldNPE("exam is Null"))
+            getMeUseCase()
+                .onSuccess { me ->
+                    reduce {
+                        if (exam != null && me != null) {
+                            DetailState.Success(exam, me)
+                        } else {
+                            DetailState.Error(DuckieResponseFieldNPE("exam or me is Null"))
+                        }
+                    }
+                }.onFailure {
+                    postSideEffect(DetailSideEffect.ReportError(it))
                 }
-            }
         }
     }
 

@@ -18,7 +18,7 @@ import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 
 internal data class HomeState(
-    val me: User,
+    val me: User? = null,
     val isHomeLoading: Boolean = false,
 
     val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,

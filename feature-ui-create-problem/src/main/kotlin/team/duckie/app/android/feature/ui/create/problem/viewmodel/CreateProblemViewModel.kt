@@ -51,7 +51,7 @@ import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
-import team.duckie.app.android.feature.datastore.me
+import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemState
@@ -77,11 +77,12 @@ internal class CreateProblemViewModel @Inject constructor(
     private val getSearchUseCase: GetSearchUseCase,
     private val tagRepository: TagRepository,
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
+    private val getMeUseCase: GetMeUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
 
     override val container =
-        container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState(me))
+        container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
 
     suspend fun initState() {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
@@ -90,11 +91,16 @@ internal class CreateProblemViewModel @Inject constructor(
         // 문제 생성 모드
         if (!isEditMode) {
             intent {
-                reduce {
-                    state.copy(
-                        isEditMode = false,
-                        createProblemStep = CreateProblemStep.ExamInformation,
-                    )
+                getMeUseCase().onSuccess { me ->
+                    reduce {
+                        state.copy(
+                            me = me,
+                            isEditMode = false,
+                            createProblemStep = CreateProblemStep.ExamInformation,
+                        )
+                    }
+                }.onFailure {
+                    postSideEffect(CreateProblemSideEffect.ReportError(it))
                 }
             }
         }
@@ -399,8 +405,9 @@ internal class CreateProblemViewModel @Inject constructor(
 
     /** 유저가 입력한 정보를 기반으로 Exam 기본 썸네일 이미지를 가져온다. */
     internal fun getExamThumbnail() = intent {
+        val state = container.stateFlow.value
         // 이미 썸네일을 서버로부터 가져온 경우 별다른 처리를 하지 않는다.
-        if (container.stateFlow.value.additionalInfo.thumbnail.toString().isNotEmpty()) {
+        if (state.additionalInfo.thumbnail.toString().isNotEmpty()) {
             reduce {
                 state.copy(createProblemStep = CreateProblemStep.CreateProblem)
             }
@@ -408,7 +415,7 @@ internal class CreateProblemViewModel @Inject constructor(
         }
 
         getExamThumbnailUseCase(
-            examThumbnailBody = container.stateFlow.value.examInformation.examThumbnailBody,
+            examThumbnailBody = state.examInformation.examThumbnailBody(requireNotNull(state.me)),
         ).onSuccess { thumbnail ->
             reduce {
                 state.copy(
