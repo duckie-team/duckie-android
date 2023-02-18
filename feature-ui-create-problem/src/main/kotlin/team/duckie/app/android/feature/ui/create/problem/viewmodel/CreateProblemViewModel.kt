@@ -174,17 +174,21 @@ internal class CreateProblemViewModel @Inject constructor(
     // 공통
     /** 시험 컨텐츠를 만든다. */
     internal fun makeExam() = intent {
+        reduce { state.copy(isMakeExamUploading = true) }
         runCatching { generateExamBody() }
             .onSuccess { examBody ->
                 makeExamUseCase(examBody)
                     .onSuccess { isSuccess: Boolean ->
+                        reduce { state.copy(isMakeExamUploading = false) }
                         print(isSuccess)
                         finishCreateProblem()
                     }.onFailure {
+                        reduce { state.copy(isMakeExamUploading = false) }
                         it.printStackTrace()
                         postSideEffect(CreateProblemSideEffect.ReportError(it))
                     }
             }.onFailure {
+                reduce { state.copy(isMakeExamUploading = false) }
                 it.printStackTrace()
                 postSideEffect(CreateProblemSideEffect.ReportError(it))
             }

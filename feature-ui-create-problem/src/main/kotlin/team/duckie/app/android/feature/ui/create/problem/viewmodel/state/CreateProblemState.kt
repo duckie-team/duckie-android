@@ -29,6 +29,7 @@ internal data class CreateProblemState(
     val findResultType: FindResultType = FindResultType.MainTag,
     val photoState: CreateProblemPhotoState? = null,
     val defaultThumbnail: String = "",
+    val isMakeExamUploading: Boolean = false,
 ) {
     data class ExamInformation(
         val isCategoryLoading: Boolean = true,

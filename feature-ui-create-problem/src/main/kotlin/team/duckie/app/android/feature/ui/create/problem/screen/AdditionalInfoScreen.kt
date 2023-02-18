@@ -143,7 +143,9 @@ internal fun AdditionalInformationScreen(
     }
 
     BackHandler {
-        if (photoState != null) {
+        if (rootState.isMakeExamUploading) {
+            return@BackHandler
+        } else if (photoState != null) {
             vm.updatePhotoState(null)
             coroutineScope.launch {
                 sheetState.hide()
