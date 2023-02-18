@@ -32,7 +32,6 @@ import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.changeActivityWithAnimation
@@ -97,7 +96,6 @@ class IntroActivity : BaseActivity() {
 
                 is IntroSideEffect.ReportError -> {
                     sideEffect.exception.printStackTrace()
-                    sideEffect.exception.reportToToast()
                     sideEffect.exception.reportToCrashlyticsIfNeeded()
                 }
             }

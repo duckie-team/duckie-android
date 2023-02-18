@@ -10,7 +10,6 @@ package team.duckie.app.android.presentation.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -18,9 +17,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.app.android.presentation.viewmodel.state.IntroState
-import team.duckie.app.android.util.kotlin.ClientMeIdNull
-import team.duckie.app.android.util.kotlin.ClientMeTokenNull
-import team.duckie.app.android.util.kotlin.DuckieClientLogicProblemException
+import javax.inject.Inject
 
 @HiltViewModel
 internal class IntroViewModel @Inject constructor(
@@ -45,13 +42,8 @@ internal class IntroViewModel @Inject constructor(
 
     private fun Result<*>.attachExceptionHandling() = intent {
         onFailure { exception ->
-            if (exception is DuckieClientLogicProblemException &&
-                (exception.code == ClientMeIdNull || exception.code == ClientMeTokenNull)
-            ) {
-                postSideEffect(IntroSideEffect.GetUserFinished(null))
-            } else {
-                postSideEffect(IntroSideEffect.ReportError(exception))
-            }
+            postSideEffect(IntroSideEffect.ReportError(exception))
+            postSideEffect(IntroSideEffect.GetUserFinished(null))
         }
     }
 }
