@@ -50,7 +50,7 @@ fun DuckTestSmallCover(
                 .fillMaxWidth()
                 .height(116.dp),
             model = duckTestCoverItem.coverImg,
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.Crop,
             contentDescription = null,
         )
         QuackBody2(
