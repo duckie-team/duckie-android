@@ -40,6 +40,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.fastForEach
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -58,6 +59,8 @@ internal fun HomeRecommendFollowingTestScreen(
     vm: HomeViewModel = activityViewModel(),
 ) {
     val state = vm.collectAsState().value
+    val toast = rememberToast()
+    val homeLoadingMypageToastMessage = stringResource(id = R.string.home_loading_mypage_toast)
 
     LaunchedEffect(Unit) {
         vm.fetchRecommendFollowingTest()
@@ -91,6 +94,7 @@ internal fun HomeRecommendFollowingTestScreen(
                 favoriteTag = maker.owner.favoriteTag,
                 onClickUserProfile = {
                     // TODO(limsaehyun): 유저의 profile 로 이동
+                    toast.invoke(homeLoadingMypageToastMessage)
                 },
                 onClickTestCover = {
                     vm.navigateToHomeDetail(maker.examId)

@@ -23,11 +23,9 @@ internal class SearchData(
 )
 
 internal class SearchResultData(
-    // TODO(riflockle7): 키값 맞는지 확인 필요
     @field:JsonProperty("exams")
     val exams: List<ExamData>? = null,
 
-    // TODO(riflockle7): 키값 맞는지 확인 필요
     @field:JsonProperty("users")
     val users: List<UserResponse>? = null,
 

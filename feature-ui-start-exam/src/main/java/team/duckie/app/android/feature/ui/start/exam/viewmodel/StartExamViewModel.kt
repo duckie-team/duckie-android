@@ -53,7 +53,6 @@ internal class StartExamViewModel @Inject constructor(
 
     /** validate 를 체크한다. */
     fun startExamValidate(): Boolean {
-        // TODO(riflockle7): 꼭 null 확인을 해주어야할까? 확인할 필요 없으면 위처럼 처리해도 괜찮을 듯
         return (container.stateFlow.value as? StartExamState.Input)?.isCertified == true
     }
 

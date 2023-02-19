@@ -36,7 +36,6 @@ internal suspend inline fun <reified DataModel, DomainModel> responseCatching(
 }
 
 // TODO(riflockle7, sungbin): 추후 responseCatching 과 합칠 수 있는 방법이 있을지 고민 필요
-//   잘 동작하는지 다른 PR 에서 확인 필요
 @Suppress("TooGenericExceptionCaught")
 internal inline fun <reified DataModel, DomainModel> responseCatchingFuel(
     response: Response,

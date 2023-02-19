@@ -57,7 +57,6 @@ internal object DuckieHttpHeaders {
     const val Client = "x-duckie-client"
 
     // Authorization 가 AuthRepositoryImpl 에서 접근 필요
-    // TODO(riflockle7): X-DUCKIE-AUTHORIZATION 으로 바뀔 수 있으니, 추후 점검 필요
     const val Authorization = "Authorization"
 }
 

@@ -662,7 +662,6 @@ internal class CreateProblemViewModel @Inject constructor(
         val newAnswers = state.createProblem.answers.toMutableList()
         val newAnswer = newAnswers[questionIndex]
         newAnswers[questionIndex] = when (newAnswer) {
-            // TODO(riflockle7): 발현 케이스 확인을 위해 이렇게 두었으며, 추후 state 명세하면서 없앨 예정.
             is Answer.Short -> duckieClientLogicProblemException(message = "주관식 답변은 삭제할 수 없습니다.")
 
             is Answer.Choice -> Answer.Choice(

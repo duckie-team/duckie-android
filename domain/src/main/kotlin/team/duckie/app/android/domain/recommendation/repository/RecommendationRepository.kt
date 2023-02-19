@@ -15,11 +15,7 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.model.SearchType
 
-/**
- * 홈 화면에서 활용하는 Repository
- *
- * TODO(limsaehyun): 데이터 Return 필요
- */
+/** 홈 화면에서 활용하는 Repository */
 @Immutable
 interface RecommendationRepository {
     fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>

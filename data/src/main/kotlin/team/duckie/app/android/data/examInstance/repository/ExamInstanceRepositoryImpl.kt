@@ -35,7 +35,6 @@ import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 class ExamInstanceRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
 ) : ExamInstanceRepository {
-    // TODO(riflockle7): GET /exam-instance/:id API commit
     override suspend fun getExamInstance(
         examInstanceId: Int,
     ): ExamInstance = withContext(Dispatchers.IO) {

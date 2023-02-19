@@ -19,7 +19,6 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
 
 class TagRepositoryImpl @Inject constructor(private val fuel: Fuel) : TagRepository {
-    // TODO(riflockle7): 동작확인 필요
     override suspend fun create(name: String): Tag = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .post("/tags")

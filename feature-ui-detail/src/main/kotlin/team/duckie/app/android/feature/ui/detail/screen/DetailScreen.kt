@@ -284,8 +284,9 @@ private fun DetailProfileLayout(
     state: DetailState.Success,
     followButtonClick: () -> Unit,
 ) {
-    // TODO(riflockle7): 추후 팔로잉, 팔로잉 취소 스펙 나오면 viewModel 에서 값을 가져오도록 처리해야 함
     val isFollowed = remember(state.isFollowing) { state.isFollowing }
+    val toast = rememberToast()
+    val detailLoadingMypageToastMessage = stringResource(id = R.string.detail_loading_mypage_toast)
 
     Row(
         modifier = Modifier.padding(
@@ -319,7 +320,8 @@ private fun DetailProfileLayout(
                 QuackBody3(
                     text = state.nickname,
                     onClick = {
-                        // TODO(riflockle7): 마이페이지로 이동
+                        // TODO(riflockle7): 프로필 화면으로 이동
+                        toast(detailLoadingMypageToastMessage)
                     },
                     color = QuackColor.Black,
                 )
