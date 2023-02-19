@@ -30,7 +30,7 @@ import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseC
 import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
 import team.duckie.app.android.domain.user.model.UserFollowing
-import team.duckie.app.android.feature.datastore.me
+import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toFollowingModel
@@ -48,14 +48,28 @@ internal class HomeViewModel @Inject constructor(
     private val fetchExamMeFollowingUseCase: FetchExamMeFollowingUseCase,
     private val fetchUserFollowingUseCase: FetchUserFollowingUseCase,
     private val followUseCase: FollowUseCase,
+    private val getMeUseCase: GetMeUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
-    override val container = container<HomeState, HomeSideEffect>(HomeState(me))
+    override val container = container<HomeState, HomeSideEffect>(HomeState())
     internal val pagingDataFlow: Flow<PagingData<RecommendationItem>>
 
     init {
+        initState()
         fetchJumbotrons()
         pagingDataFlow = fetchRecommendations()
+    }
+
+    fun initState() = intent {
+        getMeUseCase().onSuccess { me ->
+            if (me != null) {
+                reduce { state.copy(me = me) }
+            } else {
+                postSideEffect(HomeSideEffect.ReportError(Throwable("me is null")))
+            }
+        }.onFailure {
+            postSideEffect(HomeSideEffect.ReportError(it))
+        }
     }
 
     private fun fetchRecommendations() =
@@ -114,7 +128,7 @@ internal class HomeViewModel @Inject constructor(
     fun fetchRecommendFollowing() = intent {
         viewModelScope.launch {
             updateHomeLoading(true)
-            fetchUserFollowingUseCase(state.me.id)
+            fetchUserFollowingUseCase(requireNotNull(state.me?.id))
                 .onSuccess { userFollowing ->
                     reduce {
                         state.copy(

@@ -7,9 +7,10 @@
 
 package team.duckie.app.android.presentation.viewmodel.sideeffect
 
+import team.duckie.app.android.domain.user.model.User
+
 internal sealed class IntroSideEffect {
-    class SetMeInstance(val userId: Int) : IntroSideEffect()
-    class AttachAccessTokenToHeader(val accessToken: String) : IntroSideEffect()
+    class GetUserFinished(val user: User?) : IntroSideEffect()
 
     class ReportError(val exception: Throwable) : IntroSideEffect()
 }
