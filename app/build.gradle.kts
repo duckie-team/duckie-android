@@ -8,6 +8,8 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import DependencyHandler.Extensions.implementations
+import java.io.FileInputStream
+import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id(ConventionEnum.AndroidApplication)
@@ -22,6 +24,18 @@ android {
     namespace = "team.duckie.app.android"
 
     // TODO(sungbin): release signing key 등록
+    signingConfigs {
+        create("release") {
+            val configFile = project.rootProject.file("signingconfig.properties")
+            val properties = Properties()
+            properties.load(FileInputStream(configFile))
+
+            storeFile = project.rootProject.file(properties["storeFile"] as String)
+            storePassword = properties["storePassword"] as String
+            keyAlias = properties["keyAlias"] as String
+            keyPassword = properties["keyPassword"] as String
+        }
+    }
 
     buildFeatures {
         buildConfig = true
@@ -37,6 +51,11 @@ android {
 
         create("standard") {
             buildConfigField("boolean", "ALWAYS_RIPPLE", "false")
+        }
+    }
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
