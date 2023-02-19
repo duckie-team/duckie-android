@@ -95,7 +95,7 @@ internal fun CreateProblemBottomLayout(
     tempSaveButtonClick: (() -> Unit)? = null,
     nextButtonText: String,
     nextButtonClick: () -> Unit,
-    isProblemCountValidate: Boolean? = null,
+    isCreateProblemValidate: Boolean? = null,
     isValidateCheck: () -> Boolean,
 ) {
     val isValidate = isValidateCheck()
@@ -107,12 +107,12 @@ internal fun CreateProblemBottomLayout(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             leftButtonClick?.let { createButtonClick ->
-                requireNotNull(isProblemCountValidate)
+                requireNotNull(isCreateProblemValidate)
                 requireNotNull(leftButtonText)
                 Row(
                     modifier = Modifier
                         .quackClickable {
-                            if (!isProblemCountValidate) {
+                            if (isCreateProblemValidate) {
                                 createButtonClick()
                             }
                         }
@@ -122,7 +122,7 @@ internal fun CreateProblemBottomLayout(
                     leftButtonLeadingIcon?.let { QuackImage(src = it, size = DpSize(16.dp, 16.dp)) }
                     QuackSubtitle2(
                         text = leftButtonText,
-                        color = if (isProblemCountValidate) QuackColor.Gray2 else QuackColor.Black,
+                        color = if (isCreateProblemValidate) QuackColor.Black else QuackColor.Gray2,
                     )
                 }
             }

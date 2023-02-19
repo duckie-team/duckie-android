@@ -801,6 +801,7 @@ internal class CreateProblemViewModel @Inject constructor(
     /** 문제 만들기 2단계 화면의 유효성을 체크한다. */
     internal fun createProblemIsValidate(): Boolean {
         return with(container.stateFlow.value.createProblem) {
+            val examCountValidate = this.questions.size in 5..10
             val questionsValidate = this.questions.asSequence()
                 .map { it.validate() }
                 .reduce { acc, next -> acc && next }
@@ -811,7 +812,7 @@ internal class CreateProblemViewModel @Inject constructor(
                 .map { it.isNotEmpty() }
                 .reduce { acc, next -> acc && next }
 
-            questionsValidate && answersValidate && correctAnswersValidate
+            examCountValidate && questionsValidate && answersValidate && correctAnswersValidate
         }
     }
 

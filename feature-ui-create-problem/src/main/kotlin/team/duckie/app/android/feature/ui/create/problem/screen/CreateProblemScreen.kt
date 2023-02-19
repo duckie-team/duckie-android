@@ -501,7 +501,7 @@ internal fun CreateProblemScreen(
                             vm.navigateStep(CreateProblemStep.AdditionalInformation)
                         }
                     },
-                    isProblemCountValidate = problemCount in MinimumProblem..MaximumProblem,
+                    isCreateProblemValidate = problemCount < MaximumProblem,
                     isValidateCheck = vm::createProblemIsValidate,
                 )
             },
