@@ -52,7 +52,6 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblem
 import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.takeBy
-import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor

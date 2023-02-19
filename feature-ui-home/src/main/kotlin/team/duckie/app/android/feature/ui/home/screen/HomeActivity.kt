@@ -39,8 +39,8 @@ import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffe
 import team.duckie.app.android.feature.ui.search.screen.SearchResultActivity
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.ui.BaseActivity
@@ -53,6 +53,7 @@ private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
 private const val HomeBottomNavigationDividerLayoutId = "HomeBottomNavigationDivider"
 private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
 
+@AllowMagicNumber("앱 종료 시간에 대해서 매직 넘버 처리")
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
     private var waitTime = 2000L
@@ -74,7 +75,9 @@ class HomeActivity : BaseActivity() {
                 if (System.currentTimeMillis() - waitTime >= 1500L) {
                     waitTime = System.currentTimeMillis()
                     Toast.makeText(
-                        this, getString(R.string.app_exit_toast), Toast.LENGTH_SHORT
+                        this,
+                        getString(R.string.app_exit_toast),
+                        Toast.LENGTH_SHORT,
                     ).show()
                 } else {
                     finish()
