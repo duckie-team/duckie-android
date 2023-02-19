@@ -69,7 +69,7 @@ import team.duckie.app.android.util.kotlin.fastMapIndexed
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
-private const val TagsMaximumCount = 4
+private const val TagsMaximumCount = 10
 private const val MinimumProblem = 5
 private const val MaximumProblem = 10
 
