@@ -61,5 +61,8 @@ sealed class DetailState {
      *
      * @param exception 발생한 예외
      */
-    class Error(val exception: Throwable) : DetailState()
+    class Error(
+        val exception: Throwable,
+        val isNetworkError: Boolean = false,
+    ) : DetailState()
 }

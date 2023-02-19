@@ -20,6 +20,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -157,6 +158,7 @@ internal class CreateProblemViewModel @Inject constructor(
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
 
     /** tags 검색 flow. 실질 동작 로직은 apply 내에 명세되어 있다. */
+    @OptIn(FlowPreview::class)
     private val _getSearchTagsFlow: MutableSharedFlow<String> = MutableSharedFlow<String>(
         replay = 0,
         extraBufferCapacity = 1,

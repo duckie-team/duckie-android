@@ -5,10 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(
-    ExperimentalLifecycleComposeApi::class,
-)
-
 package team.duckie.app.android.feature.ui.create.problem
 
 import android.os.Bundle
@@ -28,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,13 +32,13 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.screen.AdditionalInformationScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.CreateProblemScreen
-import team.duckie.app.android.feature.ui.create.problem.screen.ErrorScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.ExamInformationScreen
-import team.duckie.app.android.feature.ui.create.problem.screen.LoadingScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.SearchTagScreen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
+import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.kotlin.DuckieResponseException
 import team.duckie.app.android.util.ui.BaseActivity
@@ -90,6 +85,7 @@ class CreateProblemActivity : BaseActivity() {
                 ) { step: CreateProblemStep ->
                     when (step) {
                         CreateProblemStep.Loading -> LoadingScreen(
+                            initState = viewModel::initState,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
