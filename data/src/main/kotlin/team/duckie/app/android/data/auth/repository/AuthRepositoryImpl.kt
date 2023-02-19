@@ -25,6 +25,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun attachAccessTokenToHeader(accessToken: String) {
-        return attachAccessTokenToHeader(accessToken)
+        return authDataSource.attachAccessTokenToHeader(accessToken)
     }
 }
