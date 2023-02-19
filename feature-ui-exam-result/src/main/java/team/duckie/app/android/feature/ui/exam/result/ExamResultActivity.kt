@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.exam.result
 
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -41,6 +42,9 @@ class ExamResultActivity : BaseActivity() {
             BackHandler {
                 homeNavigator.navigateFrom(
                     activity = this,
+                    intentBuilder = {
+                        addFlags(FLAG_ACTIVITY_CLEAR_TOP)
+                    },
                     withFinish = true,
                 )
             }
@@ -64,6 +68,9 @@ class ExamResultActivity : BaseActivity() {
             ExamResultSideEffect.FinishExamResult -> {
                 homeNavigator.navigateFrom(
                     activity = this,
+                    intentBuilder = {
+                        addFlags(FLAG_ACTIVITY_CLEAR_TOP)
+                    },
                     withFinish = true,
                 )
             }
