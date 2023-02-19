@@ -1,39 +1,28 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
+import DependencyHandler.Extensions.implementations
+
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
-    id("org.jetbrains.dokka") version Versions.BuildUtil.Dokka
-    id("de.mannodermaus.android-junit5")
-    id("name.remal.check-dependency-updates") version Versions.BuildUtil.CheckDependencyUpdates
-    // jacoco
+    id(ConventionEnum.AndroidLibrary)
+    `kotlin-parcelize`
 }
-
-/*jacoco {
-    toolVersion = Versions.Test.JaCoCo
-}
-
-tasks.withType<JacocoReport> {
-    reports {
-        html.required.set(true)
-        html.outputLocation.set(layout.projectDirectory.dir("../documents/coverage/jacoco/html"))
-        xml.required.set(true) // codecov depends on xml format report
-        xml.outputLocation.set(layout.projectDirectory.file("../documents/coverage/jacoco/report.xml"))
-    }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-    finalizedBy("jacocoTestReport")
-}*/
 
 android {
-    namespace = "land.sungbin.androidprojecttemplate.domain"
+    namespace = "team.duckie.app.android.domain"
 }
 
 dependencies {
-    val projects = listOf(
-        ProjectConstants.SharedDomain
+    implementations(
+        libs.compose.runtime, // needs for Stability
+        libs.kotlin.collections.immutable,
+        libs.jackson.annotation,
+        libs.di.inject,
+        libs.paging.common,
+        projects.utilKotlin,
     )
-    projects.forEach(::projectImplementation)
-
-    Dependencies.Test.forEach(::testImplementation)
 }

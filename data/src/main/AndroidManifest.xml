@@ -1,4 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
 
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!--suppress AndroidDomInspection -->
+                <data
+                    android:host="oauth"
+                    android:scheme="${KAKAO_MANIFEST_SCHEME}" />
+            </intent-filter>
+        </activity>
+    </application>
 </manifest>

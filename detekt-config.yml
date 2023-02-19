@@ -1,23 +1,69 @@
 complexity:
-  LongParameterList:
-    active: false # for rest api call function
   LongMethod:
-    excludes: [ '**/mapper/**' ]
+    threshold: 100
     ignoreAnnotated: [ 'Composable' ]
-  ComplexMethod:
-    excludes: [ '**/mapper/**' ]
+  CyclomaticComplexMethod:
+    ignoreAnnotated: [ 'Composable', 'AllowCyclomaticComplexMethod' ]
+  LongParameterList:
+    active: false
+  TooManyFunctions:
+    active: false
+  ComplexCondition:
+    threshold: 7
+
+performance:
+  SpreadOperator:
+    active: false
+
+formatting:
+  TrailingCommaOnCallSite:
+    active: true
+  TrailingCommaOnDeclarationSite:
+    active: true
+  ImportOrdering:
+    active: false
+  MaximumLineLength:
+    maxLineLength: 150
+  Indentation:
+    active: false
+  Filename:
+    active: false
+  PackageName:
+    active: false
+  ArgumentListWrapping:
+    maxLineLength: 150
 
 style:
   MagicNumber:
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
+    ignoreAnnotated: [ 'AllowMagicNumber' ]
+  ForbiddenComment:
+    active: false
   UnusedPrivateMember:
     ignoreAnnotated: [ 'preview' ]
+  ThrowsCount:
+    active: false
+  ReturnCount:
+    active: false
+  LoopWithTooManyJumpStatements:
+    active: false
+  DestructuringDeclarationWithTooManyEntries:
+    active: false
+  MaxLineLength:
+    maxLineLength: 150
+    excludeCommentStatements: true
+  UnnecessaryAbstractClass:
+    ignoreAnnotated: [ 'Module' ]
 
 naming:
   TopLevelPropertyNaming:
-    constantPattern: '[A-Z][A-Za-z0-9]*'
+    constantPattern: '[A-Z][A-Za-z0-9_]*'
   FunctionNaming:
     ignoreAnnotated: [ 'Composable' ]
   MatchingDeclarationName:
     active: false
+  VariableNaming:
+    active: false
+  PackageNaming:
+    packagePattern: '[a-z]+(\._?[_?A-Za-z0-9]*)*'
