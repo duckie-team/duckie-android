@@ -25,10 +25,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +47,9 @@ import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
+import team.duckie.app.android.shared.ui.compose.LoadingScreen
+import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
@@ -64,7 +69,6 @@ import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackSmallButton
 import team.duckie.quackquack.ui.component.QuackSmallButtonType
 import team.duckie.quackquack.ui.component.QuackTagType
-import team.duckie.quackquack.ui.component.QuackTitle1
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.shape.SquircleShape
@@ -79,38 +83,34 @@ private const val DetailScreenBottomBarLayoutId = "DetailScreenBottomBar"
 internal fun DetailScreen(
     modifier: Modifier,
     viewModel: DetailViewModel = activityViewModel(),
-) = when (val state = viewModel.collectAsState().value) {
-    is DetailState.Loading -> DetailLoadingScreen(
-        viewModel,
-        modifier,
-    )
+) {
+    val context = LocalContext.current
+    val state = viewModel.collectAsState().value
+    var isNetworkAvailable: Boolean by remember { mutableStateOf(false) }
+    isNetworkAvailable = !NetworkUtil.isNetworkAvailable(context)
 
-    is DetailState.Success -> DetailSuccessScreen(
-        viewModel,
-        modifier,
-        state,
-    )
+    return when {
+        isNetworkAvailable -> ErrorScreen(
+            modifier,
+            true,
+            onRetryClick = viewModel::refresh,
+        )
 
-    is DetailState.Error -> DetailErrorScreen(
-        viewModel,
-        modifier,
-    )
-}
+        state is DetailState.Loading -> LoadingScreen(
+            viewModel::initState,
+            modifier,
+        )
 
-@Composable
-private fun DetailLoadingScreen(viewModel: DetailViewModel, modifier: Modifier) {
-    LaunchedEffect(Unit) {
-        viewModel.initState()
-    }
+        state is DetailState.Success -> DetailSuccessScreen(
+            viewModel,
+            modifier,
+            state,
+        )
 
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        // TODO(riflockle7): 추후 DuckieCircularProgressIndicator.kt 와 합치거나 꽥꽥 컴포넌트로 필요
-        CircularProgressIndicator(
-            color = QuackColor.DuckieOrange.composeColor,
+        else -> ErrorScreen(
+            modifier,
+            false,
+            onRetryClick = viewModel::initState,
         )
     }
 }
@@ -436,21 +436,6 @@ private fun DetailBottomLayout(
                 onClick = onChallengeClick,
             )
         }
-    }
-}
-
-/** 에러 발생한[DetailState.Error] 상세 화면 */
-@Composable
-private fun DetailErrorScreen(viewModel: DetailViewModel, modifier: Modifier) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        // TODO(riflockle7): 추후 DuckieCircularProgressIndicator.kt 와 합치거나 꽥꽥 컴포넌트로 필요
-        QuackTitle1(
-            text = "에러입니다\nTODO$viewModel\n추후 데이터 다시 가져오기 로직 넣어야 합니다.",
-        )
     }
 }
 

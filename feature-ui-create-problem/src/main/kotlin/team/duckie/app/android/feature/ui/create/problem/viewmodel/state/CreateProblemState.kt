@@ -21,6 +21,7 @@ import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 internal data class CreateProblemState(
     val me: User? = null,
+    val isNetworkError: Boolean = false,
     val isEditMode: Boolean = false,
     val createProblemStep: CreateProblemStep = CreateProblemStep.Loading,
     val examInformation: ExamInformation = ExamInformation(),

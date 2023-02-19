@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.component
+package team.duckie.app.android.shared.ui.compose
 
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -14,7 +14,7 @@ import team.duckie.quackquack.ui.color.QuackColor
 /**
  * 로딩 상태를 표현하는 [CircularProgressIndicator]
  *
- * TODO(limsaehyun): 추후에 꽥꽥 Indicator로 교체 필요
+ * TODO(limsaehyun): 추후에 꽥꽥 Indicator로 교체하고 Materi
  */
 @Composable
 fun DuckieCircularProgressIndicator() {
