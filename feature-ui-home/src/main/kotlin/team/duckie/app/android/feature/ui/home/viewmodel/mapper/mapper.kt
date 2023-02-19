@@ -23,7 +23,7 @@ internal fun UserFollowing.toUiModel() =
 
 internal fun Exam.toJumbotronModel() =
     HomeState.HomeRecommendJumbotron(
-        id = id,
+        examId = id,
         coverUrl = thumbnailUrl,
         title = title,
         content = description ?: "",
@@ -44,6 +44,7 @@ internal fun Exam.toFollowingModel() =
     HomeState.FollowingTest(
         coverUrl = thumbnailUrl,
         title = title,
+        examId = this.id,
         owner = HomeState.FollowingTest.User(
             nickname = user?.nickname ?: "",
             profileImgUrl = user?.profileImageUrl ?: "",

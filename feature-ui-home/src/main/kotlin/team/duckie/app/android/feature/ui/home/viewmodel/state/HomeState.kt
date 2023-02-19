@@ -44,6 +44,7 @@ internal data class HomeState(
     data class FollowingTest(
         val coverUrl: String,
         val title: String,
+        val examId: Int,
         val owner: User,
     ) {
         /**
@@ -104,7 +105,7 @@ internal data class HomeState(
      */
     @Immutable
     data class HomeRecommendJumbotron(
-        val id: Int,
+        val examId: Int,
         val coverUrl: String?,
         val title: String,
         val content: String,
@@ -139,6 +140,7 @@ internal data class HomeState(
             val coverImg: String,
             val nickname: String,
             val title: String,
+            val examId: Int,
             val examineeNumber: Int,
             val recommendId: Int,
         )

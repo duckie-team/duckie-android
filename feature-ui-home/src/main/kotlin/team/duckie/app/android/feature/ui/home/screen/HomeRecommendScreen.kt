@@ -162,7 +162,7 @@ private fun HomeRecommendJumbotronLayout(
         QuackLargeButton(
             type = QuackLargeButtonType.Fill,
             text = recommendItem.buttonContent,
-            onClick = { onStartClicked(recommendItem.id) },
+            onClick = { onStartClicked(recommendItem.examId) },
             enabled = true,
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -209,7 +209,6 @@ private fun HomeTopicRecommendLayout(
             ),
         ) {
             items(items = exams) { item ->
-                // TODO(riflockle7): exam 엔티티 commit
                 DuckTestSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = item.id,

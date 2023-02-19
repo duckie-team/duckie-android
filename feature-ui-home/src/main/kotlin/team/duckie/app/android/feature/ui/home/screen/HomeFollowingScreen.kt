@@ -75,7 +75,7 @@ internal fun HomeRecommendFollowingTestScreen(
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
                 onClickedCreate = {
-                    // TODO(limsaehyun): 수정 페이지로 이동 필요
+                    vm.navigateToCreateProblem()
                 },
             )
         }
@@ -93,7 +93,7 @@ internal fun HomeRecommendFollowingTestScreen(
                     // TODO(limsaehyun): 유저의 profile 로 이동
                 },
                 onClickTestCover = {
-                    // TODO(limsaehyun): home detail 로 이동
+                    vm.navigateToHomeDetail(maker.examId)
                 },
                 cover = maker.coverUrl,
             )
@@ -122,7 +122,7 @@ internal fun HomeRecommendFollowingScreen(
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
                 onClickedCreate = {
-                    // TODO(limsaehyun): 수정 페이지로 이동 필요
+                    vm.navigateToCreateProblem()
                 },
             )
         }
