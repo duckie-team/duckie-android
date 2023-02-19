@@ -36,7 +36,6 @@ import team.duckie.app.android.feature.ui.exam.result.ExamResultActivity
 import team.duckie.app.android.feature.ui.exam.result.R
 import team.duckie.app.android.feature.ui.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
