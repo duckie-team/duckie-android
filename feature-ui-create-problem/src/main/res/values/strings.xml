@@ -6,6 +6,8 @@
   -->
 
 <resources>
+    <string name="create_problem_exit_dialog_title">문제 만들기를 끝내겠습니까?\n작성된 내용은 저장되지 않습니다.</string>
+
     <string name="create_problem_permission_toast_message">접근 권한이 없습니다.\n앱 설정에서 갤러리 권한을 허용해 주세요.</string>
     <string name="network_error">일시적인 오류가 발생했습니다. 관리자에게 문의해주세요.</string>
     <string name="get_exam_authorized_error">해당 시험을 수정할 수 있는 권한이 없습니다.</string>

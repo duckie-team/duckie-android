@@ -21,8 +21,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -55,6 +58,7 @@ import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackCircleTag
+import team.duckie.quackquack.ui.component.QuackDialog
 import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
 import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.component.QuackSurface
@@ -81,11 +85,13 @@ internal fun ExamInformationScreen(
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val lazyListState = rememberLazyListState()
+    var createProblemExitDialogVisible by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
     BackHandler {
-        // TODO(riflockle7): 다이얼로그가 필요할 듯 하여 TODO 남김
-        activity.finishWithAnimation()
+        if (!createProblemExitDialogVisible) {
+            createProblemExitDialogVisible = true
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -110,7 +116,9 @@ internal fun ExamInformationScreen(
                 modifier = Modifier.layoutId(TopAppBarLayoutId),
                 trailingText = stringResource(id = R.string.next),
                 onLeadingIconClick = {
-                    coroutineScope.launch { viewModel.finishCreateProblem() }
+                    if (!createProblemExitDialogVisible) {
+                        createProblemExitDialogVisible = true
+                    }
                 },
             )
 
@@ -243,6 +251,19 @@ internal fun ExamInformationScreen(
                 isValidateCheck = viewModel::examInformationIsValidate,
             )
         },
+    )
+
+    QuackDialog(
+        title = stringResource(id = R.string.create_problem_exit_dialog_title),
+        visible = createProblemExitDialogVisible,
+        leftButtonText = stringResource(id = R.string.cancel),
+        leftButtonOnClick = { createProblemExitDialogVisible = false },
+        rightButtonText = stringResource(id = R.string.ok),
+        rightButtonOnClick = {
+            createProblemExitDialogVisible = false
+            viewModel.finishCreateProblem()
+        },
+        onDismissRequest = {},
     )
 }
 

@@ -8,6 +8,8 @@
 package team.duckie.app.android.feature.ui.home.screen
 
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
 import team.duckie.app.android.feature.ui.detail.DetailActivity
+import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
@@ -36,6 +39,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffe
 import team.duckie.app.android.feature.ui.search.screen.SearchResultActivity
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.asLoose
+import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
@@ -51,7 +55,7 @@ private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
-
+    private var waitTime = 2000L
     private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +68,17 @@ class HomeActivity : BaseActivity() {
                 homeViewModel.container.sideEffectFlow
                     .onEach(::handleSideEffect)
                     .launchIn(this)
+            }
+
+            BackHandler {
+                if (System.currentTimeMillis() - waitTime >= 1500L) {
+                    waitTime = System.currentTimeMillis()
+                    Toast.makeText(
+                        this, getString(R.string.app_exit_toast), Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    finish()
+                }
             }
 
             QuackTheme {

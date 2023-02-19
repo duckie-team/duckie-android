@@ -6,6 +6,8 @@
   -->
 
 <resources>
+    <string name="app_exit_toast">뒤로가기 버튼을 한번 더 누르면 종료됩니다.</string>
+
     <string name="home_volume_control_message">본 고사는 듣기 평가가 포함되어 있습니다. 미리 음량을 조절해주세요!</string>
     <string name="home_following_initial_title">마음에 드는 출제자를 팔로우하면\n최신 문제지를 빠르게 풀어볼 수 있어요!"</string>
 
