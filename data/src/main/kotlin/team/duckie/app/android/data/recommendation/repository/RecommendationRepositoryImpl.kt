@@ -71,7 +71,6 @@ class RecommendationRepositoryImpl @Inject constructor(
             )
         }
 
-    // TODO(riflockle7): GET /recommendations API commit
     @ExperimentalApi
     override suspend fun fetchJumbotrons(page: Int): ImmutableList<Exam> =
         withContext(Dispatchers.IO) {
