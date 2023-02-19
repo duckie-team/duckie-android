@@ -30,10 +30,8 @@ import team.duckie.app.android.feature.ui.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
-import team.duckie.app.android.presentation.viewmodel.state.IntroState
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.changeActivityWithAnimation
@@ -65,18 +63,13 @@ class IntroActivity : BaseActivity() {
 
         vm.observe(
             lifecycleOwner = this,
-            state = ::handleState,
             sideEffect = ::handleSideEffect,
         )
 
         setContent {
             LaunchedEffect(vm) {
                 delay(SplashScreenFinishDurationMillis)
-                applicationContext.dataStore.data.first().let { preference ->
-                    preference[PreferenceKey.Account.AccessToken]?.let { accessToken ->
-                        vm.attachAccessTokenToHeaderAndSetMeInstanceIfValidationPassed(accessToken)
-                    } ?: launchOnboardActivity()
-                }
+                vm.getUser()
             }
 
             QuackTheme {
@@ -85,34 +78,23 @@ class IntroActivity : BaseActivity() {
         }
     }
 
-    private suspend fun handleState(state: IntroState) {
-        with(state) {
-            when {
-                setMeInstance && accessTokenAttachedToHeader -> {
-                    applicationContext.dataStore.data.first().let { preference ->
-                        val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish] ?: false
-                        launchHomeOrOnboardActivity(isOnboardFinsihed)
-                    }
-                }
-                accessTokenValidationFail == true -> {
+    private suspend fun handleSideEffect(sideEffect: IntroSideEffect) {
+        when (sideEffect) {
+            is IntroSideEffect.GetUserFinished -> {
+                val preference = applicationContext.dataStore.data.first()
+                val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish]
+                if (isOnboardFinsihed == null) {
+                    launchOnboardActivity()
+                } else if (sideEffect.user != null) {
+                    launchHomeOrOnboardActivity(isOnboardFinsihed)
+                } else {
                     toast(getString(R.string.expired_access_token_relogin_requried))
                     launchOnboardActivity()
                 }
             }
-        }
-    }
 
-    private fun handleSideEffect(sideEffect: IntroSideEffect) {
-        when (sideEffect) {
-            is IntroSideEffect.SetMeInstance -> {
-                vm.setMeInstance(sideEffect.userId)
-            }
-            is IntroSideEffect.AttachAccessTokenToHeader -> {
-                vm.attachAccessTokenToHeader(sideEffect.accessToken)
-            }
             is IntroSideEffect.ReportError -> {
                 sideEffect.exception.printStackTrace()
-                sideEffect.exception.reportToToast()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
         }

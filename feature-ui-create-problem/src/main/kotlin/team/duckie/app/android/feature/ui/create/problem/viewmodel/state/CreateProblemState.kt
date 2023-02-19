@@ -17,11 +17,10 @@ import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.feature.datastore.me
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 
 internal data class CreateProblemState(
-    val me: User,
+    val me: User? = null,
     val isEditMode: Boolean = false,
     val createProblemStep: CreateProblemStep = CreateProblemStep.Loading,
     val examInformation: ExamInformation = ExamInformation(),
@@ -46,8 +45,15 @@ internal data class CreateProblemState(
         val mainTag: String
             get() = searchMainTag.results.firstOrNull()?.name ?: ""
 
-        val examThumbnailBody: ExamThumbnailBody
-            get() = ExamThumbnailBody(
+        val selectedCategory: Category?
+            get() = if (categorySelection == -1) {
+                null
+            } else {
+                categories[categorySelection]
+            }
+
+        fun examThumbnailBody(me: User): ExamThumbnailBody {
+            return ExamThumbnailBody(
                 category = selectedCategory?.name ?: duckieResponseFieldNpe("선택된 카테고리가 있어야 합니다."),
                 certifyingStatement = certifyingStatement,
                 mainTag = mainTag,
@@ -55,13 +61,7 @@ internal data class CreateProblemState(
                 title = examTitle,
                 type = ThumbnailType.Text.value,
             )
-
-        val selectedCategory: Category?
-            get() = if (categorySelection == -1) {
-                null
-            } else {
-                categories[categorySelection]
-            }
+        }
     }
 
     /** 문제 만들기 2단계 화면에서 사용하는 data 모음 */

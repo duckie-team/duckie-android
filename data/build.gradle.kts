@@ -45,6 +45,7 @@ dependencies {
         projects.domain,
         projects.utilKotlin,
         projects.pluginKtorClient,
+        projects.featureDatastore,
     )
     testImplementations(
         libs.test.coroutines,

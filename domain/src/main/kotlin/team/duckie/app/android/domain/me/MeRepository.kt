@@ -5,9 +5,12 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.datastore
+package team.duckie.app.android.domain.me
 
-import kotlin.properties.Delegates
 import team.duckie.app.android.domain.user.model.User
 
-var me by Delegates.notNull<User>()
+interface MeRepository {
+    suspend fun getMe(): User
+
+    suspend fun setMe(newMe: User)
+}

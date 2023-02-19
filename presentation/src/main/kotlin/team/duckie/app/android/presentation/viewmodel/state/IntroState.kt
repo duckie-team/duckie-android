@@ -11,8 +11,4 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-internal data class IntroState(
-    val accessTokenValidationFail: Boolean? = null,
-    val accessTokenAttachedToHeader: Boolean = false,
-    val setMeInstance: Boolean = false,
-) : Parcelable
+internal object IntroState : Parcelable
