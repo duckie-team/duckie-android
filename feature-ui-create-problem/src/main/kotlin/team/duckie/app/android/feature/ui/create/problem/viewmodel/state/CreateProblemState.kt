@@ -29,12 +29,14 @@ internal data class CreateProblemState(
     val findResultType: FindResultType = FindResultType.MainTag,
     val photoState: CreateProblemPhotoState? = null,
     val defaultThumbnail: String = "",
+    val isMakeExamUploading: Boolean = false,
 ) {
     data class ExamInformation(
         val isCategoryLoading: Boolean = true,
         val categories: ImmutableList<Category> = persistentListOf(),
         val categorySelection: Int = -1,
         val isMainTagSelected: Boolean = false,
+        val prevExamTitle: String = "",
         val examTitle: String = "",
         val examDescription: String = "",
         val certifyingStatement: String = "",

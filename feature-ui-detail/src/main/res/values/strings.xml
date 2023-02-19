@@ -6,6 +6,8 @@
   -->
 
 <resources>
+    <string name="detail_loading_mypage_toast">마이페이지 화면은 추후 제공되는 기능입니다.</string>
+
     <string name="detail_num_date">응시자 %s · %s</string>
     <string name="detail_follow">팔로우</string>
     <string name="detail_follow_cancel">팔로우 취소</string>

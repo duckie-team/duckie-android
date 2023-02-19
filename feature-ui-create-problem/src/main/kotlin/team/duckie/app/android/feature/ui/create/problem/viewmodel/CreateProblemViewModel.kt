@@ -174,17 +174,21 @@ internal class CreateProblemViewModel @Inject constructor(
     // 공통
     /** 시험 컨텐츠를 만든다. */
     internal fun makeExam() = intent {
+        reduce { state.copy(isMakeExamUploading = true) }
         runCatching { generateExamBody() }
             .onSuccess { examBody ->
                 makeExamUseCase(examBody)
                     .onSuccess { isSuccess: Boolean ->
+                        reduce { state.copy(isMakeExamUploading = false) }
                         print(isSuccess)
                         finishCreateProblem()
                     }.onFailure {
+                        reduce { state.copy(isMakeExamUploading = false) }
                         it.printStackTrace()
                         postSideEffect(CreateProblemSideEffect.ReportError(it))
                     }
             }.onFailure {
+                reduce { state.copy(isMakeExamUploading = false) }
                 it.printStackTrace()
                 postSideEffect(CreateProblemSideEffect.ReportError(it))
             }
@@ -406,8 +410,8 @@ internal class CreateProblemViewModel @Inject constructor(
     /** 유저가 입력한 정보를 기반으로 Exam 기본 썸네일 이미지를 가져온다. */
     internal fun getExamThumbnail() = intent {
         val state = container.stateFlow.value
-        // 이미 썸네일을 서버로부터 가져온 경우 별다른 처리를 하지 않는다.
-        if (state.additionalInfo.thumbnail.toString().isNotEmpty()) {
+        // 이전에 등록된 제목과 동일한 경우 별다른 처리를 하지 않는다.
+        if (state.examInformation.prevExamTitle == state.examInformation.examTitle) {
             reduce {
                 state.copy(createProblemStep = CreateProblemStep.CreateProblem)
             }
@@ -420,6 +424,9 @@ internal class CreateProblemViewModel @Inject constructor(
             reduce {
                 state.copy(
                     createProblemStep = CreateProblemStep.CreateProblem,
+                    examInformation = state.examInformation.copy(
+                        prevExamTitle = state.examInformation.examTitle,
+                    ),
                     additionalInfo = state.additionalInfo.copy(thumbnail = thumbnail),
                     defaultThumbnail = thumbnail,
                 )
@@ -655,7 +662,6 @@ internal class CreateProblemViewModel @Inject constructor(
         val newAnswers = state.createProblem.answers.toMutableList()
         val newAnswer = newAnswers[questionIndex]
         newAnswers[questionIndex] = when (newAnswer) {
-            // TODO(riflockle7): 발현 케이스 확인을 위해 이렇게 두었으며, 추후 state 명세하면서 없앨 예정.
             is Answer.Short -> duckieClientLogicProblemException(message = "주관식 답변은 삭제할 수 없습니다.")
 
             is Answer.Choice -> Answer.Choice(

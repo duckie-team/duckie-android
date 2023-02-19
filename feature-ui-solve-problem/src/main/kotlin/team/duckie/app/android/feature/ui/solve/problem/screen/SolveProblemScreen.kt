@@ -79,7 +79,6 @@ internal fun SolveProblemScreen(
                     page = pageIndex,
                     question = state.problems[pageIndex].problem.question,
                 )
-                // TODO(riflockle7): problem 엔티티 commit
                 val answer = state.problems[pageIndex].problem.answer
                 answerSection(
                     page = pageIndex,

@@ -136,7 +136,6 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     val me get() = requireNotNull(container.stateFlow.value.me) { "User is not initialized." }
 
-    // TODO(riflockle7): user 엔티티 commit
     val profileImageUrl get() = requireNotNull(container.stateFlow.value.me?.profileImageUrl) { "User.profileImageUrl is not initialized." }
 
     /* ----- Onboard Logic ----- */
@@ -312,7 +311,6 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    // TODO(riflockle7): PATCH /users/:id API commit
     suspend fun updateUser(
         id: Int,
         favoriteCategories: List<Category>?,
@@ -326,8 +324,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             tags = favoriteTags,
             profileImageUrl = profileImageUrl,
             nickname = nickname,
-            // TODO(riflockle7): 온보딩 완료 시에는 무조건 NEW -> READY 로 바꿔줘야 함
-            status = "READY",
+            status = "READY", // 온보딩 완료 시에는 무조건 NEW -> READY 로 바꿔줘야 함
             updateMeInstance = { user -> viewModelScope.launch { setMeUseCase(user) } },
         )
             .onSuccess { user ->

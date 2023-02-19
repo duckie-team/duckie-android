@@ -528,7 +528,10 @@ internal fun CreateProblemScreen(
             },
             onCloseClick = {
                 vm.updatePhotoState(null)
-                galleryImagesSelections[galleryImagesSelectionIndex] = false
+                // TODO(riflockle7): 발현 조건을 모르겠음... 일단은 안전처리로 진행
+                if (galleryImagesSelections.isNotEmpty() && galleryImages.isNotEmpty()) {
+                    galleryImagesSelections[galleryImagesSelectionIndex] = false
+                }
                 coroutineShape.hideBottomSheet(sheetState) { selectedQuestionIndex = null }
             },
             onAddClick = {

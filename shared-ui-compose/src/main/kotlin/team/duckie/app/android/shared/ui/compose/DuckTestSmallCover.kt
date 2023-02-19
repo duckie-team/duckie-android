@@ -35,15 +35,13 @@ data class DuckTestCoverItem(
 fun DuckTestSmallCover(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
-    onClick: (Int) -> Unit,
+    onItemClick: (Int) -> Unit,
 ) {
     Column(
         modifier = modifier
             .width(158.dp)
-            .quackClickable(
-                rippleEnabled = true,
-            ) {
-                onClick(duckTestCoverItem.testId)
+            .quackClickable(rippleEnabled = true) {
+                onItemClick(duckTestCoverItem.testId)
             },
         horizontalAlignment = Alignment.Start,
     ) {
@@ -52,7 +50,7 @@ fun DuckTestSmallCover(
                 .fillMaxWidth()
                 .height(116.dp),
             model = duckTestCoverItem.coverImg,
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.Crop,
             contentDescription = null,
         )
         QuackBody2(

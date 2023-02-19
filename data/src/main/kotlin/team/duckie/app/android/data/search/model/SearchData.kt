@@ -14,25 +14,21 @@ import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.model.UserResponse
 
 @JsonClass(generateAdapter = true)
-internal sealed class SearchData(
+internal class SearchData(
     @field:JsonProperty("type")
-    open val type: String? = null,
-) {
-    @JsonClass(generateAdapter = true)
-    internal data class ExamSearchData(
-        @field:JsonProperty("result")
-        val result: List<ExamData>? = null,
-    ) : SearchData()
+    val type: String? = null,
 
-    @JsonClass(generateAdapter = true)
-    internal data class UserSearchData(
-        @field:JsonProperty("result")
-        val result: List<UserResponse>? = null,
-    ) : SearchData()
+    @field:JsonProperty("result")
+    val result: SearchResultData? = null,
+)
 
-    @JsonClass(generateAdapter = true)
-    internal data class TagSearchData(
-        @field:JsonProperty("result")
-        val result: List<TagData>? = null,
-    ) : SearchData()
-}
+internal class SearchResultData(
+    @field:JsonProperty("exams")
+    val exams: List<ExamData>? = null,
+
+    @field:JsonProperty("users")
+    val users: List<UserResponse>? = null,
+
+    @field:JsonProperty("tags")
+    val tags: List<TagData>? = null,
+)

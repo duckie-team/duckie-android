@@ -6,6 +6,8 @@
   -->
 
 <resources>
+    <string name="create_problem_exit_dialog_title">문제 만들기를 끝내겠습니까?\n작성된 내용은 저장되지 않습니다.</string>
+
     <string name="create_problem_permission_toast_message">접근 권한이 없습니다.\n앱 설정에서 갤러리 권한을 허용해 주세요.</string>
     <string name="network_error">일시적인 오류가 발생했습니다. 관리자에게 문의해주세요.</string>
     <string name="get_exam_authorized_error">해당 시험을 수정할 수 있는 권한이 없습니다.</string>
@@ -28,6 +30,7 @@
     <string name="input_certifying_statement">"필적확인 문구를 입력해 주세요"</string>
     <string name="add_also">+%s 추가하기</string>
     <string name="search_main_tag_placeholder">"시험 영역으로 설정할 태그를 검색해 주세요."</string>
+    <string name="make_exam_loading">문제 생성 중입니다.\n잠시 기다려주세요.</string>
 
     <string name="create_problem_bottom_sheet_title_choice_text">객관식/글</string>
     <string name="create_problem_bottom_sheet_title_choice_media">객관식/사진</string>
