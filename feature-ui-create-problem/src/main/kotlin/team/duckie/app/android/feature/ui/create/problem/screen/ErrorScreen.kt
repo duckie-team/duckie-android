@@ -9,35 +9,65 @@ package team.duckie.app.android.feature.ui.create.problem.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import org.orbitmvi.orbit.compose.collectAsState
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.create.problem.R
-import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
-import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.quackquack.ui.component.QuackTitle1
+import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackBody2
+import team.duckie.quackquack.ui.component.QuackHeadLine2
+import team.duckie.quackquack.ui.component.QuackSmallButton
+import team.duckie.quackquack.ui.component.QuackSmallButtonType
 
 @Composable
 internal fun ErrorScreen(
-    viewModel: CreateProblemViewModel = activityViewModel(),
     modifier: Modifier,
+    isNetworkError: Boolean = false,
+    title: String? = null,
+    onRetryClick: suspend () -> Unit = {},
 ) {
+    val coroutineScope = rememberCoroutineScope()
     Column(
-        modifier = modifier,
+        modifier = modifier.navigationBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        val isEditMode = viewModel.collectAsState().value.isEditMode
-        QuackTitle1(
-            text = "에러입니다\n\n$viewModel\n\n${
-                if (isEditMode) {
-                    stringResource(id = R.string.get_exam_authorized_error)
-                } else {
-                    ""
+        QuackHeadLine2(
+            padding = PaddingValues(top = 164.dp),
+            text = if (isNetworkError) {
+                stringResource(id = R.string.default_network_error_title)
+            } else {
+                title ?: stringResource(id = R.string.default_error)
+            },
+            color = QuackColor.Gray1,
+        )
+
+        if (isNetworkError) {
+            QuackBody2(
+                padding = PaddingValues(top = 8.dp),
+                text = stringResource(id = R.string.default_network_error_message),
+                color = QuackColor.Gray1,
+            )
+        }
+
+        // TODO(riflockle7): 꽥꽥에서 하얀 배경 버튼 제공 필요
+        QuackSmallButton(
+            modifier = Modifier.padding(bottom = 40.dp),
+            type = QuackSmallButtonType.Fill,
+            text = stringResource(id = R.string.error_retry),
+            enabled = false,
+            onClick = {
+                coroutineScope.launch {
+                    onRetryClick()
                 }
-            }",
+            },
         )
     }
 }

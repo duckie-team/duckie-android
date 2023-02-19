@@ -123,6 +123,8 @@ class CreateProblemActivity : BaseActivity() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
+                            isNetworkError = rootState.isNetworkError,
+                            onRetryClick = viewModel::refresh,
                         )
                     }
                 }
