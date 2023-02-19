@@ -25,6 +25,8 @@ dependencies {
         projects.navigator,
         projects.utilUi,
         projects.featureDatastore,
+        projects.sharedUiCompose,
+        projects.utilAndroid,
         projects.utilKotlin,
         projects.utilExceptionHandling,
         projects.utilCompose,

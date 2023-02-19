@@ -9,16 +9,18 @@
 
 package team.duckie.app.android.feature.ui.create.problem.viewmodel
 
+import android.app.Application
 import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -58,6 +60,8 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.util.android.image.MediaUtil
+import team.duckie.app.android.util.android.network.NetworkUtil
+import team.duckie.app.android.util.android.viewmodel.context
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
@@ -70,6 +74,7 @@ private const val TagsMaximumCount = 4
 @HiltViewModel
 @Suppress("LargeClass")
 internal class CreateProblemViewModel @Inject constructor(
+    application: Application,
     private val makeExamUseCase: MakeExamUseCase,
     private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
@@ -79,7 +84,7 @@ internal class CreateProblemViewModel @Inject constructor(
     private val loadGalleryImagesUseCase: LoadGalleryImagesUseCase,
     private val getMeUseCase: GetMeUseCase,
     private val savedStateHandle: SavedStateHandle,
-) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, ViewModel() {
+) : ContainerHost<CreateProblemState, CreateProblemSideEffect>, AndroidViewModel(application) {
 
     override val container =
         container<CreateProblemState, CreateProblemSideEffect>(CreateProblemState())
@@ -87,6 +92,11 @@ internal class CreateProblemViewModel @Inject constructor(
     suspend fun initState() {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
         val isEditMode = examId != -1
+
+        if (!NetworkUtil.isNetworkAvailable(this.context)) {
+            loadErrorPage(isNetworkError = true)
+            return
+        }
 
         // 문제 생성 모드
         if (!isEditMode) {
@@ -101,6 +111,7 @@ internal class CreateProblemViewModel @Inject constructor(
                     }
                 }.onFailure {
                     postSideEffect(CreateProblemSideEffect.ReportError(it))
+                    loadErrorPage()
                 }
             }
         }
@@ -109,6 +120,28 @@ internal class CreateProblemViewModel @Inject constructor(
             // TODO(riflockle7): 추후 기능 제공 시 구현 필요
             intent { postSideEffect(CreateProblemSideEffect.ReportError(Throwable("미지원 기능"))) }
         }
+    }
+
+    private suspend fun loadErrorPage(isNetworkError: Boolean = false) = intent {
+        reduce {
+            state.copy(
+                createProblemStep = CreateProblemStep.Error,
+                isNetworkError = isNetworkError,
+            )
+        }
+    }
+
+    suspend fun refresh() {
+        intent {
+            reduce {
+                state.copy(
+                    isNetworkError = false,
+                    createProblemStep = CreateProblemStep.Loading,
+                )
+            }
+        }
+
+        initState()
     }
 
     /**
@@ -125,6 +158,7 @@ internal class CreateProblemViewModel @Inject constructor(
     val galleryImages: ImmutableList<String> get() = mutableGalleryImages
 
     /** tags 검색 flow. 실질 동작 로직은 apply 내에 명세되어 있다. */
+    @OptIn(FlowPreview::class)
     private val _getSearchTagsFlow: MutableSharedFlow<String> = MutableSharedFlow<String>(
         replay = 0,
         extraBufferCapacity = 1,

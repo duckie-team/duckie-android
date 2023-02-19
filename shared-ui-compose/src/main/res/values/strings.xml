@@ -6,6 +6,11 @@
   -->
 
 <resources>
+    <string name="default_error">화면을 불러오지 못했어요 :(</string>
+    <string name="default_network_error_title">네트워크 연결이 불안정해요 :(</string>
+    <string name="default_network_error_message">잠시 후 다시 시도해 주세요.</string>
+    <string name="default_error_retry">다시 시도하기</string>
+
     <string name="following">팔로잉</string>
     <string name="follow">팔로우</string>
     <string name="examinee">응시자</string>

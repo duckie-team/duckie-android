@@ -64,6 +64,10 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    suspend fun refresh() {
+        initState()
+    }
+
     fun followUser() = viewModelScope.launch {
         val detailState = container.stateFlow.value
         require(detailState is DetailState.Success)
