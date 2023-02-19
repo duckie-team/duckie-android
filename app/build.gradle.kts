@@ -56,6 +56,14 @@ android {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
+            isDebuggable = false
+            // TODO(riflockle7): The Crashlytics build ID is missing. 가 발생하여 아래 코드 활성화가 불가능
+            // isMinifyEnabled = true
+            // isShrinkResources = true
+            // proguardFiles(
+            //     getDefaultProguardFile("proguard-android-optimize.txt"),
+            //     "proguard-rules.pro",
+            // )
         }
     }
 }
