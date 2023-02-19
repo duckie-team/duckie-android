@@ -16,3 +16,6 @@ secrets.tar
 /documents/dokka/
 /report
 snapshots
+info.txt
+keystore.pepk
+signingconfig.properties
