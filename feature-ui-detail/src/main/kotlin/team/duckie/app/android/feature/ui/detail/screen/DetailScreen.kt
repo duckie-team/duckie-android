@@ -344,7 +344,7 @@ private fun DetailProfileLayout(
         }
         // 공백
         Spacer(modifier = Modifier.weight(1f))
-        // TODO(riflockle7): 추후 팔로우 완료 시에 대한 처리 필요
+
         // 팔로우 버튼
         QuackBody2(
             padding = PaddingValues(
