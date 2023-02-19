@@ -104,7 +104,6 @@ private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
 
 private const val MaximumChoice = 5
-private const val MinimumProblem = 5
 private const val MaximumProblem = 10
 private const val TextFieldMaxLength = 20
 
@@ -501,7 +500,7 @@ internal fun CreateProblemScreen(
                             vm.navigateStep(CreateProblemStep.AdditionalInformation)
                         }
                     },
-                    isProblemCountValidate = problemCount in MinimumProblem..MaximumProblem,
+                    isCreateProblemValidate = problemCount < MaximumProblem,
                     isValidateCheck = vm::createProblemIsValidate,
                 )
             },
