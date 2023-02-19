@@ -98,7 +98,7 @@ class OnboardActivity : BaseActivity() {
         }
 
         onBackPressedDispatcher.addCallback(owner = this) {
-            if (onboardStepState == OnboardStep.Login) {
+            if (onboardStepState == OnboardStep.Login || onboardStepState == OnboardStep.Activity) {
                 finishWithAnimation()
             } else {
                 val onboardStepState = onboardStepState
