@@ -28,7 +28,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -284,8 +283,9 @@ private fun DetailProfileLayout(
     state: DetailState.Success,
     followButtonClick: () -> Unit,
 ) {
-    // TODO(riflockle7): 추후 팔로잉, 팔로잉 취소 스펙 나오면 viewModel 에서 값을 가져오도록 처리해야 함
-    val isFollowed = remember { mutableStateOf(state.isFollowing) }
+    val isFollowed = remember(state.isFollowing) { state.isFollowing }
+    val toast = rememberToast()
+    val detailLoadingMypageToastMessage = stringResource(id = R.string.detail_loading_mypage_toast)
 
     Row(
         modifier = Modifier.padding(
@@ -319,7 +319,8 @@ private fun DetailProfileLayout(
                 QuackBody3(
                     text = state.nickname,
                     onClick = {
-                        // TODO(riflockle7): 마이페이지로 이동
+                        // TODO(riflockle7): 프로필 화면으로 이동
+                        toast(detailLoadingMypageToastMessage)
                     },
                     color = QuackColor.Black,
                 )
@@ -351,13 +352,13 @@ private fun DetailProfileLayout(
                 bottom = 8.dp,
             ),
             text = stringResource(
-                if (isFollowed.value) {
+                if (isFollowed) {
                     R.string.detail_follow_cancel
                 } else {
                     R.string.detail_follow
                 },
             ),
-            color = if (isFollowed.value) QuackColor.Gray2 else QuackColor.DuckieOrange,
+            color = if (isFollowed) QuackColor.Gray2 else QuackColor.DuckieOrange,
             onClick = followButtonClick,
         )
     }

@@ -15,20 +15,20 @@ import team.duckie.app.android.domain.user.model.User
 @Immutable
 sealed class Search(val type: String) {
     companion object {
-        const val Exam = "EXAM"
-        const val User = "USER"
+        const val Exams = "EXAMS"
+        const val Users = "USERS"
         const val Tags = "TAGS"
     }
 
     @Immutable
     data class ExamSearch(
         val exams: List<Exam>,
-    ) : Search(Exam)
+    ) : Search(Exams)
 
     @Immutable
     data class UserSearch(
         val users: List<User>,
-    ) : Search(User)
+    ) : Search(Users)
 
     @Immutable
     data class TagSearch(

@@ -147,7 +147,6 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
                 items = onboardState.categories.toImmutableList(),
                 key = { _, category -> category.id },
             ) { index, category ->
-                // TODO(riflockle7): category 엔티티 commit
                 category.thumbnailUrl?.run {
                     CategoryItem(
                         imageUrl = this,

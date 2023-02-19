@@ -30,7 +30,6 @@ class MeRepositoryImpl @Inject constructor(
 ) : MeRepository {
     private var me: User? = null
 
-    // TODO(riflockle7): 로그인 화면으로 넘겨주는 flow 필요 (throw Error 할지 고민 중)
     override suspend fun getMe(): User {
         // 1. 토큰 값이 등록되어 있는지 먼저 확인한다 (이게 없으면 유저 정보 가져오는 거 자체가 안됨)
         val meToken = getMeToken() ?: duckieClientLogicProblemException(code = ClientMeTokenNull)

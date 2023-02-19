@@ -89,7 +89,7 @@ internal fun SearchResultScreen(
                 items(state.searchResultForTest) { item ->
                     DuckTestSmallCover(
                         duckTestCoverItem = item,
-                        onClick = {
+                        onItemClick = {
                             // TODO(limsaehyun): 상세보기로 이동
                         },
                     )

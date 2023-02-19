@@ -125,10 +125,8 @@ internal fun HomeRecommendScreen(
                 title = item?.title ?: "",
                 tag = item?.tag?.name ?: "",
                 exams = item?.exams?.toImmutableList() ?: persistentListOf(),
-                onClicked = { },
-                onTagClicked = { tag ->
-                    vm.navigateToSearchResult(tag)
-                },
+                onExamClicked = { examId -> vm.navigateToHomeDetail(examId) },
+                onTagClicked = { tag -> vm.navigateToSearchResult(tag) },
             )
         }
     }
@@ -164,7 +162,7 @@ private fun HomeRecommendJumbotronLayout(
         QuackLargeButton(
             type = QuackLargeButtonType.Fill,
             text = recommendItem.buttonContent,
-            onClick = { onStartClicked(recommendItem.id) },
+            onClick = { onStartClicked(recommendItem.examId) },
             enabled = true,
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -185,8 +183,8 @@ private fun HomeTopicRecommendLayout(
     title: String,
     tag: String,
     exams: ImmutableList<Exam>,
+    onExamClicked: (Int) -> Unit,
     onTagClicked: (String) -> Unit,
-    onClicked: (Int) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -207,10 +205,10 @@ private fun HomeTopicRecommendLayout(
             contentPadding = PaddingValues(
                 top = 12.dp,
                 start = 16.dp,
+                end = 16.dp,
             ),
         ) {
             items(items = exams) { item ->
-                // TODO(riflockle7): exam 엔티티 commit
                 DuckTestSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = item.id,
@@ -219,8 +217,8 @@ private fun HomeTopicRecommendLayout(
                         title = item.title,
                         examineeNumber = item.solvedCount ?: 0,
                     ),
-                    onClick = {
-                        onClicked(it)
+                    onItemClick = {
+                        onExamClicked(item.id)
                     },
                 )
             }

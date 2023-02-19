@@ -86,7 +86,6 @@ class UserRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    // TODO(riflockle7): GET /users/following API commit (변경점이 많아 TODO 적음)
     @AllowMagicNumber
     @ExperimentalApi
     override suspend fun fetchUserFollowing(userId: Int): UserFollowings =

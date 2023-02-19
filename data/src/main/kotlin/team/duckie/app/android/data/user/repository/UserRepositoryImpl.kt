@@ -18,9 +18,6 @@ import team.duckie.app.android.util.kotlin.ExperimentalApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// TODO(riflockle7): 결국 User 와 token 은 엮일 수 밖에 없는 요소이다.
-//  하지만 기능상 각 Repository 로 분리되는 것도 맞다.
-//  그래서 UseCase 로 AuthRepository 를 호출해주었는데 이는 괜찮은 걸까?
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
@@ -44,7 +41,6 @@ class UserRepositoryImpl @Inject constructor(
         return userDataSource.nicknameValidateCheck(nickname)
     }
 
-    // TODO(riflockle7): GET /users/following API commit (변경점이 많아 TODO 적음)
     @AllowMagicNumber
     @ExperimentalApi
     override suspend fun fetchUserFollowing(userId: Int): UserFollowings {
