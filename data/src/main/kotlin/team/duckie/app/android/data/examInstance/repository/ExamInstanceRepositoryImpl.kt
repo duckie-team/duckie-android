@@ -14,13 +14,11 @@ import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data._util.buildJson
 import team.duckie.app.android.data._util.toJsonObject
-import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.exam.mapper.toData
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
@@ -31,7 +29,7 @@ import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.model.ExamInstance
 import team.duckie.app.android.domain.examInstance.repository.ExamInstanceRepository
-import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import javax.inject.Inject
 
 class ExamInstanceRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
