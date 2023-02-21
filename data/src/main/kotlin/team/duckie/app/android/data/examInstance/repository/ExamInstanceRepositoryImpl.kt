@@ -18,6 +18,7 @@ import javax.inject.Inject
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._exception.util.responseCatchingFuel
+import team.duckie.app.android.data._util.buildJson
 import team.duckie.app.android.data._util.toJsonObject
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.exam.mapper.toData
@@ -48,16 +49,22 @@ class ExamInstanceRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun postExamInstance(examInstanceBody: ExamInstanceBody): Boolean {
-        val response = client.post {
-            url("/exam-instance")
-            setBody(examInstanceBody.toData())
+    override suspend fun postExamInstance(examInstanceBody: ExamInstanceBody): ExamInstance =
+        withContext(Dispatchers.IO) {
+            val (_, response) = fuel
+                .post(path = "/exam-instance")
+                .body(
+                    body = buildJson {
+                        "examId" withInt examInstanceBody.examId
+                    },
+                )
+                .responseString()
+
+            return@withContext responseCatchingFuel(
+                response = response,
+                parse = ExamInstanceData::toDomain,
+            )
         }
-        return responseCatching(response.status.value, response.bodyAsText()) { body ->
-            val json = body.toStringJsonMap()
-            json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
-        }
-    }
 
     override suspend fun postExamInstanceSubmit(
         id: Int,
