@@ -129,11 +129,11 @@ class DetailViewModel @Inject constructor(
         intent {
             require(state is DetailState.Success)
             (state as DetailState.Success).run {
-                makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess {
+                makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
                     (state as DetailState.Success).run {
                         postSideEffect(
                             DetailSideEffect.StartExam(
-                                exam.id,
+                                result.id,
                                 certifyingStatement,
                             ),
                         )
