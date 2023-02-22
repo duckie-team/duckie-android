@@ -12,7 +12,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.search.repository.SearchRepository
-import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)

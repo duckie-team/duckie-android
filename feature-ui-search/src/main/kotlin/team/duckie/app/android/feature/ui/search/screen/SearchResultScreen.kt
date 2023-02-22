@@ -29,7 +29,7 @@ import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchResultViewModel
-import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
+import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.component.QuackMainTab
@@ -79,7 +79,7 @@ internal fun SearchResultScreen(
             },
         )
         when (state.tagSelectedTab) {
-            SearchResultStep.DuckTest -> LazyVerticalGrid(
+            SearchResultStep.DuckExam -> LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 state = rememberLazyGridState(),
                 verticalArrangement = Arrangement.spacedBy(48.dp),
@@ -87,10 +87,10 @@ internal fun SearchResultScreen(
                 contentPadding = HomeTagListPadding,
             ) {
                 items(state.searchResultForTest) { item ->
-                    DuckTestSmallCover(
+                    DuckExamSmallCover(
                         duckTestCoverItem = item,
                         onItemClick = {
-                            // TODO(limsaehyun): 상세보기로 이동
+                            // TODO(limsaTehyun): 상세보기로 이동
                         },
                     )
                 }

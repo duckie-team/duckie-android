@@ -21,9 +21,4 @@ interface RecommendationRepository {
     fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>
 
     suspend fun fetchJumbotrons(page: Int): ImmutableList<Exam>
-
-    suspend fun fetchRecommendTags(
-        tag: String,
-        type: SearchType,
-    )
 }

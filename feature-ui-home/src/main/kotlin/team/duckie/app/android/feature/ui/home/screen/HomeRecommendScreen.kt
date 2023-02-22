@@ -46,7 +46,7 @@ import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
+import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.component.QuackBody1
@@ -209,7 +209,7 @@ private fun HomeTopicRecommendLayout(
             ),
         ) {
             items(items = exams) { item ->
-                DuckTestSmallCover(
+                DuckExamSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = item.id,
                         coverImg = item.thumbnailUrl,

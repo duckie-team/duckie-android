@@ -48,7 +48,6 @@ import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.domain.search.model.Search
-import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.repository.TagRepository
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase

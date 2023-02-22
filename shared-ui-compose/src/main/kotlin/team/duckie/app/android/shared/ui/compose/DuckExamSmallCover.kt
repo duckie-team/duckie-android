@@ -32,7 +32,7 @@ data class DuckTestCoverItem(
 )
 
 @Composable
-fun DuckTestSmallCover(
+fun DuckExamSmallCover(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: (Int) -> Unit,

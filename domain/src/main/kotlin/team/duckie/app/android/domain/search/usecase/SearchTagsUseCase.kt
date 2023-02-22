@@ -5,21 +5,20 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.domain.recommendation.usecase
+package team.duckie.app.android.domain.search.usecase
 
 import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.recommendation.model.SearchType
-import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
+import team.duckie.app.android.domain.search.repository.SearchRepository
 import javax.inject.Inject
 
 @Immutable
-class FetchSearchResultForExamUseCase @Inject constructor(
-    private val repository: RecommendationRepository,
+class SearchTagsUseCase @Inject constructor(
+    private val repository: SearchRepository,
 ) {
     suspend operator fun invoke(tag: String) = runCatching {
-        repository.fetchRecommendTags(
-            tag = tag,
-            type = SearchType.Exam,
+        repository.searchTags(
+            query = tag,
         )
     }
 }

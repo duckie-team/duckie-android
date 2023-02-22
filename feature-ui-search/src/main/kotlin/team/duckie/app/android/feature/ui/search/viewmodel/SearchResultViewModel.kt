@@ -17,8 +17,8 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForExamUseCase
-import team.duckie.app.android.domain.recommendation.usecase.FetchSearchResultForUserUseCase
+import team.duckie.app.android.domain.search.usecase.SearchExamsUseCase
+import team.duckie.app.android.domain.search.usecase.SearchUsersUseCase
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchResultSideEffect
 import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchResultState
@@ -48,8 +48,8 @@ private val DummyResultResultForUser = (0..20).map {
 
 @HiltViewModel
 internal class SearchResultViewModel @Inject constructor(
-    private val fetchSearchResultForExamUseCase: FetchSearchResultForExamUseCase,
-    private val fetchSearchResultForUserUseCase: FetchSearchResultForUserUseCase,
+    private val searchExamsUseCase: SearchExamsUseCase,
+    private val searchUsersUseCase: SearchUsersUseCase,
 ) : ContainerHost<SearchResultState, SearchResultSideEffect>, ViewModel() {
 
     override val container = container<SearchResultState, SearchResultSideEffect>(SearchResultState())
@@ -58,7 +58,7 @@ internal class SearchResultViewModel @Inject constructor(
     fun fetchSearchResultForExam(tag: String) = intent {
         updateSearchResultLoading(true)
         delay(2.seconds)
-        fetchSearchResultForExamUseCase(
+        searchExamsUseCase(
             tag = tag,
         ).onSuccess {
             reduce {
@@ -76,7 +76,7 @@ internal class SearchResultViewModel @Inject constructor(
     // TODO(limsaehyun): Request Server
     fun fetchSearchResultForUser(tag: String) = intent {
         updateSearchResultLoading(true)
-        fetchSearchResultForUserUseCase(
+        searchUsersUseCase(
             tag = tag,
         ).onSuccess {
             reduce {

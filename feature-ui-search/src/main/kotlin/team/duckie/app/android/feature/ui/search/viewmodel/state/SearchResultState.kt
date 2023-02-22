@@ -16,7 +16,7 @@ internal data class SearchResultState(
     val isSearchResultLoading: Boolean = false,
 
     val searchTag: String = "",
-    val tagSelectedTab: SearchResultStep = SearchResultStep.DuckTest,
+    val tagSelectedTab: SearchResultStep = SearchResultStep.DuckExam,
 
     val searchResultForTest: PersistentList<DuckTestCoverItem> = persistentListOf(),
     val searchResultForUser: PersistentList<User> = persistentListOf(),

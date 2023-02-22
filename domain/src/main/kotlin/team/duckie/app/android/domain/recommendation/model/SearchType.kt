@@ -12,8 +12,10 @@ package team.duckie.app.android.domain.recommendation.model
  *
  * [User] 사용자
  * [Exam] 덕질고사
+ * [TAG] 태그
  */
 enum class SearchType {
     User,
     Exam,
+    TAG,
 }
