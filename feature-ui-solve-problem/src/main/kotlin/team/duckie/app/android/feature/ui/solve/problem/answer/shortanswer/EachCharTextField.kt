@@ -7,13 +7,10 @@
 
 package team.duckie.app.android.feature.ui.solve.problem.answer.shortanswer
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -25,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.shared.ui.compose.StaggeredLayout
+import team.duckie.app.android.util.kotlin.fastForEachIndexed
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
@@ -41,6 +40,7 @@ internal fun EachCharTextField(
 ) {
     val answerCharList = remember { answer.toImmutableList() }
     val remainCount = answerCharList.size - value.text.length
+
     BasicTextField(
         modifier = modifier,
         value = value,
@@ -52,12 +52,8 @@ internal fun EachCharTextField(
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         decorationBox = {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(space = 4.dp),
-            ) {
-                itemsIndexed(
-                    items = value.text.toMutableList(),
-                ) { index, char ->
+            StaggeredLayout {
+                answerCharList.fastForEachIndexed { index, char ->
                     if (char == WhiteSpace) {
                         Spacer(modifier = Modifier.padding(start = 12.dp))
                     } else {
@@ -68,9 +64,7 @@ internal fun EachCharTextField(
                     }
                 }
                 if (remainCount > 0) {
-                    items(
-                        count = remainCount,
-                    ) { index ->
+                    repeat(times = remainCount) { index ->
                         if (answerCharList[index + value.text.length].isWhitespace()) {
                             Spacer(modifier = Modifier.padding(start = 12.dp))
                         } else {
