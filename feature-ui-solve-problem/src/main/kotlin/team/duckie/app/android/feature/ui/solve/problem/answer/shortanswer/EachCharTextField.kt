@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
-import team.duckie.app.android.shared.ui.compose.StaggeredLayout
+import team.duckie.app.android.shared.ui.compose.FlowLayout
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
@@ -52,7 +52,7 @@ internal fun EachCharTextField(
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         decorationBox = {
-            StaggeredLayout {
+            FlowLayout {
                 value.text.toImmutableList().fastForEachIndexed { index, char ->
                     if (char == WhiteSpace) {
                         Spacer(modifier = Modifier.padding(start = 12.dp))

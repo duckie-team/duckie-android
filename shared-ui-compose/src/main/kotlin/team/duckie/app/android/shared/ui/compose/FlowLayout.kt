@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.max
 
 @Composable
-fun StaggeredLayout(
+fun FlowLayout(
     modifier: Modifier = Modifier,
     horizontalSpace: Dp = 4.dp,
     verticalSpace: Dp = 4.dp,
