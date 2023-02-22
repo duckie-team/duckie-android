@@ -102,7 +102,7 @@ jackson-core = "2.14.2"
 moshi-core = "1.14.0"
 
 # orbit
-orbit-core = "4.6.0"
+orbit-core = "4.6.1"
 
 # quack
 quack-ui-components = "1.4.5"
