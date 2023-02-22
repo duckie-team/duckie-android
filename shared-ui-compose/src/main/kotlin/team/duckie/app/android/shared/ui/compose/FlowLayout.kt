@@ -43,7 +43,7 @@ fun FlowLayout(
             }
             maxY = max(placeable.height + verticalSpacePx, maxY)
 
-            flowContents.add(FlowContent(placeable, x, y))
+            flowContents += FlowContent(placeable, x, y)
             x += placeable.width + horizontalSpacePx
         }
         y += maxY
