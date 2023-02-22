@@ -52,7 +52,10 @@ internal fun EachCharTextField(
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         decorationBox = {
-            FlowLayout {
+            FlowLayout(
+                horizontalSpace = 4.dp,
+                verticalSpace = 12.dp,
+            ) {
                 value.text.toImmutableList().fastForEachIndexed { index, char ->
                     if (char == WhiteSpace) {
                         Spacer(modifier = Modifier.padding(start = 12.dp))
