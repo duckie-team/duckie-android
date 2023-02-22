@@ -71,7 +71,6 @@ class RecommendationRepositoryImpl @Inject constructor(
             )
         }
 
-    // TODO(riflockle7): GET /recommendations API commit
     @ExperimentalApi
     override suspend fun fetchJumbotrons(page: Int): ImmutableList<Exam> =
         withContext(Dispatchers.IO) {
@@ -90,12 +89,4 @@ class RecommendationRepositoryImpl @Inject constructor(
             // 예외적으로 page가 1일 경우에는 jumbotrons이 누락되면 안된다.
             return@withContext apiResponse.jumbotrons ?: duckieResponseFieldNpe("jumbotron")
         }
-
-    @ExperimentalApi
-    override suspend fun fetchRecommendTags(
-        tag: String,
-        type: SearchType,
-    ) {
-        // TODO(limsaehyun): repository 작업 필요
-    }
 }
