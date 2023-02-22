@@ -38,8 +38,8 @@ internal fun EachCharTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     answer: String,
 ) {
-    val answerCharList = remember { answer.toImmutableList() }
-    val remainCount = answerCharList.size - value.text.length
+    val answerChars = remember { answer.toImmutableList() }
+    val remainCount = answerChars.size - value.text.length
 
     BasicTextField(
         modifier = modifier,
@@ -53,7 +53,7 @@ internal fun EachCharTextField(
         keyboardActions = keyboardActions,
         decorationBox = {
             StaggeredLayout {
-                answerCharList.fastForEachIndexed { index, char ->
+                value.text.toImmutableList().fastForEachIndexed { index, char ->
                     if (char == WhiteSpace) {
                         Spacer(modifier = Modifier.padding(start = 12.dp))
                     } else {
@@ -65,7 +65,7 @@ internal fun EachCharTextField(
                 }
                 if (remainCount > 0) {
                     repeat(times = remainCount) { index ->
-                        if (answerCharList[index + value.text.length].isWhitespace()) {
+                        if (answerChars[index + value.text.length].isWhitespace()) {
                             Spacer(modifier = Modifier.padding(start = 12.dp))
                         } else {
                             CharBox(
