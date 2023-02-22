@@ -17,7 +17,7 @@ import team.duckie.app.android.domain.examInstance.model.ExamInstance
 interface ExamInstanceRepository {
     suspend fun getExamInstance(examInstanceId: Int): ExamInstance
 
-    suspend fun postExamInstance(examInstanceBody: ExamInstanceBody): Boolean
+    suspend fun postExamInstance(examInstanceBody: ExamInstanceBody): ExamInstance
 
     suspend fun postExamInstanceSubmit(
         id: Int,

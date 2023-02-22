@@ -17,7 +17,7 @@ import team.duckie.app.android.util.kotlin.fastMap
 
 internal fun ExamInstanceData.toDomain() = ExamInstance(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
-    exam = exam?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exam"),
+    exam = exam?.toDomain(),
     problemInstances = problemInstances?.fastMap { it.toDomain() },
     status = status ?: duckieResponseFieldNpe("${this::class.java.simpleName}.status"),
 )
