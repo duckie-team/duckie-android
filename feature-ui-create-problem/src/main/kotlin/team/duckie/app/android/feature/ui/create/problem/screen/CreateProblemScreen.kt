@@ -581,7 +581,7 @@ internal fun CreateProblemScreen(
             }
             deleteDialogNo = null
         },
-        onDismissRequest = {},
+        onDismissRequest = { deleteDialogNo = null },
     )
 }
 

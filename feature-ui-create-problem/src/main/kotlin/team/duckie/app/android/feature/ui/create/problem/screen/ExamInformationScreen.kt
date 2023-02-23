@@ -259,7 +259,7 @@ internal fun ExamInformationScreen(
             createProblemExitDialogVisible = false
             viewModel.finishCreateProblem()
         },
-        onDismissRequest = {},
+        onDismissRequest = { createProblemExitDialogVisible = false },
     )
 }
 
