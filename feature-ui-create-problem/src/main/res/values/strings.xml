@@ -37,7 +37,7 @@
     <string name="create_problem_bottom_sheet_title_short_form">주관식</string>
     <string name="create_problem_add_problem_button">문제 추가</string>
     <string name="create_problem_temp_save_button">임시저장</string>
-    <string name="create_problem_delete_dialog_title">삭제하시겠습니까?</string>
+    <string name="create_problem_delete_dialog_title">%s를 삭제하시겠습니까?</string>
     <string name="create_problem_question_placeholder">%s. 문제를 입력해주세요</string>
     <string name="create_problem_answer_placeholder">%s번 보기</string>
     <string name="create_problem_add_button">+ 보기추가</string>

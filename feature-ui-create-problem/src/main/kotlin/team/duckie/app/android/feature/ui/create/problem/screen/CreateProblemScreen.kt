@@ -567,7 +567,11 @@ internal fun CreateProblemScreen(
     }
 
     QuackDialog(
-        title = stringResource(id = R.string.create_problem_delete_dialog_title),
+        title = stringResource(
+            id = R.string.create_problem_delete_dialog_title,
+            (deleteDialogNo?.first?.let { "${it + 1}번 문제" } ?: "")
+                    + (deleteDialogNo?.second?.let { "의 ${it + 1}번 보기" } ?: ""),
+        ),
         visible = deleteDialogNo != null,
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { deleteDialogNo = null },
