@@ -270,7 +270,8 @@ private fun DetailContentLayout(
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
         // 점수 분포도 Layout
-        DetailScoreDistributionLayout(state)
+        // TODO(riflockle7): 기획 정해질 시 활성화
+        // DetailScoreDistributionLayout(state)
     }
 }
 
