@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -228,6 +229,7 @@ private fun DetailContentLayout(
                 start = 16.dp,
                 end = 16.dp,
             ),
+            shape = RoundedCornerShape(size = 8.dp),
             contentScale = ContentScale.FillWidth,
             src = state.exam.thumbnailUrl,
         )
@@ -270,7 +272,8 @@ private fun DetailContentLayout(
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
         // 점수 분포도 Layout
-        DetailScoreDistributionLayout(state)
+        // TODO(riflockle7): 기획 정해질 시 활성화
+        // DetailScoreDistributionLayout(state)
     }
 }
 
