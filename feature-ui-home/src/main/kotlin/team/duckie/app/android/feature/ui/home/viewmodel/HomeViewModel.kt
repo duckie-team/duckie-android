@@ -38,7 +38,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
-import team.duckie.app.android.util.kotlin.DuckieResponseException
+import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.util.kotlin.fastMap
 
 @HiltViewModel

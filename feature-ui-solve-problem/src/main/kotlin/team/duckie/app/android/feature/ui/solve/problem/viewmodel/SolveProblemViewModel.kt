@@ -22,7 +22,7 @@ import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCas
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
-import team.duckie.app.android.util.kotlin.DuckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap

@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.util.kotlin
 
+import team.duckie.app.android.util.kotlin.exception.duckieClientLogicProblemException
+
 /**
  * 주어진 숫자를 % 로 반환합니다. 각 숫자마다 규칙이 있습니다.
  * 소수 : 100 을 곱한 뒤 %

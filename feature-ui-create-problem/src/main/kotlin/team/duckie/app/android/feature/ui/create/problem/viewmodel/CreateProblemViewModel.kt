@@ -63,8 +63,9 @@ import team.duckie.app.android.util.android.image.MediaUtil
 import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.android.viewmodel.context
 import team.duckie.app.android.util.kotlin.copy
-import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
-import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.exception.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.exception.isTagAlreadyExist
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject

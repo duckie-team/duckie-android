@@ -17,7 +17,7 @@ import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.follow.mapper.toData
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.repository.FollowRepository
-import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import javax.inject.Inject
 
 class FollowRepositoryImpl @Inject constructor() : FollowRepository {
