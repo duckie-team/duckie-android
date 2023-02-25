@@ -933,7 +933,15 @@ internal class CreateProblemViewModel @Inject constructor(
             .onSuccess {
                 exitSearchScreenAfterAddTag(it)
             }.onFailure {
-                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
+                intent {
+                    postSideEffect(
+                        if (it.isTagAlreadyExist) {
+                            CreateProblemSideEffect.TagAlreadyExist(it, tagText)
+                        } else {
+                            CreateProblemSideEffect.ReportError(it)
+                        }
+                    )
+                }
             }
     }
 
