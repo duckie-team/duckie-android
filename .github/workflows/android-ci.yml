@@ -37,5 +37,14 @@ jobs:
       - name: Setup MavenLocal
         run: ./gradlew :local-enums:publishToMavenLocal
 
-      - name: Run build (includes ktlint/detekt/test/binary-compatibility check)
+      - name: Check ktLint
+        run: ./gradlew ktlintCheck
+
+      - name: Check detekt
+        run: ./gradlew detekt
+
+      - name: Run build
         run: ./gradlew buildStandardDebug
+
+      - name: Run test
+        run: ./gradlew testStandardDebug
