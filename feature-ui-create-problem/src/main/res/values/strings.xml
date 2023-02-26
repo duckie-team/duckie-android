@@ -12,6 +12,7 @@
     <string name="network_error">일시적인 오류가 발생했습니다. 관리자에게 문의해주세요.</string>
     <string name="get_exam_authorized_error">해당 시험을 수정할 수 있는 권한이 없습니다.</string>
     <string name="get_exam_not_found_error">찾을 수 없는 시험입니다.</string>
+    <string name="post_tag_already_exist_error">%s은 이미 존재하는 태그입니다.</string>
 
     <string name="create_problem">"문제 만들기"</string>
     <string name="cancel">취소</string>
