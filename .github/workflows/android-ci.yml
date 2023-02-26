@@ -45,8 +45,5 @@ jobs:
       - name: Check detekt
         run: ./gradlew detekt
 
-      - name: Run build
-        run: ./gradlew buildStandardDebug
-
       - name: Run test
         run: ./gradlew testStandardDebug
