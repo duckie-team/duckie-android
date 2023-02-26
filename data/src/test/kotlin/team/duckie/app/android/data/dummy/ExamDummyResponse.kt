@@ -13,6 +13,7 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.domain.user.model.UserStatus
 
 object ExamDummyResponse {
     const val RawData = """
@@ -77,7 +78,7 @@ object ExamDummyResponse {
             id = 1,
             nickname = "doro",
             profileImageUrl = "",
-            status = "NEW",
+            status = UserStatus.NEW,
             duckPower = DuckPower(
                 id = 1,
                 tier = "덕력 20%",

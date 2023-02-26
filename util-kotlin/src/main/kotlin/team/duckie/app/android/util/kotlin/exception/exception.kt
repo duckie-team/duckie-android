@@ -16,7 +16,6 @@
 
 package team.duckie.app.android.util.kotlin.exception
 
-import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.runIf
 

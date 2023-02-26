@@ -34,7 +34,6 @@ val Throwable.isUserNotFound: Boolean
 val Throwable.isTokenExpired: Boolean
     get() = (this as? DuckieResponseException)?.code == ExceptionCode.TOKEN_EXPIRED
 
-
 /** 앱 내에서 로그인이 필요한 [코드값][DuckieException.code]인 경우인지 체크한다. */
 val Throwable.isLoginRequireCode: Boolean
     get() = (this as? DuckieException)?.code in persistentListOf(

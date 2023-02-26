@@ -31,7 +31,6 @@ import team.duckie.app.android.feature.ui.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
-import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.BaseActivity
@@ -45,7 +44,6 @@ private val SplashScreenFinishDurationMillis = 1.5.seconds
 class IntroActivity : BaseActivity() {
 
     private val vm: IntroViewModel by viewModels()
-    private val toast by lazy { ToastWrapper(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()

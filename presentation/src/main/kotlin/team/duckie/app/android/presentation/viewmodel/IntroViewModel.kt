@@ -58,7 +58,7 @@ internal class IntroViewModel @Inject constructor(
                     else -> {
                         IntroSideEffect.ReportError(exception)
                     }
-                }
+                },
             )
         }
     }

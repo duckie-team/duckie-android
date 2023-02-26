@@ -52,7 +52,7 @@ class DetailViewModel @Inject constructor(
             getMeUseCase()
                 .onSuccess { me ->
                     reduce {
-                        if (exam != null && me != null) {
+                        if (exam != null) {
                             DetailState.Success(exam, me, exam.user?.follow != null)
                         } else {
                             DetailState.Error(DuckieResponseFieldNPE("exam or me is Null"))

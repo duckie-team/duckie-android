@@ -16,6 +16,7 @@ import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.domain.user.model.UserStatus
 
 class JsonBuilderTest {
     @Test
@@ -77,7 +78,7 @@ class JsonBuilderTest {
                     id = 0,
                     nickname = "test",
                     profileImageUrl = "test",
-                    status = "NEW",
+                    status = UserStatus.NEW,
                     duckPower = DuckPower(
                         id = 1,
                         tier = "도로 패션 20%",
