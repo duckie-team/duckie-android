@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.domain.user.model.UserStatus
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.home.screen.HomeActivity
@@ -82,15 +83,22 @@ class IntroActivity : BaseActivity() {
         when (sideEffect) {
             is IntroSideEffect.GetUserFinished -> {
                 val preference = applicationContext.dataStore.data.first()
-                val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish]
-                if (isOnboardFinsihed == null) {
+                val isOnboardFinished = preference[PreferenceKey.Onboard.Finish]
+                if (isOnboardFinished == null || sideEffect.user.status == UserStatus.NEW) {
                     launchOnboardActivity()
-                } else if (sideEffect.user != null) {
-                    launchHomeOrOnboardActivity(isOnboardFinsihed)
                 } else {
-                    toast(getString(R.string.expired_access_token_relogin_requried))
-                    launchOnboardActivity()
+                    launchHomeOrOnboardActivity(isOnboardFinished)
                 }
+            }
+
+            is IntroSideEffect.UserNotInitialized -> {
+                launchOnboardActivity()
+            }
+
+            is IntroSideEffect.GetMeError -> {
+                sideEffect.exception.printStackTrace()
+                sideEffect.exception.reportToCrashlyticsIfNeeded()
+                launchOnboardActivity()
             }
 
             is IntroSideEffect.ReportError -> {

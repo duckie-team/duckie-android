@@ -16,7 +16,7 @@ import javax.inject.Inject
 class GetMeUseCase @Inject constructor(
     private val repository: MeRepository,
 ) {
-    suspend operator fun invoke(): Result<User?> {
+    suspend operator fun invoke(): Result<User> {
         return runCatching { repository.getMe() }
     }
 }
