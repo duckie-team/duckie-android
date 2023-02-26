@@ -9,7 +9,7 @@ package team.duckie.app.android.data.tag.mapper
 
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 
 internal fun TagData.toDomain() = Tag(
     id = id ?: duckieResponseFieldNpe("id"),

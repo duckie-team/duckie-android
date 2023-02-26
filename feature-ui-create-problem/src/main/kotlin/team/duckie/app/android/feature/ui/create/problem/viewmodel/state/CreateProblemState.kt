@@ -17,7 +17,7 @@ import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 
 internal data class CreateProblemState(
     val me: User? = null,

@@ -38,7 +38,7 @@ import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
 @AllowCyclomaticComplexMethod
