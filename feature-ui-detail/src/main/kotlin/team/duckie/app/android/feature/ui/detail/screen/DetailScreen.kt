@@ -369,6 +369,7 @@ private fun DetailProfileLayout(
 
 /** 상세 화면 점수 분포도 Layout */
 @Composable
+@Suppress("unused")
 private fun DetailScoreDistributionLayout(state: DetailState.Success) {
     // 제목 Layout
     Row(
