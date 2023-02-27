@@ -50,6 +50,7 @@ import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.kotlin.addHashTag
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1
@@ -199,7 +200,7 @@ private fun HomeTopicRecommendLayout(
         QuackUnderlineHeadLine2(
             modifier = Modifier.padding(HomeHorizontalPadding),
             text = title,
-            underlineTexts = persistentListOf(tag),
+            underlineTexts = persistentListOf(tag.addHashTag()),
             onClick = {
                 onTagClicked(tag)
             },
