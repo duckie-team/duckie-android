@@ -33,7 +33,7 @@ data class DuckTestCoverItem(
     val examineeNumber: Int,
 )
 
-private const val CoverRatio = 158f / 116f
+private const val CoverRatio = 4f / 3f
 
 @Composable
 fun DuckTestSmallCover(
