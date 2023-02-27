@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -144,10 +145,11 @@ private fun HomeRecommendJumbotronLayout(
     ) {
         AsyncImage(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .aspectRatio(ratio = ThumbnailRatio),
             model = recommendItem.coverUrl,
             contentDescription = null,
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.FillBounds,
         )
         Spacer(modifier = Modifier.height(24.dp))
         QuackLarge1(
