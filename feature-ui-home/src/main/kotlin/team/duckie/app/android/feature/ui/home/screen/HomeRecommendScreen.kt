@@ -57,7 +57,6 @@ import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
