@@ -20,7 +20,7 @@ internal sealed class HomeSideEffect {
     /**
      * [SearchResultActivity] 로 이동하는 SideEffect 입니다.
      */
-    class NavigateToSearchResult(val searchTag: String) : HomeSideEffect()
+    class NavigateToSearch(val searchTag: String?) : HomeSideEffect()
 
     /**
      * [HomeDetailActivity] 로 이동하는 SideEffect 입니다.

@@ -36,7 +36,8 @@ import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigatio
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
-import team.duckie.app.android.feature.ui.search.screen.SearchResultActivity
+import team.duckie.app.android.feature.ui.search.screen.SearchActivity
+import team.duckie.app.android.feature.ui.search.screen.SearchMainScreen
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -56,6 +57,7 @@ private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
 @AllowMagicNumber("앱 종료 시간에 대해서 매직 넘버 처리")
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
+
     private var waitTime = 2000L
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -98,7 +100,9 @@ class HomeActivity : BaseActivity() {
                         ) { page ->
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
-                                BottomNavigationStep.SearchScreen -> DuckieTodoScreen()
+                                BottomNavigationStep.SearchScreen -> {
+                                    SearchMainScreen()
+                                }
                                 BottomNavigationStep.RankingScreen -> DuckieTodoScreen()
                                 BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
                             }
@@ -173,8 +177,8 @@ class HomeActivity : BaseActivity() {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
 
-            is HomeSideEffect.NavigateToSearchResult -> {
-                startActivityWithAnimation<SearchResultActivity>(
+            is HomeSideEffect.NavigateToSearch -> {
+                startActivityWithAnimation<SearchActivity>(
                     intentBuilder = {
                         putExtra(Extras.SearchTag, sideEffect.searchTag)
                     },

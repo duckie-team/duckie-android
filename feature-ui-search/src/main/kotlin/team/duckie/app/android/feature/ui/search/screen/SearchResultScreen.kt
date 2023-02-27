@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
-import team.duckie.app.android.feature.ui.search.viewmodel.SearchResultViewModel
+import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
@@ -45,13 +45,12 @@ private val HomeTagListPadding = PaddingValues(
 @Composable
 internal fun SearchResultScreen(
     modifier: Modifier = Modifier,
-    vm: SearchResultViewModel = activityViewModel(),
+    vm: SearchViewModel = activityViewModel(),
     onPrevious: () -> Unit,
 ) {
     val state = vm.collectAsState().value
 
     LaunchedEffect(Unit) {
-        vm.fetchSearchResultForExam(state.searchTag)
         vm.fetchSearchResultForUser(state.searchTag)
     }
 
@@ -75,7 +74,7 @@ internal fun SearchResultScreen(
             titles = tabTitles,
             selectedTabIndex = state.tagSelectedTab.index,
             onTabSelected = { index ->
-                vm.changeSearchResultTab(SearchResultStep.toStep(index))
+                vm.updateSearchResultTab(SearchResultStep.toStep(index))
             },
         )
         when (state.tagSelectedTab) {
@@ -100,12 +99,12 @@ internal fun SearchResultScreen(
             ) {
                 items(state.searchResultForUser) { item ->
                     UserFollowingLayout(
-                        userId = item.userId,
-                        profileImgUrl = item.profileImgUrl,
+                        userId = item.id,
+                        profileImgUrl = item.profileImageUrl ?: "",
                         nickname = item.nickname,
-                        favoriteTag = item.favoriteTag,
-                        tier = item.tier,
-                        initalFollow = item.isFollowing,
+                        favoriteTag = item.favoriteTags?.first()?.name ?: "",
+                        tier = item.duckPower?.tier ?: "",
+                        initalFollow = false, // TODO 
                         onClickFollow = {
                             // TODO(limsaehyun): following request
                         },

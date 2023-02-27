@@ -29,6 +29,7 @@ import team.duckie.app.android.domain.recommendation.usecase.FetchExamMeFollowin
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
+import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
@@ -49,6 +50,7 @@ internal class HomeViewModel @Inject constructor(
     private val fetchUserFollowingUseCase: FetchUserFollowingUseCase,
     private val followUseCase: FollowUseCase,
     private val getMeUseCase: GetMeUseCase,
+    private val fetchPopularTagsUseCase: FetchPopularTagsUseCase
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
     override val container = container<HomeState, HomeSideEffect>(HomeState())
@@ -77,93 +79,99 @@ internal class HomeViewModel @Inject constructor(
             .cachedIn(viewModelScope)
 
     private fun fetchJumbotrons() = intent {
-        viewModelScope.launch {
-            updateHomeLoading(true)
-            fetchJumbotronsUseCase()
-                .onSuccess { jumbotrons ->
-                    reduce {
-                        state.copy(
-                            jumbotrons = jumbotrons
-                                .fastMap(Exam::toJumbotronModel)
-                                .toPersistentList(),
-                        )
-                    }
-                }.onFailure { exception ->
-                    postSideEffect(HomeSideEffect.ReportError(exception))
-                }.also {
-                    updateHomeLoading(false)
+        updateHomeLoading(true)
+        fetchJumbotronsUseCase()
+            .onSuccess { jumbotrons ->
+                reduce {
+                    state.copy(
+                        jumbotrons = jumbotrons
+                            .fastMap(Exam::toJumbotronModel)
+                            .toPersistentList(),
+                    )
                 }
-        }
+            }.onFailure { exception ->
+                postSideEffect(HomeSideEffect.ReportError(exception))
+            }.also {
+                updateHomeLoading(false)
+            }
     }
 
     fun fetchRecommendFollowingTest() = intent {
-        viewModelScope.launch {
-            updateHomeLoading(true)
-            fetchExamMeFollowingUseCase()
-                .onSuccess { exams ->
+        updateHomeLoading(true)
+        fetchExamMeFollowingUseCase()
+            .onSuccess { exams ->
+                reduce {
+                    state.copy(
+                        recommendFollowingTest = exams
+                            .fastMap(Exam::toFollowingModel)
+                            .toPersistentList(),
+                    )
+                }
+            }
+            .onFailure { exception ->
+                if ((exception as? DuckieResponseException)?.code == "FOLLOWING_NOT_FOUND") {
                     reduce {
                         state.copy(
-                            recommendFollowingTest = exams
-                                .fastMap(Exam::toFollowingModel)
-                                .toPersistentList(),
+                            isFollowingExist = false,
                         )
                     }
+                    return@onFailure
                 }
-                .onFailure { exception ->
-                    if ((exception as? DuckieResponseException)?.code == "FOLLOWING_NOT_FOUND") {
-                        reduce {
-                            state.copy(
-                                isFollowingExist = false,
-                            )
-                        }
-                        return@onFailure
-                    }
-                    postSideEffect(HomeSideEffect.ReportError(exception))
-                }.also {
-                    updateHomeLoading(false)
-                }
-        }
+                postSideEffect(HomeSideEffect.ReportError(exception))
+            }.also {
+                updateHomeLoading(false)
+            }
     }
 
     fun fetchRecommendFollowing() = intent {
-        viewModelScope.launch {
-            updateHomeLoading(true)
-            fetchUserFollowingUseCase(requireNotNull(state.me?.id))
-                .onSuccess { userFollowing ->
+        updateHomeLoading(true)
+        fetchUserFollowingUseCase(requireNotNull(state.me?.id))
+            .onSuccess { userFollowing ->
+                reduce {
+                    state.copy(
+                        recommendFollowing = userFollowing.followingRecommendations.fastMap(
+                            UserFollowing::toUiModel,
+                        ).toPersistentList(),
+                    )
+                }
+            }.onFailure { exception ->
+                if ((exception as? DuckieResponseException)?.code == "FOLLOWING_ALREADY_EXISTS") {
                     reduce {
                         state.copy(
-                            recommendFollowing = userFollowing.followingRecommendations.fastMap(
-                                UserFollowing::toUiModel,
-                            ).toPersistentList(),
+                            isFollowingExist = true,
                         )
                     }
-                }.onFailure { exception ->
-                    if ((exception as? DuckieResponseException)?.code == "FOLLOWING_ALREADY_EXISTS") {
-                        reduce {
-                            state.copy(
-                                isFollowingExist = true,
-                            )
-                        }
-                        return@onFailure
-                    }
-                    postSideEffect(HomeSideEffect.ReportError(exception))
-                }.also {
-                    updateHomeLoading(false)
+                    return@onFailure
                 }
-        }
+                postSideEffect(HomeSideEffect.ReportError(exception))
+            }.also {
+                updateHomeLoading(false)
+            }
     }
 
     fun followUser(userId: Int, isFollowing: Boolean) = intent {
-        viewModelScope.launch {
-            followUseCase(
-                followBody = FollowBody(
-                    followingId = userId,
-                ),
-                isFollowing = isFollowing,
-            ).onFailure { exception ->
+        followUseCase(
+            followBody = FollowBody(
+                followingId = userId,
+            ),
+            isFollowing = isFollowing,
+        ).onFailure { exception ->
+            postSideEffect(HomeSideEffect.ReportError(exception))
+        }
+    }
+
+    fun fetchPopularTags() = intent {
+        fetchPopularTagsUseCase()
+            .onSuccess { tags ->
+                reduce {
+                    state.copy(
+                        popularTags = tags
+                    )
+                }
+            }
+            .onFailure { exception ->
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }
-        }
     }
 
     private fun updateHomeLoading(
@@ -196,10 +204,10 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    fun navigateToSearchResult(
-        searchTag: String,
+    fun navigateToSearch(
+        searchTag: String? = null,
     ) = intent {
-        postSideEffect(HomeSideEffect.NavigateToSearchResult(searchTag))
+        postSideEffect(HomeSideEffect.NavigateToSearch(searchTag))
     }
 
     fun navigateToHomeDetail(

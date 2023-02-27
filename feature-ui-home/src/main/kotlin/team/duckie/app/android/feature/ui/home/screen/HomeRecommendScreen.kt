@@ -126,7 +126,7 @@ internal fun HomeRecommendScreen(
                 tag = item?.tag?.name ?: "",
                 exams = item?.exams?.toImmutableList() ?: persistentListOf(),
                 onExamClicked = { examId -> vm.navigateToHomeDetail(examId) },
-                onTagClicked = { tag -> vm.navigateToSearchResult(tag) },
+                onTagClicked = { tag -> vm.navigateToSearch(tag) },
             )
         }
     }
@@ -212,10 +212,10 @@ private fun HomeTopicRecommendLayout(
                 DuckExamSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = item.id,
-                        coverImg = item.thumbnailUrl,
+                        thumbnailUrl = item.thumbnailUrl,
                         nickname = item.user?.nickname ?: "",
                         title = item.title,
-                        examineeNumber = item.solvedCount ?: 0,
+                        solvedCount = item.solvedCount ?: 0,
                     ),
                     onItemClick = {
                         onExamClicked(item.id)

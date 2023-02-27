@@ -19,47 +19,57 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import team.duckie.app.android.feature.ui.search.viewmodel.SearchResultViewModel
-import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchResultSideEffect
+import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.feature.ui.search.constants.SearchStep
+import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
+import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
-class SearchResultActivity : BaseActivity() {
+class SearchActivity : BaseActivity() {
 
-    private val searchResultViewModel: SearchResultViewModel by viewModels()
+    private val vm: SearchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO(limsaehyun) getExtra 필요
-        searchResultViewModel.changeSearchTag("웹툰")
+        // TODO(limsaehyun) HomeActivity에서 넘어오는 경우 getExtra 필요
+        // searchResultViewModel.updateSearchKeyword("웹툰")
 
         setContent {
-            LaunchedEffect(key1 = searchResultViewModel) {
-                searchResultViewModel.container.sideEffectFlow
+            val state = vm.collectAsState().value
+
+            LaunchedEffect(key1 = vm) {
+                vm.container.sideEffectFlow
                     .onEach(::handleSideEffect)
                     .launchIn(this)
             }
 
             QuackTheme {
-                SearchResultScreen(
-                    modifier = Modifier
-                        .padding(systemBarPaddings)
-                        .background(QuackColor.White.composeColor),
-                ) {
-                    finishWithAnimation()
+                QuackAnimatedContent(targetState = state.searchStep) { step ->
+                    when (step) {
+                        SearchStep.Search -> SearchScreen(vm = vm)
+                        SearchStep.SearchResult -> SearchResultScreen(
+                            modifier = Modifier
+                                .padding(systemBarPaddings)
+                                .background(QuackColor.White.composeColor),
+                        ) {
+                            finishWithAnimation()
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun handleSideEffect(sideEffect: SearchResultSideEffect) {
+    private fun handleSideEffect(sideEffect: SearchSideEffect) {
         when (sideEffect) {
-            is SearchResultSideEffect.ReportError -> {
+            is SearchSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
         }
