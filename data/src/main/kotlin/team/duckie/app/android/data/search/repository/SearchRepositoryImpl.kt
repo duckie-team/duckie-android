@@ -30,7 +30,27 @@ import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchRepository {
 
-    override suspend fun searchUsers(
+    override suspend fun getSearch(
+        query: String,
+        page: Int,
+        type: String,
+    ): Search = withContext(Dispatchers.IO) {
+        val (_, response) = fuel.get(
+            "/search",
+            listOf(
+                "query" to query,
+                "page" to page,
+                "type" to type,
+            ),
+        ).responseString()
+
+        return@withContext responseCatchingFuel(
+            response,
+            SearchData::toDomain,
+        )
+    }
+
+    override fun searchUsers(
         query: String,
     ): Flow<PagingData<User>> {
         return Pager(
@@ -45,7 +65,7 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
                         getSearch(
                             query = query,
                             page = it,
-                            type = SearchType.User,
+                            type = SearchType.USERS,
                         ) as Search.UserSearch
                     },
                 )
@@ -53,7 +73,7 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
         ).flow
     }
 
-    override suspend fun searchExams(
+    override fun searchExams(
         query: String,
     ): Flow<PagingData<Exam>> {
         return Pager(
@@ -68,7 +88,7 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
                         getSearch(
                             query = query,
                             page = it,
-                            type = SearchType.Exam,
+                            type = SearchType.EXAMS,
                         ) as Search.ExamSearch
                     },
                 )
@@ -76,7 +96,7 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
         ).flow
     }
 
-    override suspend fun searchTags(
+    override fun searchTags(
         query: String,
     ): Flow<PagingData<Tag>> {
         return Pager(
@@ -91,7 +111,7 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
                         getSearch(
                             query = query,
                             page = it,
-                            type = SearchType.TAG,
+                            type = SearchType.TAGS,
                         ) as Search.TagSearch
                     },
                 )
@@ -121,17 +141,24 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
 
     internal companion object {
         // 유저 검색 페이징 단위
-        const val SearchUserPagingPage = 16
+        const val SearchUserPagingPage = 10
+
         // 유저 검색 페이징 최대 사이즈
         const val SearchUserPagingMaxSize = 200
 
         // 유저 검색 페이징 단위
-        const val SearchExamPagingPage = 16
+        const val SearchExamPagingPage = 10
+
         // 유저 검색 페이징 최대 사이즈
         const val SearchExamPagingMaxSize = 200
 
-        // 유저 검색 페이징 단위
-        const val SearchTagPagingPage = 16
+        /**
+         *  유저 검색 페이징 단위
+         *  TODO(limsaehyun): 페이징 단위가 10이라서 여러번 요청됨 개선해야함
+         *  https://sungbinland.slack.com/archives/C046SS32SEQ/p1677482144601589
+         */
+        const val SearchTagPagingPage = 10
+
         // 유저 검색 페이징 최대 사이즈
         const val SearchTagPagingMaxSize = 200
     }

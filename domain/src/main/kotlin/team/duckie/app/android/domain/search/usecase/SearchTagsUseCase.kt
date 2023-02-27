@@ -12,11 +12,14 @@ import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.search.repository.SearchRepository
 import javax.inject.Inject
 
+/**
+ * 태그와 관련된 검색 결과를 가져오기 위한 유즈케이스
+ */
 @Immutable
 class SearchTagsUseCase @Inject constructor(
     private val repository: SearchRepository,
 ) {
-    suspend operator fun invoke(tag: String) = runCatching {
+    operator fun invoke(tag: String) = runCatching {
         repository.searchTags(
             query = tag,
         )
