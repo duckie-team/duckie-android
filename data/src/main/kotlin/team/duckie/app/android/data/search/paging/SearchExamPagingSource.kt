@@ -17,7 +17,7 @@ private const val SearchExamStartingKey = 1
 
 internal class SearchExamPagingSource(
     private val searchExams: suspend (Int) -> Search.ExamSearch,
-): PagingSource<Int, Exam>() {
+) : PagingSource<Int, Exam>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Exam> {
         return try {

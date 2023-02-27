@@ -13,7 +13,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
-import team.duckie.app.android.domain.recommendation.model.SearchType
 
 /** 홈 화면에서 활용하는 Repository */
 @Immutable

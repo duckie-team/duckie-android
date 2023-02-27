@@ -17,7 +17,7 @@ private const val SearchUserStartingKey = 1
 
 internal class SearchUserPagingSource(
     private val searchUsers: suspend (Int) -> Search.UserSearch,
-): PagingSource<Int, User>() {
+) : PagingSource<Int, User>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
         return try {

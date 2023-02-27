@@ -8,7 +8,6 @@
 package team.duckie.app.android.domain.search.usecase
 
 import androidx.compose.runtime.Immutable
-import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.search.repository.SearchRepository
 import javax.inject.Inject
 

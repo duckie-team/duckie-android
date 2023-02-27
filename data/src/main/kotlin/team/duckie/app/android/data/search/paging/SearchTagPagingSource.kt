@@ -17,7 +17,7 @@ private const val SearchTagStartingKey = 1
 
 internal class SearchTagPagingSource(
     private val searchTags: suspend (Int) -> Search.TagSearch,
-): PagingSource<Int, Tag>() {
+) : PagingSource<Int, Tag>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Tag> {
         return try {
