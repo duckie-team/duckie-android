@@ -133,7 +133,7 @@ internal fun HomeRecommendScreen(
     }
 }
 
-private const val thumbnailRatio = 327f / 240f
+private const val ThumbnailRatio = 4f / 3f
 
 @Composable
 private fun HomeRecommendJumbotronLayout(
@@ -148,7 +148,7 @@ private fun HomeRecommendJumbotronLayout(
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(ratio = thumbnailRatio),
+                .aspectRatio(ratio = ThumbnailRatio),
             model = recommendItem.coverUrl,
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
