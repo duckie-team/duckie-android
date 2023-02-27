@@ -41,7 +41,6 @@ import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
-import team.duckie.app.android.util.kotlin.exception.isTagAlreadyExist
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent

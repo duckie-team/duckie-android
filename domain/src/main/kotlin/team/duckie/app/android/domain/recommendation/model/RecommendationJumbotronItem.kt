@@ -19,9 +19,9 @@ import team.duckie.app.android.domain.tag.model.Tag
 enum class ExamType(
     val original: String,
 ) {
-    Text(
-        original = "text",
-    ),
+    Text("text"),
+    Audio("audio"),
+    Video("video"),
     ;
 
     companion object {

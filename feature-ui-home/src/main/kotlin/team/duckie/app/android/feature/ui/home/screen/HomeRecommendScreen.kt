@@ -168,11 +168,14 @@ private fun HomeRecommendJumbotronLayout(
         Spacer(modifier = Modifier.height(8.dp))
 
         when (recommendItem.type) {
-            ExamType.Text -> {
-                QuackBody3(
-                    text = stringResource(id = R.string.home_volume_control_message),
-                )
-            }
+            ExamType.Text -> {}
+            ExamType.Audio -> QuackBody3(
+                text = stringResource(id = R.string.home_audio_volume_control_message),
+            )
+
+            ExamType.Video -> QuackBody3(
+                text = stringResource(id = R.string.home_video_volume_control_message),
+            )
         }
     }
 }
