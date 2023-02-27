@@ -133,8 +133,6 @@ internal fun HomeRecommendScreen(
     }
 }
 
-private const val ThumbnailRatio = 4f / 3f
-
 @Composable
 private fun HomeRecommendJumbotronLayout(
     modifier: Modifier = Modifier,
