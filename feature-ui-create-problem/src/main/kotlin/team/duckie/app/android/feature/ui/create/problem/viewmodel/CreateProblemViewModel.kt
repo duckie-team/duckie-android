@@ -939,7 +939,7 @@ internal class CreateProblemViewModel @Inject constructor(
                             CreateProblemSideEffect.TagAlreadyExist(it, tagText)
                         } else {
                             CreateProblemSideEffect.ReportError(it)
-                        }
+                        },
                     )
                 }
             }
