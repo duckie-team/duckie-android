@@ -51,13 +51,14 @@ import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
+import team.duckie.app.android.shared.ui.compose.QuackAnnotatedText
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.kotlin.addHashTag
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
@@ -199,13 +200,12 @@ private fun HomeTopicRecommendLayout(
     ) {
         // TODO(limsaehyun): QuackAnnotatedHeadLine2로 교체 필요
         // https://github.com/duckie-team/quack-quack-android/issues/442
-        QuackUnderlineHeadLine2(
+        QuackAnnotatedText(
             modifier = Modifier.padding(HomeHorizontalPadding),
             text = title,
-            underlineTexts = persistentListOf(tag),
-            onClick = {
-                onTagClicked(tag)
-            },
+            highlightTextPairs = persistentListOf(
+                tag.addHashTag() to { onTagClicked(tag) },
+            ),
         )
         Spacer(modifier = Modifier.height(16.dp))
         LazyRow(
