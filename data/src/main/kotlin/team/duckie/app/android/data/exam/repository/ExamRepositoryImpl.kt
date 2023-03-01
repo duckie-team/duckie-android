@@ -27,13 +27,17 @@ import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import javax.inject.Inject
 
-class ExamRepositoryImpl @Inject constructor(private val fuel: Fuel) : ExamRepository {
+class ExamRepositoryImpl @Inject constructor(
+    private val fuel: Fuel,
+
+    ) : ExamRepository {
     override suspend fun makeExam(exam: ExamBody): Boolean {
         val response = client.post {
             url("/exams")
@@ -82,5 +86,17 @@ class ExamRepositoryImpl @Inject constructor(private val fuel: Fuel) : ExamRepos
 
     override fun getRecentExam(): ImmutableList<Exam> {
         return persistentListOf() // TODO(limsaehyun): 최근 덕질한 실험 가져오기
+    }
+
+    override suspend fun getMadeExams(): List<ExamInfo> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getSolvedExams(): List<ExamInfo> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getFavoriteExams(): List<ExamInfo> {
+        TODO("Not yet implemented")
     }
 }
