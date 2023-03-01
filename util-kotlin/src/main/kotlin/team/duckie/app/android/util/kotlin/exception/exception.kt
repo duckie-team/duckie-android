@@ -5,11 +5,20 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:Suppress("MemberVisibilityCanBePrivate")
 
-package team.duckie.app.android.util.kotlin
+package team.duckie.app.android.util.kotlin.exception
 
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
+import team.duckie.app.android.util.kotlin.runIf
 
 /**
  * 덕키 API 에서 발생하는 [Exception] 을 정의합니다.

@@ -90,7 +90,7 @@ di-hilt = "2.45"
 di-inject = "1"
 
 # ktor
-ktor-core = "2.2.3"
+ktor-core = "2.2.4"
 
 # fuel
 fuel-core = "2.3.1"
@@ -102,7 +102,7 @@ jackson-core = "2.14.2"
 moshi-core = "1.14.0"
 
 # orbit
-orbit-core = "4.5.0"
+orbit-core = "4.6.1"
 
 # quack
 quack-ui-components = "1.4.5"

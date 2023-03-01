@@ -27,8 +27,8 @@ import team.duckie.app.android.domain.heart.usecase.PostHeartUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
-import team.duckie.app.android.util.kotlin.DuckieResponseFieldNPE
-import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.exception.DuckieResponseFieldNPE
+import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -62,6 +62,10 @@ class DetailViewModel @Inject constructor(
                     postSideEffect(DetailSideEffect.ReportError(it))
                 }
         }
+    }
+
+    suspend fun refresh() {
+        initState()
     }
 
     fun followUser() = viewModelScope.launch {
@@ -125,11 +129,11 @@ class DetailViewModel @Inject constructor(
         intent {
             require(state is DetailState.Success)
             (state as DetailState.Success).run {
-                makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess {
+                makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
                     (state as DetailState.Success).run {
                         postSideEffect(
                             DetailSideEffect.StartExam(
-                                exam.id,
+                                result.id,
                                 certifyingStatement,
                             ),
                         )

@@ -104,7 +104,6 @@ private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
 
 private const val MaximumChoice = 5
-private const val MinimumProblem = 5
 private const val MaximumProblem = 10
 private const val TextFieldMaxLength = 20
 
@@ -501,7 +500,7 @@ internal fun CreateProblemScreen(
                             vm.navigateStep(CreateProblemStep.AdditionalInformation)
                         }
                     },
-                    isProblemCountValidate = problemCount in MinimumProblem..MaximumProblem,
+                    isCreateProblemValidate = problemCount < MaximumProblem,
                     isValidateCheck = vm::createProblemIsValidate,
                 )
             },
@@ -568,7 +567,11 @@ internal fun CreateProblemScreen(
     }
 
     QuackDialog(
-        title = stringResource(id = R.string.create_problem_delete_dialog_title),
+        title = stringResource(
+            id = R.string.create_problem_delete_dialog_title,
+            (deleteDialogNo?.first?.let { "${it + 1}번 문제" } ?: "") +
+                    (deleteDialogNo?.second?.let { "의 ${it + 1}번 보기" } ?: ""),
+        ),
         visible = deleteDialogNo != null,
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { deleteDialogNo = null },
@@ -582,7 +585,7 @@ internal fun CreateProblemScreen(
             }
             deleteDialogNo = null
         },
-        onDismissRequest = {},
+        onDismissRequest = { deleteDialogNo = null },
     )
 }
 

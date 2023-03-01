@@ -18,6 +18,7 @@ android {
 
 dependencies {
     implementations(
+        libs.compose.ui.material,
         libs.quack.ui.components,
         libs.compose.ui.coil,
         projects.utilCompose,

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,9 +25,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -48,13 +51,14 @@ import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
+import team.duckie.app.android.shared.ui.compose.QuackAnnotatedText
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.kotlin.addHashTag
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackUnderlineHeadLine2
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
@@ -144,10 +148,12 @@ private fun HomeRecommendJumbotronLayout(
     ) {
         AsyncImage(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .aspectRatio(ratio = ThumbnailRatio)
+                .clip(RoundedCornerShape(8.dp)),
             model = recommendItem.coverUrl,
             contentDescription = null,
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.FillBounds,
         )
         Spacer(modifier = Modifier.height(24.dp))
         QuackLarge1(
@@ -168,11 +174,14 @@ private fun HomeRecommendJumbotronLayout(
         Spacer(modifier = Modifier.height(8.dp))
 
         when (recommendItem.type) {
-            ExamType.Text -> {
-                QuackBody3(
-                    text = stringResource(id = R.string.home_volume_control_message),
-                )
-            }
+            ExamType.Text -> {}
+            ExamType.Audio -> QuackBody3(
+                text = stringResource(id = R.string.home_audio_volume_control_message),
+            )
+
+            ExamType.Video -> QuackBody3(
+                text = stringResource(id = R.string.home_video_volume_control_message),
+            )
         }
     }
 }
@@ -191,13 +200,12 @@ private fun HomeTopicRecommendLayout(
     ) {
         // TODO(limsaehyun): QuackAnnotatedHeadLine2로 교체 필요
         // https://github.com/duckie-team/quack-quack-android/issues/442
-        QuackUnderlineHeadLine2(
+        QuackAnnotatedText(
             modifier = Modifier.padding(HomeHorizontalPadding),
             text = title,
-            underlineTexts = persistentListOf(tag),
-            onClick = {
-                onTagClicked(tag)
-            },
+            highlightTextPairs = persistentListOf(
+                tag.addHashTag() to { onTagClicked(tag) },
+            ),
         )
         Spacer(modifier = Modifier.height(16.dp))
         LazyRow(

@@ -5,10 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(
-    ExperimentalLifecycleComposeApi::class,
-)
-
 package team.duckie.app.android.feature.ui.create.problem
 
 import android.os.Bundle
@@ -28,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,15 +32,15 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.create.problem.screen.AdditionalInformationScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.CreateProblemScreen
-import team.duckie.app.android.feature.ui.create.problem.screen.ErrorScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.ExamInformationScreen
-import team.duckie.app.android.feature.ui.create.problem.screen.LoadingScreen
 import team.duckie.app.android.feature.ui.create.problem.screen.SearchTagScreen
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
+import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
-import team.duckie.app.android.util.kotlin.DuckieResponseException
+import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
@@ -90,6 +85,7 @@ class CreateProblemActivity : BaseActivity() {
                 ) { step: CreateProblemStep ->
                     when (step) {
                         CreateProblemStep.Loading -> LoadingScreen(
+                            initState = viewModel::initState,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
@@ -123,6 +119,8 @@ class CreateProblemActivity : BaseActivity() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .statusBarsPadding(),
+                            isNetworkError = rootState.isNetworkError,
+                            onRetryClick = viewModel::refresh,
                         )
                     }
                 }
@@ -159,12 +157,16 @@ class CreateProblemActivity : BaseActivity() {
                 finishWithAnimation()
             }
 
+            is CreateProblemSideEffect.TagAlreadyExist -> {
+                Firebase.crashlytics.recordException(sideEffect.exception)
+                val message = getString(R.string.post_tag_already_exist_error, sideEffect.tagName)
+                sideEffect.exception.reportToToast(message)
+            }
+
             is CreateProblemSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
 
                 // API 오류 발생 시 토스트 메시지 발생
-                // TODO(riflockle7): 아마 각 statusCode 마다 발생시킬 토스트도 다를 수 있음
-                //  해당 내용 추후 맞춰야 함
                 if (sideEffect.exception is DuckieResponseException) {
                     sideEffect.exception.reportToToast(getString(R.string.network_error))
                 }

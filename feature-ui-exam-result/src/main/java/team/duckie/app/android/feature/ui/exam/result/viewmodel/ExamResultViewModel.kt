@@ -20,7 +20,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
-import team.duckie.app.android.util.kotlin.DuckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 

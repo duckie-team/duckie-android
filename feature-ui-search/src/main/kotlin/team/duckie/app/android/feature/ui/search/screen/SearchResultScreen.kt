@@ -104,7 +104,7 @@ internal fun SearchResultScreen(
                         nickname = item.nickname,
                         favoriteTag = item.favoriteTags?.first()?.name ?: "",
                         tier = item.duckPower?.tier ?: "",
-                        initalFollow = false, // TODO 
+                        initalFollow = false, // TODO
                         onClickFollow = {
                             // TODO(limsaehyun): following request
                         },

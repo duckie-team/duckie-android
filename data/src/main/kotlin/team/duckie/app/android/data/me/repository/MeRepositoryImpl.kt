@@ -15,10 +15,10 @@ import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.user.datasource.UserDataSource
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.datastore.PreferenceKey
-import team.duckie.app.android.util.kotlin.ClientMeIdNull
-import team.duckie.app.android.util.kotlin.ClientMeTokenNull
-import team.duckie.app.android.util.kotlin.ServerUserIdStrange
-import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.exception.ClientMeIdNull
+import team.duckie.app.android.util.kotlin.exception.ClientMeTokenNull
+import team.duckie.app.android.util.kotlin.exception.ServerUserIdStrange
+import team.duckie.app.android.util.kotlin.exception.duckieClientLogicProblemException
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -34,7 +34,7 @@ import team.duckie.app.android.feature.ui.solve.problem.common.DoubleButtonBotto
 import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.ui.finishWithAnimation
 
 @Composable
