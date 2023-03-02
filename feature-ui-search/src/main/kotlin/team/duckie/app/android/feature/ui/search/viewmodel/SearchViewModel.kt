@@ -19,7 +19,6 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.search.usecase.SearchExamsUseCase
-import team.duckie.app.android.domain.search.usecase.SearchTagsUseCase
 import team.duckie.app.android.domain.search.usecase.SearchUsersUseCase
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
@@ -29,7 +28,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SearchViewModel @Inject constructor(
-    private val searchTagsUseCase: SearchTagsUseCase,
     private val searchExamsUseCase: SearchExamsUseCase,
     private val searchUsersUseCase: SearchUsersUseCase,
 ) : ContainerHost<SearchState, SearchSideEffect>, ViewModel() {
@@ -38,47 +36,87 @@ internal class SearchViewModel @Inject constructor(
 
     private val searchDebounce: Long = 1500L
 
-    /** 검색 flow. [searchDebounce] 시간에 따라 검색 결과를 페이징을 적용하여 가져온다. */
-    private val _getSearchTags: MutableSharedFlow<String> = MutableSharedFlow<String>(
+    /**
+     * 추천 검색어 flow. [searchDebounce] 시간에 따라 추천 검색어를 가져온다.
+     * 현재는 추천 검색어 기능을 지원하지 않아 검색어 입력 시 [refreshSearchStep]를 실행시킨다.
+     **/
+    private val _getRecommendKeywords: MutableSharedFlow<String> = MutableSharedFlow<String>(
         replay = 0,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     ).apply {
         intent {
             this@apply.debounce(searchDebounce).collectLatest { query ->
-                searchTagsUseCase(tag = query)
-                    .onSuccess {
-                        reduce {
-                            state.copy(
-                                searchResultTag = it,
-                            )
-                        }
-                    }
-                    .onFailure {
-                    }
+                refreshSearchStep(keyword = state.searchKeyword)
+                // TODO(limsaehyun): 추후 추천 검색어 비즈니스 로직을 이곳에서 작업해야 함
             }
         }
     }
 
-    // TODO(limsaehyun): Request Server
-    fun fetchSearchResultForExam(tag: String) = intent {
+    fun clearAllRecentSearch() {
+        // TODO(limsaehyun): 최근 검색어 모두 삭제 구현
     }
 
-    // TODO(limsaehyun): Request Server
-    fun fetchSearchResultForUser(user: String) = intent {
+    fun clearRecentSearch(tagId: Int) {
+        // TODO(limsaehyun): 최근 검색어 삭제 구현
+    }
+
+    fun fetchSearchExams(keyword: String) = intent {
+        searchExamsUseCase(exam = keyword)
+            .onSuccess { paging ->
+                reduce {
+                    state.copy(
+                        searchExams = paging,
+                    )
+                }
+            }
+            .onFailure { exception ->
+                postSideEffect(SearchSideEffect.ReportError(exception))
+            }
+    }
+
+    fun fetchSearchUsers(user: String) = intent {
+        searchUsersUseCase(user = user)
+            .onSuccess { paging ->
+                reduce {
+                    state.copy(
+                        searchUsers = paging,
+                    )
+                }
+            }
+            .onFailure { exception ->
+                postSideEffect(SearchSideEffect.ReportError(exception))
+            }
     }
 
     /** 검색 화면에서 [query] 값에 맞는 검색 결과를 가져온다. */
-    private suspend fun searchTags(query: String) {
-        _getSearchTags.emit(query)
+    private suspend fun recommendKeywords(query: String) {
+        _getRecommendKeywords.emit(query)
     }
 
-    /** 검색 키워드를 업데이트한다. 업데이트 후 [searchTags]를 호출한다. */
-    fun updateSearchKeyword(keyword: String) = intent {
+    /** 검색 키워드를 업데이트한다. 업데이트 후 [recommendKeywords]를 호출한다. */
+    fun updateSearchKeyword(
+        keyword: String,
+        debounce: Boolean = true,
+    ) = intent {
         reduce {
             state.copy(searchKeyword = keyword)
         }.run {
-            searchTags(query = keyword)
+            recommendKeywords(query = keyword)
+            if (!debounce) refreshSearchStep(keyword = keyword)
+        }
+    }
+
+    /** 검색 페이지를 업데이트한다. 검색 키워드가 있다면 검색 결과로 이동한다. */
+    private fun refreshSearchStep(keyword: String) = intent {
+        if (keyword.isEmpty()) {
+            reduce {
+                state.copy(searchStep = SearchStep.Search)
+            }
+        } else {
+            reduce {
+                state.copy(searchStep = SearchStep.SearchResult)
+            }
         }
     }
 

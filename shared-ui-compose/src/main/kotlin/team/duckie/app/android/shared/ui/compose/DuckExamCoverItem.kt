@@ -39,13 +39,13 @@ private const val CoverRatio = 4f / 3f
 fun DuckExamSmallCover(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
-    onItemClick: (Int) -> Unit,
+    onItemClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .width(158.dp)
             .quackClickable(rippleEnabled = true) {
-                onItemClick(duckTestCoverItem.testId)
+                onItemClick()
             },
         horizontalAlignment = Alignment.Start,
     ) {

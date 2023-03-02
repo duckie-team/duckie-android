@@ -16,20 +16,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
+import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.component.QuackMainTab
@@ -50,13 +51,17 @@ internal fun SearchResultScreen(
 ) {
     val state = vm.collectAsState().value
 
-    LaunchedEffect(Unit) {
-        vm.fetchSearchResultForUser(state.searchTag)
-    }
+    val searchExams = state.searchExams.collectAsLazyPagingItems()
+    val searchUsers = state.searchUsers.collectAsLazyPagingItems()
 
     val tabTitles = SearchResultStep.values().map {
         it.title
     }.toPersistentList()
+
+    LaunchedEffect(Unit) {
+        vm.fetchSearchUsers(state.searchKeyword)
+        vm.fetchSearchExams(state.searchKeyword)
+    }
 
     Column(
         modifier = modifier
@@ -68,7 +73,7 @@ internal fun SearchResultScreen(
             onLeadingIconClick = {
                 onPrevious()
             },
-            leadingText = state.searchTag,
+            leadingText = state.searchKeyword,
         )
         QuackMainTab(
             titles = tabTitles,
@@ -85,25 +90,34 @@ internal fun SearchResultScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = HomeTagListPadding,
             ) {
-                items(state.searchResultForTest) { item ->
-                    DuckExamSmallCover(
-                        duckTestCoverItem = item,
-                        onItemClick = {
-                            // TODO(limsaTehyun): 상세보기로 이동
-                        },
-                    )
+                items(searchExams.itemCount) { index ->
+                    searchExams[index].let { exam ->
+                        DuckExamSmallCover(
+                            duckTestCoverItem = DuckTestCoverItem(
+                                testId = exam?.id ?: 0,
+                                thumbnailUrl = exam?.thumbnailUrl,
+                                nickname = exam?.user?.nickname ?: "",
+                                title = exam?.title ?: "",
+                                solvedCount = exam?.solvedCount ?: 0,
+                            ),
+                            onItemClick = {
+                                // TODO(limsaTehyun): 상세보기로 이동
+                            },
+                        )
+                    }
                 }
             }
+
             SearchResultStep.User -> LazyColumn(
                 contentPadding = HomeTagListPadding,
             ) {
-                items(state.searchResultForUser) { item ->
+                items(searchUsers) { item ->
                     UserFollowingLayout(
-                        userId = item.id,
-                        profileImgUrl = item.profileImageUrl ?: "",
-                        nickname = item.nickname,
-                        favoriteTag = item.favoriteTags?.first()?.name ?: "",
-                        tier = item.duckPower?.tier ?: "",
+                        userId = item?.id ?: 0,
+                        profileImgUrl = item?.profileImageUrl ?: "",
+                        nickname = item?.nickname ?: "",
+                        favoriteTag = item?.duckPower?.tag?.name ?: "",
+                        tier = item?.duckPower?.tier ?: "",
                         initalFollow = false, // TODO
                         onClickFollow = {
                             // TODO(limsaehyun): following request

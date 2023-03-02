@@ -46,5 +46,4 @@ class TagRepositoryImpl @Inject constructor(private val fuel: Fuel) : TagReposit
             parse = PopularTagsData::toDomain,
         )
     }
-
 }

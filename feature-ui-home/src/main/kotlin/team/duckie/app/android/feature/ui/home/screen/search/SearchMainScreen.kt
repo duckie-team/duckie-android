@@ -12,7 +12,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.search.screen
+package team.duckie.app.android.feature.ui.home.screen.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -119,10 +119,10 @@ internal fun SearchMainScreen(
             modifier = Modifier.padding(horizontal = SearchScreenHorizontalPaddingDp),
             items = state.popularTags.map { it.name },
             tagType = QuackTagType.Round,
-            onClick = {
-                // 태그 눌렀을 경우 처리
+            onClick = { index ->
+                vm.navigateToSearch(searchTag = state.popularTags[index].name)
             },
-            itemChunkedSize = 5
+            itemChunkedSize = 5,
         )
         Spacer(modifier = Modifier.height(52.dp))
         QuackTitle2(

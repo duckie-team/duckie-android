@@ -15,7 +15,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -50,7 +49,7 @@ internal class HomeViewModel @Inject constructor(
     private val fetchUserFollowingUseCase: FetchUserFollowingUseCase,
     private val followUseCase: FollowUseCase,
     private val getMeUseCase: GetMeUseCase,
-    private val fetchPopularTagsUseCase: FetchPopularTagsUseCase
+    private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
     override val container = container<HomeState, HomeSideEffect>(HomeState())
@@ -165,7 +164,7 @@ internal class HomeViewModel @Inject constructor(
             .onSuccess { tags ->
                 reduce {
                     state.copy(
-                        popularTags = tags
+                        popularTags = tags,
                     )
                 }
             }

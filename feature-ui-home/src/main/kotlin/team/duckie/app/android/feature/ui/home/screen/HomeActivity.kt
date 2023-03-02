@@ -34,10 +34,10 @@ import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
-import team.duckie.app.android.feature.ui.search.screen.SearchMainScreen
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -100,9 +100,7 @@ class HomeActivity : BaseActivity() {
                         ) { page ->
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
-                                BottomNavigationStep.SearchScreen -> {
-                                    SearchMainScreen()
-                                }
+                                BottomNavigationStep.SearchScreen -> SearchMainScreen()
                                 BottomNavigationStep.RankingScreen -> DuckieTodoScreen()
                                 BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
                             }

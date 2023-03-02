@@ -25,7 +25,9 @@ import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.util.ui.popStringExtra
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
@@ -38,8 +40,12 @@ class SearchActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO(limsaehyun) HomeActivity에서 넘어오는 경우 getExtra 필요
-        // searchResultViewModel.updateSearchKeyword("웹툰")
+        intent.popStringExtra(Extras.SearchTag)?.let { str ->
+            vm.updateSearchKeyword(
+                keyword = str,
+                debounce = false,
+            )
+        }
 
         setContent {
             val state = vm.collectAsState().value
@@ -51,14 +57,15 @@ class SearchActivity : BaseActivity() {
             }
 
             QuackTheme {
-                QuackAnimatedContent(targetState = state.searchStep) { step ->
+                QuackAnimatedContent(
+                    modifier = Modifier
+                        .background(QuackColor.White.composeColor)
+                        .padding(systemBarPaddings),
+                    targetState = state.searchStep,
+                ) { step ->
                     when (step) {
                         SearchStep.Search -> SearchScreen(vm = vm)
-                        SearchStep.SearchResult -> SearchResultScreen(
-                            modifier = Modifier
-                                .padding(systemBarPaddings)
-                                .background(QuackColor.White.composeColor),
-                        ) {
+                        SearchStep.SearchResult -> SearchResultScreen {
                             finishWithAnimation()
                         }
                     }

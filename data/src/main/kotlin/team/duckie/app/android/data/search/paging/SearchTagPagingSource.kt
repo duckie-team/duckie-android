@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("TooGenericExceptionCaught")
+
 package team.duckie.app.android.data.search.paging
 
 import androidx.paging.PagingSource
