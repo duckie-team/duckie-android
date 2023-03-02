@@ -39,6 +39,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.util.exception.handling.const.ErrorCode
 import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.util.kotlin.fastMap
 
@@ -63,7 +64,8 @@ internal class HomeViewModel @Inject constructor(
         pagingDataFlow = fetchRecommendations()
     }
 
-    fun initState() = intent {
+    /** [HomeViewModel]의 초기 상태를 설정한다. */
+    private fun initState() = intent {
         getMeUseCase().onSuccess { me ->
             if (me != null) {
                 reduce { state.copy(me = me) }
@@ -75,10 +77,12 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /** 추천 피드를 가져온다. */
     private fun fetchRecommendations() =
         fetchRecommendationsUseCase()
             .cachedIn(viewModelScope)
 
+    /** 홈 화면의 jumbotron을 가져온다. */
     private fun fetchJumbotrons() = intent {
         updateHomeLoading(true)
         fetchJumbotronsUseCase()
@@ -97,6 +101,7 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
+    /** 최근 덕질한 시험 목록을 가져온다. */
     fun fetchRecentExam() = intent {
         getRecentExamUseCase()
             .onSuccess { exams ->
@@ -108,6 +113,7 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
+    /** 팔로워들의 추천 덕질고사들을 가져온다. */
     fun fetchRecommendFollowingTest() = intent {
         updateHomeLoading(true)
         fetchExamMeFollowingUseCase()
@@ -121,7 +127,7 @@ internal class HomeViewModel @Inject constructor(
                 }
             }
             .onFailure { exception ->
-                if ((exception as? DuckieResponseException)?.code == "FOLLOWING_NOT_FOUND") {
+                if ((exception as? DuckieResponseException)?.code == ErrorCode.FollowingNotFound) {
                     reduce {
                         state.copy(
                             isFollowingExist = false,
@@ -135,6 +141,7 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
+    /** 추천 팔로워들을 가져온다. */
     fun fetchRecommendFollowing() = intent {
         updateHomeLoading(true)
         fetchUserFollowingUseCase(requireNotNull(state.me?.id))
@@ -147,7 +154,7 @@ internal class HomeViewModel @Inject constructor(
                     )
                 }
             }.onFailure { exception ->
-                if ((exception as? DuckieResponseException)?.code == "FOLLOWING_ALREADY_EXISTS") {
+                if ((exception as? DuckieResponseException)?.code == ErrorCode.FollowingAlreadyExists) {
                     reduce {
                         state.copy(
                             isFollowingExist = true,
@@ -161,6 +168,7 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
+    /** [userId]를 팔로우합니다. 이미 팔로우가 되어있다면 언팔로우를 진행합니다. */
     fun followUser(userId: Int, isFollowing: Boolean) = intent {
         followUseCase(
             followBody = FollowBody(
@@ -172,6 +180,7 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /** 인기 태그 목록을 가져옵니다. */
     fun fetchPopularTags() = intent {
         fetchPopularTagsUseCase()
             .onSuccess { tags ->
@@ -186,6 +195,7 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
+    /** 홈 화면의 로딩 상태를 [loading]으로 바꿉니다. */
     private fun updateHomeLoading(
         loading: Boolean,
     ) = intent {
@@ -196,6 +206,7 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /** 홈 화면의 BottomNavigation 상태를 [step]으로 바꿉니다. */
     fun navigationPage(
         step: BottomNavigationStep,
     ) = intent {
@@ -206,6 +217,7 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /** 홈 화면의 단계를 [step]으로 바꿉니다. */
     fun changedHomeScreen(
         step: HomeStep,
     ) = intent {
@@ -216,12 +228,14 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /** 검색 화면으로 이동한다. */
     fun navigateToSearch(
         searchTag: String? = null,
     ) = intent {
         postSideEffect(HomeSideEffect.NavigateToSearch(searchTag))
     }
 
+    /** 홈 디테일 화면으로 이동한다. */
     fun navigateToHomeDetail(
         examId: Int,
     ) = intent {
@@ -232,6 +246,7 @@ internal class HomeViewModel @Inject constructor(
         )
     }
 
+    /** 문제 만들기 화면으로 이동한다.*/
     fun navigateToCreateProblem() = intent {
         postSideEffect(
             HomeSideEffect.NavigateToCreateProblem,
