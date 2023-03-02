@@ -11,8 +11,11 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -23,6 +26,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
+import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
@@ -57,17 +61,26 @@ class SearchActivity : BaseActivity() {
             }
 
             QuackTheme {
-                QuackAnimatedContent(
-                    modifier = Modifier
-                        .background(QuackColor.White.composeColor)
-                        .padding(systemBarPaddings),
-                    targetState = state.searchStep,
-                ) { step ->
-                    when (step) {
-                        SearchStep.Search -> SearchScreen(vm = vm)
-                        SearchStep.SearchResult -> SearchResultScreen {
-                            finishWithAnimation()
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    QuackAnimatedContent(
+                        modifier = Modifier
+                            .background(QuackColor.White.composeColor)
+                            .padding(systemBarPaddings),
+                        targetState = state.searchStep,
+                    ) { step ->
+                        when (step) {
+                            SearchStep.Search -> SearchScreen(vm = vm)
+                            SearchStep.SearchResult -> SearchResultScreen {
+                                finishWithAnimation()
+                            }
                         }
+                    }
+
+                    if (state.isSearchLoading) {
+                        DuckieCircularProgressIndicator()
                     }
                 }
             }

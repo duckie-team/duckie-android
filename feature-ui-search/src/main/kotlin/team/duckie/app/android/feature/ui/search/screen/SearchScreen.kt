@@ -33,6 +33,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.ui.search.R
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
+import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackBody1
@@ -67,6 +68,7 @@ internal fun SearchScreen(
             )
             Spacer(modifier = Modifier.width(8.dp))
             // TODO(limsaehyun): QuackQuack를 통해서 underline이 없는 TextField로 교체해야 함
+            @AllowMagicNumber(because = "임시로 구현한 컴포넌")
             QuackBasicTextField(
                 modifier = Modifier.offset(y = (-4).dp),
                 text = state.searchKeyword,
@@ -93,6 +95,7 @@ internal fun SearchScreen(
 /**
  * 추천 검색어를 나타내는 Section
  */
+@Suppress("UnusedPrivateMember") // TODO(limsaehyun): 추후에 추천 검색어 기능에 사용 예정
 private fun LazyListScope.recommendKeywordSection(
     tags: LazyPagingItems<Tag>,
 //    keyword: String,

@@ -62,7 +62,8 @@ internal class SearchViewModel @Inject constructor(
     }
 
     /** 최근 검색어를 가져온다. */
-    private fun getRecentSearch() = intent {
+    fun getRecentSearch() = intent {
+        updateSearchLoadingState(loading = true)
         getRecentSearchUseCase()
             .onSuccess { tags ->
                 reduce {
@@ -73,6 +74,9 @@ internal class SearchViewModel @Inject constructor(
             }
             .onFailure { exception ->
                 postSideEffect(SearchSideEffect.ReportError(exception))
+            }
+            .also {
+                updateSearchLoadingState(loading = false)
             }
     }
 

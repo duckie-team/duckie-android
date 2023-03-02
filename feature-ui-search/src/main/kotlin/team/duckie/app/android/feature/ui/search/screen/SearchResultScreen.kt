@@ -61,6 +61,7 @@ internal fun SearchResultScreen(
     LaunchedEffect(Unit) {
         vm.fetchSearchUsers(state.searchKeyword)
         vm.fetchSearchExams(state.searchKeyword)
+        vm.getRecentSearch()
     }
 
     Column(
