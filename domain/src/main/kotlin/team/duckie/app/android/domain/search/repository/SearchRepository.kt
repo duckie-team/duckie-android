@@ -8,6 +8,7 @@
 package team.duckie.app.android.domain.search.repository
 
 import androidx.paging.PagingData
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.search.model.Search
@@ -23,4 +24,10 @@ interface SearchRepository {
     fun searchTags(query: String): Flow<PagingData<Tag>>
 
     fun searchExams(query: String): Flow<PagingData<Exam>>
+
+    fun getRecentSearch(): ImmutableList<Tag>
+
+    fun clearRecentSearch(tagId: Int)
+
+    fun clearAllRecentSearch()
 }

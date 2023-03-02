@@ -21,6 +21,7 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.exam.usecase.GetRecentExamUseCase
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
@@ -50,6 +51,7 @@ internal class HomeViewModel @Inject constructor(
     private val followUseCase: FollowUseCase,
     private val getMeUseCase: GetMeUseCase,
     private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
+    private val getRecentExamUseCase: GetRecentExamUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
     override val container = container<HomeState, HomeSideEffect>(HomeState())
@@ -92,6 +94,17 @@ internal class HomeViewModel @Inject constructor(
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
                 updateHomeLoading(false)
+            }
+    }
+
+    fun fetchRecentExam() = intent {
+        getRecentExamUseCase()
+            .onSuccess { exams ->
+                reduce {
+                    state.copy(
+                        recentExam = exams,
+                    )
+                }
             }
     }
 

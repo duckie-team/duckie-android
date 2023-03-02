@@ -5,13 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 package team.duckie.app.android.feature.ui.home.screen.search
 
 import androidx.compose.foundation.background
@@ -32,8 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
@@ -59,6 +54,7 @@ internal fun SearchMainScreen(
 
     LaunchedEffect(Unit) {
         vm.fetchPopularTags()
+        vm.fetchRecentExam()
     }
 
     Column(
@@ -103,7 +99,7 @@ internal fun SearchMainScreen(
                 contentAlignment = Alignment.CenterStart,
             ) {
                 QuackBody1(
-                    text = "관심있는 키워드를 검색해보세요!",
+                    text = stringResource(id = R.string.try_search),
                     color = QuackColor.Gray2,
                 )
             }
@@ -111,7 +107,7 @@ internal fun SearchMainScreen(
         Spacer(modifier = Modifier.height(16.dp))
         QuackTitle2(
             modifier = Modifier.padding(start = SearchScreenHorizontalPaddingDp),
-            text = "인기 태그",
+            text = stringResource(id = R.string.popular_tag),
         )
         Spacer(modifier = Modifier.height(8.dp))
         // TODO(limsaehyun): 추후 꽥꽥에서, 전체 너비만큼 태그 Composable 을 넣을 수 있는 Composable 적용 필요
@@ -127,7 +123,7 @@ internal fun SearchMainScreen(
         Spacer(modifier = Modifier.height(52.dp))
         QuackTitle2(
             modifier = Modifier.padding(start = SearchScreenHorizontalPaddingDp),
-            text = "최근 덕질한 시험",
+            text = stringResource(id = R.string.recent_search),
         )
         Spacer(modifier = Modifier.height(8.dp))
         LazyRow {

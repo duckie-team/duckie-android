@@ -19,4 +19,8 @@
     <string name="follow">팔로우</string>
     <string name="examinee">응시자</string>
     <string name="recommend">추천</string>
+
+    <string name="try_search">"관심있는 키워드를 검색해보세요!"</string>
+    <string name="popular_tag">인기 태그</string>
+    <string name="recent_search">최근 덕질한 시험</string>
 </resources>

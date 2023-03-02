@@ -11,6 +11,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.github.kittinunf.fuel.Fuel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -94,6 +96,10 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
                 )
             },
         ).flow
+    }
+
+    override fun getRecentSearch(): ImmutableList<Tag> {
+        return persistentListOf() // TODO(limsaehyun): 최근 검색어 가져오기
     }
 
     override fun searchTags(

@@ -9,6 +9,8 @@ package team.duckie.app.android.feature.ui.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -18,6 +20,9 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.domain.search.usecase.ClearAllRecentSearchUseCase
+import team.duckie.app.android.domain.search.usecase.ClearRecentSearchUseCase
+import team.duckie.app.android.domain.search.usecase.GetRecentSearchUseCase
 import team.duckie.app.android.domain.search.usecase.SearchExamsUseCase
 import team.duckie.app.android.domain.search.usecase.SearchUsersUseCase
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
@@ -30,6 +35,9 @@ import javax.inject.Inject
 internal class SearchViewModel @Inject constructor(
     private val searchExamsUseCase: SearchExamsUseCase,
     private val searchUsersUseCase: SearchUsersUseCase,
+    private val getRecentSearchUseCase: GetRecentSearchUseCase,
+    private val clearAllRecentSearchUseCase: ClearAllRecentSearchUseCase,
+    private val clearRecentSearchUseCase: ClearRecentSearchUseCase,
 ) : ContainerHost<SearchState, SearchSideEffect>, ViewModel() {
 
     override val container = container<SearchState, SearchSideEffect>(SearchState())
@@ -53,14 +61,48 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
-    fun clearAllRecentSearch() {
-        // TODO(limsaehyun): 최근 검색어 모두 삭제 구현
+    /** 최근 검색어를 가져온다. */
+    private fun getRecentSearch() = intent {
+        getRecentSearchUseCase()
+            .onSuccess { tags ->
+                reduce {
+                    state.copy(
+                        recentSearch = tags,
+                    )
+                }
+            }
+            .onFailure { exception ->
+                postSideEffect(SearchSideEffect.ReportError(exception))
+            }
     }
 
-    fun clearRecentSearch(tagId: Int) {
-        // TODO(limsaehyun): 최근 검색어 삭제 구현
+    /** 최근 검색어를 모두 삭제한다. */
+    fun clearAllRecentSearch() = intent {
+        clearAllRecentSearchUseCase()
+            .onSuccess {
+                reduce {
+                    state.copy(
+                        recentSearch = persistentListOf(),
+                    )
+                }
+            }
     }
 
+    /** [tagId]를 가진 최근 검색어를 삭제한다. */
+    fun clearRecentSearch(tagId: Int) = intent {
+        clearRecentSearchUseCase(tagId = tagId)
+            .onSuccess {
+                reduce {
+                    state.copy(
+                        recentSearch = state.recentSearch
+                            .filter { it.id != tagId }
+                            .toImmutableList(),
+                    )
+                }
+            }
+    }
+
+    /** [keyword]에 따른 덕질고사 검색 결과를 가져온다. */
     fun fetchSearchExams(keyword: String) = intent {
         searchExamsUseCase(exam = keyword)
             .onSuccess { paging ->
@@ -75,6 +117,7 @@ internal class SearchViewModel @Inject constructor(
             }
     }
 
+    /** [user]에 따른 유저 검색 결과를 가져온다. */
     fun fetchSearchUsers(user: String) = intent {
         searchUsersUseCase(user = user)
             .onSuccess { paging ->
