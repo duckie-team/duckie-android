@@ -123,7 +123,7 @@ internal fun SearchMainScreen(
         Spacer(modifier = Modifier.height(52.dp))
         QuackTitle2(
             modifier = Modifier.padding(start = SearchScreenHorizontalPaddingDp),
-            text = stringResource(id = R.string.recent_search),
+            text = stringResource(id = R.string.recent_exam),
         )
         Spacer(modifier = Modifier.height(8.dp))
         LazyRow {

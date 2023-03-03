@@ -18,9 +18,8 @@ import javax.inject.Inject
 class SearchExamsUseCase @Inject constructor(
     private val repository: SearchRepository,
 ) {
-    operator fun invoke(exam: String) = runCatching {
+    operator fun invoke(exam: String) =
         repository.searchExams(
             query = exam,
         )
-    }
 }

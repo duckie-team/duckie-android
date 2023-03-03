@@ -68,7 +68,7 @@ internal fun SearchScreen(
             )
             Spacer(modifier = Modifier.width(8.dp))
             // TODO(limsaehyun): QuackQuack를 통해서 underline이 없는 TextField로 교체해야 함
-            @AllowMagicNumber(because = "임시로 구현한 컴포넌")
+            @AllowMagicNumber(because = "임시로 구현한 컴포넌트")
             QuackBasicTextField(
                 modifier = Modifier.offset(y = (-4).dp),
                 text = state.searchKeyword,

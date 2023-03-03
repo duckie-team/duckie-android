@@ -18,9 +18,8 @@ import javax.inject.Inject
 class SearchUsersUseCase @Inject constructor(
     private val repository: SearchRepository,
 ) {
-    operator fun invoke(user: String) = kotlin.runCatching {
+    operator fun invoke(user: String) =
         repository.searchUsers(
             query = user,
         )
-    }
 }

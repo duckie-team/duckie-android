@@ -70,7 +70,7 @@ internal fun HomeRecommendScreen(
     val state = vm.collectAsState().value
     val pageState = rememberPagerState()
 
-    val lazyRecommendations = vm.pagingDataFlow.collectAsLazyPagingItems()
+    val lazyRecommendations = vm.recommendations.collectAsLazyPagingItems()
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
