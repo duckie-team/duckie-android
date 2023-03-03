@@ -21,9 +21,11 @@ import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data._util.toStringJsonMap
+import team.duckie.app.android.data.exam.datasource.ExamInfoDataSource
 import team.duckie.app.android.data.exam.mapper.toData
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamData
+import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
@@ -36,8 +38,8 @@ import javax.inject.Inject
 
 class ExamRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
-
-    ) : ExamRepository {
+    private val examInfoDataSource: ExamInfoDataSource,
+) : ExamRepository {
     override suspend fun makeExam(exam: ExamBody): Boolean {
         val response = client.post {
             url("/exams")
@@ -89,14 +91,14 @@ class ExamRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMadeExams(): List<ExamInfo> {
-        TODO("Not yet implemented")
+        return examInfoDataSource.getMadeExams().map(ExamInfoEntity::toDomain)
     }
 
     override suspend fun getSolvedExams(): List<ExamInfo> {
-        TODO("Not yet implemented")
+        return examInfoDataSource.getSolvedExams().map(ExamInfoEntity::toDomain)
     }
 
     override suspend fun getFavoriteExams(): List<ExamInfo> {
-        TODO("Not yet implemented")
+        return examInfoDataSource.getFavoriteExams().map(ExamInfoEntity::toDomain)
     }
 }

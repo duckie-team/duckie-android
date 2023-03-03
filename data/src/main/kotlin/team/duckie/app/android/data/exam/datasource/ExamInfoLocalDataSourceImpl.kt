@@ -13,7 +13,7 @@ import team.duckie.app.android.data.exam.dao.SolvedExamsDao
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import javax.inject.Inject
 
-class ExamInfoDataSourceImpl @Inject constructor(
+class ExamInfoLocalDataSourceImpl @Inject constructor(
     private val favoriteExamsDao: FavoriteExamsDao,
     private val madeExamsDao: MadeExamsDao,
     private val solvedExamsDao: SolvedExamsDao,
