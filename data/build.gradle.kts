@@ -33,6 +33,7 @@ android {
         buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName\"")
         manifestPlaceholders["KAKAO_MANIFEST_SCHEME"] =
             gradleLocalProperties(rootDir).getProperty("KAKAO_MANIFEST_SCHEME")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
@@ -64,6 +65,11 @@ dependencies {
         libs.ktor.server.core, // for E2E test
     )
     androidTestImplementations(
+        libs.test.androidx.junit,
         libs.test.androidx.runner,
+        libs.test.strikt,
     )
+    implementation(libs.ktx.lifecycle.viewmodel){ // for androidTest
+        exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel")
+    }
 }
