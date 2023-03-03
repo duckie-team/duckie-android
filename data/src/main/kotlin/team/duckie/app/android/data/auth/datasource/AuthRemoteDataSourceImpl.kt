@@ -19,7 +19,6 @@ import team.duckie.app.android.data._util.update
 import team.duckie.app.android.data.auth.mapper.toDomain
 import team.duckie.app.android.data.auth.model.AccessTokenCheckResponseData
 import team.duckie.app.android.data.auth.model.AuthJoinResponseData
-import team.duckie.app.android.domain.auth.datasource.AuthDataSource
 import team.duckie.app.android.domain.auth.model.AccessTokenCheckResponse
 import team.duckie.app.android.domain.auth.model.JoinResponse
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeader

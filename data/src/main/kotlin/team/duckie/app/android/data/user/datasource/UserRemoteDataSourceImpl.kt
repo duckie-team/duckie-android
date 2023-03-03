@@ -25,7 +25,6 @@ import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.data.user.model.UsersResponse
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.datasource.UserDataSource
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
