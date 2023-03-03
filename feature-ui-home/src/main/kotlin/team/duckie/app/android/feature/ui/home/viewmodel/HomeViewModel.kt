@@ -11,10 +11,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -40,6 +44,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.exception.handling.const.ErrorCode
+import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.util.kotlin.fastMap
 
@@ -56,12 +61,15 @@ internal class HomeViewModel @Inject constructor(
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
     override val container = container<HomeState, HomeSideEffect>(HomeState())
-    internal val pagingDataFlow: Flow<PagingData<RecommendationItem>>
+
+    private val _recommendations =
+        MutableStateFlow<PagingData<RecommendationItem>>(PagingData.empty())
+    internal val recommendations: Flow<PagingData<RecommendationItem>> = _recommendations
 
     init {
         initState()
         fetchJumbotrons()
-        pagingDataFlow = fetchRecommendations()
+        fetchRecommendations()
     }
 
     /** [HomeViewModel]의 초기 상태를 설정한다. */
@@ -78,9 +86,15 @@ internal class HomeViewModel @Inject constructor(
     }
 
     /** 추천 피드를 가져온다. */
-    private fun fetchRecommendations() =
-        fetchRecommendationsUseCase()
-            .cachedIn(viewModelScope)
+    private fun fetchRecommendations() {
+        viewModelScope.launch {
+            fetchRecommendationsUseCase()
+                .cachedIn(viewModelScope)
+                .collect { recommendations ->
+                    _recommendations.value = recommendations
+                }
+        }
+    }
 
     /** 홈 화면의 jumbotron을 가져온다. */
     private fun fetchJumbotrons() = intent {
@@ -175,7 +189,25 @@ internal class HomeViewModel @Inject constructor(
                 followingId = userId,
             ),
             isFollowing = isFollowing,
-        ).onFailure { exception ->
+        ).onSuccess {
+            reduce {
+                state.copy(
+                    recommendFollowing = state.recommendFollowing.map { recommend ->
+                        recommend.copy(
+                            users = recommend.users.map { user ->
+                                if (user.userId == userId) {
+                                    user.copy(
+                                        isFollowing = isFollowing,
+                                    )
+                                } else {
+                                    user
+                                }
+                            }.toImmutableList(),
+                        )
+                    }.toImmutableList(),
+                )
+            }
+        }.onFailure { exception ->
             postSideEffect(HomeSideEffect.ReportError(exception))
         }
     }

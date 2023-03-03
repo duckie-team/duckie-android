@@ -51,17 +51,17 @@ internal fun SearchResultScreen(
 ) {
     val state = vm.collectAsState().value
 
-    val searchExams = state.searchExams.collectAsLazyPagingItems()
-    val searchUsers = state.searchUsers.collectAsLazyPagingItems()
+    val searchUsers = vm.searchUsers.collectAsLazyPagingItems()
+    val searchExams = vm.searchExams.collectAsLazyPagingItems()
 
     val tabTitles = SearchResultStep.values().map {
         it.title
     }.toPersistentList()
 
     LaunchedEffect(Unit) {
-        vm.fetchSearchUsers(state.searchKeyword)
-        vm.fetchSearchExams(state.searchKeyword)
         vm.getRecentSearch()
+        vm.fetchSearchExams(state.searchKeyword)
+        vm.fetchSearchUsers(state.searchKeyword)
     }
 
     Column(
@@ -114,14 +114,17 @@ internal fun SearchResultScreen(
             ) {
                 items(searchUsers) { item ->
                     UserFollowingLayout(
-                        userId = item?.id ?: 0,
-                        profileImgUrl = item?.profileImageUrl ?: "",
+                        userId = item?.userId ?: 0,
+                        profileImgUrl = item?.profileImgUrl ?: "",
                         nickname = item?.nickname ?: "",
-                        favoriteTag = item?.duckPower?.tag?.name ?: "",
-                        tier = item?.duckPower?.tier ?: "",
-                        initalFollow = false, // TODO
-                        onClickFollow = {
-                            // TODO(limsaehyun): following request
+                        favoriteTag = item?.favoriteTag ?: "",
+                        tier = item?.tier ?: "",
+                        isFollowing = item?.isFollowing ?: false,
+                        onClickFollow = { follow ->
+                            vm.followUser(
+                                userId = item?.userId ?: 0,
+                                isFollowing = follow,
+                            )
                         },
                     )
                 }

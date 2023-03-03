@@ -11,10 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -63,12 +59,10 @@ fun UserFollowingLayout(
     nickname: String,
     favoriteTag: String,
     tier: String,
-    initalFollow: Boolean,
+    isFollowing: Boolean,
     onClickUserProfile: ((Int) -> Unit)? = null,
     onClickFollow: (Boolean) -> Unit,
 ) {
-    var isFollowing by remember { mutableStateOf(initalFollow) }
-
     Layout(
         modifier = modifier
             .fillMaxWidth()
@@ -105,8 +99,7 @@ fun UserFollowingLayout(
                 text = if (isFollowing) stringResource(id = R.string.follow) else stringResource(id = R.string.following),
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                 onClick = {
-                    isFollowing = !isFollowing
-                    onClickFollow(isFollowing)
+                    onClickFollow(!isFollowing)
                 },
                 rippleEnabled = false,
             )

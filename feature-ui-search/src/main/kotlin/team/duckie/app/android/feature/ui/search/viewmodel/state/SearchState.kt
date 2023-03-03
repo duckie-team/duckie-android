@@ -12,9 +12,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
 
@@ -27,8 +25,6 @@ import team.duckie.app.android.feature.ui.search.constants.SearchStep
  * [recommendSearchs] 추천 검색어
  * [searchKeyword] 검색어
  * [tagSelectedTab] 검색 결과에서 선택된 탭
- * [searchExams] 덕질고사 검색 결과
- * [searchUsers] 유저 검색 결과
  */
 internal data class SearchState(
     val isSearchLoading: Boolean = false,
@@ -37,6 +33,13 @@ internal data class SearchState(
     val recommendSearchs: Flow<PagingData<Tag>> = flow { PagingData.empty<Tag>() },
     val searchKeyword: String = "",
     val tagSelectedTab: SearchResultStep = SearchResultStep.DuckExam,
-    val searchExams: Flow<PagingData<Exam>> = flow { PagingData.empty<Tag>() },
-    val searchUsers: Flow<PagingData<User>> = flow { PagingData.empty<Tag>() },
-)
+) {
+    data class User(
+        val userId: Int,
+        val profileImgUrl: String,
+        val nickname: String,
+        val favoriteTag: String,
+        val tier: String,
+        val isFollowing: Boolean,
+    )
+}

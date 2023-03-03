@@ -188,7 +188,7 @@ private fun HomeFollowingInitialRecommendUsers(
                 nickname = user.nickname,
                 favoriteTag = user.favoriteTag,
                 tier = user.tier,
-                initalFollow = user.isFollowing,
+                isFollowing = user.isFollowing,
                 onClickFollow = {
                     onClickFollowing(user.userId, it)
                 },
