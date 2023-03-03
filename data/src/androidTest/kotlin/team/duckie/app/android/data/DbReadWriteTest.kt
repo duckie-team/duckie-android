@@ -4,9 +4,10 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+package team.duckie.app.android.data
 
 import androidx.room.Room
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -19,22 +20,22 @@ import team.duckie.app.android.data._local.DuckieDatabase
 import team.duckie.app.android.data.exam.dao.FavoriteExamsDao
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
 
-@RunWith(AndroidJUnit4ClassRunner::class)
-class ExamEntityReadWriteTest {
+@RunWith(AndroidJUnit4::class)
+class DbReadWriteTest {
     private lateinit var favoriteExamsDao: FavoriteExamsDao
     private lateinit var db: DuckieDatabase
 
     @Before
     fun setupDataBase() {
         db = Room.inMemoryDatabaseBuilder(
-            InstrumentationRegistry.getInstrumentation().context,
+            InstrumentationRegistry.getInstrumentation().targetContext,
             DuckieDatabase::class.java
         ).allowMainThreadQueries().build()
         favoriteExamsDao = db.favoriteExamsDao()
     }
 
     @Test
-    fun insertAll_returns_True(): Unit = runBlocking {
+    fun insertAll_returns_true(): Unit = runBlocking {
         val examInfo = ExamInfoEntity(
             id = 1,
             title = "재웅 덕질고사",
