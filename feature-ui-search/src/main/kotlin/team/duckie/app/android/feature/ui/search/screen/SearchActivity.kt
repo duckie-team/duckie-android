@@ -86,7 +86,7 @@ class SearchActivity : BaseActivity() {
                                             putExtra(Extras.ExamId, examId)
                                         },
                                     )
-                                }
+                                },
                             ) {
                                 finishWithAnimation()
                             }
