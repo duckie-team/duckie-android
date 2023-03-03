@@ -225,4 +225,3 @@ internal fun ExamInfo.toData() = ExamInfoEntity(
     thumbnailUrl = thumbnailUrl,
     solvedCount = solvedCount,
 )
-

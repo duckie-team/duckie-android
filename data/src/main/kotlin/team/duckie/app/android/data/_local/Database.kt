@@ -16,17 +16,17 @@ import team.duckie.app.android.data.exam.model.ExamInfoEntity
 
 @Database(
     entities = [
-        ExamInfoEntity::class
+        ExamInfoEntity::class,
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
 abstract class DuckieDatabase : RoomDatabase() {
     abstract fun favoriteExamsDao(): FavoriteExamsDao
     abstract fun madeExamsDao(): MadeExamsDao
     abstract fun solvedExamsDao(): SolvedExamsDao
 
-    companion object{
+    companion object {
         const val DatabaseName = "duckie-database"
     }
 }
