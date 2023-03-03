@@ -47,6 +47,7 @@ private val HomeTagListPadding = PaddingValues(
 internal fun SearchResultScreen(
     modifier: Modifier = Modifier,
     vm: SearchViewModel = activityViewModel(),
+    navigateDetail: (Int) -> Unit,
     onPrevious: () -> Unit,
 ) {
     val state = vm.collectAsState().value
@@ -102,7 +103,7 @@ internal fun SearchResultScreen(
                                 solvedCount = exam?.solvedCount ?: 0,
                             ),
                             onItemClick = {
-                                // TODO(limsaTehyun): 상세보기로 이동
+                                navigateDetail(exam?.id ?: 0)
                             },
                         )
                     }

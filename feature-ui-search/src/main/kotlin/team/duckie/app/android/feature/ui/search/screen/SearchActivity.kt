@@ -26,6 +26,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
+import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
@@ -35,9 +36,13 @@ import team.duckie.app.android.util.ui.popStringExtra
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchActivity : BaseActivity() {
+
+    @Inject
+    lateinit var detailNavigator: DetailNavigator
 
     private val vm: SearchViewModel by viewModels()
 
@@ -73,7 +78,16 @@ class SearchActivity : BaseActivity() {
                     ) { step ->
                         when (step) {
                             SearchStep.Search -> SearchScreen(vm = vm)
-                            SearchStep.SearchResult -> SearchResultScreen {
+                            SearchStep.SearchResult -> SearchResultScreen(
+                                navigateDetail = { examId ->
+                                    detailNavigator.navigateFrom(
+                                        activity = this@SearchActivity,
+                                        intentBuilder = {
+                                            putExtra(Extras.ExamId, examId)
+                                        },
+                                    )
+                                }
+                            ) {
                                 finishWithAnimation()
                             }
                         }

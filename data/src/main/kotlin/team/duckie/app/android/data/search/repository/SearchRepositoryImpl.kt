@@ -166,11 +166,7 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
         // 유저 검색 페이징 최대 사이즈
         const val SearchExamPagingMaxSize = 200
 
-        /**
-         *  유저 검색 페이징 단위
-         *  TODO(limsaehyun): 페이징 단위가 10이라서 여러번 요청됨 개선해야함
-         *  https://sungbinland.slack.com/archives/C046SS32SEQ/p1677482144601589
-         */
+        /** 유저 검색 페이징 단위 */
         const val SearchTagPagingPage = 10
 
         // 유저 검색 페이징 최대 사이즈
