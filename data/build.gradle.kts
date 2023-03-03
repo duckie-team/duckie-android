@@ -69,7 +69,7 @@ dependencies {
         libs.test.androidx.runner,
         libs.test.strikt,
     )
-    implementation(libs.ktx.lifecycle.viewmodel){ // for androidTest
+    implementation(libs.ktx.lifecycle.viewmodel) { // for androidTest
         exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel")
     }
 }
