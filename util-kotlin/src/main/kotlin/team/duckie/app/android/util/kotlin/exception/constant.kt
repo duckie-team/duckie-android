@@ -23,6 +23,10 @@ object ExceptionCode {
     const val ClientMeIdNull = "client_me_id_null"
     const val ClientMeTokenNull = "client_me_token_null"
     const val ServerUserIdStrange = "server_user_id_strange"
+
+    // Third party
+    const val KAKAOTALK_IS_INSTALLED_BUT_NOT_CONNECTED_ACCOUNT =
+        "KAKAO_TALK_INSTALLED_BUT_NIT_CONNECTED_ACCOUNT"
 }
 
 val Throwable.isTagAlreadyExist: Boolean
@@ -41,3 +45,6 @@ val Throwable.isLoginRequireCode: Boolean
         ExceptionCode.ClientMeTokenNull,
         ExceptionCode.ServerUserIdStrange,
     )
+
+val Throwable.isKakaoTalkNotConnectedAccount: Boolean
+    get() = (this as? DuckieThirdPartyException)?.code == ExceptionCode.KAKAOTALK_IS_INSTALLED_BUT_NOT_CONNECTED_ACCOUNT
