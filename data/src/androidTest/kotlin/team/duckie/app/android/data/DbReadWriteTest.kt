@@ -38,6 +38,7 @@ class DbReadWriteTest {
     fun insertAll_returns_true(): Unit = runBlocking {
         val examInfo = ExamInfoEntity(
             id = 1,
+            nickname = "닉네임",
             title = "재웅 덕질고사",
             thumbnailUrl = "",
         )
