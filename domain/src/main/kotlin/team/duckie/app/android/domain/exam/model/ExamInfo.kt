@@ -12,6 +12,7 @@ import androidx.compose.runtime.Immutable
 @Immutable
 data class ExamInfo(
     val id: Int,
+    val nickname: String,
     val title: String,
     val thumbnailUrl: String,
     val solvedCount: Int?,

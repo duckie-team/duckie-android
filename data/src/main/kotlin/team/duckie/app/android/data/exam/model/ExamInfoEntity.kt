@@ -17,6 +17,8 @@ data class ExamInfoEntity(
     val id: Int,
     @ColumnInfo(name = "title")
     val title: String,
+    @ColumnInfo(name = "nickname")
+    val nickname: String,
     @ColumnInfo(name = "thumbnail_url")
     val thumbnailUrl: String,
     @ColumnInfo(name = "solved_count")

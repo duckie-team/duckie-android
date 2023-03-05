@@ -217,6 +217,7 @@ internal fun ExamInfoEntity.toDomain() = ExamInfo(
     title = title,
     thumbnailUrl = thumbnailUrl,
     solvedCount = solvedCount,
+    nickname = nickname,
 )
 
 internal fun ExamInfo.toData() = ExamInfoEntity(
@@ -224,4 +225,5 @@ internal fun ExamInfo.toData() = ExamInfoEntity(
     title = title,
     thumbnailUrl = thumbnailUrl,
     solvedCount = solvedCount,
+    nickname = nickname,
 )
