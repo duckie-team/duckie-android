@@ -17,6 +17,7 @@ import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.data._local.DuckieDatabase.Companion.DatabaseName
 import team.duckie.app.android.data.exam.dao.FavoriteExamsDao
 import team.duckie.app.android.data.exam.dao.MadeExamsDao
+import team.duckie.app.android.data.exam.dao.RecentExamsDao
 import team.duckie.app.android.data.exam.dao.SolvedExamsDao
 import javax.inject.Singleton
 
@@ -42,5 +43,10 @@ class DatabaseModule {
     @Provides
     fun provideSolvedExamsDao(database: DuckieDatabase): SolvedExamsDao {
         return database.solvedExamsDao()
+    }
+
+    @Provides
+    fun provideRecentExamsDao(database: DuckieDatabase): RecentExamsDao {
+        return database.recentExamsDao()
     }
 }

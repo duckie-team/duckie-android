@@ -15,4 +15,6 @@ interface ExamInfoDataSource {
     suspend fun getMadeExams(): List<ExamInfoEntity>
 
     suspend fun getSolvedExams(): List<ExamInfoEntity>
+
+    suspend fun getRecentExams(): List<ExamInfoEntity>
 }

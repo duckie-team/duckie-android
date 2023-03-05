@@ -9,6 +9,7 @@ package team.duckie.app.android.data.exam.datasource
 
 import team.duckie.app.android.data.exam.dao.FavoriteExamsDao
 import team.duckie.app.android.data.exam.dao.MadeExamsDao
+import team.duckie.app.android.data.exam.dao.RecentExamsDao
 import team.duckie.app.android.data.exam.dao.SolvedExamsDao
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import javax.inject.Inject
@@ -17,6 +18,7 @@ class ExamInfoLocalDataSourceImpl @Inject constructor(
     private val favoriteExamsDao: FavoriteExamsDao,
     private val madeExamsDao: MadeExamsDao,
     private val solvedExamsDao: SolvedExamsDao,
+    private val recentExamsDao: RecentExamsDao,
 ) : ExamInfoDataSource {
     override suspend fun getFavoriteExams(): List<ExamInfoEntity> {
         return favoriteExamsDao.getAll()
@@ -28,5 +30,9 @@ class ExamInfoLocalDataSourceImpl @Inject constructor(
 
     override suspend fun getSolvedExams(): List<ExamInfoEntity> {
         return solvedExamsDao.getAll()
+    }
+
+    override suspend fun getRecentExams(): List<ExamInfoEntity> {
+        return recentExamsDao.getAll()
     }
 }

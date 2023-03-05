@@ -13,8 +13,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._datasource.client
@@ -86,8 +84,8 @@ class ExamRepositoryImpl @Inject constructor(
         return@withContext examMeFollowingResponse.exams
     }
 
-    override fun getRecentExam(): ImmutableList<Exam> {
-        return persistentListOf() // TODO(limsaehyun): 최근 덕질한 실험 가져오기
+    override suspend fun getRecentExam(): List<ExamInfo> {
+        return examInfoDataSource.getRecentExams().map(ExamInfoEntity::toDomain)
     }
 
     override suspend fun getMadeExams(): List<ExamInfo> {

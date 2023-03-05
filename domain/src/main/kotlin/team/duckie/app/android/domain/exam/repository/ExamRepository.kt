@@ -8,7 +8,6 @@
 package team.duckie.app.android.domain.exam.repository
 
 import androidx.compose.runtime.Immutable
-import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInfo
@@ -30,5 +29,5 @@ interface ExamRepository {
 
     suspend fun getFavoriteExams(): List<ExamInfo>
 
-    fun getRecentExam(): ImmutableList<Exam>
+    suspend fun getRecentExam(): List<ExamInfo>
 }

@@ -11,6 +11,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import team.duckie.app.android.data.exam.dao.FavoriteExamsDao
 import team.duckie.app.android.data.exam.dao.MadeExamsDao
+import team.duckie.app.android.data.exam.dao.RecentExamsDao
 import team.duckie.app.android.data.exam.dao.SolvedExamsDao
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
 
@@ -25,6 +26,8 @@ abstract class DuckieDatabase : RoomDatabase() {
     abstract fun favoriteExamsDao(): FavoriteExamsDao
     abstract fun madeExamsDao(): MadeExamsDao
     abstract fun solvedExamsDao(): SolvedExamsDao
+
+    abstract fun recentExamsDao(): RecentExamsDao
 
     companion object {
         const val DatabaseName = "duckie-database"
