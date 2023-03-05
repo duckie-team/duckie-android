@@ -26,7 +26,7 @@ object ExceptionCode {
 
     // Third party
     const val KAKAOTALK_IS_INSTALLED_BUT_NOT_CONNECTED_ACCOUNT =
-        "KAKAO_TALK_INSTALLED_BUT_NIT_CONNECTED_ACCOUNT"
+        "KAKAO_TALK_INSTALLED_BUT_NOT_CONNECTED_ACCOUNT"
 }
 
 val Throwable.isTagAlreadyExist: Boolean

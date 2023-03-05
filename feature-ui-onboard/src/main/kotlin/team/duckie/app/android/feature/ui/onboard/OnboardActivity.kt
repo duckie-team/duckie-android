@@ -221,7 +221,7 @@ class OnboardActivity : BaseActivity() {
                 sideEffect.exception.run {
                     if (isKakaoTalkNotConnectedAccount) {
                         reportToToast(message ?: "")
-                } else {
+                    } else {
                         reportToToast()
                     }
                 }
