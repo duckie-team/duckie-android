@@ -22,7 +22,7 @@ data class User(
     val id: Int,
     val nickname: String,
     val profileImageUrl: String?,
-    val status: String?,
+    val status: UserStatus?,
     val duckPower: DuckPower?,
     val follow: Follow?,
     val favoriteTags: List<Tag>?,

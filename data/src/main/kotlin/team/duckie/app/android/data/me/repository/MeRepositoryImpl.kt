@@ -15,9 +15,9 @@ import team.duckie.app.android.data.user.datasource.UserDataSource
 import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.datastore.PreferenceKey
-import team.duckie.app.android.util.kotlin.exception.ClientMeIdNull
-import team.duckie.app.android.util.kotlin.exception.ClientMeTokenNull
-import team.duckie.app.android.util.kotlin.exception.ServerUserIdStrange
+import team.duckie.app.android.util.kotlin.exception.ExceptionCode.ClientMeIdNull
+import team.duckie.app.android.util.kotlin.exception.ExceptionCode.ClientMeTokenNull
+import team.duckie.app.android.util.kotlin.exception.ExceptionCode.ServerUserIdStrange
 import team.duckie.app.android.util.kotlin.exception.duckieClientLogicProblemException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,25 +31,27 @@ class MeRepositoryImpl @Inject constructor(
     private var me: User? = null
 
     override suspend fun getMe(): User {
-        // 1. 토큰 값이 등록되어 있는지 먼저 확인한다 (이게 없으면 유저 정보 가져오는 거 자체가 안됨)
+        // 1. DataStore 에 토큰 값이 있는지 체크
         val meToken = getMeToken() ?: duckieClientLogicProblemException(code = ClientMeTokenNull)
 
-        // 2. 토큰이 있다면 토큰 검증한다.
+        // 2. 토큰 검증한다.
         val accessTokenValid = authDataSource.checkAccessToken(meToken).userId > 0
 
         if (accessTokenValid) {
-            // 3. id 값이 등록되어 있는지 확인한다.
+            // 3. DataStore 에 id 값이 있는지 체크
             val meId = getMeId() ?: duckieClientLogicProblemException(code = ClientMeIdNull)
 
-            // 4. me 객체값이 있는지 확인한다
+            // 4. me 객체값이 초기화 되었는지 확인
             return me ?: kotlin.run {
                 // 5. accessToken 관련 설정
                 authDataSource.attachAccessTokenToHeader(meToken)
 
-                // 6. me 객체가 없다면, id 기반으로 유저 정보를 가져온 후 setMe 를 통해 설정 뒤 반환한다.
+                // 6. id 기반으로 User 가져온 뒤 앱 내에 User 값 설정
                 val user = userDataSource.get(meId)
                 setMe(user)
 
+                // 7. User 값 반환
+                // 8. user.status = NEW 케이스 처리는 각 화면에서 처리할 것 (일단은)
                 return user
             }
         } else {

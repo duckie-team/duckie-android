@@ -75,11 +75,7 @@ internal class HomeViewModel @Inject constructor(
     /** [HomeViewModel]의 초기 상태를 설정한다. */
     private fun initState() = intent {
         getMeUseCase().onSuccess { me ->
-            if (me != null) {
-                reduce { state.copy(me = me) }
-            } else {
-                postSideEffect(HomeSideEffect.ReportError(Throwable("me is null")))
-            }
+            reduce { state.copy(me = me) }
         }.onFailure {
             postSideEffect(HomeSideEffect.ReportError(it))
         }

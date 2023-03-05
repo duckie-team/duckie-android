@@ -13,8 +13,7 @@ import androidx.compose.runtime.Immutable
 import javax.inject.Inject
 import team.duckie.app.android.domain.auth.model.AccessTokenValidation
 import team.duckie.app.android.domain.auth.repository.AuthRepository
-
-private const val ValidationFaildErrorCode = "TOKEN_EXPIRED"
+import team.duckie.app.android.util.kotlin.exception.ExceptionCode
 
 @Immutable
 class CheckAccessTokenUseCase @Inject constructor(private val repository: AuthRepository) {
@@ -31,10 +30,9 @@ class CheckAccessTokenUseCase @Inject constructor(private val repository: AuthRe
             } else {
                 Result.failure(exception)
             }*/
-            // TODO(sungbin): USER_NOT_FOUND 하드코딩 제거
-            // TODO(sungbin): USER_NOT_FOUND 일 때 UI 대응
+            // TODO(sungbin): responseCatching 재구현 후 exception.kt 에 정리할 것
             val isValidationFailedError = exception.toString().run {
-                contains(ValidationFaildErrorCode) || contains("USER_NOT_FOUND")
+                contains(ExceptionCode.TOKEN_EXPIRED) || contains(ExceptionCode.USER_NOT_FOUND)
             }
             if (isValidationFailedError) {
                 Result.success(AccessTokenValidation.failure)

@@ -26,6 +26,7 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.domain.user.model.toUserAuthStatus
 import team.duckie.app.android.util.kotlin.fastMap
 
 private const val NicknameSuffixMaxLength = 10_000
@@ -42,7 +43,7 @@ internal fun UserResponse.toDomain() = User(
     id = id ?: duckieResponseFieldNpe("id"),
     nickname = nickName ?: DuckieDefaultNickname,
     profileImageUrl = profileImageUrl,
-    status = status,
+    status = status?.toUserAuthStatus,
     duckPower = duckPower?.toDomain(),
     follow = follow?.toDomain(),
     favoriteTags = favoriteTags?.fastMap(TagData::toDomain)?.toImmutableList(),

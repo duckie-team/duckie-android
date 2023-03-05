@@ -16,7 +16,6 @@
 
 package team.duckie.app.android.util.kotlin.exception
 
-import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.runIf
 
@@ -149,13 +148,3 @@ fun duckieClientLogicProblemException(
         errors = errors,
     )
 }
-
-/** 앱 내에서 로그인이 필요한 [코드값][DuckieException.code]인 경우인지 체크한다. */
-fun DuckieException.isLoginRequireCode() =
-    this.code in persistentListOf(ClientMeIdNull, ClientMeTokenNull, ServerUserIdStrange)
-
-// TODO(riflockle7): exception 관련 모듈로 옮김 고려 필요
-const val ClientMeIdNull = "client_me_id_null"
-const val ClientMeTokenNull = "client_me_token_null"
-
-const val ServerUserIdStrange = "server_user_id_strange"

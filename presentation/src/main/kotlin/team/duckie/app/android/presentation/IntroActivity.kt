@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.domain.user.model.UserStatus
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
 import team.duckie.app.android.feature.ui.home.screen.HomeActivity
@@ -30,7 +31,6 @@ import team.duckie.app.android.feature.ui.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
-import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.BaseActivity
@@ -44,7 +44,6 @@ private val SplashScreenFinishDurationMillis = 1.5.seconds
 class IntroActivity : BaseActivity() {
 
     private val vm: IntroViewModel by viewModels()
-    private val toast by lazy { ToastWrapper(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -82,15 +81,22 @@ class IntroActivity : BaseActivity() {
         when (sideEffect) {
             is IntroSideEffect.GetUserFinished -> {
                 val preference = applicationContext.dataStore.data.first()
-                val isOnboardFinsihed = preference[PreferenceKey.Onboard.Finish]
-                if (isOnboardFinsihed == null) {
+                val isOnboardFinished = preference[PreferenceKey.Onboard.Finish]
+                if (isOnboardFinished == null || sideEffect.user.status == UserStatus.NEW) {
                     launchOnboardActivity()
-                } else if (sideEffect.user != null) {
-                    launchHomeOrOnboardActivity(isOnboardFinsihed)
                 } else {
-                    toast(getString(R.string.expired_access_token_relogin_requried))
-                    launchOnboardActivity()
+                    launchHomeOrOnboardActivity(isOnboardFinished)
                 }
+            }
+
+            is IntroSideEffect.UserNotInitialized -> {
+                launchOnboardActivity()
+            }
+
+            is IntroSideEffect.GetMeError -> {
+                sideEffect.exception.printStackTrace()
+                sideEffect.exception.reportToCrashlyticsIfNeeded()
+                launchOnboardActivity()
             }
 
             is IntroSideEffect.ReportError -> {
