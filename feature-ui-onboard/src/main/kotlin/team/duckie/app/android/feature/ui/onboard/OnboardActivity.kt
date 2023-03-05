@@ -218,10 +218,12 @@ class OnboardActivity : BaseActivity() {
             }
 
             is OnboardSideEffect.ReportError -> {
-                if (sideEffect.exception.isKakaoTalkNotConnectedAccount) {
-                    sideEffect.exception.run { reportToToast(message ?: "") }
+                sideEffect.exception.run {
+                    if (isKakaoTalkNotConnectedAccount) {
+                        reportToToast(message ?: "")
                 } else {
-                    sideEffect.exception.reportToToast()
+                        reportToToast()
+                    }
                 }
                 sideEffect.exception.printStackTrace()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
