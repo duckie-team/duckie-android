@@ -27,25 +27,25 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 
 data class DuckTestCoverItem(
     val testId: Int,
-    val coverImg: String?,
+    val thumbnailUrl: String?,
     val nickname: String,
     val title: String,
-    val examineeNumber: Int,
+    val solvedCount: Int,
 )
 
 private const val CoverRatio = 4f / 3f
 
 @Composable
-fun DuckTestSmallCover(
+fun DuckExamSmallCover(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
-    onItemClick: (Int) -> Unit,
+    onItemClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .width(158.dp)
             .quackClickable(rippleEnabled = true) {
-                onItemClick(duckTestCoverItem.testId)
+                onItemClick()
             },
         horizontalAlignment = Alignment.Start,
     ) {
@@ -54,7 +54,7 @@ fun DuckTestSmallCover(
                 .fillMaxWidth()
                 .aspectRatio(CoverRatio)
                 .clip(RoundedCornerShape(8.dp)),
-            model = duckTestCoverItem.coverImg,
+            model = duckTestCoverItem.thumbnailUrl,
             contentScale = ContentScale.FillBounds,
             contentDescription = null,
         )
@@ -68,7 +68,7 @@ fun DuckTestSmallCover(
         )
         QuackBody2(
             modifier = Modifier.padding(top = 8.dp),
-            text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.examineeNumber}",
+            text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.solvedCount}",
         )
     }
 }

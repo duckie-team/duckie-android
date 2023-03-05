@@ -49,7 +49,7 @@ import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
+import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.shared.ui.compose.QuackAnnotatedText
 import team.duckie.app.android.util.compose.activityViewModel
@@ -70,7 +70,7 @@ internal fun HomeRecommendScreen(
     val state = vm.collectAsState().value
     val pageState = rememberPagerState()
 
-    val lazyRecommendations = vm.pagingDataFlow.collectAsLazyPagingItems()
+    val lazyRecommendations = vm.recommendations.collectAsLazyPagingItems()
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -130,7 +130,7 @@ internal fun HomeRecommendScreen(
                 tag = item?.tag?.name ?: "",
                 exams = item?.exams?.toImmutableList() ?: persistentListOf(),
                 onExamClicked = { examId -> vm.navigateToHomeDetail(examId) },
-                onTagClicked = { tag -> vm.navigateToSearchResult(tag) },
+                onTagClicked = { tag -> vm.navigateToSearch(tag) },
             )
         }
     }
@@ -217,13 +217,13 @@ private fun HomeTopicRecommendLayout(
             ),
         ) {
             items(items = exams) { item ->
-                DuckTestSmallCover(
+                DuckExamSmallCover(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = item.id,
-                        coverImg = item.thumbnailUrl,
+                        thumbnailUrl = item.thumbnailUrl,
                         nickname = item.user?.nickname ?: "",
                         title = item.title,
-                        examineeNumber = item.solvedCount ?: 0,
+                        solvedCount = item.solvedCount ?: 0,
                     ),
                     onItemClick = {
                         onExamClicked(item.id)

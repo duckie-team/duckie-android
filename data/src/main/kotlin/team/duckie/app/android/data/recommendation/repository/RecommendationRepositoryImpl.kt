@@ -24,7 +24,6 @@ import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSo
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
-import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
@@ -89,12 +88,4 @@ class RecommendationRepositoryImpl @Inject constructor(
             // 예외적으로 page가 1일 경우에는 jumbotrons이 누락되면 안된다.
             return@withContext apiResponse.jumbotrons ?: duckieResponseFieldNpe("jumbotron")
         }
-
-    @ExperimentalApi
-    override suspend fun fetchRecommendTags(
-        tag: String,
-        type: SearchType,
-    ) {
-        // TODO(limsaehyun): repository 작업 필요
-    }
 }
