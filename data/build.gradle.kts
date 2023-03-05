@@ -8,14 +8,18 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import AppVersionNameProvider.App.VersionName
+import DependencyHandler.Extensions.androidTestImplementations
 import DependencyHandler.Extensions.implementations
+import DependencyHandler.Extensions.ksps
 import DependencyHandler.Extensions.testImplementations
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.JvmJUnit4)
     id(ConventionEnum.AndroidHilt)
     id(ConventionEnum.AppVersionNameProvider)
+    id(libs.plugins.kotlin.ksp.get().pluginId)
 }
 
 android {
@@ -27,6 +31,9 @@ android {
 
     defaultConfig {
         buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName\"")
+        manifestPlaceholders["KAKAO_MANIFEST_SCHEME"] =
+            gradleLocalProperties(rootDir).getProperty("KAKAO_MANIFEST_SCHEME")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
@@ -42,10 +49,14 @@ dependencies {
         libs.bundles.fuel,
         libs.bundles.moshi,
         libs.bundles.ktor.client,
+        libs.androidx.room.core,
         projects.domain,
         projects.utilKotlin,
         projects.pluginKtorClient,
         projects.featureDatastore,
+    )
+    ksps(
+        libs.androidx.room.compiler,
     )
     testImplementations(
         libs.test.coroutines,
@@ -53,4 +64,12 @@ dependencies {
         libs.test.ktor.server, // for E2E test
         libs.ktor.server.core, // for E2E test
     )
+    androidTestImplementations(
+        libs.test.androidx.junit,
+        libs.test.androidx.runner,
+        libs.test.strikt,
+    )
+    implementation(libs.ktx.lifecycle.viewmodel) { // for androidTest
+        exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel")
+    }
 }

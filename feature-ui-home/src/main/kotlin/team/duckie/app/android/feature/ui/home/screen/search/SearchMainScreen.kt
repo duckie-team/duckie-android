@@ -132,7 +132,7 @@ internal fun SearchMainScreen(
                     duckTestCoverItem = DuckTestCoverItem(
                         testId = exam.id,
                         thumbnailUrl = exam.thumbnailUrl,
-                        nickname = exam.user?.nickname ?: "",
+                        nickname = exam.nickname,
                         title = exam.title,
                         solvedCount = exam.solvedCount ?: 0,
 
