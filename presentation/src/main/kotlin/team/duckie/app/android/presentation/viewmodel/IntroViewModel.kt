@@ -17,6 +17,9 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.app.android.presentation.viewmodel.state.IntroState
+import team.duckie.app.android.util.kotlin.exception.isLoginRequireCode
+import team.duckie.app.android.util.kotlin.exception.isTokenExpired
+import team.duckie.app.android.util.kotlin.exception.isUserNotFound
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,8 +45,21 @@ internal class IntroViewModel @Inject constructor(
 
     private fun Result<*>.attachExceptionHandling() = intent {
         onFailure { exception ->
-            postSideEffect(IntroSideEffect.ReportError(exception))
-            postSideEffect(IntroSideEffect.GetUserFinished(null))
+            postSideEffect(
+                when {
+                    exception.isLoginRequireCode || exception.isUserNotFound -> {
+                        IntroSideEffect.UserNotInitialized
+                    }
+
+                    exception.isTokenExpired -> {
+                        IntroSideEffect.GetMeError(exception)
+                    }
+
+                    else -> {
+                        IntroSideEffect.ReportError(exception)
+                    }
+                },
+            )
         }
     }
 }

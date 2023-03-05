@@ -48,6 +48,7 @@ import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.domain.user.model.UserStatus
 import team.duckie.app.android.domain.user.usecase.NicknameDuplicateCheckUseCase
 import team.duckie.app.android.domain.user.usecase.SetMeUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
@@ -261,7 +262,7 @@ internal class OnboardViewModel @AssistedInject constructor(
                 postSideEffect(OnboardSideEffect.AttachAccessTokenToHeader(response.accessToken))
                 postSideEffect(
                     OnboardSideEffect.Joined(
-                        isNewUser = response.isNewUser,
+                        isNewUser = response.isNewUser || response.user.status == UserStatus.NEW,
                         me = response.user,
                     ),
                 )
