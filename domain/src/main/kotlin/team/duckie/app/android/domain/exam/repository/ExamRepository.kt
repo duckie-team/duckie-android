@@ -8,6 +8,7 @@
 package team.duckie.app.android.domain.exam.repository
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
@@ -21,4 +22,6 @@ interface ExamRepository {
     suspend fun getExamThumbnail(examThumbnailBody: ExamThumbnailBody): String
 
     suspend fun getExamMeFollowing(page: Int?): List<Exam>
+
+    fun getRecentExam(): ImmutableList<Exam>
 }

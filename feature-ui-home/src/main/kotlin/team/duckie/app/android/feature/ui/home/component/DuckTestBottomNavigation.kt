@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.ui.home.component
 
 import android.graphics.drawable.Icon
 import androidx.annotation.DrawableRes
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row

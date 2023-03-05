@@ -20,7 +20,7 @@ internal sealed class HomeSideEffect {
     /**
      * [SearchResultActivity] 로 이동하는 SideEffect 입니다.
      */
-    class NavigateToSearchResult(val searchTag: String) : HomeSideEffect()
+    class NavigateToSearch(val searchTag: String?) : HomeSideEffect()
 
     /**
      * [HomeDetailActivity] 로 이동하는 SideEffect 입니다.
@@ -31,9 +31,4 @@ internal sealed class HomeSideEffect {
      * [CreateProblemActivity] 로 이동하는 SideEffect 입니다.
      */
     object NavigateToCreateProblem : HomeSideEffect()
-
-    /**
-     * 팔로잉이 없을 떄 팔로워 추천 페이지로 이동하는 SideEffect 입니다.
-     * TODO(limsaehyun): 추후 구현 예정 (추측)
-     */
 }
