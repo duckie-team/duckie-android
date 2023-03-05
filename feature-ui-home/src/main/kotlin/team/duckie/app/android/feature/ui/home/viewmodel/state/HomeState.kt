@@ -11,13 +11,13 @@ import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.constants.HomeStep
 
 internal data class HomeState(
     val me: User? = null,
@@ -35,7 +35,7 @@ internal data class HomeState(
 
     val recommendations: PagingData<RecommendationItem> = PagingData.empty(),
 
-    val recentExam: ImmutableList<Exam> = persistentListOf(),
+    val recentExam: ImmutableList<ExamInfo> = persistentListOf(),
 
     val popularTags: ImmutableList<Tag> = persistentListOf(),
 ) {

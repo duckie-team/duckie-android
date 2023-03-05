@@ -23,6 +23,7 @@ plugins {
     alias(libs.plugins.util.secrets) apply false
     alias(libs.plugins.util.dependency.handler.extensions)
     alias(libs.plugins.util.dependency.graph)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 val UtilModulePrefix = "util-"

@@ -7,9 +7,9 @@
 
 package team.duckie.app.android.data.user.repository
 
+import team.duckie.app.android.data.user.datasource.UserDataSource
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.datasource.UserDataSource
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.repository.UserRepository

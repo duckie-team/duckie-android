@@ -121,7 +121,7 @@ internal class HomeViewModel @Inject constructor(
             .onSuccess { exams ->
                 reduce {
                     state.copy(
-                        recentExam = exams,
+                        recentExam = exams.toImmutableList(),
                     )
                 }
             }

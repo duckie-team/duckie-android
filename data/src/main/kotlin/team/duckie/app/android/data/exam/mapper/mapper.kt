@@ -13,6 +13,7 @@ import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
 import team.duckie.app.android.data.exam.model.ExamBodyData
 import team.duckie.app.android.data.exam.model.ExamData
+import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import team.duckie.app.android.data.exam.model.ExamInstanceBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
@@ -29,6 +30,7 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
@@ -208,4 +210,20 @@ internal fun ExamMeFollowingResponseData.toDomain() = ExamMeFollowingResponse(
     exams = exams?.fastMap { it.toDomain() }
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams"),
     page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
+)
+
+internal fun ExamInfoEntity.toDomain() = ExamInfo(
+    id = id,
+    title = title,
+    thumbnailUrl = thumbnailUrl,
+    solvedCount = solvedCount,
+    nickname = nickname,
+)
+
+internal fun ExamInfo.toData() = ExamInfoEntity(
+    id = id,
+    title = title,
+    thumbnailUrl = thumbnailUrl,
+    solvedCount = solvedCount,
+    nickname = nickname,
 )

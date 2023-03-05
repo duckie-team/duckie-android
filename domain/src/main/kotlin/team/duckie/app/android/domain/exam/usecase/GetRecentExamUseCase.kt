@@ -18,7 +18,7 @@ import javax.inject.Inject
 class GetRecentExamUseCase @Inject constructor(
     private val repository: ExamRepository,
 ) {
-    operator fun invoke() = runCatching {
+    suspend operator fun invoke() = runCatching {
         repository.getRecentExam()
     }
 }

@@ -10,9 +10,9 @@ package team.duckie.app.android.data.me.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.flow.first
-import team.duckie.app.android.domain.auth.datasource.AuthDataSource
+import team.duckie.app.android.data.auth.datasource.AuthDataSource
+import team.duckie.app.android.data.user.datasource.UserDataSource
 import team.duckie.app.android.domain.me.MeRepository
-import team.duckie.app.android.domain.user.datasource.UserDataSource
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.util.kotlin.exception.ClientMeIdNull
