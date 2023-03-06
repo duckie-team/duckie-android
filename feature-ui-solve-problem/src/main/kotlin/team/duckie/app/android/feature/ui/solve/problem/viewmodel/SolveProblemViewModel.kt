@@ -22,9 +22,9 @@ import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCas
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
-import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
+import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
@@ -67,30 +67,23 @@ internal class SolveProblemViewModel @Inject constructor(
         }
     }
 
-    fun moveNextPage() = intent {
-        if (state.currentPageIndex < state.totalPage - 1) {
-            reduce {
-                state.copy(
-                    currentPageIndex = state.currentPageIndex.plus(1),
-                )
-            }
-        } else {
-            postSideEffect(
-                SolveProblemSideEffect.FinishSolveProblem(
-                    examId = state.examId,
-                    answers = state.inputAnswers.fastMap { it.answer },
-                ),
+    fun setPage(page: Int) = intent {
+        reduce {
+            state.copy(
+                currentPageIndex = page,
             )
         }
     }
 
-    fun movePreviousPage() = intent {
+    fun onMoveNextPage(page: Int) = intent {
+        if (state.currentPageIndex < state.totalPage - 1) {
+            setPage(page = page)
+        }
+    }
+
+    fun onMovePreviousPage(page: Int) = intent {
         if (state.currentPageIndex > 0) {
-            reduce {
-                state.copy(
-                    currentPageIndex = state.currentPageIndex.minus(1),
-                )
-            }
+            setPage(page = page)
         }
     }
 
@@ -106,4 +99,14 @@ internal class SolveProblemViewModel @Inject constructor(
             )
         }
     }
+
+    fun finishExam() = intent {
+        postSideEffect(
+            SolveProblemSideEffect.FinishSolveProblem(
+                examId = state.examId,
+                answers = state.inputAnswers.fastMap { it.answer },
+            ),
+        )
+    }
+
 }

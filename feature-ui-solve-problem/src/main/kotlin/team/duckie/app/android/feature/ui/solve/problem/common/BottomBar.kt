@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.solve.problem.R
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
+import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackDivider
@@ -32,6 +32,7 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 internal fun DoubleButtonBottomBar(
     modifier: Modifier = Modifier,
     isFirstPage: Boolean = false,
+    isLastPage: Boolean = false,
     onLeftButtonClick: () -> Unit,
     onRightButtonClick: () -> Unit,
 ) {
@@ -48,19 +49,37 @@ internal fun DoubleButtonBottomBar(
                 ),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackAnimatedVisibility(visible = !isFirstPage) {
-                MediumButton(
-                    text = stringResource(id = R.string.previous),
-                    onClick = onLeftButtonClick,
-                )
+            QuackAnimatedContent(targetState = isFirstPage) {
+                when (it) {
+                    false -> {
+                        MediumButton(
+                            text = stringResource(id = R.string.previous),
+                            onClick = onLeftButtonClick,
+                        )
+                    }
+
+                    true -> {
+                        Spacer(modifier = Modifier)
+                    }
+                }
             }
-            if (isFirstPage) {
-                Spacer(modifier = Modifier)
+
+            QuackAnimatedContent(targetState = isLastPage) {
+                when (it) {
+                    false -> MediumButton(
+                        text = stringResource(id = R.string.next),
+                        onClick = onRightButtonClick,
+                    )
+
+                    true -> MediumButton(
+                        text = stringResource(id = R.string.submit),
+                        onClick = onRightButtonClick,
+                        backgroundColor = QuackColor.DuckieOrange,
+                        border = null,
+                        textColor = QuackColor.White,
+                    )
+                }
             }
-            MediumButton(
-                text = stringResource(id = R.string.no_idea),
-                onClick = onRightButtonClick,
-            )
         }
     }
 }
@@ -69,11 +88,14 @@ internal fun DoubleButtonBottomBar(
 private fun MediumButton(
     text: String,
     onClick: () -> Unit,
+    backgroundColor: QuackColor = QuackColor.White,
+    border: QuackBorder? = QuackBorder(color = QuackColor.Gray3),
+    textColor: QuackColor = QuackColor.Gray1,
 ) {
     QuackSurface(
         modifier = Modifier,
-        backgroundColor = QuackColor.White,
-        border = QuackBorder(color = QuackColor.Gray3),
+        backgroundColor = backgroundColor,
+        border = border,
         shape = RoundedCornerShape(size = 8.dp),
         onClick = onClick,
     ) {
@@ -84,7 +106,7 @@ private fun MediumButton(
             ),
             text = text,
             style = QuackTextStyle.Body1.change(
-                color = QuackColor.Gray1,
+                color = textColor,
                 textAlign = TextAlign.Center,
             ),
             singleLine = true,
