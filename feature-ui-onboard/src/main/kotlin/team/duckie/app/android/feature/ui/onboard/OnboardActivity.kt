@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.di.repository.ProvidesModule
@@ -45,6 +44,7 @@ import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
+import team.duckie.app.android.util.kotlin.exception.isKakaoTalkNotConnectedAccount
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.changeActivityWithAnimation
 import team.duckie.app.android.util.ui.collectWithLifecycle
@@ -52,6 +52,7 @@ import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OnboardActivity : BaseActivity() {
@@ -118,10 +119,10 @@ class OnboardActivity : BaseActivity() {
         repeatOnCreated {
             launch {
                 vm.imagePermissionGrantState.asStateFlow().collectWithLifecycle(lifecycle) { isGranted ->
-                    if (isGranted != null) {
-                        handleImageStoragePermissionGrantedState(isGranted)
+                        if (isGranted != null) {
+                            handleImageStoragePermissionGrantedState(isGranted)
+                        }
                     }
-                }
             }
 
             launch {
@@ -215,11 +216,19 @@ class OnboardActivity : BaseActivity() {
                 }
                 changeActivityWithAnimation<HomeActivity>()
             }
+
             is OnboardSideEffect.ReportError -> {
+                sideEffect.exception.run {
+                    if (isKakaoTalkNotConnectedAccount) {
+                        reportToToast(message ?: "")
+                    } else {
+                        reportToToast()
+                    }
+                }
                 sideEffect.exception.printStackTrace()
-                sideEffect.exception.reportToToast()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
+
             is OnboardSideEffect.NicknameDuplicateChecked -> CollectInStep
         }
     }
