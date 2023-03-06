@@ -66,7 +66,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
                 categories?.let { "favoriteCategories" withInts categories.fastMap { it.id } }
                 tags?.let { "favoriteTags" withInts tags.fastMap { it.id } }
                 profileImageUrl?.let { "profileImageUrl" withString profileImageUrl }
-                nickname?.let { "nickname" withString nickname }
+                nickname?.let { "nickName" withString nickname }
                 status?.let { "status" withString status }
             }
         }
