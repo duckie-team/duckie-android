@@ -5,10 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(
-    ExperimentalLifecycleComposeApi::class,
-    ExperimentalFoundationApi::class,
-)
+@file:OptIn(ExperimentalLifecycleComposeApi::class)
 
 package team.duckie.app.android.feature.ui.solve.problem
 
@@ -16,9 +13,14 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.crashlytics.ktx.crashlytics
@@ -32,6 +34,7 @@ import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.Sol
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
@@ -53,7 +56,15 @@ class SolveProblemActivity : BaseActivity() {
                     viewModel.initState()
                 }
 
-                Crossfade(targetState = state.isProblemsLoading) { isLoading ->
+                Crossfade(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = QuackColor.White.composeColor)
+                        .systemBarsPadding()
+                        .navigationBarsPadding()
+                        .imePadding(),
+                    targetState = state.isProblemsLoading
+                ) { isLoading ->
                     when (isLoading) {
                         true -> {
                             LoadingIndicator()

@@ -21,14 +21,13 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun CloseAndPageTopBar(
+    modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     currentPage: Int,
     totalPage: Int,
 ) {
     QuackTopAppBar(
-        modifier = Modifier
-            .padding(vertical = 12.dp)
-            .padding(end = 16.dp),
+        modifier = modifier,
         leadingIcon = QuackIcon.Close,
         onLeadingIconClick = onCloseClick,
         trailingContent = {
