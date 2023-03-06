@@ -27,7 +27,6 @@ dependencies {
         projects.utilKotlin,
         projects.utilCompose,
         projects.sharedUiCompose,
-        projects.featureUiSolveProblem,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.quack.ui.components,
