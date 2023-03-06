@@ -9,14 +9,15 @@
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +38,7 @@ import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.ui.finishWithAnimation
 
+@ExperimentalFoundationApi
 @Composable
 internal fun SolveProblemScreen(
     viewModel: SolveProblemViewModel = activityViewModel(),
@@ -44,6 +46,7 @@ internal fun SolveProblemScreen(
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val totalPage = remember { state.totalPage }
     val activity = LocalContext.current as SolveProblemActivity
+    val pagerState = rememberPagerState()
 
     Scaffold(
         modifier = Modifier
@@ -55,21 +58,22 @@ internal fun SolveProblemScreen(
                 onCloseClick = {
                     activity.finishWithAnimation()
                 },
-                currentPage = state.currentPageIndex + 1,
+                currentPage = pagerState.currentPage + 1,
                 totalPage = totalPage,
             )
         },
         bottomBar = {
             DoubleButtonBottomBar(
-                isFirstPage = state.currentPageIndex == 0,
+                isFirstPage = pagerState.currentPage == 0,
                 onLeftButtonClick = viewModel::movePreviousPage,
                 onRightButtonClick = viewModel::moveNextPage,
             )
         },
     ) { padding ->
-        Crossfade(
-            modifier = Modifier.padding(padding),
-            targetState = state.currentPageIndex,
+        HorizontalPager(
+            contentPadding = padding,
+            pageCount = state.totalPage,
+            state = pagerState,
         ) { pageIndex ->
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -87,6 +91,7 @@ internal fun SolveProblemScreen(
                             state.problems[pageIndex].problem.correctAnswer
                                 ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
                         )
+
                         is Answer.Choice, is Answer.ImageChoice -> answer
                         else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
                     },
