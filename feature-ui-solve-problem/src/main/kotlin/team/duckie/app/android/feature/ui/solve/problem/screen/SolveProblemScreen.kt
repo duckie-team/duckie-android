@@ -20,29 +20,33 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.feature.ui.solve.problem.R
 import team.duckie.app.android.feature.ui.solve.problem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.solve.problem.answer.answerSection
 import team.duckie.app.android.feature.ui.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.ui.solve.problem.common.DoubleButtonBottomBar
 import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
+import team.duckie.app.android.shared.ui.compose.DuckieDialog
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
-import team.duckie.app.android.util.ui.finishWithAnimation
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
@@ -57,6 +61,8 @@ internal fun SolveProblemScreen(
     val activity = LocalContext.current as SolveProblemActivity
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    var examExitDialogVisible by remember { mutableStateOf(false) }
+    var examSubmitDialogVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = pagerState) {
         viewModel.setPage(pagerState.currentPage)
@@ -70,7 +76,7 @@ internal fun SolveProblemScreen(
                     .padding(vertical = 12.dp)
                     .padding(end = 16.dp),
                 onCloseClick = {
-                    activity.finishWithAnimation()
+                    examExitDialogVisible = true
                 },
                 currentPage = pagerState.currentPage + 1,
                 totalPage = totalPage,
@@ -91,7 +97,11 @@ internal fun SolveProblemScreen(
                 },
                 onRightButtonClick = {
                     coroutineScope.launch {
-                        pagerState.moveNextPage(viewModel::onMoveNextPage)
+                        if (pagerState.currentPage == totalPage - 1) {
+                            examSubmitDialogVisible = true
+                        } else {
+                            pagerState.moveNextPage(viewModel::onMoveNextPage)
+                        }
                     }
                 },
             )
@@ -135,6 +145,34 @@ internal fun SolveProblemScreen(
                 y = topAppBarHeight + contentHeight,
             )
         }
+    }
+
+    //시험 종료 다이얼로그
+    if (examExitDialogVisible) {
+        DuckieDialog(
+            title = stringResource(id = R.string.quit_exam),
+            message = stringResource(id = R.string.not_saved),
+            leftButtonText = stringResource(id = R.string.cancel),
+            leftButtonOnClick = {},
+            rightButtonText = stringResource(id = R.string.quit),
+            rightButtonOnClick = {},
+            visible = examExitDialogVisible,
+            onDismissRequest = { examExitDialogVisible = false },
+        )
+    }
+
+    //답안 제출 다이얼로그
+    if (examSubmitDialogVisible) {
+        DuckieDialog(
+            title = stringResource(id = R.string.submit_answer),
+            message = stringResource(id = R.string.submit_answer_warning),
+            leftButtonText = stringResource(id = R.string.cancel),
+            leftButtonOnClick = { examSubmitDialogVisible = false },
+            rightButtonText = stringResource(id = R.string.submit),
+            rightButtonOnClick = { viewModel.finishExam() },
+            visible = examSubmitDialogVisible,
+            onDismissRequest = { examSubmitDialogVisible = false },
+        )
     }
 }
 
