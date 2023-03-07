@@ -47,6 +47,7 @@ import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.util.ui.finishWithAnimation
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
@@ -153,9 +154,9 @@ internal fun SolveProblemScreen(
             title = stringResource(id = R.string.quit_exam),
             message = stringResource(id = R.string.not_saved),
             leftButtonText = stringResource(id = R.string.cancel),
-            leftButtonOnClick = {},
+            leftButtonOnClick = { examExitDialogVisible = false },
             rightButtonText = stringResource(id = R.string.quit),
-            rightButtonOnClick = {},
+            rightButtonOnClick = { activity.finishWithAnimation() },
             visible = examExitDialogVisible,
             onDismissRequest = { examExitDialogVisible = false },
         )
