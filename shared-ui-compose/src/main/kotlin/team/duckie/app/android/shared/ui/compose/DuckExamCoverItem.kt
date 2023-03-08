@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
@@ -40,6 +41,7 @@ fun DuckExamSmallCover(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: () -> Unit,
+    isLoading: Boolean? = null,
 ) {
     Column(
         modifier = modifier
@@ -53,21 +55,28 @@ fun DuckExamSmallCover(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(CoverRatio)
-                .clip(RoundedCornerShape(8.dp)),
+                .clip(RoundedCornerShape(8.dp))
+                .runIf(isLoading != null) { skeleton(isLoading!!) },
             model = duckTestCoverItem.thumbnailUrl,
             contentScale = ContentScale.FillBounds,
             contentDescription = null,
         )
         QuackBody2(
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .runIf(isLoading != null) { skeleton(isLoading!!) },
             text = duckTestCoverItem.nickname,
         )
         QuackTitle2(
-            modifier = Modifier.padding(top = 4.dp),
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .runIf(isLoading != null) { skeleton(isLoading!!) },
             text = duckTestCoverItem.title,
         )
         QuackBody2(
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .runIf(isLoading != null) { skeleton(isLoading!!) },
             text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.solvedCount}",
         )
     }

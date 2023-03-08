@@ -35,4 +35,26 @@ data class Exam(
     val status: String?,
     val heart: Heart?,
     val heartCount: Int?,
-)
+) {
+    companion object {
+        fun empty() = Exam(
+            id = 0,
+            title = "",
+            description = null,
+            thumbnailUrl = "",
+            thumbnailType = null,
+            type = null,
+            buttonTitle = null,
+            certifyingStatement = null,
+            solvedCount = null,
+            answerRate = null,
+            user = null,
+            category = null,
+            mainTag = null,
+            subTags = null,
+            status = null,
+            heart = null,
+            heartCount = null,
+        )
+    }
+}

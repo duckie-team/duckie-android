@@ -28,4 +28,18 @@ data class User(
     val favoriteTags: List<Tag>?,
     val favoriteCategories: List<Category>?,
     val permissions: List<String>?,
-) : Parcelable
+) : Parcelable {
+    companion object {
+        fun empty() = User(
+            id = 0,
+            nickname = "",
+            profileImageUrl = null,
+            status = null,
+            duckPower = null,
+            follow = null,
+            favoriteTags = null,
+            favoriteCategories = null,
+            permissions = null,
+        )
+    }
+}
