@@ -63,7 +63,7 @@ class SolveProblemActivity : BaseActivity() {
                         .systemBarsPadding()
                         .navigationBarsPadding()
                         .imePadding(),
-                    targetState = state.isProblemsLoading
+                    targetState = state.isProblemsLoading,
                 ) { isLoading ->
                     when (isLoading) {
                         true -> {

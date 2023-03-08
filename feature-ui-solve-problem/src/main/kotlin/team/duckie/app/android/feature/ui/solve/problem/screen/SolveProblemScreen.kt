@@ -69,7 +69,7 @@ internal fun SolveProblemScreen(
         viewModel.setPage(pagerState.currentPage)
     }
 
-    //시험 종료 다이얼로그
+    // 시험 종료 다이얼로그
     DuckieDialog(
         title = stringResource(id = R.string.quit_exam),
         message = stringResource(id = R.string.not_saved),
@@ -81,7 +81,7 @@ internal fun SolveProblemScreen(
         onDismissRequest = { examExitDialogVisible = false },
     )
 
-    //답안 제출 다이얼로그
+    // 답안 제출 다이얼로그
     DuckieDialog(
         title = stringResource(id = R.string.submit_answer),
         message = stringResource(id = R.string.submit_answer_warning),
