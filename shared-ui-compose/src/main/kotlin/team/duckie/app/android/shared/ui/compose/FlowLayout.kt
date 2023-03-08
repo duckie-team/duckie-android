@@ -32,8 +32,8 @@ fun FlowLayout(
         var maxY = 0
         val flowContents = mutableListOf<FlowContent>()
 
-        val verticalSpacePx = horizontalSpace.roundToPx()
-        val horizontalSpacePx = verticalSpace.roundToPx()
+        val verticalSpacePx = verticalSpace.roundToPx()
+        val horizontalSpacePx = horizontalSpace.roundToPx()
 
         placeables.forEach { placeable ->
             if (placeable.width + x > constraints.maxWidth) {

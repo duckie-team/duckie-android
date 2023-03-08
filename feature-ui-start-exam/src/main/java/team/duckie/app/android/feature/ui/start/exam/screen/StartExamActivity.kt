@@ -18,19 +18,22 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
-import team.duckie.app.android.feature.ui.solve.problem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.start.exam.viewmodel.StartExamSideEffect
 import team.duckie.app.android.feature.ui.start.exam.viewmodel.StartExamViewModel
+import team.duckie.app.android.navigator.feature.solveproblem.SolveProblemNavigator
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
-import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StartExamActivity : BaseActivity() {
     private val viewModel: StartExamViewModel by viewModels()
+
+    @Inject
+    lateinit var solveProblemNavigator: SolveProblemNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +59,10 @@ class StartExamActivity : BaseActivity() {
         when (sideEffect) {
             is StartExamSideEffect.NavigateToSolveProblem -> {
                 if (sideEffect.certified) {
-                    startActivityWithAnimation<SolveProblemActivity>(
+                    solveProblemNavigator.navigateFrom(
+                        activity = this,
                         intentBuilder = { putExtra(Extras.ExamId, sideEffect.examId) },
+                        withFinish = true,
                     )
                 } else {
                     finishWithAnimation()

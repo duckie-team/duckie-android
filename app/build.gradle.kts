@@ -8,8 +8,8 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import DependencyHandler.Extensions.implementations
-import java.io.FileInputStream
 import org.jetbrains.kotlin.konan.properties.Properties
+import java.io.FileInputStream
 
 plugins {
     id(ConventionEnum.AndroidApplication)
@@ -80,6 +80,7 @@ dependencies {
         projects.presentation, // for launch IntroActivity
         projects.utilKotlin,
         projects.featureUiExamResult,
+        projects.featureUiSolveProblem,
         projects.navigator,
     )
     debugImplementation(libs.analytics.leakcanary)
