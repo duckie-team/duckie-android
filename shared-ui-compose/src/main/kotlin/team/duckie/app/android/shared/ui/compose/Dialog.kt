@@ -5,18 +5,20 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package team.duckie.app.android.shared.ui.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -41,7 +43,9 @@ fun DuckieDialog(
     rightButtonOnClick: (() -> Unit)? = null,
     visible: Boolean,
     onDismissRequest: () -> Unit,
-    properties: DialogProperties = DialogProperties(),
+    properties: DialogProperties = DialogProperties(
+        usePlatformDefaultWidth = false,
+    ),
 ) {
     if (visible) {
         Dialog(
@@ -50,8 +54,8 @@ fun DuckieDialog(
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 30.dp),
+                    .padding(horizontal = 30.dp)
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center,
             ) {
                 Column(

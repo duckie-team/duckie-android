@@ -69,6 +69,30 @@ internal fun SolveProblemScreen(
         viewModel.setPage(pagerState.currentPage)
     }
 
+    //시험 종료 다이얼로그
+    DuckieDialog(
+        title = stringResource(id = R.string.quit_exam),
+        message = stringResource(id = R.string.not_saved),
+        leftButtonText = stringResource(id = R.string.cancel),
+        leftButtonOnClick = { examExitDialogVisible = false },
+        rightButtonText = stringResource(id = R.string.quit),
+        rightButtonOnClick = { activity.finishWithAnimation() },
+        visible = examExitDialogVisible,
+        onDismissRequest = { examExitDialogVisible = false },
+    )
+
+    //답안 제출 다이얼로그
+    DuckieDialog(
+        title = stringResource(id = R.string.submit_answer),
+        message = stringResource(id = R.string.submit_answer_warning),
+        leftButtonText = stringResource(id = R.string.cancel),
+        leftButtonOnClick = { examSubmitDialogVisible = false },
+        rightButtonText = stringResource(id = R.string.submit),
+        rightButtonOnClick = { viewModel.finishExam() },
+        visible = examSubmitDialogVisible,
+        onDismissRequest = { examSubmitDialogVisible = false },
+    )
+
     Layout(
         content = {
             CloseAndPageTopBar(
@@ -146,34 +170,6 @@ internal fun SolveProblemScreen(
                 y = topAppBarHeight + contentHeight,
             )
         }
-    }
-
-    //시험 종료 다이얼로그
-    if (examExitDialogVisible) {
-        DuckieDialog(
-            title = stringResource(id = R.string.quit_exam),
-            message = stringResource(id = R.string.not_saved),
-            leftButtonText = stringResource(id = R.string.cancel),
-            leftButtonOnClick = { examExitDialogVisible = false },
-            rightButtonText = stringResource(id = R.string.quit),
-            rightButtonOnClick = { activity.finishWithAnimation() },
-            visible = examExitDialogVisible,
-            onDismissRequest = { examExitDialogVisible = false },
-        )
-    }
-
-    //답안 제출 다이얼로그
-    if (examSubmitDialogVisible) {
-        DuckieDialog(
-            title = stringResource(id = R.string.submit_answer),
-            message = stringResource(id = R.string.submit_answer_warning),
-            leftButtonText = stringResource(id = R.string.cancel),
-            leftButtonOnClick = { examSubmitDialogVisible = false },
-            rightButtonText = stringResource(id = R.string.submit),
-            rightButtonOnClick = { viewModel.finishExam() },
-            visible = examSubmitDialogVisible,
-            onDismissRequest = { examSubmitDialogVisible = false },
-        )
     }
 }
 
