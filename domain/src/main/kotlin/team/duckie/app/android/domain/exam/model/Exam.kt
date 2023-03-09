@@ -35,4 +35,30 @@ data class Exam(
     val status: String?,
     val heart: Heart?,
     val heartCount: Int?,
-)
+) {
+    companion object {
+        /*
+        * User 의 Empty Model 을 제공합니다.
+        * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
+        * */
+        fun empty() = Exam(
+            id = 0,
+            title = "",
+            description = null,
+            thumbnailUrl = "",
+            thumbnailType = null,
+            type = null,
+            buttonTitle = null,
+            certifyingStatement = null,
+            solvedCount = null,
+            answerRate = null,
+            user = null,
+            category = null,
+            mainTag = null,
+            subTags = null,
+            status = null,
+            heart = null,
+            heartCount = null,
+        )
+    }
+}
