@@ -24,7 +24,7 @@ import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.util.DpSize
 
-private val HomeIconSize = DpSize(24.dp)
+internal val HomeIconSize = DpSize(24.dp)
 
 @Composable
 internal fun HomeTopAppBar(

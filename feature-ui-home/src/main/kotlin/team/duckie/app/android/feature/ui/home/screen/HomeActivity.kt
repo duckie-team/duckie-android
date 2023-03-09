@@ -34,6 +34,7 @@ import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
@@ -101,7 +102,7 @@ class HomeActivity : BaseActivity() {
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
                                 BottomNavigationStep.SearchScreen -> SearchMainScreen()
-                                BottomNavigationStep.RankingScreen -> DuckieTodoScreen()
+                                BottomNavigationStep.RankingScreen -> RankingScreen()
                                 BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
                             }
                         }
