@@ -28,4 +28,22 @@ data class User(
     val favoriteTags: List<Tag>?,
     val favoriteCategories: List<Category>?,
     val permissions: List<String>?,
-) : Parcelable
+) : Parcelable {
+    companion object {
+        /*
+        * User 의 Empty Model 을 제공합니다.
+        * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
+        * */
+        fun empty() = User(
+            id = 0,
+            nickname = "",
+            profileImageUrl = null,
+            status = null,
+            duckPower = null,
+            follow = null,
+            favoriteTags = null,
+            favoriteCategories = null,
+            permissions = null,
+        )
+    }
+}

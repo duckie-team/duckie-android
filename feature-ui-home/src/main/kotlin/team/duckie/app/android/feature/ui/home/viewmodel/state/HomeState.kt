@@ -18,6 +18,7 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
+import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonJumbotrons
 
 internal data class HomeState(
     val me: User? = null,
@@ -26,7 +27,7 @@ internal data class HomeState(
     val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
 
-    val jumbotrons: ImmutableList<HomeRecommendJumbotron> = persistentListOf(),
+    val jumbotrons: ImmutableList<HomeRecommendJumbotron> = skeletonJumbotrons,
     val recommendTopics: ImmutableList<RecommendTopic> = persistentListOf(),
 
     val isFollowingExist: Boolean = true,

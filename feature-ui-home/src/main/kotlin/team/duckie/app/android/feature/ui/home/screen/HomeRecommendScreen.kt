@@ -48,10 +48,11 @@ import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
+import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.shared.ui.compose.QuackAnnotatedText
+import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.addHashTag
 import team.duckie.quackquack.ui.component.QuackBody1
@@ -96,13 +97,15 @@ internal fun HomeRecommendScreen(
                 state = pageState,
             ) { page ->
                 HomeRecommendJumbotronLayout(
-                    modifier = Modifier.padding(HomeHorizontalPadding),
+                    modifier = Modifier
+                        .padding(HomeHorizontalPadding),
                     recommendItem = state.jumbotrons[page],
                     onStartClicked = { examId ->
                         vm.navigateToHomeDetail(
                             examId = examId,
                         )
                     },
+                    isLoading = state.isHomeLoading,
                 )
             }
         }
@@ -131,6 +134,7 @@ internal fun HomeRecommendScreen(
                 exams = item?.exams?.toImmutableList() ?: persistentListOf(),
                 onExamClicked = { examId -> vm.navigateToHomeDetail(examId) },
                 onTagClicked = { tag -> vm.navigateToSearch(tag) },
+                isLoading = state.isHomeLoading,
             )
         }
     }
@@ -141,6 +145,7 @@ private fun HomeRecommendJumbotronLayout(
     modifier: Modifier = Modifier,
     recommendItem: HomeState.HomeRecommendJumbotron,
     onStartClicked: (Int) -> Unit,
+    isLoading: Boolean,
 ) {
     Column(
         modifier = modifier,
@@ -150,22 +155,26 @@ private fun HomeRecommendJumbotronLayout(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(ratio = ThumbnailRatio)
-                .clip(RoundedCornerShape(8.dp)),
+                .clip(RoundedCornerShape(8.dp))
+                .skeleton(isLoading),
             model = recommendItem.coverUrl,
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
         )
         Spacer(modifier = Modifier.height(24.dp))
         QuackLarge1(
+            modifier = Modifier.skeleton(isLoading),
             text = recommendItem.title,
         )
         Spacer(modifier = Modifier.height(12.dp))
         QuackBody1(
+            modifier = Modifier.skeleton(isLoading),
             text = recommendItem.content,
             align = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(24.dp))
         QuackLargeButton(
+            modifier = Modifier.skeleton(isLoading),
             type = QuackLargeButtonType.Fill,
             text = recommendItem.buttonContent,
             onClick = { onStartClicked(recommendItem.examId) },
@@ -176,10 +185,12 @@ private fun HomeRecommendJumbotronLayout(
         when (recommendItem.type) {
             ExamType.Text -> {}
             ExamType.Audio -> QuackBody3(
+                modifier = Modifier.skeleton(isLoading),
                 text = stringResource(id = R.string.home_audio_volume_control_message),
             )
 
             ExamType.Video -> QuackBody3(
+                modifier = Modifier.skeleton(isLoading),
                 text = stringResource(id = R.string.home_video_volume_control_message),
             )
         }
@@ -194,6 +205,7 @@ private fun HomeTopicRecommendLayout(
     exams: ImmutableList<Exam>,
     onExamClicked: (Int) -> Unit,
     onTagClicked: (String) -> Unit,
+    isLoading: Boolean,
 ) {
     Column(
         modifier = modifier,
@@ -201,7 +213,9 @@ private fun HomeTopicRecommendLayout(
         // TODO(limsaehyun): QuackAnnotatedHeadLine2로 교체 필요
         // https://github.com/duckie-team/quack-quack-android/issues/442
         QuackAnnotatedText(
-            modifier = Modifier.padding(HomeHorizontalPadding),
+            modifier = Modifier
+                .padding(HomeHorizontalPadding)
+                .skeleton(isLoading),
             text = title,
             highlightTextPairs = persistentListOf(
                 tag.addHashTag() to { onTagClicked(tag) },
@@ -228,6 +242,7 @@ private fun HomeTopicRecommendLayout(
                     onItemClick = {
                         onExamClicked(item.id)
                     },
+                    isLoading = isLoading,
                 )
             }
         }

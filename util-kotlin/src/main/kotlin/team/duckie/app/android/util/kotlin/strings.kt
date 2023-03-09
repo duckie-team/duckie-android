@@ -33,3 +33,10 @@ fun String.takeBy(maximumLength: Int, prevValue: String): String {
         this.take(maximumLength)
     }
 }
+
+fun randomString(length: Int): String {
+    val charset = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz0123456789"
+    return (1..length)
+        .map { charset.random() }
+        .joinToString("")
+}

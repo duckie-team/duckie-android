@@ -41,10 +41,12 @@ import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.fastForEach
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackDivider
@@ -67,6 +69,10 @@ internal fun HomeRecommendFollowingTestScreen(
 
     LaunchedEffect(Unit) {
         vm.fetchRecommendFollowingTest()
+    }
+
+    QuackAnimatedVisibility(visible = state.isHomeLoading) {
+        DuckieCircularProgressIndicator()
     }
 
     LazyColumn(
