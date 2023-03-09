@@ -4,7 +4,7 @@ plugin-build-gradle-android = "8.0.0-alpha08"
 plugin-build-google-service = "4.3.15"
 
 # plugin - code
-plugin-code-ktlint-core = "11.2.0"
+plugin-code-ktlint-core = "11.3.1"
 # https://github.com/JLLeitschuh/ktlint-gradle/issues/589
 # klint 최신 버전과 사용 불가
 plugin-code-ktlint-source = "0.45.2"
