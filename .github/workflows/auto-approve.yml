@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Auto Approve
-        uses: hmarr/auto-approve-action@v3.1.0
+        uses: hmarr/auto-approve-action@v3.2.0
         with:
           review-message: 'Auto approve due to bypass label'
           github-token: ${{ secrets.SUNGBINLAND_BOT_TOKEN }}
