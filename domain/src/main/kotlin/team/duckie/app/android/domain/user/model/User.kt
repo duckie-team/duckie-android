@@ -30,6 +30,10 @@ data class User(
     val permissions: List<String>?,
 ) : Parcelable {
     companion object {
+        /*
+        * User 의 Empty Model 을 제공합니다.
+        * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
+        * */
         fun empty() = User(
             id = 0,
             nickname = "",
