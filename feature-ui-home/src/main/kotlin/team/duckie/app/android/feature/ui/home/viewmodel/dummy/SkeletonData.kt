@@ -8,9 +8,12 @@
 package team.duckie.app.android.feature.ui.home.viewmodel.dummy
 
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
+import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.kotlin.randomString
@@ -40,3 +43,22 @@ internal val skeletonRecommendationItems = listOf(
         ),
     ),
 )
+
+internal val skeletonExamineeItems = (1..10).map {
+    if (it == 1) {
+        User.empty().copy(
+            id = it,
+            profileImageUrl = "",
+            nickname = randomString(6),
+            duckPower = DuckPower(id = it, tier = "99", Tag(id = it, name = randomString(4))),
+            favoriteTags = listOf(Tag(id = it, name = "도로패션"))
+        )
+    } else {
+        User.empty().copy(
+            id = it,
+            profileImageUrl = "",
+            nickname = randomString(3),
+            duckPower = DuckPower(id = it, tier = "99", Tag(id = it, name = randomString(4)))
+        )
+    }
+}.toImmutableList()

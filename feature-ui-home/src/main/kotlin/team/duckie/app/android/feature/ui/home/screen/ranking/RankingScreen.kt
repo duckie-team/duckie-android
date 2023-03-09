@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +28,7 @@ import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.ui.home.component.HomeIconSize
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonExamineeItems
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
@@ -44,6 +46,10 @@ internal fun RankingScreen(
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
+    LaunchedEffect(key1 = pagerState.currentPage) {
+        selectedTab = pagerState.currentPage
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         HeadLineTopAppBar(
             title = "명예의 전당",
@@ -59,19 +65,21 @@ internal fun RankingScreen(
             titles = tabs,
             selectedTabIndex = selectedTab,
             onTabSelected = {
+                selectedTab = it
                 coroutineScope.launch {
-                    selectedTab = it
                     pagerState.animateScrollToPage(it)
                 }
             }
         )
         HorizontalPager(
+            modifier = Modifier.fillMaxSize(),
+            state = pagerState,
             pageCount = tabs.size,
             key = { tabs[it] }
         ) { page ->
             when (page) {
                 ExamineePageIndex -> {
-                    ExamineeSection()
+                    ExamineeSection(skeletonExamineeItems)
                 }
 
                 ExamPageIndex -> {
