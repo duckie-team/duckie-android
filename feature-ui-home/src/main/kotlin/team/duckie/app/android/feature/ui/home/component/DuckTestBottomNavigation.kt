@@ -9,10 +9,15 @@ package team.duckie.app.android.feature.ui.home.component
 
 import android.graphics.drawable.Icon
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.Absolute.Center
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,11 +26,14 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import okhttp3.internal.immutableListOf
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.util.kotlin.fastForEachIndexed
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
@@ -71,7 +79,7 @@ internal fun DuckTestBottomNavigation(
             ),
     ) {
         rememberBottomNavigationIcons().fastForEachIndexed { index, icons ->
-            Box(
+            Column(
                 modifier = Modifier
                     .weight(
                         weight = 1f,
@@ -85,13 +93,19 @@ internal fun DuckTestBottomNavigation(
                             index,
                         )
                     },
-                contentAlignment = Alignment.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
             ) {
                 QuackImage(
                     src = icons.pick(
                         isSelected = index == selectedIndex,
                     ),
                     size = IconSize,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                QuackBody2(
+                    text = stringResource(id = icons.title),
+                    color = if (index == selectedIndex) QuackColor.Black else QuackColor.Gray1,
                 )
             }
         }
@@ -109,18 +123,22 @@ private fun rememberBottomNavigationIcons() = remember {
         BottomNavigationIcon(
             defaultIcon = R.drawable.home_ic_home_24,
             selectedIcon = R.drawable.home_ic_home_filled_24,
+            title = R.string.home,
         ),
         BottomNavigationIcon(
             defaultIcon = R.drawable.home_ic_search_24,
             selectedIcon = R.drawable.home_ic_search_filled_24,
+            title = R.string.search,
         ),
         BottomNavigationIcon(
             defaultIcon = R.drawable.home_ic_ranking_24,
             selectedIcon = R.drawable.home_ic_ranking_filled_24,
+            title = R.string.ranking,
         ),
         BottomNavigationIcon(
             defaultIcon = R.drawable.home_ic_profile_24,
             selectedIcon = R.drawable.home_ic_profile_filled_24,
+            title = R.string.mypage,
         ),
     )
 }
@@ -136,6 +154,8 @@ private data class BottomNavigationIcon(
     val defaultIcon: Int,
     @DrawableRes
     val selectedIcon: Int,
+    @StringRes
+    val title: Int,
 ) {
     /**
      * 주어진 상태에 맞는 아이콘 리소스를 가져옵니다.

@@ -23,4 +23,9 @@
     <string name="try_search">"관심있는 키워드를 검색해보세요!"</string>
     <string name="popular_tag">인기 태그</string>
     <string name="recent_exam">최근 덕질한 시험</string>
+
+    <string name="home">홈</string>
+    <string name="search">검색</string>
+    <string name="ranking">명예의 전당</string>
+    <string name="mypage">마이페이지</string>
 </resources>
