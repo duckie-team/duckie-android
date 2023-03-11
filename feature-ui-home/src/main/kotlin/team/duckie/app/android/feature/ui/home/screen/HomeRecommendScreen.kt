@@ -32,8 +32,6 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -82,12 +80,11 @@ internal fun HomeRecommendScreen(
 
     val lazyRecommendations = vm.recommendations.collectAsLazyPagingItems()
 
-
     val pullRefreshState = rememberPullRefreshState(
         refreshing = state.isHomeLoading,
         onRefresh = {
             vm.fetchRecommendFollowing()
-        }
+        },
     )
 
     Box(
