@@ -26,7 +26,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,6 +71,7 @@ import team.duckie.quackquack.ui.component.QuackLargeButtonType
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
@@ -73,70 +82,89 @@ internal fun HomeRecommendScreen(
 
     val lazyRecommendations = vm.recommendations.collectAsLazyPagingItems()
 
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        item {
-            HomeTopAppBar(
-                modifier = Modifier
-                    .padding(HomeHorizontalPadding)
-                    .padding(bottom = 16.dp),
-                selectedTabIndex = state.homeSelectedIndex.index,
-                onTabSelected = { step ->
-                    vm.changedHomeScreen(HomeStep.toStep(step))
-                },
-                onClickedCreate = {
-                    vm.navigateToCreateProblem()
-                },
-            )
-        }
 
-        item {
-            HorizontalPager(
-                pageCount = state.jumbotrons.size,
-                state = pageState,
-            ) { page ->
-                HomeRecommendJumbotronLayout(
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isHomeLoading,
+        onRefresh = {
+            vm.fetchRecommendFollowing()
+        }
+    )
+
+    Box(
+        modifier = Modifier
+            .pullRefresh(pullRefreshState),
+    ) {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize(),
+        ) {
+            item {
+                HomeTopAppBar(
                     modifier = Modifier
-                        .padding(HomeHorizontalPadding),
-                    recommendItem = state.jumbotrons[page],
-                    onStartClicked = { examId ->
-                        vm.navigateToHomeDetail(
-                            examId = examId,
-                        )
+                        .padding(HomeHorizontalPadding)
+                        .padding(bottom = 16.dp),
+                    selectedTabIndex = state.homeSelectedIndex.index,
+                    onTabSelected = { step ->
+                        vm.changedHomeScreen(HomeStep.toStep(step))
                     },
+                    onClickedCreate = {
+                        vm.navigateToCreateProblem()
+                    },
+                )
+            }
+
+            item {
+                HorizontalPager(
+                    pageCount = state.jumbotrons.size,
+                    state = pageState,
+                ) { page ->
+                    HomeRecommendJumbotronLayout(
+                        modifier = Modifier
+                            .padding(HomeHorizontalPadding),
+                        recommendItem = state.jumbotrons[page],
+                        onStartClicked = { examId ->
+                            vm.navigateToHomeDetail(
+                                examId = examId,
+                            )
+                        },
+                        isLoading = state.isHomeLoading,
+                    )
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    DuckieHorizontalPagerIndicator(
+                        modifier = Modifier
+                            .padding(top = 24.dp, bottom = 60.dp),
+                        pagerState = pageState,
+                        pageCount = state.jumbotrons.size,
+                        spacing = 6.dp,
+                    )
+                }
+            }
+
+            items(items = lazyRecommendations) { item ->
+                HomeTopicRecommendLayout(
+                    modifier = Modifier
+                        .padding(bottom = 60.dp),
+                    title = item?.title ?: "",
+                    tag = item?.tag?.name ?: "",
+                    exams = item?.exams?.toImmutableList() ?: persistentListOf(),
+                    onExamClicked = { examId -> vm.navigateToHomeDetail(examId) },
+                    onTagClicked = { tag -> vm.navigateToSearch(tag) },
                     isLoading = state.isHomeLoading,
                 )
             }
         }
-
-        item {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center,
-            ) {
-                DuckieHorizontalPagerIndicator(
-                    modifier = Modifier
-                        .padding(top = 24.dp, bottom = 60.dp),
-                    pagerState = pageState,
-                    pageCount = state.jumbotrons.size,
-                    spacing = 6.dp,
-                )
-            }
-        }
-
-        items(items = lazyRecommendations) { item ->
-            HomeTopicRecommendLayout(
-                modifier = Modifier
-                    .padding(bottom = 60.dp),
-                title = item?.title ?: "",
-                tag = item?.tag?.name ?: "",
-                exams = item?.exams?.toImmutableList() ?: persistentListOf(),
-                onExamClicked = { examId -> vm.navigateToHomeDetail(examId) },
-                onTagClicked = { tag -> vm.navigateToSearch(tag) },
-                isLoading = state.isHomeLoading,
-            )
-        }
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = state.isHomeLoading,
+            state = pullRefreshState,
+        )
     }
 }
 
