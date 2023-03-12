@@ -5,7 +5,10 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalLifecycleComposeApi::class,
+)
 
 package team.duckie.app.android.feature.ui.home.screen.ranking
 
@@ -17,56 +20,56 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
-import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.ui.home.component.HomeIconSize
-import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
-import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonExamineeItems
-import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.feature.ui.home.constants.RankingPage
+import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
 
-private const val ExamineePageIndex = 0
-private const val ExamPageIndex = 1
-
 @Composable
-internal fun RankingScreen(
-    modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = activityViewModel(),
-) {
-    val tabs = remember { persistentListOf("응시자", "덕력고사") }
-    var selectedTab by remember { mutableStateOf(0) }
+internal fun RankingScreen(viewModel: RankingViewModel) {
+    val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val tabs = remember {
+        persistentListOf(
+            context.getString(R.string.examinee),
+            context.getString(R.string.exam)
+        )
+    }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = pagerState.currentPage) {
-        selectedTab = pagerState.currentPage
+        viewModel.setSelectedTab(pagerState.currentPage)
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
         HeadLineTopAppBar(
-            title = "명예의 전당",
+            title = stringResource(id = R.string.hall_of_fame),
             rightIcons = {
                 QuackImage(
                     src = R.drawable.home_ic_create_24,
-                    onClick = { },
+                    onClick = viewModel::clickAppBarRightIcon,
                     size = HomeIconSize,
                 )
             }
         )
         QuackMainTab(
             titles = tabs,
-            selectedTabIndex = selectedTab,
+            selectedTabIndex = state.selectedTab,
             onTabSelected = {
-                selectedTab = it
+                viewModel.setSelectedTab(it)
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(it)
                 }
@@ -79,18 +82,12 @@ internal fun RankingScreen(
             key = { tabs[it] }
         ) { page ->
             when (page) {
-                ExamineePageIndex -> {
-                    ExamineeSection(skeletonExamineeItems)
+                RankingPage.Examinee.index -> {
+                    ExamineeSection(viewModel = viewModel)
                 }
 
-                ExamPageIndex -> {
-                    ExamSection(
-                        tags = persistentListOf(
-                            Tag(id = 0, name= "전체"),
-                            Tag(id = 1, name= "도로"),
-                            Tag(id = 2, name= "상록"),
-                        )
-                    )
+                RankingPage.Exam.index -> {
+                    ExamSection(viewModel = viewModel)
                 }
             }
         }

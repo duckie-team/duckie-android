@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalLifecycleComposeApi::class)
+
 package team.duckie.app.android.feature.ui.home.screen.ranking
 
 import androidx.compose.foundation.background
@@ -18,29 +20,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonRankingItems
+import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.ColumnSpacer
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCoverForColumn
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
+import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
-import team.duckie.app.android.util.kotlin.fastMapIndexed
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackTagType
@@ -49,19 +52,25 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
 internal fun ExamSection(
-    tags: ImmutableList<Tag>,
+    viewModel: RankingViewModel,
 ) {
-    val tagNames = remember(tags) { tags.fastMap { it.name } }
-    val tagSelections = remember {
-        mutableStateListOf(
-            elements = Array(
-                size = tags.size,
-                init = { it == 0 },
-            ),
+    val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val tagNames = remember(state.examTags) {
+        state.examTags.fastMap { it.name }.copy { add(0, context.getString(R.string.total)) }
+    }
+    val textTabs = remember {
+        persistentListOf(
+            context.getString(R.string.solve_order),
+            context.getString(R.string.wrong_answer_rate_order),
         )
     }
-    val textTabs = remember { persistentListOf("응시순", "오답률순") }
-    var selectedTabIndex by remember { mutableStateOf(0) }
+    val searchExams = viewModel.searchExams.collectAsLazyPagingItems()
+
+    LaunchedEffect(key1 = Unit){
+        viewModel.fetchSearchExams("")
+        viewModel.fetchPopularTags()
+    }
 
     Column(
         modifier = Modifier
@@ -72,19 +81,9 @@ internal fun ExamSection(
         // TODO:(EvergreenTree97) 태그의 inner padding이 바뀌어야 함
         QuackSingeLazyRowTag(
             items = tagNames,
-            itemSelections = tagSelections.toImmutableList(),
+            itemSelections = state.tagSelections.toImmutableList(),
             tagType = QuackTagType.Circle(),
-            onClick = { index ->
-                if (index == 0) { // "전체" 태그라면
-                    if (tagSelections[index]) {
-                        tagSelections.fastMap { false }
-                    } else {
-                        tagSelections.fastMapIndexed { mapIndex, _ -> mapIndex == 0 }
-                    }
-                } else {
-                    tagSelections[index] = tagSelections[index].not()
-                }
-            },
+            onClick = viewModel::changeSelectedTags,
             key = { _, name -> name }
         )
         ColumnSpacer(27.5.dp)
@@ -93,13 +92,13 @@ internal fun ExamSection(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackTitle2(text = "인기태그 랭킹")
+            QuackTitle2(text = stringResource(id = R.string.popular_tag_ranking))
             TextTabLayout(
                 titles = textTabs,
                 tabStyle = QuackTextStyle.Body2.change(color = QuackColor.Gray1),
                 selectedTabStyle = QuackTextStyle.Body2.change(color = QuackColor.DuckieOrange),
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = { selectedTabIndex = it },
+                selectedTabIndex = state.selectedExamOrder,
+                onTabSelected = viewModel::setSelectedExamOrder,
                 space = 16.dp,
             )
         }
@@ -110,9 +109,19 @@ internal fun ExamSection(
             verticalArrangement = Arrangement.spacedBy(48.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(items = skeletonRankingItems) {
-                RankingItem(duckTestCoverItem = it) {
-
+            items(count = searchExams.itemCount) { index ->
+                searchExams[index]?.let { item ->
+                    RankingItem(
+                        duckTestCoverItem = DuckTestCoverItem(
+                            testId = item.id,
+                            thumbnailUrl = item.thumbnailUrl,
+                            nickname = item.user?.nickname ?: "",
+                            title = item.title,
+                            solvedCount = item.solvedCount ?: 0,
+                        ),
+                        onItemClick = viewModel::clickExam,
+                        rank = index + 1,
+                    )
                 }
             }
         }
@@ -122,14 +131,15 @@ internal fun ExamSection(
 @Composable
 private fun RankingItem(
     duckTestCoverItem: DuckTestCoverItem,
-    onItemClick: () -> Unit,
+    onItemClick: (Int) -> Unit,
+    rank: Int,
 ) {
     Box(modifier = Modifier.clip(RoundedCornerShape(8.dp))) {
         DuckExamSmallCoverForColumn(
             duckTestCoverItem = duckTestCoverItem,
-            onItemClick = onItemClick
+            onItemClick = { onItemClick(duckTestCoverItem.testId) },
         )
-        RankingEdge(rank = 1)
+        RankingEdge(rank = rank)
     }
 }
 
