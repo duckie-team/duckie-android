@@ -49,9 +49,9 @@ import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackUnderlineBody3
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Suppress("UnusedPrivateMember", "unused")
@@ -240,13 +240,8 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
             },
             measurePolicy = LoginScreenLoginAreaMeasurePolicy,
         )
-        QuackUnderlineBody3(
+        QuackBody3(
             text = stringResource(R.string.kakaologin_login_terms),
-            underlineTexts = persistentListOf(
-                stringResource(R.string.kakaologin_hightlight_terms),
-                stringResource(R.string.kakaologin_hightlight_privacy),
-            ),
-            underlineColor = QuackColor.Gray2,
             color = QuackColor.Gray2,
             align = TextAlign.Center,
         )
