@@ -43,9 +43,38 @@ fun DuckExamSmallCover(
     onItemClick: () -> Unit,
     isLoading: Boolean? = null,
 ) {
+    DuckSmallCoverInternal(
+        modifier = modifier.width(158.dp),
+        duckTestCoverItem = duckTestCoverItem,
+        onItemClick = onItemClick,
+        isLoading = isLoading,
+    )
+}
+
+@Composable
+fun DuckExamSmallCoverForColumn(
+    modifier: Modifier = Modifier,
+    duckTestCoverItem: DuckTestCoverItem,
+    onItemClick: () -> Unit,
+    isLoading: Boolean? = null,
+) {
+    DuckSmallCoverInternal(
+        modifier = modifier.fillMaxWidth(),
+        duckTestCoverItem = duckTestCoverItem,
+        onItemClick = onItemClick,
+        isLoading = isLoading,
+    )
+}
+
+@Composable
+internal fun DuckSmallCoverInternal(
+    modifier: Modifier = Modifier,
+    duckTestCoverItem: DuckTestCoverItem,
+    onItemClick: () -> Unit,
+    isLoading: Boolean? = null,
+) {
     Column(
         modifier = modifier
-            .width(158.dp)
             .quackClickable(rippleEnabled = true) {
                 onItemClick()
             },
