@@ -339,7 +339,7 @@ private fun DetailProfileLayout(
                 text = stringResource(
                     R.string.detail_tier_tag,
                     state.exam.user?.duckPower?.tier ?: "",
-                    state.exam.user?.duckPower?.tag?.name ?: ""
+                    state.exam.user?.duckPower?.tag?.name ?: "",
                 ),
                 color = QuackColor.Gray2,
             )
