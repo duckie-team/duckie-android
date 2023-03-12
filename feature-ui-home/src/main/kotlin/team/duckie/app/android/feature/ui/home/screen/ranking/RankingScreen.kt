@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.ui.home.component.HomeIconSize
@@ -83,7 +84,13 @@ internal fun RankingScreen(
                 }
 
                 ExamPageIndex -> {
-                    ExamSection()
+                    ExamSection(
+                        tags = persistentListOf(
+                            Tag(id = 0, name= "전체"),
+                            Tag(id = 1, name= "도로"),
+                            Tag(id = 2, name= "상록"),
+                        )
+                    )
                 }
             }
         }

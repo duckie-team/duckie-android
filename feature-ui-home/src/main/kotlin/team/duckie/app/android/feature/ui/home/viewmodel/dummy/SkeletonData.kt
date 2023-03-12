@@ -16,6 +16,7 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.util.kotlin.randomString
 
 internal val skeletonJumbotrons = persistentListOf(
@@ -62,3 +63,15 @@ internal val skeletonExamineeItems = (1..10).map {
         )
     }
 }.toImmutableList()
+
+internal val skeletonRankingItems = (1..10).map {
+    DuckTestCoverItem(
+        testId = it,
+        thumbnailUrl = thumbnailExample,
+        nickname = randomString(3),
+        title = randomString(6),
+        solvedCount = 20
+    )
+}.toImmutableList()
+
+private const val thumbnailExample = "https://plus.unsplash.com/premium_photo-1669737010860-fc8de46eeb39?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80"
