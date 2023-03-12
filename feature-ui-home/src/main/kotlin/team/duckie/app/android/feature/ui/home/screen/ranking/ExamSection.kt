@@ -84,7 +84,6 @@ internal fun ExamSection(
             itemSelections = state.tagSelections.toImmutableList(),
             tagType = QuackTagType.Circle(),
             onClick = viewModel::changeSelectedTags,
-            key = { _, name -> name },
         )
         ColumnSpacer(27.5.dp)
         Row(

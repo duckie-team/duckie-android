@@ -33,6 +33,7 @@ import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTitle2
+import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
@@ -72,6 +73,7 @@ private fun ExamineeContent(
                 RowSpacer(space = 12.dp)
                 QuackImage(
                     src = profileImageUrl,
+                    shape = SquircleShape,
                     size = DpSize(all = 44.dp),
                 )
                 RowSpacer(space = 8.dp)

@@ -71,6 +71,9 @@ internal class RankingViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         examTags = tags,
+                        tagSelections = tags.fastMap { false }
+                            .copy { add(0, true) }
+                            .toImmutableList(),
                     )
                 }
             }
