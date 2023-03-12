@@ -56,7 +56,7 @@ internal fun RankingScreen(viewModel: RankingViewModel) {
 
     Column(modifier = Modifier.fillMaxSize()) {
         HeadLineTopAppBar(
-            title = stringResource(id = R.string.hall_of_fame),
+            title = stringResource(id = R.string.ranking),
             rightIcons = {
                 QuackImage(
                     src = R.drawable.home_ic_create_24,
