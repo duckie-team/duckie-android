@@ -334,12 +334,12 @@ private fun DetailProfileLayout(
             // 공백
             Spacer(modifier = Modifier.height(2.dp))
 
-            // 응시자, 일자
+            // 덕티어 + 퍼센트, 태그
             QuackBody3(
                 text = stringResource(
-                    R.string.detail_num_date,
-                    "${state.exam.solvedCount}",
-                    "1일 전",
+                    R.string.detail_tier_tag,
+                    state.exam.user?.duckPower?.tier ?: "",
+                    state.exam.user?.duckPower?.tag?.name ?: ""
                 ),
                 color = QuackColor.Gray2,
             )
