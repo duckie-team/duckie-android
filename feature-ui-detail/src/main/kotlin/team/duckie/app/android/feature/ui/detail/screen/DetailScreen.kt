@@ -143,7 +143,7 @@ private fun DetailSuccessScreen(
                 state = state,
             )
             // content Layout
-            DetailContentLayout(state) {
+            DetailContentLayout(state, viewModel::goToSearch) {
                 viewModel.followUser()
             }
             // 최하단 Layout
@@ -206,6 +206,7 @@ private fun DetailSuccessScreen(
 @Composable
 private fun DetailContentLayout(
     state: DetailState.Success,
+    tagItemClick: (String) -> Unit,
     followButtonClick: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
@@ -257,9 +258,7 @@ private fun DetailContentLayout(
             horizontalSpace = 4.dp,
             items = state.tagNames,
             tagType = QuackTagType.Grayscale(""),
-            onClick = {
-                // TODO(riflockle7): 태그 검색 화면으로 이동
-            },
+            onClick = { index -> tagItemClick(state.tagNames[index]) },
         )
         // 공백
         Spacer(modifier = Modifier.height(24.dp))

@@ -13,6 +13,7 @@ import team.duckie.app.android.feature.ui.detail.screen.DetailScreen
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.start.exam.screen.StartExamActivity
+import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
@@ -21,11 +22,15 @@ import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 /** 상세 화면 */
 @AndroidEntryPoint
 class DetailActivity : BaseActivity() {
     private val vm: DetailViewModel by viewModels()
+
+    @Inject
+    lateinit var searchNavigator: SearchNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +69,15 @@ class DetailActivity : BaseActivity() {
                     putExtra(Extras.CertifyingStatement, sideEffect.certifyingStatement)
                 },
             )
+
+            is DetailSideEffect.NavigateToSearch -> {
+                searchNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.SearchTag, sideEffect.searchTag)
+                    },
+                )
+            }
 
             else -> {}
         }
