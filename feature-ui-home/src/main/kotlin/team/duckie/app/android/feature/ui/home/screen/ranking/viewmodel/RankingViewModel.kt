@@ -47,11 +47,7 @@ internal class RankingViewModel @Inject constructor(
 ) : ContainerHost<RankingState, RankingSideEffect>, ViewModel() {
     override val container = container<RankingState, RankingSideEffect>(RankingState())
 
-    private val _searchExams = MutableStateFlow(
-        PagingData.from(
-            skeletonRankingExams
-        )
-    )
+    private val _searchExams = MutableStateFlow(PagingData.from(skeletonRankingExams))
     val searchExams: Flow<PagingData<Exam>> = _searchExams
 
     // TODO(EvergreenTree97): 추후 GET /ranking/exams 로 구현
@@ -96,16 +92,20 @@ internal class RankingViewModel @Inject constructor(
                     if (tagSelections[index]) {
                         copy(tagSelections = tagSelections.fastMap { false }.toImmutableList())
                     } else {
-                        copy(tagSelections = tagSelections.fastMapIndexed { mapIndex, _ -> mapIndex == 0 }
-                            .toImmutableList()
+                        copy(
+                            tagSelections = tagSelections
+                                .fastMapIndexed { mapIndex, _ -> mapIndex == 0 }
+                                .toImmutableList(),
                         )
                     }
                 } else {
                     if (tagSelections[0]) {
-                        copy(tagSelections = tagSelections.copy {
-                            this[0] = false
-                            this[index] = this[index].not()
-                        })
+                        copy(
+                            tagSelections = tagSelections.copy {
+                                this[0] = false
+                                this[index] = this[index].not()
+                            },
+                        )
                     } else {
                         copy(tagSelections = tagSelections.copy { this[index] = this[index].not() })
                     }

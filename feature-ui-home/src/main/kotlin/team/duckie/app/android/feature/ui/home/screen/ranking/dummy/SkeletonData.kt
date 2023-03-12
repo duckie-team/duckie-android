@@ -19,21 +19,20 @@ internal val skeletonExamineeItems = (1..10).map {
     if (it == 1) {
         User.empty().copy(
             id = it,
-            profileImageUrl = "",
+            profileImageUrl = ThumbnailExample,
             nickname = randomString(6),
             duckPower = DuckPower(id = it, tier = "99", Tag(id = it, name = randomString(4))),
-            favoriteTags = listOf(Tag(id = it, name = "도로패션"))
+            favoriteTags = listOf(Tag(id = it, name = "도로패션")),
         )
     } else {
         User.empty().copy(
             id = it,
-            profileImageUrl = "",
+            profileImageUrl = ThumbnailExample,
             nickname = randomString(3),
-            duckPower = DuckPower(id = it, tier = "99", Tag(id = it, name = randomString(4)))
+            duckPower = DuckPower(id = it, tier = "99", Tag(id = it, name = randomString(4))),
         )
     }
 }.toImmutableList()
-
 
 internal val skeletonRankingExams = (1..10).map {
     Exam.empty().copy(
@@ -50,5 +49,6 @@ internal val skeletonTags = persistentListOf(
     Tag(id = 3, name = randomString(3)),
 )
 
-private const val thumbnailExample =
-    "https://plus.unsplash.com/premium_photo-1669737010860-fc8de46eeb39?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80"
+private const val ThumbnailExample =
+    "https://plus.unsplash.com/premium_photo-1669737010860-fc8de46eeb39?ixlib" +
+            "=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80"

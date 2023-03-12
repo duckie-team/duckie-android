@@ -38,12 +38,10 @@ import team.duckie.quackquack.ui.util.DpSize
 @Composable
 internal fun ExamineeSection(viewModel: RankingViewModel) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         itemsIndexed(
             items = state.examinees,
-            key = { _, user -> user.id }
+            key = { _, user -> user.id },
         ) { index, user ->
             ExamineeContent(rank = index + 1, user = user)
         }
@@ -84,7 +82,7 @@ private fun ExamineeContent(
                     .padding(vertical = 12.dp)
                     .padding(end = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 QuackBody2(text = "덕력 ${duckPower?.tier}%")
                 favoriteTags?.let {

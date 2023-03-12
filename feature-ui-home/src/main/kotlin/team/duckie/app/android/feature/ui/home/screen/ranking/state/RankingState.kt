@@ -5,22 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 package team.duckie.app.android.feature.ui.home.screen.ranking.state
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonExamineeItems
-import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonRankingExams
 import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonTags
 import team.duckie.app.android.util.kotlin.fastMap
 

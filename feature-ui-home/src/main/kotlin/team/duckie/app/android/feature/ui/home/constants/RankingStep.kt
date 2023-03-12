@@ -11,5 +11,6 @@ internal enum class RankingPage(
     val index: Int,
 ) {
     Examinee(0),
-    Exam(1);
+    Exam(1),
+    ;
 }

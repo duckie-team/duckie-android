@@ -44,7 +44,7 @@ internal fun RankingScreen(viewModel: RankingViewModel) {
     val tabs = remember {
         persistentListOf(
             context.getString(R.string.examinee),
-            context.getString(R.string.exam)
+            context.getString(R.string.exam),
         )
     }
     val pagerState = rememberPagerState()
@@ -63,7 +63,7 @@ internal fun RankingScreen(viewModel: RankingViewModel) {
                     onClick = viewModel::clickAppBarRightIcon,
                     size = HomeIconSize,
                 )
-            }
+            },
         )
         QuackMainTab(
             titles = tabs,
@@ -73,13 +73,13 @@ internal fun RankingScreen(viewModel: RankingViewModel) {
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(it)
                 }
-            }
+            },
         )
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),
             state = pagerState,
             pageCount = tabs.size,
-            key = { tabs[it] }
+            key = { tabs[it] },
         ) { page ->
             when (page) {
                 RankingPage.Examinee.index -> {

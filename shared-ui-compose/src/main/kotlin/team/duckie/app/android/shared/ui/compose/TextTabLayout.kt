@@ -47,7 +47,7 @@ fun TextTabLayout(
                         onTabSelected(index)
                     },
                     text = text,
-                    style = selectedTabStyle
+                    style = selectedTabStyle,
                 )
             } else {
                 QuackText(
@@ -55,7 +55,7 @@ fun TextTabLayout(
                         onTabSelected(index)
                     },
                     text = text,
-                    style = tabStyle
+                    style = tabStyle,
                 )
             }
         }

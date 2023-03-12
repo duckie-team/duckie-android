@@ -67,7 +67,7 @@ internal fun ExamSection(
     }
     val searchExams = viewModel.searchExams.collectAsLazyPagingItems()
 
-    LaunchedEffect(key1 = Unit){
+    LaunchedEffect(key1 = Unit) {
         viewModel.fetchSearchExams("")
         viewModel.fetchPopularTags()
     }
@@ -84,7 +84,7 @@ internal fun ExamSection(
             itemSelections = state.tagSelections.toImmutableList(),
             tagType = QuackTagType.Circle(),
             onClick = viewModel::changeSelectedTags,
-            key = { _, name -> name }
+            key = { _, name -> name },
         )
         ColumnSpacer(27.5.dp)
         Row(
