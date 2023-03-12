@@ -55,7 +55,7 @@ internal fun HomeTopAppBar(
             titles = homeTextTabTitles.toImmutableList(),
             selectedTabIndex = selectedTabIndex,
             onTabSelected = onTabSelected,
-            tabStyle = QuackTextStyle.Title2.change(color = QuackColor.Gray2)
+            tabStyle = QuackTextStyle.Title2.change(color = QuackColor.Gray2),
         )
         QuackImage(
             src = R.drawable.home_ic_create_24,
