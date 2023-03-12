@@ -355,7 +355,7 @@ private fun DetailProfileLayout(
             ),
             text = stringResource(
                 if (isFollowed) {
-                    R.string.detail_follow_cancel
+                    R.string.detail_following
                 } else {
                     R.string.detail_follow
                 },
