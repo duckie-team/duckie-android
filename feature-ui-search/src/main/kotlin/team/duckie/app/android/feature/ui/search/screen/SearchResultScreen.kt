@@ -9,7 +9,6 @@ package team.duckie.app.android.feature.ui.search.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -19,8 +18,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -34,21 +35,13 @@ import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.component.QuackMainTab
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
 
-private val HomeTagListPadding = PaddingValues(
-    top = 20.dp,
-    start = 16.dp,
-    end = 16.dp,
-)
-
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun SearchResultScreen(
     modifier: Modifier = Modifier,
     vm: SearchViewModel = activityViewModel(),
     navigateDetail: (Int) -> Unit,
-    onPrevious: () -> Unit,
 ) {
     val state = vm.collectAsState().value
 
@@ -59,10 +52,11 @@ internal fun SearchResultScreen(
         it.title
     }.toPersistentList()
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    // 검색 화면 진입 시 키보드를 내립니다.
     LaunchedEffect(Unit) {
-        vm.getRecentSearch()
-        vm.fetchSearchExams(state.searchKeyword)
-        vm.fetchSearchUsers(state.searchKeyword)
+        keyboardController?.hide()
     }
 
     Column(
@@ -70,13 +64,6 @@ internal fun SearchResultScreen(
             .fillMaxSize()
             .nestedScroll(rememberNestedScrollInteropConnection()),
     ) {
-        QuackTopAppBar(
-            leadingIcon = QuackIcon.ArrowBack,
-            onLeadingIconClick = {
-                onPrevious()
-            },
-            leadingText = state.searchKeyword,
-        )
         QuackMainTab(
             titles = tabTitles,
             selectedTabIndex = state.tagSelectedTab.index,
@@ -84,13 +71,14 @@ internal fun SearchResultScreen(
                 vm.updateSearchResultTab(SearchResultStep.toStep(index))
             },
         )
+        Spacer(modifier = Modifier.height(20.dp))
         when (state.tagSelectedTab) {
             SearchResultStep.DuckExam -> LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 state = rememberLazyGridState(),
                 verticalArrangement = Arrangement.spacedBy(48.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = HomeTagListPadding,
+                contentPadding = SearchHorizontalPadding,
             ) {
                 items(searchExams.itemCount) { index ->
                     searchExams[index].let { exam ->
@@ -111,7 +99,7 @@ internal fun SearchResultScreen(
             }
 
             SearchResultStep.User -> LazyColumn(
-                contentPadding = HomeTagListPadding,
+                contentPadding = SearchHorizontalPadding,
             ) {
                 items(searchUsers) { item ->
                     UserFollowingLayout(
