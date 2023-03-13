@@ -86,7 +86,7 @@ private fun ExamineeContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                QuackBody2(text = "덕력 ${duckPower?.tier}%")
+                duckPower?.tier?.let { QuackBody2(text = it) }
                 favoriteTags?.let {
                     QuackBody2(text = "|")
                     QuackBody2(text = it.first().name)
