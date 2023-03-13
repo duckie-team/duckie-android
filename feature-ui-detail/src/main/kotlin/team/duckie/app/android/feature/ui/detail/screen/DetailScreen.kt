@@ -123,17 +123,6 @@ private fun DetailSuccessScreen(
     modifier: Modifier,
     state: DetailState.Success,
 ) {
-    val toast = rememberToast()
-
-    LaunchedEffect(viewModel) {
-        viewModel.container.sideEffectFlow.collect { effect ->
-            when (effect) {
-                is DetailSideEffect.SendToast -> toast(effect.message)
-                else -> Unit
-            }
-        }
-    }
-
     Layout(
         modifier = modifier.navigationBarsPadding(),
         content = {
