@@ -25,9 +25,11 @@ interface SearchRepository {
 
     fun searchExams(query: String): Flow<PagingData<Exam>>
 
-    fun getRecentSearch(): ImmutableList<Tag>
-
-    fun clearRecentSearch(tagId: Int)
+    fun clearRecentSearch(keyword: String)
 
     fun clearAllRecentSearch()
+
+    suspend fun saveRecentSearch(keyword: String)
+
+    suspend fun getRecentSearch(): ImmutableList<String>
 }
