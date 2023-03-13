@@ -23,13 +23,3 @@ internal fun TagData.toDomain() = Tag(
 
 internal fun PopularTagsData.toDomain(): ImmutableList<Tag> =
     this.popularTags.fastMap(TagData::toDomain).toImmutableList()
-
-internal fun Tag.toData() = SearchEntity(
-    id = id,
-    keyword = name,
-)
-
-internal fun SearchEntity.toDomain() = Tag(
-    id = id,
-    name = keyword,
-)
