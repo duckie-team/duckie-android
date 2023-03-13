@@ -47,7 +47,7 @@ internal fun RankingScreen(viewModel: RankingViewModel) {
             context.getString(R.string.exam),
         )
     }
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(initialPage = state.selectedTab)
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = pagerState.currentPage) {

@@ -19,12 +19,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,9 +38,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.constants.RankingPage
+import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.ColumnSpacer
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCoverForColumn
@@ -65,11 +73,21 @@ internal fun ExamSection(
             context.getString(R.string.wrong_answer_rate_order),
         )
     }
+    val lazyGridState = rememberLazyGridState()
     val searchExams = viewModel.searchExams.collectAsLazyPagingItems()
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(Unit) {
         viewModel.fetchSearchExams("")
         viewModel.fetchPopularTags()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect {
+            if (it is RankingSideEffect.ListPullUp && it.currentTab == RankingPage.Exam.index) {
+                lazyGridState.scrollToItem(0)
+            }
+        }
     }
 
     Column(
@@ -85,32 +103,26 @@ internal fun ExamSection(
             tagType = QuackTagType.Circle(),
             onClick = viewModel::changeSelectedTags,
         )
-        ColumnSpacer(27.5.dp)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            QuackTitle2(text = stringResource(id = R.string.popular_tag_ranking))
-            TextTabLayout(
-                titles = textTabs,
-                tabStyle = QuackTextStyle.Body2.change(color = QuackColor.Gray1),
-                selectedTabStyle = QuackTextStyle.Body2.change(color = QuackColor.DuckieOrange),
-                selectedTabIndex = state.selectedExamOrder,
-                onTabSelected = viewModel::setSelectedExamOrder,
-                space = 16.dp,
-            )
-        }
-        ColumnSpacer(17.5.dp)
+        ColumnSpacer(28.dp)
         LazyVerticalGrid(
             modifier = Modifier.fillMaxSize(),
+            state = lazyGridState,
             columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(48.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            item(
+                span = { HeaderSpan() }
+            ) {
+                RankingHeader(
+                    titles = textTabs,
+                    selectedTabIndex = state.selectedExamOrder,
+                    onTabSelected = viewModel::setSelectedExamOrder,
+                )
+            }
             items(count = searchExams.itemCount) { index ->
                 searchExams[index]?.let { item ->
                     RankingItem(
+                        modifier = Modifier.padding(bottom = 48.dp),
                         duckTestCoverItem = DuckTestCoverItem(
                             testId = item.id,
                             thumbnailUrl = item.thumbnailUrl,
@@ -127,13 +139,42 @@ internal fun ExamSection(
     }
 }
 
+@Stable
+private val HeaderSpan = { GridItemSpan(2) }
+
+@Composable
+private fun RankingHeader(
+    titles: ImmutableList<String>,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 18.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        QuackTitle2(text = stringResource(id = R.string.popular_tag_ranking))
+        TextTabLayout(
+            titles = titles,
+            tabStyle = QuackTextStyle.Body2.change(color = QuackColor.Gray1),
+            selectedTabStyle = QuackTextStyle.Body2.change(color = QuackColor.DuckieOrange),
+            selectedTabIndex = selectedTabIndex,
+            onTabSelected = onTabSelected,
+            space = 16.dp,
+        )
+    }
+}
+
 @Composable
 private fun RankingItem(
+    modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: (Int) -> Unit,
     rank: Int,
 ) {
-    Box(modifier = Modifier.clip(RoundedCornerShape(8.dp))) {
+    Box(modifier = modifier.clip(RoundedCornerShape(8.dp))) {
         DuckExamSmallCoverForColumn(
             duckTestCoverItem = duckTestCoverItem,
             onItemClick = { onItemClick(duckTestCoverItem.testId) },

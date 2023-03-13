@@ -5,9 +5,12 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalLifecycleComposeApi::class)
+
 package team.duckie.app.android.feature.ui.home.screen
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -23,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -213,6 +217,10 @@ class HomeActivity : BaseActivity() {
             is HomeSideEffect.NavigateToCreateProblem -> {
                 startActivityWithAnimation<CreateProblemActivity>()
             }
+
+            HomeSideEffect.ClickRankingRetry -> {
+                rankingViewModel.clickRetryRanking()
+            }
         }
     }
 
@@ -233,6 +241,10 @@ class HomeActivity : BaseActivity() {
                         putExtra(Extras.ExamId, sideEffect.examId)
                     },
                 )
+            }
+
+            else -> {
+                Log.d("sideEffect", sideEffect.toString())
             }
         }
     }

@@ -236,6 +236,11 @@ internal class HomeViewModel @Inject constructor(
     fun navigationPage(
         step: BottomNavigationStep,
     ) = intent {
+        if (step == BottomNavigationStep.RankingScreen
+            && state.step == BottomNavigationStep.RankingScreen
+        ) {
+            postSideEffect(HomeSideEffect.ClickRankingRetry)
+        }
         reduce {
             state.copy(
                 step = step,

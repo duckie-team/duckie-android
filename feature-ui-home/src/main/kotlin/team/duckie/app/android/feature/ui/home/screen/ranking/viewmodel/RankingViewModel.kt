@@ -112,6 +112,10 @@ internal class RankingViewModel @Inject constructor(
         postSideEffect(RankingSideEffect.NavigateToExamDetail(examId))
     }
 
+    fun clickRetryRanking() = intent {
+        postSideEffect(RankingSideEffect.ListPullUp(state.selectedTab))
+    }
+
     private fun updateLoading(
         loading: Boolean,
     ) = intent {

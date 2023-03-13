@@ -17,8 +17,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.feature.ui.home.constants.RankingPage
+import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.RowSpacer
 import team.duckie.quackquack.ui.color.QuackColor
@@ -39,7 +43,20 @@ import team.duckie.quackquack.ui.util.DpSize
 @Composable
 internal fun ExamineeSection(viewModel: RankingViewModel) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect {
+            if (it is RankingSideEffect.ListPullUp && it.currentTab == RankingPage.Examinee.index) {
+                lazyListState.animateScrollToItem(0)
+            }
+        }
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        state = lazyListState,
+    ) {
         itemsIndexed(
             items = state.examinees,
             key = { _, user -> user.id },
