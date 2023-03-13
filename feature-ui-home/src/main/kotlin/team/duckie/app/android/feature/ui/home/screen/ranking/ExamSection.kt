@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -61,6 +62,7 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 @Composable
 internal fun ExamSection(
     viewModel: RankingViewModel,
+    lazyGridState: LazyGridState,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -73,21 +75,11 @@ internal fun ExamSection(
             context.getString(R.string.wrong_answer_rate_order),
         )
     }
-    val lazyGridState = rememberLazyGridState()
     val searchExams = viewModel.searchExams.collectAsLazyPagingItems()
-    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.fetchSearchExams("")
         viewModel.fetchPopularTags()
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.container.sideEffectFlow.collect {
-            if (it is RankingSideEffect.ListPullUp && it.currentTab == RankingPage.Exam.index) {
-                lazyGridState.scrollToItem(0)
-            }
-        }
     }
 
     Column(

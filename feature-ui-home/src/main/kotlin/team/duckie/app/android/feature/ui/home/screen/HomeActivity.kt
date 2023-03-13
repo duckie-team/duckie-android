@@ -10,7 +10,6 @@
 package team.duckie.app.android.feature.ui.home.screen
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -33,14 +32,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
-import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
 import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
-import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
@@ -91,11 +88,6 @@ class HomeActivity : BaseActivity() {
                     .launchIn(this)
             }
 
-            rankingViewModel.observe(
-                lifecycleOwner = this,
-                sideEffect = ::handleRankingSideEffect,
-            )
-
             BackHandler {
                 if (System.currentTimeMillis() - waitTime >= 1500L) {
                     waitTime = System.currentTimeMillis()
@@ -124,7 +116,21 @@ class HomeActivity : BaseActivity() {
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
                                 BottomNavigationStep.SearchScreen -> SearchMainScreen()
-                                BottomNavigationStep.RankingScreen -> RankingScreen(viewModel = rankingViewModel)
+                                BottomNavigationStep.RankingScreen -> RankingScreen(
+                                    viewModel = rankingViewModel,
+                                    navigateToCreateProblem = {
+                                        createProblemNavigator.navigateFrom(activity = this)
+                                    },
+                                    navigateToDetail = { examId ->
+                                        detailNavigator.navigateFrom(
+                                            activity = this,
+                                            intentBuilder = {
+                                                putExtra(Extras.ExamId, examId)
+                                            },
+                                        )
+                                    }
+                                )
+
                                 BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
                             }
                         }
@@ -220,31 +226,6 @@ class HomeActivity : BaseActivity() {
 
             HomeSideEffect.ClickRankingRetry -> {
                 rankingViewModel.clickRetryRanking()
-            }
-        }
-    }
-
-    private fun handleRankingSideEffect(sideEffect: RankingSideEffect) {
-        when (sideEffect) {
-            is RankingSideEffect.ReportError -> {
-                Firebase.crashlytics.recordException(sideEffect.exception)
-            }
-
-            RankingSideEffect.NavigateToCreateProblem -> {
-                createProblemNavigator.navigateFrom(activity = this)
-            }
-
-            is RankingSideEffect.NavigateToExamDetail -> {
-                detailNavigator.navigateFrom(
-                    activity = this,
-                    intentBuilder = {
-                        putExtra(Extras.ExamId, sideEffect.examId)
-                    },
-                )
-            }
-
-            else -> {
-                Log.d("sideEffect", sideEffect.toString())
             }
         }
     }

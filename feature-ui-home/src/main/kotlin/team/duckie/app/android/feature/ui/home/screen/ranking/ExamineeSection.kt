@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.feature.ui.home.screen.ranking
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,8 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,17 +42,11 @@ import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
-internal fun ExamineeSection(viewModel: RankingViewModel) {
+internal fun ExamineeSection(
+    viewModel: RankingViewModel,
+    lazyListState: LazyListState,
+) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    val lazyListState = rememberLazyListState()
-
-    LaunchedEffect(Unit) {
-        viewModel.container.sideEffectFlow.collect {
-            if (it is RankingSideEffect.ListPullUp && it.currentTab == RankingPage.Examinee.index) {
-                lazyListState.animateScrollToItem(0)
-            }
-        }
-    }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
