@@ -90,30 +90,11 @@ internal class RankingViewModel @Inject constructor(
 
     fun changeSelectedTags(index: Int) = intent {
         reduce {
-            with(state) {
-                if (index == 0) { // "전체" 태그라면
-                    if (tagSelections[index]) {
-                        copy(tagSelections = tagSelections.fastMap { false }.toImmutableList())
-                    } else {
-                        copy(
-                            tagSelections = tagSelections
-                                .fastMapIndexed { mapIndex, _ -> mapIndex == 0 }
-                                .toImmutableList(),
-                        )
-                    }
-                } else {
-                    if (tagSelections[0]) {
-                        copy(
-                            tagSelections = tagSelections.copy {
-                                this[0] = false
-                                this[index] = this[index].not()
-                            },
-                        )
-                    } else {
-                        copy(tagSelections = tagSelections.copy { this[index] = this[index].not() })
-                    }
-                }
-            }
+            state.copy(
+                tagSelections = state.tagSelections
+                    .fastMapIndexed { mapIndex, _ -> mapIndex == index }
+                    .toImmutableList(),
+            )
         }
     }
 
