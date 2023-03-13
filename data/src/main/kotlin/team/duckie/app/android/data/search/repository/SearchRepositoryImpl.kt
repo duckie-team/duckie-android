@@ -104,12 +104,14 @@ class SearchRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override fun clearRecentSearch(keyword: String) {
-        TODO("Not yet implemented")
+    override suspend fun clearRecentSearch(keyword: String) {
+        searchDao.getEntityByKeyword(keyword = keyword)?.let { entity ->
+            searchDao.delete(entity = entity)
+        }
     }
 
-    override fun clearAllRecentSearch() {
-        TODO("Not yet implemented")
+    override suspend fun clearAllRecentSearch() {
+        searchDao.deleteAll()
     }
 
     override fun searchTags(
@@ -155,6 +157,10 @@ class SearchRepositoryImpl @Inject constructor(
         )
     }
 
+    /**
+     * 최근 검색어를 저장한다.
+     * 이전과 동일한 검색어 저장 시, 오래된 검색어를 삭제 후 최근 검색어를 추가한다.
+     * */
     override suspend fun saveRecentSearch(keyword: String) {
         searchDao.insert(SearchEntity(keyword = keyword))
     }

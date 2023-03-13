@@ -25,9 +25,9 @@ interface SearchRepository {
 
     fun searchExams(query: String): Flow<PagingData<Exam>>
 
-    fun clearRecentSearch(keyword: String)
+    suspend fun clearRecentSearch(keyword: String)
 
-    fun clearAllRecentSearch()
+    suspend fun clearAllRecentSearch()
 
     suspend fun saveRecentSearch(keyword: String)
 
