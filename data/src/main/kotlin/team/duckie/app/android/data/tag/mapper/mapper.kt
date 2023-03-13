@@ -11,7 +11,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.tag.model.PopularTagsData
 import team.duckie.app.android.data.tag.model.TagData
-import team.duckie.app.android.data.tag.model.SearchEntity
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
