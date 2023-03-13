@@ -203,7 +203,6 @@ internal class SearchViewModel @Inject constructor(
                 fetchSearchExams(keyword = keyword)
                 fetchSearchUsers(keyword = keyword)
                 postRecentSearch(keyword = keyword)
-
                 if (state.searchStep == SearchStep.Search) {
                     postSideEffect(SearchSideEffect.HideKeyBoard)
                 }

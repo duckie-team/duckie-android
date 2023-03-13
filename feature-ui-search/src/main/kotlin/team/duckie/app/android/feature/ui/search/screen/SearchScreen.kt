@@ -79,7 +79,7 @@ internal fun SearchScreen(
                             keyword = keyword,
                             debounce = false,
                         )
-                    }
+                    },
                 )
             }
         }
@@ -167,7 +167,7 @@ private fun LazyListScope.recentKeywordSection(
             keyword = tag,
             onCloseClick = { keyword ->
                 onClickedClear(keyword)
-            }
+            },
         ) { keyword ->
             navigateToResult(keyword)
         }
@@ -184,7 +184,7 @@ private fun RecentSearchLayout(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick(keyword) }
-            .padding(vertical = 12.dp)
+            .padding(vertical = 12.dp),
     ) {
         QuackImage(
             src = QuackIcon.Search,

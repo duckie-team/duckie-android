@@ -94,7 +94,7 @@ class SearchActivity : BaseActivity() {
                     Column(
                         modifier = Modifier
                             .background(QuackColor.White.composeColor)
-                            .padding(systemBarPaddings)
+                            .padding(systemBarPaddings),
                     ) {
                         SearchTextFieldTopBar(
                             modifier = Modifier.padding(SearchHorizontalPadding),
@@ -137,6 +137,7 @@ class SearchActivity : BaseActivity() {
             is SearchSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
+
             is SearchSideEffect.HideKeyBoard -> {
                 val inputMethodManager =
                     getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
