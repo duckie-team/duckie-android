@@ -7,9 +7,12 @@
 
 package team.duckie.app.android.shared.ui.compose
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +29,7 @@ import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
+import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -71,17 +75,35 @@ fun UserFollowingLayout(
                 vertical = 12.dp,
             ),
         content = {
-            QuackImage(
-                modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
-                src = profileImgUrl,
-                size = HomeProfileSize,
-                shape = SquircleShape,
-                onClick = {
-                    if (onClickUserProfile != null) {
-                        onClickUserProfile(userId)
-                    }
-                },
-            )
+            if (profileImgUrl.isEmpty()) {
+                // TODO(limsaehyun): 추후에 기본 프로필 이미지로 변경해야 함
+                Box(
+                    modifier = Modifier
+                        .layoutId(UserInfoBlockUserProfileLayoutId)
+                        .size(HomeProfileSize)
+                        .background(
+                            color = QuackColor.Gray2.composeColor,
+                            shape = SquircleShape,
+                        )
+                        .quackClickable {
+                            if (onClickUserProfile != null) {
+                                onClickUserProfile(userId)
+                            }
+                        },
+                )
+            } else {
+                QuackImage(
+                    modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
+                    src = profileImgUrl,
+                    size = HomeProfileSize,
+                    shape = SquircleShape,
+                    onClick = {
+                        if (onClickUserProfile != null) {
+                            onClickUserProfile(userId)
+                        }
+                    },
+                )
+            }
             QuackSubtitle2(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserNameLayoutId)
@@ -96,7 +118,9 @@ fun UserFollowingLayout(
             )
             QuackBody2(
                 modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
-                text = if (isFollowing) stringResource(id = R.string.following) else stringResource(id = R.string.follow),
+                text = if (isFollowing) stringResource(id = R.string.following) else stringResource(
+                    id = R.string.follow
+                ),
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                 onClick = {
                     onClickFollow(!isFollowing)
