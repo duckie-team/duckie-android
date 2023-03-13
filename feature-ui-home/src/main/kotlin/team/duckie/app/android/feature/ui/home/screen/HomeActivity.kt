@@ -29,15 +29,21 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
 import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
+import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
+import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
+import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
+import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -49,6 +55,7 @@ import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
 private const val HomeBottomNavigationDividerLayoutId = "HomeBottomNavigationDivider"
@@ -60,6 +67,13 @@ class HomeActivity : BaseActivity() {
 
     private var waitTime = 2000L
     private val homeViewModel: HomeViewModel by viewModels()
+    private val rankingViewModel: RankingViewModel by viewModels()
+
+    @Inject
+    lateinit var createProblemNavigator: CreateProblemNavigator
+
+    @Inject
+    lateinit var detailNavigator: DetailNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +86,11 @@ class HomeActivity : BaseActivity() {
                     .onEach(::handleSideEffect)
                     .launchIn(this)
             }
+
+            rankingViewModel.observe(
+                lifecycleOwner = this,
+                sideEffect = ::handleRankingSideEffect,
+            )
 
             BackHandler {
                 if (System.currentTimeMillis() - waitTime >= 1500L) {
@@ -101,7 +120,7 @@ class HomeActivity : BaseActivity() {
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
                                 BottomNavigationStep.SearchScreen -> SearchMainScreen()
-                                BottomNavigationStep.RankingScreen -> DuckieTodoScreen()
+                                BottomNavigationStep.RankingScreen -> RankingScreen(viewModel = rankingViewModel)
                                 BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
                             }
                         }
@@ -193,6 +212,27 @@ class HomeActivity : BaseActivity() {
 
             is HomeSideEffect.NavigateToCreateProblem -> {
                 startActivityWithAnimation<CreateProblemActivity>()
+            }
+        }
+    }
+
+    private fun handleRankingSideEffect(sideEffect: RankingSideEffect) {
+        when (sideEffect) {
+            is RankingSideEffect.ReportError -> {
+                Firebase.crashlytics.recordException(sideEffect.exception)
+            }
+
+            RankingSideEffect.NavigateToCreateProblem -> {
+                createProblemNavigator.navigateFrom(activity = this)
+            }
+
+            is RankingSideEffect.NavigateToExamDetail -> {
+                detailNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                    },
+                )
             }
         }
     }

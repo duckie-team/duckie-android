@@ -28,4 +28,11 @@
     <string name="search">검색</string>
     <string name="ranking">명예의 전당</string>
     <string name="mypage">마이페이지</string>
+
+    <!-- ranking -->
+    <string name="exam">덕력고사</string>
+    <string name="solve_order">응시순</string>
+    <string name="wrong_answer_rate_order">오답률순</string>
+    <string name="popular_tag_ranking">인기태그 랭킹</string>
+    <string name="total">전체</string>
 </resources>
