@@ -82,19 +82,18 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
+    /** 최근 검색어를 생성한다. */
     private fun postRecentSearch(keyword: String) = intent {
         postRecentSearchUseCase(keyword)
             .onSuccess {
-                print("skeat success")
             }
             .onFailure { exception ->
-                print("skeat failure $exception")
                 postSideEffect(SearchSideEffect.ReportError(exception))
             }
     }
 
     /** 최근 검색어를 가져온다. */
-    private fun getRecentSearch() = intent {
+    fun getRecentSearch() = intent {
         getRecentSearchUseCase()
             .onSuccess { tags ->
                 reduce {
@@ -135,7 +134,7 @@ internal class SearchViewModel @Inject constructor(
     }
 
     /** [keyword]에 따른 덕질고사 검색 결과를 가져온다. */
-    fun fetchSearchExams(keyword: String) {
+    private fun fetchSearchExams(keyword: String) {
         viewModelScope.launch {
             searchExamsUseCase(exam = keyword)
                 .cachedIn(viewModelScope)
@@ -145,10 +144,10 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
-    /** [user]에 따른 유저 검색 결과를 가져온다. */
-    fun fetchSearchUsers(user: String) {
+    /** [keyword]에 따른 유저 검색 결과를 가져온다. */
+    private fun fetchSearchUsers(keyword: String) {
         viewModelScope.launch {
-            searchUsersUseCase(user = user)
+            searchUsersUseCase(user = keyword)
                 .cachedIn(viewModelScope)
                 .map { paging -> paging.map(User::toUiModel) }
                 .collect { pagingUser ->
@@ -175,35 +174,43 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
-    /**
-     * 검색 페이지를 업데이트한다.
-     * 검색 키워드가 없다면 검색 화면으로 이동하고, 검색 키워드가 있다면 검색 결과로 이동한다.
-     *
-     * 검색 화면 이동 시 [getRecentSearch]를 호출
-     * 검색 결과 이동 시 [fetchSearchExams]와 [fetchSearchUsers]를 호출하고 최근 검색어 추가
-     * */
+    /** 검색 키워드가 없다면 검색 화면으로 이동하고, 검색 키워드가 있다면 검색 결과로 이동한다. */
     private fun refreshSearchStep(keyword: String) = intent {
         if (keyword.isEmpty()) {
-            reduce {
-                state.copy(searchStep = SearchStep.Search)
-            }
-            getRecentSearch()
+            navigateSearchStep(
+                step = SearchStep.Search,
+                keyword = state.searchKeyword,
+            )
         } else {
-            reduce {
-                state.copy(searchStep = SearchStep.SearchResult)
-            }
-            fetchSearchExams(keyword = state.searchKeyword)
-            fetchSearchUsers(state.searchKeyword)
-            postRecentSearch(keyword = state.searchKeyword)
+            navigateSearchStep(
+                step = SearchStep.SearchResult,
+                keyword = state.searchKeyword,
+            )
         }
     }
 
-    /** 검색 화면의 로딩 상태를 업데이트한다.*/
-    private fun updateSearchLoadingState(loading: Boolean) = intent {
+    /** 검색 페이지를 업데이트 한다. */
+    private fun navigateSearchStep(
+        step: SearchStep,
+        keyword: String,
+    ) = intent {
+        when (step) {
+            SearchStep.Search -> {
+                getRecentSearch()
+            }
+
+            SearchStep.SearchResult -> {
+                fetchSearchExams(keyword = keyword)
+                fetchSearchUsers(keyword = keyword)
+                postRecentSearch(keyword = keyword)
+
+                if (state.searchStep == SearchStep.Search) {
+                    postSideEffect(SearchSideEffect.HideKeyBoard)
+                }
+            }
+        }
         reduce {
-            state.copy(
-                isSearchLoading = loading,
-            )
+            state.copy(searchStep = step)
         }
     }
 

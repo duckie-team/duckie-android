@@ -12,7 +12,10 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "tag_entity", indices = [Index(value = ["keyword"], unique = true)])
+@Entity(
+    tableName = "tag_entity",
+    indices = [Index(value = ["keyword"], unique = true)],
+)
 data class SearchEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,

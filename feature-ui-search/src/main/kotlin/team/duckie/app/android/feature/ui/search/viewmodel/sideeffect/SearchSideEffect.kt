@@ -15,4 +15,7 @@ internal sealed class SearchSideEffect {
      * @param exception 발생한 예외
      */
     class ReportError(val exception: Throwable) : SearchSideEffect()
+
+    /** 검색 화면에서 키보드를 내립니다. */
+    object HideKeyBoard : SearchSideEffect()
 }
