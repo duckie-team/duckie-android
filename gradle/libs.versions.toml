@@ -1,6 +1,6 @@
 [versions]
 # plugin - build
-plugin-build-gradle-android = "8.0.0-alpha08"
+plugin-build-gradle-android = "8.1.0-alpha09"
 plugin-build-google-service = "4.3.15"
 
 # plugin - code
