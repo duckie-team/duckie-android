@@ -201,7 +201,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                 vm.me.nickname
             } else {
                 vm.container.stateFlow.value.temporaryNickname!!
-            }
+            },
         )
     }
     var lastErrorText by remember { mutableStateOf("") }
@@ -276,7 +276,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                     placeholderText = stringResource(R.string.profile_nickname_placeholder),
                     isError = profileScreenState == ProfileScreenState.NicknameRuleError,
                     maxLength = MaxNicknameLength,
-                    errorText = when(profileScreenState) {
+                    errorText = when (profileScreenState) {
                         ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
                         ProfileScreenState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
                         else -> lastErrorText // 안하면 invisible 될 때 갑자기 텍스트가 사라짐 (애니메이션 X)
