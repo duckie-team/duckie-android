@@ -53,7 +53,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.compose.collectSideEffect
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.photopicker.PhotoPickerConstants
 import team.duckie.app.android.feature.ui.onboard.R
@@ -61,7 +61,7 @@ import team.duckie.app.android.feature.ui.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
+import team.duckie.app.android.feature.ui.onboard.viewmodel.state.ProfileScreenState
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
@@ -195,33 +195,26 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
         }
     }
 
-    var nickname by remember { mutableStateOf(vm.me.nickname) }
+    var nickname by remember {
+        mutableStateOf(
+            if (vm.container.stateFlow.value.temporaryNickname.isNullOrEmpty()) {
+                vm.me.nickname
+            } else {
+                vm.container.stateFlow.value.temporaryNickname!!
+            }
+        )
+    }
     var lastErrorText by remember { mutableStateOf("") }
-    var nicknameRuleError by remember { mutableStateOf(false) }
-    var debounceFinish by remember { mutableStateOf(false) }
-
-    var nicknameIsUseable by remember { mutableStateOf(false) }
 
     LaunchedEffect(vm) {
         val nicknameInputFlow = snapshotFlow { nickname }
         nicknameInputFlow
-            .onEach { debounceFinish = false }
+            .onEach { vm.readyToScreenCheck(currentStep) }
             .debounce(NicknameInputDebounceSecond)
             .filterNot(String::isEmpty)
             .collect { nickname ->
-                debounceFinish = true
-                nicknameRuleError = vm.checkNicknameRuleError(nickname)
-                if (!nicknameRuleError) vm.nicknameDuplicateCheck(nickname)
+                vm.checkNickname(nickname)
             }
-    }
-
-    // FIXME(sungbin): 최초 컴포지션시에 collect 안됨
-    // Collecting in LaunchedEffect
-    vm.collectSideEffect { sideEffect ->
-        if (sideEffect is OnboardSideEffect.NicknameDuplicateChecked) {
-            nicknameIsUseable = sideEffect.isUsable
-            println("nicknameIsUseable: ${sideEffect.isUsable}")
-        }
     }
 
     BackHandler(photoPickerVisible) {
@@ -235,6 +228,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                 .fillMaxSize()
                 .padding(bottom = systemBarPaddings.calculateBottomPadding() + 16.dp),
             content = {
+                val profileScreenState = vm.collectAsState().value.profileState
                 OnboardTopAppBar(
                     modifier = Modifier.layoutId(ProfileScreenTopAppBarLayoutId),
                     currentStep = currentStep,
@@ -280,11 +274,11 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                         }
                     },
                     placeholderText = stringResource(R.string.profile_nickname_placeholder),
-                    isError = nicknameRuleError,
+                    isError = profileScreenState == ProfileScreenState.NicknameRuleError,
                     maxLength = MaxNicknameLength,
-                    errorText = when {
-                        nicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
-                        !nicknameIsUseable -> stringResource(R.string.profile_nickname_duplicate_error)
+                    errorText = when(profileScreenState) {
+                        ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
+                        ProfileScreenState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
                         else -> lastErrorText // 안하면 invisible 될 때 갑자기 텍스트가 사라짐 (애니메이션 X)
                     }.also { errorText ->
                         lastErrorText = errorText
@@ -300,7 +294,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                     text = stringResource(R.string.button_next),
                     type = QuackLargeButtonType.Fill,
                     imeAnimation = true,
-                    enabled = debounceFinish && nickname.isNotEmpty() && !nicknameRuleError && nicknameIsUseable,
+                    enabled = profileScreenState == ProfileScreenState.Valid,
                 ) {
                     navigateNextStep(
                         vm = vm,
