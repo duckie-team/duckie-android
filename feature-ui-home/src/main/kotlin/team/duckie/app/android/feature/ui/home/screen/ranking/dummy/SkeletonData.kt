@@ -36,6 +36,7 @@ internal val skeletonExamineeItems = (1..10).map {
 
 internal val skeletonRankingExams = (1..10).map {
     Exam.empty().copy(
+        id = it,
         user = User.empty().copy(nickname = randomString(3)),
         solvedCount = 20,
         description = randomString(6),

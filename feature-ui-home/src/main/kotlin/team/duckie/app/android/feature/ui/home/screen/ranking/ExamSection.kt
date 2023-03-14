@@ -22,14 +22,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,19 +36,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.constants.RankingPage
-import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.ColumnSpacer
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCoverForColumn
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
+import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.color.QuackColor
@@ -75,11 +72,11 @@ internal fun ExamSection(
             context.getString(R.string.wrong_answer_rate_order),
         )
     }
-    val searchExams = viewModel.searchExams.collectAsLazyPagingItems()
+    val examRankings = viewModel.examRankings.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
-        viewModel.fetchSearchExams("")
         viewModel.fetchPopularTags()
+        viewModel.getExams()
     }
 
     Column(
@@ -90,6 +87,9 @@ internal fun ExamSection(
     ) {
         // TODO:(EvergreenTree97) 태그의 inner padding이 바뀌어야 함
         QuackSingeLazyRowTag(
+            modifier = Modifier
+                .fillMaxWidth()
+                .skeleton(state.isTagLoading),
             items = tagNames,
             itemSelections = state.tagSelections.toImmutableList(),
             tagType = QuackTagType.Circle(),
@@ -111,8 +111,14 @@ internal fun ExamSection(
                     onTabSelected = viewModel::setSelectedExamOrder,
                 )
             }
-            items(count = searchExams.itemCount) { index ->
-                searchExams[index]?.let { item ->
+            items(
+                count = examRankings.itemCount,
+                key = ItemsPagingKey(
+                    items = examRankings,
+                    key = { examRankings[it]?.id }
+                )
+            ) { index ->
+                examRankings[index]?.let { item ->
                     RankingItem(
                         modifier = Modifier.padding(bottom = 48.dp),
                         duckTestCoverItem = DuckTestCoverItem(
@@ -124,6 +130,7 @@ internal fun ExamSection(
                         ),
                         onItemClick = viewModel::clickExam,
                         rank = index + 1,
+                        isLoading = examRankings.loadState.refresh == LoadState.Loading || state.isPagingDataLoading,
                     )
                 }
             }
@@ -165,11 +172,13 @@ private fun RankingItem(
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: (Int) -> Unit,
     rank: Int,
+    isLoading: Boolean,
 ) {
     Box(modifier = modifier.clip(RoundedCornerShape(8.dp))) {
         DuckExamSmallCoverForColumn(
             duckTestCoverItem = duckTestCoverItem,
             onItemClick = { onItemClick(duckTestCoverItem.testId) },
+            isLoading = isLoading,
         )
         RankingEdge(rank = rank)
     }
