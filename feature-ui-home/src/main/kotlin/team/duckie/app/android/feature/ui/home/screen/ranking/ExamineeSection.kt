@@ -63,7 +63,7 @@ internal fun ExamineeSection(
             key = itemsIndexedPagingKey(
                 items = examinees,
                 key = { examinees[it]?.id },
-            )
+            ),
         ) { index, user ->
             ExamineeContent(
                 rank = index + 1,

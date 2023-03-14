@@ -20,7 +20,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
@@ -127,7 +126,6 @@ internal class RankingViewModel @Inject constructor(
 
     fun fetchPopularTags() = intent {
         updateTagLoading(true)
-        delay(1000L)
         fetchPopularTagsUseCase()
             .onSuccess { tags ->
                 reduce {

@@ -76,6 +76,7 @@ class HomeActivity : BaseActivity() {
     @Inject
     lateinit var detailNavigator: DetailNavigator
 
+    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -91,11 +92,8 @@ class HomeActivity : BaseActivity() {
             BackHandler {
                 if (System.currentTimeMillis() - waitTime >= 1500L) {
                     waitTime = System.currentTimeMillis()
-                    Toast.makeText(
-                        this,
-                        getString(R.string.app_exit_toast),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    Toast.makeText(this, getString(R.string.app_exit_toast), Toast.LENGTH_SHORT)
+                        .show()
                 } else {
                     finish()
                 }
@@ -119,7 +117,9 @@ class HomeActivity : BaseActivity() {
                                 BottomNavigationStep.RankingScreen -> RankingScreen(
                                     viewModel = rankingViewModel,
                                     navigateToCreateProblem = {
-                                        createProblemNavigator.navigateFrom(activity = this)
+                                        createProblemNavigator.navigateFrom(
+                                            activity = this,
+                                        )
                                     },
                                     navigateToDetail = { examId ->
                                         detailNavigator.navigateFrom(
@@ -128,7 +128,7 @@ class HomeActivity : BaseActivity() {
                                                 putExtra(Extras.ExamId, examId)
                                             },
                                         )
-                                    }
+                                    },
                                 )
 
                                 BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()

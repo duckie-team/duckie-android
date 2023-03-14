@@ -29,7 +29,6 @@ internal data class RankingState(
         .toImmutableList(),
 )
 
-
 internal enum class ExamRankingOrder(val index: Int) {
     SolvedCount(0),
     AnswerRate(1),

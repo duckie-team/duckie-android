@@ -27,7 +27,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
-import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen

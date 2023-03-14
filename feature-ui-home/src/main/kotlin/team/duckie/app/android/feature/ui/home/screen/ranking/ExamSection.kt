@@ -104,7 +104,7 @@ internal fun ExamSection(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item(
-                span = { HeaderSpan() }
+                span = { HeaderSpan() },
             ) {
                 RankingHeader(
                     titles = textTabs,
@@ -116,8 +116,8 @@ internal fun ExamSection(
                 count = examRankings.itemCount,
                 key = itemsPagingKey(
                     items = examRankings,
-                    key = { examRankings[it]?.id }
-                )
+                    key = { examRankings[it]?.id },
+                ),
             ) { index ->
                 examRankings[index]?.let { item ->
                     RankingItem(
