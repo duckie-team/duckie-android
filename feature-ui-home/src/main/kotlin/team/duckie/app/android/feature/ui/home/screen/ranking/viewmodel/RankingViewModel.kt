@@ -20,6 +20,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
@@ -30,10 +31,15 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.search.usecase.SearchExamsUseCase
+import team.duckie.app.android.domain.ranking.usecase.GetExamRankingsByAnswerRate
+import team.duckie.app.android.domain.ranking.usecase.GetExamRankingsBySolvedCount
+import team.duckie.app.android.domain.ranking.usecase.GetUserRankingsUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
+import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonExamineeItems
 import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonRankingExams
 import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
+import team.duckie.app.android.feature.ui.home.screen.ranking.state.ExamRankingOrder
 import team.duckie.app.android.feature.ui.home.screen.ranking.state.RankingState
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
@@ -42,30 +48,86 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class RankingViewModel @Inject constructor(
-    private val searchExamsUseCase: SearchExamsUseCase,
+    private val getUserRankingsUseCase: GetUserRankingsUseCase,
+    private val getExamRankingBySolvedCountUseCase: GetExamRankingsBySolvedCount,
+    private val getExamRankingByAnswerRateUseCase: GetExamRankingsByAnswerRate,
     private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
 ) : ContainerHost<RankingState, RankingSideEffect>, ViewModel() {
     override val container = container<RankingState, RankingSideEffect>(RankingState())
 
-    private val _searchExams = MutableStateFlow(PagingData.from(skeletonRankingExams))
-    val searchExams: Flow<PagingData<Exam>> = _searchExams
+    private val _examRankings = MutableStateFlow(PagingData.from(skeletonRankingExams))
+    val examRankings: Flow<PagingData<Exam>> = _examRankings
 
-    // TODO(EvergreenTree97): 추후 GET /ranking/exams 로 구현
-    fun fetchSearchExams(keyword: String) = intent {
-        updateLoading(true)
+    private val _userRankings = MutableStateFlow(PagingData.from(skeletonExamineeItems))
+    val userRankings: Flow<PagingData<User>> = _userRankings
+
+    fun getUserRankings() = intent {
+        updatePagingDataLoading(true)
         viewModelScope.launch {
-            searchExamsUseCase(exam = keyword)
+            getUserRankingsUseCase()
+                .cachedIn(viewModelScope)
+                .catch {
+                    postSideEffect(RankingSideEffect.ReportError(it))
+                }
+                .collect { pagingUser ->
+                    _userRankings.value = pagingUser
+                    updatePagingDataLoading(false)
+                }
+        }
+    }
+
+    fun getExams() = with(container.stateFlow.value) {
+        val tagId = run {
+            val index = tagSelections.indexOf(true)
+            if (index == 0) {
+                null
+            } else {
+                examTags[index].id
+            }
+        }
+        when (ExamRankingOrder.from(selectedExamOrder)) {
+            ExamRankingOrder.AnswerRate -> getExamRankingByAnswerRate(tagId)
+            ExamRankingOrder.SolvedCount -> getExamRankingBySolvedCount(tagId)
+        }
+    }
+
+    private fun getExamRankingByAnswerRate(
+        tagId: Int?,
+    ) = intent {
+        updatePagingDataLoading(true)
+        viewModelScope.launch {
+            getExamRankingByAnswerRateUseCase(tagId)
                 .cachedIn(viewModelScope)
                 .catch {
                     postSideEffect(RankingSideEffect.ReportError(it))
                 }
                 .collect { pagingExam ->
-                    _searchExams.value = pagingExam
+                    _examRankings.value = pagingExam
+                    updatePagingDataLoading(false)
+                }
+        }
+    }
+
+    private fun getExamRankingBySolvedCount(
+        tagId: Int?,
+    ) = intent {
+        updatePagingDataLoading(true)
+        viewModelScope.launch {
+            getExamRankingBySolvedCountUseCase(tagId)
+                .cachedIn(viewModelScope)
+                .catch {
+                    postSideEffect(RankingSideEffect.ReportError(it))
+                }
+                .collect { pagingExam ->
+                    _examRankings.value = pagingExam
+                    updatePagingDataLoading(false)
                 }
         }
     }
 
     fun fetchPopularTags() = intent {
+        updateTagLoading(true)
+        delay(1000L)
         fetchPopularTagsUseCase()
             .onSuccess { tags ->
                 reduce {
@@ -76,6 +138,7 @@ internal class RankingViewModel @Inject constructor(
                             .toImmutableList(),
                     )
                 }
+                updateTagLoading(false)
             }
             .onFailure { exception ->
                 postSideEffect(RankingSideEffect.ReportError(exception))
@@ -96,12 +159,14 @@ internal class RankingViewModel @Inject constructor(
                     .toImmutableList(),
             )
         }
+        getExams()
     }
 
     fun setSelectedExamOrder(index: Int) = intent {
         reduce {
             state.copy(selectedExamOrder = index)
         }
+        getExams()
     }
 
     fun clickAppBarRightIcon() = intent {
@@ -116,12 +181,22 @@ internal class RankingViewModel @Inject constructor(
         postSideEffect(RankingSideEffect.ListPullUp(state.selectedTab))
     }
 
-    private fun updateLoading(
+    private fun updatePagingDataLoading(
         loading: Boolean,
     ) = intent {
         reduce {
             state.copy(
-                isLoading = loading,
+                isPagingDataLoading = loading,
+            )
+        }
+    }
+
+    private fun updateTagLoading(
+        loading: Boolean,
+    ) = intent {
+        reduce {
+            state.copy(
+                isTagLoading = loading,
             )
         }
     }
