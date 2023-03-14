@@ -9,6 +9,6 @@ package team.duckie.app.android.data.ranking.model
 
 enum class OrderType(val text: String) {
     AnswerRate("answer_rate"),
-    SolvedCount("solved_count"),
+    SolvedCount("solve_count"),
     ;
 }
