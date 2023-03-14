@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("TooGenericExceptionCaught")
+
 package team.duckie.app.android.data.ranking.datasource
 
 import com.github.kittinunf.fuel.Fuel
@@ -33,7 +35,7 @@ class RankingRemoteDataSourceImpl @Inject constructor(
             listOf(
                 "page" to page,
                 "order" to order.text,
-                "tagId" to tagId
+                "tagId" to tagId,
             ),
         ).responseString()
 

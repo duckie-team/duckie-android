@@ -34,7 +34,7 @@ class RankingRepositoryImpl @Inject constructor(
                 UserRankingsPagingSource(
                     getUserRankings = {
                         rankingDataSource.getUserRankings(it)
-                    }
+                    },
                 )
             },
         ).flow
@@ -72,7 +72,7 @@ class RankingRepositoryImpl @Inject constructor(
                             order = orderType,
                             tagId = tagId,
                         )
-                    }
+                    },
                 )
             },
         ).flow
