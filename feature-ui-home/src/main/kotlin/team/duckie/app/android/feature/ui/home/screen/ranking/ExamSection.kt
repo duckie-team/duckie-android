@@ -48,6 +48,7 @@ import team.duckie.app.android.shared.ui.compose.DuckExamSmallCoverForColumn
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.app.android.shared.ui.compose.skeleton
+import team.duckie.app.android.util.compose.itemsPagingKey
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.color.QuackColor
@@ -113,7 +114,7 @@ internal fun ExamSection(
             }
             items(
                 count = examRankings.itemCount,
-                key = ItemsPagingKey(
+                key = itemsPagingKey(
                     items = examRankings,
                     key = { examRankings[it]?.id }
                 )

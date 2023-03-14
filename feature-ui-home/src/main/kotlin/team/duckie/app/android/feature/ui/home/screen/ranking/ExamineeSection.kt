@@ -27,13 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.RowSpacer
 import team.duckie.app.android.shared.ui.compose.skeleton
+import team.duckie.app.android.util.compose.itemsIndexedPagingKey
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackImage
@@ -60,7 +60,7 @@ internal fun ExamineeSection(
     ) {
         itemsIndexed(
             items = examinees,
-            key = ItemsIndexedPagingKey(
+            key = itemsIndexedPagingKey(
                 items = examinees,
                 key = { examinees[it]?.id },
             )
@@ -129,20 +129,4 @@ private fun ExamineeContent(
         }
         Divider(color = QuackColor.Gray4.composeColor)
     }
-}
-
-fun <T : Any> ItemsIndexedPagingKey(
-    items: LazyPagingItems<T>,
-    key: (Int) -> Any?,
-): ((Int, T) -> Any)? = { index, _ -> // while page Changing and Load, cannot provide unique key
-    if (items[items.itemCount - 1] == null || items.itemCount <= 1) index
-    else key(index) ?: index
-}
-
-fun <T : Any> ItemsPagingKey(
-    items: LazyPagingItems<T>,
-    key: (Int) -> Any?,
-): ((Int) -> Any)? = { index -> // while page Changing and Load, cannot provide unique key
-    if (items[items.itemCount - 1] == null || items.itemCount <= 1) index
-    else key(index) ?: index
 }
