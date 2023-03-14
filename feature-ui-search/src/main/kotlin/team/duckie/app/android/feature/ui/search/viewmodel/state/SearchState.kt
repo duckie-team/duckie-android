@@ -13,6 +13,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
 
@@ -27,6 +28,7 @@ import team.duckie.app.android.feature.ui.search.constants.SearchStep
  * [tagSelectedTab] 검색 결과에서 선택된 탭
  */
 internal data class SearchState(
+    val me: User? = null,
     val isSearchLoading: Boolean = false,
     val searchStep: SearchStep = SearchStep.Search,
     val recentSearch: ImmutableList<Tag> = persistentListOf(),
@@ -34,7 +36,7 @@ internal data class SearchState(
     val searchKeyword: String = "",
     val tagSelectedTab: SearchResultStep = SearchResultStep.DuckExam,
 ) {
-    data class User(
+    data class SearchUser(
         val userId: Int,
         val profileImgUrl: String,
         val nickname: String,

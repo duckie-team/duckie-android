@@ -120,6 +120,7 @@ internal fun SearchResultScreen(
                         nickname = item?.nickname ?: "",
                         favoriteTag = item?.favoriteTag ?: "",
                         tier = item?.tier ?: "",
+                        isMine = item?.userId == state.me?.id,
                         isFollowing = item?.isFollowing ?: false,
                         onClickFollow = { follow ->
                             vm.followUser(
