@@ -19,6 +19,7 @@ import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
 import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
+import team.duckie.app.android.data.exam.model.ExamsData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.QuestionData
@@ -64,6 +65,9 @@ internal fun ExamData.toDomain() = Exam(
     heart = heart?.toDomain(),
     heartCount = heartCount,
 )
+
+internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
+    ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams")
 
 internal fun ProblemData.toDomain() = Problem(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
