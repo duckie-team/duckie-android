@@ -37,6 +37,7 @@ import team.duckie.app.android.domain.search.usecase.GetRecentSearchUseCase
 import team.duckie.app.android.domain.search.usecase.SearchExamsUseCase
 import team.duckie.app.android.domain.search.usecase.SearchUsersUseCase
 import team.duckie.app.android.domain.user.model.User
+import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
@@ -51,6 +52,7 @@ internal class SearchViewModel @Inject constructor(
     private val clearAllRecentSearchUseCase: ClearAllRecentSearchUseCase,
     private val clearRecentSearchUseCase: ClearRecentSearchUseCase,
     private val followUseCase: FollowUseCase,
+    private val getMeUseCase: GetMeUseCase,
 ) : ContainerHost<SearchState, SearchSideEffect>, ViewModel() {
 
     override val container = container<SearchState, SearchSideEffect>(SearchState())
@@ -60,8 +62,22 @@ internal class SearchViewModel @Inject constructor(
     private val _searchExams = MutableStateFlow<PagingData<Exam>>(PagingData.empty())
     val searchExams: Flow<PagingData<Exam>> = _searchExams
 
-    private val _searchUsers = MutableStateFlow<PagingData<SearchState.User>>(PagingData.empty())
-    val searchUsers: Flow<PagingData<SearchState.User>> = _searchUsers
+    private val _searchUsers =
+        MutableStateFlow<PagingData<SearchState.SearchUser>>(PagingData.empty())
+    val searchUsers: Flow<PagingData<SearchState.SearchUser>> = _searchUsers
+
+    init {
+        initState()
+    }
+
+    /** [SearchViewModel]의 초기 상태를 설정한다. */
+    private fun initState() = intent {
+        getMeUseCase().onSuccess { me ->
+            reduce { state.copy(me = me) }
+        }.onFailure {
+            postSideEffect(SearchSideEffect.ReportError(it))
+        }
+    }
 
     /**
      * 추천 검색어 flow. [searchDebounce] 시간에 따라 추천 검색어를 가져온다.
@@ -221,7 +237,7 @@ internal class SearchViewModel @Inject constructor(
 }
 
 internal fun User.toUiModel() =
-    SearchState.User(
+    SearchState.SearchUser(
         userId = id,
         nickname = nickname,
         profileImgUrl = profileImageUrl ?: "",

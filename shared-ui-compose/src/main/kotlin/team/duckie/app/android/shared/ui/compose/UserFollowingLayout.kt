@@ -47,8 +47,9 @@ private const val UserInfoBlockFollowingButtonLayoutId = "UserInfoBlockFollowing
  * @param nickname 닉네임
  * @param favoriteTag 관심 태그
  * @param tier 현재 덕력
+ * @param isMine 추천 유저가 본인인지 여부
+ * @param isFollowing 팔로우 여부
  * @param onClickUserProfile 프로필 사진을 클릭 했을 때 실행되는 람다
- * @param initalFollow 팔로우 여부
  * @param onClickFollow 팔로우 버튼을 클릭 했을 때 실행되는 람다
  */
 @Composable
@@ -59,6 +60,7 @@ fun UserFollowingLayout(
     nickname: String,
     favoriteTag: String,
     tier: String,
+    isMine: Boolean = false,
     isFollowing: Boolean,
     onClickUserProfile: ((Int) -> Unit)? = null,
     onClickFollow: (Boolean) -> Unit,
@@ -96,7 +98,11 @@ fun UserFollowingLayout(
             )
             QuackBody2(
                 modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
-                text = if (isFollowing) stringResource(id = R.string.following) else stringResource(id = R.string.follow),
+                text = if (isFollowing) {
+                    stringResource(id = R.string.following)
+                } else {
+                    stringResource(id = R.string.follow)
+                },
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                 onClick = {
                     onClickFollow(!isFollowing)
@@ -142,13 +148,15 @@ fun UserFollowingLayout(
                 y = userNamePlaceable.height,
             )
 
-            userFollowingButtonPlaceable.place(
-                x = constraints.maxWidth - userFollowingButtonPlaceable.width,
-                y = Alignment.CenterVertically.align(
-                    size = userFollowingButtonPlaceable.height,
-                    space = constraints.maxHeight,
-                ),
-            )
+            if (!isMine) {
+                userFollowingButtonPlaceable.place(
+                    x = constraints.maxWidth - userFollowingButtonPlaceable.width,
+                    y = Alignment.CenterVertically.align(
+                        size = userFollowingButtonPlaceable.height,
+                        space = constraints.maxHeight,
+                    ),
+                )
+            }
         }
     }
 }
