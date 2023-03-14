@@ -426,21 +426,18 @@ private fun TagScreenModalBottomSheetContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp),
+                .padding(
+                    vertical = 16.dp,
+                    horizontal = 16.dp,
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackTitle2(
-                modifier = Modifier.padding(start = 20.dp),
-                text = stringResource(R.string.tag_added_tag),
-            )
+            QuackTitle2(text = stringResource(R.string.tag_added_tag))
             QuackSubtitle(
                 text = stringResource(R.string.button_done),
                 color = QuackColor.DuckieOrange,
-                padding = PaddingValues(
-                    horizontal = 20.dp,
-                    vertical = 10.dp,
-                ),
+                padding = PaddingValues(vertical = 4.dp),
                 onClick = {
                     onDismissRequest(inputtedTags) {
                         inputtedTags.clear()
@@ -448,35 +445,40 @@ private fun TagScreenModalBottomSheetContent(
                 },
             )
         }
-        Box {
-            QuackCircleTag(
-                modifier = Modifier
-                    .zIndex(0f)
-                    .invisible(),
-                text = "",
-                isSelected = false,
-            )
-            // TODO(sungbin): 애니메이션 출처 밝히기
-            FlowRow(
-                modifier = Modifier
-                    .zIndex(1f)
-                    .padding(horizontal = 20.dp),
-                mainAxisSpacing = 8.dp,
-                crossAxisSpacing = 8.dp,
-            ) {
-                inputtedTags.fastForEachIndexed { index, tag ->
-                    QuackCircleTag(
-                        text = tag,
-                        isSelected = false,
-                        trailingIcon = QuackIcon.Close,
-                    ) {
-                        inputtedTags.remove(inputtedTags[index])
+        if (inputtedTags.isNotEmpty()) {
+            Box(modifier = Modifier.padding()) {
+                QuackCircleTag(
+                    modifier = Modifier
+                        .zIndex(0f)
+                        .invisible(),
+                    text = "",
+                    isSelected = false,
+                )
+
+                // TODO(sungbin): 애니메이션 출처 밝히기
+                FlowRow(
+                    modifier = Modifier
+                        .zIndex(1f)
+                        .padding(
+                            vertical = 12.dp,
+                            horizontal = 16.dp,
+                        ),
+                    mainAxisSpacing = 8.dp,
+                    crossAxisSpacing = 8.dp,
+                ) {
+                    inputtedTags.fastForEachIndexed { index, tag ->
+                        QuackCircleTag(
+                            text = tag,
+                            isSelected = false,
+                            trailingIcon = QuackIcon.Close,
+                        ) {
+                            inputtedTags.remove(inputtedTags[index])
+                        }
                     }
                 }
             }
         }
         QuackBasic2TextField(
-            modifier = Modifier.padding(top = 16.dp),
             text = tagInput,
             onTextChanged = { tagInput = it },
             placeholderText = stringResource(R.string.tag_add_manual_placeholder),
