@@ -121,7 +121,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     private val duckieUserProfileImageTemporaryFile =
         File.createTempFile("temporary-duckie-user-profile-image", ".png", context.cacheDir)
 
-    private val nicknameFilter = Regex("[^가-힣a-zA-Z0-9_.]")
+    private val nicknameFilter = Regex("[^ㄱ-ㅎ가-힣a-zA-Z0-9_.]")
     private var lastestUpdateStepMillis = System.currentTimeMillis()
 
     val galleryImages: ImmutableList<String> get() = container.stateFlow.value.galleryImages.toImmutableList()
