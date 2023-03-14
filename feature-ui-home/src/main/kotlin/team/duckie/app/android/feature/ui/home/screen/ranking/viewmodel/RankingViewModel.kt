@@ -23,7 +23,6 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -62,17 +61,15 @@ internal class RankingViewModel @Inject constructor(
 
     fun getUserRankings() = intent {
         updatePagingDataLoading(true)
-        viewModelScope.launch {
-            getUserRankingsUseCase()
-                .cachedIn(viewModelScope)
-                .catch {
-                    postSideEffect(RankingSideEffect.ReportError(it))
-                }
-                .collect { pagingUser ->
-                    _userRankings.value = pagingUser
-                    updatePagingDataLoading(false)
-                }
-        }
+        getUserRankingsUseCase()
+            .cachedIn(viewModelScope)
+            .catch {
+                postSideEffect(RankingSideEffect.ReportError(it))
+            }
+            .collect { pagingUser ->
+                _userRankings.value = pagingUser
+                updatePagingDataLoading(false)
+            }
     }
 
     fun getExams() = with(container.stateFlow.value) {
@@ -94,34 +91,30 @@ internal class RankingViewModel @Inject constructor(
         tagId: Int?,
     ) = intent {
         updatePagingDataLoading(true)
-        viewModelScope.launch {
-            getExamRankingByAnswerRateUseCase(tagId)
-                .cachedIn(viewModelScope)
-                .catch {
-                    postSideEffect(RankingSideEffect.ReportError(it))
-                }
-                .collect { pagingExam ->
-                    _examRankings.value = pagingExam
-                    updatePagingDataLoading(false)
-                }
-        }
+        getExamRankingByAnswerRateUseCase(tagId)
+            .cachedIn(viewModelScope)
+            .catch {
+                postSideEffect(RankingSideEffect.ReportError(it))
+            }
+            .collect { pagingExam ->
+                _examRankings.value = pagingExam
+                updatePagingDataLoading(false)
+            }
     }
 
     private fun getExamRankingBySolvedCount(
         tagId: Int?,
     ) = intent {
         updatePagingDataLoading(true)
-        viewModelScope.launch {
-            getExamRankingBySolvedCountUseCase(tagId)
-                .cachedIn(viewModelScope)
-                .catch {
-                    postSideEffect(RankingSideEffect.ReportError(it))
-                }
-                .collect { pagingExam ->
-                    _examRankings.value = pagingExam
-                    updatePagingDataLoading(false)
-                }
-        }
+        getExamRankingBySolvedCountUseCase(tagId)
+            .cachedIn(viewModelScope)
+            .catch {
+                postSideEffect(RankingSideEffect.ReportError(it))
+            }
+            .collect { pagingExam ->
+                _examRankings.value = pagingExam
+                updatePagingDataLoading(false)
+            }
     }
 
     fun fetchPopularTags() = intent {
