@@ -15,6 +15,8 @@ import team.duckie.app.android.data.auth.datasource.AuthDataSource
 import team.duckie.app.android.data.auth.datasource.AuthRemoteDataSourceImpl
 import team.duckie.app.android.data.exam.datasource.ExamInfoDataSource
 import team.duckie.app.android.data.exam.datasource.ExamInfoLocalDataSourceImpl
+import team.duckie.app.android.data.ranking.datasource.RankingDataSource
+import team.duckie.app.android.data.ranking.datasource.RankingRemoteDataSourceImpl
 import team.duckie.app.android.data.user.datasource.UserDataSource
 import team.duckie.app.android.data.user.datasource.UserRemoteDataSourceImpl
 
@@ -29,4 +31,7 @@ abstract class BindsModule {
 
     @Binds
     abstract fun provideExamInfoLocalDataSource(impl: ExamInfoLocalDataSourceImpl): ExamInfoDataSource
+
+    @Binds
+    abstract fun provideRankingRemoteDataSource(impl: RankingRemoteDataSourceImpl): RankingDataSource
 }
