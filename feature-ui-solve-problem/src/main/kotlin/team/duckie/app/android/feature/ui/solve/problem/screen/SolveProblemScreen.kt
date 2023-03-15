@@ -27,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -35,7 +34,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.feature.ui.solve.problem.R
-import team.duckie.app.android.feature.ui.solve.problem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.solve.problem.answer.answerSection
 import team.duckie.app.android.feature.ui.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.ui.solve.problem.common.DoubleButtonBottomBar
@@ -59,7 +57,6 @@ internal fun SolveProblemScreen(
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val totalPage = remember { state.totalPage }
-    val activity = LocalContext.current as SolveProblemActivity
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
