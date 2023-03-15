@@ -28,7 +28,6 @@ internal fun LazyListScope.answerSection(
     page: Int,
     answer: Answer,
     inputAnswers: ImmutableList<InputAnswer>,
-    onSolveProblem: () -> Unit,
     onClickAnswer: (page: Int, inputAnswer: InputAnswer) -> Unit,
 ) {
     when (answer) {
@@ -50,7 +49,6 @@ internal fun LazyListScope.answerSection(
                                         answer = choice.text,
                                     ),
                                 )
-                                onSolveProblem()
                             },
                         )
                     }
@@ -79,7 +77,6 @@ internal fun LazyListScope.answerSection(
                                     answer = imageChoice.text,
                                 ),
                             )
-                            onSolveProblem()
                         },
                     )
                 }
@@ -99,7 +96,6 @@ internal fun LazyListScope.answerSection(
                                 answer = inputText,
                             ),
                         )
-                        onSolveProblem()
                     },
                 )
             }
