@@ -13,7 +13,7 @@ import team.duckie.app.android.data.heart.model.HeartData
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.model.UserResponse
 
-internal data class ExamData(
+data class ExamData(
     @field:JsonProperty("id")
     val id: Int? = null,
 
@@ -64,4 +64,9 @@ internal data class ExamData(
 
     @field:JsonProperty("heartCount")
     val heartCount: Int? = null,
+)
+
+data class ExamsData(
+    @field:JsonProperty("exams")
+    val exams: List<ExamData>? = null,
 )

@@ -14,6 +14,7 @@ import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.start.exam.screen.StartExamActivity
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
+import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
@@ -79,7 +80,7 @@ class DetailActivity : BaseActivity() {
                 )
             }
 
-            else -> {}
+            is DetailSideEffect.SendToast -> ToastWrapper(this).invoke(sideEffect.message)
         }
     }
 }

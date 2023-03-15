@@ -10,7 +10,7 @@ package team.duckie.app.android.data.category.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.tag.model.TagData
 
-internal data class CategoryData(
+data class CategoryData(
     @field:JsonProperty("id")
     val id: Int? = null,
 

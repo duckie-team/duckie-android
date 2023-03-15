@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalLifecycleComposeApi::class)
+
 package team.duckie.app.android.feature.ui.home.screen
 
 import android.os.Bundle
@@ -23,20 +25,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
-import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
 import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
-import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
@@ -75,6 +76,7 @@ class HomeActivity : BaseActivity() {
     @Inject
     lateinit var detailNavigator: DetailNavigator
 
+    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -87,19 +89,11 @@ class HomeActivity : BaseActivity() {
                     .launchIn(this)
             }
 
-            rankingViewModel.observe(
-                lifecycleOwner = this,
-                sideEffect = ::handleRankingSideEffect,
-            )
-
             BackHandler {
                 if (System.currentTimeMillis() - waitTime >= 1500L) {
                     waitTime = System.currentTimeMillis()
-                    Toast.makeText(
-                        this,
-                        getString(R.string.app_exit_toast),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    Toast.makeText(this, getString(R.string.app_exit_toast), Toast.LENGTH_SHORT)
+                        .show()
                 } else {
                     finish()
                 }
@@ -120,7 +114,23 @@ class HomeActivity : BaseActivity() {
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
                                 BottomNavigationStep.SearchScreen -> SearchMainScreen()
-                                BottomNavigationStep.RankingScreen -> RankingScreen(viewModel = rankingViewModel)
+                                BottomNavigationStep.RankingScreen -> RankingScreen(
+                                    viewModel = rankingViewModel,
+                                    navigateToCreateProblem = {
+                                        createProblemNavigator.navigateFrom(
+                                            activity = this,
+                                        )
+                                    },
+                                    navigateToDetail = { examId ->
+                                        detailNavigator.navigateFrom(
+                                            activity = this,
+                                            intentBuilder = {
+                                                putExtra(Extras.ExamId, examId)
+                                            },
+                                        )
+                                    },
+                                )
+
                                 BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
                             }
                         }
@@ -213,26 +223,9 @@ class HomeActivity : BaseActivity() {
             is HomeSideEffect.NavigateToCreateProblem -> {
                 startActivityWithAnimation<CreateProblemActivity>()
             }
-        }
-    }
 
-    private fun handleRankingSideEffect(sideEffect: RankingSideEffect) {
-        when (sideEffect) {
-            is RankingSideEffect.ReportError -> {
-                Firebase.crashlytics.recordException(sideEffect.exception)
-            }
-
-            RankingSideEffect.NavigateToCreateProblem -> {
-                createProblemNavigator.navigateFrom(activity = this)
-            }
-
-            is RankingSideEffect.NavigateToExamDetail -> {
-                detailNavigator.navigateFrom(
-                    activity = this,
-                    intentBuilder = {
-                        putExtra(Extras.ExamId, sideEffect.examId)
-                    },
-                )
+            HomeSideEffect.ClickRankingRetry -> {
+                rankingViewModel.clickRetryRanking()
             }
         }
     }
