@@ -31,4 +31,6 @@ internal sealed class HomeSideEffect {
      * [CreateProblemActivity] 로 이동하는 SideEffect 입니다.
      */
     object NavigateToCreateProblem : HomeSideEffect()
+
+    object ClickRankingRetry : HomeSideEffect()
 }

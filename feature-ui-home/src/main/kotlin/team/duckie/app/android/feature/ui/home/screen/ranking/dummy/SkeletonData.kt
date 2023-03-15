@@ -16,26 +16,17 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.util.kotlin.randomString
 
 internal val skeletonExamineeItems = (1..10).map {
-    if (it == 1) {
-        User.empty().copy(
-            id = it,
-            profileImageUrl = ThumbnailExample,
-            nickname = randomString(6),
-            duckPower = DuckPower(id = it, tier = "99", Tag(id = it, name = randomString(4))),
-            favoriteTags = listOf(Tag(id = it, name = "도로패션")),
-        )
-    } else {
-        User.empty().copy(
-            id = it,
-            profileImageUrl = ThumbnailExample,
-            nickname = randomString(3),
-            duckPower = DuckPower(id = it, tier = "99", Tag(id = it, name = randomString(4))),
-        )
-    }
+    User.empty().copy(
+        id = it,
+        profileImageUrl = ThumbnailExample,
+        nickname = randomString(3),
+        duckPower = DuckPower(id = it, tier = "99", Tag(id = it, name = randomString(4))),
+    )
 }.toImmutableList()
 
 internal val skeletonRankingExams = (1..10).map {
     Exam.empty().copy(
+        id = it,
         user = User.empty().copy(nickname = randomString(3)),
         solvedCount = 20,
         description = randomString(6),

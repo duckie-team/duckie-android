@@ -19,10 +19,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,7 +36,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.feature.ui.home.R
@@ -42,6 +47,8 @@ import team.duckie.app.android.shared.ui.compose.ColumnSpacer
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCoverForColumn
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
+import team.duckie.app.android.shared.ui.compose.skeleton
+import team.duckie.app.android.util.compose.itemsPagingKey
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.color.QuackColor
@@ -53,6 +60,7 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 @Composable
 internal fun ExamSection(
     viewModel: RankingViewModel,
+    lazyGridState: LazyGridState,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -65,11 +73,11 @@ internal fun ExamSection(
             context.getString(R.string.wrong_answer_rate_order),
         )
     }
-    val searchExams = viewModel.searchExams.collectAsLazyPagingItems()
+    val examRankings = viewModel.examRankings.collectAsLazyPagingItems()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.fetchSearchExams("")
+    LaunchedEffect(Unit) {
         viewModel.fetchPopularTags()
+        viewModel.getExams()
     }
 
     Column(
@@ -80,37 +88,40 @@ internal fun ExamSection(
     ) {
         // TODO:(EvergreenTree97) 태그의 inner padding이 바뀌어야 함
         QuackSingeLazyRowTag(
+            modifier = Modifier
+                .fillMaxWidth()
+                .skeleton(state.isTagLoading),
             items = tagNames,
             itemSelections = state.tagSelections.toImmutableList(),
             tagType = QuackTagType.Circle(),
             onClick = viewModel::changeSelectedTags,
         )
-        ColumnSpacer(27.5.dp)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            QuackTitle2(text = stringResource(id = R.string.popular_tag_ranking))
-            TextTabLayout(
-                titles = textTabs,
-                tabStyle = QuackTextStyle.Body2.change(color = QuackColor.Gray1),
-                selectedTabStyle = QuackTextStyle.Body2.change(color = QuackColor.DuckieOrange),
-                selectedTabIndex = state.selectedExamOrder,
-                onTabSelected = viewModel::setSelectedExamOrder,
-                space = 16.dp,
-            )
-        }
-        ColumnSpacer(17.5.dp)
+        ColumnSpacer(28.dp)
         LazyVerticalGrid(
             modifier = Modifier.fillMaxSize(),
+            state = lazyGridState,
             columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(48.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(count = searchExams.itemCount) { index ->
-                searchExams[index]?.let { item ->
+            item(
+                span = { HeaderSpan() },
+            ) {
+                RankingHeader(
+                    titles = textTabs,
+                    selectedTabIndex = state.selectedExamOrder,
+                    onTabSelected = viewModel::setSelectedExamOrder,
+                )
+            }
+            items(
+                count = examRankings.itemCount,
+                key = itemsPagingKey(
+                    items = examRankings,
+                    key = { examRankings[it]?.id },
+                ),
+            ) { index ->
+                examRankings[index]?.let { item ->
                     RankingItem(
+                        modifier = Modifier.padding(bottom = 48.dp),
                         duckTestCoverItem = DuckTestCoverItem(
                             testId = item.id,
                             thumbnailUrl = item.thumbnailUrl,
@@ -120,6 +131,7 @@ internal fun ExamSection(
                         ),
                         onItemClick = viewModel::clickExam,
                         rank = index + 1,
+                        isLoading = examRankings.loadState.refresh == LoadState.Loading || state.isPagingDataLoading,
                     )
                 }
             }
@@ -127,16 +139,47 @@ internal fun ExamSection(
     }
 }
 
+@Stable
+private val HeaderSpan = { GridItemSpan(2) }
+
+@Composable
+private fun RankingHeader(
+    titles: ImmutableList<String>,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 18.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        QuackTitle2(text = stringResource(id = R.string.popular_tag_ranking))
+        TextTabLayout(
+            titles = titles,
+            tabStyle = QuackTextStyle.Body2.change(color = QuackColor.Gray1),
+            selectedTabStyle = QuackTextStyle.Body2.change(color = QuackColor.DuckieOrange),
+            selectedTabIndex = selectedTabIndex,
+            onTabSelected = onTabSelected,
+            space = 16.dp,
+        )
+    }
+}
+
 @Composable
 private fun RankingItem(
+    modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: (Int) -> Unit,
     rank: Int,
+    isLoading: Boolean,
 ) {
-    Box(modifier = Modifier.clip(RoundedCornerShape(8.dp))) {
+    Box(modifier = modifier.clip(RoundedCornerShape(8.dp))) {
         DuckExamSmallCoverForColumn(
             duckTestCoverItem = duckTestCoverItem,
             onItemClick = { onItemClick(duckTestCoverItem.testId) },
+            isLoading = isLoading,
         )
         RankingEdge(rank = rank)
     }

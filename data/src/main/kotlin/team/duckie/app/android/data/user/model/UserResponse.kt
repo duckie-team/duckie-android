@@ -12,7 +12,7 @@ import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.follow.model.FollowData
 import team.duckie.app.android.data.tag.model.TagData
 
-internal data class UserResponse(
+data class UserResponse(
     @field:JsonProperty("id")
     val id: Int? = null,
 
