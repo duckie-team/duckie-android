@@ -12,7 +12,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.github.kittinunf.fuel.Fuel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -22,22 +21,23 @@ import team.duckie.app.android.data.search.model.SearchData
 import team.duckie.app.android.data.search.paging.SearchExamPagingSource
 import team.duckie.app.android.data.search.paging.SearchTagPagingSource
 import team.duckie.app.android.data.search.paging.SearchUserPagingSource
-import team.duckie.app.android.data.search.dao.SearchDao
-import team.duckie.app.android.data.tag.model.SearchEntity
+import team.duckie.app.android.data.search.datasource.SearchLocalDataSource
+import team.duckie.app.android.data.search.datasource.SearchRemoteDataSource
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.domain.search.repository.SearchRepository
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.util.kotlin.fastMap
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
-    private val fuel: Fuel,
-    private val searchDao: SearchDao,
+    private val fuel: Fuel, // TODO (limsaehyun) DataSource로 분리해야 함
+    private val searchLocalDataSource: SearchLocalDataSource,
+    private val searchRemoteDataSource: SearchRemoteDataSource
 ) : SearchRepository {
 
+    // TODO(limsaehyun) : 검색의 관심사 분리를 위해 제거해야 함
     override suspend fun getSearch(
         query: String,
         page: Int,
@@ -69,10 +69,10 @@ class SearchRepositoryImpl @Inject constructor(
             ),
             pagingSourceFactory = {
                 SearchUserPagingSource(
-                    searchUsers = {
-                        getSearch(
+                    searchUsers = { page ->
+                        searchRemoteDataSource.getSearch(
                             query = query,
-                            page = it,
+                            page = page,
                             type = SearchType.USERS,
                         ) as Search.UserSearch
                     },
@@ -92,10 +92,10 @@ class SearchRepositoryImpl @Inject constructor(
             ),
             pagingSourceFactory = {
                 SearchExamPagingSource(
-                    searchExams = {
-                        getSearch(
+                    searchExams = { page ->
+                        searchRemoteDataSource.getSearch(
                             query = query,
-                            page = it,
+                            page = page,
                             type = SearchType.EXAMS,
                         ) as Search.ExamSearch
                     },
@@ -105,13 +105,11 @@ class SearchRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearRecentSearch(keyword: String) {
-        searchDao.getEntityByKeyword(keyword = keyword)?.let { entity ->
-            searchDao.delete(entity = entity)
-        }
+        searchLocalDataSource.clearRecentSearch(keyword = keyword)
     }
 
     override suspend fun clearAllRecentSearch() {
-        searchDao.deleteAll()
+        searchLocalDataSource.clearAllRecentSearch()
     }
 
     override fun searchTags(
@@ -125,10 +123,10 @@ class SearchRepositoryImpl @Inject constructor(
             ),
             pagingSourceFactory = {
                 SearchTagPagingSource(
-                    searchTags = {
-                        getSearch(
+                    searchTags = { page ->
+                        searchRemoteDataSource.getSearch(
                             query = query,
-                            page = it,
+                            page = page,
                             type = SearchType.TAGS,
                         ) as Search.TagSearch
                     },
@@ -137,36 +135,12 @@ class SearchRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    private suspend fun getSearch(
-        query: String,
-        page: Int,
-        type: SearchType,
-    ): Search = withContext(Dispatchers.IO) {
-        val (_, response) = fuel.get(
-            "/search",
-            listOf(
-                "query" to query,
-                "page" to page,
-                "type" to type,
-            ),
-        ).responseString()
-
-        return@withContext responseCatchingFuel(
-            response,
-            SearchData::toDomain,
-        )
-    }
-
-    /**
-     * 최근 검색어를 저장한다.
-     * 이전과 동일한 검색어 저장 시, 오래된 검색어를 삭제 후 최근 검색어를 추가한다.
-     * */
     override suspend fun saveRecentSearch(keyword: String) {
-        searchDao.insert(SearchEntity(keyword = keyword))
+        searchLocalDataSource.saveRecentSearch(keyword = keyword)
     }
 
     override suspend fun getRecentSearch(): ImmutableList<String> {
-        return searchDao.getAll().fastMap { it.keyword }.toImmutableList()
+        return searchLocalDataSource.getRecentSearch()
     }
 
     internal companion object {

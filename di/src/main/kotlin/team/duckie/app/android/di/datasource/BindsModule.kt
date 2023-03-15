@@ -15,6 +15,10 @@ import team.duckie.app.android.data.auth.datasource.AuthDataSource
 import team.duckie.app.android.data.auth.datasource.AuthRemoteDataSourceImpl
 import team.duckie.app.android.data.exam.datasource.ExamInfoDataSource
 import team.duckie.app.android.data.exam.datasource.ExamInfoLocalDataSourceImpl
+import team.duckie.app.android.data.search.datasource.SearchLocalDataSource
+import team.duckie.app.android.data.search.datasource.SearchLocalDataSourceImpl
+import team.duckie.app.android.data.search.datasource.SearchRemoteDataSource
+import team.duckie.app.android.data.search.datasource.SearchRemoteDataSourceImpl
 import team.duckie.app.android.data.user.datasource.UserDataSource
 import team.duckie.app.android.data.user.datasource.UserRemoteDataSourceImpl
 
@@ -29,4 +33,10 @@ abstract class BindsModule {
 
     @Binds
     abstract fun provideExamInfoLocalDataSource(impl: ExamInfoLocalDataSourceImpl): ExamInfoDataSource
+
+    @Binds
+    abstract fun provideSearchLocalDataSource(impl: SearchLocalDataSourceImpl): SearchLocalDataSource
+
+    @Binds
+    abstract fun provideSearchRemoteDataSource(impl: SearchRemoteDataSourceImpl): SearchRemoteDataSource
 }
