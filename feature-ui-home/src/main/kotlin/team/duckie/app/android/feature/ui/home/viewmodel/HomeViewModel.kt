@@ -63,6 +63,8 @@ internal class HomeViewModel @Inject constructor(
     private val _recommendations = MutableStateFlow(PagingData.from(skeletonRecommendationItems))
     internal val recommendations: Flow<PagingData<RecommendationItem>> = _recommendations
 
+    private val pullToRefreshMinLoadingDelay = 500L
+
     init {
         initState()
         fetchJumbotrons()
@@ -90,6 +92,21 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 추천 피드를 새로고침한다.
+     * [forceLoading] 는 PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
+     * */
+    fun refreshRecommendations(
+        forceLoading: Boolean = false,
+    ) {
+        viewModelScope.launch {
+            updateHomeRecommendLoading(true)
+            fetchRecommendations()
+            if (forceLoading) delay(pullToRefreshMinLoadingDelay)
+            updateHomeRecommendLoading(false)
+        }
+    }
+
     /** 홈 화면의 jumbotron을 가져온다. */
     private fun fetchJumbotrons() = intent {
         updateHomeRecommendLoading(true)
@@ -110,13 +127,13 @@ internal class HomeViewModel @Inject constructor(
     }
 
     /** 팔로워들의 추천 덕질고사들을 가져온다. */
-    fun fetchRecommendExam() = intent {
+    fun fetchRecommendFollowingExam() = intent {
         updateHomeRecommendFollowingLoading(true)
         fetchExamMeFollowingUseCase()
             .onSuccess { exams ->
                 reduce {
                     state.copy(
-                        recommendExam = exams
+                        recommendFollowingExam = exams
                             .fastMap(Exam::toFollowingModel)
                             .toPersistentList(),
                     )
@@ -138,9 +155,7 @@ internal class HomeViewModel @Inject constructor(
     }
 
     /** 추천 팔로워들을 가져온다. */
-    fun fetchRecommendFollowing(
-        forcedLoading: Boolean = false,
-    ) = intent {
+    fun fetchRecommendFollowing() = intent {
         updateHomeRecommendLoading(true)
         fetchUserFollowingUseCase(requireNotNull(state.me?.id))
             .onSuccess { userFollowing ->
@@ -162,7 +177,6 @@ internal class HomeViewModel @Inject constructor(
                 }
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
-                if(forcedLoading) delay(300L) // PullToRefresh 를 경우 새로고침을 했음을 사용자에게 인지시키기 위함
                 updateHomeRecommendLoading(false)
             }
     }
@@ -226,7 +240,7 @@ internal class HomeViewModel @Inject constructor(
         loading: Boolean,
     ) = intent {
         reduce {
-            state.copy(isHomeRecommendExamLoading = loading)
+            state.copy(isHomeRecommendFollowingExamLoading = loading)
         }
     }
 
