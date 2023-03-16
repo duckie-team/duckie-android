@@ -8,12 +8,9 @@
 package team.duckie.app.android.feature.ui.home.viewmodel.state
 
 import androidx.compose.runtime.Immutable
-import androidx.paging.PagingData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.recommendation.model.ExamType
-import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
@@ -25,7 +22,7 @@ internal data class HomeState(
     val me: User? = null,
 
     val isHomeRecommendLoading: Boolean = false,
-    val isHomeRecommendExamLoading: Boolean = false,
+    val isHomeRecommendFollowingExamLoading: Boolean = false,
 
     val bottomNavigationStep: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
@@ -35,7 +32,7 @@ internal data class HomeState(
 
     val isFollowingExist: Boolean = true,
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
-    val recommendExam: ImmutableList<RecommendExam> = skeletonRecommendExam,
+    val recommendFollowingExam: ImmutableList<RecommendExam> = skeletonRecommendExam,
 
     val popularTags: ImmutableList<Tag> = persistentListOf(),
 ) {

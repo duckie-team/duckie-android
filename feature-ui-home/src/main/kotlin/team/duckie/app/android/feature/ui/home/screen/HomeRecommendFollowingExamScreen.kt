@@ -53,7 +53,7 @@ private val HomeProfileSize: DpSize = DpSize(
 )
 
 @Composable
-internal fun HomeRecommendExamScreen(
+internal fun HomeRecommendFollowingExamScreen(
     modifier: Modifier = Modifier,
     vm: HomeViewModel = activityViewModel(),
 ) {
@@ -62,7 +62,7 @@ internal fun HomeRecommendExamScreen(
     val homeLoadingMypageToastMessage = stringResource(id = R.string.home_loading_mypage_toast)
 
     LaunchedEffect(Unit) {
-        vm.fetchRecommendExam()
+        vm.fetchRecommendFollowingExam()
     }
 
     LazyColumn(
@@ -83,7 +83,7 @@ internal fun HomeRecommendExamScreen(
         }
 
         itemsIndexed(
-            items = state.recommendExam,
+            items = state.recommendFollowingExam,
         ) { _, maker ->
             TestCoverWithMaker(
                 profile = maker.owner.profileImgUrl,
@@ -99,7 +99,7 @@ internal fun HomeRecommendExamScreen(
                     vm.navigateToHomeDetail(maker.examId)
                 },
                 cover = maker.coverUrl,
-                isLoading = state.isHomeRecommendExamLoading,
+                isLoading = state.isHomeRecommendFollowingExamLoading,
             )
         }
     }

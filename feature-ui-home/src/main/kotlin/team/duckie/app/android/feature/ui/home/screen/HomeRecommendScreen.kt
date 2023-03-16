@@ -81,7 +81,7 @@ internal fun HomeRecommendScreen(
     val pullRefreshState = rememberPullRefreshState(
         refreshing = state.isHomeRecommendLoading,
         onRefresh = {
-            vm.fetchRecommendFollowing(forcedLoading = true)
+            vm.refreshRecommendations(forceLoading = true)
         },
     )
 
