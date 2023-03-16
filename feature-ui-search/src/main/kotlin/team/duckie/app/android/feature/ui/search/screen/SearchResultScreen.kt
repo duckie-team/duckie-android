@@ -40,6 +40,7 @@ import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchState
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
+import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
@@ -80,7 +81,7 @@ internal fun SearchResultScreen(
                 vm.updateSearchResultTab(SearchResultStep.toStep(index))
             },
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(height = 20.dp)
         when (state.tagSelectedTab) {
             SearchResultStep.DuckExam -> SearchResultForExam(
                 searchExams = searchExams,
@@ -97,7 +98,7 @@ internal fun SearchResultScreen(
                 },
             )
         }
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(height = 48.dp)
     }
 }
 
@@ -117,7 +118,7 @@ private fun SearchResultForUser(
                 text = stringResource(id = R.string.no_search_user),
                 color = QuackColor.Gray1,
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(height = 8.dp)
             QuackBody1(
                 text = stringResource(id = R.string.search_another_keyword),
                 color = QuackColor.Gray1,
@@ -160,7 +161,7 @@ private fun SearchResultForExam(
                 text = stringResource(id = R.string.no_search_exam),
                 color = QuackColor.Gray1,
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(height = 8.dp)
             QuackBody1(
                 text = stringResource(id = R.string.search_another_keyword),
                 color = QuackColor.Gray1,
