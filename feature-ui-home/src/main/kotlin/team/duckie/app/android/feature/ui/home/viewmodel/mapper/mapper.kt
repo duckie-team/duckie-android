@@ -41,11 +41,11 @@ internal fun User.toUiModel() =
     )
 
 internal fun Exam.toFollowingModel() =
-    HomeState.FollowingTest(
+    HomeState.RecommendExam(
         coverUrl = thumbnailUrl,
         title = title,
         examId = this.id,
-        owner = HomeState.FollowingTest.User(
+        owner = HomeState.RecommendExam.User(
             nickname = user?.nickname ?: "",
             profileImgUrl = user?.profileImageUrl ?: "",
             favoriteTag = user?.duckPower?.tag?.name ?: "",

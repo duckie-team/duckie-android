@@ -71,7 +71,7 @@ class RecommendationRepositoryImpl @Inject constructor(
         }
 
     @ExperimentalApi
-    override suspend fun fetchJumbotrons(page: Int): ImmutableList<Exam> =
+    override suspend fun fetchJumbotrons(): ImmutableList<Exam> =
         withContext(Dispatchers.IO) {
             val (_, response) = fuel
                 .get(

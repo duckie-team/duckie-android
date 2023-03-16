@@ -8,23 +8,25 @@
 package team.duckie.app.android.feature.ui.home.viewmodel.state
 
 import androidx.compose.runtime.Immutable
-import androidx.paging.PagingData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.recommendation.model.ExamType
-import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonJumbotrons
+import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonRecommendExam
 
 internal data class HomeState(
     val me: User? = null,
-    val isHomeLoading: Boolean = false,
 
-    val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,
+    val isHomeRecommendLoading: Boolean = false,
+    val isHomeRecommendFollowingExamLoading: Boolean = false,
+
+    val isHomeRecommendPullRefreshLoading: Boolean = false,
+
+    val bottomNavigationStep: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
 
     val jumbotrons: ImmutableList<HomeRecommendJumbotron> = skeletonJumbotrons,
@@ -32,23 +34,19 @@ internal data class HomeState(
 
     val isFollowingExist: Boolean = true,
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
-    val recommendFollowingTest: ImmutableList<FollowingTest> = persistentListOf(),
-
-    val recommendations: PagingData<RecommendationItem> = PagingData.empty(),
-
-    val recentExam: ImmutableList<ExamInfo> = persistentListOf(),
+    val recommendFollowingExam: ImmutableList<RecommendExam> = skeletonRecommendExam,
 
     val popularTags: ImmutableList<Tag> = persistentListOf(),
 ) {
     /**
-     * 팔로잉의 덕질고사 추천 피드 data class [FollowingTest]
+     * 팔로잉의 덕질고사 추천 피드 data class [RecommendExam]
      *
      * @param coverUrl 덕질고사 커버 이미지 url
      * @param title 덕질고사 제목
      * @param owner 덕질고사 만든이
      */
     @Immutable
-    data class FollowingTest(
+    data class RecommendExam(
         val coverUrl: String,
         val title: String,
         val examId: Int,
@@ -67,7 +65,28 @@ internal data class HomeState(
             val profileImgUrl: String,
             val favoriteTag: String,
             val tier: String,
-        )
+        ) {
+            /**
+             * [User] 의 Empty Model 입니다.
+             * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
+             */
+            companion object {
+                fun empty() = User("", "", "", "")
+            }
+        }
+
+        /**
+         * [RecommendExam] 의 Empty Model 입니다.
+         * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
+         */
+        companion object {
+            fun empty() = RecommendExam(
+                "",
+                "",
+                0,
+                User.empty(),
+            )
+        }
     }
 
     /**
