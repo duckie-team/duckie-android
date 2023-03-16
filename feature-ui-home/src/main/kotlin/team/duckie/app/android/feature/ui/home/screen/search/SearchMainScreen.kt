@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -30,8 +29,6 @@ import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
-import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
@@ -120,27 +117,5 @@ internal fun SearchMainScreen(
             },
             itemChunkedSize = 5,
         )
-        Spacer(modifier = Modifier.height(52.dp))
-        QuackTitle2(
-            modifier = Modifier.padding(start = SearchScreenHorizontalPaddingDp),
-            text = stringResource(id = R.string.recent_exam),
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyRow {
-            items(state.recentExam) { exam ->
-                DuckExamSmallCover(
-                    duckTestCoverItem = DuckTestCoverItem(
-                        testId = exam.id,
-                        thumbnailUrl = exam.thumbnailUrl,
-                        nickname = exam.nickname,
-                        title = exam.title,
-                        solvedCount = exam.solvedCount ?: 0,
-
-                        ),
-                    onItemClick = {
-                    },
-                )
-            }
-        }
     }
 }

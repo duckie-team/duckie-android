@@ -12,10 +12,10 @@ import team.duckie.app.android.domain.search.repository.SearchRepository
 import javax.inject.Inject
 
 @Immutable
-class ClearAllRecentSearchUseCase @Inject constructor(
+class PostRecentSearchUseCase @Inject constructor(
     private val repository: SearchRepository,
 ) {
-    suspend operator fun invoke() = runCatching {
-        repository.clearAllRecentSearch()
+    suspend operator fun invoke(keyword: String) = runCatching {
+        repository.saveRecentSearch(keyword = keyword)
     }
 }

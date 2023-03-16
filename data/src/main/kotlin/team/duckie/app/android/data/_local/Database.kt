@@ -14,10 +14,13 @@ import team.duckie.app.android.data.exam.dao.MadeExamsDao
 import team.duckie.app.android.data.exam.dao.RecentExamsDao
 import team.duckie.app.android.data.exam.dao.SolvedExamsDao
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
+import team.duckie.app.android.data.search.dao.SearchDao
+import team.duckie.app.android.data.tag.model.SearchEntity
 
 @Database(
     entities = [
         ExamInfoEntity::class,
+        SearchEntity::class,
     ],
     version = 1,
     exportSchema = false,
@@ -28,6 +31,8 @@ abstract class DuckieDatabase : RoomDatabase() {
     abstract fun solvedExamsDao(): SolvedExamsDao
 
     abstract fun recentExamsDao(): RecentExamsDao
+
+    abstract fun searchDao(): SearchDao
 
     companion object {
         const val DatabaseName = "duckie-database"

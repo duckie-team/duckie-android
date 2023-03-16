@@ -43,9 +43,9 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
-import team.duckie.app.android.shared.ui.compose.ColumnSpacer
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCoverForColumn
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
+import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.itemsPagingKey
@@ -96,7 +96,7 @@ internal fun ExamSection(
             tagType = QuackTagType.Circle(),
             onClick = viewModel::changeSelectedTags,
         )
-        ColumnSpacer(28.dp)
+        Spacer(space = 28.dp)
         LazyVerticalGrid(
             modifier = Modifier.fillMaxSize(),
             state = lazyGridState,
