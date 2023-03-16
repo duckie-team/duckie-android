@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class SearchLocalDataSourceImpl @Inject constructor(
     private val searchDao: SearchDao,
-): SearchLocalDataSource {
+) : SearchLocalDataSource {
 
     /** [getSearchEntityByKeyword]를 통해 entity를 가져와 삭제한다. */
     override suspend fun clearRecentSearch(keyword: String) {

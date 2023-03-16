@@ -118,13 +118,7 @@ fun UserFollowingLayout(
             )
             QuackBody2(
                 modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
-                text = if (isFollowing) {
-                    stringResource(id = R.string.following)
-                } else {
-                    stringResource(
-                    id = R.string.follow,
-                )
-                },
+                text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                 onClick = {
                     onClickFollow(!isFollowing)
@@ -164,9 +158,9 @@ fun UserFollowingLayout(
                 x = userProfilePlaceable.width,
                 y = if (tier.isEmpty() || favoriteTag.isEmpty()) {
                     Alignment.CenterVertically.align(
-                    size = userNamePlaceable.height,
-                    space = constraints.maxHeight,
-                )
+                        size = userNamePlaceable.height,
+                        space = constraints.maxHeight,
+                    )
                 } else {
                     0
                 },

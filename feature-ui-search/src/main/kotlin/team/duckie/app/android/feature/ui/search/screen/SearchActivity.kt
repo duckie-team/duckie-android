@@ -7,9 +7,7 @@
 
 package team.duckie.app.android.feature.ui.search.screen
 
-import android.content.Context
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -45,6 +43,7 @@ import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.KeyboardUtil
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.app.android.util.ui.popStringExtra
@@ -139,12 +138,7 @@ class SearchActivity : BaseActivity() {
             }
 
             is SearchSideEffect.HideKeyBoard -> {
-                val inputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(
-                    currentFocus?.windowToken,
-                    InputMethodManager.HIDE_NOT_ALWAYS,
-                )
+                KeyboardUtil.hideKeyboard(this)
             }
         }
     }

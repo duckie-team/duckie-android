@@ -34,7 +34,7 @@ import javax.inject.Inject
 class SearchRepositoryImpl @Inject constructor(
     private val fuel: Fuel, // TODO (limsaehyun) DataSource로 분리해야 함
     private val searchLocalDataSource: SearchLocalDataSource,
-    private val searchRemoteDataSource: SearchRemoteDataSource
+    private val searchRemoteDataSource: SearchRemoteDataSource,
 ) : SearchRepository {
 
     // TODO(limsaehyun) : 검색의 관심사 분리를 위해 제거해야 함

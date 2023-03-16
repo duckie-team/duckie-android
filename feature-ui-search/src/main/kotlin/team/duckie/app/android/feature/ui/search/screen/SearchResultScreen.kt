@@ -9,10 +9,8 @@ package team.duckie.app.android.feature.ui.search.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -33,7 +31,6 @@ import androidx.paging.compose.items
 import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.search.R
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
@@ -63,10 +60,10 @@ internal fun SearchResultScreen(
         it.title
     }.toPersistentList()
 
-    val current = LocalFocusManager.current
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(Unit) {
-        current.clearFocus()
+        focusManager.clearFocus()
     }
 
     Column(
