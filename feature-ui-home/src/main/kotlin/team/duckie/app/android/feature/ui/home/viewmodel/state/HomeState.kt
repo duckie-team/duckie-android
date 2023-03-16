@@ -23,10 +23,11 @@ import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonRecommend
 
 internal data class HomeState(
     val me: User? = null,
+
     val isHomeRecommendLoading: Boolean = false,
     val isHomeRecommendExamLoading: Boolean = false,
 
-    val step: BottomNavigationStep = BottomNavigationStep.HomeScreen,
+    val bottomNavigationStep: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
 
     val jumbotrons: ImmutableList<HomeRecommendJumbotron> = skeletonJumbotrons,
@@ -35,10 +36,6 @@ internal data class HomeState(
     val isFollowingExist: Boolean = true,
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
     val recommendExam: ImmutableList<RecommendExam> = skeletonRecommendExam,
-
-    val recommendations: PagingData<RecommendationItem> = PagingData.empty(),
-
-    val recentExam: ImmutableList<ExamInfo> = persistentListOf(),
 
     val popularTags: ImmutableList<Tag> = persistentListOf(),
 ) {

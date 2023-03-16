@@ -67,7 +67,7 @@ import team.duckie.quackquack.ui.component.QuackLargeButtonType
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
@@ -81,7 +81,7 @@ internal fun HomeRecommendScreen(
     val pullRefreshState = rememberPullRefreshState(
         refreshing = state.isHomeRecommendLoading,
         onRefresh = {
-            vm.fetchRecommendFollowing()
+            vm.fetchRecommendFollowing(forcedLoading = true)
         },
     )
 

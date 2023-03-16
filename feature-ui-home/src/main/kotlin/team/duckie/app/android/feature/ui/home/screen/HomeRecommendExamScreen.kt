@@ -62,7 +62,7 @@ internal fun HomeRecommendExamScreen(
     val homeLoadingMypageToastMessage = stringResource(id = R.string.home_loading_mypage_toast)
 
     LaunchedEffect(Unit) {
-        vm.fetchRecommendFollowingTest()
+        vm.fetchRecommendExam()
     }
 
     LazyColumn(
