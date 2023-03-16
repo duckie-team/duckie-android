@@ -92,7 +92,7 @@ internal class HomeViewModel @Inject constructor(
 
     /** 홈 화면의 jumbotron을 가져온다. */
     private fun fetchJumbotrons() = intent {
-        updateHomeLoading(true)
+        updateHomeRecommendLoading(true)
         fetchJumbotronsUseCase()
             .onSuccess { jumbotrons ->
                 reduce {
@@ -105,7 +105,7 @@ internal class HomeViewModel @Inject constructor(
             }.onFailure { exception ->
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
-                updateHomeLoading(false)
+                updateHomeRecommendLoading(false)
             }
     }
 
@@ -123,12 +123,12 @@ internal class HomeViewModel @Inject constructor(
 
     /** 팔로워들의 추천 덕질고사들을 가져온다. */
     fun fetchRecommendFollowingTest() = intent {
-        updateHomeLoading(true)
+        updateHomeRecommendFollowingLoading(true)
         fetchExamMeFollowingUseCase()
             .onSuccess { exams ->
                 reduce {
                     state.copy(
-                        recommendFollowingTest = exams
+                        recommendExam = exams
                             .fastMap(Exam::toFollowingModel)
                             .toPersistentList(),
                     )
@@ -145,13 +145,13 @@ internal class HomeViewModel @Inject constructor(
                 }
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
-                updateHomeLoading(false)
+                updateHomeRecommendFollowingLoading(false)
             }
     }
 
     /** 추천 팔로워들을 가져온다. */
     fun fetchRecommendFollowing() = intent {
-        updateHomeLoading(true)
+        updateHomeRecommendLoading(true)
         fetchUserFollowingUseCase(requireNotNull(state.me?.id))
             .onSuccess { userFollowing ->
                 reduce {
@@ -172,7 +172,7 @@ internal class HomeViewModel @Inject constructor(
                 }
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
-                updateHomeLoading(false)
+                updateHomeRecommendLoading(false)
             }
     }
 
@@ -221,14 +221,21 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
-    /** 홈 화면의 로딩 상태를 [loading]으로 바꿉니다. */
-    private fun updateHomeLoading(
+    /** 홈 화면의 추천 탭의 로딩 상태를 [loading]으로 바꿉니다. */
+    private fun updateHomeRecommendLoading(
         loading: Boolean,
     ) = intent {
         reduce {
-            state.copy(
-                isHomeLoading = loading,
-            )
+            state.copy(isHomeRecommendLoading = loading)
+        }
+    }
+
+    /** 홈 화면의 팔로잉 탭의 로딩 상태를 [loading]으로 바꿉니다. */
+    private fun updateHomeRecommendFollowingLoading(
+        loading: Boolean,
+    ) = intent {
+        reduce {
+            state.copy(isHomeRecommendExamLoading = loading)
         }
     }
 

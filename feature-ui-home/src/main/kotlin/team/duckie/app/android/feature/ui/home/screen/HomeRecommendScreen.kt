@@ -31,8 +31,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -81,7 +79,7 @@ internal fun HomeRecommendScreen(
     val lazyRecommendations = vm.recommendations.collectAsLazyPagingItems()
 
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = state.isHomeLoading,
+        refreshing = state.isHomeRecommendLoading,
         onRefresh = {
             vm.fetchRecommendFollowing()
         },
@@ -124,7 +122,7 @@ internal fun HomeRecommendScreen(
                                 examId = examId,
                             )
                         },
-                        isLoading = state.isHomeLoading,
+                        isLoading = state.isHomeRecommendLoading,
                     )
                 }
             }
@@ -153,13 +151,13 @@ internal fun HomeRecommendScreen(
                     exams = item?.exams?.toImmutableList() ?: persistentListOf(),
                     onExamClicked = { examId -> vm.navigateToHomeDetail(examId) },
                     onTagClicked = { tag -> vm.navigateToSearch(tag) },
-                    isLoading = state.isHomeLoading,
+                    isLoading = state.isHomeRecommendLoading,
                 )
             }
         }
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = state.isHomeLoading,
+            refreshing = state.isHomeRecommendLoading,
             state = pullRefreshState,
         )
     }
