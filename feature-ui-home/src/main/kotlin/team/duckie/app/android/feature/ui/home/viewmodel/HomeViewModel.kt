@@ -14,6 +14,7 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +24,6 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.exam.usecase.GetRecentExamUseCase
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
@@ -56,13 +56,14 @@ internal class HomeViewModel @Inject constructor(
     private val followUseCase: FollowUseCase,
     private val getMeUseCase: GetMeUseCase,
     private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
-    private val getRecentExamUseCase: GetRecentExamUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
     override val container = container<HomeState, HomeSideEffect>(HomeState())
 
     private val _recommendations = MutableStateFlow(PagingData.from(skeletonRecommendationItems))
     internal val recommendations: Flow<PagingData<RecommendationItem>> = _recommendations
+
+    private val pullToRefreshMinLoadingDelay = 500L
 
     init {
         initState()
@@ -72,11 +73,12 @@ internal class HomeViewModel @Inject constructor(
 
     /** [HomeViewModel]의 초기 상태를 설정한다. */
     private fun initState() = intent {
-        getMeUseCase().onSuccess { me ->
-            reduce { state.copy(me = me) }
-        }.onFailure {
-            postSideEffect(HomeSideEffect.ReportError(it))
-        }
+        getMeUseCase()
+            .onSuccess { me ->
+                reduce { state.copy(me = me) }
+            }.onFailure {
+                postSideEffect(HomeSideEffect.ReportError(it))
+            }
     }
 
     /** 추천 피드를 가져온다. */
@@ -90,9 +92,24 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 추천 피드를 새로고침한다.
+     * [forceLoading] 는 PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
+     * */
+    fun refreshRecommendations(
+        forceLoading: Boolean = false,
+    ) {
+        viewModelScope.launch {
+            updateHomeRecommendPullRefreshLoading(true)
+            fetchRecommendations()
+            if (forceLoading) delay(pullToRefreshMinLoadingDelay)
+            updateHomeRecommendPullRefreshLoading(false)
+        }
+    }
+
     /** 홈 화면의 jumbotron을 가져온다. */
     private fun fetchJumbotrons() = intent {
-        updateHomeLoading(true)
+        updateHomeRecommendLoading(true)
         fetchJumbotronsUseCase()
             .onSuccess { jumbotrons ->
                 reduce {
@@ -105,30 +122,18 @@ internal class HomeViewModel @Inject constructor(
             }.onFailure { exception ->
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
-                updateHomeLoading(false)
-            }
-    }
-
-    /** 최근 덕질한 시험 목록을 가져온다. */
-    fun fetchRecentExam() = intent {
-        getRecentExamUseCase()
-            .onSuccess { exams ->
-                reduce {
-                    state.copy(
-                        recentExam = exams.toImmutableList(),
-                    )
-                }
+                updateHomeRecommendLoading(false)
             }
     }
 
     /** 팔로워들의 추천 덕질고사들을 가져온다. */
-    fun fetchRecommendFollowingTest() = intent {
-        updateHomeLoading(true)
+    fun fetchRecommendFollowingExam() = intent {
+        updateHomeRecommendFollowingLoading(true)
         fetchExamMeFollowingUseCase()
             .onSuccess { exams ->
                 reduce {
                     state.copy(
-                        recommendFollowingTest = exams
+                        recommendFollowingExam = exams
                             .fastMap(Exam::toFollowingModel)
                             .toPersistentList(),
                     )
@@ -145,13 +150,13 @@ internal class HomeViewModel @Inject constructor(
                 }
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
-                updateHomeLoading(false)
+                updateHomeRecommendFollowingLoading(false)
             }
     }
 
     /** 추천 팔로워들을 가져온다. */
     fun fetchRecommendFollowing() = intent {
-        updateHomeLoading(true)
+        updateHomeRecommendLoading(true)
         fetchUserFollowingUseCase(requireNotNull(state.me?.id))
             .onSuccess { userFollowing ->
                 reduce {
@@ -172,7 +177,7 @@ internal class HomeViewModel @Inject constructor(
                 }
                 postSideEffect(HomeSideEffect.ReportError(exception))
             }.also {
-                updateHomeLoading(false)
+                updateHomeRecommendLoading(false)
             }
     }
 
@@ -221,13 +226,31 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
-    /** 홈 화면의 로딩 상태를 [loading]으로 바꿉니다. */
-    private fun updateHomeLoading(
+    /** 홈 화면의 추천 탭의 로딩 상태를 [loading]으로 바꿉니다. */
+    private fun updateHomeRecommendLoading(
+        loading: Boolean,
+    ) = intent {
+        reduce {
+            state.copy(isHomeRecommendLoading = loading)
+        }
+    }
+
+    /** 홈 화면의 팔로잉 탭의 로딩 상태를 [loading]으로 바꿉니다. */
+    private fun updateHomeRecommendFollowingLoading(
+        loading: Boolean,
+    ) = intent {
+        reduce {
+            state.copy(isHomeRecommendFollowingExamLoading = loading)
+        }
+    }
+
+    private fun updateHomeRecommendPullRefreshLoading(
         loading: Boolean,
     ) = intent {
         reduce {
             state.copy(
-                isHomeLoading = loading,
+                isHomeRecommendPullRefreshLoading = loading,
+                isHomeRecommendLoading = loading, // 스캘레톤 UI를 위해 업데이트
             )
         }
     }
@@ -236,12 +259,12 @@ internal class HomeViewModel @Inject constructor(
     fun navigationPage(
         step: BottomNavigationStep,
     ) = intent {
-        if (step == BottomNavigationStep.RankingScreen && state.step == BottomNavigationStep.RankingScreen) {
+        if (step == BottomNavigationStep.RankingScreen && state.bottomNavigationStep == BottomNavigationStep.RankingScreen) {
             postSideEffect(HomeSideEffect.ClickRankingRetry)
         }
         reduce {
             state.copy(
-                step = step,
+                bottomNavigationStep = step,
             )
         }
     }

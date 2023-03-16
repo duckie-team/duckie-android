@@ -51,7 +51,6 @@ internal fun SearchMainScreen(
 
     LaunchedEffect(Unit) {
         vm.fetchPopularTags()
-        vm.fetchRecentExam()
     }
 
     Column(

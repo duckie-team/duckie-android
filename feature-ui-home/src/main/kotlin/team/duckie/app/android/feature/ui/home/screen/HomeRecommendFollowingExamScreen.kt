@@ -8,7 +8,6 @@
 package team.duckie.app.android.feature.ui.home.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,11 +15,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -30,36 +27,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import kotlinx.collections.immutable.ImmutableList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
-import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
-import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
-import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
+import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
-import team.duckie.app.android.util.kotlin.fastForEach
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
-import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
+internal const val ThumbnailRatio = 4f / 3f
+
+private val HomeProfileSize: DpSize = DpSize(
+    all = 24.dp,
+)
+
 @Composable
-internal fun HomeRecommendFollowingTestScreen(
+internal fun HomeRecommendFollowingExamScreen(
     modifier: Modifier = Modifier,
     vm: HomeViewModel = activityViewModel(),
 ) {
@@ -68,11 +62,7 @@ internal fun HomeRecommendFollowingTestScreen(
     val homeLoadingMypageToastMessage = stringResource(id = R.string.home_loading_mypage_toast)
 
     LaunchedEffect(Unit) {
-        vm.fetchRecommendFollowingTest()
-    }
-
-    QuackAnimatedVisibility(visible = state.isHomeLoading) {
-        DuckieCircularProgressIndicator()
+        vm.fetchRecommendFollowingExam()
     }
 
     LazyColumn(
@@ -93,7 +83,7 @@ internal fun HomeRecommendFollowingTestScreen(
         }
 
         itemsIndexed(
-            items = state.recommendFollowingTest,
+            items = state.recommendFollowingExam,
         ) { _, maker ->
             TestCoverWithMaker(
                 profile = maker.owner.profileImgUrl,
@@ -102,108 +92,18 @@ internal fun HomeRecommendFollowingTestScreen(
                 tier = maker.owner.tier,
                 favoriteTag = maker.owner.favoriteTag,
                 onClickUserProfile = {
-                    // TODO(limsaehyun): 유저의 profile 로 이동
+                    // TODO(limsaehyun): 마이페이지로 이동
                     toast.invoke(homeLoadingMypageToastMessage)
                 },
                 onClickTestCover = {
                     vm.navigateToHomeDetail(maker.examId)
                 },
                 cover = maker.coverUrl,
+                isLoading = state.isHomeRecommendFollowingExamLoading,
             )
         }
     }
 }
-
-@Composable
-internal fun HomeRecommendFollowingScreen(
-    modifier: Modifier = Modifier,
-    vm: HomeViewModel = activityViewModel(),
-) {
-    val state = vm.collectAsState().value
-
-    LaunchedEffect(Unit) {
-        vm.fetchRecommendFollowing()
-    }
-
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        item {
-            HomeTopAppBar(
-                selectedTabIndex = state.homeSelectedIndex.index,
-                onTabSelected = { step ->
-                    vm.changedHomeScreen(HomeStep.toStep(step))
-                },
-                onClickedCreate = {
-                    vm.navigateToCreateProblem()
-                },
-            )
-        }
-
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(164.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                QuackHeadLine2(
-                    text = stringResource(id = R.string.home_following_initial_title),
-                    align = TextAlign.Center,
-                )
-            }
-        }
-
-        items(
-            items = state.recommendFollowing,
-        ) { categories ->
-            HomeFollowingInitialRecommendUsers(
-                modifier = Modifier.padding(bottom = 16.dp),
-                topic = categories.topic,
-                recommendUser = categories.users,
-                onClickFollowing = { userId, isFollowing ->
-                    vm.followUser(userId, isFollowing)
-                },
-            )
-        }
-    }
-}
-
-@Composable
-private fun HomeFollowingInitialRecommendUsers(
-    modifier: Modifier = Modifier,
-    topic: String,
-    recommendUser: ImmutableList<HomeState.RecommendUserByTopic.User>,
-    onClickFollowing: (Int, Boolean) -> Unit,
-) {
-    Column(
-        modifier = modifier,
-    ) {
-        QuackDivider()
-        QuackTitle2(
-            modifier = Modifier.padding(
-                top = 24.dp,
-                bottom = 12.dp,
-            ),
-            text = topic,
-        )
-        recommendUser.fastForEach { user ->
-            UserFollowingLayout(
-                userId = user.userId,
-                profileImgUrl = user.profileImgUrl,
-                nickname = user.nickname,
-                favoriteTag = user.favoriteTag,
-                tier = user.tier,
-                isFollowing = user.isFollowing,
-                onClickFollow = {
-                    onClickFollowing(user.userId, it)
-                },
-            )
-        }
-    }
-}
-
-internal const val ThumbnailRatio = 4f / 3f
 
 @Composable
 private fun TestCoverWithMaker(
@@ -216,6 +116,7 @@ private fun TestCoverWithMaker(
     favoriteTag: String,
     onClickTestCover: () -> Unit,
     onClickUserProfile: () -> Unit,
+    isLoading: Boolean,
 ) {
     Column(
         modifier = modifier,
@@ -227,7 +128,8 @@ private fun TestCoverWithMaker(
                 .clip(RoundedCornerShape(8.dp))
                 .quackClickable {
                     onClickTestCover()
-                },
+                }
+                .skeleton(isLoading),
             model = cover,
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
@@ -240,13 +142,10 @@ private fun TestCoverWithMaker(
             tier = tier,
             favoriteTag = favoriteTag,
             onClickUserProfile = onClickUserProfile,
+            isLoading = isLoading,
         )
     }
 }
-
-private val HomeProfileSize: DpSize = DpSize(
-    all = 24.dp,
-)
 
 @Composable
 private fun TestMakerLayout(
@@ -256,6 +155,7 @@ private fun TestMakerLayout(
     name: String,
     tier: String,
     favoriteTag: String,
+    isLoading: Boolean,
     onClickUserProfile: (() -> Unit)? = null,
 ) {
     Row(
@@ -263,6 +163,7 @@ private fun TestMakerLayout(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         QuackImage(
+            modifier = Modifier.skeleton(isLoading),
             src = profile,
             size = HomeProfileSize,
             shape = SquircleShape,
@@ -273,11 +174,18 @@ private fun TestMakerLayout(
             },
         )
         Column(modifier = Modifier.padding(start = 8.dp)) {
-            QuackSubtitle2(text = title)
+            QuackSubtitle2(
+                modifier = Modifier.skeleton(isLoading),
+                text = title,
+            )
             Row(modifier = Modifier.padding(top = 4.dp)) {
-                QuackBody3(text = name)
+                QuackBody3(
+                    modifier = Modifier.skeleton(isLoading),
+                    text = name,
+                )
                 Spacer(modifier = Modifier.width(8.dp))
                 QuackBody3(
+                    modifier = Modifier.skeleton(isLoading),
                     text = "$tier · $favoriteTag",
                     color = QuackColor.Gray2,
                 )

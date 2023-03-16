@@ -109,7 +109,7 @@ class HomeActivity : BaseActivity() {
                         // TODO(limsaehyun): 추후에 QuackCrossfade 로 교체 필요
                         Crossfade(
                             modifier = Modifier.layoutId(HomeCrossFacadeLayoutId),
-                            targetState = state.step,
+                            targetState = state.bottomNavigationStep,
                         ) { page ->
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
@@ -141,7 +141,7 @@ class HomeActivity : BaseActivity() {
                         )
                         DuckTestBottomNavigation(
                             modifier = Modifier.layoutId(HomeBottomNavigationViewLayoutId),
-                            selectedIndex = state.step.index,
+                            selectedIndex = state.bottomNavigationStep.index,
                             onClick = { index ->
                                 homeViewModel.navigationPage(
                                     BottomNavigationStep.toStep(index),
