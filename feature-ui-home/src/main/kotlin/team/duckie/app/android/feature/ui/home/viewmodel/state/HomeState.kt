@@ -24,6 +24,8 @@ internal data class HomeState(
     val isHomeRecommendLoading: Boolean = false,
     val isHomeRecommendFollowingExamLoading: Boolean = false,
 
+    val isHomeRecommendPullRefreshLoading: Boolean = false,
+
     val bottomNavigationStep: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
 

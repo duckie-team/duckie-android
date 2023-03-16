@@ -100,10 +100,10 @@ internal class HomeViewModel @Inject constructor(
         forceLoading: Boolean = false,
     ) {
         viewModelScope.launch {
-            updateHomeRecommendLoading(true)
+            updateHomeRecommendPullRefreshLoading(true)
             fetchRecommendations()
             if (forceLoading) delay(pullToRefreshMinLoadingDelay)
-            updateHomeRecommendLoading(false)
+            updateHomeRecommendPullRefreshLoading(false)
         }
     }
 
@@ -241,6 +241,17 @@ internal class HomeViewModel @Inject constructor(
     ) = intent {
         reduce {
             state.copy(isHomeRecommendFollowingExamLoading = loading)
+        }
+    }
+
+    private fun updateHomeRecommendPullRefreshLoading(
+        loading: Boolean,
+    ) = intent {
+        reduce {
+            state.copy(
+                isHomeRecommendPullRefreshLoading = loading,
+                isHomeRecommendLoading = loading, // 스캘레톤 UI를 위해 업데이트
+            )
         }
     }
 

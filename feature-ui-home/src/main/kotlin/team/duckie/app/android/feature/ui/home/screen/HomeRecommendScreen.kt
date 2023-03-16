@@ -79,7 +79,7 @@ internal fun HomeRecommendScreen(
     val lazyRecommendations = vm.recommendations.collectAsLazyPagingItems()
 
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = state.isHomeRecommendLoading,
+        refreshing = state.isHomeRecommendPullRefreshLoading,
         onRefresh = {
             vm.refreshRecommendations(forceLoading = true)
         },
@@ -157,7 +157,7 @@ internal fun HomeRecommendScreen(
         }
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = state.isHomeRecommendLoading,
+            refreshing = state.isHomeRecommendPullRefreshLoading,
             state = pullRefreshState,
         )
     }
