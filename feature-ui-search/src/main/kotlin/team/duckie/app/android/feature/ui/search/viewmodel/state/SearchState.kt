@@ -31,7 +31,7 @@ internal data class SearchState(
     val me: User? = null,
     val isSearchLoading: Boolean = false,
     val searchStep: SearchStep = SearchStep.Search,
-    val recentSearch: ImmutableList<Tag> = persistentListOf(),
+    val recentSearch: ImmutableList<String> = persistentListOf(),
     val recommendSearchs: Flow<PagingData<Tag>> = flow { PagingData.empty<Tag>() },
     val searchKeyword: String = "",
     val tagSelectedTab: SearchResultStep = SearchResultStep.DuckExam,

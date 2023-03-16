@@ -32,7 +32,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
-import team.duckie.app.android.shared.ui.compose.RowSpacer
+import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.itemsIndexedPagingKey
 import team.duckie.quackquack.ui.color.QuackColor
@@ -102,14 +102,14 @@ private fun ExamineeContent(
                         .skeleton(isLoading),
                     text = "${rank}등",
                 )
-                RowSpacer(space = 12.dp)
+                Spacer(space = 12.dp)
                 QuackImage(
                     modifier = Modifier.skeleton(isLoading),
                     src = profileImageUrl,
                     shape = SquircleShape,
                     size = DpSize(all = 44.dp),
                 )
-                RowSpacer(space = 8.dp)
+                Spacer(space = 8.dp)
                 QuackTitle2(
                     modifier = Modifier.skeleton(isLoading),
                     text = nickname,
