@@ -27,7 +27,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
-import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
@@ -123,17 +121,6 @@ private fun DetailSuccessScreen(
     modifier: Modifier,
     state: DetailState.Success,
 ) {
-    val toast = rememberToast()
-
-    LaunchedEffect(viewModel) {
-        viewModel.container.sideEffectFlow.collect { effect ->
-            when (effect) {
-                is DetailSideEffect.SendToast -> toast(effect.message)
-                else -> Unit
-            }
-        }
-    }
-
     Layout(
         modifier = modifier.navigationBarsPadding(),
         content = {
@@ -143,7 +130,7 @@ private fun DetailSuccessScreen(
                 state = state,
             )
             // content Layout
-            DetailContentLayout(state) {
+            DetailContentLayout(state, viewModel::goToSearch) {
                 viewModel.followUser()
             }
             // 최하단 Layout
@@ -206,6 +193,7 @@ private fun DetailSuccessScreen(
 @Composable
 private fun DetailContentLayout(
     state: DetailState.Success,
+    tagItemClick: (String) -> Unit,
     followButtonClick: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
@@ -257,9 +245,7 @@ private fun DetailContentLayout(
             horizontalSpace = 4.dp,
             items = state.tagNames,
             tagType = QuackTagType.Grayscale(""),
-            onClick = {
-                // TODO(riflockle7): 태그 검색 화면으로 이동
-            },
+            onClick = { index -> tagItemClick(state.tagNames[index]) },
         )
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
@@ -335,12 +321,12 @@ private fun DetailProfileLayout(
             // 공백
             Spacer(modifier = Modifier.height(2.dp))
 
-            // 응시자, 일자
+            // 덕티어 + 퍼센트, 태그
             QuackBody3(
                 text = stringResource(
-                    R.string.detail_num_date,
-                    "${state.exam.solvedCount}",
-                    "1일 전",
+                    R.string.detail_tier_tag,
+                    state.exam.user?.duckPower?.tier ?: "",
+                    state.exam.user?.duckPower?.tag?.name ?: "",
                 ),
                 color = QuackColor.Gray2,
             )
@@ -356,7 +342,7 @@ private fun DetailProfileLayout(
             ),
             text = stringResource(
                 if (isFollowed) {
-                    R.string.detail_follow_cancel
+                    R.string.detail_following
                 } else {
                     R.string.detail_follow
                 },

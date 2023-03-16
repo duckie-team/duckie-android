@@ -78,7 +78,7 @@ internal fun SearchResultScreen(
                 vm.updateSearchResultTab(SearchResultStep.toStep(index))
             },
         )
-        Spacer(height = 20.dp)
+        Spacer(space = 20.dp)
         when (state.tagSelectedTab) {
             SearchResultStep.DuckExam -> SearchResultForExam(
                 searchExams = searchExams,
@@ -95,13 +95,13 @@ internal fun SearchResultScreen(
                 },
             )
         }
-        Spacer(height = 48.dp)
+        Spacer(space = 48.dp)
     }
 }
 
 @Composable
 private fun SearchResultForUser(
-    searchUsers: LazyPagingItems<SearchState.User>,
+    searchUsers: LazyPagingItems<SearchState.SearchUser>,
     onClickFollow: (Int, Boolean) -> Unit,
 ) {
     if (searchUsers.itemCount == 0) {
@@ -115,7 +115,7 @@ private fun SearchResultForUser(
                 text = stringResource(id = R.string.no_search_user),
                 color = QuackColor.Gray1,
             )
-            Spacer(height = 8.dp)
+            Spacer(space = 8.dp)
             QuackBody1(
                 text = stringResource(id = R.string.search_another_keyword),
                 color = QuackColor.Gray1,
@@ -158,7 +158,7 @@ private fun SearchResultForExam(
                 text = stringResource(id = R.string.no_search_exam),
                 color = QuackColor.Gray1,
             )
-            Spacer(height = 8.dp)
+            Spacer(space = 8.dp)
             QuackBody1(
                 text = stringResource(id = R.string.search_another_keyword),
                 color = QuackColor.Gray1,

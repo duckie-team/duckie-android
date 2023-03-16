@@ -35,7 +35,7 @@ fun String.takeBy(maximumLength: Int, prevValue: String): String {
 }
 
 fun randomString(length: Int): String {
-    val charset = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz0123456789"
+    val charset = "ABCDEFGHIJKLMNOPQRSTUVWXTZ"
     return (1..length)
         .map { charset.random() }
         .joinToString("")

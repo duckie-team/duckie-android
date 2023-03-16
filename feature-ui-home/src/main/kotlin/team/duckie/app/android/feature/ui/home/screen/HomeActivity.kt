@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalLifecycleComposeApi::class)
+
 package team.duckie.app.android.feature.ui.home.screen
 
 import android.os.Bundle
@@ -23,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,10 +37,14 @@ import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
+import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
+import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
+import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -49,6 +56,7 @@ import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
 private const val HomeBottomNavigationDividerLayoutId = "HomeBottomNavigationDivider"
@@ -60,7 +68,15 @@ class HomeActivity : BaseActivity() {
 
     private var waitTime = 2000L
     private val homeViewModel: HomeViewModel by viewModels()
+    private val rankingViewModel: RankingViewModel by viewModels()
 
+    @Inject
+    lateinit var createProblemNavigator: CreateProblemNavigator
+
+    @Inject
+    lateinit var detailNavigator: DetailNavigator
+
+    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -76,11 +92,8 @@ class HomeActivity : BaseActivity() {
             BackHandler {
                 if (System.currentTimeMillis() - waitTime >= 1500L) {
                     waitTime = System.currentTimeMillis()
-                    Toast.makeText(
-                        this,
-                        getString(R.string.app_exit_toast),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    Toast.makeText(this, getString(R.string.app_exit_toast), Toast.LENGTH_SHORT)
+                        .show()
                 } else {
                     finish()
                 }
@@ -101,7 +114,23 @@ class HomeActivity : BaseActivity() {
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
                                 BottomNavigationStep.SearchScreen -> SearchMainScreen()
-                                BottomNavigationStep.RankingScreen -> DuckieTodoScreen()
+                                BottomNavigationStep.RankingScreen -> RankingScreen(
+                                    viewModel = rankingViewModel,
+                                    navigateToCreateProblem = {
+                                        createProblemNavigator.navigateFrom(
+                                            activity = this,
+                                        )
+                                    },
+                                    navigateToDetail = { examId ->
+                                        detailNavigator.navigateFrom(
+                                            activity = this,
+                                            intentBuilder = {
+                                                putExtra(Extras.ExamId, examId)
+                                            },
+                                        )
+                                    },
+                                )
+
                                 BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
                             }
                         }
@@ -193,6 +222,10 @@ class HomeActivity : BaseActivity() {
 
             is HomeSideEffect.NavigateToCreateProblem -> {
                 startActivityWithAnimation<CreateProblemActivity>()
+            }
+
+            HomeSideEffect.ClickRankingRetry -> {
+                rankingViewModel.clickRetryRanking()
             }
         }
     }

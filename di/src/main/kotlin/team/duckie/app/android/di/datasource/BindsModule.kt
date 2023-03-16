@@ -19,6 +19,8 @@ import team.duckie.app.android.data.search.datasource.SearchLocalDataSource
 import team.duckie.app.android.data.search.datasource.SearchLocalDataSourceImpl
 import team.duckie.app.android.data.search.datasource.SearchRemoteDataSource
 import team.duckie.app.android.data.search.datasource.SearchRemoteDataSourceImpl
+import team.duckie.app.android.data.ranking.datasource.RankingDataSource
+import team.duckie.app.android.data.ranking.datasource.RankingRemoteDataSourceImpl
 import team.duckie.app.android.data.user.datasource.UserDataSource
 import team.duckie.app.android.data.user.datasource.UserRemoteDataSourceImpl
 
@@ -39,4 +41,7 @@ abstract class BindsModule {
 
     @Binds
     abstract fun provideSearchRemoteDataSource(impl: SearchRemoteDataSourceImpl): SearchRemoteDataSource
+
+    @Binds
+    abstract fun provideRankingRemoteDataSource(impl: RankingRemoteDataSourceImpl): RankingDataSource
 }

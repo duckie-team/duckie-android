@@ -144,4 +144,8 @@ class DetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun goToSearch(tag: String) = viewModelScope.launch {
+        intent { postSideEffect(DetailSideEffect.NavigateToSearch(tag)) }
+    }
 }
