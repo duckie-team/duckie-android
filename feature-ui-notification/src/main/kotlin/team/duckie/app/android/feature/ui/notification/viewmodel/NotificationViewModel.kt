@@ -9,7 +9,7 @@ package team.duckie.app.android.feature.ui.notification.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -19,8 +19,6 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.notification.usecase.DeleteNotificationUseCase
 import team.duckie.app.android.domain.notification.usecase.GetNotificationsUseCase
 import javax.inject.Inject
-
-private const val ArtificialDelay = 500L
 
 @HiltViewModel
 internal class NotificationViewModel @Inject constructor(
@@ -33,15 +31,24 @@ internal class NotificationViewModel @Inject constructor(
 
     fun getNotifications() = intent {
         updateLoading(true)
-        delay(ArtificialDelay)
-        getNotificationsUseCase().onSuccess {
+        getNotificationsUseCase().onSuccess { notifications ->
+            reduce {
+                state.copy(notifications = notifications.toImmutableList())
+            }
             updateLoading(false)
         }
     }
 
     fun clickBackPress() = intent { postSideEffect(NotificationSideEffect.FinishActivity) }
 
-    fun clickNotification() = intent { postSideEffect(NotificationSideEffect.NavigateToMyPage) }
+    fun clickNotification(id: Int) = intent {
+        deleteNotificationUseCase(id).onSuccess {
+            postSideEffect(NotificationSideEffect.NavigateToMyPage)
+        }.onFailure {
+            postSideEffect(NotificationSideEffect.ReportError(it))
+        }
+
+    }
 
     private suspend fun SimpleSyntax<NotificationState, *>.updateLoading(isLoading: Boolean) =
         reduce {

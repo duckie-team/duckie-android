@@ -29,11 +29,13 @@ import team.duckie.app.android.feature.ui.notification.R
 import team.duckie.app.android.feature.ui.notification.viewmodel.NotificationViewModel
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.util.kotlin.getDiffDayFromToday
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -69,8 +71,9 @@ internal fun NotificationScreen(
                     NotificationItem(
                         thumbnailUrl = thumbnailUrl,
                         body = body,
-                        createdAt = createdAt.toString(),
+                        createdAt = { createdAt.getDiffDayFromToday() },
                         isLoading = state.isLoading,
+                        onClick = { viewModel.clickNotification(notification.id) },
                     )
                 }
             }
@@ -82,11 +85,14 @@ internal fun NotificationScreen(
 private fun NotificationItem(
     thumbnailUrl: String,
     body: String,
-    createdAt: String,
+    createdAt: () -> String,
     isLoading: Boolean,
+    onClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .quackClickable(onClick = onClick),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         QuackImage(
@@ -107,7 +113,7 @@ private fun NotificationItem(
             )
             QuackBody3(
                 modifier = Modifier.skeleton(visible = isLoading),
-                text = createdAt,
+                text = createdAt(),
             )
         }
     }

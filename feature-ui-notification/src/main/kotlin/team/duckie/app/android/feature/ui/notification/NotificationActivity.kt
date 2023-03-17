@@ -18,12 +18,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.notification.screen.NotificationScreen
 import team.duckie.app.android.feature.ui.notification.viewmodel.NotificationSideEffect
 import team.duckie.app.android.feature.ui.notification.viewmodel.NotificationViewModel
 import team.duckie.app.android.navigator.feature.home.HomeNavigator
+import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
@@ -65,7 +69,14 @@ class NotificationActivity : BaseActivity() {
                 finishWithAnimation()
             }
 
-            NotificationSideEffect.NavigateToMyPage -> homeNavigator.navigateFrom(activity = this)
+            NotificationSideEffect.NavigateToMyPage -> {
+                homeNavigator.navigateFrom(activity = this)
+            }
+
+            is NotificationSideEffect.ReportError -> {
+                sideEffect.exception
+                Firebase.crashlytics.recordException(sideEffect.exception)
+            }
         }
     }
 }

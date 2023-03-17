@@ -8,6 +8,7 @@
 package team.duckie.app.android.feature.ui.notification.viewmodel
 
 sealed class NotificationSideEffect {
+    class ReportError(val exception: Throwable) : NotificationSideEffect()
     object FinishActivity : NotificationSideEffect()
     object NavigateToMyPage : NotificationSideEffect()
 }
