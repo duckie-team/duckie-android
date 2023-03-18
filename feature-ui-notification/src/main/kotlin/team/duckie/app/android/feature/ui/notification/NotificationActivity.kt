@@ -72,7 +72,6 @@ class NotificationActivity : BaseActivity() {
             }
 
             is NotificationSideEffect.ReportError -> {
-                sideEffect.exception
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
         }

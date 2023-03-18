@@ -38,6 +38,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
+import java.util.Date
 
 @Composable
 internal fun NotificationScreen(
@@ -71,7 +72,7 @@ internal fun NotificationScreen(
                     NotificationItem(
                         thumbnailUrl = thumbnailUrl,
                         body = body,
-                        createdAt = { createdAt.getDiffDayFromToday() },
+                        createdAt = createdAt,
                         isLoading = state.isLoading,
                         onClick = { viewModel.clickNotification(notification.id) },
                     )
@@ -85,7 +86,7 @@ internal fun NotificationScreen(
 private fun NotificationItem(
     thumbnailUrl: String,
     body: String,
-    createdAt: () -> String,
+    createdAt: Date,
     isLoading: Boolean,
     onClick: () -> Unit,
 ) {
@@ -113,7 +114,7 @@ private fun NotificationItem(
             )
             QuackBody3(
                 modifier = Modifier.skeleton(visible = isLoading),
-                text = createdAt(),
+                text = createdAt.getDiffDayFromToday(),
             )
         }
     }
