@@ -55,6 +55,7 @@ import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
+import team.duckie.app.android.feature.ui.onboard.viewmodel.state.ProfileScreenState
 import team.duckie.app.android.util.android.permission.PermissionCompat
 import team.duckie.app.android.util.android.savedstate.SaveableMutableStateFlow
 import team.duckie.app.android.util.android.viewmodel.context
@@ -120,7 +121,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     private val duckieUserProfileImageTemporaryFile =
         File.createTempFile("temporary-duckie-user-profile-image", ".png", context.cacheDir)
 
-    private val nicknameFilter = Regex("[^가-힣a-zA-Z0-9_.]")
+    private val nicknameFilter = Regex("[^ㄱ-ㅎ가-힣a-zA-Z0-9_.]")
     private var lastestUpdateStepMillis = System.currentTimeMillis()
 
     val galleryImages: ImmutableList<String> get() = container.stateFlow.value.galleryImages.toImmutableList()
@@ -176,16 +177,44 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     // validation
 
-    suspend fun nicknameDuplicateCheck(nickname: String) = intent {
-        nicknameDuplicateCheckUseCase(nickname)
-            .onSuccess { result ->
-                postSideEffect(OnboardSideEffect.NicknameDuplicateChecked(result))
-            }
-            .attachExceptionHandling()
+    /** 각 Screen 의 valid 체크 전 사전 작업을 수행한다. */
+    fun readyToScreenCheck(step: OnboardStep) = intent {
+        when (step) {
+            OnboardStep.Profile -> reduce { state.copy(profileState = ProfileScreenState.Checking) }
+            else -> return@intent
+        }
     }
 
-    fun checkNicknameRuleError(nickname: String): Boolean {
+    /** 닉네임을 체크한다. */
+    fun checkNickname(nickname: String) {
+        val isNicknameRuleError = checkNicknameRule(nickname)
+        if (isNicknameRuleError) {
+            intent { reduce { state.copy(profileState = ProfileScreenState.NicknameRuleError) } }
+            return
+        }
+
+        checkNicknameDuplicate(nickname)
+    }
+
+    /** 닉네임 룰을 지켰는지 체크한다. */
+    private fun checkNicknameRule(nickname: String): Boolean {
         return nicknameFilter.containsMatchIn(nickname)
+    }
+
+    /** 겹치는 닉네임이 있는지 체크한다. */
+    private fun checkNicknameDuplicate(nickname: String) = intent {
+        nicknameDuplicateCheckUseCase(nickname)
+            .onSuccess { result ->
+                if (result) {
+                    reduce { state.copy(profileState = ProfileScreenState.Valid) }
+                } else {
+                    reduce { state.copy(profileState = ProfileScreenState.NicknameDuplicateError) }
+                }
+            }
+            .attachExceptionHandling {
+                // TODO(riflockle7): 음 에러 나는 게 닉네임 중복만 있으려나...
+                reduce { state.copy(profileState = ProfileScreenState.NicknameDuplicateError) }
+            }
     }
 
     // user
@@ -340,7 +369,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     }
 
     private fun Result<*>.attachExceptionHandling(
-        additinal: (exception: Throwable) -> Unit = {},
+        additinal: suspend (exception: Throwable) -> Unit = {},
     ) = intent {
         onFailure { exception ->
             postSideEffect(OnboardSideEffect.ReportError(exception))
