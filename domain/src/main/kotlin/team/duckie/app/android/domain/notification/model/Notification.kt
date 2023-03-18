@@ -24,7 +24,7 @@ data class Notification(
             title = "",
             body = "",
             thumbnailUrl = "",
-            createdAt = Date(0)
+            createdAt = Date(0),
         )
     }
 }

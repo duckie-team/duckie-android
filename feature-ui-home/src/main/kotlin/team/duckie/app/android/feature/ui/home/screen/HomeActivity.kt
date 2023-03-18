@@ -134,7 +134,7 @@ class HomeActivity : BaseActivity() {
                                 BottomNavigationStep.MyPageScreen -> MyPageScreen(
                                     navigateToMyPage = {
                                         notificationNavigator.navigateFrom(activity = this)
-                                    }
+                                    },
                                 )
                             }
                         }

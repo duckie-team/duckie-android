@@ -54,18 +54,18 @@ internal fun NotificationScreen(
         QuackTopAppBar(
             leadingIcon = QuackIcon.ArrowBack,
             leadingText = stringResource(id = R.string.notification),
-            onLeadingIconClick = viewModel::clickBackPress
+            onLeadingIconClick = viewModel::clickBackPress,
         )
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 20.dp)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(28.dp)
+            verticalArrangement = Arrangement.spacedBy(28.dp),
         ) {
             items(
                 items = state.notifications,
-                key = { it.id }
+                key = { it.id },
             ) { notification ->
                 with(notification) {
                     NotificationItem(
@@ -93,7 +93,7 @@ private fun NotificationItem(
         modifier = Modifier
             .fillMaxWidth()
             .quackClickable(onClick = onClick),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         QuackImage(
             modifier = Modifier.skeleton(
@@ -105,7 +105,7 @@ private fun NotificationItem(
         )
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             QuackBody2(
                 modifier = Modifier.skeleton(visible = isLoading),

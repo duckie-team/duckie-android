@@ -30,4 +30,3 @@ data class NotificationResponse(
     @field:JsonProperty("createdAt")
     val createdAt: String? = null,
 )
-

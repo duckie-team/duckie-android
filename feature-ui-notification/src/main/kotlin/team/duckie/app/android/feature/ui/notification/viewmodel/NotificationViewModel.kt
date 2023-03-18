@@ -47,7 +47,6 @@ internal class NotificationViewModel @Inject constructor(
         }.onFailure {
             postSideEffect(NotificationSideEffect.ReportError(it))
         }
-
     }
 
     private suspend fun SimpleSyntax<NotificationState, *>.updateLoading(isLoading: Boolean) =

@@ -34,12 +34,12 @@ class NotificationRemoteDataSourceImpl @Inject constructor(
         val (_, response) = fuel
             .delete(
                 path = "/notifications",
-                parameters = listOf("id" to id)
+                parameters = listOf("id" to id),
             ).responseString()
 
         return@withContext responseCatchingFuel(
             response = response,
-            parse = { isSuccess: Boolean -> isSuccess }
+            parse = { isSuccess: Boolean -> isSuccess },
         )
     }
 }

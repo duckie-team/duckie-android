@@ -38,10 +38,10 @@ internal fun MyPageScreen(
                     QuackImage(
                         src = QuackIcon.Notice,
                         size = DpSize(all = 24.dp),
-                        onClick = navigateToMyPage
+                        onClick = navigateToMyPage,
                     )
                 }
-            }
+            },
         )
     }
 }

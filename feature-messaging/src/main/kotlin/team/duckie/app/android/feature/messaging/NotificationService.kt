@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.messaging
 
-import android.content.Intent
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -18,6 +17,7 @@ class NotificationService : FirebaseMessagingService() {
         sendTokenToServer(token)
     }
 
+    @Suppress("UnusedPrivateMember")
     private fun sendTokenToServer(token: String) {
         // TODO(EvergreenTree97): Token Server에 전달
     }
