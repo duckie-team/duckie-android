@@ -84,6 +84,7 @@ dependencies {
         projects.featureUiNotification,
         projects.featureUiCreateProblem,
         projects.featureUiDetail,
+        projects.featureMessaging,
         projects.navigator,
     )
     debugImplementation(libs.analytics.leakcanary)
