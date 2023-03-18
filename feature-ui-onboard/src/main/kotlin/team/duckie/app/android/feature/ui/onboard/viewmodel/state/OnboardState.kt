@@ -19,9 +19,18 @@ internal data class OnboardState(
     val step: OnboardStep = OnboardStep.Activity,
     val me: User? = null,
     val finishOnboarding: Boolean = false,
+    val profileState: ProfileScreenState = ProfileScreenState.Checking,
     val temporaryNickname: String? = null,
     val temporaryProfileImageFile: File? = null,
     val galleryImages: List<String> = emptyList(),
     val categories: List<Category> = emptyList(),
     val selectedCategories: List<Category> = emptyList(),
 ) : Parcelable
+
+/** ProfileScreen 의 state */
+enum class ProfileScreenState {
+    Valid,
+    Checking,
+    NicknameRuleError,
+    NicknameDuplicateError,
+}
