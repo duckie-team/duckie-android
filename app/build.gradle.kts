@@ -81,6 +81,10 @@ dependencies {
         projects.utilKotlin,
         projects.featureUiExamResult,
         projects.featureUiSolveProblem,
+        projects.featureUiNotification,
+        projects.featureUiCreateProblem,
+        projects.featureUiDetail,
+        projects.featureMessaging,
         projects.navigator,
     )
     debugImplementation(libs.analytics.leakcanary)

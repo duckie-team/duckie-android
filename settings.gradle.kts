@@ -43,6 +43,7 @@ include(
     ":navigator",
     ":feature-datastore",
     ":feature-photopicker",
+    ":feature-messaging",
     ":feature-ui-search",
     ":feature-ui-setting",
     ":feature-ui-onboard",

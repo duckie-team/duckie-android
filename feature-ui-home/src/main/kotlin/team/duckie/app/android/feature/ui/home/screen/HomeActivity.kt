@@ -32,11 +32,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
-import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
@@ -45,7 +44,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffe
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
-import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
+import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
@@ -72,6 +71,9 @@ class HomeActivity : BaseActivity() {
 
     @Inject
     lateinit var createProblemNavigator: CreateProblemNavigator
+
+    @Inject
+    lateinit var notificationNavigator: NotificationNavigator
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
@@ -117,9 +119,7 @@ class HomeActivity : BaseActivity() {
                                 BottomNavigationStep.RankingScreen -> RankingScreen(
                                     viewModel = rankingViewModel,
                                     navigateToCreateProblem = {
-                                        createProblemNavigator.navigateFrom(
-                                            activity = this,
-                                        )
+                                        createProblemNavigator.navigateFrom(activity = this)
                                     },
                                     navigateToDetail = { examId ->
                                         detailNavigator.navigateFrom(
@@ -131,7 +131,11 @@ class HomeActivity : BaseActivity() {
                                     },
                                 )
 
-                                BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
+                                BottomNavigationStep.MyPageScreen -> MyPageScreen(
+                                    navigateToMyPage = {
+                                        notificationNavigator.navigateFrom(activity = this)
+                                    },
+                                )
                             }
                         }
                         // TODO(limsaehyun): 추후에 QuackDivider 로 교체 필요
@@ -213,7 +217,8 @@ class HomeActivity : BaseActivity() {
             }
 
             is HomeSideEffect.NavigateToHomeDetail -> {
-                startActivityWithAnimation<DetailActivity>(
+                detailNavigator.navigateFrom(
+                    activity = this,
                     intentBuilder = {
                         putExtra(Extras.ExamId, sideEffect.examId)
                     },
@@ -221,7 +226,7 @@ class HomeActivity : BaseActivity() {
             }
 
             is HomeSideEffect.NavigateToCreateProblem -> {
-                startActivityWithAnimation<CreateProblemActivity>()
+                createProblemNavigator.navigateFrom(activity = this)
             }
 
             HomeSideEffect.ClickRankingRetry -> {
