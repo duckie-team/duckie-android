@@ -28,8 +28,6 @@ dependencies {
         projects.utilCompose,
         projects.utilExceptionHandling,
         projects.sharedUiCompose,
-        projects.featureUiDetail,
-        projects.featureUiCreateProblem,
         projects.featureUiSearch,
         projects.featureDatastore,
         projects.navigator,

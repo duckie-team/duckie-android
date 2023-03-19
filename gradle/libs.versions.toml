@@ -212,6 +212,7 @@ firebase-remote-config = { module = "com.google.firebase:firebase-config-ktx" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
 firebase-performance = { module = "com.google.firebase:firebase-perf-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 
 login-kakao = { module = "com.kakao.sdk:v2-user", version.ref = "login-kakao" }
 
