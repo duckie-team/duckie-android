@@ -46,7 +46,7 @@ import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchState
 import team.duckie.app.android.util.kotlin.seconds
 import javax.inject.Inject
 
-private val SearchDebounceSecond: Long = (1.5).seconds
+private val SearchDebounceSecond: Long = (0.5).seconds
 
 @HiltViewModel
 internal class SearchViewModel @Inject constructor(
