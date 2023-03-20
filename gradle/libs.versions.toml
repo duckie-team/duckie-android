@@ -31,7 +31,7 @@ plugin-local-master = "master"
 kotlin-core = "1.8.10"
 kotlin-dokka = "1.8.10"
 kotlin-kover = "0.6.1"
-kotlin-coroutines = "1.6.2"
+kotlin-coroutines = "1.6.4"
 kotlin-collections-immutable = "0.3.5"
 
 # apache
