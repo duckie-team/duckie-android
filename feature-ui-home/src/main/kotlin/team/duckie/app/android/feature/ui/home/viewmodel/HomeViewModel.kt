@@ -9,8 +9,11 @@ package team.duckie.app.android.feature.ui.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -36,6 +39,7 @@ import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
+import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonFollowingExam
 import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonRecommendationItems
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toFollowingModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
@@ -63,7 +67,10 @@ internal class HomeViewModel @Inject constructor(
     private val _recommendations = MutableStateFlow(PagingData.from(skeletonRecommendationItems))
     internal val recommendations: Flow<PagingData<RecommendationItem>> = _recommendations
 
-    private val pullToRefreshMinLoadingDelay = 500L
+    private val _followingExams = MutableStateFlow(PagingData.from(skeletonFollowingExam))
+    internal val followingExam: Flow<PagingData<HomeState.RecommendExam>> = _followingExams
+
+    private val pullToRefreshMinLoadingDelay = 1000L
 
     init {
         initState()
@@ -94,7 +101,7 @@ internal class HomeViewModel @Inject constructor(
 
     /**
      * 추천 피드를 새로고침한다.
-     * [forceLoading] 는 PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
+     * [forceLoading] - PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
      * */
     fun refreshRecommendations(
         forceLoading: Boolean = false,
@@ -104,6 +111,21 @@ internal class HomeViewModel @Inject constructor(
             fetchRecommendations()
             if (forceLoading) delay(pullToRefreshMinLoadingDelay)
             updateHomeRecommendPullRefreshLoading(false)
+        }
+    }
+
+    /**
+     * 팔로잉 추천 탭을 새로고침한다.
+     * [forceLoading] - PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
+     */
+    fun refreshRecommendFollowingExams(
+        forceLoading: Boolean = false,
+    ) {
+        viewModelScope.launch {
+            updateHomeRecommendFollowingExamRefreshLoading(true)
+            fetchRecommendFollowingExam()
+            if (forceLoading) delay(pullToRefreshMinLoadingDelay)
+            updateHomeRecommendFollowingExamRefreshLoading(false)
         }
     }
 
@@ -126,37 +148,47 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
-    /** 팔로워들의 추천 덕질고사들을 가져온다. */
-    fun fetchRecommendFollowingExam() = intent {
+    fun initFollowingExams() {
         updateHomeRecommendFollowingLoading(true)
+        fetchRecommendFollowingExam()
+        updateHomeRecommendFollowingLoading(false)
+    }
+
+    /** 팔로워들의 추천 덕질고사들을 가져온다. */
+    private fun fetchRecommendFollowingExam() = intent {
         fetchExamMeFollowingUseCase()
-            .onSuccess { exams ->
+            .cachedIn(viewModelScope)
+            .collect { exams ->
+                _followingExams.value = exams.map(Exam::toFollowingModel)
+            }
+    }
+
+    /** 팔로잉 탭의 페이징 상태를 관리합니다.  */
+    fun handleLoadRecommendFollowingState(loadStates: LoadStates) = intent {
+        val errorLoadState = arrayOf(
+            loadStates.append,
+            loadStates.prepend,
+            loadStates.refresh
+        ).filterIsInstance(LoadState.Error::class.java).firstOrNull()
+
+        val exception = errorLoadState?.error
+
+        if (exception != null) {
+            if ((exception as? DuckieResponseException)?.code == ErrorCode.FollowingNotFound) {
                 reduce {
                     state.copy(
-                        recommendFollowingExam = exams
-                            .fastMap(Exam::toFollowingModel)
-                            .toPersistentList(),
+                        isFollowingExist = false,
                     )
                 }
-            }
-            .onFailure { exception ->
-                if ((exception as? DuckieResponseException)?.code == ErrorCode.FollowingNotFound) {
-                    reduce {
-                        state.copy(
-                            isFollowingExist = false,
-                        )
-                    }
-                    return@onFailure
-                }
+            } else {
                 postSideEffect(HomeSideEffect.ReportError(exception))
-            }.also {
-                updateHomeRecommendFollowingLoading(false)
             }
+        }
     }
 
     /** 추천 팔로워들을 가져온다. */
     fun fetchRecommendFollowing() = intent {
-        updateHomeRecommendLoading(true)
+        updateHomeRecommendLoading(true) // TODO 제거 대상
         fetchUserFollowingUseCase(requireNotNull(state.me?.id))
             .onSuccess { userFollowing ->
                 reduce {
@@ -251,6 +283,17 @@ internal class HomeViewModel @Inject constructor(
             state.copy(
                 isHomeRecommendPullRefreshLoading = loading,
                 isHomeRecommendLoading = loading, // 스캘레톤 UI를 위해 업데이트
+            )
+        }
+    }
+
+    private fun updateHomeRecommendFollowingExamRefreshLoading(
+        loading: Boolean,
+    ) = intent {
+        reduce {
+            state.copy(
+                isHomeRecommendFollowingExamRefreshLoading = loading,
+                isHomeRecommendFollowingExamLoading = loading, // 스캘레톤 UI를 위해 업데이트)
             )
         }
     }

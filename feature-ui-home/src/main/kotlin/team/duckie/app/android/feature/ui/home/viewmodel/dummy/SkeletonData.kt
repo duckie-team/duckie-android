@@ -42,7 +42,7 @@ internal val skeletonRecommendationItems = listOf(
     ),
 )
 
-internal val skeletonRecommendExam = (0..2).map {
+internal val skeletonFollowingExam = (0..2).map {
     HomeState.RecommendExam(
         coverUrl = "",
         title = randomString(12),
