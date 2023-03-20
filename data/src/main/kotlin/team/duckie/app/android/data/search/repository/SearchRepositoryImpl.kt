@@ -65,7 +65,6 @@ class SearchRepositoryImpl @Inject constructor(
             config = PagingConfig(
                 pageSize = SearchUserPagingPage,
                 enablePlaceholders = true,
-                maxSize = SearchUserPagingMaxSize,
             ),
             pagingSourceFactory = {
                 SearchUserPagingSource(
@@ -88,7 +87,6 @@ class SearchRepositoryImpl @Inject constructor(
             config = PagingConfig(
                 pageSize = SearchExamPagingPage,
                 enablePlaceholders = true,
-                maxSize = SearchExamPagingMaxSize,
             ),
             pagingSourceFactory = {
                 SearchExamPagingSource(
@@ -119,7 +117,6 @@ class SearchRepositoryImpl @Inject constructor(
             config = PagingConfig(
                 pageSize = SearchTagPagingPage,
                 enablePlaceholders = true,
-                maxSize = SearchTagPagingMaxSize,
             ),
             pagingSourceFactory = {
                 SearchTagPagingSource(
@@ -147,19 +144,10 @@ class SearchRepositoryImpl @Inject constructor(
         /** 유저 검색 페이징 단위 */
         const val SearchUserPagingPage = 10
 
-        /** 유저 검색 페이징 최대 사이즈 */
-        const val SearchUserPagingMaxSize = 200
-
         /** 유저 검색 페이징 단위 */
         const val SearchExamPagingPage = 10
 
-        /** 유저 검색 페이징 최대 사이즈 */
-        const val SearchExamPagingMaxSize = 200
-
         /** 유저 검색 페이징 단위 */
         const val SearchTagPagingPage = 10
-
-        /** 유저 검색 페이징 최대 사이즈 */
-        const val SearchTagPagingMaxSize = 200
     }
 }
