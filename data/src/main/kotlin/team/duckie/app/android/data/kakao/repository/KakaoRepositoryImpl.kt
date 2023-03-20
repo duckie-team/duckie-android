@@ -26,6 +26,12 @@ private val KakaoTalkNotConnectedAccountException = DuckieThirdPartyException(
     code = ExceptionCode.KAKAOTALK_IS_INSTALLED_BUT_NOT_CONNECTED_ACCOUNT,
 )
 
+private val KakaoTalkNotSupportException = DuckieThirdPartyException(
+    code = ExceptionCode.KAKAOTALK_NOT_SUPPORT_EXCEPTION,
+)
+
+private const val KakaoNotSupportStatusCode: Int = 302
+
 // Calling startActivity() from outside of an Activity.
 // Activity Context 필요.
 class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
@@ -47,7 +53,13 @@ class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
                     when {
                         error != null -> {
                             when (error) {
-                                is AuthError -> failure(KakaoTalkNotConnectedAccountException)
+                                is AuthError -> {
+                                    if (error.statusCode == KakaoNotSupportStatusCode) {
+                                        failure(KakaoTalkNotSupportException)
+                                    } else {
+                                        failure(KakaoTalkNotConnectedAccountException)
+                                    }
+                                }
                                 else -> failure(error)
                             }
                         }
@@ -60,7 +72,7 @@ class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
         }.getOrThrow()
     }
 
-    private suspend fun loginWithWebView(): String {
+    override suspend fun loginWithWebView(): String {
         return suspendCancellableCoroutine { continuation ->
             UserApiClient.instance.loginWithKakaoAccount(activity) { token, error ->
                 continuation.resume(
