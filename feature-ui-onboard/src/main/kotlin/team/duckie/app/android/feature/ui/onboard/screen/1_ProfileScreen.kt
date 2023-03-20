@@ -150,7 +150,7 @@ private val ProfileScreenMeasurePolicy = MeasurePolicy { measurables, constraint
 }
 
 private const val MaxNicknameLength = 10
-private val NicknameInputDebounceSecond = 0.3.seconds
+private val NicknameInputDebounceSecond = (0.35).seconds
 
 @Composable
 internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {

@@ -43,7 +43,10 @@ import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchState
+import team.duckie.app.android.util.kotlin.seconds
 import javax.inject.Inject
+
+private val SearchDebounceSecond: Long = (1.5).seconds
 
 @HiltViewModel
 internal class SearchViewModel @Inject constructor(
@@ -58,8 +61,6 @@ internal class SearchViewModel @Inject constructor(
 ) : ContainerHost<SearchState, SearchSideEffect>, ViewModel() {
 
     override val container = container<SearchState, SearchSideEffect>(SearchState())
-
-    private val searchDebounce: Long = 500L
 
     private val _searchExams = MutableStateFlow<PagingData<Exam>>(PagingData.empty())
     val searchExams: Flow<PagingData<Exam>> = _searchExams
@@ -91,7 +92,7 @@ internal class SearchViewModel @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     ).apply {
         intent {
-            this@apply.debounce(searchDebounce).collectLatest { query ->
+            this@apply.debounce(SearchDebounceSecond).collectLatest { query ->
                 refreshSearchStep(keyword = state.searchKeyword)
                 // TODO(limsaehyun): 추후 추천 검색어 비즈니스 로직을 이곳에서 작업해야 함
             }
