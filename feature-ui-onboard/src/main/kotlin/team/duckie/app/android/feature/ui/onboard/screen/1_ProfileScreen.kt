@@ -70,6 +70,7 @@ import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.app.android.util.kotlin.seconds
+import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackErrorableTextField
@@ -150,7 +151,6 @@ private val ProfileScreenMeasurePolicy = MeasurePolicy { measurables, constraint
 }
 
 private const val MaxNicknameLength = 10
-private val NicknameInputDebounceSecond = (0.35).seconds
 
 @Composable
 internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
@@ -161,15 +161,16 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     val coroutineScope = rememberCoroutineScope()
 
     @Suppress("RemoveExplicitTypeArguments")
-    val galleryImages = remember<ImmutableList<String>>(vm.isImagePermissionGranted, vm.galleryImages) {
-        if (vm.isImagePermissionGranted == true) {
-            vm.galleryImages.runIf(vm.isCameraPermissionGranted) {
-                toPersistentList().add(0, PhotoPickerConstants.Camera)
+    val galleryImages =
+        remember<ImmutableList<String>>(vm.isImagePermissionGranted, vm.galleryImages) {
+            if (vm.isImagePermissionGranted == true) {
+                vm.galleryImages.runIf(vm.isCameraPermissionGranted) {
+                    toPersistentList().add(0, PhotoPickerConstants.Camera)
+                }
+            } else {
+                persistentListOf()
             }
-        } else {
-            persistentListOf()
         }
-    }
 
     var photoPickerVisible by remember { mutableStateOf(false) }
     var profilePhoto by remember { mutableStateOf<Any>(vm.profileImageUrl) }
@@ -210,7 +211,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
         val nicknameInputFlow = snapshotFlow { nickname }
         nicknameInputFlow
             .onEach { vm.readyToScreenCheck(currentStep) }
-            .debounce(NicknameInputDebounceSecond)
+            .debounce(Debounce.SearchSecond)
             .filterNot(String::isEmpty)
             .collect { nickname ->
                 vm.checkNickname(nickname)
@@ -259,7 +260,9 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                             profilePhotoSelections[lastSelectionIndex] = false
                         }
                     },
-                    openPhotoPicker = { photoPickerVisible = true }.takeIf { vm.isImagePermissionGranted == true },
+                    openPhotoPicker = {
+                        photoPickerVisible = true
+                    }.takeIf { vm.isImagePermissionGranted == true },
                 )
                 // TODO(sungbin): https://github.com/duckie-team/quack-quack-android/issues/438
                 QuackErrorableTextField(
@@ -338,7 +341,8 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                 },
                 onAddClick = {
                     profilePhotoLastSelectionIndex?.let { selectedIndex ->
-                        profilePhoto = galleryImages[selectedIndex].toUri().also(vm::updateUserProfileImageFile)
+                        profilePhoto = galleryImages[selectedIndex].toUri()
+                            .also(vm::updateUserProfileImageFile)
                     }
                     photoPickerVisible = false
                 },

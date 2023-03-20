@@ -67,15 +67,13 @@ import team.duckie.app.android.util.kotlin.exception.duckieClientLogicProblemExc
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.exception.isTagAlreadyExist
 import team.duckie.app.android.util.kotlin.fastMapIndexed
-import team.duckie.app.android.util.kotlin.seconds
+import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
 private const val TagsMaximumCount = 10
 private const val MinimumProblem = 5
 private const val MaximumProblem = 10
-
-private val SearchDebounceSecond = (0.35).seconds
 
 @HiltViewModel
 @Suppress("LargeClass")
@@ -171,7 +169,7 @@ internal class CreateProblemViewModel @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     ).apply {
         viewModelScope.launch {
-            this@apply.debounce(SearchDebounceSecond).collectLatest { query ->
+            this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
                 intent {
                     getSearchUseCase(query = query, page = 1, type = Search.Tags)
                         .onSuccess {

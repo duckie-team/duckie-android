@@ -43,10 +43,8 @@ import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchState
-import team.duckie.app.android.util.kotlin.seconds
+import team.duckie.app.android.util.ui.const.Debounce
 import javax.inject.Inject
-
-private val SearchDebounceSecond: Long = (0.5).seconds
 
 @HiltViewModel
 internal class SearchViewModel @Inject constructor(
@@ -92,7 +90,7 @@ internal class SearchViewModel @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     ).apply {
         intent {
-            this@apply.debounce(SearchDebounceSecond).collectLatest { query ->
+            this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
                 refreshSearchStep(keyword = state.searchKeyword)
                 // TODO(limsaehyun): 추후 추천 검색어 비즈니스 로직을 이곳에서 작업해야 함
             }
