@@ -7,6 +7,9 @@
 
 package team.duckie.app.android.data.exam.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.github.kittinunf.fuel.Fuel
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -14,6 +17,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
@@ -25,6 +29,7 @@ import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
+import team.duckie.app.android.data.exam.paging.ExamMeFollowingPagingSource
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInfo
@@ -67,12 +72,28 @@ class ExamRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getExamMeFollowing(): Flow<PagingData<Exam>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = ExamMePagingPage,
+                enablePlaceholders = true,
+            ),
+            pagingSourceFactory = {
+                ExamMeFollowingPagingSource(
+                    getExamMeFollowing = { page ->
+                        getExamMeFollowing(page)
+                    }
+                )
+            }
+        ).flow
+    }
+
     @AllowMagicNumber
-    override suspend fun getExamMeFollowing(page: Int?): List<Exam> = withContext(Dispatchers.IO) {
+    private suspend fun getExamMeFollowing(page: Int): List<Exam> = withContext(Dispatchers.IO) {
         val (_, response) = fuel
             .get(
                 "/exams/me/following",
-                page?.let { listOf("page" to page) },
+                listOf("page" to page),
             )
             .responseString()
 
@@ -98,5 +119,9 @@ class ExamRepositoryImpl @Inject constructor(
 
     override suspend fun getFavoriteExams(): List<ExamInfo> {
         return examInfoDataSource.getFavoriteExams().map(ExamInfoEntity::toDomain)
+    }
+
+    internal companion object {
+        const val ExamMePagingPage = 10
     }
 }
