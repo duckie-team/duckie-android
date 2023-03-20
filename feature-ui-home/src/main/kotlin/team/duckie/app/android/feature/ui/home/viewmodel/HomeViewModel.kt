@@ -46,8 +46,8 @@ import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
-import team.duckie.app.android.util.exception.handling.const.ErrorCode
-import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
+import team.duckie.app.android.util.kotlin.exception.isFollowingAlreadyExists
+import team.duckie.app.android.util.kotlin.exception.isFollowingNotFound
 import team.duckie.app.android.util.kotlin.fastMap
 import javax.inject.Inject
 
@@ -174,7 +174,7 @@ internal class HomeViewModel @Inject constructor(
         val exception = errorLoadState?.error
 
         if (exception != null) {
-            if ((exception as? DuckieResponseException)?.code == ErrorCode.FollowingNotFound) {
+            if (exception.isFollowingNotFound) {
                 reduce {
                     state.copy(
                         isFollowingExist = false,
@@ -199,7 +199,7 @@ internal class HomeViewModel @Inject constructor(
                     )
                 }
             }.onFailure { exception ->
-                if ((exception as? DuckieResponseException)?.code == ErrorCode.FollowingAlreadyExists) {
+                if (exception.isFollowingAlreadyExists) {
                     reduce {
                         state.copy(
                             isFollowingExist = true,
