@@ -75,11 +75,6 @@ internal fun ExamSection(
     }
     val examRankings = viewModel.examRankings.collectAsLazyPagingItems()
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchPopularTags()
-        viewModel.getExams()
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()

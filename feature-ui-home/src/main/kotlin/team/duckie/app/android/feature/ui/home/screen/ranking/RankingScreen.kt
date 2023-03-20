@@ -66,6 +66,12 @@ internal fun RankingScreen(
     }
 
     LaunchedEffect(Unit) {
+        viewModel.fetchPopularTags()
+        viewModel.getExams()
+        viewModel.getUserRankings()
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is RankingSideEffect.ReportError -> {

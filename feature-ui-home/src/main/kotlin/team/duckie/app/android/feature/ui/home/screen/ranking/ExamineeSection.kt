@@ -51,10 +51,6 @@ internal fun ExamineeSection(
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val examinees = viewModel.userRankings.collectAsLazyPagingItems()
 
-    LaunchedEffect(Unit) {
-        viewModel.getUserRankings()
-    }
-
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         state = lazyListState,
