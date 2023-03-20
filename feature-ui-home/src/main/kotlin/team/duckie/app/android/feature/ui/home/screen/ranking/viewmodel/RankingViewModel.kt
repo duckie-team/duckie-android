@@ -5,13 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 package team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -39,7 +32,8 @@ import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonRank
 import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
 import team.duckie.app.android.feature.ui.home.screen.ranking.state.ExamRankingOrder
 import team.duckie.app.android.feature.ui.home.screen.ranking.state.RankingState
-import team.duckie.app.android.util.kotlin.copy
+import team.duckie.app.android.feature.ui.home.screen.ranking.state.addAllSelection
+import team.duckie.app.android.feature.ui.home.screen.ranking.state.addAllTag
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 import javax.inject.Inject
@@ -123,10 +117,8 @@ internal class RankingViewModel @Inject constructor(
             .onSuccess { tags ->
                 reduce {
                     state.copy(
-                        examTags = tags,
-                        tagSelections = tags.fastMap { false }
-                            .copy { add(0, true) }
-                            .toImmutableList(),
+                        examTags = tags.addAllTag(),
+                        tagSelections = tags.fastMap { false }.toImmutableList().addAllSelection(),
                     )
                 }
                 updateTagLoading(false)

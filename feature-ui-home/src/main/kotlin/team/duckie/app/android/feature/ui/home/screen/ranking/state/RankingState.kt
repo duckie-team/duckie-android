@@ -35,3 +35,6 @@ internal enum class ExamRankingOrder(val index: Int) {
         fun from(value: Int) = ExamRankingOrder.values().first { it.index == value }
     }
 }
+
+internal fun ImmutableList<Tag>.addAllTag() = this.copy { add(0, Tag(-1, "전체")) }
+internal fun ImmutableList<Boolean>.addAllSelection() = this.copy { add(0, true) }

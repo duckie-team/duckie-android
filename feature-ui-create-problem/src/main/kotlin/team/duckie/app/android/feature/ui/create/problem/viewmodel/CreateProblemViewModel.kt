@@ -67,6 +67,7 @@ import team.duckie.app.android.util.kotlin.exception.duckieClientLogicProblemExc
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.exception.isTagAlreadyExist
 import team.duckie.app.android.util.kotlin.fastMapIndexed
+import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -168,7 +169,7 @@ internal class CreateProblemViewModel @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     ).apply {
         viewModelScope.launch {
-            this@apply.debounce(1500L).collectLatest { query ->
+            this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
                 intent {
                     getSearchUseCase(query = query, page = 1, type = Search.Tags)
                         .onSuccess {
