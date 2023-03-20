@@ -93,6 +93,7 @@ internal fun SearchResultScreen(
                         isFollowing = follow,
                     )
                 },
+                myUserId = state.me?.id ?: 1,
             )
         }
         Spacer(space = 48.dp)
@@ -103,6 +104,7 @@ internal fun SearchResultScreen(
 private fun SearchResultForUser(
     searchUsers: LazyPagingItems<SearchState.SearchUser>,
     onClickFollow: (Int, Boolean) -> Unit,
+    myUserId: Int,
 ) {
     if (searchUsers.itemCount == 0) {
         Column(
@@ -136,6 +138,7 @@ private fun SearchResultForUser(
                     onClickFollow = { follow ->
                         onClickFollow(item?.userId ?: 0, follow)
                     },
+                    isMine = myUserId == item?.userId,
                 )
             }
         }
