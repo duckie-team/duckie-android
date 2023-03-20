@@ -69,7 +69,6 @@ import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.kotlin.runIf
-import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
