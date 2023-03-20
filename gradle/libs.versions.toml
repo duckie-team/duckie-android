@@ -51,6 +51,7 @@ androidx-annotation = "1.5.0"
 # compose
 compose-core = "1.3.1"
 compose-foundation = "1.4.0-alpha03" # use alpha for HorizontalPager
+compose-material = "1.4.0-alpha03"
 compose-runtime = "1.4.0-rc01" # use alpha for SnapshotStateList#toList
 compose-lifecycle = "2.6.0-alpha03" # use alpha for StateFlow#collectAsStateWithLifecycle
 compose-compiler = "1.4.3"
@@ -178,7 +179,7 @@ compose-ui-coil = { module = "io.coil-kt:coil-compose", version.ref = "compose-c
 compose-ui-coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "compose-coil" }
 compose-ui-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose-foundation" }
 compose-ui-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity" }
-compose-ui-material = { module = "androidx.compose.material:material", version.ref = "compose-core" }
+compose-ui-material = { module = "androidx.compose.material:material", version.ref = "compose-material" }
 compose-ui-lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "compose-lottie" }
 compose-ui-camposer = { module = "io.github.ujizin:camposer", version.ref = "compose-camposer" }
 compose-ui-accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "compose-accompanist" }
