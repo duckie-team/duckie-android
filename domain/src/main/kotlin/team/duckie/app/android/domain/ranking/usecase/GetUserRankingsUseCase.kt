@@ -15,5 +15,5 @@ import javax.inject.Inject
 class GetUserRankingsUseCase @Inject constructor(
     private val repository: RankingRepository,
 ) {
-    operator fun invoke() = repository.getUserRankings()
+    suspend operator fun invoke() = repository.getUserRankings()
 }

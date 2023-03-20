@@ -13,5 +13,5 @@ import javax.inject.Inject
 class GetExamRankingsBySolvedCount @Inject constructor(
     private val repository: RankingRepository,
 ) {
-    operator fun invoke(tagId: Int?) = repository.getExamRankingsBySolvedCount(tagId)
+    suspend operator fun invoke(tagId: Int?) = repository.getExamRankingsBySolvedCount(tagId)
 }
