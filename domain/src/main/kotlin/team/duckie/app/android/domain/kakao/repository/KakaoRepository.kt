@@ -12,4 +12,6 @@ import androidx.compose.runtime.Immutable
 @Immutable
 interface KakaoRepository {
     suspend fun getAccessToken(): String
+
+    suspend fun loginWithWebView(): String
 }

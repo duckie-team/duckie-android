@@ -27,6 +27,9 @@ object ExceptionCode {
     // Third party
     const val KAKAOTALK_IS_INSTALLED_BUT_NOT_CONNECTED_ACCOUNT =
         "KAKAO_TALK_INSTALLED_BUT_NOT_CONNECTED_ACCOUNT"
+
+    const val KAKAOTALK_NOT_SUPPORT_EXCEPTION =
+        "KAKAOTALK_NOT_SUPPORT_EXCEPTION"
 }
 
 val Throwable.isTagAlreadyExist: Boolean
@@ -48,3 +51,6 @@ val Throwable.isLoginRequireCode: Boolean
 
 val Throwable.isKakaoTalkNotConnectedAccount: Boolean
     get() = (this as? DuckieThirdPartyException)?.code == ExceptionCode.KAKAOTALK_IS_INSTALLED_BUT_NOT_CONNECTED_ACCOUNT
+
+val Throwable.isKakaoTalkNotSupportAccount: Boolean
+    get() = (this as? DuckieThirdPartyException)?.code == ExceptionCode.KAKAOTALK_NOT_SUPPORT_EXCEPTION
