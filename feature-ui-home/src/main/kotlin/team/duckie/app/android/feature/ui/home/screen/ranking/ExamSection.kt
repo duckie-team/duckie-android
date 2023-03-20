@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -40,7 +39,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCoverForColumn
@@ -49,7 +47,6 @@ import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.itemsPagingKey
-import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
@@ -65,7 +62,7 @@ internal fun ExamSection(
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val tagNames = remember(state.examTags) {
-        state.examTags.fastMap { it.name }.copy { add(0, context.getString(R.string.total)) }
+        state.examTags.fastMap { it.name }
     }
     val textTabs = remember {
         persistentListOf(
@@ -74,11 +71,6 @@ internal fun ExamSection(
         )
     }
     val examRankings = viewModel.examRankings.collectAsLazyPagingItems()
-
-    LaunchedEffect(Unit) {
-        viewModel.fetchPopularTags()
-        viewModel.getExams()
-    }
 
     Column(
         modifier = Modifier
@@ -92,7 +84,7 @@ internal fun ExamSection(
                 .fillMaxWidth()
                 .skeleton(state.isTagLoading),
             items = tagNames,
-            itemSelections = state.tagSelections.toImmutableList(),
+            itemSelections = state.tagSelections,
             tagType = QuackTagType.Circle(),
             onClick = viewModel::changeSelectedTags,
         )

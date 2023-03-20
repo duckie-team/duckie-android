@@ -16,9 +16,9 @@ import team.duckie.app.android.domain.user.model.User
 @Immutable
 interface RankingRepository {
 
-    fun getUserRankings(): Flow<PagingData<User>>
+    suspend fun getUserRankings(): Flow<PagingData<User>>
 
-    fun getExamRankingsBySolvedCount(tagId: Int?): Flow<PagingData<Exam>>
+    suspend fun getExamRankingsBySolvedCount(tagId: Int?): Flow<PagingData<Exam>>
 
-    fun getExamRankingsByAnswerRate(tagId: Int?): Flow<PagingData<Exam>>
+    suspend fun getExamRankingsByAnswerRate(tagId: Int?): Flow<PagingData<Exam>>
 }
