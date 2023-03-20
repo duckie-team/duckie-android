@@ -168,7 +168,7 @@ internal class HomeViewModel @Inject constructor(
         val errorLoadState = arrayOf(
             loadStates.append,
             loadStates.prepend,
-            loadStates.refresh
+            loadStates.refresh,
         ).filterIsInstance(LoadState.Error::class.java).firstOrNull()
 
         val exception = errorLoadState?.error
@@ -188,7 +188,6 @@ internal class HomeViewModel @Inject constructor(
 
     /** 추천 팔로워들을 가져온다. */
     fun fetchRecommendFollowing() = intent {
-        updateHomeRecommendLoading(true) // TODO 제거 대상
         fetchUserFollowingUseCase(requireNotNull(state.me?.id))
             .onSuccess { userFollowing ->
                 reduce {
@@ -208,8 +207,6 @@ internal class HomeViewModel @Inject constructor(
                     return@onFailure
                 }
                 postSideEffect(HomeSideEffect.ReportError(exception))
-            }.also {
-                updateHomeRecommendLoading(false)
             }
     }
 

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun <T : Any> Flow<PagingData<T>>.collectAndHandleState(
-    handleLoadStates: (LoadStates) -> Unit
+    handleLoadStates: (LoadStates) -> Unit,
 ): LazyPagingItems<T> {
     val lazyPagingItem = collectAsLazyPagingItems()
 

@@ -101,8 +101,6 @@ internal class SearchViewModel @Inject constructor(
     /** 최근 검색어를 생성한다. */
     private fun postRecentSearch(keyword: String) = intent {
         postRecentSearchUseCase(keyword)
-            .onSuccess {
-            }
             .onFailure { exception ->
                 postSideEffect(SearchSideEffect.ReportError(exception))
             }

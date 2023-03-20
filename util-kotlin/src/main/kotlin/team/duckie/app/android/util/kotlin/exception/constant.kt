@@ -19,7 +19,6 @@ object ExceptionCode {
     // 409
     const val TAG_ALREADY_EXISTS = "TAG_ALREADY_EXISTS"
 
-
     // 팔로잉이 존재하지 않을 때 발생하는 Error
     const val FollowingNotFound = "FOLLOWING_NOT_FOUND"
 

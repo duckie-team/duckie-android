@@ -82,9 +82,9 @@ class ExamRepositoryImpl @Inject constructor(
                 ExamMeFollowingPagingSource(
                     getExamMeFollowing = { page ->
                         getExamMeFollowing(page)
-                    }
+                    },
                 )
-            }
+            },
         ).flow
     }
 
