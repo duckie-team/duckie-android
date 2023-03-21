@@ -84,6 +84,6 @@ class RecommendationRepositoryImpl @Inject constructor(
         }
 
     internal companion object {
-        const val RecommendationsPagingPage = 16
+        const val RecommendationsPagingPage = 3
     }
 }
