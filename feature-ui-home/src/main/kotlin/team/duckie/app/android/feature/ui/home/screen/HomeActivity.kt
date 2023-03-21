@@ -42,6 +42,7 @@ import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
+import team.duckie.app.android.feature.ui.setting.screen.SettingActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
@@ -135,6 +136,9 @@ class HomeActivity : BaseActivity() {
                                     navigateToMyPage = {
                                         notificationNavigator.navigateFrom(activity = this)
                                     },
+                                    navigateToSettingPage = {
+                                        homeViewModel.navigateToSetting()
+                                    }
                                 )
                             }
                         }
@@ -227,6 +231,10 @@ class HomeActivity : BaseActivity() {
 
             is HomeSideEffect.NavigateToCreateProblem -> {
                 createProblemNavigator.navigateFrom(activity = this)
+            }
+
+            is HomeSideEffect.NavigateToSetting -> {
+                startActivityWithAnimation<SettingActivity>()
             }
 
             HomeSideEffect.ClickRankingRetry -> {
