@@ -32,7 +32,7 @@ fun QuackMaxWidthDivider() {
                 val placeable = measurable.measure(
                     constraints.copy(
                         maxWidth = screenWidthPx.dp.roundToPx(),
-                    )
+                    ),
                 )
                 layout(placeable.width, placeable.height) {
                     placeable.place(0, 0)

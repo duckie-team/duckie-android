@@ -10,7 +10,6 @@
 import AppVersionNameProvider.App.VersionName
 import DependencyHandler.Extensions.androidTestImplementations
 import DependencyHandler.Extensions.implementations
-import DependencyHandler.Extensions.ksps
 import DependencyHandler.Extensions.testImplementations
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
