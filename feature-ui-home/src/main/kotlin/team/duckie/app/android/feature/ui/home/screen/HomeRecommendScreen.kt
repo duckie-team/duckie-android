@@ -244,7 +244,7 @@ private fun HomeTopicRecommendLayout(
                 tag.addHashTag() to { onTagClicked(tag) },
             ),
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(
