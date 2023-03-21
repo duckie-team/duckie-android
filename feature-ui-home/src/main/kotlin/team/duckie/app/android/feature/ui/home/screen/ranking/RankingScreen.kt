@@ -7,7 +7,6 @@
 
 @file:OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalLifecycleComposeApi::class,
 )
 
 package team.duckie.app.android.feature.ui.home.screen.ranking
@@ -27,7 +26,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
