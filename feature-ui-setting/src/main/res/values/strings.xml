@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
+<resources>
+    <string name="app_setting">앱 설정</string>
+
+    <string name="account_info">계정 정보</string>
+    <string name="notification">알림</string>
+    <string name="inquiry">문의</string>
+    <string name="terms_and_policies">약관 및 정책</string>
+    <string name="version_info">버전 정보</string>
+</resources>

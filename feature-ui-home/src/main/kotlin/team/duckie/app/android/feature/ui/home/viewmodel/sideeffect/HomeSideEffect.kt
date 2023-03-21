@@ -27,7 +27,6 @@ internal sealed class HomeSideEffect {
      */
     class NavigateToHomeDetail(val examId: Int) : HomeSideEffect()
 
-
     /**
      * [SettingActivity] 로 이동하는 SideEffect 입니다.
      */

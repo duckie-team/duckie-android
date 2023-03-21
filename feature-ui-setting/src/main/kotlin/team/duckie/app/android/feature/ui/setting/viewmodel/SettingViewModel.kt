@@ -15,16 +15,21 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
+import team.duckie.app.android.feature.ui.setting.constans.SettingType
 import team.duckie.app.android.feature.ui.setting.viewmodel.sideeffect.SettingSideEffect
 import team.duckie.app.android.feature.ui.setting.viewmodel.state.SettingState
 import javax.inject.Inject
 
 @HiltViewModel
-internal class SettingViewModel @Inject constructor(
+class SettingViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
 ) : ContainerHost<SettingState, SettingSideEffect>, ViewModel() {
 
     override val container = container<SettingState, SettingSideEffect>(SettingState())
+
+    init {
+        initState()
+    }
 
     /** [SettingViewModel]의 초기 상태를 설정한다. */
     private fun initState() = intent {
@@ -35,5 +40,20 @@ internal class SettingViewModel @Inject constructor(
             .onFailure {
                 postSideEffect(SettingSideEffect.ReportError(it))
             }
+    }
+
+    fun navigateBack() = intent {
+        when (state.settingType) {
+            SettingType.Main -> {
+                postSideEffect(SettingSideEffect.NavigateBack)
+            }
+            else -> {
+                navigateStep(step = SettingType.Main)
+            }
+        }
+    }
+
+    fun navigateStep(step: SettingType) = intent {
+        reduce { state.copy(settingType = step) }
     }
 }

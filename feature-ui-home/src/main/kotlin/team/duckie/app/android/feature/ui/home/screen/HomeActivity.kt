@@ -138,7 +138,7 @@ class HomeActivity : BaseActivity() {
                                     },
                                     navigateToSettingPage = {
                                         homeViewModel.navigateToSetting()
-                                    }
+                                    },
                                 )
                             }
                         }
