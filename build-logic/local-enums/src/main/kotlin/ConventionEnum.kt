@@ -24,6 +24,7 @@ class ConventionEnum : Plugin<Project> {
         const val AndroidLibraryComposeUiTest = "$prefix.android.library.compose.uitest"
 
         const val AndroidHilt = "$prefix.android.hilt"
+        const val AndroidRoom = "$prefix.android.room"
 
         const val JvmLibrary = "$prefix.jvm.library"
         const val JvmJUnit4 = "$prefix.jvm.junit4"

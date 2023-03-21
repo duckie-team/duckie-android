@@ -19,6 +19,7 @@ plugins {
     id(ConventionEnum.JvmJUnit4)
     id(ConventionEnum.AndroidHilt)
     id(ConventionEnum.AppVersionNameProvider)
+    id(ConventionEnum.AndroidRoom)
     id(libs.plugins.kotlin.ksp.get().pluginId)
 }
 
@@ -49,14 +50,10 @@ dependencies {
         libs.bundles.fuel,
         libs.bundles.moshi,
         libs.bundles.ktor.client,
-        libs.androidx.room.core,
         projects.domain,
         projects.utilKotlin,
         projects.pluginKtorClient,
         projects.featureDatastore,
-    )
-    ksps(
-        libs.androidx.room.compiler,
     )
     testImplementations(
         libs.test.coroutines,
