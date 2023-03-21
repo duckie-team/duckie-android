@@ -81,6 +81,7 @@ internal fun HomeRecommendFollowingScreen(
         ) { categories ->
             HomeFollowingInitialRecommendUsers(
                 modifier = Modifier.padding(bottom = 16.dp),
+                myUserId = state.me?.id ?: 0,
                 topic = categories.topic,
                 recommendUser = categories.users,
                 onClickFollowing = { userId, isFollowing ->
@@ -95,6 +96,7 @@ internal fun HomeRecommendFollowingScreen(
 private fun HomeFollowingInitialRecommendUsers(
     modifier: Modifier = Modifier,
     topic: String,
+    myUserId: Int,
     recommendUser: ImmutableList<HomeState.RecommendUserByTopic.User>,
     onClickFollowing: (Int, Boolean) -> Unit,
 ) {
@@ -112,6 +114,7 @@ private fun HomeFollowingInitialRecommendUsers(
         recommendUser.fastForEach { user ->
             UserFollowingLayout(
                 userId = user.userId,
+                isMine = myUserId == user.userId,
                 profileImgUrl = user.profileImgUrl,
                 nickname = user.nickname,
                 favoriteTag = user.favoriteTag,
