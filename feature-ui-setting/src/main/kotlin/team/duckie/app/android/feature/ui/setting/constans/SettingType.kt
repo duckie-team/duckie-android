@@ -51,9 +51,6 @@ enum class SettingType(
     PrivacyPolicy(
         titleRes = R.string.privacy_policy,
     ),
-    OpenSourceLicense(
-        titleRes = R.string.open_source_license,
-    ),
     ;
 
     companion object {
@@ -61,7 +58,6 @@ enum class SettingType(
         val policyPages = persistentListOf(
             TermsOfService,
             PrivacyPolicy,
-            OpenSourceLicense,
         )
 
         /** 메인 설정 페이지에 표시될 설정 */

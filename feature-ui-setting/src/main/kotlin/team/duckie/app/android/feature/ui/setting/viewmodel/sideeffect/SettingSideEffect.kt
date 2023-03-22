@@ -17,4 +17,6 @@ sealed class SettingSideEffect {
     class ReportError(val exception: Throwable) : SettingSideEffect()
 
     object NavigateBack : SettingSideEffect()
+
+    object NavigateOssLicense : SettingSideEffect()
 }

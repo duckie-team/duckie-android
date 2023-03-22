@@ -65,7 +65,17 @@ class SettingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 설정 페이지를 업데이트 합니다.
+     */
     fun navigateStep(step: SettingType) = intent {
         reduce { state.copy(settingType = step) }
+    }
+
+    /**
+     * 오픈소스 라이센스 페이지로 이동합니다.
+     */
+    fun navigateOssLicense() = intent {
+        postSideEffect(SettingSideEffect.NavigateOssLicense)
     }
 }

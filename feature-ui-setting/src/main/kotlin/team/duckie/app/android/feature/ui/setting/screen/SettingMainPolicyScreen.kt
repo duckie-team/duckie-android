@@ -16,13 +16,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.ui.setting.component.SettingContentLayout
 import team.duckie.app.android.feature.ui.setting.constans.SettingType
+import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.shared.ui.compose.Spacer
 
 @Composable
 fun SettingMainPolicyScreen(
     navigatePage: (SettingType) -> Unit,
+    navigateOssLicense: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -39,18 +42,26 @@ fun SettingMainPolicyScreen(
                     navigatePage(page)
                 }
             }
+            item {
+                SettingContentLayout(
+                    title = stringResource(
+                        id = R.string.open_source_license,
+                    ),
+                    isBold = false,
+                ) {
+                    navigateOssLicense()
+                }
+            }
         }
     }
 }
 
 @Composable
 fun SettingTermsOfServiceScreen() {
+    DuckieTodoScreen() // TODO(limsaehyun) : 이용약관 작업 필요
 }
 
 @Composable
 fun SettingPrivacyPolicy() {
-}
-
-@Composable
-fun SettingOpenSourceLicenseScreen() {
+    DuckieTodoScreen() // TODO(limsaehyun): 개인정보 처리 방침 작업 필요
 }

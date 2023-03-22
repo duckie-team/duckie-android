@@ -32,5 +32,7 @@ dependencies {
         libs.quack.ui.components,
         libs.compose.lifecycle.runtime,
         libs.firebase.crashlytics,
+        libs.ui.oss.license,
+        libs.androidx.appcompat,
     )
 }

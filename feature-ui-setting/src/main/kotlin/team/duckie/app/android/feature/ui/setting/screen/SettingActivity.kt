@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +34,7 @@ import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimationSpec
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackTopAppBar
@@ -106,11 +108,13 @@ class SettingActivity : BaseActivity() {
                                     navigatePage = {
                                         vm.navigateStep(it)
                                     },
+                                    navigateOssLicense = {
+                                        vm.navigateOssLicense()
+                                    },
                                 )
                                 SettingType.Version -> DuckieTodoScreen()
                                 SettingType.PrivacyPolicy -> SettingPrivacyPolicy()
                                 SettingType.TermsOfService -> SettingTermsOfServiceScreen()
-                                SettingType.OpenSourceLicense -> SettingOpenSourceLicenseScreen()
                             }
                         }
                     }
@@ -124,9 +128,11 @@ class SettingActivity : BaseActivity() {
             is SettingSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
-
             is SettingSideEffect.NavigateBack -> {
                 finishWithAnimation()
+            }
+            is SettingSideEffect.NavigateOssLicense -> {
+                startActivityWithAnimation<OssLicensesMenuActivity>()
             }
         }
     }
