@@ -22,8 +22,8 @@ import team.duckie.app.android.data.tag.model.SearchEntity
         ExamInfoEntity::class,
         SearchEntity::class,
     ],
-    version = 1,
-    exportSchema = false,
+    version = 2,
+    exportSchema = true,
 )
 abstract class DuckieDatabase : RoomDatabase() {
     abstract fun favoriteExamsDao(): FavoriteExamsDao
