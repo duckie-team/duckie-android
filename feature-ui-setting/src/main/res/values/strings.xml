@@ -13,4 +13,12 @@
     <string name="inquiry">문의</string>
     <string name="terms_and_policies">약관 및 정책</string>
     <string name="version_info">버전 정보</string>
+
+    <string name="log_out">로그아웃</string>
+    <string name="withdraw">탈퇴하기</string>
+
+    <string name="sign_in_account">로그인 계정</string>
+    <string name="email">이메일</string>
+    <string name="contact_inquiry">문의처</string>
+    <string name="instagram">인스타그램</string>
 </resources>

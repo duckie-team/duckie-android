@@ -33,6 +33,7 @@ import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.quackquack.ui.animation.QuackAnimationSpec
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -79,16 +80,26 @@ class SettingActivity : BaseActivity() {
                                 horizontal = 16.dp,
                             ),
                     ) {
-                        Crossfade(targetState = state.settingType) { step ->
+                        Crossfade(
+                            targetState = state.settingType,
+                            animationSpec = QuackAnimationSpec(),
+                        ) { step ->
                             when (step) {
                                 SettingType.Main -> SettingMainScreen(
                                     vm = vm,
                                     version = "1.0.0-MVP", // TODO(limsaehyun): 버전 코드 가져오기
                                 )
-
-                                SettingType.AccountInfo -> AccountInfoScreen(state = state)
+                                SettingType.AccountInfo -> SettingAccountInfoScreen(
+                                    email = "sh007100@naver.com", // TODO(limsaehyun) : 이메일 가져오기 & Auth 정보 넘겨주기
+                                    onClickLogOut = {
+                                        vm.logout()
+                                    },
+                                    onClickWithdraw = {
+                                        vm.withdraw()
+                                    }
+                                )
                                 SettingType.Notification -> DuckieTodoScreen()
-                                SettingType.Inquiry -> DuckieTodoScreen()
+                                SettingType.Inquiry -> SettingInquiryScreen()
                                 SettingType.TermsAndPolicies -> DuckieTodoScreen()
                                 SettingType.Version -> DuckieTodoScreen()
                             }
