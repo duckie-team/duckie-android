@@ -29,11 +29,6 @@ import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import javax.inject.Inject
 
-/**
- * [fetchRecommendatiins] 에서 사용되는 paging 단위
- */
-internal const val ITEMS_PER_PAGE = 16
-
 class RecommendationRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
 ) : RecommendationRepository {
@@ -42,9 +37,8 @@ class RecommendationRepositoryImpl @Inject constructor(
     override fun fetchRecommendations(): Flow<PagingData<RecommendationItem>> {
         return Pager(
             config = PagingConfig(
-                pageSize = ITEMS_PER_PAGE,
+                pageSize = RecommendationsPagingPage,
                 enablePlaceholders = true,
-                maxSize = 200,
             ),
             pagingSourceFactory = {
                 RecommendationPagingSource(
@@ -88,4 +82,8 @@ class RecommendationRepositoryImpl @Inject constructor(
             // 예외적으로 page가 1일 경우에는 jumbotrons이 누락되면 안된다.
             return@withContext apiResponse.jumbotrons ?: duckieResponseFieldNpe("jumbotron")
         }
+
+    internal companion object {
+        const val RecommendationsPagingPage = 3
+    }
 }

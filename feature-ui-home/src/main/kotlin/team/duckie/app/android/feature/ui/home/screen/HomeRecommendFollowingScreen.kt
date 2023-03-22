@@ -29,11 +29,11 @@ import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.shared.ui.compose.QuackMaxWidthDivider
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.fastForEach
-import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackHeadLine2
+import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTitle2
 
 @Composable
@@ -66,10 +66,10 @@ internal fun HomeRecommendFollowingScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(164.dp),
+                    .height(213.dp),
                 contentAlignment = Alignment.Center,
             ) {
-                QuackHeadLine2(
+                QuackSubtitle(
                     text = stringResource(id = R.string.home_following_initial_title),
                     align = TextAlign.Center,
                 )
@@ -81,6 +81,7 @@ internal fun HomeRecommendFollowingScreen(
         ) { categories ->
             HomeFollowingInitialRecommendUsers(
                 modifier = Modifier.padding(bottom = 16.dp),
+                myUserId = state.me?.id ?: 0,
                 topic = categories.topic,
                 recommendUser = categories.users,
                 onClickFollowing = { userId, isFollowing ->
@@ -95,13 +96,14 @@ internal fun HomeRecommendFollowingScreen(
 private fun HomeFollowingInitialRecommendUsers(
     modifier: Modifier = Modifier,
     topic: String,
+    myUserId: Int,
     recommendUser: ImmutableList<HomeState.RecommendUserByTopic.User>,
     onClickFollowing: (Int, Boolean) -> Unit,
 ) {
     Column(
         modifier = modifier,
     ) {
-        QuackDivider()
+        QuackMaxWidthDivider()
         QuackTitle2(
             modifier = Modifier.padding(
                 top = 24.dp,
@@ -112,6 +114,7 @@ private fun HomeFollowingInitialRecommendUsers(
         recommendUser.fastForEach { user ->
             UserFollowingLayout(
                 userId = user.userId,
+                isMine = myUserId == user.userId,
                 profileImgUrl = user.profileImgUrl,
                 nickname = user.nickname,
                 favoriteTag = user.favoriteTag,

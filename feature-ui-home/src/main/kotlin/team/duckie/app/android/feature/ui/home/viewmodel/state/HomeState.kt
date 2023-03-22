@@ -16,7 +16,6 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonJumbotrons
-import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonRecommendExam
 
 internal data class HomeState(
     val me: User? = null,
@@ -24,6 +23,7 @@ internal data class HomeState(
     val isHomeRecommendLoading: Boolean = false,
     val isHomeRecommendFollowingExamLoading: Boolean = false,
 
+    val isHomeRecommendFollowingExamRefreshLoading: Boolean = false,
     val isHomeRecommendPullRefreshLoading: Boolean = false,
 
     val bottomNavigationStep: BottomNavigationStep = BottomNavigationStep.HomeScreen,
@@ -34,8 +34,6 @@ internal data class HomeState(
 
     val isFollowingExist: Boolean = true,
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
-    val recommendFollowingExam: ImmutableList<RecommendExam> = skeletonRecommendExam,
-
     val popularTags: ImmutableList<Tag> = persistentListOf(),
 ) {
     /**
