@@ -8,6 +8,7 @@
 package team.duckie.app.android.feature.ui.setting.constans
 
 import androidx.annotation.StringRes
+import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.setting.R
 
 /**
@@ -17,7 +18,7 @@ import team.duckie.app.android.feature.setting.R
  * [AccountInfo] 계정 정보 페이지
  * [Notification] 알림 설정 페이지
  * [Inquiry] 문의하기 페이지
- * [TermsAndPolicies] 이용약관 및 개인정보 처리방침 페이지
+ * [MainPolicy] 이용약관 및 개인정보 처리방침 페이지
  * [Version] 버전 정보 페이지
  * */
 enum class SettingType(
@@ -36,10 +37,37 @@ enum class SettingType(
     Inquiry(
         titleRes = R.string.inquiry,
     ),
-    TermsAndPolicies(
+    MainPolicy(
         titleRes = R.string.terms_and_policies,
     ),
     Version(
         titleRes = R.string.version_info,
     ),
+
+    /** 약관 및 정책 안에 있는 페이지 */
+    TermsOfService(
+        titleRes = R.string.terms_of_service,
+    ),
+    PrivacyPolicy(
+        titleRes = R.string.privacy_policy,
+    ),
+    OpenSourceLicense(
+        titleRes = R.string.open_source_license,
+    ),
+    ;
+
+    companion object {
+        /** [MainPolicy] 안에 위치한 설정 */
+        val policyPages = persistentListOf(
+            TermsOfService,
+            PrivacyPolicy,
+            OpenSourceLicense,
+        )
+
+        /** 메인 설정 페이지에 표시될 설정 */
+        val settingPages = SettingType
+            .values()
+            .filter { it !in listOf(Main) }
+            .filter { it !in policyPages }
+    }
 }

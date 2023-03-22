@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,7 +22,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.ui.setting.component.SettingContentLayout
-import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 
 /**
@@ -38,7 +36,6 @@ const val DUCKIE_INSTAGRAM = "@duckie_team"
 
 @Composable
 fun SettingInquiryScreen() {
-
     val rememberInquiryItems: ImmutableList<Pair<Int, String>> = remember {
         persistentListOf(
             R.string.email to DUCKIE_EMAIL,
@@ -51,10 +48,10 @@ fun SettingInquiryScreen() {
     ) {
         QuackSubtitle2(
             modifier = Modifier.padding(vertical = 12.dp),
-            text = stringResource(id = R.string.contact_inquiry)
+            text = stringResource(id = R.string.contact_inquiry),
         )
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             items(rememberInquiryItems) { item ->
                 SettingContentLayout(

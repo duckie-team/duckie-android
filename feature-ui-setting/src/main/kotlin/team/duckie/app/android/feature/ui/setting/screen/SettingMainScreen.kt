@@ -20,9 +20,7 @@ fun SettingMainScreen(
     vm: SettingViewModel,
     version: String,
 ) {
-    val settingItems = SettingType
-        .values()
-        .filter { it !in listOf(SettingType.Main) }
+    val settingItems = SettingType.settingPages
 
     LazyColumn {
         items(settingItems) { item ->

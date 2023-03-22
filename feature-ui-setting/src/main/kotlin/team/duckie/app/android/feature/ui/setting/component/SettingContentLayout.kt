@@ -33,7 +33,9 @@ internal fun SettingContentLayout(
         modifier = Modifier
             .fillMaxWidth()
             .height(44.dp)
-            .quackClickable {
+            .quackClickable(
+                rippleEnabled = false,
+            ) {
                 if (onClick != null) {
                     onClick()
                 }

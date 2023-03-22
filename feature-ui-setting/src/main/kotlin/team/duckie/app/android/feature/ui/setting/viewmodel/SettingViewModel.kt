@@ -16,6 +16,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.setting.constans.SettingType
+import team.duckie.app.android.feature.ui.setting.constans.SettingType.Companion.policyPages
 import team.duckie.app.android.feature.ui.setting.viewmodel.sideeffect.SettingSideEffect
 import team.duckie.app.android.feature.ui.setting.viewmodel.state.SettingState
 import javax.inject.Inject
@@ -54,6 +55,9 @@ class SettingViewModel @Inject constructor(
         when (state.settingType) {
             SettingType.Main -> {
                 postSideEffect(SettingSideEffect.NavigateBack)
+            }
+            in policyPages -> {
+                navigateStep(step = SettingType.MainPolicy)
             }
             else -> {
                 navigateStep(step = SettingType.Main)

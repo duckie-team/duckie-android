@@ -13,6 +13,9 @@
     <string name="inquiry">문의</string>
     <string name="terms_and_policies">약관 및 정책</string>
     <string name="version_info">버전 정보</string>
+    <string name="terms_of_service">이용약관</string>
+    <string name="privacy_policy">개인정보처리방침</string>
+    <string name="open_source_license">오픈소스 라이선스</string>
 
     <string name="log_out">로그아웃</string>
     <string name="withdraw">탈퇴하기</string>

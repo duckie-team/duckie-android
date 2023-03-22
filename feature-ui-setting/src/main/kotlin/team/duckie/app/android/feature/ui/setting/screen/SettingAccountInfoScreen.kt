@@ -44,7 +44,6 @@ fun SettingAccountInfoScreen(
     onClickLogOut: () -> Unit,
     onClickWithdraw: () -> Unit,
 ) {
-
     val rememberAccountInfoItems: ImmutableList<Pair<Int, () -> Unit>> = remember {
         persistentListOf(
             R.string.log_out to onClickLogOut,
@@ -88,7 +87,7 @@ fun SettingAccountInfoScreen(
             )
             QuackDivider(modifier = Modifier.padding(vertical = 16.dp))
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 items(rememberAccountInfoItems) { index ->
                     SettingContentLayout(

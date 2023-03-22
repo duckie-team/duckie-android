@@ -89,6 +89,7 @@ class SettingActivity : BaseActivity() {
                                     vm = vm,
                                     version = "1.0.0-MVP", // TODO(limsaehyun): 버전 코드 가져오기
                                 )
+
                                 SettingType.AccountInfo -> SettingAccountInfoScreen(
                                     email = "sh007100@naver.com", // TODO(limsaehyun) : 이메일 가져오기 & Auth 정보 넘겨주기
                                     onClickLogOut = {
@@ -96,12 +97,20 @@ class SettingActivity : BaseActivity() {
                                     },
                                     onClickWithdraw = {
                                         vm.withdraw()
-                                    }
+                                    },
                                 )
+
                                 SettingType.Notification -> DuckieTodoScreen()
                                 SettingType.Inquiry -> SettingInquiryScreen()
-                                SettingType.TermsAndPolicies -> DuckieTodoScreen()
+                                SettingType.MainPolicy -> SettingMainPolicyScreen(
+                                    navigatePage = {
+                                        vm.navigateStep(it)
+                                    },
+                                )
                                 SettingType.Version -> DuckieTodoScreen()
+                                SettingType.PrivacyPolicy -> SettingPrivacyPolicy()
+                                SettingType.TermsOfService -> SettingTermsOfServiceScreen()
+                                SettingType.OpenSourceLicense -> SettingOpenSourceLicenseScreen()
                             }
                         }
                     }
