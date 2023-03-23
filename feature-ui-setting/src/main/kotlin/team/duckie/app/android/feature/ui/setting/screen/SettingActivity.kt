@@ -30,6 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.feature.setting.BuildConfig
+import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.ui.setting.constans.SettingType
 import team.duckie.app.android.feature.ui.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.ui.setting.viewmodel.sideeffect.SettingSideEffect
@@ -77,12 +79,12 @@ class SettingActivity : BaseActivity() {
                 DuckieDialog(
                     modifier = Modifier
                         .duckieDialogPosition(DuckieDialogPosition.CENTER),
-                    title = "앗, 정말 로그아웃 하시겠어요?",
-                    leftButtonText = "취소",
+                    title = stringResource(id = R.string.log_out_check_message),
+                    leftButtonText = stringResource(id = R.string.cancel),
                     leftButtonOnClick = {
                         vm.changeLogoutDialogVisible(false)
                     },
-                    rightButtonText = "로그아웃",
+                    rightButtonText = stringResource(id = R.string.log_out),
                     rightButtonOnClick = {
                         vm.logout()
                     },
@@ -118,11 +120,11 @@ class SettingActivity : BaseActivity() {
                             when (step) {
                                 SettingType.Main -> SettingMainScreen(
                                     vm = vm,
-                                    version = "1.0.0-MVP", // TODO(limsaehyun): 버전 코드 가져오기
+                                    version = BuildConfig.APP_VERSION_NAME,
                                 )
 
                                 SettingType.AccountInfo -> SettingAccountInfoScreen(
-                                    email = "sh007100@naver.com", // TODO(limsaehyun) : 이메일 가져오기 & Auth 정보 넘겨주기
+                                    email = "", // TODO(limsaehyun) : 이메일 가져오기 & OAuth 정보 넘겨주기
                                     onClickLogOut = {
                                         vm.changeLogoutDialogVisible(true)
                                     },

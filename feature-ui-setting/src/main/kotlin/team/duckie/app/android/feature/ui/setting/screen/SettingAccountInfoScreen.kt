@@ -38,6 +38,8 @@ import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 
+private val KakaoColor: Color = Color(0xFFFEE500)
+
 @Composable
 fun SettingAccountInfoScreen(
     email: String,
@@ -70,7 +72,7 @@ fun SettingAccountInfoScreen(
                 modifier = Modifier
                     .size(18.dp)
                     .background(
-                        color = Color.Yellow,
+                        color = KakaoColor,
                         shape = RoundedCornerShape(2.dp),
                     ),
                 contentAlignment = Alignment.Center,

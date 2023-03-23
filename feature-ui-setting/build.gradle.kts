@@ -5,16 +5,26 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+import AppVersionNameProvider.App.VersionName
 import DependencyHandler.Extensions.implementations
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.AndroidLibraryCompose)
     id(ConventionEnum.AndroidHilt)
+    id(ConventionEnum.AppVersionNameProvider)
 }
 
 android {
     namespace = "team.duckie.app.android.feature.setting"
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    defaultConfig {
+        buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName\"")
+    }
 }
 
 dependencies {
