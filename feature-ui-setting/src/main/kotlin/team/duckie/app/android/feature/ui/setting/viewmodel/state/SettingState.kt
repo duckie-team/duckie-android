@@ -13,4 +13,6 @@ import team.duckie.app.android.feature.ui.setting.constans.SettingType
 data class SettingState(
     val me: User? = null,
     val settingType: SettingType = SettingType.Main,
+
+    val logoutDialogVisible: Boolean = false,
 )

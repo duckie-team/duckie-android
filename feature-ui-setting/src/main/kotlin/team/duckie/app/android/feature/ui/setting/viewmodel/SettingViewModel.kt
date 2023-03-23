@@ -14,6 +14,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.domain.auth.usecase.ClearTokenUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.setting.constans.SettingType
 import team.duckie.app.android.feature.ui.setting.constans.SettingType.Companion.policyPages
@@ -24,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
+    private val clearTokenUseCase: ClearTokenUseCase,
 ) : ContainerHost<SettingState, SettingSideEffect>, ViewModel() {
 
     override val container = container<SettingState, SettingSideEffect>(SettingState())
@@ -43,8 +45,18 @@ class SettingViewModel @Inject constructor(
             }
     }
 
-    fun logout() {
-        // TODO(limsaehyun): 로그아웃 로직 구현
+    fun changeLogoutDialogVisible(visible: Boolean) = intent {
+        reduce { state.copy(logoutDialogVisible = visible) }
+    }
+
+    fun logout() = intent {
+        clearTokenUseCase()
+            .onSuccess {
+                postSideEffect(SettingSideEffect.NavigateIntro)
+            }
+            .onFailure {
+                postSideEffect(SettingSideEffect.ReportError(it))
+            }
     }
 
     fun navigateBack() = intent {
