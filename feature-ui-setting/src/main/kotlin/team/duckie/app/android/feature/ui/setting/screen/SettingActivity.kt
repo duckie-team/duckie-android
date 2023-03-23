@@ -102,7 +102,7 @@ class SettingActivity : BaseActivity() {
                                     },
                                 )
 
-                                SettingType.Notification -> DuckieTodoScreen()
+                                SettingType.Notification -> DuckieTodoScreen() // TODO(limsaehyun): SettingNotificationScreen 사용 필요
                                 SettingType.Inquiry -> SettingInquiryScreen()
                                 SettingType.MainPolicy -> SettingMainPolicyScreen(
                                     navigatePage = {
@@ -112,9 +112,10 @@ class SettingActivity : BaseActivity() {
                                         vm.navigateOssLicense()
                                     },
                                 )
-                                SettingType.Version -> DuckieTodoScreen()
+
                                 SettingType.PrivacyPolicy -> SettingPrivacyPolicy()
                                 SettingType.TermsOfService -> SettingTermsOfServiceScreen()
+                                else -> Unit
                             }
                         }
                     }
@@ -128,9 +129,11 @@ class SettingActivity : BaseActivity() {
             is SettingSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
+
             is SettingSideEffect.NavigateBack -> {
                 finishWithAnimation()
             }
+
             is SettingSideEffect.NavigateOssLicense -> {
                 startActivityWithAnimation<OssLicensesMenuActivity>()
             }

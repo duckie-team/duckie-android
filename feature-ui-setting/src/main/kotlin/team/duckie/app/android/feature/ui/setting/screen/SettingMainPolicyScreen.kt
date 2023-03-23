@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.ui.setting.component.SettingContentLayout
 import team.duckie.app.android.feature.ui.setting.constans.SettingType
-import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.shared.ui.compose.Spacer
 
 @Composable
@@ -54,14 +53,4 @@ fun SettingMainPolicyScreen(
             }
         }
     }
-}
-
-@Composable
-fun SettingTermsOfServiceScreen() {
-    DuckieTodoScreen() // TODO(limsaehyun) : 이용약관 작업 필요
-}
-
-@Composable
-fun SettingPrivacyPolicy() {
-    DuckieTodoScreen() // TODO(limsaehyun): 개인정보 처리 방침 작업 필요
 }

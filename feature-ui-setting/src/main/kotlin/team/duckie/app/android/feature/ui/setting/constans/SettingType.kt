@@ -43,8 +43,6 @@ enum class SettingType(
     Version(
         titleRes = R.string.version_info,
     ),
-
-    /** 약관 및 정책 안에 있는 페이지 */
     TermsOfService(
         titleRes = R.string.terms_of_service,
     ),
@@ -65,5 +63,10 @@ enum class SettingType(
             .values()
             .filter { it !in listOf(Main) }
             .filter { it !in policyPages }
+
+        /** 클릭이 불가능한 설정 */
+        val nonClickablePages = persistentListOf(
+            Version,
+        )
     }
 }

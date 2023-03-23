@@ -28,7 +28,9 @@ fun SettingMainScreen(
                 title = stringResource(id = item.titleRes),
                 trailingText = if (item == SettingType.Version) version else null,
                 onClick = {
-                    vm.navigateStep(item)
+                    if (item !in SettingType.nonClickablePages) {
+                        vm.navigateStep(item)
+                    }
                 },
                 isBold = true,
             )
