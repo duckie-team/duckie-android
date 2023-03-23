@@ -24,4 +24,21 @@
     <string name="email">이메일</string>
     <string name="contact_inquiry">문의처</string>
     <string name="instagram">인스타그램</string>
+
+    <!--  앱 알림 설정  -->
+    <string name="setting_notification_exam_review">덕력고사 검토</string>
+    <string name="setting_notification_exam_like">덕력고사 좋아요</string>
+    <string name="setting_notification_follow">팔로우</string>
+    <string name="setting_notification_following">팔로우한 유저</string>
+    <string name="setting_notification_favorite_category_tag">관심 카테고리 및 태그</string>
+    <string name="setting_notification_ranking">명예의 전당</string>
+    <string name="setting_notification_notice">공지사항</string>
+
+    <string name="setting_notification_exam_review_description">내가 출제한 덕력고사 및 문제에 대한 알림</string>
+    <string name="setting_notification_exam_like_description">내 덕력고사에 다른 유저가 좋아요를 눌렀을 때의 알림</string>
+    <string name="setting_notification_follow_description">다른 유저가 나를 팔로우했을 때의 알림</string>
+    <string name="setting_notification_following_description">팔로우한 유저 활동에 대한 알림</string>
+    <string name="setting_notification_favorite_category_tag_description">내 관심 카테고리와 태그의 덕력고사가 업로드 됐을 때의 알림</string>
+    <string name="setting_notification_ranking_description">나 혹은 내 덕력고사가 명예의 전당에 올랐을 때의 알림</string>
+    <string name="setting_notification_notice_description">덕키 공지 및 업데이트에 대한 알림</string>
 </resources>
