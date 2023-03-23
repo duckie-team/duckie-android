@@ -47,10 +47,6 @@ class SettingViewModel @Inject constructor(
         // TODO(limsaehyun): 로그아웃 로직 구현
     }
 
-    fun withdraw() {
-        // TODO(limsaehyun): 회원탈퇴 로직 구현
-    }
-
     fun navigateBack() = intent {
         when (state.settingType) {
             SettingType.Main -> {

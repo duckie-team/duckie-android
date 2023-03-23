@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -98,7 +100,7 @@ class SettingActivity : BaseActivity() {
                                         vm.logout()
                                     },
                                     onClickWithdraw = {
-                                        vm.withdraw()
+                                        vm.navigateStep(SettingType.WithDraw)
                                     },
                                 )
 
@@ -115,6 +117,7 @@ class SettingActivity : BaseActivity() {
 
                                 SettingType.PrivacyPolicy -> SettingPrivacyPolicy()
                                 SettingType.TermsOfService -> SettingTermsOfServiceScreen()
+                                SettingType.WithDraw -> SettingWithdrawScreen()
                                 else -> Unit
                             }
                         }

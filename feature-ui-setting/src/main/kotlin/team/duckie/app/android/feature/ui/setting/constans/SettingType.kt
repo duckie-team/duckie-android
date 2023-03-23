@@ -49,6 +49,9 @@ enum class SettingType(
     PrivacyPolicy(
         titleRes = R.string.privacy_policy,
     ),
+    WithDraw(
+        titleRes = R.string.withdraw,
+    ),
     ;
 
     companion object {
@@ -58,11 +61,17 @@ enum class SettingType(
             PrivacyPolicy,
         )
 
+        /** [AccountInfo] 안에 위치한 설정 */
+        private val accountInfoPages = persistentListOf(
+            WithDraw,
+        )
+
         /** 메인 설정 페이지에 표시될 설정 */
         val settingPages = SettingType
             .values()
             .filter { it !in listOf(Main) }
             .filter { it !in policyPages }
+            .filter { it !in accountInfoPages }
 
         /** 클릭이 불가능한 설정 */
         val nonClickablePages = persistentListOf(

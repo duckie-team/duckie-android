@@ -85,17 +85,17 @@ fun SettingAccountInfoScreen(
                 text = email,
                 color = QuackColor.Gray1,
             )
-            QuackDivider(modifier = Modifier.padding(vertical = 16.dp))
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                items(rememberAccountInfoItems) { index ->
-                    SettingContentLayout(
-                        title = stringResource(id = index.first),
-                        isBold = false,
-                        onClick = index.second,
-                    )
-                }
+        }
+        QuackDivider(modifier = Modifier.padding(vertical = 16.dp))
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            items(rememberAccountInfoItems) { index ->
+                SettingContentLayout(
+                    title = stringResource(id = index.first),
+                    isBold = false,
+                    onClick = index.second,
+                )
             }
         }
     }
