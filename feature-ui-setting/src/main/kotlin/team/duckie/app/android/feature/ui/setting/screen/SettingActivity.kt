@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.setting.screen
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -32,7 +33,11 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.setting.constans.SettingType
 import team.duckie.app.android.feature.ui.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.ui.setting.viewmodel.sideeffect.SettingSideEffect
+import team.duckie.app.android.navigator.feature.intro.IntroNavigator
+import team.duckie.app.android.shared.ui.compose.DuckieDialog
+import team.duckie.app.android.shared.ui.compose.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
+import team.duckie.app.android.shared.ui.compose.duckieDialogPosition
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
@@ -42,9 +47,13 @@ import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingActivity : BaseActivity() {
+
+    @Inject
+    lateinit var introNavigator: IntroNavigator
 
     private val vm: SettingViewModel by viewModels()
 
@@ -65,6 +74,24 @@ class SettingActivity : BaseActivity() {
             val state = vm.collectAsState().value
 
             QuackTheme {
+                DuckieDialog(
+                    modifier = Modifier
+                        .duckieDialogPosition(DuckieDialogPosition.CENTER),
+                    title = "앗, 정말 로그아웃 하시겠어요?",
+                    leftButtonText = "취소",
+                    leftButtonOnClick = {
+                        vm.changeLogoutDialogVisible(false)
+                    },
+                    rightButtonText = "로그아웃",
+                    rightButtonOnClick = {
+                        vm.logout()
+                    },
+                    visible = state.logoutDialogVisible,
+                    onDismissRequest = {
+                        vm.changeLogoutDialogVisible(false)
+                    },
+                )
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -97,7 +124,7 @@ class SettingActivity : BaseActivity() {
                                 SettingType.AccountInfo -> SettingAccountInfoScreen(
                                     email = "sh007100@naver.com", // TODO(limsaehyun) : 이메일 가져오기 & Auth 정보 넘겨주기
                                     onClickLogOut = {
-                                        vm.logout()
+                                        vm.changeLogoutDialogVisible(true)
                                     },
                                     onClickWithdraw = {
                                         vm.navigateStep(SettingType.WithDraw)
@@ -139,6 +166,15 @@ class SettingActivity : BaseActivity() {
 
             is SettingSideEffect.NavigateOssLicense -> {
                 startActivityWithAnimation<OssLicensesMenuActivity>()
+            }
+
+            is SettingSideEffect.NavigateIntro -> {
+                introNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    },
+                )
             }
         }
     }

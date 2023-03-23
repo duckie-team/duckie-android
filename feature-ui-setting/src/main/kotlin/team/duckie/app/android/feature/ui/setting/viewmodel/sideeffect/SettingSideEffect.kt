@@ -19,4 +19,6 @@ sealed class SettingSideEffect {
     object NavigateBack : SettingSideEffect()
 
     object NavigateOssLicense : SettingSideEffect()
+
+    object NavigateIntro : SettingSideEffect()
 }
