@@ -183,6 +183,7 @@ compose-ui-lottie = { module = "com.airbnb.android:lottie-compose", version.ref 
 compose-ui-camposer = { module = "io.github.ujizin:camposer", version.ref = "compose-camposer" }
 compose-ui-accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "compose-accompanist" }
 compose-ui-accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeholder", version.ref = "compose-accompanist" }
+compose-ui-accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "compose-accompanist" }
 compose-util-tooling-core = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-core" } # debugImplementation
 compose-util-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-core" }
 compose-util-customview-pooling-container = { module = "androidx.customview:customview-poolingcontainer", version.ref = "compose-customview-pooling-container" } # debugImplementation

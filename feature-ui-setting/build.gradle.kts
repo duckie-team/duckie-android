@@ -31,6 +31,7 @@ dependencies {
         libs.orbit.compose,
         libs.quack.ui.components,
         libs.compose.lifecycle.runtime,
+        libs.compose.ui.accompanist.webview,
         libs.firebase.crashlytics,
         libs.ui.oss.license,
         libs.androidx.appcompat,

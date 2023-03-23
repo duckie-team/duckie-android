@@ -7,10 +7,36 @@
 
 package team.duckie.app.android.feature.ui.setting.screen
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import com.google.accompanist.web.LoadingState
+import com.google.accompanist.web.WebView
+import com.google.accompanist.web.rememberWebViewState
+import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
+
+private const val PrivacyPolicyLink: String = "https://rickkyok.tistory.com/8"
 
 @Composable
 fun SettingPrivacyPolicy() {
-    DuckieTodoScreen() // TODO(limsaehyun): 개인정보 처리 방침 작업 필요
+    val rememberWebViewState =
+        rememberWebViewState(
+            url = PrivacyPolicyLink,
+        )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        WebView(
+            state = rememberWebViewState,
+        )
+        val loadingState = rememberWebViewState.loadingState
+        if (loadingState is LoadingState.Loading) {
+            DuckieCircularProgressIndicator()
+        }
+    }
 }
