@@ -368,7 +368,7 @@ private fun TagSelection(
                 color = QuackColor.DuckieOrange,
                 onClick = {
                     coroutineScope.launch {
-                        sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                        sheetState.show()
                     }
                 },
             )
