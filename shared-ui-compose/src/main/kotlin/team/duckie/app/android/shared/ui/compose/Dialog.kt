@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalComposeUiApi::class)
 
 package team.duckie.app.android.shared.ui.compose
 
@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -31,6 +32,36 @@ import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.modifier.quackClickable
+
+enum class DuckieDialogPosition {
+    BOTTOM, CENTER, TOP
+}
+
+fun Modifier.duckieDialogPosition(pos: DuckieDialogPosition) = layout { measurable, constraints ->
+
+    val placeable = measurable.measure(constraints)
+    layout(constraints.maxWidth, constraints.maxHeight) {
+        when (pos) {
+            DuckieDialogPosition.BOTTOM -> {
+                placeable.place(0, constraints.maxHeight - placeable.height)
+            }
+
+            DuckieDialogPosition.CENTER -> {
+                placeable.place(
+                    x = 0,
+                    y = Alignment.CenterVertically.align(
+                        size = placeable.height,
+                        space = constraints.maxHeight,
+                    ),
+                )
+            }
+
+            DuckieDialogPosition.TOP -> {
+                placeable.place(0, 0)
+            }
+        }
+    }
+}
 
 @Composable
 fun DuckieDialog(
