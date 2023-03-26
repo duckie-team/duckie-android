@@ -259,7 +259,7 @@ internal fun AdditionalInformationScreen(
                     AdditionalThumbnailLayout(thumbnail = selectedGalleryImage) {
                         keyboard?.hide()
                         coroutineScope.launch {
-                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                            sheetState.show()
                         }
                     }
 
