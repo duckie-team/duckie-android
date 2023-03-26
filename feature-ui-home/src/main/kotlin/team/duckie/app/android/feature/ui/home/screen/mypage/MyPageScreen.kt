@@ -25,6 +25,7 @@ import team.duckie.quackquack.ui.util.DpSize
 @Composable
 internal fun MyPageScreen(
     navigateToMyPage: () -> Unit,
+    navigateToSettingPage: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         HeadLineTopAppBar(
@@ -34,6 +35,7 @@ internal fun MyPageScreen(
                     QuackImage(
                         src = QuackIcon.Setting,
                         size = DpSize(all = 24.dp),
+                        onClick = navigateToSettingPage,
                     )
                     QuackImage(
                         src = QuackIcon.Notice,

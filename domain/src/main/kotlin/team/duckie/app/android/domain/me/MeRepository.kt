@@ -13,4 +13,6 @@ interface MeRepository {
     suspend fun getMe(): User
 
     suspend fun setMe(newMe: User)
+
+    suspend fun clearMeToken()
 }

@@ -344,4 +344,11 @@ internal class HomeViewModel @Inject constructor(
             HomeSideEffect.NavigateToCreateProblem,
         )
     }
+
+    /** 설정 화면으로 이동한다 */
+    fun navigateToSetting() = intent {
+        postSideEffect(
+            HomeSideEffect.NavigateToSetting,
+        )
+    }
 }

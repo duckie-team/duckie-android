@@ -150,7 +150,7 @@ local-plugin-enum = { id = "team.duckie.app.android.local.plugin.enum", version.
 [libraries]
 build-gradle-agp = { module = "com.android.tools.build:gradle", version.ref = "plugin-build-gradle-android" }
 build-google-service = { module = "com.google.gms:google-services", version.ref = "plugin-build-google-service" }
-build-ui-oss-license = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "ui-oss-license" }
+build-ui-oss-license = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "plugin-ui-oss-license" }
 build-di-hilt = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "di-hilt" }
 build-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebase-plugin-crashlytics" }
 build-firebase-performance = { module = "com.google.firebase:perf-plugin", version.ref = "firebase-plugin-performance" }
@@ -184,6 +184,7 @@ compose-ui-lottie = { module = "com.airbnb.android:lottie-compose", version.ref 
 compose-ui-camposer = { module = "io.github.ujizin:camposer", version.ref = "compose-camposer" }
 compose-ui-accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "compose-accompanist" }
 compose-ui-accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeholder", version.ref = "compose-accompanist" }
+compose-ui-accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "compose-accompanist" }
 compose-util-tooling-core = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-core" } # debugImplementation
 compose-util-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-core" }
 compose-util-customview-pooling-container = { module = "androidx.customview:customview-poolingcontainer", version.ref = "compose-customview-pooling-container" } # debugImplementation
