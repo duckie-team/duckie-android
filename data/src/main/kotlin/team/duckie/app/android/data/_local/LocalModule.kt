@@ -19,6 +19,7 @@ import team.duckie.app.android.data.exam.dao.FavoriteExamsDao
 import team.duckie.app.android.data.exam.dao.MadeExamsDao
 import team.duckie.app.android.data.exam.dao.RecentExamsDao
 import team.duckie.app.android.data.exam.dao.SolvedExamsDao
+import team.duckie.app.android.data.search.dao.SearchDao
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -48,5 +49,10 @@ class DatabaseModule {
     @Provides
     fun provideRecentExamsDao(database: DuckieDatabase): RecentExamsDao {
         return database.recentExamsDao()
+    }
+
+    @Provides
+    fun provideSearchDao(database: DuckieDatabase): SearchDao {
+        return database.searchDao()
     }
 }

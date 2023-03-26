@@ -10,7 +10,6 @@ package team.duckie.app.android.feature.ui.solve.problem.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -52,14 +51,17 @@ internal class SolveProblemViewModel @Inject constructor(
     private suspend fun getProblems(examId: Int) = intent {
         reduce { state.copy(isProblemsLoading = true) }
         getExamInstanceUseCase(id = examId).onSuccess { examInstance ->
-            reduce {
-                val problemInstances =
-                    examInstance.problemInstances?.toImmutableList() ?: persistentListOf()
-                state.copy(
-                    isProblemsLoading = false,
-                    problems = problemInstances,
-                    inputAnswers = ImmutableList(problemInstances.size) { InputAnswer() },
-                )
+            val problemInstances = examInstance.problemInstances?.toImmutableList()
+            if (problemInstances == null) {
+                stopExam()
+            } else {
+                reduce {
+                    state.copy(
+                        isProblemsLoading = false,
+                        problems = problemInstances,
+                        inputAnswers = ImmutableList(problemInstances.size) { InputAnswer() },
+                    )
+                }
             }
         }.onFailure {
             it.printStackTrace()
@@ -108,4 +110,6 @@ internal class SolveProblemViewModel @Inject constructor(
             ),
         )
     }
+
+    fun stopExam() = intent { postSideEffect(SolveProblemSideEffect.NavigatePreviousScreen) }
 }

@@ -12,7 +12,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.github.kittinunf.fuel.Fuel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -22,6 +21,8 @@ import team.duckie.app.android.data.search.model.SearchData
 import team.duckie.app.android.data.search.paging.SearchExamPagingSource
 import team.duckie.app.android.data.search.paging.SearchTagPagingSource
 import team.duckie.app.android.data.search.paging.SearchUserPagingSource
+import team.duckie.app.android.data.search.datasource.SearchLocalDataSource
+import team.duckie.app.android.data.search.datasource.SearchRemoteDataSource
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.search.model.Search
@@ -30,8 +31,13 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import javax.inject.Inject
 
-class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchRepository {
+class SearchRepositoryImpl @Inject constructor(
+    private val fuel: Fuel, // TODO (limsaehyun) DataSource로 분리해야 함
+    private val searchLocalDataSource: SearchLocalDataSource,
+    private val searchRemoteDataSource: SearchRemoteDataSource,
+) : SearchRepository {
 
+    // TODO(limsaehyun) : 검색의 관심사 분리를 위해 제거해야 함
     override suspend fun getSearch(
         query: String,
         page: Int,
@@ -59,14 +65,13 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
             config = PagingConfig(
                 pageSize = SearchUserPagingPage,
                 enablePlaceholders = true,
-                maxSize = SearchUserPagingMaxSize,
             ),
             pagingSourceFactory = {
                 SearchUserPagingSource(
-                    searchUsers = {
-                        getSearch(
+                    searchUsers = { page ->
+                        searchRemoteDataSource.getSearch(
                             query = query,
-                            page = it,
+                            page = page,
                             type = SearchType.USERS,
                         ) as Search.UserSearch
                     },
@@ -82,14 +87,13 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
             config = PagingConfig(
                 pageSize = SearchExamPagingPage,
                 enablePlaceholders = true,
-                maxSize = SearchExamPagingMaxSize,
             ),
             pagingSourceFactory = {
                 SearchExamPagingSource(
-                    searchExams = {
-                        getSearch(
+                    searchExams = { page ->
+                        searchRemoteDataSource.getSearch(
                             query = query,
-                            page = it,
+                            page = page,
                             type = SearchType.EXAMS,
                         ) as Search.ExamSearch
                     },
@@ -98,16 +102,12 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
         ).flow
     }
 
-    override fun getRecentSearch(): ImmutableList<Tag> {
-        return persistentListOf() // TODO(limsaehyun): 최근 검색어 가져오기
+    override suspend fun clearRecentSearch(keyword: String) {
+        searchLocalDataSource.clearRecentSearch(keyword = keyword)
     }
 
-    override fun clearRecentSearch(tagId: Int) {
-        // TODO(limsaehyun): 최근 검색어 지우기
-    }
-
-    override fun clearAllRecentSearch() {
-        // TODO(limsaehyun): 최근 검색어 지우기
+    override suspend fun clearAllRecentSearch() {
+        searchLocalDataSource.clearAllRecentSearch()
     }
 
     override fun searchTags(
@@ -117,14 +117,13 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
             config = PagingConfig(
                 pageSize = SearchTagPagingPage,
                 enablePlaceholders = true,
-                maxSize = SearchTagPagingMaxSize,
             ),
             pagingSourceFactory = {
                 SearchTagPagingSource(
-                    searchTags = {
-                        getSearch(
+                    searchTags = { page ->
+                        searchRemoteDataSource.getSearch(
                             query = query,
-                            page = it,
+                            page = page,
                             type = SearchType.TAGS,
                         ) as Search.TagSearch
                     },
@@ -133,43 +132,22 @@ class SearchRepositoryImpl @Inject constructor(private val fuel: Fuel) : SearchR
         ).flow
     }
 
-    private suspend fun getSearch(
-        query: String,
-        page: Int,
-        type: SearchType,
-    ): Search = withContext(Dispatchers.IO) {
-        val (_, response) = fuel.get(
-            "/search",
-            listOf(
-                "query" to query,
-                "page" to page,
-                "type" to type,
-            ),
-        ).responseString()
+    override suspend fun saveRecentSearch(keyword: String) {
+        searchLocalDataSource.saveRecentSearch(keyword = keyword)
+    }
 
-        return@withContext responseCatchingFuel(
-            response,
-            SearchData::toDomain,
-        )
+    override suspend fun getRecentSearch(): ImmutableList<String> {
+        return searchLocalDataSource.getRecentSearch()
     }
 
     internal companion object {
-        // 유저 검색 페이징 단위
+        /** 유저 검색 페이징 단위 */
         const val SearchUserPagingPage = 10
 
-        // 유저 검색 페이징 최대 사이즈
-        const val SearchUserPagingMaxSize = 200
-
-        // 유저 검색 페이징 단위
+        /** 유저 검색 페이징 단위 */
         const val SearchExamPagingPage = 10
-
-        // 유저 검색 페이징 최대 사이즈
-        const val SearchExamPagingMaxSize = 200
 
         /** 유저 검색 페이징 단위 */
         const val SearchTagPagingPage = 10
-
-        // 유저 검색 페이징 최대 사이즈
-        const val SearchTagPagingMaxSize = 200
     }
 }

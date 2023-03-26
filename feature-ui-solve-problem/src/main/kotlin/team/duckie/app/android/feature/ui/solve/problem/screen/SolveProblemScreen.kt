@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class)
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
@@ -27,45 +27,42 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.feature.ui.solve.problem.R
-import team.duckie.app.android.feature.ui.solve.problem.SolveProblemActivity
 import team.duckie.app.android.feature.ui.solve.problem.answer.answerSection
 import team.duckie.app.android.feature.ui.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.ui.solve.problem.common.DoubleButtonBottomBar
 import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.shared.ui.compose.DuckieDialog
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
-import team.duckie.app.android.util.ui.finishWithAnimation
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
 private const val SolveProblemBottomBarLayoutId = "SolveProblemBottomBar"
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SolveProblemScreen(
     viewModel: SolveProblemViewModel = activityViewModel(),
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val totalPage = remember { state.totalPage }
-    val activity = LocalContext.current as SolveProblemActivity
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = pagerState) {
+    LaunchedEffect(key1 = pagerState.currentPage) {
         viewModel.setPage(pagerState.currentPage)
     }
 
@@ -76,7 +73,7 @@ internal fun SolveProblemScreen(
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { examExitDialogVisible = false },
         rightButtonText = stringResource(id = R.string.quit),
-        rightButtonOnClick = { activity.finishWithAnimation() },
+        rightButtonOnClick = { viewModel.stopExam() },
         visible = examExitDialogVisible,
         onDismissRequest = { examExitDialogVisible = false },
     )
@@ -110,6 +107,7 @@ internal fun SolveProblemScreen(
                 modifier = Modifier.layoutId(SolveProblemContentLayoutId),
                 viewModel = viewModel,
                 pagerState = pagerState,
+                state = state,
             )
             DoubleButtonBottomBar(
                 modifier = Modifier.layoutId(SolveProblemBottomBarLayoutId),
@@ -178,9 +176,8 @@ internal fun ContentSection(
     modifier: Modifier = Modifier,
     viewModel: SolveProblemViewModel,
     pagerState: PagerState,
+    state: SolveProblemState,
 ) {
-    val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    val coroutineScope = rememberCoroutineScope()
     HorizontalPager(
         modifier = modifier,
         pageCount = state.totalPage,
@@ -208,17 +205,12 @@ internal fun ContentSection(
                 },
                 inputAnswers = state.inputAnswers,
                 onClickAnswer = viewModel::inputAnswer,
-                onSolveProblem = {
-                    coroutineScope.launch {
-                        pagerState.moveNextPage(viewModel::onMoveNextPage)
-                    }
-                },
             )
         }
     }
 }
 
-suspend fun PagerState.moveNextPage(
+suspend inline fun PagerState.moveNextPage(
     onMovePage: (Int) -> Unit,
 ) {
     if (canScrollForward) {
@@ -229,7 +221,7 @@ suspend fun PagerState.moveNextPage(
     }
 }
 
-suspend fun PagerState.movePreviousPage(
+suspend inline fun PagerState.movePreviousPage(
     onMovePage: (Int) -> Unit,
 ) {
     if (canScrollBackward) {

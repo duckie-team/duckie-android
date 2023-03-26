@@ -27,6 +27,7 @@ dependencies {
         libs.build.local.plugin.enum,
         libs.build.dependency.handler.extensions,
     )
+    compileOnly(libs.ksp.gradlePlugin)
 }
 
 gradlePlugin {
@@ -58,6 +59,10 @@ gradlePlugin {
         register("androidLibraryComposeUiTestPlugin") {
             id = ConventionEnum.AndroidLibraryComposeUiTest
             implementationClass = "AndroidLibraryComposeUiTestPlugin"
+        }
+        register("androidRoom") {
+            id = ConventionEnum.AndroidRoom
+            implementationClass = "AndroidRoomConventionPlugin"
         }
         register("jvmLibraryPlugin") {
             id = ConventionEnum.JvmLibrary

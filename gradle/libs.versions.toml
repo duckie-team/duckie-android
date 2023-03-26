@@ -31,7 +31,7 @@ plugin-local-master = "master"
 kotlin-core = "1.8.10"
 kotlin-dokka = "1.8.10"
 kotlin-kover = "0.6.1"
-kotlin-coroutines = "1.6.2"
+kotlin-coroutines = "1.6.4"
 kotlin-collections-immutable = "0.3.5"
 
 # apache
@@ -42,7 +42,7 @@ androidx-appcompat = "1.6.1" # needs for oss license activity
 androidx-lifecycle-savedstate = "2.5.1"
 androidx-splash = "1.0.0"
 androidx-datastore = "1.0.0"
-androidx-room = "2.5.0"
+androidx-room = "2.5.1"
 androidx-profile-installer = "1.2.2"
 androidx-paging = "3.1.1"
 androidx-paging-compose = "1.0.0-alpha17"
@@ -50,9 +50,10 @@ androidx-annotation = "1.5.0"
 
 # compose
 compose-core = "1.3.1"
-compose-foundation = "1.4.0-alpha03" # use alpha for HorizontalPager
+compose-foundation = "1.4.0-beta01" # use alpha for HorizontalPager
+compose-material = "1.4.0-alpha03"
 compose-runtime = "1.4.0-rc01" # use alpha for SnapshotStateList#toList
-compose-lifecycle = "2.6.0" # use alpha for StateFlow#collectAsStateWithLifecycle
+compose-lifecycle = "2.6.1" # use alpha for StateFlow#collectAsStateWithLifecycle
 compose-compiler = "1.4.3"
 compose-activity = "1.6.1"
 compose-accompanist = "0.28.0"
@@ -71,7 +72,7 @@ ui-oss-license = "17.0.0"
 ui-system-controller = "1.0.1"
 
 # exoplayer
-exoplayer-core = "2.18.4"
+exoplayer-core = "2.18.5"
 
 # analytics
 analytics-leakcanary = "2.10"
@@ -178,7 +179,7 @@ compose-ui-coil = { module = "io.coil-kt:coil-compose", version.ref = "compose-c
 compose-ui-coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "compose-coil" }
 compose-ui-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose-foundation" }
 compose-ui-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity" }
-compose-ui-material = { module = "androidx.compose.material:material", version.ref = "compose-core" }
+compose-ui-material = { module = "androidx.compose.material:material", version.ref = "compose-material" }
 compose-ui-lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "compose-lottie" }
 compose-ui-camposer = { module = "io.github.ujizin:camposer", version.ref = "compose-camposer" }
 compose-ui-accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "compose-accompanist" }
@@ -212,6 +213,7 @@ firebase-remote-config = { module = "com.google.firebase:firebase-config-ktx" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
 firebase-performance = { module = "com.google.firebase:firebase-perf-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 
 login-kakao = { module = "com.kakao.sdk:v2-user", version.ref = "login-kakao" }
 
@@ -260,6 +262,9 @@ test-ktor-server = { module = "io.ktor:ktor-server-test-host", version.ref = "kt
 test-orbit = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit-core" }
 
 detekt-plugin-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "plugin-code-detekt" }
+
+# Dependencies of the included build-logic
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "plugin-kotlin-ksp" }
 
 [bundles]
 compose-core = ["compose-runtime", "compose-ui-foundation", "compose-ui-activity", "compose-util-tooling-preview"]

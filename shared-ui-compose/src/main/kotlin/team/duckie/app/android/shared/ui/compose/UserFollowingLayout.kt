@@ -7,9 +7,12 @@
 
 package team.duckie.app.android.shared.ui.compose
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +29,7 @@ import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
+import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -47,8 +51,9 @@ private const val UserInfoBlockFollowingButtonLayoutId = "UserInfoBlockFollowing
  * @param nickname 닉네임
  * @param favoriteTag 관심 태그
  * @param tier 현재 덕력
+ * @param isMine 추천 유저가 본인인지 여부
+ * @param isFollowing 팔로우 여부
  * @param onClickUserProfile 프로필 사진을 클릭 했을 때 실행되는 람다
- * @param initalFollow 팔로우 여부
  * @param onClickFollow 팔로우 버튼을 클릭 했을 때 실행되는 람다
  */
 @Composable
@@ -59,6 +64,7 @@ fun UserFollowingLayout(
     nickname: String,
     favoriteTag: String,
     tier: String,
+    isMine: Boolean = false,
     isFollowing: Boolean,
     onClickUserProfile: ((Int) -> Unit)? = null,
     onClickFollow: (Boolean) -> Unit,
@@ -71,17 +77,35 @@ fun UserFollowingLayout(
                 vertical = 12.dp,
             ),
         content = {
-            QuackImage(
-                modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
-                src = profileImgUrl,
-                size = HomeProfileSize,
-                shape = SquircleShape,
-                onClick = {
-                    if (onClickUserProfile != null) {
-                        onClickUserProfile(userId)
-                    }
-                },
-            )
+            if (profileImgUrl.isEmpty()) {
+                // TODO(limsaehyun): 추후에 기본 프로필 이미지로 변경해야 함
+                Box(
+                    modifier = Modifier
+                        .layoutId(UserInfoBlockUserProfileLayoutId)
+                        .size(HomeProfileSize)
+                        .background(
+                            color = QuackColor.Gray2.composeColor,
+                            shape = SquircleShape,
+                        )
+                        .quackClickable {
+                            if (onClickUserProfile != null) {
+                                onClickUserProfile(userId)
+                            }
+                        },
+                )
+            } else {
+                QuackImage(
+                    modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
+                    src = profileImgUrl,
+                    size = HomeProfileSize,
+                    shape = SquircleShape,
+                    onClick = {
+                        if (onClickUserProfile != null) {
+                            onClickUserProfile(userId)
+                        }
+                    },
+                )
+            }
             QuackSubtitle2(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserNameLayoutId)
@@ -92,11 +116,11 @@ fun UserFollowingLayout(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserDescriptionLayoutId)
                     .padding(start = 8.dp),
-                text = "$tier · $favoriteTag",
+                text = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
             )
             QuackBody2(
                 modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
-                text = if (isFollowing) stringResource(id = R.string.following) else stringResource(id = R.string.follow),
+                text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                 onClick = {
                     onClickFollow(!isFollowing)
@@ -134,7 +158,14 @@ fun UserFollowingLayout(
 
             userNamePlaceable.place(
                 x = userProfilePlaceable.width,
-                y = 0,
+                y = if (tier.isEmpty() || favoriteTag.isEmpty()) {
+                    Alignment.CenterVertically.align(
+                        size = userNamePlaceable.height,
+                        space = constraints.maxHeight,
+                    )
+                } else {
+                    0
+                },
             )
 
             userDescriptionPlaceable.place(
@@ -142,13 +173,15 @@ fun UserFollowingLayout(
                 y = userNamePlaceable.height,
             )
 
-            userFollowingButtonPlaceable.place(
-                x = constraints.maxWidth - userFollowingButtonPlaceable.width,
-                y = Alignment.CenterVertically.align(
-                    size = userFollowingButtonPlaceable.height,
-                    space = constraints.maxHeight,
-                ),
-            )
+            if (!isMine) {
+                userFollowingButtonPlaceable.place(
+                    x = constraints.maxWidth - userFollowingButtonPlaceable.width,
+                    y = Alignment.CenterVertically.align(
+                        size = userFollowingButtonPlaceable.height,
+                        space = constraints.maxHeight,
+                    ),
+                )
+            }
         }
     }
 }

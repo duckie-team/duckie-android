@@ -29,16 +29,19 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.feature.ui.create.problem.CreateProblemActivity
-import team.duckie.app.android.feature.ui.detail.DetailActivity
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
+import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
+import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
-import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
+import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
+import team.duckie.app.android.navigator.feature.detail.DetailNavigator
+import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
@@ -49,6 +52,7 @@ import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
+import javax.inject.Inject
 
 private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
 private const val HomeBottomNavigationDividerLayoutId = "HomeBottomNavigationDivider"
@@ -60,7 +64,18 @@ class HomeActivity : BaseActivity() {
 
     private var waitTime = 2000L
     private val homeViewModel: HomeViewModel by viewModels()
+    private val rankingViewModel: RankingViewModel by viewModels()
 
+    @Inject
+    lateinit var createProblemNavigator: CreateProblemNavigator
+
+    @Inject
+    lateinit var notificationNavigator: NotificationNavigator
+
+    @Inject
+    lateinit var detailNavigator: DetailNavigator
+
+    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -76,11 +91,8 @@ class HomeActivity : BaseActivity() {
             BackHandler {
                 if (System.currentTimeMillis() - waitTime >= 1500L) {
                     waitTime = System.currentTimeMillis()
-                    Toast.makeText(
-                        this,
-                        getString(R.string.app_exit_toast),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    Toast.makeText(this, getString(R.string.app_exit_toast), Toast.LENGTH_SHORT)
+                        .show()
                 } else {
                     finish()
                 }
@@ -96,13 +108,31 @@ class HomeActivity : BaseActivity() {
                         // TODO(limsaehyun): 추후에 QuackCrossfade 로 교체 필요
                         Crossfade(
                             modifier = Modifier.layoutId(HomeCrossFacadeLayoutId),
-                            targetState = state.step,
+                            targetState = state.bottomNavigationStep,
                         ) { page ->
                             when (page) {
                                 BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
                                 BottomNavigationStep.SearchScreen -> SearchMainScreen()
-                                BottomNavigationStep.RankingScreen -> DuckieTodoScreen()
-                                BottomNavigationStep.MyPageScreen -> DuckieTodoScreen()
+                                BottomNavigationStep.RankingScreen -> RankingScreen(
+                                    viewModel = rankingViewModel,
+                                    navigateToCreateProblem = {
+                                        createProblemNavigator.navigateFrom(activity = this)
+                                    },
+                                    navigateToDetail = { examId ->
+                                        detailNavigator.navigateFrom(
+                                            activity = this,
+                                            intentBuilder = {
+                                                putExtra(Extras.ExamId, examId)
+                                            },
+                                        )
+                                    },
+                                )
+
+                                BottomNavigationStep.MyPageScreen -> MyPageScreen(
+                                    navigateToMyPage = {
+                                        notificationNavigator.navigateFrom(activity = this)
+                                    },
+                                )
                             }
                         }
                         // TODO(limsaehyun): 추후에 QuackDivider 로 교체 필요
@@ -112,7 +142,7 @@ class HomeActivity : BaseActivity() {
                         )
                         DuckTestBottomNavigation(
                             modifier = Modifier.layoutId(HomeBottomNavigationViewLayoutId),
-                            selectedIndex = state.step.index,
+                            selectedIndex = state.bottomNavigationStep.index,
                             onClick = { index ->
                                 homeViewModel.navigationPage(
                                     BottomNavigationStep.toStep(index),
@@ -184,7 +214,8 @@ class HomeActivity : BaseActivity() {
             }
 
             is HomeSideEffect.NavigateToHomeDetail -> {
-                startActivityWithAnimation<DetailActivity>(
+                detailNavigator.navigateFrom(
+                    activity = this,
                     intentBuilder = {
                         putExtra(Extras.ExamId, sideEffect.examId)
                     },
@@ -192,7 +223,11 @@ class HomeActivity : BaseActivity() {
             }
 
             is HomeSideEffect.NavigateToCreateProblem -> {
-                startActivityWithAnimation<CreateProblemActivity>()
+                createProblemNavigator.navigateFrom(activity = this)
+            }
+
+            HomeSideEffect.ClickRankingRetry -> {
+                rankingViewModel.clickRetryRanking()
             }
         }
     }

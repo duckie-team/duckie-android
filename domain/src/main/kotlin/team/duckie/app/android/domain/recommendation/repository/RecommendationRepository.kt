@@ -19,5 +19,5 @@ import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 interface RecommendationRepository {
     fun fetchRecommendations(): Flow<PagingData<RecommendationItem>>
 
-    suspend fun fetchJumbotrons(page: Int): ImmutableList<Exam>
+    suspend fun fetchJumbotrons(): ImmutableList<Exam>
 }

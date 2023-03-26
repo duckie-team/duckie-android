@@ -8,6 +8,7 @@
 package team.duckie.app.android.feature.ui.home.viewmodel.dummy
 
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
@@ -40,3 +41,12 @@ internal val skeletonRecommendationItems = listOf(
         ),
     ),
 )
+
+internal val skeletonFollowingExam = (0..2).map {
+    HomeState.RecommendExam(
+        coverUrl = "",
+        title = randomString(12),
+        examId = 1,
+        owner = HomeState.RecommendExam.User.empty().copy(nickname = randomString(3)),
+    )
+}.toPersistentList()

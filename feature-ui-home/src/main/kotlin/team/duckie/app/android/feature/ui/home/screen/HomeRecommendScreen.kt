@@ -31,8 +31,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -69,7 +67,7 @@ import team.duckie.quackquack.ui.component.QuackLargeButtonType
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
@@ -81,9 +79,9 @@ internal fun HomeRecommendScreen(
     val lazyRecommendations = vm.recommendations.collectAsLazyPagingItems()
 
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = state.isHomeLoading,
+        refreshing = state.isHomeRecommendPullRefreshLoading,
         onRefresh = {
-            vm.fetchRecommendFollowing()
+            vm.refreshRecommendations(forceLoading = true)
         },
     )
 
@@ -124,7 +122,7 @@ internal fun HomeRecommendScreen(
                                 examId = examId,
                             )
                         },
-                        isLoading = state.isHomeLoading,
+                        isLoading = state.isHomeRecommendLoading,
                     )
                 }
             }
@@ -153,13 +151,13 @@ internal fun HomeRecommendScreen(
                     exams = item?.exams?.toImmutableList() ?: persistentListOf(),
                     onExamClicked = { examId -> vm.navigateToHomeDetail(examId) },
                     onTagClicked = { tag -> vm.navigateToSearch(tag) },
-                    isLoading = state.isHomeLoading,
+                    isLoading = state.isHomeRecommendLoading,
                 )
             }
         }
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = state.isHomeLoading,
+            refreshing = state.isHomeRecommendPullRefreshLoading,
             state = pullRefreshState,
         )
     }
@@ -246,7 +244,7 @@ private fun HomeTopicRecommendLayout(
                 tag.addHashTag() to { onTagClicked(tag) },
             ),
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(

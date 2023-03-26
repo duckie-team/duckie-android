@@ -15,7 +15,7 @@ import javax.inject.Inject
 class ClearRecentSearchUseCase @Inject constructor(
     private val repository: SearchRepository,
 ) {
-    operator fun invoke(tagId: Int) = runCatching {
-        repository.clearRecentSearch(tagId = tagId)
+    suspend operator fun invoke(keyword: String) = runCatching {
+        repository.clearRecentSearch(keyword = keyword)
     }
 }

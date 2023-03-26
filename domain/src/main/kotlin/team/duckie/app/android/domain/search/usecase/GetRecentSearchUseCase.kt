@@ -15,8 +15,7 @@ import javax.inject.Inject
 class GetRecentSearchUseCase @Inject constructor(
     private val repository: SearchRepository,
 ) {
-
-    operator fun invoke() = runCatching {
+    suspend operator fun invoke() = runCatching {
         repository.getRecentSearch()
     }
 }

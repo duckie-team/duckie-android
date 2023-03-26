@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.search.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,13 +16,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,11 +35,10 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.ui.search.R
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody2
+import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -48,47 +49,64 @@ import team.duckie.quackquack.ui.util.DpSize
 internal fun SearchScreen(
     vm: SearchViewModel,
 ) {
+    LaunchedEffect(Unit) {
+        vm.getRecentSearch()
+    }
+
     val state = vm.collectAsState().value
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(SearchHorizontalPadding)
+            .imePadding(),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            QuackImage(
-                src = QuackIcon.ArrowBack,
-                size = DpSize(all = 24.dp),
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            // TODO(limsaehyun): QuackQuack를 통해서 underline이 없는 TextField로 교체해야 함
-            @AllowMagicNumber(because = "임시로 구현한 컴포넌트")
-            QuackBasicTextField(
-                modifier = Modifier.offset(y = (-4).dp),
-                text = state.searchKeyword,
-                onTextChanged = { keyword ->
-                    vm.updateSearchKeyword(keyword = keyword)
-                },
-                placeholderText = stringResource(id = R.string.try_search),
-            )
+        Spacer(modifier = Modifier.height(22.dp))
+        if (state.recentSearch.isEmpty()) {
+            RecentSearchNotFoundScreen()
+        } else {
+            LazyColumn {
+                recentKeywordSection(
+                    tags = state.recentSearch,
+                    onClickedClearAll = {
+                        vm.clearAllRecentSearch()
+                    },
+                    onClickedClear = { keyword ->
+                        vm.clearRecentSearch(keyword = keyword)
+                    },
+                    navigateToResult = { keyword ->
+                        vm.updateSearchKeyword(
+                            keyword = keyword,
+                            debounce = false,
+                        )
+                    },
+                )
+            }
         }
-        LazyColumn {
-            recentKeywordSection(
-                tags = state.recentSearch,
-                onClickedClearAll = {
-                    vm.clearAllRecentSearch()
-                },
-                onClickedClear = { tagId ->
-                    vm.clearRecentSearch(tagId = tagId)
-                },
-            )
-        }
+    }
+}
+
+/**
+ * 최근 검색어가 없을 경우 표시되는 화면
+ * TODO(limsaehyun): 디자인 변경 예정
+ * */
+@Composable
+private fun RecentSearchNotFoundScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        QuackHeadLine1(
+            text = stringResource(id = R.string.no_recent_search),
+            color = QuackColor.Gray1,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        QuackBody1(
+            text = stringResource(id = R.string.search_another_keyword),
+            color = QuackColor.Gray1,
+        )
     }
 }
 
@@ -120,9 +138,10 @@ private fun LazyListScope.recommendKeywordSection(
  * 최신 검색어를 나타내는 Section
  */
 private fun LazyListScope.recentKeywordSection(
-    tags: ImmutableList<Tag>,
+    tags: ImmutableList<String>,
+    navigateToResult: (String) -> Unit,
     onClickedClearAll: () -> Unit,
-    onClickedClear: (Int) -> Unit,
+    onClickedClear: (String) -> Unit,
 ) {
     item {
         Row(
@@ -145,24 +164,27 @@ private fun LazyListScope.recentKeywordSection(
 
     items(tags) { tag ->
         RecentSearchLayout(
-            keyword = tag.name,
-            onCloseClicked = {
-                onClickedClear(tag.id)
+            keyword = tag,
+            onCloseClick = { keyword ->
+                onClickedClear(keyword)
             },
-        )
+        ) { keyword ->
+            navigateToResult(keyword)
+        }
     }
 }
 
 @Composable
 private fun RecentSearchLayout(
     keyword: String,
-    onCloseClicked: () -> Unit,
+    onCloseClick: (String) -> Unit,
+    onClick: (String) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(44.dp)
-            .padding(horizontal = 12.dp),
+            .clickable { onClick(keyword) }
+            .padding(vertical = 12.dp),
     ) {
         QuackImage(
             src = QuackIcon.Search,
@@ -176,7 +198,7 @@ private fun RecentSearchLayout(
             src = QuackIcon.Close,
             size = DpSize(16.dp),
             tint = QuackColor.Gray2,
-            onClick = onCloseClicked,
+            onClick = { onCloseClick(keyword) },
         )
     }
 }
