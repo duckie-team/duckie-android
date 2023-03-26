@@ -60,7 +60,7 @@ compose-accompanist = "0.28.0"
 compose-lottie = "6.0.0"
 compose-camposer = "0.1.1"
 compose-customview-pooling-container = "1.0.0"
-compose-coil = "2.2.2"
+compose-coil = "2.3.0"
 
 # ktx
 ktx-core = "1.9.0"
