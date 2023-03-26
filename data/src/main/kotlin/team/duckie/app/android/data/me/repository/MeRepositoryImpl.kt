@@ -9,6 +9,7 @@ package team.duckie.app.android.data.me.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.first
 import team.duckie.app.android.data.auth.datasource.AuthDataSource
 import team.duckie.app.android.data.user.datasource.UserDataSource
@@ -61,6 +62,12 @@ class MeRepositoryImpl @Inject constructor(
 
     override suspend fun setMe(newMe: User) {
         me = newMe
+    }
+
+    override suspend fun clearMeToken() {
+        dataStore.edit { preferences ->
+            preferences.remove(PreferenceKey.Account.AccessToken)
+        }
     }
 
     private suspend fun getMeId(): Int? {

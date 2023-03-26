@@ -18,6 +18,7 @@ plugins {
     id(libs.plugins.firebase.crashlytics.get().pluginId)
     id(libs.plugins.firebase.performance.get().pluginId)
     id(libs.plugins.util.secrets.get().pluginId)
+    id(libs.plugins.ui.oss.license.get().pluginId)
 }
 
 android {
