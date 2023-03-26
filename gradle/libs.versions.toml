@@ -39,14 +39,14 @@ apache-commons-io = "2.11.0"
 
 # androidx
 androidx-appcompat = "1.6.1" # needs for oss license activity
-androidx-lifecycle-savedstate = "2.5.1"
+androidx-lifecycle-savedstate = "2.6.1"
 androidx-splash = "1.0.0"
 androidx-datastore = "1.0.0"
 androidx-room = "2.5.1"
 androidx-profile-installer = "1.2.2"
 androidx-paging = "3.1.1"
-androidx-paging-compose = "1.0.0-alpha17"
-androidx-annotation = "1.5.0"
+androidx-paging-compose = "1.0.0-alpha18"
+androidx-annotation = "1.6.0"
 
 # compose
 compose-core = "1.3.1"
@@ -65,7 +65,7 @@ compose-coil = "2.2.2"
 # ktx
 ktx-core = "1.9.0"
 ktx-activity = "1.6.1"
-ktx-lifecycle = "2.5.1"
+ktx-lifecycle = "2.6.1"
 
 # ui
 ui-oss-license = "17.0.0"
