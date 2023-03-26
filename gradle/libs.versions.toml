@@ -72,7 +72,7 @@ ui-oss-license = "17.0.0"
 ui-system-controller = "1.0.1"
 
 # exoplayer
-exoplayer-core = "2.18.4"
+exoplayer-core = "2.18.5"
 
 # analytics
 analytics-leakcanary = "2.10"
