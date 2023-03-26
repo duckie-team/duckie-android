@@ -311,7 +311,7 @@ internal fun CreateProblemScreen(
                                         coroutineShape.launch {
                                             selectedQuestionIndex = questionIndex
                                             keyboard?.hide()
-                                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                            sheetState.show()
                                         }
                                     },
                                     answer = correctAnswer,
@@ -360,7 +360,7 @@ internal fun CreateProblemScreen(
                                         coroutineShape.launch {
                                             selectedQuestionIndex = questionIndex
                                             keyboard?.hide()
-                                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                            sheetState.show()
                                         }
                                     },
                                     answers = answers,
@@ -422,7 +422,7 @@ internal fun CreateProblemScreen(
                                         coroutineShape.launch {
                                             selectedQuestionIndex = questionIndex
                                             keyboard?.hide()
-                                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                            sheetState.show()
                                         }
                                     },
                                     answers = answers,
@@ -489,7 +489,7 @@ internal fun CreateProblemScreen(
                     leftButtonClick = {
                         coroutineShape.launch {
                             keyboard?.hide()
-                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                            sheetState.show()
                         }
                     },
                     tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
