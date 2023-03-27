@@ -5,7 +5,12 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package team.duckie.app.android.feature.ui.detail.viewmodel.state
+
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
@@ -24,6 +29,7 @@ sealed class DetailState {
         val exam: Exam,
         val appUser: User,
         val isFollowing: Boolean = false,
+        val sheetState: ModalBottomSheetValue = ModalBottomSheetValue.Hidden,
     ) : DetailState() {
         private val tags: List<Tag>
             get() = mutableListOf<Tag>().apply {
