@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.detail.viewmodel
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,6 +33,7 @@ import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
+@OptIn(ExperimentalMaterialApi::class)
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
@@ -147,5 +149,18 @@ class DetailViewModel @Inject constructor(
 
     fun goToSearch(tag: String) = viewModelScope.launch {
         intent { postSideEffect(DetailSideEffect.NavigateToSearch(tag)) }
+    }
+
+    fun updateReportDialogVisible(visible: Boolean) = intent {
+        reduce {
+            require(state is DetailState.Success)
+            (state as DetailState.Success).run {
+                copy(reportDialogVisible = visible)
+            }
+        }
+    }
+
+    fun report() {
+        // TODO(limsaehyun): 신고하기 로직
     }
 }

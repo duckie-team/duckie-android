@@ -59,8 +59,11 @@ import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.shared.ui.compose.DuckieBottomSheetDialog
+import team.duckie.app.android.shared.ui.compose.DuckieDialog
+import team.duckie.app.android.shared.ui.compose.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
+import team.duckie.app.android.shared.ui.compose.duckieDialogPosition
 import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
@@ -118,6 +121,18 @@ internal fun DetailScreen(
         )
 
         state is DetailState.Success -> {
+            DuckieDialog(
+                modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
+                title = stringResource(id = R.string.detail_report_success),
+                rightButtonText = stringResource(id = R.string.check),
+                rightButtonOnClick = {
+                    viewModel.updateReportDialogVisible(false)
+                },
+                visible = state.reportDialogVisible,
+                onDismissRequest = {
+                    viewModel.updateReportDialogVisible(false)
+                },
+            )
             DetailBottomSheetDialog(
                 bottomSheetState = bottomSheetState,
                 closeSheet = {
