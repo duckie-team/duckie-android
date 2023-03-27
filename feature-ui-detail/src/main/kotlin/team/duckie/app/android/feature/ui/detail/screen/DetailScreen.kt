@@ -32,12 +32,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
@@ -99,6 +102,8 @@ internal fun DetailScreen(
     val state = viewModel.collectAsState().value
     var isNetworkAvailable: Boolean by remember { mutableStateOf(false) }
     isNetworkAvailable = !NetworkUtil.isNetworkAvailable(context)
+    val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val coroutineScope = rememberCoroutineScope()
 
     return when {
         isNetworkAvailable -> ErrorScreen(
@@ -114,16 +119,23 @@ internal fun DetailScreen(
 
         state is DetailState.Success -> {
             DetailBottomSheetDialog(
-                sheetState = state.sheetState,
+                bottomSheetState = bottomSheetState,
                 closeSheet = {
-                    viewModel.updateBottomSheetValue(ModalBottomSheetValue.Hidden)
+                    coroutineScope.launch {
+                        bottomSheetState.hide()
+                    }
                 },
                 onReport = viewModel::report,
             ) {
                 DetailSuccessScreen(
-                    viewModel,
-                    modifier,
-                    state,
+                    modifier = modifier,
+                    viewModel = viewModel,
+                    openBottomSheet = {
+                        coroutineScope.launch {
+                            bottomSheetState.show()
+                        }
+                    },
+                    state = state,
                 )
             }
         }
@@ -147,9 +159,10 @@ private data class DetailBottomSheetItem(
     val onClick: () -> Unit,
 )
 
+/** 더보기 클릭 시 사용되는 BottomSheetDialog */
 @Composable
 private fun DetailBottomSheetDialog(
-    sheetState: ModalBottomSheetValue,
+    bottomSheetState: ModalBottomSheetState,
     closeSheet: () -> Unit,
     onReport: () -> Unit,
     content: @Composable () -> Unit,
@@ -166,7 +179,7 @@ private fun DetailBottomSheetDialog(
 
     DuckieBottomSheetDialog(
         useHandle = true,
-        sheetState = rememberModalBottomSheetState(sheetState),
+        sheetState = bottomSheetState,
         sheetContent = {
             LazyColumn(
                 modifier = Modifier
@@ -210,6 +223,7 @@ private fun DetailBottomSheetDialog(
 private fun DetailSuccessScreen(
     viewModel: DetailViewModel,
     modifier: Modifier,
+    openBottomSheet: () -> Unit,
     state: DetailState.Success,
 ) {
     Layout(
@@ -224,7 +238,7 @@ private fun DetailSuccessScreen(
             DetailContentLayout(
                 state = state,
                 tagItemClick = viewModel::goToSearch,
-                moreButtonClick = { viewModel.updateBottomSheetValue(ModalBottomSheetValue.Expanded) },
+                moreButtonClick = openBottomSheet,
             ) {
                 viewModel.followUser()
             }
