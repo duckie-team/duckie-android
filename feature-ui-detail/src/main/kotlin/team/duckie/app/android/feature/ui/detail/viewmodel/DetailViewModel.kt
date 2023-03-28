@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.detail.viewmodel
 
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,15 +24,18 @@ import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.heart.usecase.DeleteHeartUseCase
 import team.duckie.app.android.domain.heart.usecase.PostHeartUseCase
+import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.util.kotlin.exception.DuckieResponseFieldNPE
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
-@OptIn(ExperimentalMaterialApi::class)
+private const val ReportAlreadyExists = "이미 신고한 게시물 입니다!"
+
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val examRepository: ExamRepository,
@@ -42,6 +44,7 @@ class DetailViewModel @Inject constructor(
     private val postHeartUseCase: PostHeartUseCase,
     private val deleteHeartUseCase: DeleteHeartUseCase,
     private val makeExamInstanceUseCase: MakeExamInstanceUseCase,
+    private val reportUseCase: ReportUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
@@ -68,6 +71,20 @@ class DetailViewModel @Inject constructor(
 
     suspend fun refresh() {
         initState()
+    }
+
+    /** [examId] 게시글을 신고한다. */
+    fun report(examId: Int) = intent {
+        reportUseCase(examId = examId)
+            .onSuccess {
+                updateReportDialogVisible(true)
+            }
+            .onFailure { exception ->
+                when {
+                    exception.isReportAlreadyExists -> postSideEffect(DetailSideEffect.SendToast(ReportAlreadyExists))
+                    else -> postSideEffect(DetailSideEffect.ReportError(exception))
+                }
+            }
     }
 
     fun followUser() = viewModelScope.launch {
@@ -158,9 +175,5 @@ class DetailViewModel @Inject constructor(
                 copy(reportDialogVisible = visible)
             }
         }
-    }
-
-    fun report() {
-        // TODO(limsaehyun): 신고하기 로직
     }
 }

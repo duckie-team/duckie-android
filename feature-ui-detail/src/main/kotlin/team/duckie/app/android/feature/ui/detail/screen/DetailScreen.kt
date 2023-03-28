@@ -140,7 +140,7 @@ internal fun DetailScreen(
                         bottomSheetState.hide()
                     }
                 },
-                onReport = viewModel::report,
+                onReport = { viewModel.report(state.exam.id) },
             ) {
                 DetailSuccessScreen(
                     modifier = modifier,
@@ -210,7 +210,7 @@ private fun DetailBottomSheetDialog(
                             .quackClickable(
                                 rippleEnabled = false,
                             ) {
-                                item.onClick
+                                item.onClick()
                                 closeSheet()
                             }
                             .padding(start = 16.dp),
