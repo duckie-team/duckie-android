@@ -10,9 +10,9 @@
 package team.duckie.app.android.feature.ui.detail.screen
 
 import android.app.Activity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -46,6 +47,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
+import team.duckie.app.android.shared.ui.compose.DuckieIcon
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.util.android.network.NetworkUtil
@@ -291,11 +293,12 @@ private fun DetailProfileLayout(
                 size = DpSize(32.dp, 32.dp),
             )
         } else {
-            Box(
-                Modifier
+            Image(
+                modifier = Modifier
                     .size(DpSize(32.dp, 32.dp))
-                    .clip(SquircleShape)
-                    .background(QuackColor.Gray2.composeColor),
+                    .clip(SquircleShape),
+                painter = painterResource(id = DuckieIcon.DefaultProfile),
+                contentDescription = null,
             )
         }
 
