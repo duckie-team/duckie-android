@@ -47,7 +47,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
-import team.duckie.app.android.shared.ui.compose.DuckieIcon
+import team.duckie.app.android.shared.ui.compose.DefaultProfile
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.util.android.network.NetworkUtil
@@ -297,7 +297,7 @@ private fun DetailProfileLayout(
                 modifier = Modifier
                     .size(DpSize(32.dp, 32.dp))
                     .clip(SquircleShape),
-                painter = painterResource(id = DuckieIcon.DefaultProfile),
+                painter = painterResource(id = QuackIcon.DefaultProfile),
                 contentDescription = null,
             )
         }

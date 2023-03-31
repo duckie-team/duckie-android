@@ -30,6 +30,7 @@ import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
+import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
@@ -89,7 +90,7 @@ fun UserFollowingLayout(
                                 onClickUserProfile(userId)
                             }
                         },
-                    painter = painterResource(id = DuckieIcon.DefaultProfile),
+                    painter = painterResource(id = QuackIcon.DefaultProfile),
                     contentDescription = null,
                 )
             } else {

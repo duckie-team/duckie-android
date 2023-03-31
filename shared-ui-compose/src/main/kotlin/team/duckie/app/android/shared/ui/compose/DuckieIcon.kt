@@ -7,8 +7,6 @@
 
 package team.duckie.app.android.shared.ui.compose
 
-object DuckieIcon {
+import team.duckie.quackquack.ui.icon.QuackIcon
 
-    /** 기본 프로필 이미지 */
-    val DefaultProfile = R.drawable.ic_default_profile
-}
+val QuackIcon.Companion.DefaultProfile get() = R.drawable.ic_default_profile
