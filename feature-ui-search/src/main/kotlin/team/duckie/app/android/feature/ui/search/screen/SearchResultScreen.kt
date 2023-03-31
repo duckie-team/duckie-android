@@ -60,12 +60,6 @@ internal fun SearchResultScreen(
         it.title
     }.toPersistentList()
 
-    val focusManager = LocalFocusManager.current
-
-    LaunchedEffect(Unit) {
-        focusManager.clearFocus()
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
