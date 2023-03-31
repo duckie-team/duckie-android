@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.data._local
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import team.duckie.app.android.data.exam.dao.FavoriteExamsDao
@@ -24,6 +25,9 @@ import team.duckie.app.android.data.tag.model.SearchEntity
     ],
     version = 2,
     exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2),
+    ],
 )
 abstract class DuckieDatabase : RoomDatabase() {
     abstract fun favoriteExamsDao(): FavoriteExamsDao
