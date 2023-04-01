@@ -63,7 +63,7 @@ jobs:
           git commit -m "veresionCode $versionCode 으로 올리기"
 
       - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
-          branch: develop
+        run: |
+          git push --force-with-lease origin develop
+        env:
+          GITHUB_TOKEN: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
