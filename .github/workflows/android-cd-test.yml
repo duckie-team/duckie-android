@@ -1,0 +1,66 @@
+# ref: https://dev.to/supersuman/build-and-sign-android-apps-using-github-actions-54j
+name: Android CD TEST
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false"
+on:
+  push:
+    tags:
+      - v*
+      - github_action_test_*
+
+jobs:
+  cd-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Unarchive keystore signing files
+        run: |
+          gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.SECRET_GPG_PASSWORD }} --output secrets.tar secrets.tar.gpg
+          tar xvf secrets.tar
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1.0.6
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: Setup MavenLocal
+        run: ./gradlew :local-enums:publishToMavenLocal
+
+      - name: Increase versionCode
+        run: |
+          # 특정 경로의 파일 내에서 특정 패턴이 포함된 라인의 숫자값을 가져옴
+          versionCode=$(grep 'const val versionCode =' ${{ secrets.DUCKIE_VERSION_CODE_RELATIVE_PATH }} | sed 's/[^0-9]*//g')
+
+          # 숫자로 바꾸고 1을 더한 값으로 업데이트
+          versionCode=$((versionCode + 1))
+
+          # sed를 사용하여 파일 내 해당 라인 업데이트
+          sed -i "s/const val versionCode = .*/const val versionCode = $versionCode/" ./${{ secrets.DUCKIE_VERSION_CODE_RELATIVE_PATH }}
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "ridickle7@gamil.com"
+          git config --local user.name "ricky_0_k"
+          git add .
+          git commit -m "veresionCode $versionCode 으로 올리기"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
+          branch: develop
