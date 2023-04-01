@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
+<resources>
+    <string name="app_setting">앱 설정</string>
+
+    <string name="account_info">계정 정보</string>
+    <string name="notification">알림</string>
+    <string name="inquiry">문의</string>
+    <string name="terms_and_policies">약관 및 정책</string>
+    <string name="version_info">버전 정보</string>
+    <string name="terms_of_service">이용약관</string>
+    <string name="privacy_policy">개인정보처리방침</string>
+    <string name="open_source_license">오픈소스 라이선스</string>
+
+    <string name="log_out">로그아웃</string>
+    <string name="withdraw">탈퇴하기</string>
+    <string name="log_out_check_message">앗, 정말 로그아웃 하시겠어요?</string>
+
+    <string name="sign_in_account">로그인 계정</string>
+    <string name="email">이메일</string>
+    <string name="contact_inquiry">문의처</string>
+    <string name="instagram">인스타그램</string>
+    <string name="cancel">취소</string>
+
+    <!--  앱 알림 설정  -->
+    <string name="setting_notification_exam_review">덕력고사 검토</string>
+    <string name="setting_notification_exam_like">덕력고사 좋아요</string>
+    <string name="setting_notification_follow">팔로우</string>
+    <string name="setting_notification_following">팔로우한 유저</string>
+    <string name="setting_notification_favorite_category_tag">관심 카테고리 및 태그</string>
+    <string name="setting_notification_ranking">명예의 전당</string>
+    <string name="setting_notification_notice">공지사항</string>
+
+    <string name="setting_notification_exam_review_description">내가 출제한 덕력고사 및 문제에 대한 알림</string>
+    <string name="setting_notification_exam_like_description">내 덕력고사에 다른 유저가 좋아요를 눌렀을 때의 알림</string>
+    <string name="setting_notification_follow_description">다른 유저가 나를 팔로우했을 때의 알림</string>
+    <string name="setting_notification_following_description">팔로우한 유저 활동에 대한 알림</string>
+    <string name="setting_notification_favorite_category_tag_description">내 관심 카테고리와 태그의 덕력고사가 업로드 됐을 때의 알림</string>
+    <string name="setting_notification_ranking_description">나 혹은 내 덕력고사가 명예의 전당에 올랐을 때의 알림</string>
+    <string name="setting_notification_notice_description">덕키 공지 및 업데이트에 대한 알림</string>
+</resources>
