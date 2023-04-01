@@ -48,7 +48,7 @@ jobs:
           curl -X PATCH \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}" \
-            https://api.github.com/repos/duckie-team/duckie-android/branches/develop/protection \
+            https://api.github.com/repos/duckie-team/duckie-android/branches/refs/heads/develop/protection \
             -d '{
               "required_status_checks": null,
               "enforce_admins": null,
@@ -94,7 +94,7 @@ jobs:
           curl -X PATCH \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}" \
-            https://api.github.com/repos/duckie-team/duckie-android/branches/develop/protection \
+            https://api.github.com/repos/duckie-team/duckie-android/branches/refs/heads/develop/protection \
             -d '{
               "required_status_checks": {
                 "strict": true,
