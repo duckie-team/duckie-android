@@ -38,9 +38,6 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
-      - name: Setup MavenLocal
-        run: ./gradlew :local-enums:publishToMavenLocal
-
       - name: Rebase branch
         run: |
           git pull --rebase origin develop
