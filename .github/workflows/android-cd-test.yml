@@ -67,6 +67,6 @@ jobs:
 
       - name: Push changes
         run: |
-          git push --force-with-lease
+          git push --force
         env:
           GITHUB_TOKEN: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
