@@ -7,8 +7,7 @@
 
 package team.duckie.app.android.shared.ui.compose
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,8 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,7 @@ import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
+import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
@@ -78,20 +80,18 @@ fun UserFollowingLayout(
             ),
         content = {
             if (profileImgUrl.isEmpty()) {
-                // TODO(limsaehyun): 추후에 기본 프로필 이미지로 변경해야 함
-                Box(
+                Image(
                     modifier = Modifier
                         .layoutId(UserInfoBlockUserProfileLayoutId)
                         .size(HomeProfileSize)
-                        .background(
-                            color = QuackColor.Gray2.composeColor,
-                            shape = SquircleShape,
-                        )
+                        .clip(SquircleShape)
                         .quackClickable {
                             if (onClickUserProfile != null) {
                                 onClickUserProfile(userId)
                             }
                         },
+                    painter = painterResource(id = QuackIcon.DefaultProfile),
+                    contentDescription = null,
                 )
             } else {
                 QuackImage(
