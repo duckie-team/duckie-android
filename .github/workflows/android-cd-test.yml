@@ -21,33 +21,6 @@ jobs:
           create-branch: true
           token: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
 
-      - name: Unarchive keystore signing files
-        run: |
-          gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.SECRET_GPG_PASSWORD }} --output secrets.tar secrets.tar.gpg
-          tar xvf secrets.tar
-
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1.0.6
-
-      - name: Setup JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: zulu
-          java-version: 17
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-home-cache-cleanup: true
-
-      - name: Set Config
-        run: |
-          git config --local user.email "ridickle7@gamil.com"
-          git config --local user.name "ricky_0_k"
-
       - name: Increase versionCode
         run: |
           # 특정 경로의 파일 내에서 특정 패턴이 포함된 라인의 숫자값을 가져옴
@@ -68,4 +41,4 @@ jobs:
 
       - name: Push changes
         run: |
-          git push --no-verify --force-with-lease
+          git push
