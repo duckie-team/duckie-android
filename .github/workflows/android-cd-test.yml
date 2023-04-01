@@ -42,21 +42,19 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
-      # 현재 develop 의 보호 상태를 기억
-      - name: Save current develop branch protection status
-        uses: jakejarvis/actions-gh-restore-branch@v1
-        id: save_develop_branch_status
-        with:
-          token: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
-          branch: develop
-
       # 임시로 보호 상태를 해제
-      - name: Temporarily remove develop branch protect
-        run: |
-          gh api -X PATCH /repos/{owner}/{repo}/branches/develop/protection \
-            -H "Accept: application/vnd.github.luke-cage-preview+json" \
-            -d '{ "required_pull_request_reviews": null, "enforce_admins": false }' \
-            --silent
+      - name: Unprotect branch
+        if: always()
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const github = require("@actions/github");
+            const octokit = new github.GitHub(${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }});
+            octokit.repos.removeBranchProtection({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              branch: "develop",
+            });
 
       - name: Set Config
         run: |
@@ -84,15 +82,25 @@ jobs:
       - name: Push changes
         run: |
           git push --no-verify --force-with-lease
-        env:
-          GITHUB_TOKEN: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
 
       # 원래 보호 상태를 복원
-      - name: Restore develop branch protection status
+      - name: Protect branch
         if: always()
-        uses: jakejarvis/actions-gh-restore-branch@v1
+        uses: actions/github-script@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: develop
-          # 저장되어 있던 보호 상태를 복원
-          branch_info: ${{ steps.save_develop_branch_status.outputs.branch_info }}
+          script: |
+            const github = require("@actions/github");
+            const octokit = new github.GitHub(${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }});
+            octokit.repos.updateBranchProtection({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              branch: "develop",
+              required_pull_request_reviews: {
+                required_approving_review_count: 1
+              },
+              required_status_checks: {
+                contexts: ["ci-build"]
+              },
+              enforce_admins: true,
+              restrictions: null
+            });
