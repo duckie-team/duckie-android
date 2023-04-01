@@ -14,7 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: refs/heads/develop
+          create-branch: true
 
       - name: Unarchive keystore signing files
         run: |
@@ -38,11 +42,10 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
-      - name: Set Config & Rebase branch
+      - name: Set Config
         run: |
           git config --local user.email "ridickle7@gamil.com"
           git config --local user.name "ricky_0_k"
-          git pull --rebase origin develop
 
       - name: Increase versionCode
         run: |
