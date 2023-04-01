@@ -43,18 +43,22 @@ jobs:
           gradle-home-cache-cleanup: true
 
       # 임시로 보호 상태를 해제
-      - name: Unprotect branch
-        if: always()
-        uses: actions/github-script@v5
-        with:
-          script: |
-            const github = require("@actions/github");
-            const octokit = new github.GitHub(${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }});
-            octokit.repos.removeBranchProtection({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
-              branch: "develop",
-            });
+      - name: Unprotect develop branch
+        run: |
+          curl -X PATCH \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}" \
+            https://api.github.com/repos/<OWNER>/<REPO>/branches/<BRANCH>/protection \
+            -d '{
+              "required_status_checks": null,
+              "enforce_admins": null,
+              "required_pull_request_reviews": {
+                "dismiss_stale_reviews": true,
+                "require_code_owner_reviews": false,
+                "required_approving_review_count": 1
+              },
+              "restrictions": null
+            }'
 
       - name: Set Config
         run: |
@@ -84,23 +88,25 @@ jobs:
           git push --no-verify --force-with-lease
 
       # 원래 보호 상태를 복원
-      - name: Protect branch
+      - name: Restore develop branch protection
         if: always()
-        uses: actions/github-script@v5
-        with:
-          script: |
-            const github = require("@actions/github");
-            const octokit = new github.GitHub(${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }});
-            octokit.repos.updateBranchProtection({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
-              branch: "develop",
-              required_pull_request_reviews: {
-                required_approving_review_count: 1
+        run: |
+          curl -X PATCH \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}" \
+            https://api.github.com/repos/<OWNER>/<REPO>/branches/<BRANCH>/protection \
+            -d '{
+              "required_status_checks": {
+                "strict": true,
+                "contexts": [
+                  "ci-build"
+                ]
               },
-              required_status_checks: {
-                contexts: ["ci-build"]
+              "enforce_admins": true,
+              "required_pull_request_reviews": {
+                "dismiss_stale_reviews": true,
+                "require_code_owner_reviews": false,
+                "required_approving_review_count": 1
               },
-              enforce_admins: true,
-              restrictions: null
-            });
+              "restrictions": null
+            }'
