@@ -19,6 +19,7 @@ jobs:
         with:
           ref: refs/heads/develop
           create-branch: true
+          token: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
 
       - name: Unarchive keystore signing files
         run: |
@@ -41,14 +42,6 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-home-cache-cleanup: true
-
-      # 임시로 보호 상태를 해제
-      - name: Unprotect branch
-        run: |
-          TOKEN="${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}"
-          BRANCH="develop"
-          API_URL="https://api.github.com/repos/${{ github.repository }}/branches/${BRANCH}/protection/enforce_admins"
-          curl -X DELETE -H "Authorization: token $TOKEN" "$API_URL"
 
       - name: Set Config
         run: |
@@ -76,13 +69,3 @@ jobs:
       - name: Push changes
         run: |
           git push --no-verify --force-with-lease
-
-      # 원래 보호 상태를 복원
-      - name: Restore develop branch protection
-        if: always()
-        run: |
-          TOKEN="${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}"
-          BRANCH="develop"
-          API_URL="https://api.github.com/repos/${{ github.repository }}/branches/${BRANCH}/protection"
-          PROTECTION_DATA="{\"enforce_admins\": true, \"required_pull_request_reviews\": {\"required_approving_review_count\": 1}, \"required_status_checks\": {\"contexts\": [\"ci-build\"], \"strict\": true}}"
-          curl -X PUT -H "Authorization: token $TOKEN" -H "Content-Type: application/json" -d "$PROTECTION_DATA" "$API_URL"
