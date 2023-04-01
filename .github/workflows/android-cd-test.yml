@@ -54,10 +54,17 @@ jobs:
 
       - name: Commit changes
         run: |
+          # 특정 경로의 파일 내에서 특정 패턴이 포함된 라인의 숫자값을 가져옴
+          versionCode=$(grep 'const val versionCode =' ${{ secrets.DUCKIE_VERSION_CODE_RELATIVE_PATH }} | sed 's/[^0-9]*//g')
+
           git config --local user.email "ridickle7@gamil.com"
           git config --local user.name "ricky_0_k"
           git add .
           git commit -m "veresionCode $versionCode 으로 올리기"
+
+      - name: Rebase branch
+        run: |
+          git pull --rebase origin develop
 
       - name: Push changes
         uses: ad-m/github-push-action@master
