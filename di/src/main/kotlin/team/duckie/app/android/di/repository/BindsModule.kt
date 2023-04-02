@@ -26,6 +26,7 @@ import team.duckie.app.android.data.me.repository.MeRepositoryImpl
 import team.duckie.app.android.data.notification.repository.NotificationRepositoryImpl
 import team.duckie.app.android.data.ranking.repository.RankingRepositoryImpl
 import team.duckie.app.android.data.recommendation.repository.RecommendationRepositoryImpl
+import team.duckie.app.android.data.report.repository.ReportRepositoryImpl
 import team.duckie.app.android.data.search.repository.SearchRepositoryImpl
 import team.duckie.app.android.data.tag.repository.TagRepositoryImpl
 import team.duckie.app.android.data.terms.repository.TermsRepositoryImpl
@@ -43,6 +44,7 @@ import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.notification.repository.NotificationRepository
 import team.duckie.app.android.domain.ranking.repository.RankingRepository
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
+import team.duckie.app.android.domain.report.repository.ReportRepository
 import team.duckie.app.android.domain.search.repository.SearchRepository
 import team.duckie.app.android.domain.tag.repository.TagRepository
 import team.duckie.app.android.domain.terms.repository.TermsRepository
@@ -101,4 +103,7 @@ abstract class BindsModule {
 
     @Binds
     abstract fun provideNotificationRepository(impl: NotificationRepositoryImpl): NotificationRepository
+
+    @Binds
+    abstract fun provideReportRepository(imple: ReportRepositoryImpl): ReportRepository
 }

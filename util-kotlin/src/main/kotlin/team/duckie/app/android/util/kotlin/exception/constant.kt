@@ -19,6 +19,9 @@ object ExceptionCode {
     // 409
     const val TAG_ALREADY_EXISTS = "TAG_ALREADY_EXISTS"
 
+    // 이미 신고했을 떄 발생하는 Error
+    const val ReportAlreadyExists = "REPORT_ALREADY_EXISTS"
+
     // 팔로잉이 존재하지 않을 때 발생하는 Error
     const val FollowingNotFound = "FOLLOWING_NOT_FOUND"
 
@@ -37,6 +40,9 @@ object ExceptionCode {
     const val KAKAOTALK_NOT_SUPPORT_EXCEPTION =
         "KAKAOTALK_NOT_SUPPORT_EXCEPTION"
 }
+
+val Throwable.isReportAlreadyExists: Boolean
+    get() = (this as? DuckieResponseException)?.code == ExceptionCode.ReportAlreadyExists
 
 val Throwable.isFollowingNotFound: Boolean
     get() = (this as? DuckieResponseException)?.code == ExceptionCode.FollowingNotFound

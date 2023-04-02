@@ -6,10 +6,13 @@
  */
 
 @file:AllowMagicNumber
+@file:OptIn(ExperimentalMaterialApi::class)
 
 package team.duckie.app.android.feature.ui.detail.screen
 
 import android.app.Activity
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,13 +26,20 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,13 +53,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.shared.ui.compose.DefaultProfile
+import team.duckie.app.android.shared.ui.compose.DuckieBottomSheetDialog
+import team.duckie.app.android.shared.ui.compose.DuckieDialog
+import team.duckie.app.android.shared.ui.compose.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
+import team.duckie.app.android.shared.ui.compose.duckieDialogPosition
 import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
@@ -69,9 +85,11 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackSmallButton
 import team.duckie.quackquack.ui.component.QuackSmallButtonType
+import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
@@ -89,6 +107,8 @@ internal fun DetailScreen(
     val state = viewModel.collectAsState().value
     var isNetworkAvailable: Boolean by remember { mutableStateOf(false) }
     isNetworkAvailable = !NetworkUtil.isNetworkAvailable(context)
+    val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val coroutineScope = rememberCoroutineScope()
 
     return when {
         isNetworkAvailable -> ErrorScreen(
@@ -102,11 +122,40 @@ internal fun DetailScreen(
             modifier,
         )
 
-        state is DetailState.Success -> DetailSuccessScreen(
-            viewModel,
-            modifier,
-            state,
-        )
+        state is DetailState.Success -> {
+            DuckieDialog(
+                modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
+                title = stringResource(id = R.string.detail_report_success),
+                rightButtonText = stringResource(id = R.string.check),
+                rightButtonOnClick = {
+                    viewModel.updateReportDialogVisible(false)
+                },
+                visible = state.reportDialogVisible,
+                onDismissRequest = {
+                    viewModel.updateReportDialogVisible(false)
+                },
+            )
+            DetailBottomSheetDialog(
+                bottomSheetState = bottomSheetState,
+                closeSheet = {
+                    coroutineScope.launch {
+                        bottomSheetState.hide()
+                    }
+                },
+                onReport = { viewModel.report(state.exam.id) },
+            ) {
+                DetailSuccessScreen(
+                    modifier = modifier,
+                    viewModel = viewModel,
+                    openBottomSheet = {
+                        coroutineScope.launch {
+                            bottomSheetState.show()
+                        }
+                    },
+                    state = state,
+                )
+            }
+        }
 
         else -> ErrorScreen(
             modifier,
@@ -116,11 +165,82 @@ internal fun DetailScreen(
     }
 }
 
+/**
+ * [DetailBottomSheetDialog] 에서 표시할 요소들을 정의합니다.
+ */
+private data class DetailBottomSheetItem(
+    @DrawableRes
+    val icon: Int,
+    @StringRes
+    val text: Int,
+    val onClick: () -> Unit,
+)
+
+/** 더보기 클릭 시 사용되는 BottomSheetDialog */
+@Composable
+private fun DetailBottomSheetDialog(
+    bottomSheetState: ModalBottomSheetState,
+    closeSheet: () -> Unit,
+    onReport: () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    val rememberBottomSheetItems = remember {
+        persistentListOf(
+            DetailBottomSheetItem(
+                icon = R.drawable.ic_report,
+                text = R.string.report,
+                onClick = onReport,
+            ),
+        )
+    }
+
+    DuckieBottomSheetDialog(
+        useHandle = true,
+        sheetState = bottomSheetState,
+        sheetContent = {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(bottom = 16.dp),
+            ) {
+                items(rememberBottomSheetItems) { item ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(44.dp)
+                            .quackClickable(
+                                rippleEnabled = false,
+                            ) {
+                                item.onClick()
+                                closeSheet()
+                            }
+                            .padding(start = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        QuackImage(
+                            src = item.icon,
+                            size = DpSize(width = 24.dp, height = 24.dp),
+                        )
+                        QuackSubtitle2(
+                            modifier = Modifier.padding(start = 8.dp),
+                            text = stringResource(id = item.text),
+                        )
+                    }
+                }
+            }
+        },
+    ) {
+        content()
+    }
+}
+
 /** 데이터 성공적으로 받은[DetailState.Success] 상세 화면 */
 @Composable
 private fun DetailSuccessScreen(
     viewModel: DetailViewModel,
     modifier: Modifier,
+    openBottomSheet: () -> Unit,
     state: DetailState.Success,
 ) {
     Layout(
@@ -132,7 +252,11 @@ private fun DetailSuccessScreen(
                 state = state,
             )
             // content Layout
-            DetailContentLayout(state, viewModel::goToSearch) {
+            DetailContentLayout(
+                state = state,
+                tagItemClick = viewModel::goToSearch,
+                moreButtonClick = openBottomSheet,
+            ) {
                 viewModel.followUser()
             }
             // 최하단 Layout
@@ -196,6 +320,7 @@ private fun DetailSuccessScreen(
 private fun DetailContentLayout(
     state: DetailState.Success,
     tagItemClick: (String) -> Unit,
+    moreButtonClick: () -> Unit,
     followButtonClick: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
@@ -225,11 +350,23 @@ private fun DetailContentLayout(
         )
         // 공백
         Spacer(modifier = Modifier.height(12.dp))
-        // 제목
-        QuackHeadLine2(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = state.exam.title,
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            // 제목
+            QuackHeadLine2(text = state.exam.title)
+            // 더보기 아이콘
+            QuackImage(
+                src = QuackIcon.More,
+                size = DpSize(width = 24.dp, height = 24.dp),
+                onClick = moreButtonClick,
+            )
+        }
+
         // 공백
         Spacer(modifier = Modifier.height(8.dp))
         // 내용
