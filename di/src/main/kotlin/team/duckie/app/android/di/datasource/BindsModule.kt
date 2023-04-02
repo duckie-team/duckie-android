@@ -19,6 +19,8 @@ import team.duckie.app.android.data.notification.datasource.NotificationDataSour
 import team.duckie.app.android.data.notification.datasource.NotificationRemoteDataSourceImpl
 import team.duckie.app.android.data.ranking.datasource.RankingDataSource
 import team.duckie.app.android.data.ranking.datasource.RankingRemoteDataSourceImpl
+import team.duckie.app.android.data.report.datasource.ReportRemoteDataSource
+import team.duckie.app.android.data.report.datasource.ReportRemoteDataSourceImpl
 import team.duckie.app.android.data.search.datasource.SearchLocalDataSource
 import team.duckie.app.android.data.search.datasource.SearchLocalDataSourceImpl
 import team.duckie.app.android.data.search.datasource.SearchRemoteDataSource
@@ -57,4 +59,8 @@ abstract class BindsModule {
     @Singleton
     @Binds
     abstract fun provideNotificationRemoteDataSource(impl: NotificationRemoteDataSourceImpl): NotificationDataSource
+
+    @Singleton
+    @Binds
+    abstract fun provideReportRemoteDataSource(impl: ReportRemoteDataSourceImpl): ReportRemoteDataSource
 }

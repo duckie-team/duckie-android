@@ -126,16 +126,16 @@ fun DuckieDialog(
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .quackClickable(
-                                    rippleEnabled = false,
-                                    onClick = leftButtonOnClick,
-                                ),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            if (leftButtonText != null) {
+                        if (leftButtonText != null) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .quackClickable(
+                                        rippleEnabled = false,
+                                        onClick = leftButtonOnClick,
+                                    ),
+                                contentAlignment = Alignment.Center,
+                            ) {
                                 QuackSubtitle(
                                     modifier = Modifier
                                         .quackClickable(
@@ -151,17 +151,17 @@ fun DuckieDialog(
                                 )
                             }
                         }
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .background(color = QuackColor.DuckieOrange.composeColor)
-                                .quackClickable(
-                                    rippleEnabled = false,
-                                    onClick = leftButtonOnClick,
-                                ),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            if (rightButtonText != null) {
+                        if (rightButtonText != null) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .background(color = QuackColor.DuckieOrange.composeColor)
+                                    .quackClickable(
+                                        rippleEnabled = false,
+                                        onClick = leftButtonOnClick,
+                                    ),
+                                contentAlignment = Alignment.Center,
+                            ) {
                                 QuackSubtitle(
                                     modifier = Modifier
                                         .quackClickable(

@@ -112,8 +112,9 @@ private fun RecentSearchNotFoundScreen() {
 
 /**
  * 추천 검색어를 나타내는 Section
+ * TODO(limsaehyun): 추후에 추천 검색어 기능에 사용 예정
  */
-@Suppress("UnusedPrivateMember") // TODO(limsaehyun): 추후에 추천 검색어 기능에 사용 예정
+@Suppress("UnusedPrivateMember")
 private fun LazyListScope.recommendKeywordSection(
     tags: LazyPagingItems<Tag>,
 //    keyword: String,
