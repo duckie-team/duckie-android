@@ -24,10 +24,11 @@ internal val skeletonExamineeItems = (1..10).map {
     )
 }.toImmutableList()
 
-internal val skeletonRankingExams = (1..10).map {
+internal fun skeletonExams(count: Int = 10) = (1..count).map {
     Exam.empty().copy(
         id = it,
         user = User.empty().copy(nickname = randomString(3)),
+        title = randomString(6),
         solvedCount = 20,
         description = randomString(6),
     )
