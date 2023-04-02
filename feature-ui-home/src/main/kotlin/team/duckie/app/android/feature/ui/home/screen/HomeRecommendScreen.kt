@@ -261,10 +261,12 @@ private fun HomeTopicRecommendLayout(
                         nickname = item.user?.nickname ?: "",
                         title = item.title,
                         solvedCount = item.solvedCount ?: 0,
+                        heartCount = item?.heartCount ?: 0,
                     ),
                     onItemClick = {
                         onExamClicked(item.id)
                     },
+                    onMoreClick = {},
                     isLoading = isLoading,
                 )
             }

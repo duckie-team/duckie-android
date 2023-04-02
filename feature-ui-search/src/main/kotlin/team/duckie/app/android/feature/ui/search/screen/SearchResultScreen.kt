@@ -176,9 +176,13 @@ private fun SearchResultForExam(
                             nickname = exam?.user?.nickname ?: "",
                             title = exam?.title ?: "",
                             solvedCount = exam?.solvedCount ?: 0,
+                            heartCount = exam?.heartCount ?: 0,
                         ),
                         onItemClick = {
                             navigateDetail(exam?.id ?: 0)
+                        },
+                        onMoreClick = {
+
                         },
                     )
                 }
