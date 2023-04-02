@@ -24,8 +24,8 @@ jobs:
       # 버전 코드 올리기
       - name: Set Config
         run: |
-          git config --local user.email "ridickle7@gmail.com"
-          git config --local user.name "ricky_0_k"
+          git config --local user.email "${{ secrets.DUCKIE_ADMINISTRATOR_EMAIL }}"
+          git config --local user.name "${{ secrets.DUCKIE_ADMINISTRATOR_USER_NAME }}"
 
       - name: Increase versionCode
         run: |
