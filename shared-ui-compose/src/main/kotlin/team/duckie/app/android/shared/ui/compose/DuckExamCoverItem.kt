@@ -107,6 +107,7 @@ internal fun DuckSmallCoverInternal(
                 .fillMaxWidth()
                 .padding(top = 8.dp)
                 .runIf(isLoading != null) { skeleton(isLoading!!) },
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             QuackBody2(text = duckTestCoverItem.nickname)
             QuackImage(
