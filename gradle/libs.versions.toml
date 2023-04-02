@@ -64,7 +64,7 @@ compose-coil = "2.2.2"
 
 # ktx
 ktx-core = "1.9.0"
-ktx-activity = "1.6.1"
+ktx-activity = "1.7.0"
 ktx-lifecycle = "2.6.1"
 
 # ui
