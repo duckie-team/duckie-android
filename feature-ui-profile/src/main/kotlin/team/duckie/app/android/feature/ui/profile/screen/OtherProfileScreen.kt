@@ -5,11 +5,9 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.screen.mypage
+package team.duckie.app.android.feature.ui.profile.screen
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -20,47 +18,56 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.component.HeadLineTopAppBar
-import team.duckie.app.android.feature.ui.home.screen.mypage.section.EditSection
-import team.duckie.app.android.feature.ui.home.screen.mypage.section.ExamSection
-import team.duckie.app.android.feature.ui.home.screen.mypage.section.FollowSection
-import team.duckie.app.android.feature.ui.home.screen.mypage.section.MyFavoriteTagSection
-import team.duckie.app.android.feature.ui.home.screen.mypage.section.ProfileSection
-import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonExams
+import team.duckie.app.android.domain.user.model.UserProfile
+import team.duckie.app.android.feature.ui.profile.R
+import team.duckie.app.android.feature.ui.profile.component.BackPressHeadLineTopAppBar
+import team.duckie.app.android.feature.ui.profile.dummy.skeletonExams
+import team.duckie.app.android.feature.ui.profile.section.ExamSection
+import team.duckie.app.android.feature.ui.profile.section.FollowSection
+import team.duckie.app.android.feature.ui.profile.section.MyFavoriteTagSection
+import team.duckie.app.android.feature.ui.profile.section.ProfileSection
 import team.duckie.app.android.shared.ui.compose.Create
-import team.duckie.app.android.shared.ui.compose.Notice
 import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
-internal fun MyPageScreen(
-    navigateToMyPage: () -> Unit,
-    navigateToSettingPage: () -> Unit,
-    isMe: Boolean = true,
+internal fun OtherProfileScreen(
+    userProfile: UserProfile,
+    isLoading: Boolean,
+    follow: Boolean,
+    onClickFollow: () -> Unit,
+) {
+    ProfileScreen(
+        userProfile = userProfile,
+        isLoading = isLoading,
+        editSection = {
+            FollowSection(
+                enabled = follow,
+                onClick = onClickFollow,
+            )
+        },
+        topBar = {
+            BackPressHeadLineTopAppBar(
+                title = userProfile.user?.nickname ?: "",
+                isLoading = isLoading,
+            )
+        }
+    )
+}
+
+
+@Composable
+internal fun ProfileScreen(
+    userProfile: UserProfile,
+    isLoading: Boolean,
+    topBar: @Composable () -> Unit,
+    editSection: @Composable () -> Unit,
+    onClickExam: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        HeadLineTopAppBar(
-            title = stringResource(id = R.string.mypage),
-            rightIcons = {
-                Row(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
-                    QuackImage(
-                        src = QuackIcon.Setting,
-                        size = DpSize(all = 24.dp),
-                        onClick = navigateToSettingPage,
-                    )
-                    QuackImage(
-                        src = QuackIcon.Notice,
-                        size = DpSize(all = 24.dp),
-                        onClick = navigateToMyPage,
-                    )
-                }
-            },
-        )
+        topBar()
         Column(
             modifier = Modifier
                 .verticalScroll(scrollState)
@@ -69,26 +76,18 @@ internal fun MyPageScreen(
                     vertical = 36.dp,
                 ),
         ) {
-            ProfileSection(
-                profile = "",
-                duckPower = "2222",
-                follower = 100,
-                following = 100,
-                introduce = "dd",
-                isLoading = false,
-            )
-            Spacer(space = 20.dp)
-            if (isMe) {
-                EditSection(
-                    onClickEditProfile = { /*TODO*/ },
-                    onClickEditTag = {},
-                )
-            } else {
-                FollowSection(
-                    enabled = true,
-                    onClick = {},
+            with(userProfile) {
+                ProfileSection(
+                    profile = user?.profileImageUrl ?: "",
+                    duckPower = user?.duckPower?.tier ?: "",
+                    follower = followerCount,
+                    following = followingCount,
+                    introduce = user?.introduction ?: "",
+                    isLoading = isLoading,
                 )
             }
+            Spacer(space = 20.dp)
+            editSection()
             Spacer(space = 36.dp)
             MyFavoriteTagSection(
                 title = "내 관심태그",
@@ -120,4 +119,3 @@ internal fun MyPageScreen(
         }
     }
 }
-

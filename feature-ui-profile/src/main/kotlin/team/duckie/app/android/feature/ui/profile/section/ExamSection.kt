@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.screen.mypage.section
+package team.duckie.app.android.feature.ui.profile.section
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +35,7 @@ internal fun ExamSection(
     title: String,
     exams: ImmutableList<Exam>,
     onClickShowAll: () -> Unit,
+    onClickExam: (Exam) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -75,8 +76,9 @@ internal fun ExamSection(
                         solvedCount = item.solvedCount ?: 0,
                         heartCount = item.heartCount ?: 0,
                     ),
-                    onItemClick = { },
-                    onMoreClick = { })
+                    onItemClick = { onClickExam(item) },
+                    onMoreClick = { }
+                )
             }
         }
     }
