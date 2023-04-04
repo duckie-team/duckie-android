@@ -43,6 +43,7 @@ internal fun UserResponse.toDomain() = User(
     id = id ?: duckieResponseFieldNpe("id"),
     nickname = nickName ?: DuckieDefaultNickname,
     profileImageUrl = profileImageUrl,
+    introduction = introduction,
     status = status?.toUserAuthStatus,
     duckPower = duckPower?.toDomain(),
     follow = follow?.toDomain(),

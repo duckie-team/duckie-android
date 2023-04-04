@@ -22,6 +22,9 @@ data class UserResponse(
     @field:JsonProperty("profileImageUrl")
     val profileImageUrl: String? = null,
 
+    @field:JsonProperty("introduction")
+    val introduction: String? = null,
+
     @field:JsonProperty("status")
     val status: String? = null,
 
