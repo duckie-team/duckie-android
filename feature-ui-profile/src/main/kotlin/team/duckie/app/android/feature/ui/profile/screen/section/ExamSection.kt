@@ -5,6 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+
 package team.duckie.app.android.feature.ui.profile.section
 
 import androidx.annotation.DrawableRes
@@ -30,12 +31,13 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
-internal fun ExamSection(
+fun ExamSection(
     @DrawableRes icon: Int,
     title: String,
     exams: ImmutableList<Exam>,
     onClickShowAll: () -> Unit,
     onClickExam: (Exam) -> Unit,
+    onClickMore: (() -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -77,7 +79,7 @@ internal fun ExamSection(
                         heartCount = item.heartCount ?: 0,
                     ),
                     onItemClick = { onClickExam(item) },
-                    onMoreClick = { }
+                    onMoreClick = onClickMore,
                 )
             }
         }
