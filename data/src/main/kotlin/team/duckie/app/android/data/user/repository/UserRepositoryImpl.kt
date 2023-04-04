@@ -12,6 +12,7 @@ import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
+import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ExperimentalApi
@@ -53,5 +54,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun fetchMeFollowings(): List<User> {
         return userDataSource.fetchMeFollowings()
+    }
+
+    override suspend fun fetchUserProfile(userId: Int): UserProfile {
+        return userDataSource.fetchUserProfile(userId)
     }
 }

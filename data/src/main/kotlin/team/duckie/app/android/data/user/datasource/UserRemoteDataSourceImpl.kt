@@ -21,12 +21,14 @@ import team.duckie.app.android.data._util.jsonBody
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserFollowingsResponse
+import team.duckie.app.android.data.user.model.UserProfileData
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.data.user.model.UsersResponse
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
+import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
@@ -120,6 +122,14 @@ class UserRemoteDataSourceImpl @Inject constructor(
         return responseCatchingFuel(
             response = response,
             parse = UsersResponse::toDomain,
+        )
+    }
+
+    override suspend fun fetchUserProfile(userId: Int): UserProfile {
+        val response = client.get("/profile/$userId")
+        return responseCatching(
+            response = response.body(),
+            parse = UserProfileData::toDomain,
         )
     }
 }
