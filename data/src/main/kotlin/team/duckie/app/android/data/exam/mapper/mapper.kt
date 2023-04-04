@@ -240,5 +240,6 @@ internal fun ProfileExamData.toDomain() = ProfileExam(
     thumbnailUrl = thumbnailUrl
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
     solvedCount = solvedCount,
+    heartCount = heartCount,
     user = user?.toDomain(),
 )

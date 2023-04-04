@@ -7,9 +7,11 @@
 
 package team.duckie.app.android.domain.user.model
 
+import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
 
+@Immutable
 data class UserProfile(
     val followerCount: Int,
     val followingCount: Int,

@@ -23,6 +23,9 @@ data class ProfileExamData(
     @field:JsonProperty("solvedCount")
     val solvedCount: Int? = null,
 
+    @field:JsonProperty("heartCount")
+    val heartCount: Int? = null,
+
     @field:JsonProperty("user")
     val user: UserResponse? = null,
 )
