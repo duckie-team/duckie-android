@@ -24,6 +24,8 @@ plugins {
     alias(libs.plugins.util.dependency.handler.extensions)
     alias(libs.plugins.util.dependency.graph)
     alias(libs.plugins.kotlin.ksp)
+    id("com.android.library") version "8.0.0-alpha08" apply false
+    id("org.jetbrains.kotlin.android") version "1.7.20" apply false
 }
 
 val UtilModulePrefix = "util-"

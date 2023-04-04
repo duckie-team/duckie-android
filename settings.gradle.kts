@@ -54,6 +54,7 @@ include(
     ":feature-ui-create-problem",
     ":feature-ui-detail",
     ":feature-ui-exam-result",
+    ":feature-ui-profile",
     ":shared-ui-compose",
     ":util-ui",
     ":util-kotlin",
