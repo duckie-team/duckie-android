@@ -44,7 +44,7 @@ internal fun OtherProfileScreen(
 
     ReportDialog(
         onClick = { viewModel.updateReportDialogVisible(false) },
-        visible = true,
+        visible = state.reportDialogVisible,
         onDismissRequest = { viewModel.updateReportDialogVisible(false) },
     )
     ReportBottomSheetDialog(
@@ -60,14 +60,14 @@ internal fun OtherProfileScreen(
             editSection = {
                 FollowSection(
                     enabled = state.follow,
-                    onClick = { },
+                    onClick = viewModel::followUser,
                 )
             },
             topBar = {
                 BackPressedHeadLineTopAppBar(
                     title = state.userProfile.user?.nickname ?: "",
                     isLoading = state.isLoading,
-                    onBackPressed = viewModel::clickArrowBack
+                    onBackPressed = viewModel::clickBackPress
                 )
             },
             tagSection = {
@@ -76,7 +76,8 @@ internal fun OtherProfileScreen(
                     emptySection = {
                         EmptyText(message = stringResource(id = R.string.not_yet_add_favorite_tag))
                     },
-                    tags = tags
+                    tags = tags,
+                    onClickTag = viewModel::onClickTag,
                 )
             },
             submittedExamSection = {

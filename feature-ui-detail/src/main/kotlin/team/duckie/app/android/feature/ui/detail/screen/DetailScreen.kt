@@ -378,7 +378,7 @@ private fun DetailProfileLayout(
         // 닉네임, 응시자, 일자 Layout
         Column(
             modifier = Modifier.quackClickable(
-                onClick = { profileClick(state.appUser.id) },
+                onClick = { profileClick(state.exam.user?.id ?: 0) },
                 rippleEnabled = false,
             )
         ) {

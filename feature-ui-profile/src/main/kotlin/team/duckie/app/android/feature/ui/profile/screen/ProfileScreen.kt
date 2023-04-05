@@ -7,9 +7,12 @@
 
 package team.duckie.app.android.feature.ui.profile.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -27,6 +30,7 @@ import team.duckie.app.android.feature.ui.profile.screen.section.ProfileSection
 import team.duckie.app.android.feature.ui.profile.viewmodel.mapper.toPresentation
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.Spacer
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
@@ -52,7 +56,13 @@ fun ProfileScreen(
     }
 
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = QuackColor.White.composeColor)
+            .systemBarsPadding()
+            .navigationBarsPadding()
+    ) {
         topBar()
         Column(
             modifier = Modifier

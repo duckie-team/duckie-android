@@ -11,12 +11,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.feature.ui.profile.R
-import team.duckie.app.android.feature.ui.profile.component.EmptyText
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.QuackTitle2
@@ -26,6 +23,7 @@ internal fun FavoriteTagSection(
     title: String,
     emptySection: @Composable () -> Unit,
     tags: ImmutableList<Tag>,
+    onClickTag: (String) -> Unit,
 ) {
     val tagList = remember(tags) { tags.map { it.name }.toList() }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -33,7 +31,11 @@ internal fun FavoriteTagSection(
         if (tags.isEmpty()) {
             emptySection()
         } else {
-            QuackSingeLazyRowTag(items = tagList, tagType = QuackTagType.Circle(), onClick = {})
+            QuackSingeLazyRowTag(
+                items = tagList,
+                tagType = QuackTagType.Circle(),
+                onClick = { index -> onClickTag(tagList[index]) },
+            )
         }
     }
 }

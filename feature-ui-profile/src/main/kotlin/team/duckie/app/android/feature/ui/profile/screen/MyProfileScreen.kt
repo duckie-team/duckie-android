@@ -47,6 +47,7 @@ fun MyProfileScreen(
     onClickFavoriteTag: () -> Unit,
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMakeExam: () -> Unit,
+    onClickTag: (String) -> Unit,
 ) {
     val tags = remember(userProfile.user?.favoriteTags) {
         userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
@@ -97,6 +98,7 @@ fun MyProfileScreen(
                         onClick = onClickFavoriteTag,
                     )
                 },
+                onClickTag = onClickTag,
             )
         },
         submittedExamSection = {

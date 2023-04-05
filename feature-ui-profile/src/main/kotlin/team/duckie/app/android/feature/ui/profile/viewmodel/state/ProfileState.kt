@@ -7,13 +7,15 @@
 
 package team.duckie.app.android.feature.ui.profile.viewmodel.state
 
+import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.ui.profile.dummy.skeletonUserProfile
 
 data class ProfileState(
-    val isMe: Boolean = false,
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val userProfile: UserProfile = skeletonUserProfile(),
+    val me: User? = null,
+    val isMe: Boolean = false,
     val reportDialogVisible: Boolean = false,
     val follow: Boolean = false,
     val reportExamId: Int = 0,
