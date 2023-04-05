@@ -80,7 +80,12 @@ class DetailViewModel @Inject constructor(
             }
             .onFailure { exception ->
                 when {
-                    exception.isReportAlreadyExists -> postSideEffect(DetailSideEffect.SendToast(ReportAlreadyExists))
+                    exception.isReportAlreadyExists -> postSideEffect(
+                        DetailSideEffect.SendToast(
+                            ReportAlreadyExists
+                        )
+                    )
+
                     else -> postSideEffect(DetailSideEffect.ReportError(exception))
                 }
             }
@@ -165,6 +170,10 @@ class DetailViewModel @Inject constructor(
 
     fun goToSearch(tag: String) = viewModelScope.launch {
         intent { postSideEffect(DetailSideEffect.NavigateToSearch(tag)) }
+    }
+
+    fun goToProfile(userId: Int) = viewModelScope.launch {
+        intent { postSideEffect(DetailSideEffect.NavigateToMyPage(userId)) }
     }
 
     fun updateReportDialogVisible(visible: Boolean) = intent {

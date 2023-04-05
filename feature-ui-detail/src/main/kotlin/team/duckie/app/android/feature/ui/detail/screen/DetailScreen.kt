@@ -64,7 +64,6 @@ import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
@@ -82,6 +81,7 @@ import team.duckie.quackquack.ui.component.QuackSmallButtonType
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
@@ -186,9 +186,9 @@ private fun DetailSuccessScreen(
                 state = state,
                 tagItemClick = viewModel::goToSearch,
                 moreButtonClick = openBottomSheet,
-            ) {
-                viewModel.followUser()
-            }
+                followButtonClick = viewModel::followUser,
+                profileClick = viewModel::goToProfile,
+            )
             // 최하단 Layout
             DetailBottomLayout(
                 modifier = Modifier
@@ -252,6 +252,7 @@ private fun DetailContentLayout(
     tagItemClick: (String) -> Unit,
     moreButtonClick: () -> Unit,
     followButtonClick: () -> Unit,
+    profileClick: (Int) -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
@@ -321,7 +322,11 @@ private fun DetailContentLayout(
         // 구분선
         QuackDivider()
         // 프로필 Layout
-        DetailProfileLayout(state, followButtonClick = followButtonClick)
+        DetailProfileLayout(
+            state = state,
+            followButtonClick = followButtonClick,
+            profileClick = profileClick,
+        )
         // 구분선
         QuackDivider()
         // 공백
@@ -340,10 +345,9 @@ private fun DetailContentLayout(
 private fun DetailProfileLayout(
     state: DetailState.Success,
     followButtonClick: () -> Unit,
+    profileClick: (Int) -> Unit,
 ) {
     val isFollowed = remember(state.isFollowing) { state.isFollowing }
-    val toast = rememberToast()
-    val detailLoadingMypageToastMessage = stringResource(id = R.string.detail_loading_mypage_toast)
 
     Row(
         modifier = Modifier.padding(
@@ -372,15 +376,16 @@ private fun DetailProfileLayout(
         // 공백
         Spacer(modifier = Modifier.width(8.dp))
         // 닉네임, 응시자, 일자 Layout
-        Column {
+        Column(
+            modifier = Modifier.quackClickable(
+                onClick = { profileClick(state.appUser.id) },
+                rippleEnabled = false,
+            )
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임
                 QuackBody3(
                     text = state.nickname,
-                    onClick = {
-                        // TODO(riflockle7): 프로필 화면으로 이동
-                        toast(detailLoadingMypageToastMessage)
-                    },
                     color = QuackColor.Black,
                 )
 

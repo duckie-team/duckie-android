@@ -34,4 +34,6 @@ sealed class DetailSideEffect {
      * [SearchActivity] 로 이동하는 SideEffect 입니다.
      */
     class NavigateToSearch(val searchTag: String?) : DetailSideEffect()
+
+    class NavigateToMyPage(val userId: Int) : DetailSideEffect()
 }
