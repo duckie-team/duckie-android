@@ -21,6 +21,7 @@ import team.duckie.app.android.domain.user.usecase.FetchUserProfileUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.sideeffect.MyPageSideEffect
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.state.MyPageState
+import team.duckie.app.android.feature.ui.profile.viewmodel.intent.MyPageIntent
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import javax.inject.Inject
 
@@ -28,10 +29,9 @@ import javax.inject.Inject
 internal class MyPageViewModel @Inject constructor(
     private val fetchUserProfileUseCase: FetchUserProfileUseCase,
     private val getMeUseCase: GetMeUseCase,
-) : ContainerHost<MyPageState, MyPageSideEffect>, ViewModel() {
+) : ContainerHost<MyPageState, MyPageSideEffect>, ViewModel(), MyPageIntent {
 
     override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
-
     fun getUserProfile() = intent {
         updateLoading(true)
         val job = viewModelScope.launch {
@@ -47,9 +47,7 @@ internal class MyPageViewModel @Inject constructor(
                 viewModelScope.launch {
                     fetchUserProfileUseCase(it.id).onSuccess { profile ->
                         reduce {
-                            state.copy(
-                                userProfile = profile
-                            )
+                            state.copy(userProfile = profile)
                         }
                     }.onFailure {
                         postSideEffect(MyPageSideEffect.ReportError(it))
@@ -68,31 +66,32 @@ internal class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun clickNotification() = intent {
-        postSideEffect(MyPageSideEffect.NavigateToNotification)
-    }
-
-    fun clickSetting() = intent {
-        postSideEffect(MyPageSideEffect.NavigateToSetting)
-    }
-
-    fun clickEditProfile(message: String) = intent {
-        postSideEffect(MyPageSideEffect.SendToast(message))
-    }
-
-    fun clickEditTag(message: String) = intent {
-        postSideEffect(MyPageSideEffect.SendToast(message))
-    }
-
     fun clickExam(exam: DuckTestCoverItem) = intent {
         postSideEffect(MyPageSideEffect.NavigateToExamDetail(exam.testId))
     }
 
-    fun clickMakeExam() = intent {
+
+    override fun clickNotification() = intent {
+        postSideEffect(MyPageSideEffect.NavigateToNotification)
+    }
+
+    override fun clickSetting() = intent {
+        postSideEffect(MyPageSideEffect.NavigateToSetting)
+    }
+
+    override fun clickEditProfile(message: String) = intent {
+        postSideEffect(MyPageSideEffect.SendToast(message))
+    }
+
+    override fun clickEditTag(message: String) = intent {
+        postSideEffect(MyPageSideEffect.SendToast(message))
+    }
+
+    override fun clickMakeExam() = intent {
         postSideEffect(MyPageSideEffect.NavigateToMakeExam)
     }
 
-    fun clickFavoriteTag(message: String) = intent {
+    override fun clickFavoriteTag(message: String) = intent {
         postSideEffect(MyPageSideEffect.SendToast(message))
     }
 }
