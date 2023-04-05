@@ -32,6 +32,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.feature.ui.home.screen.guide.HomeGuideScreen
 import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
@@ -58,6 +59,7 @@ import javax.inject.Inject
 private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
 private const val HomeBottomNavigationDividerLayoutId = "HomeBottomNavigationDivider"
 private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
+private const val HomeGuideLayoutId = "HomeGuideLayoutId"
 
 @AllowMagicNumber("앱 종료 시간에 대해서 매직 넘버 처리")
 @AndroidEntryPoint
@@ -106,6 +108,10 @@ class HomeActivity : BaseActivity() {
                         .background(color = MaterialTheme.colors.background)
                         .padding(systemBarPaddings),
                     content = {
+                        HomeGuideScreen(
+                            modifier = Modifier.layoutId(HomeGuideLayoutId),
+                            onClosed = { homeViewModel.updateGuideVisible(visible = false) }
+                        )
                         // TODO(limsaehyun): 추후에 QuackCrossfade 로 교체 필요
                         Crossfade(
                             modifier = Modifier.layoutId(HomeCrossFacadeLayoutId),
@@ -156,6 +162,7 @@ class HomeActivity : BaseActivity() {
                     },
                 ) { measurables, constraints ->
                     val looseConstraints = constraints.asLoose()
+                    val extraLooseConstraints = constraints.asLoose(height = true)
 
                     val homeBottomNavigationDividerPlaceable =
                         measurables.fastFirstOrNull { measurable ->
@@ -179,6 +186,10 @@ class HomeActivity : BaseActivity() {
                         measurable.layoutId == HomeCrossFacadeLayoutId
                     }?.measure(homeCrossFadeConstraints) ?: npe()
 
+                    val homeGuidePlaceable = measurables.fastFirstOrNull { measurable ->
+                        measurable.layoutId == HomeGuideLayoutId
+                    }?.measure(extraLooseConstraints) ?: npe()
+
                     layout(
                         width = constraints.maxWidth,
                         height = constraints.maxHeight,
@@ -197,6 +208,12 @@ class HomeActivity : BaseActivity() {
                             x = 0,
                             y = constraints.maxHeight - homeBottomNavigationHeight,
                         )
+                        if (state.guideVisible) {
+                            homeGuidePlaceable.place(
+                                x = 0,
+                                y = 0
+                            )
+                        }
                     }
                 }
             }

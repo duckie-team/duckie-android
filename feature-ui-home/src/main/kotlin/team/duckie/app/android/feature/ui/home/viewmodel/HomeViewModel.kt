@@ -351,4 +351,8 @@ internal class HomeViewModel @Inject constructor(
             HomeSideEffect.NavigateToSetting,
         )
     }
+
+    fun updateGuideVisible(visible: Boolean) = intent {
+        reduce { state.copy(guideVisible = visible) }
+    }
 }
