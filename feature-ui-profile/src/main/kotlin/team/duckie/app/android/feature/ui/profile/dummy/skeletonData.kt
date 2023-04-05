@@ -4,6 +4,7 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+@file:Suppress("MagicNumber")
 
 package team.duckie.app.android.feature.ui.profile.dummy
 
@@ -14,7 +15,7 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.util.kotlin.randomString
 
-fun skeletonUserProfile(count: Int = 10) = UserProfile.empty().copy(
+fun skeletonUserProfile() = UserProfile.empty().copy(
     createdExams = skeletonProfileExams(),
     solvedExamInstances = skeletonProfileExamInstances(),
     heartExams = skeletonProfileExams(),
@@ -38,8 +39,7 @@ fun skeletonProfileExamInstances(count: Int = 10) = (1..count).map {
             title = randomString(6),
             solvedCount = 20,
             heartCount = 20,
-            thumbnailUrl = ""
-        )
+            thumbnailUrl = "",
+        ),
     )
 }.toImmutableList()
-

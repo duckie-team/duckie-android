@@ -10,7 +10,7 @@ package team.duckie.app.android.feature.ui.friends.constant
 internal enum class FriendsPage(
     val index: Int,
 ) {
-    follower(0),
-    following(1),
+    Follower(0),
+    Following(1),
     ;
 }

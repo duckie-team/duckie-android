@@ -49,7 +49,7 @@ fun ExamSection(
             ) {
                 QuackImage(
                     src = icon,
-                    size = DpSize(all = 24.dp)
+                    size = DpSize(all = 24.dp),
                 )
                 QuackTitle2(text = title)
             }

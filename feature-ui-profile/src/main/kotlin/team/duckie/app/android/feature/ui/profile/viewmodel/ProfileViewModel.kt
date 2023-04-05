@@ -127,7 +127,6 @@ internal class ProfileViewModel @Inject constructor(
         postSideEffect(ProfileSideEffect.NavigateToExamDetail(exam.testId))
     }
 
-
     override fun clickNotification() = intent {
         postSideEffect(ProfileSideEffect.NavigateToNotification)
     }

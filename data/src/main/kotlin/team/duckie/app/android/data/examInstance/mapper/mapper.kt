@@ -29,4 +29,3 @@ internal fun ProblemInstanceData.toDomain() = ProblemInstance(
     status = status ?: duckieResponseFieldNpe("${this::class.java.simpleName}.status"),
     submittedAnswer = submittedAnswer,
 )
-

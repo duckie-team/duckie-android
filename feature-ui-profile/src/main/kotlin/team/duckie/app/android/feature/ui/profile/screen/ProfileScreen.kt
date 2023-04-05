@@ -55,13 +55,12 @@ fun ProfileScreen(
             ?: persistentListOf()
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = QuackColor.White.composeColor)
             .systemBarsPadding()
-            .navigationBarsPadding()
+            .navigationBarsPadding(),
     ) {
         topBar()
         Column(

@@ -11,8 +11,6 @@
 package team.duckie.app.android.feature.ui.detail.screen
 
 import android.app.Activity
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -153,17 +151,6 @@ internal fun DetailScreen(
         )
     }
 }
-
-/**
- * [DetailBottomSheetDialog] 에서 표시할 요소들을 정의합니다.
- */
-private data class DetailBottomSheetItem(
-    @DrawableRes
-    val icon: Int,
-    @StringRes
-    val text: Int,
-    val onClick: () -> Unit,
-)
 
 /** 데이터 성공적으로 받은[DetailState.Success] 상세 화면 */
 @Composable
@@ -380,7 +367,7 @@ private fun DetailProfileLayout(
             modifier = Modifier.quackClickable(
                 onClick = { profileClick(state.exam.user?.id ?: 0) },
                 rippleEnabled = false,
-            )
+            ),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임

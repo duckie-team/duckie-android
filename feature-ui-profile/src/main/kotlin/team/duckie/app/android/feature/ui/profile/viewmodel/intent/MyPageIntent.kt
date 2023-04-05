@@ -16,6 +16,5 @@ interface MyPageIntent {
 
     fun clickEditTag(message: String)
 
-
     fun clickMakeExam()
 }

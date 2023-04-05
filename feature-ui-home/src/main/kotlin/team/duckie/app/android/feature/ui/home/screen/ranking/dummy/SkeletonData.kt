@@ -4,6 +4,7 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+@file:Suppress("MagicNumber")
 
 package team.duckie.app.android.feature.ui.home.screen.ranking.dummy
 

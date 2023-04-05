@@ -150,11 +150,7 @@ class HomeActivity : BaseActivity() {
                                 BottomNavigationStep.MyPageScreen -> MyPageScreen(
                                     viewModel = myPageViewModel,
                                     navigateToSetting = { settingNavigator.navigateFrom(this) },
-                                    navigateToNotification = {
-                                        notificationNavigator.navigateFrom(
-                                            this
-                                        )
-                                    },
+                                    navigateToNotification = { notificationNavigator.navigateFrom(this) },
                                     navigateToExam = { examId ->
                                         detailNavigator.navigateFrom(
                                             activity = this,
@@ -169,11 +165,9 @@ class HomeActivity : BaseActivity() {
                                     navigateToSearch = {
                                         searchNavigator.navigateFrom(
                                             activity = this,
-                                            intentBuilder = {
-                                                putExtra(Extras.SearchTag, it)
-                                            }
+                                            intentBuilder = { putExtra(Extras.SearchTag, it) },
                                         )
-                                    }
+                                    },
                                 )
                             }
                         }

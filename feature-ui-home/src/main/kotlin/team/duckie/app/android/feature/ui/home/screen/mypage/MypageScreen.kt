@@ -56,7 +56,6 @@ internal fun MyPageScreen(
                     navigateToExam(sideEffect.examId)
                 }
 
-
                 is MyPageSideEffect.ReportError -> {
                     with(sideEffect.exception) {
                         printStackTrace()

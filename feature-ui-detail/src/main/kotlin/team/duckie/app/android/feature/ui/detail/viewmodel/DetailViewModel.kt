@@ -81,9 +81,7 @@ class DetailViewModel @Inject constructor(
             .onFailure { exception ->
                 when {
                     exception.isReportAlreadyExists -> postSideEffect(
-                        DetailSideEffect.SendToast(
-                            ReportAlreadyExists
-                        )
+                        DetailSideEffect.SendToast(ReportAlreadyExists),
                     )
 
                     else -> postSideEffect(DetailSideEffect.ReportError(exception))

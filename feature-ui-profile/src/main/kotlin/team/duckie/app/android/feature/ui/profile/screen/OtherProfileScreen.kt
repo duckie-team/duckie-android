@@ -5,7 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-
 @file:OptIn(ExperimentalMaterialApi::class)
 
 package team.duckie.app.android.feature.ui.profile.screen
@@ -67,7 +66,7 @@ internal fun OtherProfileScreen(
                 BackPressedHeadLineTopAppBar(
                     title = state.userProfile.user?.nickname ?: "",
                     isLoading = state.isLoading,
-                    onBackPressed = viewModel::clickBackPress
+                    onBackPressed = viewModel::clickBackPress,
                 )
             },
             tagSection = {

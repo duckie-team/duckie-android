@@ -85,7 +85,7 @@ class ProfileActivity : BaseActivity() {
         }
         viewModel.observe(
             lifecycleOwner = this,
-            sideEffect = ::handleSideEffect
+            sideEffect = ::handleSideEffect,
         )
     }
 
@@ -116,7 +116,6 @@ class ProfileActivity : BaseActivity() {
                 )
             }
 
-
             is ProfileSideEffect.ReportError -> {
                 with(sideEffect.exception) {
                     printStackTrace()
@@ -131,19 +130,14 @@ class ProfileActivity : BaseActivity() {
                 ToastWrapper(this@ProfileActivity).invoke(sideEffect.message)
             }
 
-            ProfileSideEffect.NavigateToFollowPage -> {
-
-            }
+            ProfileSideEffect.NavigateToFollowPage -> {}
 
             is ProfileSideEffect.NavigateToSearch -> {
                 searchNavigator.navigateFrom(
                     activity = this@ProfileActivity,
-                    intentBuilder = {
-                        putExtra(Extras.SearchTag, sideEffect.tagName)
-                    }
+                    intentBuilder = { putExtra(Extras.SearchTag, sideEffect.tagName) },
                 )
             }
         }
     }
-
 }

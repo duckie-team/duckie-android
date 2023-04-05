@@ -181,9 +181,7 @@ private fun SearchResultForExam(
                         onItemClick = {
                             navigateDetail(exam?.id ?: 0)
                         },
-                        onMoreClick = {
-
-                        },
+                        onMoreClick = {},
                     )
                 }
             }

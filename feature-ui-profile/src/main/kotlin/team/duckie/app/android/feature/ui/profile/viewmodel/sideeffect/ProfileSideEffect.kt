@@ -5,7 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-
 package team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect
 
 sealed class ProfileSideEffect {
@@ -27,4 +26,3 @@ sealed class ProfileSideEffect {
 
     class SendToast(val message: String) : ProfileSideEffect()
 }
-

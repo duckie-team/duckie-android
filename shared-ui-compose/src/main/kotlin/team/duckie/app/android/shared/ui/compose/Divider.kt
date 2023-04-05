@@ -33,6 +33,6 @@ fun RowScope.Divider(
     Box(
         modifier = heightModifier
             .width(width)
-            .background(color.composeColor)
+            .background(color.composeColor),
     )
 }

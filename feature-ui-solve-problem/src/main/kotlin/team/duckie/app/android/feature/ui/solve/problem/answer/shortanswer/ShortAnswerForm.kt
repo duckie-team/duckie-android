@@ -34,6 +34,7 @@ internal fun ShortAnswerForm(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     EachCharTextField(
+        modifier = modifier,
         value = value,
         onValueChanged = { newValue, prevLength ->
             value = newValue

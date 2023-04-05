@@ -5,14 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
-package team.duckie.app.android.feature.ui.home.screen.mypage
+package team.duckie.app.android.feature.ui.profile.screen.section
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -23,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.profile.R
-import team.duckie.app.android.feature.ui.profile.screen.section.EditButton
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.quackquack.ui.color.QuackColor
 

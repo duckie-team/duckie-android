@@ -129,7 +129,7 @@ internal fun DuckSmallCoverInternal(
                 .padding(top = 8.dp)
                 .runIf(isLoading != null) { skeleton(isLoading!!) },
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(2.dp)
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             QuackBody2(
                 text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.solvedCount}",
@@ -141,6 +141,5 @@ internal fun DuckSmallCoverInternal(
                 color = QuackColor.Gray2,
             )
         }
-
     }
 }

@@ -27,7 +27,7 @@ internal fun EmptyText(message: String) {
     ) {
         QuackBody1(
             modifier = Modifier.padding(vertical = 20.dp),
-            text = message
+            text = message,
         )
     }
 }

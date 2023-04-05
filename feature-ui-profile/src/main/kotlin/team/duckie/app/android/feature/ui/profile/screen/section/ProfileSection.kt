@@ -96,11 +96,11 @@ private fun EachInformation(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         QuackSubtitle2(
             modifier = Modifier.skeleton(isLoading),
-            text = value()
+            text = value(),
         )
         QuackBody3(text = title)
     }

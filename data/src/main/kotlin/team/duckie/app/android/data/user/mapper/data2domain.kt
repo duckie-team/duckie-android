@@ -83,7 +83,7 @@ internal fun DuckPowerResponse.toDomain(): DuckPower {
 
 internal fun ProfileExamInstanceData.toDomain() = ProfileExamInstance(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
-    exam = exam?.toDomain()
+    exam = exam?.toDomain(),
 )
 
 internal fun UserProfileData.toDomain() = UserProfile(
@@ -94,5 +94,5 @@ internal fun UserProfileData.toDomain() = UserProfile(
     createdExams = createdExams?.map(ProfileExamData::toDomain),
     solvedExamInstances = solvedExamInstances?.map(ProfileExamInstanceData::toDomain),
     heartExams = createdExams?.map(ProfileExamData::toDomain),
-    user = user?.toDomain()
+    user = user?.toDomain(),
 )

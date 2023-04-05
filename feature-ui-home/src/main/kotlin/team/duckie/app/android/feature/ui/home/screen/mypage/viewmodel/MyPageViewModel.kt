@@ -5,7 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-
 package team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -22,7 +21,6 @@ import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.sideeffect.MyPageSideEffect
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.state.MyPageState
 import team.duckie.app.android.feature.ui.profile.viewmodel.intent.MyPageIntent
-import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import javax.inject.Inject
 
@@ -74,7 +72,6 @@ internal class MyPageViewModel @Inject constructor(
     fun clickExam(exam: DuckTestCoverItem) = intent {
         postSideEffect(MyPageSideEffect.NavigateToExamDetail(exam.testId))
     }
-
 
     override fun clickNotification() = intent {
         postSideEffect(MyPageSideEffect.NavigateToNotification)

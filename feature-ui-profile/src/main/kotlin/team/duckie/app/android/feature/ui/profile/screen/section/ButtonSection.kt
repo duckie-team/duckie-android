@@ -22,7 +22,6 @@ import team.duckie.quackquack.ui.component.QuackSurface
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
-
 @Composable
 internal fun FollowSection(
     enabled: Boolean,
