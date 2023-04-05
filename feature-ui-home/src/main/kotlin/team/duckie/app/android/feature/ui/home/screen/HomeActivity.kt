@@ -110,7 +110,7 @@ class HomeActivity : BaseActivity() {
                     content = {
                         HomeGuideScreen(
                             modifier = Modifier.layoutId(HomeGuideLayoutId),
-                            onClosed = { homeViewModel.updateGuideVisible(visible = false) }
+                            onClose = { homeViewModel.updateGuideVisible(visible = false) },
                         )
                         // TODO(limsaehyun): 추후에 QuackCrossfade 로 교체 필요
                         Crossfade(
@@ -211,7 +211,7 @@ class HomeActivity : BaseActivity() {
                         if (state.guideVisible) {
                             homeGuidePlaceable.place(
                                 x = 0,
-                                y = 0
+                                y = 0,
                             )
                         }
                     }

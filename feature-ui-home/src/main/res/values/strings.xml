@@ -30,6 +30,7 @@
     <string name="mypage">마이페이지</string>
     <string name="skip">건너뛰기</string>
     <string name="next">다음</string>
+    <string name="start_duckie">덕키 시작하기</string>
 
     <!-- ranking -->
     <string name="exam">덕력고사</string>
@@ -39,6 +40,10 @@
     <string name="total">전체</string>
 
     <!-- guide -->
+    <string name="guide_start_message">덕키에 온걸 환영한덕!\n나와 같이 한 번 살펴볼까?</string>
+    <string name="guide_start_accept_message">좋아, 가보자고!</string>
+    <string name="guide_start_deny_message">아냐, 괜찮아</string>
+
     <string name="guide_home_subtitle">내가 이 구역 찐덕후라면?</string>
     <string name="guide_home_title">덕력고사로 검증해봐야지!</string>
 

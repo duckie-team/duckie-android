@@ -26,19 +26,19 @@ internal enum class GuideStep(
         index = 0,
         subtitle = R.string.guide_home_subtitle,
         title = R.string.guide_home_title,
-        image = R.drawable.bg_guide_home
+        image = R.drawable.bg_guide_home,
     ),
     DETAIL(
         index = 1,
         subtitle = R.string.guide_detail_subtitle,
         title = R.string.guide_detail_title,
-        image = R.drawable.bg_guide_detail
+        image = R.drawable.bg_guide_detail,
     ),
     CREATE(
         index = 2,
         subtitle = R.string.guide_create_subtitle,
         title = R.string.guide_create_title,
-        image = R.drawable.bg_guide_create
+        image = R.drawable.bg_guide_create,
     ),
     ;
 

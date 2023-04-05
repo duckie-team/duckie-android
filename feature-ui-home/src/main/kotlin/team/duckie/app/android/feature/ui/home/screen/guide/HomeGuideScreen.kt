@@ -25,11 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.screen.guide.viewmodel.HomeGuideViewModel
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
@@ -42,7 +44,7 @@ import team.duckie.quackquack.ui.component.QuackSmallButtonType
 internal fun HomeGuideScreen(
     modifier: Modifier = Modifier,
     vm: HomeGuideViewModel = activityViewModel(),
-    onClosed: () -> Unit,
+    onClose: () -> Unit,
 ) {
     val state = vm.collectAsState().value
     val pagerState = rememberPagerState()
@@ -62,7 +64,7 @@ internal fun HomeGuideScreen(
                 onNext = {
                     vm.updateGuideStared(started = false)
                 },
-                onClosed = onClosed,
+                onClosed = onClose,
             )
         } else {
             HorizontalPager(
@@ -71,8 +73,8 @@ internal fun HomeGuideScreen(
                 state = pagerState,
             ) { index ->
                 HomeGuideFeatureScreen(
-                    pagerState = pagerState,
                     guideStep = GuideStep.getGuideStepByIndex(index),
+                    onClose = onClose,
                 )
             }
             HomeGuideFeatureBottomLayout(
@@ -80,7 +82,7 @@ internal fun HomeGuideScreen(
                 pageCount = GuideStep.values().size,
                 onNext = {
                     if (pagerState.currentPage == pageCount - 1) {
-                        onClosed()
+                        onClose()
                     } else {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
@@ -110,7 +112,7 @@ private fun HomeGuideStartScreen(
         )
         Spacer(space = 12.dp)
         QuackHeadLine1(
-            text = "덕키에 온걸 환영한덕!\n나와 같이 한 번 살펴볼까?",
+            text = stringResource(id = R.string.guide_start_message),
             color = QuackColor.White,
             align = TextAlign.Center,
         )
@@ -119,15 +121,15 @@ private fun HomeGuideStartScreen(
             modifier = Modifier
                 .size(118.dp, 44.dp),
             type = QuackSmallButtonType.Fill,
-            text = "좋아, 가보자고!",
+            text = stringResource(id = R.string.guide_start_accept_message),
             enabled = true,
             onClick = onNext,
         )
         Spacer(space = 16.dp)
         QuackBody2(
-            text = "아냐, 괜찮아",
+            text = stringResource(id = R.string.guide_start_deny_message),
             color = QuackColor.Gray2,
-            onClick = onClosed
+            onClick = onClosed,
         )
     }
 }
