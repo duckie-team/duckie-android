@@ -84,7 +84,9 @@ internal fun OtherProfileScreen(
                 EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
             },
             onClickExam = viewModel::clickExam,
-            onClickMore = viewModel::report,
+            onClickMore = {
+                coroutineScope.launch { bottomSheetState.show() }
+            },
         )
     }
 }

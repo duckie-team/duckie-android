@@ -22,6 +22,7 @@ import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.sideeffect.MyPageSideEffect
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.state.MyPageState
 import team.duckie.app.android.feature.ui.profile.viewmodel.intent.MyPageIntent
+import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import javax.inject.Inject
 
@@ -58,6 +59,10 @@ internal class MyPageViewModel @Inject constructor(
         updateLoading(false)
     }
 
+    fun onClickTag(tag: String) = intent {
+        postSideEffect(MyPageSideEffect.NavigateToSearch(tag))
+    }
+
     private fun updateLoading(
         loading: Boolean,
     ) = intent {
@@ -89,9 +94,5 @@ internal class MyPageViewModel @Inject constructor(
 
     override fun clickMakeExam() = intent {
         postSideEffect(MyPageSideEffect.NavigateToMakeExam)
-    }
-
-    override fun clickFavoriteTag(message: String) = intent {
-        postSideEffect(MyPageSideEffect.SendToast(message))
     }
 }

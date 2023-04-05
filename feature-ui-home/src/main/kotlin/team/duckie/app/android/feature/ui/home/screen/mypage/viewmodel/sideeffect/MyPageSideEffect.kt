@@ -19,4 +19,6 @@ sealed class MyPageSideEffect {
     class NavigateToExamDetail(val examId: Int) : MyPageSideEffect()
 
     class SendToast(val message: String) : MyPageSideEffect()
+
+    class NavigateToSearch(val tagName: String) : MyPageSideEffect()
 }

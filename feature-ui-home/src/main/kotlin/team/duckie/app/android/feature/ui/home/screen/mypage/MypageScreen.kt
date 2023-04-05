@@ -5,13 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 package team.duckie.app.android.feature.ui.home.screen.mypage
 
 import androidx.compose.runtime.Composable
@@ -34,6 +27,7 @@ internal fun MyPageScreen(
     navigateToNotification: () -> Unit,
     navigateToExam: (Int) -> Unit,
     navigateToCreateProblem: () -> Unit,
+    navigateToSearch: (String) -> Unit,
     viewModel: MyPageViewModel,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
@@ -76,6 +70,10 @@ internal fun MyPageScreen(
                 is MyPageSideEffect.SendToast -> {
                     ToastWrapper(context).invoke(sideEffect.message)
                 }
+
+                is MyPageSideEffect.NavigateToSearch -> {
+                    navigateToSearch(sideEffect.tagName)
+                }
             }
         }
     }
@@ -90,7 +88,8 @@ internal fun MyPageScreen(
             onClickEditTag = { viewModel.clickEditTag(context.getString(R.string.provide_after)) },
             onClickExam = viewModel::clickExam,
             onClickMakeExam = viewModel::clickMakeExam,
-            onClickFavoriteTag =  { viewModel.clickEditProfile(context.getString(R.string.provide_after)) },
+            onClickFavoriteTag = { viewModel.clickEditProfile(context.getString(R.string.provide_after)) },
+            onClickTag = viewModel::onClickTag,
         )
     }
 }

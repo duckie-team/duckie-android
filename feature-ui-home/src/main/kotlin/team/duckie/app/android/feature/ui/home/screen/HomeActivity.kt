@@ -45,6 +45,7 @@ import team.duckie.app.android.feature.ui.search.screen.SearchActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
+import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -83,6 +84,9 @@ class HomeActivity : BaseActivity() {
 
     @Inject
     lateinit var settingNavigator: SettingNavigator
+
+    @Inject
+    lateinit var searchNavigator: SearchNavigator
 
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,6 +165,14 @@ class HomeActivity : BaseActivity() {
                                     },
                                     navigateToCreateProblem = {
                                         createProblemNavigator.navigateFrom(this)
+                                    },
+                                    navigateToSearch = {
+                                        searchNavigator.navigateFrom(
+                                            activity = this,
+                                            intentBuilder = {
+                                                putExtra(Extras.SearchTag, it)
+                                            }
+                                        )
                                     }
                                 )
                             }

@@ -18,6 +18,4 @@ interface MyPageIntent {
 
 
     fun clickMakeExam()
-
-    fun clickFavoriteTag(message: String)
 }

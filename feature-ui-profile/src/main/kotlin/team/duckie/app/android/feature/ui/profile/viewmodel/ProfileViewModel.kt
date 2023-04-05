@@ -61,7 +61,7 @@ internal class ProfileViewModel @Inject constructor(
                             state.copy(
                                 userProfile = profile,
                                 isMe = it.id == userId,
-                                follow = profile.user?.follow != null,
+                                follow = profile.user?.follow == null,
                             )
                         }
                     }.onFailure {
@@ -81,6 +81,7 @@ internal class ProfileViewModel @Inject constructor(
             .onFailure { exception ->
                 postSideEffect(ProfileSideEffect.ReportError(exception))
             }
+        getUserProfile()
     }
 
     fun followUser() = viewModelScope.launch {
@@ -145,10 +146,6 @@ internal class ProfileViewModel @Inject constructor(
 
     override fun clickMakeExam() = intent {
         postSideEffect(ProfileSideEffect.NavigateToMakeExam)
-    }
-
-    override fun clickFavoriteTag(message: String) = intent {
-        postSideEffect(ProfileSideEffect.SendToast(message))
     }
 
     private fun updateLoading(
