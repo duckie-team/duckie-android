@@ -30,7 +30,7 @@ dependencies {
         projects.sharedUiCompose,
         projects.featureUiSearch,
         projects.featureDatastore,
-        projects.featureUiSetting,
+        projects.featureUiProfile,
         projects.navigator,
         libs.orbit.viewmodel,
         libs.orbit.compose,

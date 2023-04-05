@@ -20,17 +20,20 @@ android {
 dependencies {
     implementations(
         platform(libs.firebase.bom),
-        projects.di,
         projects.domain,
+        projects.di,
         projects.navigator,
         projects.utilUi,
-        projects.utilKotlin,
-        projects.utilCompose,
         projects.sharedUiCompose,
+        projects.utilAndroid,
+        projects.utilKotlin,
+        projects.utilExceptionHandling,
+        projects.utilCompose,
         libs.orbit.viewmodel,
         libs.orbit.compose,
-        libs.quack.ui.components,
+        libs.ktx.lifecycle.runtime,
+        libs.compose.ui.material, // needs for Scaffold
         libs.compose.lifecycle.runtime,
-        libs.firebase.crashlytics,
+        libs.quack.ui.components,
     )
 }
