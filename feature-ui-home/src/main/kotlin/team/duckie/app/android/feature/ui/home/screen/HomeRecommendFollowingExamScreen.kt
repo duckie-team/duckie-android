@@ -65,9 +65,6 @@ internal fun HomeRecommendFollowingExamScreen(
     vm: HomeViewModel = activityViewModel(),
 ) {
     val state = vm.collectAsState().value
-    val toast = rememberToast()
-    val homeLoadingMypageToastMessage = stringResource(id = R.string.home_loading_mypage_toast)
-
     val followingExam = vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
 
     LaunchedEffect(Unit) {
@@ -114,7 +111,7 @@ internal fun HomeRecommendFollowingExamScreen(
                     favoriteTag = maker?.owner?.favoriteTag ?: "",
                     onClickUserProfile = {
                         // TODO(limsaehyun): 마이페이지로 이동
-                        toast.invoke(homeLoadingMypageToastMessage)
+
                     },
                     onClickTestCover = {
                         vm.navigateToHomeDetail(maker?.examId ?: 0)

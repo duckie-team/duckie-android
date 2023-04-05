@@ -5,117 +5,85 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package team.duckie.app.android.feature.ui.profile.screen
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.model.UserProfile
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.profile.R
-import team.duckie.app.android.feature.ui.profile.component.BackPressHeadLineTopAppBar
-import team.duckie.app.android.feature.ui.profile.dummy.skeletonExams
-import team.duckie.app.android.feature.ui.profile.section.ExamSection
-import team.duckie.app.android.feature.ui.profile.section.FollowSection
-import team.duckie.app.android.feature.ui.profile.section.MyFavoriteTagSection
-import team.duckie.app.android.feature.ui.profile.section.ProfileSection
-import team.duckie.app.android.shared.ui.compose.Create
-import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.app.android.feature.ui.profile.component.BackPressedHeadLineTopAppBar
+import team.duckie.app.android.feature.ui.profile.component.EmptyText
+import team.duckie.app.android.feature.ui.profile.screen.section.FavoriteTagSection
+import team.duckie.app.android.feature.ui.profile.screen.section.FollowSection
+import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileViewModel
+import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
+import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 
 @Composable
 internal fun OtherProfileScreen(
-    userProfile: UserProfile,
-    isLoading: Boolean,
-    follow: Boolean,
-    onClickFollow: () -> Unit,
+    viewModel: ProfileViewModel,
 ) {
-    ProfileScreen(
-        userProfile = userProfile,
-        isLoading = isLoading,
-        editSection = {
-            FollowSection(
-                enabled = follow,
-                onClick = onClickFollow,
-            )
-        },
-        topBar = {
-            BackPressHeadLineTopAppBar(
-                title = userProfile.user?.nickname ?: "",
-                isLoading = isLoading,
-            )
-        }
+    val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
+    val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val coroutineScope = rememberCoroutineScope()
+    val tags = remember(state.userProfile.user?.favoriteTags) {
+        state.userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
+    }
+
+    ReportDialog(
+        onClick = { viewModel.updateReportDialogVisible(false) },
+        visible = true,
+        onDismissRequest = { viewModel.updateReportDialogVisible(false) },
     )
-}
-
-
-@Composable
-internal fun ProfileScreen(
-    userProfile: UserProfile,
-    isLoading: Boolean,
-    topBar: @Composable () -> Unit,
-    editSection: @Composable () -> Unit,
-    onClickExam: () -> Unit,
-) {
-    val scrollState = rememberScrollState()
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        topBar()
-        Column(
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 36.dp,
-                ),
-        ) {
-            with(userProfile) {
-                ProfileSection(
-                    profile = user?.profileImageUrl ?: "",
-                    duckPower = user?.duckPower?.tier ?: "",
-                    follower = followerCount,
-                    following = followingCount,
-                    introduce = user?.introduction ?: "",
-                    isLoading = isLoading,
+    ReportBottomSheetDialog(
+        bottomSheetState = bottomSheetState,
+        closeSheet = {
+            coroutineScope.launch { bottomSheetState.hide() }
+        },
+        onReport = viewModel::report,
+    ) {
+        ProfileScreen(
+            userProfile = state.userProfile,
+            isLoading = state.isLoading,
+            editSection = {
+                FollowSection(
+                    enabled = state.follow,
+                    onClick = { },
                 )
-            }
-            Spacer(space = 20.dp)
-            editSection()
-            Spacer(space = 36.dp)
-            MyFavoriteTagSection(
-                title = "내 관심태그",
-                tags = persistentListOf(
-                    Tag(0, "태그"), Tag(1, "태그1")
+            },
+            topBar = {
+                BackPressedHeadLineTopAppBar(
+                    title = state.userProfile.user?.nickname ?: "",
+                    isLoading = state.isLoading,
+                    onBackPressed = viewModel::clickArrowBack
                 )
-            )
-            Spacer(space = 44.dp)
-            ExamSection(
-                icon = QuackIcon.Create,
-                title = stringResource(id = R.string.submitted_exam),
-                exams = skeletonExams(),
-                onClickShowAll = {},
-            )
-            Spacer(space = 44.dp)
-            ExamSection(
-                icon = QuackIcon.Badge.drawableId,
-                title = stringResource(id = R.string.solved_exam),
-                exams = skeletonExams(),
-                onClickShowAll = {},
-            )
-            Spacer(space = 44.dp)
-            ExamSection(
-                icon = QuackIcon.Heart.drawableId,
-                title = stringResource(id = R.string.hearted_exam),
-                exams = skeletonExams(),
-                onClickShowAll = {},
-            )
-        }
+            },
+            tagSection = {
+                FavoriteTagSection(
+                    title = stringResource(id = R.string.favorite_tag),
+                    emptySection = {
+                        EmptyText(message = stringResource(id = R.string.not_yet_add_favorite_tag))
+                    },
+                    tags = tags
+                )
+            },
+            submittedExamSection = {
+                EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
+            },
+            onClickExam = viewModel::clickExam,
+            onClickMore = viewModel::report,
+        )
     }
 }

@@ -15,12 +15,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.quackquack.ui.component.QuackHeadLine1
+import team.duckie.quackquack.ui.component.QuackImage
+import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-internal fun HeadLineTopAppBar(
+internal fun BackPressedHeadLineTopAppBar(
     title: String,
-    rightIcons: @Composable () -> Unit,
+    isLoading: Boolean,
+    onBackPressed: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -30,9 +34,15 @@ internal fun HeadLineTopAppBar(
                 vertical = 12.dp,
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        QuackHeadLine1(text = title)
-        rightIcons()
+        QuackImage(
+            src = QuackIcon.ArrowBack,
+            onClick = onBackPressed,
+        )
+        QuackHeadLine1(
+            modifier = Modifier.skeleton(isLoading),
+            text = title,
+        )
     }
 }

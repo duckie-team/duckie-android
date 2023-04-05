@@ -5,7 +5,14 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.profile.section
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
+package team.duckie.app.android.feature.ui.profile.screen.section
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +33,7 @@ import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
@@ -45,7 +53,8 @@ internal fun ProfileSection(
         ) {
             QuackImage(
                 src = profile.ifEmpty { QuackIcon.DefaultProfile },
-                size = DpSize(all = 44.dp)
+                size = DpSize(all = 44.dp),
+                shape = SquircleShape,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),

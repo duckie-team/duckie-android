@@ -10,13 +10,18 @@ package team.duckie.app.android.feature.ui.profile
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.profile.screen.OtherProfileScreen
 import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileViewModel
+import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
+import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
+import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.util.exception.handling.reporter.reportToToast
+import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
@@ -32,18 +37,35 @@ class ProfileActivity : BaseActivity() {
 
         setContent {
             QuackTheme {
-                val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-                OtherProfileScreen(
-                    userProfile = state.userProfile,
-                    isLoading = true,
-                    follow = true,
-                    onClickFollow = {},
-                )
+                OtherProfileScreen(viewModel)
             }
         }
-
-
+        viewModel.observe(
+            lifecycleOwner = this,
+            sideEffect = ::handleSideEffect
+        )
     }
 
+    private fun handleSideEffect(sideEffect: ProfileSideEffect) {
+        when (sideEffect) {
+            is ProfileSideEffect.ReportError -> {
+                with(sideEffect.exception) {
+                    printStackTrace()
+                    reportToCrashlyticsIfNeeded()
+                    if (isReportAlreadyExists) {
+                        reportToToast(ReportAlreadyExists)
+                    }
+                }
+            }
+
+            ProfileSideEffect.NavigateToBack -> {
+                finishWithAnimation()
+            }
+
+            is ProfileSideEffect.NavigateToExamDetail -> {
+                detailNavigator.navigateFrom(this)
+            }
+        }
+    }
 
 }

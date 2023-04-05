@@ -48,7 +48,7 @@ fun DuckExamSmallCover(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: () -> Unit,
-    onMoreClick: () -> Unit,
+    onMoreClick: (() -> Unit)? = null,
     isLoading: Boolean? = null,
 ) {
     DuckSmallCoverInternal(
@@ -82,7 +82,7 @@ internal fun DuckSmallCoverInternal(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: () -> Unit,
-    onMoreClick: () -> Unit,
+    onMoreClick: (() -> Unit)? = null,
     isLoading: Boolean? = null,
 ) {
     Column(
@@ -110,11 +110,13 @@ internal fun DuckSmallCoverInternal(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             QuackBody2(text = duckTestCoverItem.nickname)
-            QuackImage(
-                src = QuackIcon.More,
-                size = DpSize(all = 16.dp),
-                onClick = onMoreClick,
-            )
+            if (onMoreClick != null) {
+                QuackImage(
+                    src = QuackIcon.More,
+                    size = DpSize(all = 16.dp),
+                    onClick = onMoreClick,
+                )
+            }
         }
         QuackTitle2(
             modifier = Modifier

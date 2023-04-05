@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.profile.section
+package team.duckie.app.android.feature.ui.profile.screen.section
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,7 +30,11 @@ internal fun FollowSection(
 ) {
     EditButton(
         modifier = Modifier.fillMaxWidth(),
-        text = stringResource(id = R.string.edit_tag),
+        text = if (enabled) {
+            stringResource(id = R.string.follow)
+        } else {
+            stringResource(id = R.string.following)
+        },
         enabled = enabled,
         onClick = onClick,
     )
