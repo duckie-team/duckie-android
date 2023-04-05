@@ -28,6 +28,8 @@
     <string name="search">검색</string>
     <string name="ranking">명예의 전당</string>
     <string name="mypage">마이페이지</string>
+    <string name="skip">건너뛰기</string>
+    <string name="next">다음</string>
 
     <!-- ranking -->
     <string name="exam">덕력고사</string>
@@ -35,4 +37,14 @@
     <string name="wrong_answer_rate_order">오답률순</string>
     <string name="popular_tag_ranking">인기태그 랭킹</string>
     <string name="total">전체</string>
+
+    <!-- guide -->
+    <string name="guide_home_subtitle">내가 이 구역 찐덕후라면?</string>
+    <string name="guide_home_title">덕력고사로 검증해봐야지!</string>
+
+    <string name="guide_detail_subtitle">이 정도는 맞춰줘야지</string>
+    <string name="guide_detail_title">덕력고사 응시하기</string>
+
+    <string name="guide_create_subtitle">아 내가 더 많이 아는데…</string>
+    <string name="guide_create_title">문제 만들기</string>
 </resources>
