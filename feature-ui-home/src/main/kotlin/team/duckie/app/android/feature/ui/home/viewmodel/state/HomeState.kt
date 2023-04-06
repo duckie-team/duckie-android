@@ -36,7 +36,7 @@ internal data class HomeState(
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
     val popularTags: ImmutableList<Tag> = persistentListOf(),
 
-    val guideVisible: Boolean = true, // TODO(limsaehyun) default값 false로 변경
+    val guideVisible: Boolean = false,
 ) {
     /**
      * 팔로잉의 덕질고사 추천 피드 data class [RecommendExam]

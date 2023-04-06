@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.home.screen
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -81,6 +82,8 @@ class HomeActivity : BaseActivity() {
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        startedGuide(intent)
 
         setContent {
             val state by homeViewModel.collectAsState()
@@ -169,9 +172,10 @@ class HomeActivity : BaseActivity() {
                             measurable.layoutId == HomeBottomNavigationDividerLayoutId
                         }?.measure(looseConstraints) ?: npe()
 
-                    val homeBottomNavigationPlaceable = measurables.fastFirstOrNull { measurable ->
-                        measurable.layoutId == HomeBottomNavigationViewLayoutId
-                    }?.measure(looseConstraints) ?: npe()
+                    val homeBottomNavigationPlaceable =
+                        measurables.fastFirstOrNull { measurable ->
+                            measurable.layoutId == HomeBottomNavigationViewLayoutId
+                        }?.measure(looseConstraints) ?: npe()
 
                     val homeBottomNavigationHeight = homeBottomNavigationPlaceable.height
 
@@ -216,6 +220,15 @@ class HomeActivity : BaseActivity() {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun startedGuide(intent: Intent) {
+        intent.getBooleanExtra(Extras.StartGuide, false).also { start ->
+            if (start) {
+                homeViewModel.updateGuideVisible(visible = true)
+                intent.removeExtra(Extras.StartGuide)
             }
         }
     }

@@ -14,4 +14,5 @@ object Extras {
     const val Submitted = "ExtraSubmitted"
 
     const val SearchTag = "ExtraSearchTag"
+    const val StartGuide = "StartGuide"
 }
