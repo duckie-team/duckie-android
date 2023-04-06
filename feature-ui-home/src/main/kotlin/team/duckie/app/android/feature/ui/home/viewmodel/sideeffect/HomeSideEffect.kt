@@ -37,5 +37,7 @@ internal sealed class HomeSideEffect {
      */
     object NavigateToCreateProblem : HomeSideEffect()
 
+    object NavigateToNotification : HomeSideEffect()
+
     object ClickRankingRetry : HomeSideEffect()
 }
