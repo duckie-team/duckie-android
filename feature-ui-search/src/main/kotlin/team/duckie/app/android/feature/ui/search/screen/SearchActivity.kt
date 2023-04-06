@@ -43,7 +43,6 @@ import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.KeyboardUtil
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.app.android.util.ui.popStringExtra
@@ -135,10 +134,6 @@ class SearchActivity : BaseActivity() {
         when (sideEffect) {
             is SearchSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
-            }
-
-            is SearchSideEffect.HideKeyBoard -> {
-                KeyboardUtil.hideKeyboard(this)
             }
         }
     }
