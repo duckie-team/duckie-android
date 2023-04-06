@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class)
 
 package team.duckie.app.android.feature.ui.home.screen.guide
 
@@ -39,6 +39,7 @@ import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackSmallButton
 import team.duckie.quackquack.ui.component.QuackSmallButtonType
+import team.duckie.quackquack.ui.modifier.quackClickable
 
 @Composable
 internal fun HomeGuideScreen(
@@ -54,13 +55,15 @@ internal fun HomeGuideScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(
-                color = QuackColor.Black.composeColor.copy(alpha = 0.9F),
-            ),
+            .background(color = QuackColor.Black.composeColor.copy(alpha = 0.9F)),
         contentAlignment = Alignment.BottomCenter,
     ) {
         if (state.isGuideStarted) {
             HomeGuideStartScreen(
+                modifier = Modifier.quackClickable( // 하위 컴포저블의 clickable 막기 위함
+                    rippleEnabled = false,
+                    onClick = {},
+                ),
                 onNext = {
                     vm.updateGuideStared(started = false)
                 },
@@ -96,11 +99,12 @@ internal fun HomeGuideScreen(
 
 @Composable
 private fun HomeGuideStartScreen(
+    modifier: Modifier = Modifier,
     onNext: () -> Unit,
     onClosed: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
