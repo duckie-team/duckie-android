@@ -11,7 +11,7 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.ui.profile.dummy.skeletonUserProfile
 
-data class MyPageState(
+internal data class MyPageState(
     val isLoading: Boolean = true,
     val userProfile: UserProfile = skeletonUserProfile(),
     val me: User? = null,

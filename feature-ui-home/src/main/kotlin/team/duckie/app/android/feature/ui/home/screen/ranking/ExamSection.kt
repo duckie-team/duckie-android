@@ -170,7 +170,7 @@ private fun RankingItem(
             duckTestCoverItem = duckTestCoverItem,
             onItemClick = { onItemClick(duckTestCoverItem.testId) },
             isLoading = isLoading,
-            onMoreClick = {},
+            onMoreClick = {}, // TODO(EvergreenTree97) 신고하기 작업 필요
         )
         RankingEdge(rank = rank)
     }

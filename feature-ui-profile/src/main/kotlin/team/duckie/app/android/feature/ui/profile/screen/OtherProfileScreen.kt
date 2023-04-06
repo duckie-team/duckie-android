@@ -22,7 +22,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.profile.R
-import team.duckie.app.android.feature.ui.profile.component.BackPressedHeadLineTopAppBar
+import team.duckie.app.android.shared.ui.compose.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.feature.ui.profile.component.EmptyText
 import team.duckie.app.android.feature.ui.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.ui.profile.screen.section.FollowSection

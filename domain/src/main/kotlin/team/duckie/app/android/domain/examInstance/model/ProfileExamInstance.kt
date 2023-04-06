@@ -18,9 +18,9 @@ data class ProfileExamInstance(
 ) {
     companion object {
         /*
-      * ProfileExamInstance 의 Empty Model 을 제공합니다.
-      * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
-      * */
+         * ProfileExamInstance 의 Empty Model 을 제공합니다.
+         * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
+         * */
         fun empty() = ProfileExamInstance(
             id = 0,
             exam = ProfileExam(

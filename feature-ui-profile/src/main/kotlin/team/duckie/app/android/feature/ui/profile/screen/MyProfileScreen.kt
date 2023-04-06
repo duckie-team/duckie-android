@@ -53,7 +53,7 @@ fun MyProfileScreen(
         userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
     }
     val submittedExams = remember(userProfile.createdExams) {
-        /*userProfile.createdExams?.map { it.toPresentation() }?.toImmutableList()
+        /*userProfile.createdExams?.map { it.toUiModel() }?.toImmutableList()
             ?: persistentListOf()*/
         persistentListOf<DuckTestCoverItem>()
     }

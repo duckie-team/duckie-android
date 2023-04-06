@@ -27,7 +27,7 @@ import team.duckie.app.android.feature.ui.profile.R
 import team.duckie.app.android.feature.ui.profile.component.EmptyText
 import team.duckie.app.android.feature.ui.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.ui.profile.screen.section.ProfileSection
-import team.duckie.app.android.feature.ui.profile.viewmodel.mapper.toPresentation
+import team.duckie.app.android.feature.ui.profile.viewmodel.mapper.toUiModel
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.quackquack.ui.color.QuackColor
@@ -46,12 +46,12 @@ fun ProfileScreen(
 ) {
     val scrollState = rememberScrollState()
     val solvedExams = remember(userProfile.solvedExamInstances) {
-        userProfile.solvedExamInstances?.map { it.toPresentation() }
+        userProfile.solvedExamInstances?.map { it.toUiModel() }
             ?.toImmutableList()
             ?: persistentListOf()
     }
     val heartedExams = remember(userProfile.heartExams) {
-        userProfile.heartExams?.map { it.toPresentation() }?.toImmutableList()
+        userProfile.heartExams?.map { it.toUiModel() }?.toImmutableList()
             ?: persistentListOf()
     }
 

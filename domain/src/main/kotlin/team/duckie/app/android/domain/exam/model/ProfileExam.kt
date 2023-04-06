@@ -20,10 +20,10 @@ data class ProfileExam(
     val user: User?,
 ) {
     companion object {
-        /*
-       * ProfileExam 의 Empty Model 을 제공합니다.
-       * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
-       * */
+        /**
+         * ProfileExam 의 Empty Model 을 제공합니다.
+         * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
+         */
         fun empty() = ProfileExam(
             id = 0,
             title = "",

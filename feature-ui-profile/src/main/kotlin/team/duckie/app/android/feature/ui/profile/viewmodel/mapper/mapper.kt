@@ -11,7 +11,7 @@ import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 
-fun ProfileExam.toPresentation() = DuckTestCoverItem(
+fun ProfileExam.toUiModel() = DuckTestCoverItem(
     testId = id,
     thumbnailUrl = thumbnailUrl,
     nickname = user?.nickname ?: "",
@@ -20,7 +20,7 @@ fun ProfileExam.toPresentation() = DuckTestCoverItem(
     heartCount = heartCount ?: 0,
 )
 
-fun ProfileExamInstance.toPresentation() = DuckTestCoverItem(
+fun ProfileExamInstance.toUiModel() = DuckTestCoverItem(
     testId = exam?.id ?: 0,
     thumbnailUrl = exam?.thumbnailUrl,
     nickname = exam?.user?.nickname ?: "",

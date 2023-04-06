@@ -4,8 +4,7 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
-
-package team.duckie.app.android.feature.ui.profile.component
+package team.duckie.app.android.shared.ui.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -15,13 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-internal fun BackPressedHeadLineTopAppBar(
+fun BackPressedHeadLineTopAppBar(
     title: String,
     isLoading: Boolean,
     onBackPressed: () -> Unit,
