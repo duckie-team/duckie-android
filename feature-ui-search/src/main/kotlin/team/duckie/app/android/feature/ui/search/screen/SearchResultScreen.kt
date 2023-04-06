@@ -17,11 +17,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -59,12 +57,6 @@ internal fun SearchResultScreen(
     val tabTitles = SearchResultStep.values().map {
         it.title
     }.toPersistentList()
-
-    val focusManager = LocalFocusManager.current
-
-    LaunchedEffect(Unit) {
-        focusManager.clearFocus()
-    }
 
     Column(
         modifier = modifier

@@ -45,3 +45,13 @@ internal data class SearchState(
         val isFollowing: Boolean,
     )
 }
+
+internal fun User.toUiModel() =
+    SearchState.SearchUser(
+        userId = id,
+        nickname = nickname,
+        profileImgUrl = profileImageUrl ?: "",
+        isFollowing = follow != null,
+        favoriteTag = duckPower?.tag?.name ?: "",
+        tier = duckPower?.tier ?: "",
+    )
