@@ -12,8 +12,8 @@ import android.content.Intent
 /**
  * Intent 에서 String 값을 반환한 후, 제거합니다.
  */
-fun Intent.popStringExtra(str: String): String? {
-    val value = this.getStringExtra(str)
-    if (value != null) { this.removeExtra(str) }
+fun Intent.popStringExtra(key: String): String? {
+    val value = this.getStringExtra(key)
+    if (value != null) { this.removeExtra(key) }
     return value
 }
