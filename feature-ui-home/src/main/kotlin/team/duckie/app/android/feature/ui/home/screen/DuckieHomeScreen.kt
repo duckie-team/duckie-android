@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.home.screen
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,6 +26,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewMode
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
+import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.getPlaceable
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -106,8 +106,7 @@ internal fun DuckieHomeScreen(
                 modifier = Modifier.layoutId(HomeGuideLayoutId),
                 onClose = { homeViewModel.updateGuideVisible(visible = false) },
             )
-            // TODO(limsaehyun): 추후에 QuackCrossfade 로 교체 필요
-            Crossfade(
+            QuackCrossfade(
                 modifier = Modifier.layoutId(HomeCrossFacadeLayoutId),
                 targetState = state.bottomNavigationStep,
             ) { page ->

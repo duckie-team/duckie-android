@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.home.screen.home
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -18,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.activityViewModel
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
@@ -32,7 +32,7 @@ internal fun HomeScreen(
         modifier = Modifier,
         contentAlignment = Alignment.Center,
     ) {
-        Crossfade(
+        QuackCrossfade(
             targetState = state.homeSelectedIndex,
         ) { page ->
             when (page) {
