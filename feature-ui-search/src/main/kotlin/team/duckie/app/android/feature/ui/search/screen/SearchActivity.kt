@@ -109,12 +109,7 @@ class SearchActivity : BaseActivity() {
                                 SearchStep.Search -> SearchScreen(vm = vm)
                                 SearchStep.SearchResult -> SearchResultScreen(
                                     navigateDetail = { examId ->
-                                        detailNavigator.navigateFrom(
-                                            activity = this@SearchActivity,
-                                            intentBuilder = {
-                                                putExtra(Extras.ExamId, examId)
-                                            },
-                                        )
+                                        vm.navigateToDetail(examId = examId)
                                     },
                                 )
                             }
@@ -132,6 +127,15 @@ class SearchActivity : BaseActivity() {
         when (sideEffect) {
             is SearchSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
+            }
+
+            is SearchSideEffect.NavigateToDetail -> {
+                detailNavigator.navigateFrom(
+                    activity = this@SearchActivity,
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                    },
+                )
             }
         }
     }

@@ -254,4 +254,8 @@ internal class SearchViewModel @Inject constructor(
             postSideEffect(SearchSideEffect.ReportError(exception))
         }
     }
+
+    fun navigateToDetail(examId: Int) = intent {
+        postSideEffect(SearchSideEffect.NavigateToDetail(examId))
+    }
 }
