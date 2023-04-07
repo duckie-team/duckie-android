@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.screen.guide.viewmodel
+package team.duckie.app.android.feature.ui.home.viewmodel.guide
 
-internal data class HomeGuideState(
-    val isGuideStarted: Boolean = true,
-)
+sealed class HomeGuideSideEffect

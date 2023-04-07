@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel
+package team.duckie.app.android.feature.ui.home.viewmodel.ranking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,13 +27,6 @@ import team.duckie.app.android.domain.ranking.usecase.GetExamRankingsBySolvedCou
 import team.duckie.app.android.domain.ranking.usecase.GetUserRankingsUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonExamineeItems
-import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonRankingExams
-import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
-import team.duckie.app.android.feature.ui.home.screen.ranking.state.ExamRankingOrder
-import team.duckie.app.android.feature.ui.home.screen.ranking.state.RankingState
-import team.duckie.app.android.feature.ui.home.screen.ranking.state.addAllSelection
-import team.duckie.app.android.feature.ui.home.screen.ranking.state.addAllTag
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.fastMapIndexed
 import javax.inject.Inject

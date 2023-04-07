@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.screen
+package team.duckie.app.android.feature.ui.home.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +39,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
-import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.collectAndHandleState
@@ -68,7 +68,8 @@ internal fun HomeRecommendFollowingExamScreen(
     val toast = rememberToast()
     val homeLoadingMypageToastMessage = stringResource(id = R.string.home_loading_mypage_toast)
 
-    val followingExam = vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
+    val followingExam =
+        vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
 
     LaunchedEffect(Unit) {
         vm.initFollowingExams()

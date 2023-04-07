@@ -5,12 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.screen.ranking.state
+package team.duckie.app.android.feature.ui.home.viewmodel.ranking
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonTags
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
 

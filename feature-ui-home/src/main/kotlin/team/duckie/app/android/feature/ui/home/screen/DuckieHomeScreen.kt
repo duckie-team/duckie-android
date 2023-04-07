@@ -20,12 +20,13 @@ import androidx.compose.ui.layout.layoutId
 import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.screen.guide.HomeGuideScreen
+import team.duckie.app.android.feature.ui.home.screen.home.HomeScreen
 import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
-import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
-import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
-import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.getPlaceable
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -90,7 +91,7 @@ private fun getHomeMeasurePolicy(
 }
 
 @Composable
-internal fun HomeScreen(
+internal fun DuckieHomeScreen(
     homeViewModel: HomeViewModel,
     rankingViewModel: RankingViewModel,
     state: HomeState,
@@ -111,7 +112,7 @@ internal fun HomeScreen(
                 targetState = state.bottomNavigationStep,
             ) { page ->
                 when (page) {
-                    BottomNavigationStep.HomeScreen -> DuckieHomeScreen()
+                    BottomNavigationStep.HomeScreen -> HomeScreen()
                     BottomNavigationStep.SearchScreen -> SearchMainScreen()
                     BottomNavigationStep.RankingScreen -> RankingScreen(
                         viewModel = rankingViewModel,

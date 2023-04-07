@@ -13,19 +13,8 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.MeasurePolicy
-import androidx.compose.ui.layout.layoutId
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,32 +22,18 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigation
-import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
-import team.duckie.app.android.feature.ui.home.screen.guide.HomeGuideScreen
-import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
-import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
-import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
-import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
-import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
-import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
-import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeSideEffect
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
 import team.duckie.app.android.feature.ui.setting.screen.SettingActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
-import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.compose.getPlaceable
-import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
-import team.duckie.app.android.util.kotlin.npe
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
@@ -105,7 +80,7 @@ class HomeActivity : BaseActivity() {
             }
 
             QuackTheme {
-                HomeScreen(
+                DuckieHomeScreen(
                     homeViewModel = homeViewModel,
                     rankingViewModel = rankingViewModel,
                     state = state,
@@ -164,4 +139,3 @@ class HomeActivity : BaseActivity() {
         }
     }
 }
-

@@ -5,9 +5,12 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(
+    ExperimentalMaterialApi::class,
+    ExperimentalFoundationApi::class,
+)
 
-package team.duckie.app.android.feature.ui.home.screen
+package team.duckie.app.android.feature.ui.home.screen.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -50,8 +53,8 @@ import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
-import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
-import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
@@ -67,7 +70,6 @@ import team.duckie.quackquack.ui.component.QuackLargeButtonType
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,

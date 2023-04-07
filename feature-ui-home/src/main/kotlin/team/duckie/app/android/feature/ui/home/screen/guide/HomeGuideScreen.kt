@@ -31,7 +31,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.screen.guide.viewmodel.HomeGuideViewModel
+import team.duckie.app.android.feature.ui.home.constants.GuideStep
+import team.duckie.app.android.feature.ui.home.viewmodel.guide.HomeGuideViewModel
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
