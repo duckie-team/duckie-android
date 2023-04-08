@@ -28,13 +28,12 @@ import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
+import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.kotlin.exception.DuckieResponseFieldNPE
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
-
-private const val ReportAlreadyExists = "이미 신고한 게시물 입니다!"
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
@@ -81,7 +80,10 @@ class DetailViewModel @Inject constructor(
             }
             .onFailure { exception ->
                 when {
-                    exception.isReportAlreadyExists -> postSideEffect(DetailSideEffect.SendToast(ReportAlreadyExists))
+                    exception.isReportAlreadyExists -> postSideEffect(
+                        DetailSideEffect.SendToast(ReportAlreadyExists),
+                    )
+
                     else -> postSideEffect(DetailSideEffect.ReportError(exception))
                 }
             }
@@ -166,6 +168,10 @@ class DetailViewModel @Inject constructor(
 
     fun goToSearch(tag: String) = viewModelScope.launch {
         intent { postSideEffect(DetailSideEffect.NavigateToSearch(tag)) }
+    }
+
+    fun goToProfile(userId: Int) = viewModelScope.launch {
+        intent { postSideEffect(DetailSideEffect.NavigateToMyPage(userId)) }
     }
 
     fun updateReportDialogVisible(visible: Boolean) = intent {

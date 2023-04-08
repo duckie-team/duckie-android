@@ -28,6 +28,7 @@ data class User(
     val favoriteTags: List<Tag>?,
     val favoriteCategories: List<Category>?,
     val permissions: List<String>?,
+    val introduction: String?,
 ) : Parcelable {
     companion object {
         /*
@@ -44,6 +45,7 @@ data class User(
             favoriteTags = null,
             favoriteCategories = null,
             permissions = null,
+            introduction = null,
         )
     }
 }

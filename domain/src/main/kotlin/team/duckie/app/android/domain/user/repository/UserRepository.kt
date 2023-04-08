@@ -12,6 +12,7 @@ import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
+import team.duckie.app.android.domain.user.model.UserProfile
 
 @Immutable
 interface UserRepository {
@@ -33,4 +34,6 @@ interface UserRepository {
     suspend fun fetchMeFollowers(): List<User>
 
     suspend fun fetchMeFollowings(): List<User>
+
+    suspend fun fetchUserProfile(userId: Int): UserProfile
 }
