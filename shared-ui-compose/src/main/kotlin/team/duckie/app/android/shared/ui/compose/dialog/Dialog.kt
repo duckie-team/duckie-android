@@ -7,7 +7,7 @@
 
 @file:OptIn(ExperimentalComposeUiApi::class, ExperimentalComposeUiApi::class)
 
-package team.duckie.app.android.shared.ui.compose
+package team.duckie.app.android.shared.ui.compose.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

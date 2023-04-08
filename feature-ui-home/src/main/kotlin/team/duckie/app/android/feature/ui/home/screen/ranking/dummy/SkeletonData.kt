@@ -4,6 +4,7 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+@file:Suppress("MagicNumber")
 
 package team.duckie.app.android.feature.ui.home.screen.ranking.dummy
 
@@ -24,10 +25,11 @@ internal val skeletonExamineeItems = (1..10).map {
     )
 }.toImmutableList()
 
-internal val skeletonRankingExams = (1..10).map {
+internal fun skeletonExams(count: Int = 10) = (1..count).map {
     Exam.empty().copy(
         id = it,
         user = User.empty().copy(nickname = randomString(3)),
+        title = randomString(6),
         solvedCount = 20,
         description = randomString(6),
     )

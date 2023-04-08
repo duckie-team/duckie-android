@@ -30,20 +30,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.collectAndHandleState
-import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
@@ -65,10 +62,8 @@ internal fun HomeRecommendFollowingExamScreen(
     vm: HomeViewModel = activityViewModel(),
 ) {
     val state = vm.collectAsState().value
-    val toast = rememberToast()
-    val homeLoadingMypageToastMessage = stringResource(id = R.string.home_loading_mypage_toast)
-
-    val followingExam = vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
+    val followingExam =
+        vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
 
     LaunchedEffect(Unit) {
         vm.initFollowingExams()
@@ -114,7 +109,6 @@ internal fun HomeRecommendFollowingExamScreen(
                     favoriteTag = maker?.owner?.favoriteTag ?: "",
                     onClickUserProfile = {
                         // TODO(limsaehyun): 마이페이지로 이동
-                        toast.invoke(homeLoadingMypageToastMessage)
                     },
                     onClickTestCover = {
                         vm.navigateToHomeDetail(maker?.examId ?: 0)

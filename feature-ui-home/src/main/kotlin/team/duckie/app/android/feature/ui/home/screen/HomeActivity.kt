@@ -35,16 +35,18 @@ import team.duckie.app.android.feature.ui.home.component.DuckTestBottomNavigatio
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.screen.guide.HomeGuideScreen
 import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
+import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
-import team.duckie.app.android.feature.ui.setting.screen.SettingActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
+import team.duckie.app.android.navigator.feature.search.SearchNavigator
+import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
@@ -69,6 +71,7 @@ class HomeActivity : BaseActivity() {
     private var waitTime = 2000L
     private val homeViewModel: HomeViewModel by viewModels()
     private val rankingViewModel: RankingViewModel by viewModels()
+    private val myPageViewModel: MyPageViewModel by viewModels()
 
     @Inject
     lateinit var createProblemNavigator: CreateProblemNavigator
@@ -78,6 +81,12 @@ class HomeActivity : BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
+
+    @Inject
+    lateinit var settingNavigator: SettingNavigator
+
+    @Inject
+    lateinit var searchNavigator: SearchNavigator
 
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,11 +148,25 @@ class HomeActivity : BaseActivity() {
                                 )
 
                                 BottomNavigationStep.MyPageScreen -> MyPageScreen(
-                                    navigateToMyPage = {
-                                        notificationNavigator.navigateFrom(activity = this)
+                                    viewModel = myPageViewModel,
+                                    navigateToSetting = { settingNavigator.navigateFrom(this) },
+                                    navigateToNotification = { notificationNavigator.navigateFrom(this) },
+                                    navigateToExam = { examId ->
+                                        detailNavigator.navigateFrom(
+                                            activity = this,
+                                            intentBuilder = {
+                                                putExtra(Extras.ExamId, examId)
+                                            },
+                                        )
                                     },
-                                    navigateToSettingPage = {
-                                        homeViewModel.navigateToSetting()
+                                    navigateToCreateProblem = {
+                                        createProblemNavigator.navigateFrom(this)
+                                    },
+                                    navigateToSearch = {
+                                        searchNavigator.navigateFrom(
+                                            activity = this,
+                                            intentBuilder = { putExtra(Extras.SearchTag, it) },
+                                        )
                                     },
                                 )
                             }
@@ -261,7 +284,7 @@ class HomeActivity : BaseActivity() {
             }
 
             is HomeSideEffect.NavigateToSetting -> {
-                startActivityWithAnimation<SettingActivity>()
+                settingNavigator.navigateFrom(this)
             }
 
             HomeSideEffect.ClickRankingRetry -> {

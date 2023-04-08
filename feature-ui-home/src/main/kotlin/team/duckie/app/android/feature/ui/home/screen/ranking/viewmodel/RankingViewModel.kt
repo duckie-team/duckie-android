@@ -28,7 +28,7 @@ import team.duckie.app.android.domain.ranking.usecase.GetUserRankingsUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonExamineeItems
-import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonRankingExams
+import team.duckie.app.android.feature.ui.home.screen.ranking.dummy.skeletonExams
 import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
 import team.duckie.app.android.feature.ui.home.screen.ranking.state.ExamRankingOrder
 import team.duckie.app.android.feature.ui.home.screen.ranking.state.RankingState
@@ -47,7 +47,7 @@ internal class RankingViewModel @Inject constructor(
 ) : ContainerHost<RankingState, RankingSideEffect>, ViewModel() {
     override val container = container<RankingState, RankingSideEffect>(RankingState())
 
-    private val _examRankings = MutableStateFlow(PagingData.from(skeletonRankingExams))
+    private val _examRankings = MutableStateFlow(PagingData.from(skeletonExams()))
     val examRankings: Flow<PagingData<Exam>> = _examRankings
 
     private val _userRankings = MutableStateFlow(PagingData.from(skeletonExamineeItems))

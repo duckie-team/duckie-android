@@ -7,8 +7,10 @@
 
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package team.duckie.app.android.shared.ui.compose
+package team.duckie.app.android.shared.ui.compose.dialog
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,14 @@ import team.duckie.quackquack.ui.color.QuackColor
 private val BottomSheetShape = RoundedCornerShape(
     topStart = 16.dp,
     topEnd = 16.dp,
+)
+
+data class BottomSheetItem(
+    @DrawableRes
+    val icon: Int,
+    @StringRes
+    val text: Int,
+    val onClick: () -> Unit,
 )
 
 @Composable
