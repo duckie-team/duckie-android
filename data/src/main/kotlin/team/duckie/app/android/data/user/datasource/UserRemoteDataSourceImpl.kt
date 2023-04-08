@@ -11,6 +11,7 @@ import com.github.kittinunf.fuel.Fuel
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
+import io.ktor.client.request.post
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -79,7 +80,11 @@ class UserRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun nicknameValidateCheck(nickname: String): Boolean {
-        val response = client.get("/users/$nickname/duplicate-check")
+        val response = client.post("/users/duplicate-check") {
+            jsonBody {
+                "nickName" withString nickname
+            }
+        }
 
         return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
