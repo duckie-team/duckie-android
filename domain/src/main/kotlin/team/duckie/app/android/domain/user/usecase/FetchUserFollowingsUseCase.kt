@@ -12,11 +12,11 @@ import team.duckie.app.android.domain.user.repository.UserRepository
 import javax.inject.Inject
 
 @Immutable
-class FetchRecommendUserFollowingUseCase @Inject constructor(
+class FetchUserFollowingsUseCase @Inject constructor(
     private val repository: UserRepository,
 ) {
 
     suspend operator fun invoke(userId: Int) = runCatching {
-        repository.fetchRecommendUserFollowing(userId)
+        repository.fetchUserFollowings(userId)
     }
 }

@@ -29,7 +29,7 @@ interface UserRepository {
 
     suspend fun nicknameValidateCheck(nickname: String): Boolean
 
-    suspend fun fetchUserFollowing(userId: Int): UserFollowings
+    suspend fun fetchRecommendUserFollowing(userId: Int): UserFollowings
 
     suspend fun fetchMeFollowers(): List<User>
 
