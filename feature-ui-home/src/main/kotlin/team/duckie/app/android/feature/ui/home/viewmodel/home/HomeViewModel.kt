@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.viewmodel
+package team.duckie.app.android.feature.ui.home.viewmodel.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,13 +39,9 @@ import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
-import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonFollowingExam
-import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonRecommendationItems
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toFollowingModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
-import team.duckie.app.android.feature.ui.home.viewmodel.sideeffect.HomeSideEffect
-import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
 import team.duckie.app.android.util.kotlin.exception.isFollowingAlreadyExists
 import team.duckie.app.android.util.kotlin.exception.isFollowingNotFound
 import team.duckie.app.android.util.kotlin.fastMap
@@ -338,18 +334,19 @@ internal class HomeViewModel @Inject constructor(
         )
     }
 
-    /** 문제 만들기 화면으로 이동한다.*/
+    /** 문제 만들기 화면으로 이동한다 */
     fun navigateToCreateProblem() = intent {
-        postSideEffect(
-            HomeSideEffect.NavigateToCreateProblem,
-        )
+        postSideEffect(HomeSideEffect.NavigateToCreateProblem)
     }
 
     /** 설정 화면으로 이동한다 */
     fun navigateToSetting() = intent {
-        postSideEffect(
-            HomeSideEffect.NavigateToSetting,
-        )
+        postSideEffect(HomeSideEffect.NavigateToSetting)
+    }
+
+    /** 알림 화면으로 이동한다 */
+    fun navigateToNotification() = intent {
+        postSideEffect(HomeSideEffect.NavigateToNotification)
     }
 
     fun updateGuideVisible(visible: Boolean) = intent {

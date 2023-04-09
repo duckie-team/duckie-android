@@ -31,7 +31,7 @@ class SearchRemoteDataSourceImpl @Inject constructor(
             listOf(
                 "query" to query,
                 "page" to page,
-                "type" to type,
+                "type" to type.type,
             ),
         ).responseString()
 

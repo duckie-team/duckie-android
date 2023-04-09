@@ -12,7 +12,7 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowing
-import team.duckie.app.android.feature.ui.home.viewmodel.state.HomeState
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
 import team.duckie.app.android.util.kotlin.fastMap
 
 internal fun UserFollowing.toUiModel() =

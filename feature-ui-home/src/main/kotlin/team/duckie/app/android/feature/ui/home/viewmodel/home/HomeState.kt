@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.viewmodel.state
+package team.duckie.app.android.feature.ui.home.viewmodel.home
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
@@ -15,7 +15,6 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
-import team.duckie.app.android.feature.ui.home.viewmodel.dummy.skeletonJumbotrons
 
 internal data class HomeState(
     val me: User? = null,

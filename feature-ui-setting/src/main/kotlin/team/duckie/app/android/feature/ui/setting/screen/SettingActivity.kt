@@ -12,7 +12,6 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,11 +37,11 @@ import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
+import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.app.android.util.ui.startActivityWithAnimation
-import team.duckie.quackquack.ui.animation.QuackAnimationSpec
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -110,9 +109,8 @@ class SettingActivity : BaseActivity() {
                                 horizontal = 16.dp,
                             ),
                     ) {
-                        Crossfade(
+                        QuackCrossfade(
                             targetState = state.settingType,
-                            animationSpec = QuackAnimationSpec(),
                         ) { step ->
                             when (step) {
                                 SettingType.Main -> SettingMainScreen(

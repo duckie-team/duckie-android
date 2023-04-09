@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.viewmodel.sideeffect
+package team.duckie.app.android.feature.ui.home.viewmodel.home
 
 internal sealed class HomeSideEffect {
 
@@ -36,6 +36,8 @@ internal sealed class HomeSideEffect {
      * [CreateProblemActivity] 로 이동하는 SideEffect 입니다.
      */
     object NavigateToCreateProblem : HomeSideEffect()
+
+    object NavigateToNotification : HomeSideEffect()
 
     object ClickRankingRetry : HomeSideEffect()
 }

@@ -35,8 +35,8 @@ import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.ui.home.component.HomeIconSize
 import team.duckie.app.android.feature.ui.home.constants.RankingPage
-import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
-import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingSideEffect
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.Create
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab

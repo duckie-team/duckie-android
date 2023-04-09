@@ -49,6 +49,7 @@ import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
+import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 import team.duckie.app.android.domain.tag.model.Tag
@@ -171,7 +172,7 @@ internal class CreateProblemViewModel @Inject constructor(
         viewModelScope.launch {
             this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
                 intent {
-                    getSearchUseCase(query = query, page = 1, type = Search.Tags)
+                    getSearchUseCase(query = query, page = 1, type = SearchType.Tags)
                         .onSuccess {
                             val searchResults = (it as Search.TagSearch).tags
                                 .take(TagsMaximumCount)
