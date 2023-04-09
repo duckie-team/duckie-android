@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.home.screen.mypage
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,11 +17,13 @@ import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.sideeffect.MyPageSideEffect
 import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
+import team.duckie.app.android.feature.ui.profile.screen.edit.ProfileEditActivity
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
+import team.duckie.app.android.util.ui.startActivityWithAnimation
 
 @Composable
 internal fun MyPageScreen(
@@ -32,6 +35,7 @@ internal fun MyPageScreen(
     navigateToFriend: (FriendsType, Int) -> Unit,
     viewModel: MyPageViewModel,
 ) {
+    val activity = LocalContext.current as Activity
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -85,7 +89,8 @@ internal fun MyPageScreen(
             isLoading = isLoading,
             onClickSetting = viewModel::clickSetting,
             onClickNotification = viewModel::clickNotification,
-            onClickEditProfile = { viewModel.clickEditProfile(context.getString(R.string.provide_after)) },
+            // TODO(EvergreenTree97) 추후 sideEffect로 관리
+            onClickEditProfile = { activity.startActivityWithAnimation<ProfileEditActivity>() },
             onClickEditTag = { viewModel.clickEditTag(context.getString(R.string.provide_after)) },
             onClickExam = viewModel::clickExam,
             onClickMakeExam = viewModel::clickMakeExam,

@@ -22,6 +22,7 @@
     <string name="make_exam">덕력고사 만들기</string>
 
     <string name="edit_profile">프로필 수정</string>
+    <string name="edit_profile_picture">프로필 사진 수정</string>
     <string name="edit_tag">태그 편집</string>
     <string name="my_favorite_tag">내 관심 태그</string>
     <string name="not_yet_add_favorite_tag">추가한 관심태그가 없어요 :(</string>
@@ -30,4 +31,10 @@
 
     <string name="please_input_introduce">자기소개를 입력해주세요 :)</string>
     <string name="provide_after">추후 제공되는 기능입니다.</string>
+    <string name="edit_complete">수정 완료</string>
+    <string name="profile_fail_capture_photo">사진을 가져오는데 실패했어요.</string>
+
+    <string name="profile_nickname_placeholder">닉네임 입력</string>
+    <string name="profile_nickname_rule_error">이름에는 문자, 숫자, 밑줄, 마침표만 사용할 수 있어요.</string>
+    <string name="profile_nickname_duplicate_error">이미 있는 이름이에요</string>
 </resources>

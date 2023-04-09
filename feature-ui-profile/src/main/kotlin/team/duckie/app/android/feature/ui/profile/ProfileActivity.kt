@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
 import team.duckie.app.android.feature.ui.profile.screen.OtherProfileScreen
+import team.duckie.app.android.feature.ui.profile.screen.edit.ProfileEditActivity
 import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
@@ -32,6 +33,7 @@ import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.util.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
@@ -72,7 +74,7 @@ class ProfileActivity : BaseActivity() {
                             isLoading = state.isLoading,
                             onClickSetting = viewModel::clickSetting,
                             onClickNotification = viewModel::clickNotification,
-                            onClickEditProfile = { viewModel.clickEditProfile(getString(R.string.provide_after)) },
+                            onClickEditProfile = { startActivityWithAnimation<ProfileEditActivity>() },
                             onClickEditTag = { viewModel.clickEditTag(getString(R.string.provide_after)) },
                             onClickExam = viewModel::clickExam,
                             onClickMakeExam = viewModel::clickMakeExam,

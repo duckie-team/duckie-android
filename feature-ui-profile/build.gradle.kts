@@ -22,6 +22,7 @@ dependencies {
         platform(libs.firebase.bom),
         projects.domain,
         projects.di,
+        projects.featurePhotopicker,
         projects.navigator,
         projects.utilUi,
         projects.sharedUiCompose,
