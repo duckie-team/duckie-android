@@ -15,7 +15,7 @@ package team.duckie.app.android.domain.recommendation.model
  * [Tags] 태그
  */
 enum class SearchType(
-    val type: String
+    val type: String,
 ) {
     Users("USERS"),
     Exams("EXAMS"),

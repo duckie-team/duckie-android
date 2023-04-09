@@ -147,7 +147,7 @@ internal fun DuckieHomeScreen(
             )
         },
         measurePolicy = getHomeMeasurePolicy(
-            guideVisible = state.guideVisible
-        )
+            guideVisible = state.guideVisible,
+        ),
     )
 }
