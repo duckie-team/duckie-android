@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.notification.screen
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.notification.R
 import team.duckie.app.android.feature.ui.notification.viewmodel.NotificationViewModel
+import team.duckie.app.android.shared.ui.compose.NoItemScreen
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.getDiffDayFromToday
@@ -54,25 +56,38 @@ internal fun NotificationScreen(
             leadingText = stringResource(id = R.string.notification),
             onLeadingIconClick = viewModel::clickBackPress,
         )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 20.dp)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(28.dp),
-        ) {
-            items(
-                items = state.notifications,
-                key = { it.id },
-            ) { notification ->
-                with(notification) {
-                    NotificationItem(
-                        thumbnailUrl = thumbnailUrl,
-                        body = body,
-                        createdAt = createdAt,
-                        isLoading = state.isLoading,
-                        onClick = { viewModel.clickNotification(notification.id) },
+        Crossfade(state.notifications.isEmpty()) {
+            when (it) {
+                true -> {
+                    NoItemScreen(
+                        title = stringResource(id = R.string.empty_notfications),
+                        description = stringResource(id = R.string.check_notifications_after_activity),
                     )
+                }
+
+                false -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 20.dp)
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(28.dp),
+                    ) {
+                        items(
+                            items = state.notifications,
+                            key = { it.id },
+                        ) { notification ->
+                            with(notification) {
+                                NotificationItem(
+                                    thumbnailUrl = thumbnailUrl,
+                                    body = body,
+                                    createdAt = createdAt,
+                                    isLoading = state.isLoading,
+                                    onClick = { viewModel.clickNotification(notification.id) },
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
