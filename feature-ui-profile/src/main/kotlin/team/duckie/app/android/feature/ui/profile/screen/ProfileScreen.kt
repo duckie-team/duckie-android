@@ -35,6 +35,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 fun ProfileScreen(
+    modifier: Modifier = Modifier,
     userProfile: UserProfile,
     isLoading: Boolean,
     topBar: @Composable () -> Unit,
@@ -58,9 +59,7 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = QuackColor.White.composeColor)
-            .systemBarsPadding()
-            .navigationBarsPadding(),
+            .background(color = QuackColor.White.composeColor),
     ) {
         topBar()
         Column(

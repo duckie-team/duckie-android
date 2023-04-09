@@ -72,7 +72,7 @@ class DetailActivity : BaseActivity() {
                 profileNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
-                        putExtra(Extras.userId, sideEffect.userId)
+                        putExtra(Extras.UserId, sideEffect.userId)
                     },
                 )
             }

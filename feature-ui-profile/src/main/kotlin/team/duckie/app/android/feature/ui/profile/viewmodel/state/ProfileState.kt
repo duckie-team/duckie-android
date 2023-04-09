@@ -19,4 +19,5 @@ data class ProfileState(
     val reportDialogVisible: Boolean = false,
     val follow: Boolean = false,
     val reportExamId: Int = 0,
+    val userId: Int = 0,
 )

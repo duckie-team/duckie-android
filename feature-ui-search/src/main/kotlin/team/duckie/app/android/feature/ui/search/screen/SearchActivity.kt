@@ -38,6 +38,7 @@ import team.duckie.app.android.feature.ui.search.constants.SearchStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
+import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
 import team.duckie.app.android.shared.ui.compose.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -60,6 +61,9 @@ class SearchActivity : BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
+
+    @Inject
+    lateinit var profileNavigator: ProfileNavigator
 
     private val vm: SearchViewModel by viewModels()
 
@@ -134,6 +138,15 @@ class SearchActivity : BaseActivity() {
                     activity = this@SearchActivity,
                     intentBuilder = {
                         putExtra(Extras.ExamId, sideEffect.examId)
+                    },
+                )
+            }
+
+            is SearchSideEffect.NavigateToUserProfile -> {
+                profileNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.UserId, sideEffect.userId)
                     },
                 )
             }

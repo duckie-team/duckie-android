@@ -9,6 +9,8 @@
 
 package team.duckie.app.android.feature.ui.profile.screen
 
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -16,17 +18,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.profile.R
-import team.duckie.app.android.shared.ui.compose.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.feature.ui.profile.component.EmptyText
 import team.duckie.app.android.feature.ui.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.ui.profile.screen.section.FollowSection
 import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileViewModel
+import team.duckie.app.android.shared.ui.compose.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 
@@ -47,6 +50,9 @@ internal fun OtherProfileScreen(
         onDismissRequest = { viewModel.updateReportDialogVisible(false) },
     )
     ReportBottomSheetDialog(
+        modifier = Modifier
+            .systemBarsPadding()
+            .navigationBarsPadding(),
         bottomSheetState = bottomSheetState,
         closeSheet = {
             coroutineScope.launch { bottomSheetState.hide() }
@@ -59,7 +65,7 @@ internal fun OtherProfileScreen(
             editSection = {
                 FollowSection(
                     enabled = state.follow,
-                    onClick = viewModel::followUser,
+                    onClick = viewModel::clickFollow,
                 )
             },
             topBar = {
