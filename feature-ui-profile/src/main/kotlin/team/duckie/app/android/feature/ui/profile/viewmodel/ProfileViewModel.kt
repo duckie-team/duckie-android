@@ -103,6 +103,7 @@ internal class ProfileViewModel @Inject constructor(
         }.onFailure {
             intent { postSideEffect(ProfileSideEffect.ReportError(it)) }
         }
+        getUserProfile()
     }
 
     fun updateReportDialogVisible(visible: Boolean) = intent {
