@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package team.duckie.app.android.feature.ui.home.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +24,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
@@ -30,20 +33,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.collectAndHandleState
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
+import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
@@ -55,7 +66,6 @@ private val HomeProfileSize: DpSize = DpSize(
     all = 24.dp,
 )
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun HomeRecommendFollowingExamScreen(
     modifier: Modifier = Modifier,
@@ -77,6 +87,35 @@ internal fun HomeRecommendFollowingExamScreen(
         },
     )
 
+    when (followingExam.itemCount) {
+        0 -> HomeFollowingExamNotFoundScreen(
+            state = state,
+            changeHomeStep = { step ->
+                vm.changedHomeScreen(step)
+            },
+            navigateToCreateProblem = {
+                vm.navigateToCreateProblem()
+            },
+        )
+
+        else -> HomeRecommendFollowingSuccessScreen(
+            modifier = modifier,
+            pullRefreshState = pullRefreshState,
+            state = state,
+            vm = vm,
+            followingExam = followingExam,
+        )
+    }
+}
+
+@Composable
+private fun HomeRecommendFollowingSuccessScreen(
+    modifier: Modifier = Modifier,
+    pullRefreshState: PullRefreshState,
+    state: HomeState,
+    vm: HomeViewModel,
+    followingExam: LazyPagingItems<HomeState.RecommendExam>,
+) {
     Box(
         modifier = Modifier
             .pullRefresh(state = pullRefreshState),
@@ -213,5 +252,36 @@ private fun TestMakerLayout(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun HomeFollowingExamNotFoundScreen(
+    state: HomeState,
+    changeHomeStep: (HomeStep) -> Unit,
+    navigateToCreateProblem: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        HomeTopAppBar(
+            selectedTabIndex = state.homeSelectedIndex.index,
+            onTabSelected = { step ->
+                changeHomeStep(HomeStep.toStep(step))
+            },
+            onClickedCreate = {
+                navigateToCreateProblem()
+            },
+        )
+        Spacer(space = 60.dp)
+        QuackSubtitle(
+            text = stringResource(id = R.string.home_following_exam_not_found_title),
+            align = TextAlign.Center,
+        )
+        Spacer(space = 12.dp)
+        QuackBody2(text = stringResource(id = R.string.home_following_exam_not_found_subtitle))
     }
 }
