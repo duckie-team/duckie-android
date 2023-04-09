@@ -86,6 +86,7 @@ internal fun SearchResultScreen(
                     )
                 },
                 myUserId = state.me?.id ?: 1,
+                onClickUserProfile = vm::clickUserProfile,
             )
         }
         Spacer(space = 48.dp)
@@ -96,6 +97,7 @@ internal fun SearchResultScreen(
 private fun SearchResultForUser(
     searchUsers: LazyPagingItems<SearchState.SearchUser>,
     onClickFollow: (Int, Boolean) -> Unit,
+    onClickUserProfile: (Int) -> Unit,
     myUserId: Int,
 ) {
     if (searchUsers.itemCount == 0) {
@@ -131,6 +133,7 @@ private fun SearchResultForUser(
                         onClickFollow(item?.userId ?: 0, follow)
                     },
                     isMine = myUserId == item?.userId,
+                    onClickUserProfile = onClickUserProfile,
                 )
             }
         }

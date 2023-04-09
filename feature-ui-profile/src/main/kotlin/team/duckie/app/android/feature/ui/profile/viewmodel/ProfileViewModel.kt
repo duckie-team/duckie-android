@@ -43,7 +43,7 @@ internal class ProfileViewModel @Inject constructor(
     override val container = container<ProfileState, ProfileSideEffect>(ProfileState())
 
     fun getUserProfile() = intent {
-        val userId = savedStateHandle.getStateFlow(Extras.userId, 0).value
+        val userId = savedStateHandle.getStateFlow(Extras.UserId, 0).value
         updateLoading(true)
         val job = viewModelScope.launch {
             getMeUseCase()
