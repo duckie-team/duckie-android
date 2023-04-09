@@ -23,10 +23,10 @@ import team.duckie.app.android.feature.ui.home.screen.home.HomeScreen
 import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
-import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
-import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.getPlaceable
@@ -97,6 +97,7 @@ internal fun DuckieHomeScreen(
     rankingViewModel: RankingViewModel,
     myPageViewModel: MyPageViewModel,
     state: HomeState,
+    navigateToUserProfile: (Int) -> Unit,
 ) {
     Layout(
         modifier = Modifier
@@ -122,6 +123,9 @@ internal fun DuckieHomeScreen(
                         },
                         navigateToDetail = { examId ->
                             homeViewModel.navigateToHomeDetail(examId)
+                        },
+                        navigateToUserProfile = { userId ->
+                            navigateToUserProfile(userId)
                         },
                     )
 

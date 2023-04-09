@@ -16,6 +16,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.domain.notification.model.Notification
 import team.duckie.app.android.domain.notification.usecase.DeleteNotificationUseCase
 import team.duckie.app.android.domain.notification.usecase.GetNotificationsUseCase
 import javax.inject.Inject
@@ -35,8 +36,12 @@ internal class NotificationViewModel @Inject constructor(
             reduce {
                 state.copy(notifications = notifications.toImmutableList())
             }
-            updateLoading(false)
+        }.onFailure {
+            reduce {
+                state.copy(notifications = emptyList<Notification>().toImmutableList())
+            }
         }
+        updateLoading(false)
     }
 
     fun clickBackPress() = intent { postSideEffect(NotificationSideEffect.FinishActivity) }
