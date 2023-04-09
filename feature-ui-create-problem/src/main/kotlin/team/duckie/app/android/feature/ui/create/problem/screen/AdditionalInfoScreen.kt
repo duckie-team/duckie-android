@@ -255,7 +255,7 @@ internal fun AdditionalInformationScreen(
                         .padding(horizontal = 16.dp)
                         .layoutId(ContentLayoutId),
                 ) {
-                    // 썸네일 선택 (어떤 분야를 좋아하나요?) Layout
+                    // 썸네일 선택 (어떤 카테고리를 좋아하나요?) Layout
                     AdditionalThumbnailLayout(thumbnail = selectedGalleryImage) {
                         keyboard?.hide()
                         coroutineScope.launch {
@@ -327,7 +327,7 @@ internal fun AdditionalInformationScreen(
     }
 }
 
-/** 썸네일 선택 (어떤 분야를 좋아하나요?) Layout */
+/** 썸네일 선택 (어떤 카테고리를 좋아하나요?) Layout */
 @Composable
 private fun AdditionalThumbnailLayout(
     thumbnail: Any?,
@@ -383,7 +383,10 @@ private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel(
                     ),
                 )
             },
-            placeholderText = stringResource(id = R.string.additional_information_take_input_hint),
+            placeholderText = stringResource(
+                id = R.string.additional_information_take_input_hint,
+                TakeTitleMaxLength,
+            ),
             keyboardOptions = ImeActionNext,
         )
     }
