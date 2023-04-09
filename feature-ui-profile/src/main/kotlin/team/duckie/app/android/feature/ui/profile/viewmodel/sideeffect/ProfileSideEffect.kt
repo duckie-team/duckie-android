@@ -28,5 +28,5 @@ sealed class ProfileSideEffect {
 
     class SendToast(val message: String) : ProfileSideEffect()
 
-    class NavigateToFriends(val friendType: FriendsType) : ProfileSideEffect()
+    class NavigateToFriends(val friendType: FriendsType, val userId: Int) : ProfileSideEffect()
 }

@@ -29,7 +29,7 @@ internal fun MyPageScreen(
     navigateToExam: (Int) -> Unit,
     navigateToCreateProblem: () -> Unit,
     navigateToSearch: (String) -> Unit,
-    navigateToFriend: (FriendsType) -> Unit,
+    navigateToFriend: (FriendsType, Int) -> Unit,
     viewModel: MyPageViewModel,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()

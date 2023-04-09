@@ -147,7 +147,10 @@ class ProfileActivity : BaseActivity() {
             is ProfileSideEffect.NavigateToFriends -> {
                 friendsNavigator.navigateFrom(
                     activity = this,
-                    intentBuilder = { putExtra(Extras.FriendType, sideEffect.friendType.index) },
+                    intentBuilder = {
+                        putExtra(Extras.FriendType, sideEffect.friendType.index)
+                        putExtra(Extras.userId, sideEffect.userId)
+                    },
                 )
             }
         }

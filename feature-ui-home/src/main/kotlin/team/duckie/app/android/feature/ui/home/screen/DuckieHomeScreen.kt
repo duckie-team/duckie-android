@@ -31,6 +31,7 @@ import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.getPlaceable
 import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.quackquack.ui.component.QuackDivider
 
 private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
@@ -142,7 +143,9 @@ internal fun DuckieHomeScreen(
                         navigateToSearch = { searchTag ->
                             homeViewModel.navigateToSearch(searchTag)
                         },
-                        navigateToFriend = homeViewModel::navigateFriends,
+                        navigateToFriend = { type: FriendsType, userId: Int ->
+                            homeViewModel.navigateFriends(type, userId)
+                        },
                     )
                 }
             }

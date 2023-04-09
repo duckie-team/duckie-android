@@ -340,8 +340,8 @@ internal class HomeViewModel @Inject constructor(
         postSideEffect(HomeSideEffect.NavigateToCreateProblem)
     }
 
-    fun navigateFriends(friendType: FriendsType) = intent {
-        postSideEffect(HomeSideEffect.NavigateToFriends(friendType, state.me?.id ?: 0))
+    fun navigateFriends(friendType: FriendsType, userId: Int) = intent {
+        postSideEffect(HomeSideEffect.NavigateToFriends(friendType, userId))
     }
 
     /** 설정 화면으로 이동한다 */

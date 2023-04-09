@@ -33,13 +33,14 @@ import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
 internal fun ProfileSection(
+    userId: Int,
     profile: String,
     duckPower: String,
     follower: Int,
     following: Int,
     introduce: String,
     isLoading: Boolean,
-    onClickFriend: (FriendsType) -> Unit,
+    onClickFriend: (FriendsType, Int) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -68,7 +69,7 @@ internal fun ProfileSection(
                     title = stringResource(id = R.string.follower),
                     isLoading = isLoading,
                     onClick = {
-                        onClickFriend(FriendsType.Follower)
+                        onClickFriend(FriendsType.Follower, userId)
                     },
                 )
                 Divider(height = 12.dp)
@@ -77,7 +78,7 @@ internal fun ProfileSection(
                     title = stringResource(id = R.string.following),
                     isLoading = isLoading,
                     onClick = {
-                        onClickFriend(FriendsType.Following)
+                        onClickFriend(FriendsType.Following, userId)
                     },
                 )
             }

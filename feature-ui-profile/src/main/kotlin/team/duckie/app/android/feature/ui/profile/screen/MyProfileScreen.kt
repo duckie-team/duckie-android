@@ -49,7 +49,7 @@ fun MyProfileScreen(
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMakeExam: () -> Unit,
     onClickTag: (String) -> Unit,
-    onClickFriend: (FriendsType) -> Unit,
+    onClickFriend: (FriendsType, Int) -> Unit,
 ) {
     val tags = remember(userProfile.user?.favoriteTags) {
         userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
