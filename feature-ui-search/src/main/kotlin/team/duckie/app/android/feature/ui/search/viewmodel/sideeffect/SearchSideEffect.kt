@@ -17,4 +17,6 @@ internal sealed class SearchSideEffect {
     class ReportError(val exception: Throwable) : SearchSideEffect()
 
     class NavigateToDetail(val examId: Int) : SearchSideEffect()
+
+    class NavigateToUserProfile(val userId: Int) : SearchSideEffect()
 }

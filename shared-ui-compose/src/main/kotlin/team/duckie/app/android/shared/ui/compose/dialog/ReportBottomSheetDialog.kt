@@ -35,6 +35,7 @@ const val ReportAlreadyExists = "이미 신고한 게시물 입니다!"
 
 @Composable
 fun ReportBottomSheetDialog(
+    modifier: Modifier = Modifier,
     bottomSheetState: ModalBottomSheetState,
     closeSheet: () -> Unit,
     onReport: () -> Unit,
@@ -51,6 +52,7 @@ fun ReportBottomSheetDialog(
     }
 
     DuckieBottomSheetDialog(
+        modifier = modifier,
         useHandle = true,
         sheetState = bottomSheetState,
         sheetContent = {

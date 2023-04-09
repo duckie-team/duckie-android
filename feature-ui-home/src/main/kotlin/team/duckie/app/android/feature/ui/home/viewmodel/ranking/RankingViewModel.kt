@@ -157,6 +157,10 @@ internal class RankingViewModel @Inject constructor(
         postSideEffect(RankingSideEffect.ListPullUp(state.selectedTab))
     }
 
+    fun clickUser(userId: Int) = intent {
+        postSideEffect(RankingSideEffect.NavigateToUserProfile(userId))
+    }
+
     private fun updatePagingDataLoading(
         loading: Boolean,
     ) = intent {

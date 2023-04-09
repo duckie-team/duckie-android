@@ -47,13 +47,14 @@ data class BottomSheetItem(
 
 @Composable
 fun DuckieBottomSheetDialog(
+    modifier: Modifier = Modifier,
     useHandle: Boolean = false,
     sheetState: ModalBottomSheetState,
     sheetContent: @Composable () -> Unit,
     content: @Composable () -> Unit,
 ) {
     ModalBottomSheetLayout(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         sheetState = sheetState,
         sheetShape = BottomSheetShape,
         sheetContent = {
