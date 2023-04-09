@@ -25,10 +25,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.friends.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.ui.friends.viewmodel.state.FriendsState
@@ -41,7 +45,6 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.icon.QuackIcon
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun FriendsScreen(
     viewModel: FriendsViewModel,
@@ -58,10 +61,6 @@ internal fun FriendsScreen(
     val pagerState = rememberPagerState(initialPage = state.selectedTab.index)
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -71,15 +70,6 @@ internal fun FriendsScreen(
         BackPressedHeadLine2TopAppBar(
             title = "asd,",
             onBackPressed = onPrevious,
-        )
-        HeadLineTopAppBar(
-            title = "",
-            rightIcons = {
-                QuackImage(
-                    src = QuackIcon.ArrowBack,
-                    onClick = viewModel::clickAppBarRightIcon,
-                )
-            },
         )
         QuackMainTab(
             titles = tabs,
@@ -96,12 +86,19 @@ internal fun FriendsScreen(
             pageCount = FriendsType.values().size,
             state = pagerState,
         ) {
-            when(state.selectedTab) {
+            when (state.selectedTab) {
                 FriendsType.Follower -> {
-                    FriendSection(friends = state.followers, myUserId = 1)
+                    FriendSection(
+                        friends = state.followers,
+                        myUserId = state.me?.id ?: 0,
+                    )
                 }
+
                 FriendsType.Following -> {
-                    FriendSection(friends = state.followings, myUserId = 1)
+                    FriendSection(
+                        friends = state.followings,
+                        myUserId = state.me?.id ?: 0,
+                    )
                 }
             }
         }
@@ -110,22 +107,25 @@ internal fun FriendsScreen(
 
 @Composable
 private fun FriendSection(
-    friends: ImmutableList<FriendsState.User>,
+    friends: ImmutableList<User>,
     myUserId: Int,
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .padding(horizontal = 16.dp),
+    ) {
         items(friends) { item ->
             UserFollowingLayout(
-                userId = item.userId,
-                profileImgUrl = item.profileImgUrl,
-                nickname = item.nickname ,
-                favoriteTag = item.favoriteTag ,
-                tier = item.tier,
-                isFollowing = item.isFollowing ,
+                userId = item.id,
+                profileImgUrl = item.profileImageUrl ?: "",
+                nickname = item.nickname,
+                favoriteTag = item.duckPower?.tag?.name ?: "",
+                tier = item.duckPower?.tier ?: "",
+                isFollowing = item.follow != null,
                 onClickFollow = { follow ->
 //                    onClickFollow(item.userId, follow)
                 },
-                isMine = myUserId == item.userId,
+                isMine = myUserId == item.id,
             )
         }
     }

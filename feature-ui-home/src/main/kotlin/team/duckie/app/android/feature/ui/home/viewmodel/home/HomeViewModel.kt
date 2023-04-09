@@ -341,7 +341,7 @@ internal class HomeViewModel @Inject constructor(
     }
 
     fun navigateFriends(friendType: FriendsType) = intent {
-        postSideEffect(HomeSideEffect.NavigateToFriends(friendType))
+        postSideEffect(HomeSideEffect.NavigateToFriends(friendType, state.me?.id ?: 0))
     }
 
     /** 설정 화면으로 이동한다 */

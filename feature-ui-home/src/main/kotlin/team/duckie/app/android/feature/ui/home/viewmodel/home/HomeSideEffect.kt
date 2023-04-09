@@ -43,5 +43,5 @@ internal sealed class HomeSideEffect {
 
     object ClickRankingRetry : HomeSideEffect()
 
-    class NavigateToFriends(val friendType: FriendsType) : HomeSideEffect()
+    class NavigateToFriends(val friendType: FriendsType, val myUserId: Int) : HomeSideEffect()
 }
