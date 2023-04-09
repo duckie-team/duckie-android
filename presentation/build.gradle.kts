@@ -25,6 +25,7 @@ dependencies {
         projects.utilUi,
         projects.utilCompose,
         projects.utilKotlin,
+        projects.utilAndroid,
         projects.featureDatastore,
         projects.featureUiHome,
         projects.featureUiOnboard,

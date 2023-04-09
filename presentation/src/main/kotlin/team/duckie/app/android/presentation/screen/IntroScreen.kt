@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.presentation.R
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
+import team.duckie.app.android.shared.ui.compose.constant.getAppPackageName
+import team.duckie.app.android.util.android.intent.goToMarket
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.color.QuackColor
@@ -38,6 +40,7 @@ internal fun IntroScreen(
     viewModel: IntroViewModel = activityViewModel(),
 ) {
     val activity = LocalContext.current as Activity
+    val appPackageName = getAppPackageName()
     val updateRequireTitle = stringResource(id = R.string.update_require_dialog_title)
     val updateRequireDescription = stringResource(id = R.string.update_require_dialog_description)
     Column(
@@ -89,7 +92,8 @@ internal fun IntroScreen(
         },
         rightButtonText = "지금 업데이트",
         rightButtonOnClick = {
-            // TODO 지금 업데이트 클릭 이벤트 처리
+            activity.goToMarket(appPackageName)
+            activity.finish()
         },
         onDismissRequest = {}
     )
