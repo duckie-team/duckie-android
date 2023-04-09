@@ -29,6 +29,7 @@ dependencies {
         projects.utilKotlin,
         projects.utilExceptionHandling,
         projects.utilCompose,
+        projects.utilUi,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,

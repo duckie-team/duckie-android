@@ -15,6 +15,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.feature.ui.friends.viewmodel.sideeffect.FriendsSideEffect
 import team.duckie.app.android.feature.ui.friends.viewmodel.state.FriendsState
+import team.duckie.app.android.util.kotlin.FriendsType
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,9 +24,9 @@ internal class FriendsViewModel @Inject constructor(
 ) : ContainerHost<FriendsState, FriendsSideEffect>, ViewModel() {
     override val container = container<FriendsState, FriendsSideEffect>(FriendsState())
 
-    fun setSelectedTab(index: Int) = intent {
+    fun setSelectedTab(type: FriendsType) = intent {
         reduce {
-            state.copy(selectedTab = index)
+            state.copy(selectedTab = type)
         }
     }
 

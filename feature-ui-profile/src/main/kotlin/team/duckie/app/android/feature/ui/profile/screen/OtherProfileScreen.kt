@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialApi::class)
 
 package team.duckie.app.android.feature.ui.profile.screen
 
@@ -86,6 +86,7 @@ internal fun OtherProfileScreen(
             onClickMore = {
                 coroutineScope.launch { bottomSheetState.show() }
             },
+            onClickFriend = viewModel::navigateFriends,
         )
     }
 }

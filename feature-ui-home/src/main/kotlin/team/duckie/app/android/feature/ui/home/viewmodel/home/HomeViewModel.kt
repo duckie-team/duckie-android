@@ -42,6 +42,7 @@ import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toFollowingModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
+import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.kotlin.exception.isFollowingAlreadyExists
 import team.duckie.app.android.util.kotlin.exception.isFollowingNotFound
 import team.duckie.app.android.util.kotlin.fastMap
@@ -337,6 +338,10 @@ internal class HomeViewModel @Inject constructor(
     /** 문제 만들기 화면으로 이동한다 */
     fun navigateToCreateProblem() = intent {
         postSideEffect(HomeSideEffect.NavigateToCreateProblem)
+    }
+
+    fun navigateFriends(friendType: FriendsType) = intent {
+        postSideEffect(HomeSideEffect.NavigateToFriends(friendType))
     }
 
     /** 설정 화면으로 이동한다 */

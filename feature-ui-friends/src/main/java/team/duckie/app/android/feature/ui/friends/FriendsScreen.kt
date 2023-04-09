@@ -24,10 +24,12 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.friends.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
+import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.icon.QuackIcon
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun FriendsScreen(
     viewModel: FriendsViewModel,
@@ -40,7 +42,7 @@ internal fun FriendsScreen(
         )
     }
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    val pagerState = rememberPagerState(initialPage = state.selectedTab)
+    val pagerState = rememberPagerState(initialPage = state.selectedTab.index)
     val coroutineScope = rememberCoroutineScope()
     Column(modifier = Modifier.fillMaxSize()) {
         HeadLineTopAppBar(
@@ -54,11 +56,11 @@ internal fun FriendsScreen(
         )
         QuackMainTab(
             titles = tabs,
-            selectedTabIndex = state.selectedTab,
-            onTabSelected = {
-                viewModel.setSelectedTab(it)
+            selectedTabIndex = state.selectedTab.index,
+            onTabSelected = { index ->
+                viewModel.setSelectedTab(FriendsType.fromIndex(index))
                 coroutineScope.launch {
-                    pagerState.animateScrollToPage(it)
+                    pagerState.animateScrollToPage(index)
                 }
             },
         )

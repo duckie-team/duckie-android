@@ -7,7 +7,9 @@
 
 package team.duckie.app.android.feature.ui.friends.viewmodel.state
 
+import team.duckie.app.android.util.kotlin.FriendsType
+
 internal data class FriendsState(
     val isLoading: Boolean = true,
-    val selectedTab: Int = 0,
+    val selectedTab: FriendsType = FriendsType.Follower,
 )

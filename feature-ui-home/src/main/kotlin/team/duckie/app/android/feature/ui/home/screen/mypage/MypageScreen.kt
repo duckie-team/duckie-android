@@ -19,6 +19,7 @@ import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 
 @Composable
@@ -28,6 +29,7 @@ internal fun MyPageScreen(
     navigateToExam: (Int) -> Unit,
     navigateToCreateProblem: () -> Unit,
     navigateToSearch: (String) -> Unit,
+    navigateToFriend: (FriendsType) -> Unit,
     viewModel: MyPageViewModel,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
@@ -89,6 +91,7 @@ internal fun MyPageScreen(
             onClickMakeExam = viewModel::clickMakeExam,
             onClickFavoriteTag = { viewModel.clickEditProfile(context.getString(R.string.provide_after)) },
             onClickTag = viewModel::onClickTag,
+            onClickFriend = navigateToFriend,
         )
     }
 }

@@ -142,6 +142,7 @@ internal fun DuckieHomeScreen(
                         navigateToSearch = { searchTag ->
                             homeViewModel.navigateToSearch(searchTag)
                         },
+                        navigateToFriend = homeViewModel::navigateFriends,
                     )
                 }
             }

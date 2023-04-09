@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect
 
+import team.duckie.app.android.util.kotlin.FriendsType
+
 sealed class ProfileSideEffect {
 
     class ReportError(val exception: Throwable) : ProfileSideEffect()
@@ -25,4 +27,6 @@ sealed class ProfileSideEffect {
     class NavigateToExamDetail(val examId: Int) : ProfileSideEffect()
 
     class SendToast(val message: String) : ProfileSideEffect()
+
+    class NavigateToFriends(val friendType: FriendsType) : ProfileSideEffect()
 }

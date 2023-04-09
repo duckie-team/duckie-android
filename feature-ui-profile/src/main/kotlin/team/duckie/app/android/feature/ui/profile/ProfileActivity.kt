@@ -21,6 +21,7 @@ import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
+import team.duckie.app.android.navigator.feature.friend.FriendNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
@@ -53,6 +54,9 @@ class ProfileActivity : BaseActivity() {
     @Inject
     lateinit var searchNavigator: SearchNavigator
 
+    @Inject
+    lateinit var friendsNavigator: FriendNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -74,6 +78,7 @@ class ProfileActivity : BaseActivity() {
                             onClickMakeExam = viewModel::clickMakeExam,
                             onClickFavoriteTag = { viewModel.clickEditProfile(getString(R.string.provide_after)) },
                             onClickTag = viewModel::onClickTag,
+                            onClickFriend = viewModel::navigateFriends,
                         )
                     }
 
@@ -136,6 +141,13 @@ class ProfileActivity : BaseActivity() {
                 searchNavigator.navigateFrom(
                     activity = this@ProfileActivity,
                     intentBuilder = { putExtra(Extras.SearchTag, sideEffect.tagName) },
+                )
+            }
+
+            is ProfileSideEffect.NavigateToFriends -> {
+                friendsNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = { putExtra(Extras.FriendType, sideEffect.friendType.index) },
                 )
             }
         }

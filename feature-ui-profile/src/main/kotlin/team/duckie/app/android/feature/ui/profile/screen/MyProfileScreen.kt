@@ -30,6 +30,7 @@ import team.duckie.app.android.feature.ui.profile.screen.section.FavoriteTagSect
 import team.duckie.app.android.shared.ui.compose.Create
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.Notice
+import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
@@ -48,6 +49,7 @@ fun MyProfileScreen(
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMakeExam: () -> Unit,
     onClickTag: (String) -> Unit,
+    onClickFriend: (FriendsType) -> Unit,
 ) {
     val tags = remember(userProfile.user?.favoriteTags) {
         userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
@@ -124,5 +126,6 @@ fun MyProfileScreen(
             )
         },
         onClickExam = onClickExam,
+        onClickFriend = onClickFriend,
     )
 }
