@@ -24,11 +24,11 @@
     <string name="main_tag">"시험 영역"</string>
     <string name="find_main_tag">"시험 영역 찾기"</string>
     <string name="exam_title">"시험 제목"</string>
-    <string name="input_exam_title">"시험 제목을 입력해 주세요"</string>
+    <string name="input_exam_title">"시험 제목을 입력해 주세요 (최대 %s자)"</string>
     <string name="exam_description">"설명</string>
-    <string name="input_exam_description">"시험에 대한 설명을 입력해 주세요"</string>
+    <string name="input_exam_description">"시험에 대한 설명을 입력해 주세요 (최대 %s자)"</string>
     <string name="certifying_statement">"필적 확인 문구</string>
-    <string name="input_certifying_statement">"필적확인 문구를 입력해 주세요"</string>
+    <string name="input_certifying_statement">"필적확인 문구를 입력해 주세요 (최대 %s자)"</string>
     <string name="add_also">+%s 추가하기</string>
     <string name="search_main_tag_placeholder">"시험 영역으로 설정할 태그를 검색해 주세요."</string>
     <string name="make_exam_loading">문제 생성 중입니다.\n잠시 기다려주세요.</string>
@@ -48,7 +48,7 @@
     <string name="additional_information_thumbnail_title">시험 썸네일</string>
     <string name="additional_information_thumbnail_select">썸네일 종류 선택</string>
     <string name="additional_information_take_title">시험 응시하기 버튼</string>
-    <string name="additional_information_take_input_hint">응시버튼 커스텀을 해보세요</string>
+    <string name="additional_information_take_input_hint">응시버튼 커스텀을 해보세요 (최대 %s자)</string>
     <string name="additional_information_sub_tags_title">태그 추가</string>
     <string name="additional_information_sub_tags_placeholder"># 태그입력</string>
 </resources>

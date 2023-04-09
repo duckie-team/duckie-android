@@ -383,7 +383,10 @@ private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel(
                     ),
                 )
             },
-            placeholderText = stringResource(id = R.string.additional_information_take_input_hint),
+            placeholderText = stringResource(
+                id = R.string.additional_information_take_input_hint,
+                TakeTitleMaxLength,
+            ),
             keyboardOptions = ImeActionNext,
         )
     }

@@ -177,7 +177,10 @@ internal fun ExamInformationScreen(
                                 ),
                             )
                         },
-                        placeholderText = stringResource(id = R.string.input_exam_title),
+                        placeholderText = stringResource(
+                            id = R.string.input_exam_title,
+                            ExamTitleMaxLength,
+                        ),
                         keyboardOptions = ImeActionNext,
                         keyboardActions = moveDownFocus(focusManager),
                     )
@@ -199,7 +202,10 @@ internal fun ExamInformationScreen(
                                 ),
                             )
                         },
-                        placeholderText = stringResource(id = R.string.input_exam_description),
+                        placeholderText = stringResource(
+                            id = R.string.input_exam_description,
+                            ExamDescriptionMaxLength,
+                        ),
                         imeAction = ImeAction.Next,
                         keyboardActions = moveDownFocus(focusManager),
                         focused = state.examDescriptionFocused,
@@ -217,7 +223,10 @@ internal fun ExamInformationScreen(
                                 ),
                             )
                         },
-                        placeholderText = stringResource(id = R.string.input_certifying_statement),
+                        placeholderText = stringResource(
+                            id = R.string.input_certifying_statement,
+                            CertifyingStatementMaxLength,
+                        ),
                         keyboardActions = KeyboardActions(
                             onDone = {
                                 coroutineScope.launch {
