@@ -39,6 +39,7 @@ internal fun HomeScreen(
                 HomeStep.HomeRecommendScreen -> {
                     HomeRecommendScreen()
                 }
+
                 HomeStep.HomeFollowingScreen -> {
                     if (state.isFollowingExist) {
                         HomeRecommendFollowingExamScreen(
