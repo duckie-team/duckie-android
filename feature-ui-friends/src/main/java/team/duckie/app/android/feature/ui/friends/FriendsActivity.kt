@@ -16,6 +16,7 @@ import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
@@ -32,7 +33,12 @@ class FriendsActivity : BaseActivity() {
 
         setContent {
             QuackTheme {
-                FriendsScreen(viewModel)
+                FriendsScreen(
+                    viewModel = viewModel,
+                    onPrevious = {
+                        finishWithAnimation()
+                    }
+                )
             }
         }
     }

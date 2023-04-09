@@ -27,7 +27,7 @@ import team.duckie.app.android.feature.ui.profile.R
 import team.duckie.app.android.feature.ui.profile.component.EmptyText
 import team.duckie.app.android.feature.ui.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.ui.profile.screen.section.ProfileSection
-import team.duckie.app.android.feature.ui.profile.viewmodel.mapper.toUiModel
+import team.duckie.app.android.feature.ui.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.util.kotlin.FriendsType
