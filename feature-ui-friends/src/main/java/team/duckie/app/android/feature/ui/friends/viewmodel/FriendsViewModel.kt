@@ -68,12 +68,6 @@ internal class FriendsViewModel @Inject constructor(
         }
     }
 
-    fun setSelectedTab(type: FriendsType) = intent {
-        reduce {
-            state.copy(selectedTab = type)
-        }
-    }
-
     private fun fetchUserFollowers(userId: Int) = intent {
         updateLoadingState(true)
         fetchUserFollowersUseCase(userId)

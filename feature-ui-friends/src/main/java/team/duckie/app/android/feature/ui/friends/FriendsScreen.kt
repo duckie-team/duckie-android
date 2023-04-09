@@ -22,8 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
@@ -32,16 +35,19 @@ import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.ui.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.shared.ui.compose.BackPressedHeadLine2TopAppBar
+import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackMainTab
 
 @Composable
 internal fun FriendsScreen(
     viewModel: FriendsViewModel,
     onPrevious: () -> Unit = { },
+    initialFriendsType: FriendsType
 ) {
     val context = LocalContext.current
     val tabs = remember {
@@ -51,7 +57,7 @@ internal fun FriendsScreen(
         )
     }
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    val pagerState = rememberPagerState(initialPage = state.selectedTab.index)
+    val pagerState = rememberPagerState(initialPage = initialFriendsType.index)
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -61,14 +67,14 @@ internal fun FriendsScreen(
             .padding(systemBarPaddings),
     ) {
         BackPressedHeadLine2TopAppBar(
-            title = "asd,",
+            title = state.me?.nickname ?: "",
             onBackPressed = onPrevious,
         )
         QuackMainTab(
             titles = tabs,
-            selectedTabIndex = state.selectedTab.index,
+            selectedTabIndex = pagerState.currentPage,
             onTabSelected = { index ->
-                viewModel.setSelectedTab(FriendsType.fromIndex(index))
+//                viewModel.setSelectedTab(FriendsType.fromIndex(index))
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(index)
                 }
@@ -78,12 +84,13 @@ internal fun FriendsScreen(
             modifier = Modifier.fillMaxSize(),
             pageCount = FriendsType.values().size,
             state = pagerState,
-        ) {
-            when (state.selectedTab) {
+        ) { index ->
+            when (FriendsType.fromIndex(index)) {
                 FriendsType.Follower -> {
-                    FriendSection(
-                        friends = state.followers,
+                    FriendLayout(
                         myUserId = state.me?.id ?: 0,
+                        friends = state.followers,
+                        isEmpty = state.followers.isEmpty(),
                         onClickFollow = { userId, follow ->
                             viewModel.followUser(
                                 userId = userId,
@@ -91,13 +98,18 @@ internal fun FriendsScreen(
                                 type = FriendsType.Follower,
                             )
                         },
+                        notFoundMessage = stringResource(
+                            id = R.string.follower,
+                            state.me?.nickname ?: "",
+                        )
                     )
                 }
 
                 FriendsType.Following -> {
-                    FriendSection(
-                        friends = state.followings,
+                    FriendLayout(
                         myUserId = state.me?.id ?: 0,
+                        friends = state.followings,
+                        isEmpty = state.followings.isEmpty(),
                         onClickFollow = { userId, follow ->
                             viewModel.followUser(
                                 userId = userId,
@@ -105,10 +117,56 @@ internal fun FriendsScreen(
                                 type = FriendsType.Following,
                             )
                         },
+                        notFoundMessage = stringResource(
+                            id = R.string.following_not_found,
+                            state.me?.nickname ?: "",
+                        )
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun FriendLayout(
+    myUserId: Int,
+    friends: ImmutableList<FriendsState.Friend>,
+    isEmpty: Boolean,
+    onClickFollow: (Int, Boolean) -> Unit,
+    notFoundMessage: String,
+) {
+    when {
+        isEmpty -> {
+            FriendNotFoundScreen(
+                title = notFoundMessage
+            )
+        }
+
+        else -> {
+            FriendSection(
+                friends = friends,
+                myUserId = myUserId,
+                onClickFollow = onClickFollow
+            )
+        }
+    }
+}
+
+@Composable
+private fun FriendNotFoundScreen(
+    title: String,
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(space = 74.5.dp)
+        QuackHeadLine2(
+            text = title,
+            color = QuackColor.Gray1,
+            align = TextAlign.Center,
+        )
     }
 }
 
@@ -120,6 +178,7 @@ private fun FriendSection(
 ) {
     LazyColumn(
         modifier = Modifier
+            .fillMaxSize()
             .padding(horizontal = 16.dp),
     ) {
         items(friends) { item ->

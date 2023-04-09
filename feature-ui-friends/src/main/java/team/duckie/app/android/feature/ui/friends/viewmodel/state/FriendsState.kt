@@ -16,7 +16,6 @@ internal data class FriendsState(
     val me: User ? = null,
 
     val isLoading: Boolean = true,
-    val selectedTab: FriendsType = FriendsType.Follower,
 
     val followers: ImmutableList<Friend> = persistentListOf(),
     val followings: ImmutableList<Friend> = persistentListOf(),

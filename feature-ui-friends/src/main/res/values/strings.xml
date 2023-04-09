@@ -8,4 +8,7 @@
 <resources>
     <string name="follower">팔로워</string>
     <string name="following">팔로잉</string>
+
+    <string name="follower_not_found">%s님을 팔로우 하고 있는\n유저가 없어요</string>
+    <string name="following_not_found">%s님이 팔로우 하고 있는\n유저가 없어요</string>
 </resources>

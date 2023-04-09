@@ -27,9 +27,7 @@ class FriendsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getFriendType(intent).also { type ->
-            viewModel.setSelectedTab(type)
-        }
+        val friendType = getFriendType(intent)
 
         setContent {
             QuackTheme {
@@ -38,6 +36,7 @@ class FriendsActivity : BaseActivity() {
                     onPrevious = {
                         finishWithAnimation()
                     },
+                    initialFriendsType = friendType,
                 )
             }
         }
