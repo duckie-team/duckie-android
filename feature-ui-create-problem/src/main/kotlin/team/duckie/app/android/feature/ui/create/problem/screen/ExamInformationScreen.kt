@@ -263,6 +263,7 @@ internal fun ExamInformationScreen(
     DuckieDialog(
         modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(id = R.string.create_problem_exit_dialog_title),
+        message = stringResource(id = R.string.create_problem_exit_dialog_message),
         visible = createProblemExitDialogVisible,
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { createProblemExitDialogVisible = false },
