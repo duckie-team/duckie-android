@@ -27,7 +27,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.itemsIndexedPagingKey

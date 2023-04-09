@@ -10,14 +10,8 @@ package team.duckie.app.android.data.search.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.github.kittinunf.fuel.Fuel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
-import team.duckie.app.android.data._exception.util.responseCatchingFuel
-import team.duckie.app.android.data.search.mapper.toDomain
-import team.duckie.app.android.data.search.model.SearchData
 import team.duckie.app.android.data.search.paging.SearchExamPagingSource
 import team.duckie.app.android.data.search.paging.SearchTagPagingSource
 import team.duckie.app.android.data.search.paging.SearchUserPagingSource
@@ -32,29 +26,19 @@ import team.duckie.app.android.domain.user.model.User
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
-    private val fuel: Fuel, // TODO (limsaehyun) DataSource로 분리해야 함
     private val searchLocalDataSource: SearchLocalDataSource,
     private val searchRemoteDataSource: SearchRemoteDataSource,
 ) : SearchRepository {
 
-    // TODO(limsaehyun) : 검색의 관심사 분리를 위해 제거해야 함
     override suspend fun getSearch(
         query: String,
         page: Int,
-        type: String,
-    ): Search = withContext(Dispatchers.IO) {
-        val (_, response) = fuel.get(
-            "/search",
-            listOf(
-                "query" to query,
-                "page" to page,
-                "type" to type,
-            ),
-        ).responseString()
-
-        return@withContext responseCatchingFuel(
-            response,
-            SearchData::toDomain,
+        type: SearchType,
+    ): Search {
+        return searchRemoteDataSource.getSearch(
+            query = query,
+            page = page,
+            type = type,
         )
     }
 
@@ -72,7 +56,7 @@ class SearchRepositoryImpl @Inject constructor(
                         searchRemoteDataSource.getSearch(
                             query = query,
                             page = page,
-                            type = SearchType.USERS,
+                            type = SearchType.Users,
                         ) as Search.UserSearch
                     },
                 )
@@ -94,7 +78,7 @@ class SearchRepositoryImpl @Inject constructor(
                         searchRemoteDataSource.getSearch(
                             query = query,
                             page = page,
-                            type = SearchType.EXAMS,
+                            type = SearchType.Exams,
                         ) as Search.ExamSearch
                     },
                 )
@@ -124,7 +108,7 @@ class SearchRepositoryImpl @Inject constructor(
                         searchRemoteDataSource.getSearch(
                             query = query,
                             page = page,
-                            type = SearchType.TAGS,
+                            type = SearchType.Tags,
                         ) as Search.TagSearch
                     },
                 )

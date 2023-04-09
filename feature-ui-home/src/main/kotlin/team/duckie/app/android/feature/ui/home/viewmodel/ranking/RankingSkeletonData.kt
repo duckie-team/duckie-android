@@ -6,7 +6,7 @@
  */
 @file:Suppress("MagicNumber")
 
-package team.duckie.app.android.feature.ui.home.screen.ranking.dummy
+package team.duckie.app.android.feature.ui.home.viewmodel.ranking
 
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList

@@ -15,4 +15,6 @@ internal sealed class SearchSideEffect {
      * @param exception 발생한 예외
      */
     class ReportError(val exception: Throwable) : SearchSideEffect()
+
+    class NavigateToDetail(val examId: Int) : SearchSideEffect()
 }
