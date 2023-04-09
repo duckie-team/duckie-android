@@ -19,7 +19,7 @@ import team.duckie.app.android.domain.user.repository.UserRepository
 import javax.inject.Inject
 
 @Immutable
-class FetchUserFollowingUseCase @Inject constructor(
+class FetchRecommendUserFollowingUseCase @Inject constructor(
     private val repository: UserRepository,
 ) {
 

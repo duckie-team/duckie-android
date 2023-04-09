@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.user.datasource
 
-import android.service.autofill.UserData
 import com.github.kittinunf.fuel.Fuel
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -95,7 +94,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
 
     @AllowMagicNumber
     @ExperimentalApi
-    override suspend fun fetchUserFollowing(userId: Int): UserFollowings =
+    override suspend fun fetchRecommendUserFollowing(userId: Int): UserFollowings =
         withContext(Dispatchers.IO) {
             val (_, response) = fuel
                 .get(
