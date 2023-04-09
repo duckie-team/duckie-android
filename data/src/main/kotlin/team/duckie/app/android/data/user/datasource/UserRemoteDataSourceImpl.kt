@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.data.user.datasource
 
+import android.service.autofill.UserData
 import com.github.kittinunf.fuel.Fuel
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -135,6 +136,22 @@ class UserRemoteDataSourceImpl @Inject constructor(
         return responseCatching(
             response = response.body(),
             parse = UserProfileData::toDomain,
+        )
+    }
+
+    override suspend fun fetchUserFollowings(userId: Int): List<User> {
+        val response = client.get("/users/$userId/followings")
+        return responseCatching(
+            response = response.body(),
+            parse = UsersResponse::toDomain,
+        )
+    }
+
+    override suspend fun fetchUserFollowers(userId: Int): List<User> {
+        val response = client.get("/users/$userId/followers")
+        return responseCatching(
+            response = response.body(),
+            parse = UsersResponse::toDomain,
         )
     }
 }

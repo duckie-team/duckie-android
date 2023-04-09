@@ -34,4 +34,8 @@ interface UserDataSource {
     suspend fun fetchMeFollowings(): List<User>
 
     suspend fun fetchUserProfile(userId: Int): UserProfile
+
+    suspend fun fetchUserFollowings(userId: Int): List<User>
+
+    suspend fun fetchUserFollowers(userId: Int): List<User>
 }
