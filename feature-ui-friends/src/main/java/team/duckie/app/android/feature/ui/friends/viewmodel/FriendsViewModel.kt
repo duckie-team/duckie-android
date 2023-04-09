@@ -16,14 +16,12 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.usecase.FetchUserFollowersUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserFollowingsUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.friends.viewmodel.sideeffect.FriendsSideEffect
 import team.duckie.app.android.feature.ui.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.util.kotlin.FriendsType
-import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 

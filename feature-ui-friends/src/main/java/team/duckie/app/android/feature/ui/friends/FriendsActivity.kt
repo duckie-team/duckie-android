@@ -11,9 +11,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.LaunchedEffect
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.runBlocking
 import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.ui.BaseActivity
@@ -33,15 +31,13 @@ class FriendsActivity : BaseActivity() {
             viewModel.setSelectedTab(type)
         }
 
-
-
         setContent {
             QuackTheme {
                 FriendsScreen(
                     viewModel = viewModel,
                     onPrevious = {
                         finishWithAnimation()
-                    }
+                    },
                 )
             }
         }

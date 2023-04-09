@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,21 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.feature.ui.friends.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
-import team.duckie.app.android.feature.ui.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.shared.ui.compose.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
-import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun FriendsScreen(

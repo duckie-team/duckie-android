@@ -13,7 +13,7 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.util.kotlin.FriendsType
 
 internal data class FriendsState(
-    val me: User ?= null,
+    val me: User ? = null,
 
     val isLoading: Boolean = true,
     val selectedTab: FriendsType = FriendsType.Follower,
