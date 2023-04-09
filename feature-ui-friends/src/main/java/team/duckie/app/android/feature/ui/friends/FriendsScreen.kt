@@ -29,8 +29,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
-import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
+import team.duckie.app.android.feature.ui.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.shared.ui.compose.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -84,6 +84,13 @@ internal fun FriendsScreen(
                     FriendSection(
                         friends = state.followers,
                         myUserId = state.me?.id ?: 0,
+                        onClickFollow = { userId, follow ->
+                            viewModel.followUser(
+                                userId = userId,
+                                isFollowing = follow,
+                                type = FriendsType.Follower,
+                            )
+                        },
                     )
                 }
 
@@ -91,6 +98,13 @@ internal fun FriendsScreen(
                     FriendSection(
                         friends = state.followings,
                         myUserId = state.me?.id ?: 0,
+                        onClickFollow = { userId, follow ->
+                            viewModel.followUser(
+                                userId = userId,
+                                isFollowing = follow,
+                                type = FriendsType.Following,
+                            )
+                        },
                     )
                 }
             }
@@ -100,8 +114,9 @@ internal fun FriendsScreen(
 
 @Composable
 private fun FriendSection(
-    friends: ImmutableList<User>,
+    friends: ImmutableList<FriendsState.Friend>,
     myUserId: Int,
+    onClickFollow: (Int, Boolean) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -109,16 +124,16 @@ private fun FriendSection(
     ) {
         items(friends) { item ->
             UserFollowingLayout(
-                userId = item.id,
-                profileImgUrl = item.profileImageUrl ?: "",
+                userId = item.userId,
+                profileImgUrl = item.profileImgUrl,
                 nickname = item.nickname,
-                favoriteTag = item.duckPower?.tag?.name ?: "",
-                tier = item.duckPower?.tier ?: "",
-                isFollowing = item.follow != null,
+                favoriteTag = item.favoriteTag,
+                tier = item.tier,
+                isFollowing = item.isFollowing,
                 onClickFollow = { follow ->
-//                    onClickFollow(item.userId, follow)
+                    onClickFollow(item.userId, follow)
                 },
-                isMine = myUserId == item.id,
+                isMine = myUserId == item.userId,
             )
         }
     }

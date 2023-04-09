@@ -18,6 +18,15 @@ internal data class FriendsState(
     val isLoading: Boolean = true,
     val selectedTab: FriendsType = FriendsType.Follower,
 
-    val followers: ImmutableList<User> = persistentListOf(),
-    val followings: ImmutableList<User> = persistentListOf(),
-)
+    val followers: ImmutableList<Friend> = persistentListOf(),
+    val followings: ImmutableList<Friend> = persistentListOf(),
+) {
+    data class Friend(
+        val userId: Int,
+        val profileImgUrl: String,
+        val nickname: String,
+        val favoriteTag: String,
+        val tier: String,
+        val isFollowing: Boolean,
+    )
+}
