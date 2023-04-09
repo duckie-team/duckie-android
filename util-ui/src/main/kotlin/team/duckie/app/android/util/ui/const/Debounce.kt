@@ -9,4 +9,5 @@ package team.duckie.app.android.util.ui.const
 
 object Debounce {
     const val SearchSecond = 350L
+    const val ClickDebounce = 250L
 }

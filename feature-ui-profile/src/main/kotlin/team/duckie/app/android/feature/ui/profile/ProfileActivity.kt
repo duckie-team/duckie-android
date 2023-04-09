@@ -59,7 +59,7 @@ class ProfileActivity : BaseActivity() {
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
             QuackTheme {
                 LaunchedEffect(Unit) {
-                    viewModel.getUserProfile()
+                    viewModel.init()
                 }
                 when (state.isMe) {
                     true -> {
