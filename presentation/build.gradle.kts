@@ -30,8 +30,10 @@ dependencies {
         projects.featureUiOnboard,
         projects.utilExceptionHandling,
         projects.domain,
+        projects.sharedUiCompose,
         libs.orbit.viewmodel,
         libs.androidx.splash,
         libs.quack.ui.components,
+        libs.orbit.compose,
     )
 }

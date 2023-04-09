@@ -10,9 +10,11 @@ package team.duckie.app.android.presentation.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
@@ -29,9 +31,17 @@ internal class IntroViewModel @Inject constructor(
 ) : ContainerHost<IntroState, IntroSideEffect>, ViewModel() {
 
     override val container = container<IntroState, IntroSideEffect>(
-        initialState = IntroState,
+        initialState = IntroState(),
         savedStateHandle = savedStateHandle,
     )
+
+    /** 앱 업데이트 여부를 체크한다. */
+    suspend fun checkUpdateRequire() = intent {
+        delay(2000)
+        reduce {
+            state.copy(isUpdateRequire = true)
+        }
+    }
 
     suspend fun getUser() = intent {
         getMeUseCase()
