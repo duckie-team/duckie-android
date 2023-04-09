@@ -47,6 +47,7 @@ internal fun RankingScreen(
     viewModel: RankingViewModel,
     navigateToCreateProblem: () -> Unit,
     navigateToDetail: (Int) -> Unit,
+    navigateToUserProfile: (Int) -> Unit,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -96,6 +97,10 @@ internal fun RankingScreen(
                             lazyListState.animateScrollToItem(0)
                         }
                     }
+                }
+
+                is RankingSideEffect.NavigateToUserProfile -> {
+                    navigateToUserProfile(sideEffect.userId)
                 }
             }
         }

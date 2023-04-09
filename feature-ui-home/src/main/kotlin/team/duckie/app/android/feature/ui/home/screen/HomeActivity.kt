@@ -23,13 +23,14 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
-import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
-import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeSideEffect
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
+import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
@@ -63,6 +64,9 @@ class HomeActivity : BaseActivity() {
     @Inject
     lateinit var searchNavigator: SearchNavigator
 
+    @Inject
+    lateinit var profileNavigator: ProfileNavigator
+
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +98,14 @@ class HomeActivity : BaseActivity() {
                     rankingViewModel = rankingViewModel,
                     myPageViewModel = myPageViewModel,
                     state = state,
+                    navigateToUserProfile = {
+                        profileNavigator.navigateFrom(
+                            activity = this,
+                            intentBuilder = {
+                                putExtra(Extras.UserId, it)
+                            },
+                        )
+                    },
                 )
             }
         }

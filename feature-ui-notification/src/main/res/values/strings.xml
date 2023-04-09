@@ -7,4 +7,6 @@
 
 <resources>
     <string name="notification">알림</string>
+    <string name="empty_notfications">알림이 없어요!</string>
+    <string name="check_notifications_after_activity">덕키에서 활동 후 알림을 확인해 보세요.</string>
 </resources>
