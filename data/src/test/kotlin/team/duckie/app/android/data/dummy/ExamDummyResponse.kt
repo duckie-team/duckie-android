@@ -91,6 +91,7 @@ object ExamDummyResponse {
             favoriteTags = null,
             favoriteCategories = null,
             permissions = null,
+            introduction = null,
         ),
         category = Category(1, "연예인", "https://duckie", null),
         mainTag = Tag(1, "doro"),

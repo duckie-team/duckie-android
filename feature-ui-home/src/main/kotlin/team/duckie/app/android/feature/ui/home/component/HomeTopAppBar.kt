@@ -20,9 +20,11 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
 import okhttp3.internal.immutableListOf
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.shared.ui.compose.Create
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
+import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -58,7 +60,7 @@ internal fun HomeTopAppBar(
             tabStyle = QuackTextStyle.Title2.change(color = QuackColor.Gray2),
         )
         QuackImage(
-            src = R.drawable.home_ic_create_24,
+            src = QuackIcon.Create,
             onClick = onClickedCreate,
             size = HomeIconSize,
         )

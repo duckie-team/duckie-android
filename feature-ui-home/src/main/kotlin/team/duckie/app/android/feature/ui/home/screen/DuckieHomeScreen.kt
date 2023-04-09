@@ -21,6 +21,7 @@ import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.screen.guide.HomeGuideScreen
 import team.duckie.app.android.feature.ui.home.screen.home.HomeScreen
 import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
+import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
@@ -94,6 +95,7 @@ private fun getHomeMeasurePolicy(
 internal fun DuckieHomeScreen(
     homeViewModel: HomeViewModel,
     rankingViewModel: RankingViewModel,
+    myPageViewModel: MyPageViewModel,
     state: HomeState,
 ) {
     Layout(
@@ -124,11 +126,21 @@ internal fun DuckieHomeScreen(
                     )
 
                     BottomNavigationStep.MyPageScreen -> MyPageScreen(
-                        navigateToMyPage = {
+                        viewModel = myPageViewModel,
+                        navigateToSetting = {
+                            homeViewModel.navigateToSetting()
+                        },
+                        navigateToNotification = {
                             homeViewModel.navigateToNotification()
                         },
-                        navigateToSettingPage = {
-                            homeViewModel.navigateToSetting()
+                        navigateToExam = { examId ->
+                            homeViewModel.navigateToHomeDetail(examId)
+                        },
+                        navigateToCreateProblem = {
+                            homeViewModel.navigateToCreateProblem()
+                        },
+                        navigateToSearch = { searchTag ->
+                            homeViewModel.navigateToSearch(searchTag)
                         },
                     )
                 }

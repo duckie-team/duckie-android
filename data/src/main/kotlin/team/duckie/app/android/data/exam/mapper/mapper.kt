@@ -22,6 +22,7 @@ import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
 import team.duckie.app.android.data.exam.model.ExamsData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
+import team.duckie.app.android.data.exam.model.ProfileExamData
 import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.data.heart.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
@@ -39,6 +40,7 @@ import team.duckie.app.android.domain.exam.model.ExamMeFollowingResponse
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
+import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
@@ -230,4 +232,14 @@ internal fun ExamInfo.toData() = ExamInfoEntity(
     thumbnailUrl = thumbnailUrl,
     solvedCount = solvedCount,
     nickname = nickname,
+)
+
+internal fun ProfileExamData.toDomain() = ProfileExam(
+    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
+    title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
+    thumbnailUrl = thumbnailUrl
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
+    solvedCount = solvedCount,
+    heartCount = heartCount,
+    user = user?.toDomain(),
 )

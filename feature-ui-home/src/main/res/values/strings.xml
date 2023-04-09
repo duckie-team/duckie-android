@@ -7,7 +7,7 @@
 
 <resources>
     <string name="app_exit_toast">뒤로가기 버튼을 한번 더 누르면 종료됩니다.</string>
-    <string name="home_loading_mypage_toast">마이페이지 화면은 추후 제공되는 기능입니다.</string>
+    <string name="provide_after">추후 제공되는 기능입니다.</string>
 
     <string name="home_audio_volume_control_message">본 고사는 듣기 평가가 포함되어 있습니다. 미리 음량을 조절해주세요!</string>
     <string name="home_video_volume_control_message">본 고사는 영상이 포함되어 있습니다. 미리 음량을 조절해주세요!</string>
@@ -52,4 +52,14 @@
 
     <string name="guide_create_subtitle">아 내가 더 많이 아는데…</string>
     <string name="guide_create_title">문제 만들기</string>
+
+    <!-- mypage -->
+    <string name="duck_power">덕력</string>
+    <string name="follower">팔로워</string>
+    <string name="edit_profile">프로필 수정</string>
+    <string name="edit_tag">태그 편집</string>
+
+    <string name="submitted_exam">출제한 덕력고사</string>
+    <string name="solved_exam">응시한 덕력고사</string>
+    <string name="hearted_exam">좋아요한 덕력고사</string>
 </resources>

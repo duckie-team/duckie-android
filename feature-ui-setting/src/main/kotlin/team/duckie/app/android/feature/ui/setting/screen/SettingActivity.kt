@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,10 +33,10 @@ import team.duckie.app.android.feature.ui.setting.constans.SettingType
 import team.duckie.app.android.feature.ui.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.ui.setting.viewmodel.sideeffect.SettingSideEffect
 import team.duckie.app.android.navigator.feature.intro.IntroNavigator
-import team.duckie.app.android.shared.ui.compose.DuckieDialog
-import team.duckie.app.android.shared.ui.compose.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
-import team.duckie.app.android.shared.ui.compose.duckieDialogPosition
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
+import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
@@ -76,8 +74,7 @@ class SettingActivity : BaseActivity() {
 
             QuackTheme {
                 DuckieDialog(
-                    modifier = Modifier
-                        .duckieDialogPosition(DuckieDialogPosition.CENTER),
+                    modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
                     title = stringResource(id = R.string.log_out_check_message),
                     leftButtonText = stringResource(id = R.string.cancel),
                     leftButtonOnClick = {

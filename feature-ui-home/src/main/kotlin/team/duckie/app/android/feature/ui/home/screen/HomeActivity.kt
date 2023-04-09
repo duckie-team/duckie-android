@@ -22,14 +22,16 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
+import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeSideEffect
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
-import team.duckie.app.android.feature.ui.setting.screen.SettingActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
+import team.duckie.app.android.navigator.feature.search.SearchNavigator
+import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
@@ -44,6 +46,7 @@ class HomeActivity : BaseActivity() {
     private var waitTime = 2000L
     private val homeViewModel: HomeViewModel by viewModels()
     private val rankingViewModel: RankingViewModel by viewModels()
+    private val myPageViewModel: MyPageViewModel by viewModels()
 
     @Inject
     lateinit var createProblemNavigator: CreateProblemNavigator
@@ -53,6 +56,12 @@ class HomeActivity : BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
+
+    @Inject
+    lateinit var settingNavigator: SettingNavigator
+
+    @Inject
+    lateinit var searchNavigator: SearchNavigator
 
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +92,7 @@ class HomeActivity : BaseActivity() {
                 DuckieHomeScreen(
                     homeViewModel = homeViewModel,
                     rankingViewModel = rankingViewModel,
+                    myPageViewModel = myPageViewModel,
                     state = state,
                 )
             }
@@ -126,7 +136,7 @@ class HomeActivity : BaseActivity() {
             }
 
             is HomeSideEffect.NavigateToSetting -> {
-                startActivityWithAnimation<SettingActivity>()
+                settingNavigator.navigateFrom(this)
             }
 
             is HomeSideEffect.NavigateToNotification -> {

@@ -98,6 +98,7 @@ class JsonBuilderTest {
                         ),
                     ),
                     permissions = null,
+                    introduction = null,
                 ),
             )
         }

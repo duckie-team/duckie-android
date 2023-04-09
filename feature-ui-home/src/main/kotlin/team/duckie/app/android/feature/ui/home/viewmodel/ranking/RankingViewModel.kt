@@ -40,7 +40,7 @@ internal class RankingViewModel @Inject constructor(
 ) : ContainerHost<RankingState, RankingSideEffect>, ViewModel() {
     override val container = container<RankingState, RankingSideEffect>(RankingState())
 
-    private val _examRankings = MutableStateFlow(PagingData.from(skeletonRankingExams))
+    private val _examRankings = MutableStateFlow(PagingData.from(skeletonExams()))
     val examRankings: Flow<PagingData<Exam>> = _examRankings
 
     private val _userRankings = MutableStateFlow(PagingData.from(skeletonExamineeItems))

@@ -11,15 +11,12 @@ package team.duckie.app.android.feature.ui.solve.problem.answer.shortanswer
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
@@ -34,15 +31,10 @@ internal fun ShortAnswerForm(
     onDone: (String) -> Unit,
 ) {
     var value by remember { mutableStateOf(TextFieldValue()) } // replace '*' to " " 필요
-    val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
-
     EachCharTextField(
-        modifier = modifier.focusRequester(focusRequester),
+        modifier = modifier,
         value = value,
         onValueChanged = { newValue, prevLength ->
             value = newValue
