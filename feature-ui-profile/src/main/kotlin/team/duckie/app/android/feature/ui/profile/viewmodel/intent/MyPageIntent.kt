@@ -12,7 +12,7 @@ interface MyPageIntent {
 
     fun clickSetting()
 
-    fun clickEditProfile(message: String)
+    fun clickEditProfile()
 
     fun clickEditTag(message: String)
 

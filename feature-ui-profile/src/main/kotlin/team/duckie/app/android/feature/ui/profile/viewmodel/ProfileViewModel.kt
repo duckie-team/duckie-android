@@ -166,8 +166,8 @@ internal class ProfileViewModel @Inject constructor(
         postSideEffect(ProfileSideEffect.NavigateToSetting)
     }
 
-    override fun clickEditProfile(message: String) = intent {
-        postSideEffect(ProfileSideEffect.SendToast(message))
+    override fun clickEditProfile() = intent {
+        postSideEffect(ProfileSideEffect.NavigateToEditProfile(state.userId))
     }
 
     override fun clickEditTag(message: String) = intent {
