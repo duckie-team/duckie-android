@@ -9,7 +9,6 @@
 
 package team.duckie.app.android.feature.ui.profile.screen.edit
 
-import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,13 +17,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,27 +32,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.photopicker.PhotoPicker
 import team.duckie.app.android.feature.ui.profile.R
 import team.duckie.app.android.feature.ui.profile.component.EditTopAppBar
+import team.duckie.app.android.feature.ui.profile.component.GrayBorderButton
 import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileEditViewModel
 import team.duckie.app.android.feature.ui.profile.viewmodel.state.ProfileScreenState
 import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackErrorableTextField
 import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSmallButton
-import team.duckie.quackquack.ui.component.QuackSmallButtonType
+import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.shape.SquircleShape
+import team.duckie.quackquack.ui.util.DpSize
 
 private const val MaxNicknameLength = 10
 
@@ -61,45 +61,26 @@ internal fun ProfileEditScreen(
     vm: ProfileEditViewModel,
 ) {
     val state by vm.container.stateFlow.collectAsStateWithLifecycle()
-    val activity = LocalContext.current as Activity
+    val galleryState = remember(state) { state.galleryState }
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
-    var photoPickerVisible by remember { mutableStateOf(false) }
-    val galleryImages = remember(vm.galleryImages) { vm.galleryImages }
-    val galleryImagesSelections = remember(vm.galleryImages) {
-        mutableStateListOf(
-            elements = Array(
-                size = galleryImages.size,
-                init = { false },
-            ),
-        )
-    }
-    var profilePhotoLastSelectionIndex by remember { mutableStateOf<Int?>(null) }
-    val profilePhotoSelections = remember {
-        mutableStateListOf(
-            elements = Array(
-                size = galleryImages.size,
-                init = { false },
-            ),
-        )
-    }
     var lastErrorText by remember { mutableStateOf("") }
 
     val takePhotoFromCameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview(),
     ) { takenPhoto ->
-        photoPickerVisible = false
+        vm.changePhotoPickerVisible(false)
         if (takenPhoto != null) {
             vm.changeProfile(takenPhoto)
         }
     }
 
-    BackHandler(photoPickerVisible) {
-        photoPickerVisible = false
+    BackHandler(galleryState.visible) {
+        vm.changePhotoPickerVisible(false)
     }
 
-    if (photoPickerVisible) {
+    if (galleryState.visible) {
         SideEffect {
             keyboardController?.hide()
             focusManager.clearFocus()
@@ -111,30 +92,19 @@ internal fun ProfileEditScreen(
                 .background(color = QuackColor.White.composeColor)
                 .navigationBarsPadding()
                 .systemBarsPadding(),
-            imageUris = galleryImages,
-            imageSelections = galleryImagesSelections,
+            imageUris = galleryState.images,
+            imageSelections = galleryState.imagesSelections,
             onCameraClick = {
-                coroutineScope.launch {
-                    takePhotoFromCameraLauncher.launch()
-                }
+                coroutineScope.launch { takePhotoFromCameraLauncher.launch() }
             },
             onImageClick = { index, _ ->
-                profilePhotoSelections[index] = !profilePhotoSelections[index]
-                profilePhotoLastSelectionIndex?.let { lastSelectionIndex ->
-                    if (lastSelectionIndex != index) {
-                        profilePhotoSelections[lastSelectionIndex] = false
-                    }
-                }
-                profilePhotoLastSelectionIndex = index
+                vm.clickGalleryImage(index)
             },
             onCloseClick = {
-                photoPickerVisible = false
+                vm.changePhotoPickerVisible(false)
             },
             onAddClick = {
-                profilePhotoLastSelectionIndex?.let { selectedIndex ->
-                    vm.changeProfile(galleryImages[selectedIndex].toUri())
-                }
-                photoPickerVisible = false
+                vm.addProfileFromGallery()
             },
         )
     }
@@ -148,35 +118,62 @@ internal fun ProfileEditScreen(
     ) {
         EditTopAppBar(
             title = stringResource(id = R.string.edit_profile),
-            onBackPressed = { activity.finishWithAnimation() },
-            onClickEditComplete = { activity.finishWithAnimation() },
+            onBackPressed = vm::clickBackPress,
+            onClickEditComplete = vm::clickEditComplete,
         )
-        Spacer(space = 40.dp)
-        ProfileEditSection(
-            profile = state.profile,
-            onClickEditProfile = { photoPickerVisible = true },
-        )
-        QuackErrorableTextField(
-            text = state.nickName,
-            onTextChanged = { text ->
-                if (text.length <= MaxNicknameLength) {
-                    vm.changeNickName(text)
-                }
-            },
-            placeholderText = stringResource(R.string.profile_nickname_placeholder),
-            isError = state.profileState == ProfileScreenState.NicknameRuleError,
-            maxLength = MaxNicknameLength,
-            errorText = when (state.profileState) {
-                ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
-                ProfileScreenState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
-                else -> lastErrorText
-            }.also { errorText ->
-                lastErrorText = errorText
-            },
-            keyboardActions = KeyboardActions {
-                keyboardController?.hide()
-            },
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+        ) {
+            Spacer(space = 40.dp)
+            ProfileEditSection(
+                profile = state.profile,
+                onClickEditProfile = vm::clickEditProfile,
+            )
+            Spacer(space = 40.dp)
+            QuackBody1(
+                text = stringResource(R.string.nickname),
+                color = QuackColor.Gray1,
+            )
+            QuackErrorableTextField(
+                modifier = Modifier.skeleton(state.isLoading),
+                text = state.nickName,
+                onTextChanged = { text ->
+                    if (text.length <= MaxNicknameLength) {
+                        vm.changeNickName(text)
+                    }
+                },
+                placeholderText = stringResource(R.string.profile_nickname_placeholder),
+                isError = state.profileState == ProfileScreenState.NicknameRuleError,
+                maxLength = MaxNicknameLength,
+                errorText = when (state.profileState) {
+                    ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
+                    ProfileScreenState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
+                    else -> lastErrorText
+                }.also { errorText ->
+                    lastErrorText = errorText
+                },
+                keyboardActions = KeyboardActions {
+                    keyboardController?.hide()
+                },
+            )
+            Spacer(space = 36.dp)
+            QuackBody1(
+                text = stringResource(R.string.introduce),
+                color = QuackColor.Gray1,
+            )
+            Spacer(space = 8.dp)
+            QuackReviewTextArea(
+                // TODO(evergreenTree97) 배포 후 글자 수 제한있는 텍스트필드 구현
+                modifier = Modifier.skeleton(state.isLoading),
+                text = state.introduce,
+                onTextChanged = vm::inputIntroduce,
+                focused = state.introduceFocused,
+                placeholderText = stringResource(id = R.string.please_input_introduce),
+            )
+        }
+
     }
 }
 
@@ -186,17 +183,17 @@ internal fun ProfileEditSection(
     onClickEditProfile: () -> Unit,
 ) {
     Column(
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         QuackImage(
             src = profile,
             shape = SquircleShape,
+            size = DpSize(80.dp),
         )
-        QuackSmallButton(
-            type = QuackSmallButtonType.Border,
+        GrayBorderButton(
             text = stringResource(id = R.string.edit_profile_picture),
-            enabled = true,
             onClick = onClickEditProfile,
         )
     }

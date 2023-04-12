@@ -47,7 +47,6 @@ fun MyProfileScreen(
     onClickNotification: () -> Unit,
     onClickEditProfile: () -> Unit,
     onClickEditTag: () -> Unit,
-    onClickFavoriteTag: () -> Unit,
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMakeExam: () -> Unit,
     onClickTag: (String) -> Unit,
@@ -57,15 +56,10 @@ fun MyProfileScreen(
         userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
     }
     val submittedExams = remember(userProfile.createdExams) {
-        /*userProfile.createdExams?.map { it.toUiModel() }?.toImmutableList()
-            ?: persistentListOf()*/
         persistentListOf<DuckTestCoverItem>()
     }
 
     ProfileScreen(
-        modifier = Modifier
-            .systemBarsPadding()
-            .navigationBarsPadding(),
         userProfile = userProfile,
         isLoading = isLoading,
         editSection = {
@@ -101,7 +95,7 @@ fun MyProfileScreen(
                     QuackLargeButton(
                         type = QuackLargeButtonType.Compact,
                         text = stringResource(id = R.string.add_favorite_tag),
-                        onClick = onClickFavoriteTag,
+                        onClick = onClickEditTag
                     )
                 },
                 onClickTag = onClickTag,

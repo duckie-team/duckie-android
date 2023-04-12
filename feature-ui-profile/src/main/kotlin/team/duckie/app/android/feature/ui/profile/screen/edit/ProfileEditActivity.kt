@@ -11,8 +11,12 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileEditViewModel
+import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileEditSideEffect
+import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
@@ -24,6 +28,19 @@ class ProfileEditActivity : BaseActivity() {
         setContent {
             QuackTheme {
                 ProfileEditScreen(viewModel)
+            }
+        }
+        viewModel.observe(
+            lifecycleOwner = this,
+            sideEffect = ::handleSideEffect,
+        )
+    }
+
+    private fun handleSideEffect(sideEffect: ProfileEditSideEffect) {
+        when (sideEffect) {
+            is ProfileEditSideEffect.NavigateBack -> finishWithAnimation()
+            is ProfileEditSideEffect.ReportError -> {
+                sideEffect.exception.reportToCrashlyticsIfNeeded()
             }
         }
     }

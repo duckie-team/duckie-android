@@ -7,10 +7,26 @@
 
 package team.duckie.app.android.feature.ui.profile.viewmodel.state
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
+
 data class ProfileEditState(
-    val profile: Any? = null,
+    val isLoading: Boolean = true,
+    val profile: Any? = SharedIcon.ic_default_profile,
     val nickName: String = "",
     val profileState: ProfileScreenState = ProfileScreenState.Checking,
+    val galleryState: GalleryState = GalleryState(),
+    val introduce: String = "",
+    val introduceFocused: Boolean = false,
+    val userId: Int = 0,
+)
+
+data class GalleryState(
+    val visible: Boolean = false,
+    val images: ImmutableList<String> = persistentListOf(),
+    val imagesSelections: ImmutableList<Boolean> = persistentListOf(),
+    val selectedIndex: Int = -1,
 )
 
 /** ProfileScreen 의 state */
