@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun LoadingScreen(
     initState: suspend () -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) {
     LaunchedEffect(Unit) {
         initState()
