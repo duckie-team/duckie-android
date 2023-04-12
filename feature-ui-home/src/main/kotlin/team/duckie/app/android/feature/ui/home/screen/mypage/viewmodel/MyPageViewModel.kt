@@ -22,6 +22,7 @@ import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.sideeffec
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.state.MyPageState
 import team.duckie.app.android.feature.ui.profile.viewmodel.intent.MyPageIntent
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
+import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -81,8 +82,13 @@ internal class MyPageViewModel @Inject constructor(
         postSideEffect(MyPageSideEffect.NavigateToSetting)
     }
 
-    override fun clickEditProfile(message: String) = intent {
-        postSideEffect(MyPageSideEffect.SendToast(message))
+    override fun clickEditProfile() = intent {
+        postSideEffect(
+            MyPageSideEffect.NavigateToEditProfile(
+                userId = state.userProfile.user?.id
+                    ?: throw DuckieClientLogicProblemException(code = "User is null")
+            )
+        )
     }
 
     override fun clickEditTag(message: String) = intent {

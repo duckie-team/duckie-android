@@ -16,6 +16,8 @@ sealed class MyPageSideEffect {
 
     object NavigateToMakeExam : MyPageSideEffect()
 
+    class NavigateToEditProfile(val userId: Int) : MyPageSideEffect()
+
     class NavigateToExamDetail(val examId: Int) : MyPageSideEffect()
 
     class SendToast(val message: String) : MyPageSideEffect()

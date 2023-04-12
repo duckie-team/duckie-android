@@ -33,6 +33,7 @@ internal fun MyPageScreen(
     navigateToCreateProblem: () -> Unit,
     navigateToSearch: (String) -> Unit,
     navigateToFriend: (FriendsType, Int) -> Unit,
+    navigateToEditProfile: (Int) -> Unit,
     viewModel: MyPageViewModel,
 ) {
     val activity = LocalContext.current as Activity
@@ -89,12 +90,10 @@ internal fun MyPageScreen(
             isLoading = isLoading,
             onClickSetting = viewModel::clickSetting,
             onClickNotification = viewModel::clickNotification,
-            // TODO(EvergreenTree97) 추후 sideEffect로 관리
-            onClickEditProfile = { activity.startActivityWithAnimation<ProfileEditActivity>() },
+            onClickEditProfile = viewModel::clickEditProfile,
             onClickEditTag = { viewModel.clickEditTag(context.getString(R.string.provide_after)) },
             onClickExam = viewModel::clickExam,
             onClickMakeExam = viewModel::clickMakeExam,
-            onClickFavoriteTag = { viewModel.clickEditProfile(context.getString(R.string.provide_after)) },
             onClickTag = viewModel::onClickTag,
             onClickFriend = navigateToFriend,
         )

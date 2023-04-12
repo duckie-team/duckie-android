@@ -31,6 +31,7 @@ import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavi
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.friend.FriendNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
+import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
@@ -71,6 +72,9 @@ class HomeActivity : BaseActivity() {
     @Inject
     lateinit var friendsNavigator: FriendNavigator
 
+    @Inject
+    lateinit var profileEditNavigator: ProfileEditNavigator
+
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +108,14 @@ class HomeActivity : BaseActivity() {
                     state = state,
                     navigateToUserProfile = {
                         profileNavigator.navigateFrom(
+                            activity = this,
+                            intentBuilder = {
+                                putExtra(Extras.UserId, it)
+                            },
+                        )
+                    },
+                    navigateToEditProfile = {
+                        profileEditNavigator.navigateFrom(
                             activity = this,
                             intentBuilder = {
                                 putExtra(Extras.UserId, it)
