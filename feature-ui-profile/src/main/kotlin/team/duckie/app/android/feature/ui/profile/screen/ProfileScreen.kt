@@ -56,7 +56,7 @@ fun ProfileScreen(
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(color = QuackColor.White.composeColor),
     ) {
