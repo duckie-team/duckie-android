@@ -25,10 +25,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -43,7 +41,7 @@ import team.duckie.app.android.feature.ui.profile.R
 import team.duckie.app.android.feature.ui.profile.component.EditTopAppBar
 import team.duckie.app.android.feature.ui.profile.component.GrayBorderButton
 import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileEditViewModel
-import team.duckie.app.android.feature.ui.profile.viewmodel.state.ProfileScreenState
+import team.duckie.app.android.feature.ui.profile.viewmodel.state.NicknameState
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.quackquack.ui.color.QuackColor
@@ -54,7 +52,8 @@ import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
-private const val MaxNicknameLength = 10
+private const val MaxNicknameLength = 12
+private const val MaxIntroductionLength = 60
 
 @Composable
 internal fun ProfileEditScreen(
@@ -65,7 +64,6 @@ internal fun ProfileEditScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
-    var lastErrorText by remember { mutableStateOf("") }
 
     val takePhotoFromCameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview(),
@@ -138,21 +136,19 @@ internal fun ProfileEditScreen(
             )
             QuackErrorableTextField(
                 modifier = Modifier.skeleton(state.isLoading),
-                text = state.nickName,
+                text = state.nickname,
                 onTextChanged = { text ->
                     if (text.length <= MaxNicknameLength) {
                         vm.changeNickName(text)
                     }
                 },
                 placeholderText = stringResource(R.string.profile_nickname_placeholder),
-                isError = state.profileState == ProfileScreenState.NicknameRuleError,
+                isError = state.nicknameState.isInValid(),
                 maxLength = MaxNicknameLength,
-                errorText = when (state.profileState) {
-                    ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
-                    ProfileScreenState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
-                    else -> lastErrorText
-                }.also { errorText ->
-                    lastErrorText = errorText
+                errorText = when (state.nicknameState) {
+                    NicknameState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
+                    NicknameState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
+                    else -> ""
                 },
                 keyboardActions = KeyboardActions {
                     keyboardController?.hide()
@@ -168,7 +164,11 @@ internal fun ProfileEditScreen(
                 // TODO(evergreenTree97) 배포 후 글자 수 제한있는 텍스트필드 구현
                 modifier = Modifier.skeleton(state.isLoading),
                 text = state.introduce,
-                onTextChanged = vm::inputIntroduce,
+                onTextChanged = {
+                    if (it.length <= MaxIntroductionLength) {
+                        vm.inputIntroduce(it)
+                    }
+                },
                 focused = state.introduceFocused,
                 placeholderText = stringResource(id = R.string.please_input_introduce),
             )

@@ -14,8 +14,9 @@ import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
 data class ProfileEditState(
     val isLoading: Boolean = true,
     val profile: Any? = SharedIcon.ic_default_profile,
-    val nickName: String = "",
-    val profileState: ProfileScreenState = ProfileScreenState.Checking,
+    val nickname: String = "",
+    val editEnabled: Boolean = false,
+    val nicknameState: NicknameState = NicknameState.Checking,
     val galleryState: GalleryState = GalleryState(),
     val introduce: String = "",
     val introduceFocused: Boolean = false,
@@ -29,10 +30,14 @@ data class GalleryState(
     val selectedIndex: Int = -1,
 )
 
-/** ProfileScreen 의 state */
-enum class ProfileScreenState {
+enum class NicknameState {
     Valid,
     Checking,
     NicknameRuleError,
     NicknameDuplicateError,
+    ;
+
+    fun isInValid(): Boolean {
+        return this == NicknameRuleError || this == NicknameDuplicateError
+    }
 }
