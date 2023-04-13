@@ -70,6 +70,7 @@ fun UserFollowingLayout(
     isFollowing: Boolean,
     onClickUserProfile: ((Int) -> Unit)? = null,
     onClickFollow: (Boolean) -> Unit,
+    isLoading: Boolean = false,
 ) {
     Layout(
         modifier = modifier
@@ -89,13 +90,16 @@ fun UserFollowingLayout(
                             if (onClickUserProfile != null) {
                                 onClickUserProfile(userId)
                             }
-                        },
+                        }
+                        .skeleton(isLoading),
                     painter = painterResource(id = QuackIcon.DefaultProfile),
                     contentDescription = null,
                 )
             } else {
                 QuackImage(
-                    modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
+                    modifier = Modifier
+                        .layoutId(UserInfoBlockUserProfileLayoutId)
+                        .skeleton(isLoading),
                     src = profileImgUrl,
                     size = HomeProfileSize,
                     shape = SquircleShape,
@@ -109,17 +113,21 @@ fun UserFollowingLayout(
             QuackSubtitle2(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserNameLayoutId)
-                    .padding(start = 8.dp, top = 2.dp),
+                    .padding(start = 8.dp, top = 2.dp)
+                    .skeleton(isLoading),
                 text = nickname,
             )
             QuackBody3(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserDescriptionLayoutId)
-                    .padding(start = 8.dp),
+                    .padding(start = 8.dp)
+                    .skeleton(isLoading),
                 text = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
             )
             QuackBody2(
-                modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
+                modifier = Modifier
+                    .layoutId(UserInfoBlockFollowingButtonLayoutId)
+                    .skeleton(isLoading),
                 text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                 onClick = {

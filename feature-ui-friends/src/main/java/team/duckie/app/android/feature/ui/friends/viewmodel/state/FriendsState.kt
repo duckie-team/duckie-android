@@ -8,17 +8,18 @@
 package team.duckie.app.android.feature.ui.friends.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.util.kotlin.FriendsType
+import team.duckie.app.android.feature.ui.friends.viewmodel.skeletonFriends
+import team.duckie.app.android.util.kotlin.randomString
 
 internal data class FriendsState(
     val me: User ? = null,
 
     val isLoading: Boolean = true,
+    val isMine: Boolean = true,
 
-    val followers: ImmutableList<Friend> = persistentListOf(),
-    val followings: ImmutableList<Friend> = persistentListOf(),
+    val followers: ImmutableList<Friend> = skeletonFriends,
+    val followings: ImmutableList<Friend> = skeletonFriends,
 ) {
     data class Friend(
         val userId: Int,
@@ -27,5 +28,16 @@ internal data class FriendsState(
         val favoriteTag: String,
         val tier: String,
         val isFollowing: Boolean,
-    )
+    ) {
+        companion object {
+            fun empty() = Friend(
+                userId = 0,
+                profileImgUrl = "",
+                nickname = randomString(length = 5),
+                favoriteTag = randomString(length = 5),
+                tier = randomString(length = 5),
+                isFollowing = false,
+            )
+        }
+    }
 }

@@ -31,7 +31,7 @@ class FriendsActivity : BaseActivity() {
 
         setContent {
             QuackTheme {
-                FriendsScreen(
+                FriendScreen(
                     viewModel = viewModel,
                     onPrevious = {
                         finishWithAnimation()
