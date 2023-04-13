@@ -55,11 +55,12 @@ class UserRemoteDataSourceImpl @Inject constructor(
         tags: List<Tag>?,
         profileImageUrl: String?,
         nickname: String?,
+        introduction: String?,
         status: String?,
     ): User {
         runtimeCheck(
             nickname != null || profileImageUrl != null || categories != null ||
-                    tags != null || status != null,
+                    tags != null || introduction != null || status != null,
         ) {
             "At least one of the parameters must be non-null"
         }
@@ -70,6 +71,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
                 tags?.let { "favoriteTags" withInts tags.fastMap { it.id } }
                 profileImageUrl?.let { "profileImageUrl" withString profileImageUrl }
                 nickname?.let { "nickName" withString nickname }
+                introduction?.let { "introduction" withString introduction }
                 status?.let { "status" withString status }
             }
         }
