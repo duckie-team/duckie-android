@@ -26,6 +26,7 @@ import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
+import team.duckie.app.android.navigator.feature.friend.FriendNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator

@@ -77,6 +77,10 @@ internal fun MyPageScreen(
                 is MyPageSideEffect.NavigateToSearch -> {
                     navigateToSearch(sideEffect.tagName)
                 }
+
+                is MyPageSideEffect.NavigateToEditProfile -> {
+                    navigateToEditProfile(sideEffect.userId)
+                }
             }
         }
     }
