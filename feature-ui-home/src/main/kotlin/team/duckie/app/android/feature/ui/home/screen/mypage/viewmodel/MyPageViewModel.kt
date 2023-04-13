@@ -86,8 +86,8 @@ internal class MyPageViewModel @Inject constructor(
         postSideEffect(
             MyPageSideEffect.NavigateToEditProfile(
                 userId = state.userProfile.user?.id
-                    ?: throw DuckieClientLogicProblemException(code = "User is null")
-            )
+                    ?: throw DuckieClientLogicProblemException(code = "User is null"),
+            ),
         )
     }
 

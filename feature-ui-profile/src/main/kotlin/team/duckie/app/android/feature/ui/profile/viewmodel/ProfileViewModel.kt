@@ -94,7 +94,7 @@ internal class ProfileViewModel @Inject constructor(
                             state.copy(
                                 userProfile = profile,
                                 isMe = it.id == userId,
-                                follow = profile.user?.follow == null, // following하지 않을 때 null
+                                follow = profile.user?.follow == null,
                                 userId = userId,
                             )
                         }

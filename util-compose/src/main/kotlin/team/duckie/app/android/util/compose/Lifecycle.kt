@@ -32,5 +32,4 @@ fun LaunchOnLifecycle(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-
 }

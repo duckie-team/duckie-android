@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(FlowPreview::class, FlowPreview::class)
+@file:OptIn(FlowPreview::class)
 
 package team.duckie.app.android.util.kotlin
 
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 @Suppress("FunctionName")
 fun <T> MutableDebounceFlow() = MutableSharedFlow<T>(
     extraBufferCapacity = 1,
-    onBufferOverflow = BufferOverflow.DROP_OLDEST
+    onBufferOverflow = BufferOverflow.DROP_OLDEST,
 )
 
 fun <T> MutableSharedFlow<T>.debounceAction(

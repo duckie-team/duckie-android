@@ -112,7 +112,7 @@ internal fun ProfileEditScreen(
             .fillMaxSize()
             .background(QuackColor.White.composeColor)
             .navigationBarsPadding()
-            .systemBarsPadding()
+            .systemBarsPadding(),
     ) {
         EditTopAppBar(
             title = stringResource(id = R.string.edit_profile),
@@ -173,7 +173,6 @@ internal fun ProfileEditScreen(
                 placeholderText = stringResource(id = R.string.please_input_introduce),
             )
         }
-
     }
 }
 
@@ -185,7 +184,7 @@ internal fun ProfileEditSection(
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         QuackImage(
             src = profile,

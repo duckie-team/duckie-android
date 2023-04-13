@@ -79,7 +79,7 @@ class ProfileActivity : BaseActivity() {
                         .background(color = QuackColor.White.composeColor)
                         .statusBarsPadding()
                         .navigationBarsPadding(),
-                    targetState = state.isLoading
+                    targetState = state.isLoading,
                 ) {
                     when (it) {
                         true -> {

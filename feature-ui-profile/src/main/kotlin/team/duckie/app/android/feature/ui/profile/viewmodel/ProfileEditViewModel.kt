@@ -60,7 +60,7 @@ class ProfileEditViewModel @Inject constructor(
             builder = { filterNot(String::isEmpty) },
             action = { nickname ->
                 nicknameValidationProcess(nickname)
-            }
+            },
         )
     }
 
@@ -72,7 +72,7 @@ class ProfileEditViewModel @Inject constructor(
                         NicknameState.NicknameRuleError
                     } else {
                         NicknameState.Valid
-                    }
+                    },
                 )
             }
         }
@@ -85,7 +85,7 @@ class ProfileEditViewModel @Inject constructor(
                         NicknameState.NicknameRuleError
                     } else {
                         NicknameState.Valid
-                    }
+                    },
                 )
             }
         }.onFailure {
@@ -132,7 +132,7 @@ class ProfileEditViewModel @Inject constructor(
                 galleryState = state.galleryState.copy(
                     images = persistentListOf(*images.toTypedArray()),
                     imagesSelections = images.fastMap { false }.toImmutableList(),
-                )
+                ),
             )
             changePhotoPickerVisible(true)
         }.onFailure {
@@ -164,7 +164,7 @@ class ProfileEditViewModel @Inject constructor(
                     i == index
                 },
                 selectedIndex = index,
-            )
+            ),
         )
     }
 
