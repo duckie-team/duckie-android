@@ -12,6 +12,7 @@ package team.duckie.app.android.util.kotlin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -26,9 +27,10 @@ fun <T> MutableDebounceFlow() = MutableSharedFlow<T>(
 fun <T> MutableSharedFlow<T>.debounceAction(
     coroutineScope: CoroutineScope,
     timeoutMillis: Long,
+    builder: Flow<T>.() -> Flow<T> = { this },
     action: suspend (T) -> Unit,
 ) {
     coroutineScope.launch {
-        debounce(timeoutMillis).collectLatest(action)
+        debounce(timeoutMillis).builder().collectLatest(action)
     }
 }

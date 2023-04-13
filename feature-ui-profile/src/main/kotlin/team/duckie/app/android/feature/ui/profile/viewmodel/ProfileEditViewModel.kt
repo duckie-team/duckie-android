@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.filterNot
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -34,6 +35,7 @@ import team.duckie.app.android.util.kotlin.MutableDebounceFlow
 import team.duckie.app.android.util.kotlin.debounceAction
 import team.duckie.app.android.util.kotlin.fastAll
 import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -54,7 +56,8 @@ class ProfileEditViewModel @Inject constructor(
     private val nickNameChangeEvent = MutableDebounceFlow<String>().apply {
         debounceAction(
             coroutineScope = viewModelScope,
-            timeoutMillis = 500L,
+            timeoutMillis = Debounce.SearchSecond,
+            builder = { filterNot(String::isEmpty) },
             action = { nickname ->
                 nicknameValidationProcess(nickname)
             }
