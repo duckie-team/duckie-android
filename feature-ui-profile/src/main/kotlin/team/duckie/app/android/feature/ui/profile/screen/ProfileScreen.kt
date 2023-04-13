@@ -84,7 +84,9 @@ fun ProfileScreen(
                         ?: stringResource(id = R.string.please_input_introduce),
                     isLoading = isLoading,
                     onClickFriend = { friendsType, userId ->
-                        onClickFriend(friendsType, userId)
+                        if(!isLoading) {
+                            onClickFriend(friendsType, userId)
+                        }
                     },
                 )
             }
