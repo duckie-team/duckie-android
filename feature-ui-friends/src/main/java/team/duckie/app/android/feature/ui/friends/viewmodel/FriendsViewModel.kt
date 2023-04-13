@@ -26,7 +26,6 @@ import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.friends.viewmodel.sideeffect.FriendsSideEffect
 import team.duckie.app.android.feature.ui.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.util.kotlin.FriendsType
-import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
@@ -49,22 +48,26 @@ internal class FriendsViewModel @Inject constructor(
     private fun initState(
         userId: Int,
     ) = intent {
+        updateLoadingState(true)
         val result = getMeUseCase()
             .onSuccess { me ->
                 reduce { state.copy(me = me) }
             }
             .onFailure {
                 postSideEffect(FriendsSideEffect.ReportError(it))
+            }.also {
+                updateLoadingState(false)
             }
+
         if (result.isSuccess) {
             val myId = result.getOrNull()?.id ?: 0
-            if (userId == myId) {
-                fetchUserFollowers(myId)
-                fetchUserFollowings(myId)
-            } else {
-                fetchUserFollowers(userId)
-                fetchUserFollowings(userId)
-            }
+            val isMine = userId == myId
+
+            reduce { state.copy(isMine = isMine) }
+
+            val targetId = if (isMine) myId else userId
+            fetchUserFollowers(targetId)
+            fetchUserFollowings(targetId)
         }
     }
 
@@ -119,17 +122,13 @@ internal class FriendsViewModel @Inject constructor(
                 when (type) {
                     FriendsType.Follower -> {
                         state.copy(
-                            followers = changeFollowingState(state.followers, userId, isFollowing),
+                            followers = state.followers.changeFollowingState(userId, isFollowing),
                         )
                     }
 
                     FriendsType.Following -> {
                         state.copy(
-                            followings = changeFollowingState(
-                                state.followings,
-                                userId,
-                                isFollowing,
-                            ),
+                            followings = state.followings.changeFollowingState(userId, isFollowing),
                         )
                     }
                 }
@@ -139,12 +138,11 @@ internal class FriendsViewModel @Inject constructor(
         }
     }
 
-    private fun changeFollowingState(
-        users: List<FriendsState.Friend>,
+    private fun List<FriendsState.Friend>.changeFollowingState(
         filiterUserId: Int,
         isFollowing: Boolean,
     ): ImmutableList<FriendsState.Friend> {
-        return users.map { user ->
+        return map { user ->
             if (user.userId == filiterUserId) {
                 user.copy(isFollowing = isFollowing)
             } else {

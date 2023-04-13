@@ -9,6 +9,12 @@
     <string name="follower">팔로워</string>
     <string name="following">팔로잉</string>
 
-    <string name="follower_not_found">%s님을 팔로우 하고 있는\n유저가 없어요</string>
-    <string name="following_not_found">%s님이 팔로우 하고 있는\n유저가 없어요</string>
+    <string name="my_page_follower_not_found">%s님을 팔로우 하고 있는\n유저가 없어요</string>
+    <string name="my_page_following_not_found">%s님이 팔로우 하고 있는\n유저가 없어요</string>
+
+    <string name="follower_not_found_title">아직 나를 팔로우 하는 사람이 없어요</string>
+    <string name="follower_not_found_description">덕키에서 활동 후 팔로워를 모아보세요.</string>
+
+    <string name="following_not_found_title">아직 내가 팔로우 한 사람이 없어요</string>
+    <string name="following_not_found_description">마음에 드는 유저를 팔로우해 보세요.</string>
 </resources>

@@ -35,8 +35,10 @@ import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.ui.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.shared.ui.compose.BackPressedHeadLine2TopAppBar
+import team.duckie.app.android.shared.ui.compose.NoItemScreen
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
+import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.quackquack.ui.color.QuackColor
@@ -44,10 +46,10 @@ import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackMainTab
 
 @Composable
-internal fun FriendsScreen(
+internal fun FriendScreen(
     viewModel: FriendsViewModel,
     onPrevious: () -> Unit = { },
-    initialFriendsType: FriendsType
+    initialFriendsType: FriendsType,
 ) {
     val context = LocalContext.current
     val tabs = remember {
@@ -74,7 +76,6 @@ internal fun FriendsScreen(
             titles = tabs,
             selectedTabIndex = pagerState.currentPage,
             onTabSelected = { index ->
-//                viewModel.setSelectedTab(FriendsType.fromIndex(index))
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(index)
                 }
@@ -85,84 +86,136 @@ internal fun FriendsScreen(
             pageCount = FriendsType.values().size,
             state = pagerState,
         ) { index ->
-            when (FriendsType.fromIndex(index)) {
-                FriendsType.Follower -> {
-                    FriendLayout(
-                        myUserId = state.me?.id ?: 0,
-                        friends = state.followers,
-                        isEmpty = state.followers.isEmpty(),
-                        onClickFollow = { userId, follow ->
-                            viewModel.followUser(
-                                userId = userId,
-                                isFollowing = follow,
-                                type = FriendsType.Follower,
-                            )
-                        },
-                        notFoundMessage = stringResource(
-                            id = R.string.follower,
-                            state.me?.nickname ?: "",
-                        )
+            FriendScreenInternal(
+                isLoading = state.isLoading,
+                isMine = state.isMine,
+                type = FriendsType.fromIndex(index),
+                state = state,
+                onClickFollowByFollower = { userId, follow ->
+                    viewModel.followUser(
+                        userId = userId,
+                        isFollowing = follow,
+                        type = FriendsType.Follower,
                     )
-                }
+                },
+                onClickFollowByFollowing = { userId, follow ->
+                    viewModel.followUser(
+                        userId = userId,
+                        isFollowing = follow,
+                        type = FriendsType.Following,
+                    )
+                },
+            )
+        }
+    }
+}
 
-                FriendsType.Following -> {
-                    FriendLayout(
-                        myUserId = state.me?.id ?: 0,
-                        friends = state.followings,
-                        isEmpty = state.followings.isEmpty(),
-                        onClickFollow = { userId, follow ->
-                            viewModel.followUser(
-                                userId = userId,
-                                isFollowing = follow,
-                                type = FriendsType.Following,
-                            )
-                        },
-                        notFoundMessage = stringResource(
-                            id = R.string.following_not_found,
-                            state.me?.nickname ?: "",
-                        )
-                    )
-                }
+@Composable
+private fun FriendScreenInternal(
+    isLoading: Boolean,
+    isMine: Boolean,
+    type: FriendsType,
+    state: FriendsState,
+    onClickFollowByFollower: (Int, Boolean) -> Unit,
+    onClickFollowByFollowing: (Int, Boolean) -> Unit,
+) {
+    when (type) {
+        FriendsType.Follower -> {
+            if (state.followers.isEmpty()) {
+                FriendNotFoundScreen(
+                    isLoading = isLoading,
+                    isMine = isMine,
+                    type = type,
+                    nickname = state.me?.nickname ?: "",
+                )
+            } else {
+                FriendListScreen(
+                    isLoading = isLoading,
+                    friends = state.followers,
+                    myUserId = state.me?.id ?: 0,
+                    onClickFollow = onClickFollowByFollower,
+                )
+            }
+        }
+
+        FriendsType.Following -> {
+            if (state.followings.isEmpty()) {
+                FriendNotFoundScreen(
+                    isLoading = isLoading,
+                    isMine = isMine,
+                    type = type,
+                    nickname = state.me?.nickname ?: "",
+                )
+            } else {
+                FriendListScreen(
+                    isLoading = isLoading,
+                    friends = state.followings,
+                    myUserId = state.me?.id ?: 0,
+                    onClickFollow = onClickFollowByFollowing,
+                )
             }
         }
     }
 }
 
 @Composable
-private fun FriendLayout(
-    myUserId: Int,
-    friends: ImmutableList<FriendsState.Friend>,
-    isEmpty: Boolean,
-    onClickFollow: (Int, Boolean) -> Unit,
-    notFoundMessage: String,
+private fun FriendNotFoundScreen(
+    isLoading: Boolean,
+    isMine: Boolean,
+    type: FriendsType,
+    nickname: String, // [isMine] == true 일 때만 사용
 ) {
-    when {
-        isEmpty -> {
-            FriendNotFoundScreen(
-                title = notFoundMessage
-            )
-        }
+    val isFollower = when (type) {
+        FriendsType.Follower -> true
+        FriendsType.Following -> false
+    }
 
-        else -> {
-            FriendSection(
-                friends = friends,
-                myUserId = myUserId,
-                onClickFollow = onClickFollow
-            )
-        }
+    if (isMine) {
+        MyPageFriendNotFoundScreen(
+            isLoading = isLoading,
+            title = stringResource(
+                id = if (isFollower) {
+                    R.string.my_page_follower_not_found
+                } else {
+                    R.string.my_page_following_not_found
+                },
+                nickname,
+            ),
+        )
+    } else {
+        NoItemScreen(
+            modifier = Modifier.padding(top = 72.dp),
+            title = stringResource(
+                id = if (isFollower) {
+                    R.string.follower_not_found_title
+                } else {
+                    R.string.following_not_found_title
+                },
+            ),
+            description = stringResource(
+                id = if (isFollower) {
+                    R.string.follower_not_found_description
+                } else {
+                    R.string.following_not_found_description
+                },
+            ),
+            isLoading = isLoading,
+        )
     }
 }
 
 @Composable
-private fun FriendNotFoundScreen(
+private fun MyPageFriendNotFoundScreen(
+    isLoading: Boolean,
     title: String,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(space = 74.5.dp)
         QuackHeadLine2(
+            modifier = Modifier.skeleton(isLoading),
             text = title,
             color = QuackColor.Gray1,
             align = TextAlign.Center,
@@ -171,7 +224,8 @@ private fun FriendNotFoundScreen(
 }
 
 @Composable
-private fun FriendSection(
+private fun FriendListScreen(
+    isLoading: Boolean,
     friends: ImmutableList<FriendsState.Friend>,
     myUserId: Int,
     onClickFollow: (Int, Boolean) -> Unit,
@@ -183,6 +237,7 @@ private fun FriendSection(
     ) {
         items(friends) { item ->
             UserFollowingLayout(
+                isLoading = isLoading,
                 userId = item.userId,
                 profileImgUrl = item.profileImgUrl,
                 nickname = item.nickname,
