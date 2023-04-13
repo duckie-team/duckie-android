@@ -17,7 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import team.duckie.app.android.feature.ui.solve.problem.R
 import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
 
 @Composable
@@ -37,6 +39,7 @@ internal fun ShortAnswerForm(
                 value = it
             }
         },
+        placeholderText = stringResource(id = R.string.length_contains_space, answer.length),
         imeAction = ImeAction.Done,
         maxLength = answer.length,
         showCounter = true,
