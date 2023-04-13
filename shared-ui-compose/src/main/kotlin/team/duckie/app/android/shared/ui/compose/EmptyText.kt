@@ -30,7 +30,7 @@ fun NoItemScreen(
     ) {
         QuackHeadLine2(
             text = title,
-            color = QuackColor.Gray1
+            color = QuackColor.Gray1,
         )
         QuackBody2(
             text = description,
