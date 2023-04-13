@@ -35,13 +35,14 @@ import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseC
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.domain.user.model.UserFollowing
-import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
+import team.duckie.app.android.domain.user.usecase.FetchRecommendUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toFollowingModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
+import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.kotlin.exception.isFollowingAlreadyExists
 import team.duckie.app.android.util.kotlin.exception.isFollowingNotFound
 import team.duckie.app.android.util.kotlin.fastMap
@@ -52,7 +53,7 @@ internal class HomeViewModel @Inject constructor(
     private val fetchRecommendationsUseCase: FetchRecommendationsUseCase,
     private val fetchJumbotronsUseCase: FetchJumbotronsUseCase,
     private val fetchExamMeFollowingUseCase: FetchExamMeFollowingUseCase,
-    private val fetchUserFollowingUseCase: FetchUserFollowingUseCase,
+    private val fetchRecommendUserFollowingUseCase: FetchRecommendUserFollowingUseCase,
     private val followUseCase: FollowUseCase,
     private val getMeUseCase: GetMeUseCase,
     private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
@@ -184,7 +185,7 @@ internal class HomeViewModel @Inject constructor(
 
     /** 추천 팔로워들을 가져온다. */
     fun fetchRecommendFollowing() = intent {
-        fetchUserFollowingUseCase(requireNotNull(state.me?.id))
+        fetchRecommendUserFollowingUseCase(requireNotNull(state.me?.id))
             .onSuccess { userFollowing ->
                 reduce {
                     state.copy(
@@ -337,6 +338,10 @@ internal class HomeViewModel @Inject constructor(
     /** 문제 만들기 화면으로 이동한다 */
     fun navigateToCreateProblem() = intent {
         postSideEffect(HomeSideEffect.NavigateToCreateProblem)
+    }
+
+    fun navigateFriends(friendType: FriendsType, userId: Int) = intent {
+        postSideEffect(HomeSideEffect.NavigateToFriends(friendType, userId))
     }
 
     /** 설정 화면으로 이동한다 */

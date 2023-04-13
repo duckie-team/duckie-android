@@ -25,9 +25,10 @@ import team.duckie.app.android.feature.ui.profile.R
 import team.duckie.app.android.feature.ui.profile.component.EmptyText
 import team.duckie.app.android.feature.ui.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.ui.profile.screen.section.ProfileSection
-import team.duckie.app.android.feature.ui.profile.viewmodel.mapper.toUiModel
+import team.duckie.app.android.feature.ui.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.Spacer
+import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.icon.QuackIcon
 
@@ -42,6 +43,7 @@ fun ProfileScreen(
     submittedExamSection: @Composable () -> Unit,
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMore: (() -> Unit)? = null,
+    onClickFriend: (FriendsType, Int) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val solvedExams = remember(userProfile.solvedExamInstances) {
@@ -70,6 +72,7 @@ fun ProfileScreen(
         ) {
             with(userProfile) {
                 ProfileSection(
+                    userId = user?.id ?: 0,
                     profile = user?.profileImageUrl ?: "",
                     duckPower = user?.duckPower?.tier ?: "",
                     follower = followerCount,
@@ -77,6 +80,11 @@ fun ProfileScreen(
                     introduce = user?.introduction
                         ?: stringResource(id = R.string.please_input_introduce),
                     isLoading = isLoading,
+                    onClickFriend = { friendsType, userId ->
+                        if (!isLoading) {
+                            onClickFriend(friendsType, userId)
+                        }
+                    },
                 )
             }
             Spacer(space = 20.dp)

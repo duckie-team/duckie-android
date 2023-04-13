@@ -35,6 +35,7 @@ import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSi
 import team.duckie.app.android.feature.ui.profile.viewmodel.state.ProfileState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.util.ui.const.Debounce
+import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -139,6 +140,10 @@ internal class ProfileViewModel @Inject constructor(
 
     fun onClickTag(tag: String) = intent {
         postSideEffect(ProfileSideEffect.NavigateToSearch(tag))
+    }
+
+    fun navigateFriends(friendType: FriendsType, userId: Int) = intent {
+        postSideEffect(ProfileSideEffect.NavigateToFriends(friendType, userId))
     }
 
     override fun clickBackPress() = intent {

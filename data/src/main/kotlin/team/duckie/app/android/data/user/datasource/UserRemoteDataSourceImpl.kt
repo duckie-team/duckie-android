@@ -94,7 +94,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
 
     @AllowMagicNumber
     @ExperimentalApi
-    override suspend fun fetchUserFollowing(userId: Int): UserFollowings =
+    override suspend fun fetchRecommendUserFollowing(userId: Int): UserFollowings =
         withContext(Dispatchers.IO) {
             val (_, response) = fuel
                 .get(
@@ -135,6 +135,22 @@ class UserRemoteDataSourceImpl @Inject constructor(
         return responseCatching(
             response = response.body(),
             parse = UserProfileData::toDomain,
+        )
+    }
+
+    override suspend fun fetchUserFollowings(userId: Int): List<User> {
+        val response = client.get("/users/$userId/followings")
+        return responseCatching(
+            response = response.body(),
+            parse = UsersResponse::toDomain,
+        )
+    }
+
+    override suspend fun fetchUserFollowers(userId: Int): List<User> {
+        val response = client.get("/users/$userId/followers")
+        return responseCatching(
+            response = response.body(),
+            parse = UsersResponse::toDomain,
         )
     }
 }

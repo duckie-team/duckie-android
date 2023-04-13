@@ -22,6 +22,7 @@ fun NoItemScreen(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
+    isLoading: Boolean = false,
 ) {
     Column(
         modifier = modifier,
@@ -29,10 +30,12 @@ fun NoItemScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         QuackHeadLine2(
+            modifier = Modifier.skeleton(isLoading),
             text = title,
             color = QuackColor.Gray1,
         )
         QuackBody2(
+            modifier = Modifier.skeleton(isLoading),
             text = description,
             color = QuackColor.Gray1,
         )
