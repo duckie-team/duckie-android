@@ -34,6 +34,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 fun ProfileScreen(
+    modifier: Modifier = Modifier,
     userProfile: UserProfile,
     isLoading: Boolean,
     topBar: @Composable () -> Unit,
