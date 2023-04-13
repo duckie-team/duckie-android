@@ -5,12 +5,19 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(FlowPreview::class)
+
 package team.duckie.app.android.feature.ui.profile.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -27,8 +34,8 @@ import team.duckie.app.android.feature.ui.profile.viewmodel.intent.OtherPageInte
 import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.feature.ui.profile.viewmodel.state.ProfileState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
+import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.app.android.util.kotlin.FriendsType
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -43,8 +50,33 @@ internal class ProfileViewModel @Inject constructor(
 
     override val container = container<ProfileState, ProfileSideEffect>(ProfileState())
 
-    fun getUserProfile() = intent {
-        val userId = savedStateHandle.getStateFlow(Extras.userId, 0).value
+    private val followEvent = MutableSharedFlow<Unit>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    ).apply {
+        intent {
+            debounce(Debounce.ClickDebounce).collectLatest {
+                val state = container.stateFlow.value
+                followUseCase(
+                    FollowBody(state.userId),
+                    state.follow,
+                ).onSuccess { apiResult ->
+                    if (apiResult) {
+                        reduce {
+                            state.copy(follow = state.follow.not())
+                        }
+                    }
+                }.onFailure {
+                    intent { postSideEffect(ProfileSideEffect.ReportError(it)) }
+                }
+                getUserProfile()
+            }
+        }
+    }
+
+    fun init() = intent {
+        val userId = savedStateHandle.getStateFlow(Extras.UserId, 0).value
         updateLoading(true)
         val job = viewModelScope.launch {
             getMeUseCase()
@@ -62,7 +94,8 @@ internal class ProfileViewModel @Inject constructor(
                             state.copy(
                                 userProfile = profile,
                                 isMe = it.id == userId,
-                                follow = profile.user?.follow == null,
+                                follow = profile.user?.follow == null, // following하지 않을 때 null
+                                userId = userId,
                             )
                         }
                     }.onFailure {
@@ -74,6 +107,21 @@ internal class ProfileViewModel @Inject constructor(
         updateLoading(false)
     }
 
+    private fun getUserProfile() = intent {
+        viewModelScope.launch {
+            fetchUserProfileUseCase(state.userId).onSuccess { profile ->
+                reduce {
+                    state.copy(
+                        userProfile = profile,
+                        isMe = state.isMe,
+                    )
+                }
+            }.onFailure {
+                postSideEffect(ProfileSideEffect.ReportError(it))
+            }
+        }
+    }
+
     fun report() = intent {
         reportUseCase(state.reportExamId)
             .onSuccess {
@@ -82,28 +130,6 @@ internal class ProfileViewModel @Inject constructor(
             .onFailure { exception ->
                 postSideEffect(ProfileSideEffect.ReportError(exception))
             }
-        getUserProfile()
-    }
-
-    fun followUser() = viewModelScope.launch {
-        val state = container.stateFlow.value
-
-        followUseCase(
-            FollowBody(
-                state.userProfile.user?.id ?: duckieResponseFieldNpe("팔로우할 유저는 반드시 있어야 합니다."),
-            ),
-            state.follow.not(),
-        ).onSuccess { apiResult ->
-            if (apiResult) {
-                intent {
-                    reduce {
-                        state.copy(follow = state.follow.not())
-                    }
-                }
-            }
-        }.onFailure {
-            intent { postSideEffect(ProfileSideEffect.ReportError(it)) }
-        }
     }
 
     fun updateReportDialogVisible(visible: Boolean) = intent {
@@ -124,8 +150,8 @@ internal class ProfileViewModel @Inject constructor(
         postSideEffect(ProfileSideEffect.NavigateToBack)
     }
 
-    override fun clickFollow() {
-        TODO("Not yet implemented")
+    override fun clickFollow() = intent {
+        followEvent.emit(Unit)
     }
 
     fun clickExam(exam: DuckTestCoverItem) = intent {

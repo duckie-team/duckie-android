@@ -41,7 +41,7 @@ internal class FriendsViewModel @Inject constructor(
     override val container = container<FriendsState, FriendsSideEffect>(FriendsState())
 
     init {
-        val userId = savedStateHandle.getStateFlow(Extras.userId, 0)
+        val userId = savedStateHandle.getStateFlow(Extras.UserId, 0)
         initState(userId.value)
     }
 

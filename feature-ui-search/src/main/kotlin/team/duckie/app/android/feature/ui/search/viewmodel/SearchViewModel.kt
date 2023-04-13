@@ -258,4 +258,8 @@ internal class SearchViewModel @Inject constructor(
     fun navigateToDetail(examId: Int) = intent {
         postSideEffect(SearchSideEffect.NavigateToDetail(examId))
     }
+
+    fun clickUserProfile(userId: Int) = intent {
+        postSideEffect(SearchSideEffect.NavigateToUserProfile(userId = userId))
+    }
 }

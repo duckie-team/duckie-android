@@ -56,6 +56,7 @@ import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.shared.ui.compose.DefaultProfile
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
+import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 import team.duckie.app.android.util.android.network.NetworkUtil
@@ -458,6 +459,7 @@ private fun DetailBottomLayout(
     onChallengeClick: () -> Unit,
 ) {
     Column(modifier = modifier) {
+        Spacer(space = 20.dp)
         // 구분선
         QuackDivider()
         // 버튼 모음 Layout

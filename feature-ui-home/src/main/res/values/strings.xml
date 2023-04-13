@@ -62,4 +62,8 @@
     <string name="submitted_exam">출제한 덕력고사</string>
     <string name="solved_exam">응시한 덕력고사</string>
     <string name="hearted_exam">좋아요한 덕력고사</string>
+
+    <!-- home -->
+    <string name="home_following_exam_not_found_title">팔로우한 유저 중에\n아직 올라온 덕력고사가 없어요.</string>
+    <string name="home_following_exam_not_found_subtitle">다른 유저들을 더 찾아보세요!</string>
 </resources>

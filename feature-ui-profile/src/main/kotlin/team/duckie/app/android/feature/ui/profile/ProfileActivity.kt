@@ -63,7 +63,7 @@ class ProfileActivity : BaseActivity() {
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
             QuackTheme {
                 LaunchedEffect(Unit) {
-                    viewModel.getUserProfile()
+                    viewModel.init()
                 }
                 when (state.isMe) {
                     true -> {
@@ -149,7 +149,7 @@ class ProfileActivity : BaseActivity() {
                     activity = this,
                     intentBuilder = {
                         putExtra(Extras.FriendType, sideEffect.friendType.index)
-                        putExtra(Extras.userId, sideEffect.userId)
+                        putExtra(Extras.UserId, sideEffect.userId)
                     },
                 )
             }

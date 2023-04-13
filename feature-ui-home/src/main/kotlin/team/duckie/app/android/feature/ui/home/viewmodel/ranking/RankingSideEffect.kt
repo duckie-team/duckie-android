@@ -11,7 +11,7 @@ internal sealed class RankingSideEffect {
     class ReportError(val exception: Throwable) : RankingSideEffect()
 
     object NavigateToCreateProblem : RankingSideEffect()
-
     class ListPullUp(val currentTab: Int) : RankingSideEffect()
     class NavigateToExamDetail(val examId: Int) : RankingSideEffect()
+    class NavigateToUserProfile(val userId: Int) : RankingSideEffect()
 }
