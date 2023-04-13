@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.home.screen.mypage
 
-import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,13 +16,12 @@ import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.sideeffect.MyPageSideEffect
 import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
-import team.duckie.app.android.feature.ui.profile.screen.edit.ProfileEditActivity
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
+import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
-import team.duckie.app.android.util.ui.startActivityWithAnimation
 
 @Composable
 internal fun MyPageScreen(
@@ -36,11 +34,10 @@ internal fun MyPageScreen(
     navigateToEditProfile: (Int) -> Unit,
     viewModel: MyPageViewModel,
 ) {
-    val activity = LocalContext.current as Activity
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
+    LaunchOnLifecycle {
         viewModel.getUserProfile()
     }
 

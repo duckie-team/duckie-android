@@ -107,7 +107,7 @@ internal class ProfileViewModel @Inject constructor(
         updateLoading(false)
     }
 
-    private fun getUserProfile() = intent {
+    fun getUserProfile() = intent {
         viewModelScope.launch {
             fetchUserProfileUseCase(state.userId).onSuccess { profile ->
                 reduce {

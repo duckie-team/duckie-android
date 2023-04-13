@@ -32,6 +32,7 @@ import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
+import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
@@ -91,6 +92,9 @@ class ProfileActivity : BaseActivity() {
                         false -> {
                             when (state.isMe) {
                                 true -> {
+                                    LaunchOnLifecycle {
+                                        viewModel.getUserProfile()
+                                    }
                                     MyProfileScreen(
                                         userProfile = state.userProfile,
                                         isLoading = state.isLoading,
