@@ -88,6 +88,7 @@ dependencies {
         projects.featureMessaging,
         projects.featureUiProfile,
         projects.featureUiSetting,
+        projects.featureUiFriends,
         projects.navigator,
     )
     debugImplementation(libs.analytics.leakcanary)

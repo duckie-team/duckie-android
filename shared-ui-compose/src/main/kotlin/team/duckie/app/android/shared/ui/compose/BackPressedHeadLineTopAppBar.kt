@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import team.duckie.quackquack.ui.component.QuackHeadLine1
+import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.icon.QuackIcon
 
@@ -39,6 +40,33 @@ fun BackPressedHeadLineTopAppBar(
             onClick = onBackPressed,
         )
         QuackHeadLine1(
+            modifier = Modifier.skeleton(isLoading),
+            text = title,
+        )
+    }
+}
+
+@Composable
+fun BackPressedHeadLine2TopAppBar(
+    title: String,
+    isLoading: Boolean = false,
+    onBackPressed: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 12.dp,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        QuackImage(
+            src = QuackIcon.ArrowBack,
+            onClick = onBackPressed,
+        )
+        QuackHeadLine2(
             modifier = Modifier.skeleton(isLoading),
             text = title,
         )

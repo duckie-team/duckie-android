@@ -5,12 +5,18 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.friends.constant
+package team.duckie.app.android.util.kotlin
 
-internal enum class FriendsPage(
+enum class FriendsType(
     val index: Int,
 ) {
     Follower(0),
     Following(1),
     ;
+
+    companion object {
+        fun fromIndex(index: Int): FriendsType {
+            return values().first { it.index == index }
+        }
+    }
 }

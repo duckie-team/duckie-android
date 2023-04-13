@@ -44,8 +44,8 @@ class UserRepositoryImpl @Inject constructor(
 
     @AllowMagicNumber
     @ExperimentalApi
-    override suspend fun fetchUserFollowing(userId: Int): UserFollowings {
-        return userDataSource.fetchUserFollowing(userId)
+    override suspend fun fetchRecommendUserFollowing(userId: Int): UserFollowings {
+        return userDataSource.fetchRecommendUserFollowing(userId)
     }
 
     override suspend fun fetchMeFollowers(): List<User> {
@@ -58,5 +58,13 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun fetchUserProfile(userId: Int): UserProfile {
         return userDataSource.fetchUserProfile(userId)
+    }
+
+    override suspend fun fetchUserFollowings(userId: Int): List<User> {
+        return userDataSource.fetchUserFollowings(userId)
+    }
+
+    override suspend fun fetchUserFollowers(userId: Int): List<User> {
+        return userDataSource.fetchUserFollowers(userId)
     }
 }

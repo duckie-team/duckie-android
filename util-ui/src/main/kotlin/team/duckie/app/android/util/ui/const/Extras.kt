@@ -16,4 +16,6 @@ object Extras {
 
     const val SearchTag = "ExtraSearchTag"
     const val StartGuide = "StartGuide"
+
+    const val FriendType = "ExtraFriendType"
 }

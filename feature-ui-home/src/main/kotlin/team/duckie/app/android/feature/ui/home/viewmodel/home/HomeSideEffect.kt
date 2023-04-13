@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.feature.ui.home.viewmodel.home
 
+import team.duckie.app.android.util.kotlin.FriendsType
+
 internal sealed class HomeSideEffect {
 
     /**
@@ -40,4 +42,6 @@ internal sealed class HomeSideEffect {
     object NavigateToNotification : HomeSideEffect()
 
     object ClickRankingRetry : HomeSideEffect()
+
+    class NavigateToFriends(val friendType: FriendsType, val myUserId: Int) : HomeSideEffect()
 }

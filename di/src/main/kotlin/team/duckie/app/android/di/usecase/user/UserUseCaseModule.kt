@@ -13,7 +13,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.user.repository.UserRepository
-import team.duckie.app.android.domain.user.usecase.FetchUserFollowingUseCase
+import team.duckie.app.android.domain.user.usecase.FetchRecommendUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserMeFollowersUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserMeFollowingsUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
@@ -51,8 +51,8 @@ object UserUseCaseModule {
     }
 
     @Provides
-    fun provideUserFollowingUseCase(repository: UserRepository): FetchUserFollowingUseCase {
-        return FetchUserFollowingUseCase(repository)
+    fun provideUserFollowingUseCase(repository: UserRepository): FetchRecommendUserFollowingUseCase {
+        return FetchRecommendUserFollowingUseCase(repository)
     }
 
     @Provides

@@ -29,6 +29,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewMode
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
+import team.duckie.app.android.navigator.feature.friend.FriendNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
@@ -66,6 +67,9 @@ class HomeActivity : BaseActivity() {
 
     @Inject
     lateinit var profileNavigator: ProfileNavigator
+
+    @Inject
+    lateinit var friendsNavigator: FriendNavigator
 
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -157,6 +161,16 @@ class HomeActivity : BaseActivity() {
 
             HomeSideEffect.ClickRankingRetry -> {
                 rankingViewModel.clickRetryRanking()
+            }
+
+            is HomeSideEffect.NavigateToFriends -> {
+                friendsNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.FriendType, sideEffect.friendType.index)
+                        putExtra(Extras.UserId, sideEffect.myUserId)
+                    },
+                )
             }
         }
     }
