@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -34,7 +35,6 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier,
     userProfile: UserProfile,
     isLoading: Boolean,
     topBar: @Composable () -> Unit,
@@ -57,9 +57,10 @@ fun ProfileScreen(
     }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
-            .background(color = QuackColor.White.composeColor),
+            .background(color = QuackColor.White.composeColor)
+            .systemBarsPadding(),
     ) {
         topBar()
         Column(

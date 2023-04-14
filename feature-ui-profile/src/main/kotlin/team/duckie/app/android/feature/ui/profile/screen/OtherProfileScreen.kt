@@ -9,8 +9,6 @@
 
 package team.duckie.app.android.feature.ui.profile.screen
 
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -18,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
@@ -50,9 +47,6 @@ internal fun OtherProfileScreen(
         onDismissRequest = { viewModel.updateReportDialogVisible(false) },
     )
     ReportBottomSheetDialog(
-        modifier = Modifier
-            .systemBarsPadding()
-            .navigationBarsPadding(),
         bottomSheetState = bottomSheetState,
         closeSheet = {
             coroutineScope.launch { bottomSheetState.hide() }

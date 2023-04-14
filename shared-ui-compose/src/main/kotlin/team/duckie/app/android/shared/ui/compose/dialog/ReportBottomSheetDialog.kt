@@ -88,7 +88,6 @@ fun ReportBottomSheetDialog(
                 }
             }
         },
-    ) {
-        content()
-    }
+        content = content,
+    )
 }
