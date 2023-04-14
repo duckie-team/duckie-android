@@ -168,6 +168,7 @@ private fun DetailSuccessScreen(
             TopAppCustomBar(
                 modifier = Modifier.layoutId(DetailScreenTopAppBarLayoutId),
                 state = state,
+                onTagClick = viewModel::goToSearch,
             )
             // content Layout
             DetailContentLayout(
@@ -495,7 +496,11 @@ private fun DetailBottomLayout(
 
 /** 상세 화면에서 사용하는 TopAppBar */
 @Composable
-private fun TopAppCustomBar(modifier: Modifier, state: DetailState.Success) {
+private fun TopAppCustomBar(
+    modifier: Modifier,
+    state: DetailState.Success,
+    onTagClick: (String) -> Unit,
+) {
     val activity = LocalContext.current as Activity
     Row(
         modifier = modifier
@@ -520,6 +525,7 @@ private fun TopAppCustomBar(modifier: Modifier, state: DetailState.Success) {
             text = state.mainTagNames,
             trailingIcon = QuackIcon.ArrowRight,
             isSelected = false,
+            onClick = { onTagClick(state.mainTagNames) },
         )
     }
 }

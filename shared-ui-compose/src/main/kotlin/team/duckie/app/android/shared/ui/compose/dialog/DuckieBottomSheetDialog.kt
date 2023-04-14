@@ -15,7 +15,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -54,7 +53,7 @@ fun DuckieBottomSheetDialog(
     content: @Composable () -> Unit,
 ) {
     ModalBottomSheetLayout(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         sheetState = sheetState,
         sheetShape = BottomSheetShape,
         sheetContent = {
@@ -64,9 +63,8 @@ fun DuckieBottomSheetDialog(
             )
         },
         sheetBackgroundColor = Color.Transparent,
-    ) {
-        content()
-    }
+        content = content,
+    )
 }
 
 @Composable
@@ -84,7 +82,6 @@ private fun DuckieBottomSheetContent(
         DuckieBottomSheetHandle(
             useHandle = useHandle,
         )
-
         sheetContent()
     }
 }
