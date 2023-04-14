@@ -9,7 +9,10 @@
 
 package team.duckie.app.android.feature.ui.profile.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
@@ -32,6 +35,7 @@ import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.shared.ui.compose.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
+import team.duckie.quackquack.ui.color.QuackColor
 
 @Composable
 internal fun OtherProfileScreen(
@@ -50,9 +54,6 @@ internal fun OtherProfileScreen(
         onDismissRequest = { viewModel.updateReportDialogVisible(false) },
     )
     ReportBottomSheetDialog(
-        modifier = Modifier
-            .systemBarsPadding()
-            .navigationBarsPadding(),
         bottomSheetState = bottomSheetState,
         closeSheet = {
             coroutineScope.launch { bottomSheetState.hide() }

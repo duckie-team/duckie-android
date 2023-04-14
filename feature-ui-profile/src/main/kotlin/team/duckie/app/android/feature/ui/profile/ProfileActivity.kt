@@ -74,45 +74,36 @@ class ProfileActivity : BaseActivity() {
         setContent {
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
             QuackTheme {
-                Crossfade(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor)
-                        .statusBarsPadding()
-                        .navigationBarsPadding(),
-                    targetState = state.isLoading,
-                ) {
-                    when (it) {
-                        true -> {
-                            LoadingScreen(
-                                modifier = Modifier.fillMaxSize(),
-                                initState = { viewModel.init() },
-                            )
-                        }
+                when (state.isLoading) {
+                    true -> {
+                        LoadingScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            initState = { viewModel.init() },
+                        )
+                    }
 
-                        false -> {
-                            when (state.isMe) {
-                                true -> {
-                                    LaunchOnLifecycle {
-                                        viewModel.getUserProfile()
-                                    }
-                                    MyProfileScreen(
-                                        userProfile = state.userProfile,
-                                        isLoading = state.isLoading,
-                                        onClickSetting = viewModel::clickSetting,
-                                        onClickNotification = viewModel::clickNotification,
-                                        onClickEditProfile = viewModel::clickEditProfile,
-                                        onClickEditTag = { viewModel.clickEditTag(getString(R.string.provide_after)) },
-                                        onClickExam = viewModel::clickExam,
-                                        onClickMakeExam = viewModel::clickMakeExam,
-                                        onClickTag = viewModel::onClickTag,
-                                        onClickFriend = viewModel::navigateFriends,
-                                    )
+                    false -> {
+                        when (state.isMe) {
+                            true -> {
+                                LaunchOnLifecycle {
+                                    viewModel.getUserProfile()
                                 }
+                                MyProfileScreen(
+                                    userProfile = state.userProfile,
+                                    isLoading = state.isLoading,
+                                    onClickSetting = viewModel::clickSetting,
+                                    onClickNotification = viewModel::clickNotification,
+                                    onClickEditProfile = viewModel::clickEditProfile,
+                                    onClickEditTag = { viewModel.clickEditTag(getString(R.string.provide_after)) },
+                                    onClickExam = viewModel::clickExam,
+                                    onClickMakeExam = viewModel::clickMakeExam,
+                                    onClickTag = viewModel::onClickTag,
+                                    onClickFriend = viewModel::navigateFriends,
+                                )
+                            }
 
-                                false -> {
-                                    OtherProfileScreen(viewModel)
-                                }
+                            false -> {
+                                OtherProfileScreen(viewModel)
                             }
                         }
                     }
