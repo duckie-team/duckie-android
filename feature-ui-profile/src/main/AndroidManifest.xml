@@ -11,6 +11,9 @@
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
+        <activity
+            android:name=".screen.edit.ProfileEditActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

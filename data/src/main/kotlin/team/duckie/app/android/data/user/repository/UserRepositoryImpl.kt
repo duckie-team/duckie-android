@@ -33,9 +33,10 @@ class UserRepositoryImpl @Inject constructor(
         tags: List<Tag>?,
         profileImageUrl: String?,
         nickname: String?,
+        introduction: String?,
         status: String?,
     ): User {
-        return userDataSource.update(id, categories, tags, profileImageUrl, nickname, status)
+        return userDataSource.update(id, categories, tags, profileImageUrl, nickname, introduction, status)
     }
 
     override suspend fun nicknameValidateCheck(nickname: String): Boolean {

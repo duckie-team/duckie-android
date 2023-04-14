@@ -94,7 +94,7 @@ internal class ProfileViewModel @Inject constructor(
                             state.copy(
                                 userProfile = profile,
                                 isMe = it.id == userId,
-                                follow = profile.user?.follow == null, // following하지 않을 때 null
+                                follow = profile.user?.follow == null,
                                 userId = userId,
                             )
                         }
@@ -107,7 +107,7 @@ internal class ProfileViewModel @Inject constructor(
         updateLoading(false)
     }
 
-    private fun getUserProfile() = intent {
+    fun getUserProfile() = intent {
         viewModelScope.launch {
             fetchUserProfileUseCase(state.userId).onSuccess { profile ->
                 reduce {
@@ -166,8 +166,8 @@ internal class ProfileViewModel @Inject constructor(
         postSideEffect(ProfileSideEffect.NavigateToSetting)
     }
 
-    override fun clickEditProfile(message: String) = intent {
-        postSideEffect(ProfileSideEffect.SendToast(message))
+    override fun clickEditProfile() = intent {
+        postSideEffect(ProfileSideEffect.NavigateToEditProfile(state.userId))
     }
 
     override fun clickEditTag(message: String) = intent {

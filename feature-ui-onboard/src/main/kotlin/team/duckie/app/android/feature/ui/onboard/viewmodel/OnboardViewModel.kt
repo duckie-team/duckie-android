@@ -356,6 +356,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             nickname = nickname,
             status = "READY", // 온보딩 완료 시에는 무조건 NEW -> READY 로 바꿔줘야 함
             updateMeInstance = { user -> viewModelScope.launch { setMeUseCase(user) } },
+            introduction = null,
         )
             .onSuccess { user ->
                 reduce {

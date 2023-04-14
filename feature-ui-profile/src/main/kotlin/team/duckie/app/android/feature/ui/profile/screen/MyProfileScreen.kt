@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,7 +45,6 @@ fun MyProfileScreen(
     onClickNotification: () -> Unit,
     onClickEditProfile: () -> Unit,
     onClickEditTag: () -> Unit,
-    onClickFavoriteTag: () -> Unit,
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMakeExam: () -> Unit,
     onClickTag: (String) -> Unit,
@@ -57,15 +54,10 @@ fun MyProfileScreen(
         userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
     }
     val submittedExams = remember(userProfile.createdExams) {
-        /*userProfile.createdExams?.map { it.toUiModel() }?.toImmutableList()
-            ?: persistentListOf()*/
         persistentListOf<DuckTestCoverItem>()
     }
 
     ProfileScreen(
-        modifier = Modifier
-            .systemBarsPadding()
-            .navigationBarsPadding(),
         userProfile = userProfile,
         isLoading = isLoading,
         editSection = {
@@ -101,7 +93,7 @@ fun MyProfileScreen(
                     QuackLargeButton(
                         type = QuackLargeButtonType.Compact,
                         text = stringResource(id = R.string.add_favorite_tag),
-                        onClick = onClickFavoriteTag,
+                        onClick = onClickEditTag,
                     )
                 },
                 onClickTag = onClickTag,
