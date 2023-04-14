@@ -10,8 +10,13 @@ package team.duckie.app.android.feature.ui.profile
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
@@ -23,15 +28,19 @@ import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavi
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.friend.FriendNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
+import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
+import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
+import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
@@ -55,6 +64,9 @@ class ProfileActivity : BaseActivity() {
     lateinit var searchNavigator: SearchNavigator
 
     @Inject
+    lateinit var profileEditNavigator: ProfileEditNavigator
+
+    @Inject
     lateinit var friendsNavigator: FriendNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,28 +74,47 @@ class ProfileActivity : BaseActivity() {
         setContent {
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
             QuackTheme {
-                LaunchedEffect(Unit) {
-                    viewModel.init()
-                }
-                when (state.isMe) {
-                    true -> {
-                        MyProfileScreen(
-                            userProfile = state.userProfile,
-                            isLoading = state.isLoading,
-                            onClickSetting = viewModel::clickSetting,
-                            onClickNotification = viewModel::clickNotification,
-                            onClickEditProfile = { viewModel.clickEditProfile(getString(R.string.provide_after)) },
-                            onClickEditTag = { viewModel.clickEditTag(getString(R.string.provide_after)) },
-                            onClickExam = viewModel::clickExam,
-                            onClickMakeExam = viewModel::clickMakeExam,
-                            onClickFavoriteTag = { viewModel.clickEditProfile(getString(R.string.provide_after)) },
-                            onClickTag = viewModel::onClickTag,
-                            onClickFriend = viewModel::navigateFriends,
-                        )
-                    }
+                Crossfade(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = QuackColor.White.composeColor)
+                        .statusBarsPadding()
+                        .navigationBarsPadding(),
+                    targetState = state.isLoading,
+                ) {
+                    when (it) {
+                        true -> {
+                            LoadingScreen(
+                                modifier = Modifier.fillMaxSize(),
+                                initState = { viewModel.init() },
+                            )
+                        }
 
-                    false -> {
-                        OtherProfileScreen(viewModel)
+                        false -> {
+                            when (state.isMe) {
+                                true -> {
+                                    LaunchOnLifecycle {
+                                        viewModel.getUserProfile()
+                                    }
+                                    MyProfileScreen(
+                                        userProfile = state.userProfile,
+                                        isLoading = state.isLoading,
+                                        onClickSetting = viewModel::clickSetting,
+                                        onClickNotification = viewModel::clickNotification,
+                                        onClickEditProfile = viewModel::clickEditProfile,
+                                        onClickEditTag = { viewModel.clickEditTag(getString(R.string.provide_after)) },
+                                        onClickExam = viewModel::clickExam,
+                                        onClickMakeExam = viewModel::clickMakeExam,
+                                        onClickTag = viewModel::onClickTag,
+                                        onClickFriend = viewModel::navigateFriends,
+                                    )
+                                }
+
+                                false -> {
+                                    OtherProfileScreen(viewModel)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -151,6 +182,13 @@ class ProfileActivity : BaseActivity() {
                         putExtra(Extras.FriendType, sideEffect.friendType.index)
                         putExtra(Extras.UserId, sideEffect.userId)
                     },
+                )
+            }
+
+            is ProfileSideEffect.NavigateToEditProfile -> {
+                profileEditNavigator.navigateFrom(
+                    activity = this@ProfileActivity,
+                    intentBuilder = { putExtra(Extras.UserId, sideEffect.userId) },
                 )
             }
         }

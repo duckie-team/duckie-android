@@ -99,6 +99,7 @@ internal fun DuckieHomeScreen(
     myPageViewModel: MyPageViewModel,
     state: HomeState,
     navigateToUserProfile: (Int) -> Unit,
+    navigateToEditProfile: (Int) -> Unit,
 ) {
     Layout(
         modifier = Modifier
@@ -149,6 +150,9 @@ internal fun DuckieHomeScreen(
                         },
                         navigateToFriend = { type: FriendsType, userId: Int ->
                             homeViewModel.navigateFriends(type, userId)
+                        },
+                        navigateToEditProfile = { userId ->
+                            navigateToEditProfile(userId)
                         },
                     )
                 }

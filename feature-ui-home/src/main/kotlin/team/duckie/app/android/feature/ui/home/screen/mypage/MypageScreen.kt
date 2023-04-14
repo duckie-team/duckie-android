@@ -17,6 +17,7 @@ import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageVie
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.sideeffect.MyPageSideEffect
 import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
+import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.FriendsType
@@ -30,12 +31,13 @@ internal fun MyPageScreen(
     navigateToCreateProblem: () -> Unit,
     navigateToSearch: (String) -> Unit,
     navigateToFriend: (FriendsType, Int) -> Unit,
+    navigateToEditProfile: (Int) -> Unit,
     viewModel: MyPageViewModel,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
+    LaunchOnLifecycle {
         viewModel.getUserProfile()
     }
 
@@ -75,6 +77,10 @@ internal fun MyPageScreen(
                 is MyPageSideEffect.NavigateToSearch -> {
                     navigateToSearch(sideEffect.tagName)
                 }
+
+                is MyPageSideEffect.NavigateToEditProfile -> {
+                    navigateToEditProfile(sideEffect.userId)
+                }
             }
         }
     }
@@ -85,11 +91,10 @@ internal fun MyPageScreen(
             isLoading = isLoading,
             onClickSetting = viewModel::clickSetting,
             onClickNotification = viewModel::clickNotification,
-            onClickEditProfile = { viewModel.clickEditProfile(context.getString(R.string.provide_after)) },
+            onClickEditProfile = viewModel::clickEditProfile,
             onClickEditTag = { viewModel.clickEditTag(context.getString(R.string.provide_after)) },
             onClickExam = viewModel::clickExam,
             onClickMakeExam = viewModel::clickMakeExam,
-            onClickFavoriteTag = { viewModel.clickEditProfile(context.getString(R.string.provide_after)) },
             onClickTag = viewModel::onClickTag,
             onClickFriend = navigateToFriend,
         )
