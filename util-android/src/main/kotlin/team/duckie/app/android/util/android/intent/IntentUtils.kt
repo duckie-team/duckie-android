@@ -11,17 +11,19 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 
 fun Activity.goToMarket(appPackageName: String) {
     // TODO(riflockle7): 추후 다른 곳에서 가져오도록 개선 필요
     try {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
     } catch (e: ActivityNotFoundException) {
+        Log.w("goToMarket", "Play Store not found for package name: $appPackageName", e)
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
-            )
+                Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName"),
+            ),
         )
     }
 }
