@@ -95,6 +95,6 @@ internal fun IntroScreen(
             activity.goToMarket(appPackageName)
             activity.finish()
         },
-        onDismissRequest = {}
+        onDismissRequest = {},
     )
 }
