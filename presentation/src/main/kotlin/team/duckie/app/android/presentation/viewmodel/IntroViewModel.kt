@@ -13,10 +13,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.app.android.presentation.viewmodel.state.IntroState
+import team.duckie.app.android.util.kotlin.exception.isAppUpgradeRequire
 import team.duckie.app.android.util.kotlin.exception.isLoginRequireCode
 import team.duckie.app.android.util.kotlin.exception.isTokenExpired
 import team.duckie.app.android.util.kotlin.exception.isUserNotFound
@@ -29,11 +31,12 @@ internal class IntroViewModel @Inject constructor(
 ) : ContainerHost<IntroState, IntroSideEffect>, ViewModel() {
 
     override val container = container<IntroState, IntroSideEffect>(
-        initialState = IntroState,
+        initialState = IntroState(),
         savedStateHandle = savedStateHandle,
     )
 
-    suspend fun getUser() = intent {
+    /** 앱 업데이트 여부를 체크한다. */
+    suspend fun checkUpdateRequire() = intent {
         getMeUseCase()
             .onSuccess { user ->
                 postSideEffect(
@@ -45,21 +48,23 @@ internal class IntroViewModel @Inject constructor(
 
     private fun Result<*>.attachExceptionHandling() = intent {
         onFailure { exception ->
-            postSideEffect(
-                when {
-                    exception.isLoginRequireCode || exception.isUserNotFound -> {
-                        IntroSideEffect.UserNotInitialized
-                    }
+            when {
+                exception.isAppUpgradeRequire -> {
+                    reduce { state.copy(isUpdateRequire = true) }
+                }
 
-                    exception.isTokenExpired -> {
-                        IntroSideEffect.GetMeError(exception)
-                    }
+                exception.isLoginRequireCode || exception.isUserNotFound -> {
+                    postSideEffect(IntroSideEffect.UserNotInitialized)
+                }
 
-                    else -> {
-                        IntroSideEffect.ReportError(exception)
-                    }
-                },
-            )
+                exception.isTokenExpired -> {
+                    postSideEffect(IntroSideEffect.GetMeError(exception))
+                }
+
+                else -> {
+                    postSideEffect(IntroSideEffect.ReportError(exception))
+                }
+            }
         }
     }
 }

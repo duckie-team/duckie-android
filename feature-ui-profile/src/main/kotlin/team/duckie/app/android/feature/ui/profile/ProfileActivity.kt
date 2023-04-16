@@ -31,6 +31,7 @@ import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.BaseActivity
@@ -67,6 +68,8 @@ class ProfileActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // TODO(riflockle7): 왜 이걸 직접 명시해 주어야 시스템 패딩이 정상적으로 적용되는지 모르겠음... 추후 확인 필요
+            systemBarPaddings
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
             QuackTheme {
                 when (state.isLoading) {

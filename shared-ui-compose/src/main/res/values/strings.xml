@@ -6,6 +6,9 @@
   -->
 
 <resources>
+    <!--riflockle7: 분명 더 잘 가져올 수 있는 방법이 있을꺼라 생각 추후 개선 필요-->
+    <string name="app_package_name">team.duckie.app.android(</string>
+
     <string name="default_error">화면을 불러오지 못했어요 :(</string>
     <string name="default_network_error_title">네트워크 연결이 불안정해요 :(</string>
     <string name="default_network_error_message">잠시 후 다시 시도해 주세요.</string>

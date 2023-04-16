@@ -19,6 +19,9 @@ object ExceptionCode {
     // 409
     const val TAG_ALREADY_EXISTS = "TAG_ALREADY_EXISTS"
 
+    // 426
+    const val APP_UPGRADE_REQUIRED = "APP_UPGRADE_REQUIRED"
+
     // 이미 신고했을 떄 발생하는 Error
     const val ReportAlreadyExists = "REPORT_ALREADY_EXISTS"
 
@@ -72,3 +75,6 @@ val Throwable.isKakaoTalkNotConnectedAccount: Boolean
 
 val Throwable.isKakaoTalkNotSupportAccount: Boolean
     get() = (this as? DuckieThirdPartyException)?.code == ExceptionCode.KAKAOTALK_NOT_SUPPORT_EXCEPTION
+
+val Throwable.isAppUpgradeRequire: Boolean
+    get() = (this as? DuckieThirdPartyException)?.code == ExceptionCode.APP_UPGRADE_REQUIRED

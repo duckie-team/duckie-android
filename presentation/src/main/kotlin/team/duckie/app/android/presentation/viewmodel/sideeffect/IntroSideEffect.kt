@@ -19,6 +19,9 @@ internal sealed class IntroSideEffect {
     /** 유저 정보를 가져오는 도중 에러 발생 시 방출하는 SideEffect */
     class GetMeError(val exception: Throwable) : IntroSideEffect()
 
+    /** 앱 업데이트가 필요할 시 방출하는 SideEffect */
+    class UpdateRequireError(val exception: Throwable) : IntroSideEffect()
+
     /** 에러 Report 하는 SideEffect */
     class ReportError(val exception: Throwable) : IntroSideEffect()
 }
