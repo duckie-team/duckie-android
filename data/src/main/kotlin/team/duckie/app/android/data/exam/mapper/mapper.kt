@@ -13,16 +13,13 @@ import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
 import team.duckie.app.android.data.exam.model.ExamBodyData
 import team.duckie.app.android.data.exam.model.ExamData
-import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import team.duckie.app.android.data.exam.model.ExamInstanceBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
 import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
-import team.duckie.app.android.data.exam.model.ExamsData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
-import team.duckie.app.android.data.exam.model.ProfileExamData
 import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.data.heart.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
@@ -32,7 +29,6 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
-import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
@@ -40,10 +36,9 @@ import team.duckie.app.android.domain.exam.model.ExamMeFollowingResponse
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
-import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
 
 @AllowCyclomaticComplexMethod
@@ -67,9 +62,6 @@ internal fun ExamData.toDomain() = Exam(
     heart = heart?.toDomain(),
     heartCount = heartCount,
 )
-
-internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
-    ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams")
 
 internal fun ProblemData.toDomain() = Problem(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
@@ -216,30 +208,4 @@ internal fun ExamMeFollowingResponseData.toDomain() = ExamMeFollowingResponse(
     exams = exams?.fastMap { it.toDomain() }
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams"),
     page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
-)
-
-internal fun ExamInfoEntity.toDomain() = ExamInfo(
-    id = id,
-    title = title,
-    thumbnailUrl = thumbnailUrl,
-    solvedCount = solvedCount,
-    nickname = nickname,
-)
-
-internal fun ExamInfo.toData() = ExamInfoEntity(
-    id = id,
-    title = title,
-    thumbnailUrl = thumbnailUrl,
-    solvedCount = solvedCount,
-    nickname = nickname,
-)
-
-internal fun ProfileExamData.toDomain() = ProfileExam(
-    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
-    title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
-    thumbnailUrl = thumbnailUrl
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
-    solvedCount = solvedCount,
-    heartCount = heartCount,
-    user = user?.toDomain(),
 )

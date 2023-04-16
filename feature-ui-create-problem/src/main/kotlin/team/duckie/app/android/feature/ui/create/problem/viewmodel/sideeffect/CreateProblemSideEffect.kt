@@ -31,13 +31,4 @@ internal sealed class CreateProblemSideEffect {
      * @see CreateProblemState.error
      */
     data class ReportError(val exception: Throwable) : CreateProblemSideEffect()
-
-    /**
-     * 이미 존재하는 [태그명][tagName]인 경우 방출하는 SideEffect
-     *
-     * @param exception 발생한 예외
-     * @param tagName 테그명
-     */
-    data class TagAlreadyExist(val exception: Throwable, val tagName: String) :
-        CreateProblemSideEffect()
 }

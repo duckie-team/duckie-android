@@ -12,7 +12,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.domain.tag.repository.TagRepository
-import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 
 @Module
@@ -21,10 +20,5 @@ object TagUseCaseModule {
     @Provides
     fun provideTagCreateUseCase(repository: TagRepository): TagCreateUseCase {
         return TagCreateUseCase(repository)
-    }
-
-    @Provides
-    fun providePopularTagsUseCase(repository: TagRepository): FetchPopularTagsUseCase {
-        return FetchPopularTagsUseCase(repository)
     }
 }

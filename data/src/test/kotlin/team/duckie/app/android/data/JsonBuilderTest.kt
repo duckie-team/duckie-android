@@ -8,7 +8,6 @@
 package team.duckie.app.android.data
 
 import kotlinx.collections.immutable.persistentListOf
-import org.junit.Ignore
 import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -17,10 +16,7 @@ import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.domain.user.model.UserStatus
 
-// TODO(jisungbin): 요 파일 json 포메팅 해서 다 수정해주세요
-@Ignore("jsonString 포메팅 완료한 뒤에 다시 활성화하기")
 class JsonBuilderTest {
     @Test
     fun single() {
@@ -81,7 +77,7 @@ class JsonBuilderTest {
                     id = 0,
                     nickname = "test",
                     profileImageUrl = "test",
-                    status = UserStatus.NEW,
+                    status = "NEW",
                     duckPower = DuckPower(
                         id = 1,
                         tier = "도로 패션 20%",
@@ -101,7 +97,6 @@ class JsonBuilderTest {
                         ),
                     ),
                     permissions = null,
-                    introduction = null,
                 ),
             )
         }

@@ -7,7 +7,7 @@
 
 package team.duckie.app.android.data.auth.repository
 
-import team.duckie.app.android.data.auth.datasource.AuthDataSource
+import team.duckie.app.android.domain.auth.datasource.AuthDataSource
 import team.duckie.app.android.domain.auth.model.AccessTokenCheckResponse
 import team.duckie.app.android.domain.auth.model.JoinResponse
 import team.duckie.app.android.domain.auth.repository.AuthRepository

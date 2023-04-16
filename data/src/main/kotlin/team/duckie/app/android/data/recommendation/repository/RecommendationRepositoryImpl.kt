@@ -24,10 +24,16 @@ import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSo
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
+import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import team.duckie.app.android.util.kotlin.ExperimentalApi
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import javax.inject.Inject
+
+/**
+ * [fetchRecommendatiins] 에서 사용되는 paging 단위
+ */
+internal const val ITEMS_PER_PAGE = 16
 
 class RecommendationRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
@@ -37,8 +43,9 @@ class RecommendationRepositoryImpl @Inject constructor(
     override fun fetchRecommendations(): Flow<PagingData<RecommendationItem>> {
         return Pager(
             config = PagingConfig(
-                pageSize = RecommendationsPagingPage,
+                pageSize = ITEMS_PER_PAGE,
                 enablePlaceholders = true,
+                maxSize = 200,
             ),
             pagingSourceFactory = {
                 RecommendationPagingSource(
@@ -65,7 +72,7 @@ class RecommendationRepositoryImpl @Inject constructor(
         }
 
     @ExperimentalApi
-    override suspend fun fetchJumbotrons(): ImmutableList<Exam> =
+    override suspend fun fetchJumbotrons(page: Int): ImmutableList<Exam> =
         withContext(Dispatchers.IO) {
             val (_, response) = fuel
                 .get(
@@ -83,7 +90,11 @@ class RecommendationRepositoryImpl @Inject constructor(
             return@withContext apiResponse.jumbotrons ?: duckieResponseFieldNpe("jumbotron")
         }
 
-    internal companion object {
-        const val RecommendationsPagingPage = 3
+    @ExperimentalApi
+    override suspend fun fetchRecommendTags(
+        tag: String,
+        type: SearchType,
+    ) {
+        // TODO(limsaehyun): repository 작업 필요
     }
 }

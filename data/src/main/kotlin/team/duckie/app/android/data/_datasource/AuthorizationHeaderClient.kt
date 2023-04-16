@@ -28,10 +28,12 @@ import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlugin
 
 /** token 이 필요한 HttpClient */
+@Deprecated(message = "fuel 로 변경 예정 (#180)")
 internal var client = AuthorizationHeaderClient()
     private set
 
 /** token 이 필요 없는 HttpClient */
+@Deprecated(message = "fuel 로 변경 예정 (#180)")
 @Suppress("unused")
 internal var noAuthClient = AuthorizationHeaderClient(false)
     private set

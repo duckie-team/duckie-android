@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.start.exam.R
 import team.duckie.app.android.feature.ui.start.exam.viewmodel.StartExamState
@@ -82,8 +81,7 @@ private fun StartExamLoadingScreen(modifier: Modifier, viewModel: StartExamViewM
  */
 @Composable
 internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewModel) {
-    val state =
-        viewModel.container.stateFlow.collectAsStateWithLifecycle().value as StartExamState.Input
+    val state = viewModel.collectAsState().value as StartExamState.Input
 
     val certifyingStatement: String = remember(state.certifyingStatement) {
         state.certifyingStatement

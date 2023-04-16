@@ -49,7 +49,6 @@ import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
-import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 import team.duckie.app.android.domain.tag.model.Tag
@@ -64,11 +63,9 @@ import team.duckie.app.android.util.android.image.MediaUtil
 import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.android.viewmodel.context
 import team.duckie.app.android.util.kotlin.copy
-import team.duckie.app.android.util.kotlin.exception.duckieClientLogicProblemException
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.exception.isTagAlreadyExist
+import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMapIndexed
-import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -170,9 +167,9 @@ internal class CreateProblemViewModel @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     ).apply {
         viewModelScope.launch {
-            this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
+            this@apply.debounce(1500L).collectLatest { query ->
                 intent {
-                    getSearchUseCase(query = query, page = 1, type = SearchType.Tags)
+                    getSearchUseCase(query = query, page = 1, type = Search.Tags)
                         .onSuccess {
                             val searchResults = (it as Search.TagSearch).tags
                                 .take(TagsMaximumCount)
@@ -935,15 +932,7 @@ internal class CreateProblemViewModel @Inject constructor(
             .onSuccess {
                 exitSearchScreenAfterAddTag(it)
             }.onFailure {
-                intent {
-                    postSideEffect(
-                        if (it.isTagAlreadyExist) {
-                            CreateProblemSideEffect.TagAlreadyExist(it, tagText)
-                        } else {
-                            CreateProblemSideEffect.ReportError(it)
-                        },
-                    )
-                }
+                intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
             }
     }
 

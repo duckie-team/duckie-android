@@ -77,9 +77,6 @@ import team.duckie.app.android.feature.ui.create.problem.common.getCreateProblem
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateProblemStep
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
-import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
@@ -93,6 +90,7 @@ import team.duckie.quackquack.ui.component.QuackBasic2TextField
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackBorderTextField
+import team.duckie.quackquack.ui.component.QuackDialog
 import team.duckie.quackquack.ui.component.QuackDropDownCard
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackRoundCheckBox
@@ -313,7 +311,7 @@ internal fun CreateProblemScreen(
                                         coroutineShape.launch {
                                             selectedQuestionIndex = questionIndex
                                             keyboard?.hide()
-                                            sheetState.show()
+                                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
                                     answer = correctAnswer,
@@ -362,7 +360,7 @@ internal fun CreateProblemScreen(
                                         coroutineShape.launch {
                                             selectedQuestionIndex = questionIndex
                                             keyboard?.hide()
-                                            sheetState.show()
+                                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
                                     answers = answers,
@@ -424,7 +422,7 @@ internal fun CreateProblemScreen(
                                         coroutineShape.launch {
                                             selectedQuestionIndex = questionIndex
                                             keyboard?.hide()
-                                            sheetState.show()
+                                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     },
                                     answers = answers,
@@ -491,7 +489,7 @@ internal fun CreateProblemScreen(
                     leftButtonClick = {
                         coroutineShape.launch {
                             keyboard?.hide()
-                            sheetState.show()
+                            sheetState.animateTo(ModalBottomSheetValue.Expanded)
                         }
                     },
                     tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
@@ -568,13 +566,8 @@ internal fun CreateProblemScreen(
         )
     }
 
-    DuckieDialog(
-        modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
-        title = stringResource(
-            id = R.string.create_problem_delete_dialog_title,
-            (deleteDialogNo?.first?.let { "${it + 1}번 문제" } ?: "") +
-                    (deleteDialogNo?.second?.let { "의 ${it + 1}번 보기" } ?: ""),
-        ),
+    QuackDialog(
+        title = stringResource(id = R.string.create_problem_delete_dialog_title),
         visible = deleteDialogNo != null,
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { deleteDialogNo = null },
@@ -588,7 +581,7 @@ internal fun CreateProblemScreen(
             }
             deleteDialogNo = null
         },
-        onDismissRequest = { deleteDialogNo = null },
+        onDismissRequest = {},
     )
 }
 

@@ -15,7 +15,7 @@ package team.duckie.app.android.data.recommendation.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import team.duckie.app.android.data.recommendation.repository.RecommendationRepositoryImpl.Companion.RecommendationsPagingPage
+import team.duckie.app.android.data.recommendation.repository.ITEMS_PER_PAGE
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.util.kotlin.ExperimentalApi
@@ -34,7 +34,7 @@ internal class RecommendationPagingSource(
             LoadResult.Page(
                 data = response.recommendations,
                 prevKey = if (currentPage == STARTING_KEY) null else currentPage - 1,
-                nextKey = if (response.recommendations.isEmpty() || response.recommendations.size < RecommendationsPagingPage) null else currentPage + 1,
+                nextKey = if (response.recommendations.isEmpty() || response.recommendations.size < ITEMS_PER_PAGE) null else currentPage + 1,
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

@@ -9,17 +9,16 @@ package team.duckie.app.android.data.me.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.first
-import team.duckie.app.android.data.auth.datasource.AuthDataSource
-import team.duckie.app.android.data.user.datasource.UserDataSource
+import team.duckie.app.android.domain.auth.datasource.AuthDataSource
 import team.duckie.app.android.domain.me.MeRepository
+import team.duckie.app.android.domain.user.datasource.UserDataSource
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.datastore.PreferenceKey
-import team.duckie.app.android.util.kotlin.exception.ExceptionCode.ClientMeIdNull
-import team.duckie.app.android.util.kotlin.exception.ExceptionCode.ClientMeTokenNull
-import team.duckie.app.android.util.kotlin.exception.ExceptionCode.ServerUserIdStrange
-import team.duckie.app.android.util.kotlin.exception.duckieClientLogicProblemException
+import team.duckie.app.android.util.kotlin.ClientMeIdNull
+import team.duckie.app.android.util.kotlin.ClientMeTokenNull
+import team.duckie.app.android.util.kotlin.ServerUserIdStrange
+import team.duckie.app.android.util.kotlin.duckieClientLogicProblemException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,27 +31,25 @@ class MeRepositoryImpl @Inject constructor(
     private var me: User? = null
 
     override suspend fun getMe(): User {
-        // 1. DataStore 에 토큰 값이 있는지 체크
+        // 1. 토큰 값이 등록되어 있는지 먼저 확인한다 (이게 없으면 유저 정보 가져오는 거 자체가 안됨)
         val meToken = getMeToken() ?: duckieClientLogicProblemException(code = ClientMeTokenNull)
 
-        // 2. 토큰 검증한다.
+        // 2. 토큰이 있다면 토큰 검증한다.
         val accessTokenValid = authDataSource.checkAccessToken(meToken).userId > 0
 
         if (accessTokenValid) {
-            // 3. DataStore 에 id 값이 있는지 체크
+            // 3. id 값이 등록되어 있는지 확인한다.
             val meId = getMeId() ?: duckieClientLogicProblemException(code = ClientMeIdNull)
 
-            // 4. me 객체값이 초기화 되었는지 확인
+            // 4. me 객체값이 있는지 확인한다
             return me ?: kotlin.run {
                 // 5. accessToken 관련 설정
                 authDataSource.attachAccessTokenToHeader(meToken)
 
-                // 6. id 기반으로 User 가져온 뒤 앱 내에 User 값 설정
+                // 6. me 객체가 없다면, id 기반으로 유저 정보를 가져온 후 setMe 를 통해 설정 뒤 반환한다.
                 val user = userDataSource.get(meId)
                 setMe(user)
 
-                // 7. User 값 반환
-                // 8. user.status = NEW 케이스 처리는 각 화면에서 처리할 것 (일단은)
                 return user
             }
         } else {
@@ -62,12 +59,6 @@ class MeRepositoryImpl @Inject constructor(
 
     override suspend fun setMe(newMe: User) {
         me = newMe
-    }
-
-    override suspend fun clearMeToken() {
-        dataStore.edit { preferences ->
-            preferences.remove(PreferenceKey.Account.AccessToken)
-        }
     }
 
     private suspend fun getMeId(): Int? {

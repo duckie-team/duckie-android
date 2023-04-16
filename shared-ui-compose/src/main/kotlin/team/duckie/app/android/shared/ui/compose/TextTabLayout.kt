@@ -19,43 +19,38 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackHeadLine2
+import team.duckie.quackquack.ui.component.QuackTitle2
 
 @Composable
 fun TextTabLayout(
     titles: ImmutableList<String>,
-    selectedTabStyle: QuackTextStyle = QuackTextStyle.HeadLine2,
-    tabStyle: QuackTextStyle = QuackTextStyle.Title2,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
-    space: Dp = 12.dp,
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(space),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         itemsIndexed(titles) { index, text ->
             if (index == selectedTabIndex) {
-                QuackText(
-                    modifier = Modifier.quackClickable {
+                QuackHeadLine2(
+                    text = text,
+                    color = QuackColor.Black,
+                    onClick = {
                         onTabSelected(index)
                     },
-                    text = text,
-                    style = selectedTabStyle,
                 )
             } else {
-                QuackText(
-                    modifier = Modifier.quackClickable {
+                QuackTitle2(
+                    text = text,
+                    color = QuackColor.Gray2,
+                    onClick = {
                         onTabSelected(index)
                     },
-                    text = text,
-                    style = tabStyle,
                 )
             }
         }

@@ -67,6 +67,11 @@ Edit Configurations -> Set `Launch Options` like this:
   <img src="https://img.shields.io/badge/Module-UiFeature-%2381BDC3" />
 </p>
 
+## Maintainers
+
+- Project Lead: [Ji Sungbin](https://www.linkedin.com/in/ji-sungbin-4343b7219/)
+- Design: [Kim Hyejin](https://my.surfit.io/w/417265724)
+
 ## Tech Stacks (Korean)
 
 TBD

@@ -29,11 +29,4 @@ sealed class DetailSideEffect {
      * @param certifyingStatement 필적 확인 문구
      */
     class StartExam(val examId: Int, val certifyingStatement: String) : DetailSideEffect()
-
-    /**
-     * [SearchActivity] 로 이동하는 SideEffect 입니다.
-     */
-    class NavigateToSearch(val searchTag: String?) : DetailSideEffect()
-
-    class NavigateToMyPage(val userId: Int) : DetailSideEffect()
 }

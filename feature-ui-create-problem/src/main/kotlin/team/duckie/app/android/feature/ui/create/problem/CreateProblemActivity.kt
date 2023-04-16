@@ -40,7 +40,7 @@ import team.duckie.app.android.feature.ui.create.problem.viewmodel.state.CreateP
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
-import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
+import team.duckie.app.android.util.kotlin.DuckieResponseException
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
@@ -157,16 +157,12 @@ class CreateProblemActivity : BaseActivity() {
                 finishWithAnimation()
             }
 
-            is CreateProblemSideEffect.TagAlreadyExist -> {
-                Firebase.crashlytics.recordException(sideEffect.exception)
-                val message = getString(R.string.post_tag_already_exist_error, sideEffect.tagName)
-                sideEffect.exception.reportToToast(message)
-            }
-
             is CreateProblemSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
 
                 // API 오류 발생 시 토스트 메시지 발생
+                // TODO(riflockle7): 아마 각 statusCode 마다 발생시킬 토스트도 다를 수 있음
+                //  해당 내용 추후 맞춰야 함
                 if (sideEffect.exception is DuckieResponseException) {
                     sideEffect.exception.reportToToast(getString(R.string.network_error))
                 }

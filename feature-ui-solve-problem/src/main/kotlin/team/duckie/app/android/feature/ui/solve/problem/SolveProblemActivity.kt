@@ -5,19 +5,17 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalLifecycleComposeApi::class)
+
 package team.duckie.app.android.feature.ui.solve.problem
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -28,11 +26,8 @@ import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScree
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
-import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
-import team.duckie.app.android.util.ui.finishWithAnimation
-import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
@@ -54,15 +49,7 @@ class SolveProblemActivity : BaseActivity() {
                     viewModel.initState()
                 }
 
-                QuackCrossfade(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor)
-                        .systemBarsPadding()
-                        .navigationBarsPadding()
-                        .imePadding(),
-                    targetState = state.isProblemsLoading,
-                ) { isLoading ->
+                Crossfade(targetState = state.isProblemsLoading) { isLoading ->
                     when (isLoading) {
                         true -> {
                             LoadingIndicator()
@@ -97,10 +84,6 @@ class SolveProblemActivity : BaseActivity() {
 
             is SolveProblemSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
-            }
-
-            SolveProblemSideEffect.NavigatePreviousScreen -> {
-                finishWithAnimation()
             }
         }
     }

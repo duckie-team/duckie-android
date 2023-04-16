@@ -12,7 +12,7 @@ import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.data.follow.model.FollowData
 import team.duckie.app.android.data.tag.model.TagData
 
-data class UserResponse(
+internal data class UserResponse(
     @field:JsonProperty("id")
     val id: Int? = null,
 
@@ -21,9 +21,6 @@ data class UserResponse(
 
     @field:JsonProperty("profileImageUrl")
     val profileImageUrl: String? = null,
-
-    @field:JsonProperty("introduction")
-    val introduction: String? = null,
 
     @field:JsonProperty("status")
     val status: String? = null,

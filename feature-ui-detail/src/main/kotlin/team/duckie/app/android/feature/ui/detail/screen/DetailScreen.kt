@@ -6,14 +6,13 @@
  */
 
 @file:AllowMagicNumber
-@file:OptIn(ExperimentalMaterialApi::class)
 
 package team.duckie.app.android.feature.ui.detail.screen
 
 import android.app.Activity
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,16 +24,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,25 +39,21 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
+import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
-import team.duckie.app.android.shared.ui.compose.DefaultProfile
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
-import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
-import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
+import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
@@ -80,7 +71,6 @@ import team.duckie.quackquack.ui.component.QuackSmallButtonType
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
@@ -98,8 +88,6 @@ internal fun DetailScreen(
     val state = viewModel.collectAsState().value
     var isNetworkAvailable: Boolean by remember { mutableStateOf(false) }
     isNetworkAvailable = !NetworkUtil.isNetworkAvailable(context)
-    val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    val coroutineScope = rememberCoroutineScope()
 
     return when {
         isNetworkAvailable -> ErrorScreen(
@@ -113,37 +101,11 @@ internal fun DetailScreen(
             modifier,
         )
 
-        state is DetailState.Success -> {
-            ReportDialog(
-                onClick = {
-                    viewModel.updateReportDialogVisible(false)
-                },
-                visible = state.reportDialogVisible,
-                onDismissRequest = {
-                    viewModel.updateReportDialogVisible(false)
-                },
-            )
-            ReportBottomSheetDialog(
-                bottomSheetState = bottomSheetState,
-                closeSheet = {
-                    coroutineScope.launch {
-                        bottomSheetState.hide()
-                    }
-                },
-                onReport = { viewModel.report(state.exam.id) },
-            ) {
-                DetailSuccessScreen(
-                    modifier = modifier,
-                    viewModel = viewModel,
-                    openBottomSheet = {
-                        coroutineScope.launch {
-                            bottomSheetState.show()
-                        }
-                    },
-                    state = state,
-                )
-            }
-        }
+        state is DetailState.Success -> DetailSuccessScreen(
+            viewModel,
+            modifier,
+            state,
+        )
 
         else -> ErrorScreen(
             modifier,
@@ -158,9 +120,19 @@ internal fun DetailScreen(
 private fun DetailSuccessScreen(
     viewModel: DetailViewModel,
     modifier: Modifier,
-    openBottomSheet: () -> Unit,
     state: DetailState.Success,
 ) {
+    val toast = rememberToast()
+
+    LaunchedEffect(viewModel) {
+        viewModel.container.sideEffectFlow.collect { effect ->
+            when (effect) {
+                is DetailSideEffect.SendToast -> toast(effect.message)
+                else -> Unit
+            }
+        }
+    }
+
     Layout(
         modifier = modifier.navigationBarsPadding(),
         content = {
@@ -168,16 +140,11 @@ private fun DetailSuccessScreen(
             TopAppCustomBar(
                 modifier = Modifier.layoutId(DetailScreenTopAppBarLayoutId),
                 state = state,
-                onTagClick = viewModel::goToSearch,
             )
             // content Layout
-            DetailContentLayout(
-                state = state,
-                tagItemClick = viewModel::goToSearch,
-                moreButtonClick = openBottomSheet,
-                followButtonClick = viewModel::followUser,
-                profileClick = viewModel::goToProfile,
-            )
+            DetailContentLayout(state) {
+                viewModel.followUser()
+            }
             // 최하단 Layout
             DetailBottomLayout(
                 modifier = Modifier
@@ -238,10 +205,7 @@ private fun DetailSuccessScreen(
 @Composable
 private fun DetailContentLayout(
     state: DetailState.Success,
-    tagItemClick: (String) -> Unit,
-    moreButtonClick: () -> Unit,
     followButtonClick: () -> Unit,
-    profileClick: (Int) -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
@@ -264,29 +228,16 @@ private fun DetailContentLayout(
                 start = 16.dp,
                 end = 16.dp,
             ),
-            shape = RoundedCornerShape(size = 8.dp),
             contentScale = ContentScale.FillWidth,
             src = state.exam.thumbnailUrl,
         )
         // 공백
         Spacer(modifier = Modifier.height(12.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            // 제목
-            QuackHeadLine2(text = state.exam.title)
-            // 더보기 아이콘
-            QuackImage(
-                src = QuackIcon.More,
-                size = DpSize(width = 24.dp, height = 24.dp),
-                onClick = moreButtonClick,
-            )
-        }
-
+        // 제목
+        QuackHeadLine2(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = state.exam.title,
+        )
         // 공백
         Spacer(modifier = Modifier.height(8.dp))
         // 내용
@@ -304,25 +255,22 @@ private fun DetailContentLayout(
             horizontalSpace = 4.dp,
             items = state.tagNames,
             tagType = QuackTagType.Grayscale(""),
-            onClick = { index -> tagItemClick(state.tagNames[index]) },
+            onClick = {
+                // TODO(riflockle7): 태그 검색 화면으로 이동
+            },
         )
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
         // 구분선
         QuackDivider()
         // 프로필 Layout
-        DetailProfileLayout(
-            state = state,
-            followButtonClick = followButtonClick,
-            profileClick = profileClick,
-        )
+        DetailProfileLayout(state, followButtonClick = followButtonClick)
         // 구분선
         QuackDivider()
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
         // 점수 분포도 Layout
-        // TODO(riflockle7): 기획 정해질 시 활성화
-        // DetailScoreDistributionLayout(state)
+        DetailScoreDistributionLayout(state)
     }
 }
 
@@ -334,9 +282,10 @@ private fun DetailContentLayout(
 private fun DetailProfileLayout(
     state: DetailState.Success,
     followButtonClick: () -> Unit,
-    profileClick: (Int) -> Unit,
 ) {
     val isFollowed = remember(state.isFollowing) { state.isFollowing }
+    val toast = rememberToast()
+    val detailLoadingMypageToastMessage = stringResource(id = R.string.detail_loading_mypage_toast)
 
     Row(
         modifier = Modifier.padding(
@@ -353,28 +302,26 @@ private fun DetailProfileLayout(
                 size = DpSize(32.dp, 32.dp),
             )
         } else {
-            Image(
-                modifier = Modifier
+            Box(
+                Modifier
                     .size(DpSize(32.dp, 32.dp))
-                    .clip(SquircleShape),
-                painter = painterResource(id = QuackIcon.DefaultProfile),
-                contentDescription = null,
+                    .clip(SquircleShape)
+                    .background(QuackColor.Gray2.composeColor),
             )
         }
 
         // 공백
         Spacer(modifier = Modifier.width(8.dp))
         // 닉네임, 응시자, 일자 Layout
-        Column(
-            modifier = Modifier.quackClickable(
-                onClick = { profileClick(state.exam.user?.id ?: 0) },
-                rippleEnabled = false,
-            ),
-        ) {
+        Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임
                 QuackBody3(
                     text = state.nickname,
+                    onClick = {
+                        // TODO(riflockle7): 프로필 화면으로 이동
+                        toast(detailLoadingMypageToastMessage)
+                    },
                     color = QuackColor.Black,
                 )
 
@@ -385,12 +332,12 @@ private fun DetailProfileLayout(
             // 공백
             Spacer(modifier = Modifier.height(2.dp))
 
-            // 덕티어 + 퍼센트, 태그
+            // 응시자, 일자
             QuackBody3(
                 text = stringResource(
-                    R.string.detail_tier_tag,
-                    state.exam.user?.duckPower?.tier ?: "",
-                    state.exam.user?.duckPower?.tag?.name ?: "",
+                    R.string.detail_num_date,
+                    "${state.exam.solvedCount}",
+                    "1일 전",
                 ),
                 color = QuackColor.Gray2,
             )
@@ -406,7 +353,7 @@ private fun DetailProfileLayout(
             ),
             text = stringResource(
                 if (isFollowed) {
-                    R.string.detail_following
+                    R.string.detail_follow_cancel
                 } else {
                     R.string.detail_follow
                 },
@@ -419,7 +366,6 @@ private fun DetailProfileLayout(
 
 /** 상세 화면 점수 분포도 Layout */
 @Composable
-@Suppress("unused")
 private fun DetailScoreDistributionLayout(state: DetailState.Success) {
     // 제목 Layout
     Row(
@@ -460,7 +406,6 @@ private fun DetailBottomLayout(
     onChallengeClick: () -> Unit,
 ) {
     Column(modifier = modifier) {
-        Spacer(space = 20.dp)
         // 구분선
         QuackDivider()
         // 버튼 모음 Layout
@@ -496,11 +441,7 @@ private fun DetailBottomLayout(
 
 /** 상세 화면에서 사용하는 TopAppBar */
 @Composable
-private fun TopAppCustomBar(
-    modifier: Modifier,
-    state: DetailState.Success,
-    onTagClick: (String) -> Unit,
-) {
+private fun TopAppCustomBar(modifier: Modifier, state: DetailState.Success) {
     val activity = LocalContext.current as Activity
     Row(
         modifier = modifier
@@ -525,7 +466,6 @@ private fun TopAppCustomBar(
             text = state.mainTagNames,
             trailingIcon = QuackIcon.ArrowRight,
             isSelected = false,
-            onClick = { onTagClick(state.mainTagNames) },
         )
     }
 }

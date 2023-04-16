@@ -18,7 +18,7 @@ jobs:
           tar xvf secrets.tar
 
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1.0.6
+        uses: gradle/wrapper-validation-action@v1.0.5
 
       - name: Setup JDK 17
         uses: actions/setup-java@v3
@@ -33,15 +33,9 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-home-cache-cleanup: true
-
+          
       - name: Setup MavenLocal
         run: ./gradlew :local-enums:publishToMavenLocal
 
-      - name: Check ktLint
-        run: ./gradlew ktlintCheck
-
-      - name: Check detekt
-        run: ./gradlew detekt
-
-      - name: Run test
-        run: ./gradlew testStandardDebug
+      - name: Run build (includes ktlint/detekt/test/binary-compatibility check)
+        run: ./gradlew build

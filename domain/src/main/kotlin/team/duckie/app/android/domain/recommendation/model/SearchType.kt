@@ -10,14 +10,10 @@ package team.duckie.app.android.domain.recommendation.model
 /**
  * 검색할 때 사용되는 타입 enum [SearchType]
  *
- * [Users] 사용자
- * [Exams] 덕질고사
- * [Tags] 태그
+ * [User] 사용자
+ * [Exam] 덕질고사
  */
-enum class SearchType(
-    val type: String,
-) {
-    Users("USERS"),
-    Exams("EXAMS"),
-    Tags("TAGS"),
+enum class SearchType {
+    User,
+    Exam,
 }

@@ -8,11 +8,8 @@
 package team.duckie.app.android.domain.exam.repository
 
 import androidx.compose.runtime.Immutable
-import androidx.paging.PagingData
-import kotlinx.coroutines.flow.Flow
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
-import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 
 @Immutable
@@ -23,13 +20,5 @@ interface ExamRepository {
 
     suspend fun getExamThumbnail(examThumbnailBody: ExamThumbnailBody): String
 
-    suspend fun getExamMeFollowing(): Flow<PagingData<Exam>>
-
-    suspend fun getMadeExams(): List<ExamInfo>
-
-    suspend fun getSolvedExams(): List<ExamInfo>
-
-    suspend fun getFavoriteExams(): List<ExamInfo>
-
-    suspend fun getRecentExam(): List<ExamInfo>
+    suspend fun getExamMeFollowing(page: Int?): List<Exam>
 }

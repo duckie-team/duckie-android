@@ -32,7 +32,5 @@ dependencies {
         libs.quack.ui.components,
         libs.compose.lifecycle.runtime,
         libs.firebase.crashlytics,
-        libs.paging.runtime,
-        libs.paging.compose,
     )
 }

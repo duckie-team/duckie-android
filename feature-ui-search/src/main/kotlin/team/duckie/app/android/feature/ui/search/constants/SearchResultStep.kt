@@ -11,7 +11,7 @@ internal enum class SearchResultStep(
     val title: String,
     val index: Int,
 ) {
-    DuckExam(
+    DuckTest(
         title = "덕질고사",
         index = 0,
     ),

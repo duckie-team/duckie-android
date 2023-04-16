@@ -8,12 +8,9 @@
 package team.duckie.app.android.domain.tag.repository
 
 import androidx.compose.runtime.Immutable
-import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.tag.model.Tag
 
 @Immutable
 interface TagRepository {
     suspend fun create(name: String): Tag
-
-    suspend fun getPopularTags(): ImmutableList<Tag>
 }

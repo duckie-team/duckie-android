@@ -20,7 +20,7 @@ import team.duckie.app.android.domain.exam.model.Exam
 @Immutable
 data class ExamInstance(
     val id: Int,
-    val exam: Exam?,
+    val exam: Exam,
     val problemInstances: List<ProblemInstance>?,
     val status: String,
 )

@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.ui.solve.problem.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,13 +21,14 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun CloseAndPageTopBar(
-    modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     currentPage: Int,
     totalPage: Int,
 ) {
     QuackTopAppBar(
-        modifier = modifier,
+        modifier = Modifier
+            .padding(vertical = 12.dp)
+            .padding(end = 16.dp),
         leadingIcon = QuackIcon.Close,
         onLeadingIconClick = onCloseClick,
         trailingContent = {

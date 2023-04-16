@@ -7,12 +7,11 @@
 
 package team.duckie.app.android.data.user.repository
 
-import team.duckie.app.android.data.user.datasource.UserDataSource
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.domain.user.datasource.UserDataSource
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
-import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.domain.user.repository.UserRepository
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ExperimentalApi
@@ -33,10 +32,9 @@ class UserRepositoryImpl @Inject constructor(
         tags: List<Tag>?,
         profileImageUrl: String?,
         nickname: String?,
-        introduction: String?,
         status: String?,
     ): User {
-        return userDataSource.update(id, categories, tags, profileImageUrl, nickname, introduction, status)
+        return userDataSource.update(id, categories, tags, profileImageUrl, nickname, status)
     }
 
     override suspend fun nicknameValidateCheck(nickname: String): Boolean {
@@ -45,8 +43,8 @@ class UserRepositoryImpl @Inject constructor(
 
     @AllowMagicNumber
     @ExperimentalApi
-    override suspend fun fetchRecommendUserFollowing(userId: Int): UserFollowings {
-        return userDataSource.fetchRecommendUserFollowing(userId)
+    override suspend fun fetchUserFollowing(userId: Int): UserFollowings {
+        return userDataSource.fetchUserFollowing(userId)
     }
 
     override suspend fun fetchMeFollowers(): List<User> {
@@ -55,17 +53,5 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun fetchMeFollowings(): List<User> {
         return userDataSource.fetchMeFollowings()
-    }
-
-    override suspend fun fetchUserProfile(userId: Int): UserProfile {
-        return userDataSource.fetchUserProfile(userId)
-    }
-
-    override suspend fun fetchUserFollowings(userId: Int): List<User> {
-        return userDataSource.fetchUserFollowings(userId)
-    }
-
-    override suspend fun fetchUserFollowers(userId: Int): List<User> {
-        return userDataSource.fetchUserFollowers(userId)
     }
 }

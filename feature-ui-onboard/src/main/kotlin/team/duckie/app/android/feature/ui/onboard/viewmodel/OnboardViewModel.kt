@@ -48,14 +48,12 @@ import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.domain.user.model.UserStatus
 import team.duckie.app.android.domain.user.usecase.NicknameDuplicateCheckUseCase
 import team.duckie.app.android.domain.user.usecase.SetMeUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.OnboardState
-import team.duckie.app.android.feature.ui.onboard.viewmodel.state.ProfileScreenState
 import team.duckie.app.android.util.android.permission.PermissionCompat
 import team.duckie.app.android.util.android.savedstate.SaveableMutableStateFlow
 import team.duckie.app.android.util.android.viewmodel.context
@@ -121,7 +119,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     private val duckieUserProfileImageTemporaryFile =
         File.createTempFile("temporary-duckie-user-profile-image", ".png", context.cacheDir)
 
-    private val nicknameFilter = Regex("[^ㄱ-ㅎ가-힣a-zA-Z0-9_.]")
+    private val nicknameFilter = Regex("[^가-힣a-zA-Z0-9_.]")
     private var lastestUpdateStepMillis = System.currentTimeMillis()
 
     val galleryImages: ImmutableList<String> get() = container.stateFlow.value.galleryImages.toImmutableList()
@@ -177,44 +175,16 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     // validation
 
-    /** 각 Screen 의 valid 체크 전 사전 작업을 수행한다. */
-    fun readyToScreenCheck(step: OnboardStep) = intent {
-        when (step) {
-            OnboardStep.Profile -> reduce { state.copy(profileState = ProfileScreenState.Checking) }
-            else -> return@intent
-        }
-    }
-
-    /** 닉네임을 체크한다. */
-    fun checkNickname(nickname: String) {
-        val isNicknameRuleError = checkNicknameRule(nickname)
-        if (isNicknameRuleError) {
-            intent { reduce { state.copy(profileState = ProfileScreenState.NicknameRuleError) } }
-            return
-        }
-
-        checkNicknameDuplicate(nickname)
-    }
-
-    /** 닉네임 룰을 지켰는지 체크한다. */
-    private fun checkNicknameRule(nickname: String): Boolean {
-        return nicknameFilter.containsMatchIn(nickname)
-    }
-
-    /** 겹치는 닉네임이 있는지 체크한다. */
-    private fun checkNicknameDuplicate(nickname: String) = intent {
+    suspend fun nicknameDuplicateCheck(nickname: String) = intent {
         nicknameDuplicateCheckUseCase(nickname)
             .onSuccess { result ->
-                if (result) {
-                    reduce { state.copy(profileState = ProfileScreenState.Valid) }
-                } else {
-                    reduce { state.copy(profileState = ProfileScreenState.NicknameDuplicateError) }
-                }
+                postSideEffect(OnboardSideEffect.NicknameDuplicateChecked(result))
             }
-            .attachExceptionHandling {
-                // TODO(riflockle7): 음 에러 나는 게 닉네임 중복만 있으려나...
-                reduce { state.copy(profileState = ProfileScreenState.NicknameDuplicateError) }
-            }
+            .attachExceptionHandling()
+    }
+
+    fun checkNicknameRuleError(nickname: String): Boolean {
+        return nicknameFilter.containsMatchIn(nickname)
     }
 
     // user
@@ -291,7 +261,7 @@ internal class OnboardViewModel @AssistedInject constructor(
                 postSideEffect(OnboardSideEffect.AttachAccessTokenToHeader(response.accessToken))
                 postSideEffect(
                     OnboardSideEffect.Joined(
-                        isNewUser = response.isNewUser || response.user.status == UserStatus.NEW,
+                        isNewUser = response.isNewUser,
                         me = response.user,
                     ),
                 )
@@ -356,7 +326,6 @@ internal class OnboardViewModel @AssistedInject constructor(
             nickname = nickname,
             status = "READY", // 온보딩 완료 시에는 무조건 NEW -> READY 로 바꿔줘야 함
             updateMeInstance = { user -> viewModelScope.launch { setMeUseCase(user) } },
-            introduction = null,
         )
             .onSuccess { user ->
                 reduce {
@@ -370,7 +339,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     }
 
     private fun Result<*>.attachExceptionHandling(
-        additinal: suspend (exception: Throwable) -> Unit = {},
+        additinal: (exception: Throwable) -> Unit = {},
     ) = intent {
         onFailure { exception ->
             postSideEffect(OnboardSideEffect.ReportError(exception))

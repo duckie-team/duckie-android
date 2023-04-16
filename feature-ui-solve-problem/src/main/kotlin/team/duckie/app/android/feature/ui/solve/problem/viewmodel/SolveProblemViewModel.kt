@@ -10,6 +10,7 @@ package team.duckie.app.android.feature.ui.solve.problem.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -21,9 +22,9 @@ import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCas
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
+import team.duckie.app.android.util.kotlin.DuckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
-import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
@@ -51,17 +52,14 @@ internal class SolveProblemViewModel @Inject constructor(
     private suspend fun getProblems(examId: Int) = intent {
         reduce { state.copy(isProblemsLoading = true) }
         getExamInstanceUseCase(id = examId).onSuccess { examInstance ->
-            val problemInstances = examInstance.problemInstances?.toImmutableList()
-            if (problemInstances == null) {
-                stopExam()
-            } else {
-                reduce {
-                    state.copy(
-                        isProblemsLoading = false,
-                        problems = problemInstances,
-                        inputAnswers = ImmutableList(problemInstances.size) { InputAnswer() },
-                    )
-                }
+            reduce {
+                val problemInstances =
+                    examInstance.problemInstances?.toImmutableList() ?: persistentListOf()
+                state.copy(
+                    isProblemsLoading = false,
+                    problems = problemInstances,
+                    inputAnswers = ImmutableList(problemInstances.size) { InputAnswer() },
+                )
             }
         }.onFailure {
             it.printStackTrace()
@@ -69,23 +67,30 @@ internal class SolveProblemViewModel @Inject constructor(
         }
     }
 
-    fun setPage(page: Int) = intent {
-        reduce {
-            state.copy(
-                currentPageIndex = page,
+    fun moveNextPage() = intent {
+        if (state.currentPageIndex < state.totalPage - 1) {
+            reduce {
+                state.copy(
+                    currentPageIndex = state.currentPageIndex.plus(1),
+                )
+            }
+        } else {
+            postSideEffect(
+                SolveProblemSideEffect.FinishSolveProblem(
+                    examId = state.examId,
+                    answers = state.inputAnswers.fastMap { it.answer },
+                ),
             )
         }
     }
 
-    fun onMoveNextPage(page: Int) = intent {
-        if (state.currentPageIndex < state.totalPage - 1) {
-            setPage(page = page)
-        }
-    }
-
-    fun onMovePreviousPage(page: Int) = intent {
+    fun movePreviousPage() = intent {
         if (state.currentPageIndex > 0) {
-            setPage(page = page)
+            reduce {
+                state.copy(
+                    currentPageIndex = state.currentPageIndex.minus(1),
+                )
+            }
         }
     }
 
@@ -101,15 +106,4 @@ internal class SolveProblemViewModel @Inject constructor(
             )
         }
     }
-
-    fun finishExam() = intent {
-        postSideEffect(
-            SolveProblemSideEffect.FinishSolveProblem(
-                examId = state.examId,
-                answers = state.inputAnswers.fastMap { it.answer },
-            ),
-        )
-    }
-
-    fun stopExam() = intent { postSideEffect(SolveProblemSideEffect.NavigatePreviousScreen) }
 }

@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.ui.solve.problem.question.audio
 
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -22,7 +23,6 @@ import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackSurface
@@ -39,7 +39,7 @@ internal fun AudioController(
 ) {
     val playing = remember(isPlaying()) { isPlaying() }
     Box(modifier = modifier) {
-        QuackCrossfade(targetState = playing) {
+        Crossfade(targetState = playing) {
             when (it) {
                 true -> {
                     PlayingGif(

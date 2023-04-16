@@ -21,8 +21,6 @@ dependencies {
         libs.compose.ui.material,
         libs.quack.ui.components,
         libs.compose.ui.coil,
-        libs.compose.ui.material,
-        libs.compose.ui.accompanist.placeholder,
         projects.utilCompose,
         projects.utilKotlin,
     )

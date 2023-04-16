@@ -8,8 +8,8 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import DependencyHandler.Extensions.implementations
-import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.FileInputStream
+import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id(ConventionEnum.AndroidApplication)
@@ -18,7 +18,6 @@ plugins {
     id(libs.plugins.firebase.crashlytics.get().pluginId)
     id(libs.plugins.firebase.performance.get().pluginId)
     id(libs.plugins.util.secrets.get().pluginId)
-    id(libs.plugins.ui.oss.license.get().pluginId)
 }
 
 android {
@@ -81,14 +80,6 @@ dependencies {
         projects.presentation, // for launch IntroActivity
         projects.utilKotlin,
         projects.featureUiExamResult,
-        projects.featureUiSolveProblem,
-        projects.featureUiNotification,
-        projects.featureUiCreateProblem,
-        projects.featureUiDetail,
-        projects.featureMessaging,
-        projects.featureUiProfile,
-        projects.featureUiSetting,
-        projects.featureUiFriends,
         projects.navigator,
     )
     debugImplementation(libs.analytics.leakcanary)

@@ -12,8 +12,5 @@ internal sealed class SolveProblemSideEffect {
         val examId: Int,
         val answers: List<String>,
     ) : SolveProblemSideEffect()
-
     class ReportError(val exception: Throwable) : SolveProblemSideEffect()
-
-    object NavigatePreviousScreen : SolveProblemSideEffect()
 }

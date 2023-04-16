@@ -48,9 +48,6 @@ import team.duckie.app.android.feature.ui.create.problem.common.getCreateProblem
 import team.duckie.app.android.feature.ui.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.ui.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
-import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.takeBy
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
@@ -58,6 +55,7 @@ import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackCircleTag
+import team.duckie.quackquack.ui.component.QuackDialog
 import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
 import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.component.QuackSurface
@@ -177,10 +175,7 @@ internal fun ExamInformationScreen(
                                 ),
                             )
                         },
-                        placeholderText = stringResource(
-                            id = R.string.input_exam_title,
-                            ExamTitleMaxLength,
-                        ),
+                        placeholderText = stringResource(id = R.string.input_exam_title),
                         keyboardOptions = ImeActionNext,
                         keyboardActions = moveDownFocus(focusManager),
                     )
@@ -202,10 +197,7 @@ internal fun ExamInformationScreen(
                                 ),
                             )
                         },
-                        placeholderText = stringResource(
-                            id = R.string.input_exam_description,
-                            ExamDescriptionMaxLength,
-                        ),
+                        placeholderText = stringResource(id = R.string.input_exam_description),
                         imeAction = ImeAction.Next,
                         keyboardActions = moveDownFocus(focusManager),
                         focused = state.examDescriptionFocused,
@@ -223,10 +215,7 @@ internal fun ExamInformationScreen(
                                 ),
                             )
                         },
-                        placeholderText = stringResource(
-                            id = R.string.input_certifying_statement,
-                            CertifyingStatementMaxLength,
-                        ),
+                        placeholderText = stringResource(id = R.string.input_certifying_statement),
                         keyboardActions = KeyboardActions(
                             onDone = {
                                 coroutineScope.launch {
@@ -260,10 +249,8 @@ internal fun ExamInformationScreen(
         },
     )
 
-    DuckieDialog(
-        modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
+    QuackDialog(
         title = stringResource(id = R.string.create_problem_exit_dialog_title),
-        message = stringResource(id = R.string.create_problem_exit_dialog_message),
         visible = createProblemExitDialogVisible,
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { createProblemExitDialogVisible = false },
@@ -272,7 +259,7 @@ internal fun ExamInformationScreen(
             createProblemExitDialogVisible = false
             viewModel.finishCreateProblem()
         },
-        onDismissRequest = { createProblemExitDialogVisible = false },
+        onDismissRequest = {},
     )
 }
 

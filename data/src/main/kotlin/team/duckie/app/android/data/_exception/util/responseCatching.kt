@@ -16,9 +16,9 @@ import team.duckie.app.android.data._exception.model.ExceptionBody
 import team.duckie.app.android.data._exception.model.throwing
 import team.duckie.app.android.data._util.jsonMapper
 import team.duckie.app.android.data._util.toStringJsonMap
-import team.duckie.app.android.util.kotlin.exception.ApiErrorThreshold
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.exception.toDuckieStatusCode
+import team.duckie.app.android.util.kotlin.ApiErrorThreshold
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
+import team.duckie.app.android.util.kotlin.toDuckieStatusCode
 
 @Suppress("TooGenericExceptionCaught")
 internal suspend inline fun <reified DataModel, DomainModel> responseCatching(

@@ -9,7 +9,7 @@
 
     <application>
         <activity
-            android:name=".screen.SearchActivity"
+            android:name=".screen.SearchResultActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
     </application>

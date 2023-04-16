@@ -9,31 +9,24 @@
 
 package team.duckie.app.android.data.user.mapper
 
+import kotlin.random.Random
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.category.model.CategoryData
-import team.duckie.app.android.data.exam.mapper.toDomain
-import team.duckie.app.android.data.exam.model.ProfileExamData
-import team.duckie.app.android.data.examInstance.model.ProfileExamInstanceData
 import team.duckie.app.android.data.follow.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.model.DuckPowerResponse
 import team.duckie.app.android.data.user.model.UserFollowingResponse
 import team.duckie.app.android.data.user.model.UserFollowingsResponse
-import team.duckie.app.android.data.user.model.UserProfileData
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.data.user.model.UsersResponse
-import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.model.UserFollowings
-import team.duckie.app.android.domain.user.model.UserProfile
-import team.duckie.app.android.domain.user.model.toUserAuthStatus
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.domain.user.model.UserFollowing
+import team.duckie.app.android.util.kotlin.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
-import kotlin.random.Random
 
 private const val NicknameSuffixMaxLength = 10_000
 private const val NicknameSuffixLength = 4
@@ -49,8 +42,7 @@ internal fun UserResponse.toDomain() = User(
     id = id ?: duckieResponseFieldNpe("id"),
     nickname = nickName ?: DuckieDefaultNickname,
     profileImageUrl = profileImageUrl,
-    introduction = introduction,
-    status = status?.toUserAuthStatus,
+    status = status,
     duckPower = duckPower?.toDomain(),
     follow = follow?.toDomain(),
     favoriteTags = favoriteTags?.fastMap(TagData::toDomain)?.toImmutableList(),
@@ -80,19 +72,3 @@ internal fun DuckPowerResponse.toDomain(): DuckPower {
         tag = tag?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tag"),
     )
 }
-
-internal fun ProfileExamInstanceData.toDomain() = ProfileExamInstance(
-    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
-    exam = exam?.toDomain(),
-)
-
-internal fun UserProfileData.toDomain() = UserProfile(
-    followerCount = followerCount
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.followerCount"),
-    followingCount = followingCount
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.followingCount"),
-    createdExams = createdExams?.map(ProfileExamData::toDomain),
-    solvedExamInstances = solvedExamInstances?.map(ProfileExamInstanceData::toDomain),
-    heartExams = createdExams?.map(ProfileExamData::toDomain),
-    user = user?.toDomain(),
-)

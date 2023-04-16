@@ -7,18 +7,18 @@
 
 package team.duckie.app.android.shared.ui.compose
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -30,8 +30,6 @@ import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -53,9 +51,8 @@ private const val UserInfoBlockFollowingButtonLayoutId = "UserInfoBlockFollowing
  * @param nickname 닉네임
  * @param favoriteTag 관심 태그
  * @param tier 현재 덕력
- * @param isMine 추천 유저가 본인인지 여부
- * @param isFollowing 팔로우 여부
  * @param onClickUserProfile 프로필 사진을 클릭 했을 때 실행되는 람다
+ * @param initalFollow 팔로우 여부
  * @param onClickFollow 팔로우 버튼을 클릭 했을 때 실행되는 람다
  */
 @Composable
@@ -66,12 +63,12 @@ fun UserFollowingLayout(
     nickname: String,
     favoriteTag: String,
     tier: String,
-    isMine: Boolean = false,
-    isFollowing: Boolean,
+    initalFollow: Boolean,
     onClickUserProfile: ((Int) -> Unit)? = null,
     onClickFollow: (Boolean) -> Unit,
-    isLoading: Boolean = false,
 ) {
+    var isFollowing by remember { mutableStateOf(initalFollow) }
+
     Layout(
         modifier = modifier
             .fillMaxWidth()
@@ -80,58 +77,36 @@ fun UserFollowingLayout(
                 vertical = 12.dp,
             ),
         content = {
-            if (profileImgUrl.isEmpty()) {
-                Image(
-                    modifier = Modifier
-                        .layoutId(UserInfoBlockUserProfileLayoutId)
-                        .size(HomeProfileSize)
-                        .clip(SquircleShape)
-                        .quackClickable {
-                            if (onClickUserProfile != null) {
-                                onClickUserProfile(userId)
-                            }
-                        }
-                        .skeleton(isLoading),
-                    painter = painterResource(id = QuackIcon.DefaultProfile),
-                    contentDescription = null,
-                )
-            } else {
-                QuackImage(
-                    modifier = Modifier
-                        .layoutId(UserInfoBlockUserProfileLayoutId)
-                        .skeleton(isLoading),
-                    src = profileImgUrl,
-                    size = HomeProfileSize,
-                    shape = SquircleShape,
-                    onClick = {
-                        if (onClickUserProfile != null) {
-                            onClickUserProfile(userId)
-                        }
-                    },
-                )
-            }
+            QuackImage(
+                modifier = Modifier.layoutId(UserInfoBlockUserProfileLayoutId),
+                src = profileImgUrl,
+                size = HomeProfileSize,
+                shape = SquircleShape,
+                onClick = {
+                    if (onClickUserProfile != null) {
+                        onClickUserProfile(userId)
+                    }
+                },
+            )
             QuackSubtitle2(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserNameLayoutId)
-                    .padding(start = 8.dp, top = 2.dp)
-                    .skeleton(isLoading),
+                    .padding(start = 8.dp, top = 2.dp),
                 text = nickname,
             )
             QuackBody3(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserDescriptionLayoutId)
-                    .padding(start = 8.dp)
-                    .skeleton(isLoading),
-                text = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
+                    .padding(start = 8.dp),
+                text = "$tier · $favoriteTag",
             )
             QuackBody2(
-                modifier = Modifier
-                    .layoutId(UserInfoBlockFollowingButtonLayoutId)
-                    .skeleton(isLoading),
-                text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
+                modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
+                text = if (isFollowing) stringResource(id = R.string.follow) else stringResource(id = R.string.following),
                 color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                 onClick = {
-                    onClickFollow(!isFollowing)
+                    isFollowing = !isFollowing
+                    onClickFollow(isFollowing)
                 },
                 rippleEnabled = false,
             )
@@ -166,14 +141,7 @@ fun UserFollowingLayout(
 
             userNamePlaceable.place(
                 x = userProfilePlaceable.width,
-                y = if (tier.isEmpty() || favoriteTag.isEmpty()) {
-                    Alignment.CenterVertically.align(
-                        size = userNamePlaceable.height,
-                        space = constraints.maxHeight,
-                    )
-                } else {
-                    0
-                },
+                y = 0,
             )
 
             userDescriptionPlaceable.place(
@@ -181,15 +149,13 @@ fun UserFollowingLayout(
                 y = userNamePlaceable.height,
             )
 
-            if (!isMine) {
-                userFollowingButtonPlaceable.place(
-                    x = constraints.maxWidth - userFollowingButtonPlaceable.width,
-                    y = Alignment.CenterVertically.align(
-                        size = userFollowingButtonPlaceable.height,
-                        space = constraints.maxHeight,
-                    ),
-                )
-            }
+            userFollowingButtonPlaceable.place(
+                x = constraints.maxWidth - userFollowingButtonPlaceable.width,
+                y = Alignment.CenterVertically.align(
+                    size = userFollowingButtonPlaceable.height,
+                    space = constraints.maxHeight,
+                ),
+            )
         }
     }
 }

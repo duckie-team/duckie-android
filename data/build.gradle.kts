@@ -8,18 +8,14 @@
 @file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 import AppVersionNameProvider.App.VersionName
-import DependencyHandler.Extensions.androidTestImplementations
 import DependencyHandler.Extensions.implementations
 import DependencyHandler.Extensions.testImplementations
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
     id(ConventionEnum.JvmJUnit4)
     id(ConventionEnum.AndroidHilt)
     id(ConventionEnum.AppVersionNameProvider)
-    id(ConventionEnum.AndroidRoom)
-    id(libs.plugins.kotlin.ksp.get().pluginId)
 }
 
 android {
@@ -31,9 +27,6 @@ android {
 
     defaultConfig {
         buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName\"")
-        manifestPlaceholders["KAKAO_MANIFEST_SCHEME"] =
-            gradleLocalProperties(rootDir).getProperty("KAKAO_MANIFEST_SCHEME")
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
@@ -60,12 +53,4 @@ dependencies {
         libs.test.ktor.server, // for E2E test
         libs.ktor.server.core, // for E2E test
     )
-    androidTestImplementations(
-        libs.test.androidx.junit,
-        libs.test.androidx.runner,
-        libs.test.strikt,
-    )
-    implementation(libs.ktx.lifecycle.viewmodel) { // for androidTest
-        exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel")
-    }
 }

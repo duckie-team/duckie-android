@@ -9,50 +9,51 @@ package team.duckie.app.android.feature.ui.search.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.feature.ui.search.R
 import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
-import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
-import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchState
-import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.shared.ui.compose.Spacer
+import team.duckie.app.android.feature.ui.search.viewmodel.SearchResultViewModel
+import team.duckie.app.android.shared.ui.compose.DuckTestSmallCover
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackMainTab
+import team.duckie.quackquack.ui.component.QuackTopAppBar
+import team.duckie.quackquack.ui.icon.QuackIcon
+
+private val HomeTagListPadding = PaddingValues(
+    top = 20.dp,
+    start = 16.dp,
+    end = 16.dp,
+)
 
 @Composable
 internal fun SearchResultScreen(
     modifier: Modifier = Modifier,
-    vm: SearchViewModel = activityViewModel(),
-    navigateDetail: (Int) -> Unit,
+    vm: SearchResultViewModel = activityViewModel(),
+    onPrevious: () -> Unit,
 ) {
     val state = vm.collectAsState().value
 
-    val searchUsers = vm.searchUsers.collectAsLazyPagingItems()
-    val searchExams = vm.searchExams.collectAsLazyPagingItems()
+    LaunchedEffect(Unit) {
+        vm.fetchSearchResultForExam(state.searchTag)
+        vm.fetchSearchResultForUser(state.searchTag)
+    }
 
     val tabTitles = SearchResultStep.values().map {
         it.title
@@ -63,131 +64,55 @@ internal fun SearchResultScreen(
             .fillMaxSize()
             .nestedScroll(rememberNestedScrollInteropConnection()),
     ) {
+        QuackTopAppBar(
+            leadingIcon = QuackIcon.ArrowBack,
+            onLeadingIconClick = {
+                onPrevious()
+            },
+            leadingText = state.searchTag,
+        )
         QuackMainTab(
             titles = tabTitles,
             selectedTabIndex = state.tagSelectedTab.index,
             onTabSelected = { index ->
-                vm.updateSearchResultTab(SearchResultStep.toStep(index))
+                vm.changeSearchResultTab(SearchResultStep.toStep(index))
             },
         )
-        Spacer(space = 20.dp)
         when (state.tagSelectedTab) {
-            SearchResultStep.DuckExam -> SearchResultForExam(
-                searchExams = searchExams,
-                navigateDetail = navigateDetail,
-            )
-
-            SearchResultStep.User -> SearchResultForUser(
-                searchUsers = searchUsers,
-                onClickFollow = { userId, follow ->
-                    vm.followUser(
-                        userId = userId,
-                        isFollowing = follow,
-                    )
-                },
-                myUserId = state.me?.id ?: 1,
-                onClickUserProfile = vm::clickUserProfile,
-            )
-        }
-        Spacer(space = 48.dp)
-    }
-}
-
-@Composable
-private fun SearchResultForUser(
-    searchUsers: LazyPagingItems<SearchState.SearchUser>,
-    onClickFollow: (Int, Boolean) -> Unit,
-    onClickUserProfile: (Int) -> Unit,
-    myUserId: Int,
-) {
-    if (searchUsers.itemCount == 0) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 68.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            QuackHeadLine1(
-                text = stringResource(id = R.string.no_search_user),
-                color = QuackColor.Gray1,
-            )
-            Spacer(space = 8.dp)
-            QuackBody1(
-                text = stringResource(id = R.string.search_another_keyword),
-                color = QuackColor.Gray1,
-            )
-        }
-    } else {
-        LazyColumn(
-            contentPadding = SearchHorizontalPadding,
-        ) {
-            items(searchUsers) { item ->
-                UserFollowingLayout(
-                    userId = item?.userId ?: 0,
-                    profileImgUrl = item?.profileImgUrl ?: "",
-                    nickname = item?.nickname ?: "",
-                    favoriteTag = item?.favoriteTag ?: "",
-                    tier = item?.tier ?: "",
-                    isFollowing = item?.isFollowing ?: false,
-                    onClickFollow = { follow ->
-                        onClickFollow(item?.userId ?: 0, follow)
-                    },
-                    isMine = myUserId == item?.userId,
-                    onClickUserProfile = onClickUserProfile,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun SearchResultForExam(
-    searchExams: LazyPagingItems<Exam>,
-    navigateDetail: (Int) -> Unit,
-) {
-    if (searchExams.itemCount == 0) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 68.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            QuackHeadLine1(
-                text = stringResource(id = R.string.no_search_exam),
-                color = QuackColor.Gray1,
-            )
-            Spacer(space = 8.dp)
-            QuackBody1(
-                text = stringResource(id = R.string.search_another_keyword),
-                color = QuackColor.Gray1,
-            )
-        }
-    } else {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            state = rememberLazyGridState(),
-            verticalArrangement = Arrangement.spacedBy(48.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = SearchHorizontalPadding,
-        ) {
-            items(searchExams.itemCount) { index ->
-                searchExams[index].let { exam ->
-                    DuckExamSmallCover(
-                        duckTestCoverItem = DuckTestCoverItem(
-                            testId = exam?.id ?: 0,
-                            thumbnailUrl = exam?.thumbnailUrl,
-                            nickname = exam?.user?.nickname ?: "",
-                            title = exam?.title ?: "",
-                            solvedCount = exam?.solvedCount ?: 0,
-                            heartCount = exam?.heartCount ?: 0,
-                        ),
+            SearchResultStep.DuckTest -> LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                state = rememberLazyGridState(),
+                verticalArrangement = Arrangement.spacedBy(48.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = HomeTagListPadding,
+            ) {
+                items(state.searchResultForTest) { item ->
+                    DuckTestSmallCover(
+                        duckTestCoverItem = item,
                         onItemClick = {
-                            navigateDetail(exam?.id ?: 0)
+                            // TODO(limsaehyun): 상세보기로 이동
                         },
-                        onMoreClick = {},
+                    )
+                }
+            }
+            SearchResultStep.User -> LazyColumn(
+                contentPadding = HomeTagListPadding,
+            ) {
+                items(state.searchResultForUser) { item ->
+                    UserFollowingLayout(
+                        userId = item.userId,
+                        profileImgUrl = item.profileImgUrl,
+                        nickname = item.nickname,
+                        favoriteTag = item.favoriteTag,
+                        tier = item.tier,
+                        initalFollow = item.isFollowing,
+                        onClickFollow = {
+                            // TODO(limsaehyun): following request
+                        },
                     )
                 }
             }
         }
+        Spacer(modifier = Modifier.height(48.dp))
     }
 }
