@@ -17,7 +17,7 @@ plugin-kotlin-ksp = "1.8.10-1.0.9"
 plugin-compose-paparazzi = "1.2.0"
 
 # plugin - ui
-plugin-ui-oss-license = "0.10.5"
+plugin-ui-oss-license = "0.10.6"
 
 # plugin - util
 plugin-util-dependency-graph = "1.0.0"
