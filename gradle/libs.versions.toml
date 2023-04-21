@@ -80,7 +80,7 @@ analytics-anrwatchdog = "1.4.0"
 
 # firebase
 firebase-bom = "31.2.3"
-firebase-plugin-crashlytics = "2.9.4"
+firebase-plugin-crashlytics = "2.9.5"
 firebase-plugin-performance = "1.4.2"
 
 # login
