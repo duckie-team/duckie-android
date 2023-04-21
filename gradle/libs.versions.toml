@@ -119,7 +119,7 @@ test-junit-engine = "5.9.2"
 test-androidx-junit = "1.1.5"
 test-androidx-runner = "1.5.2"
 test-parameter-injector = "1.11"
-test-turbine = "0.12.1"
+test-turbine = "0.12.3"
 
 [plugins]
 gms-google-service = { id = "com.google.gms.google-services", version.ref = "plugin-build-google-service" }
