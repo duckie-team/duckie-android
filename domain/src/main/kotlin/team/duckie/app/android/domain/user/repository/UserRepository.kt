@@ -24,6 +24,7 @@ interface UserRepository {
         tags: List<Tag>?,
         profileImageUrl: String?,
         nickname: String?,
+        introduction: String?,
         status: String?,
     ): User
 

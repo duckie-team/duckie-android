@@ -10,8 +10,9 @@ package team.duckie.app.android.feature.ui.profile
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
@@ -23,10 +24,14 @@ import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavi
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.friend.FriendNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
+import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
+import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
+import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
+import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.BaseActivity
@@ -55,35 +60,50 @@ class ProfileActivity : BaseActivity() {
     lateinit var searchNavigator: SearchNavigator
 
     @Inject
+    lateinit var profileEditNavigator: ProfileEditNavigator
+
+    @Inject
     lateinit var friendsNavigator: FriendNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // TODO(riflockle7): 왜 이걸 직접 명시해 주어야 시스템 패딩이 정상적으로 적용되는지 모르겠음... 추후 확인 필요
+            systemBarPaddings
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
             QuackTheme {
-                LaunchedEffect(Unit) {
-                    viewModel.init()
-                }
-                when (state.isMe) {
+                when (state.isLoading) {
                     true -> {
-                        MyProfileScreen(
-                            userProfile = state.userProfile,
-                            isLoading = state.isLoading,
-                            onClickSetting = viewModel::clickSetting,
-                            onClickNotification = viewModel::clickNotification,
-                            onClickEditProfile = { viewModel.clickEditProfile(getString(R.string.provide_after)) },
-                            onClickEditTag = { viewModel.clickEditTag(getString(R.string.provide_after)) },
-                            onClickExam = viewModel::clickExam,
-                            onClickMakeExam = viewModel::clickMakeExam,
-                            onClickFavoriteTag = { viewModel.clickEditProfile(getString(R.string.provide_after)) },
-                            onClickTag = viewModel::onClickTag,
-                            onClickFriend = viewModel::navigateFriends,
+                        LoadingScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            initState = { viewModel.init() },
                         )
                     }
 
                     false -> {
-                        OtherProfileScreen(viewModel)
+                        when (state.isMe) {
+                            true -> {
+                                LaunchOnLifecycle {
+                                    viewModel.getUserProfile()
+                                }
+                                MyProfileScreen(
+                                    userProfile = state.userProfile,
+                                    isLoading = state.isLoading,
+                                    onClickSetting = viewModel::clickSetting,
+                                    onClickNotification = viewModel::clickNotification,
+                                    onClickEditProfile = viewModel::clickEditProfile,
+                                    onClickEditTag = { viewModel.clickEditTag(getString(R.string.provide_after)) },
+                                    onClickExam = viewModel::clickExam,
+                                    onClickMakeExam = viewModel::clickMakeExam,
+                                    onClickTag = viewModel::onClickTag,
+                                    onClickFriend = viewModel::navigateFriends,
+                                )
+                            }
+
+                            false -> {
+                                OtherProfileScreen(viewModel)
+                            }
+                        }
                     }
                 }
             }
@@ -151,6 +171,13 @@ class ProfileActivity : BaseActivity() {
                         putExtra(Extras.FriendType, sideEffect.friendType.index)
                         putExtra(Extras.UserId, sideEffect.userId)
                     },
+                )
+            }
+
+            is ProfileSideEffect.NavigateToEditProfile -> {
+                profileEditNavigator.navigateFrom(
+                    activity = this@ProfileActivity,
+                    intentBuilder = { putExtra(Extras.UserId, sideEffect.userId) },
                 )
             }
         }

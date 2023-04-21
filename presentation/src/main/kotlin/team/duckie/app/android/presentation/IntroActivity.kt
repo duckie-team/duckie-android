@@ -68,7 +68,7 @@ class IntroActivity : BaseActivity() {
         setContent {
             LaunchedEffect(vm) {
                 delay(SplashScreenFinishDurationMillis)
-                vm.getUser()
+                vm.checkUpdateRequire()
             }
 
             QuackTheme {
@@ -98,6 +98,8 @@ class IntroActivity : BaseActivity() {
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
                 launchOnboardActivity()
             }
+
+            is IntroSideEffect.UpdateRequireError -> {}
 
             is IntroSideEffect.ReportError -> {
                 sideEffect.exception.printStackTrace()

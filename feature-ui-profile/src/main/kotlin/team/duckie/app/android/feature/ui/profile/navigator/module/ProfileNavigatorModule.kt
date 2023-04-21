@@ -11,7 +11,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import team.duckie.app.android.feature.ui.profile.navigator.impl.ProfileEditNavigatorImpl
 import team.duckie.app.android.feature.ui.profile.navigator.impl.ProfileNavigatorImpl
+import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import javax.inject.Singleton
 
@@ -22,4 +24,8 @@ internal abstract class ProfileNavigatorModule {
     @Singleton
     @Binds
     abstract fun bindProfileNavigator(navigator: ProfileNavigatorImpl): ProfileNavigator
+
+    @Singleton
+    @Binds
+    abstract fun bindProfileEditNavigator(navigator: ProfileEditNavigatorImpl): ProfileEditNavigator
 }

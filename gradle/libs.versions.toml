@@ -17,7 +17,7 @@ plugin-kotlin-ksp = "1.8.10-1.0.9"
 plugin-compose-paparazzi = "1.2.0"
 
 # plugin - ui
-plugin-ui-oss-license = "0.10.5"
+plugin-ui-oss-license = "0.10.6"
 
 # plugin - util
 plugin-util-dependency-graph = "1.0.0"
@@ -49,18 +49,18 @@ androidx-paging-compose = "1.0.0-alpha18"
 androidx-annotation = "1.6.0"
 
 # compose
-compose-core = "1.3.1"
+compose-core = "1.4.2"
 compose-foundation = "1.4.0-beta01" # use alpha for HorizontalPager
 compose-material = "1.4.0"
-compose-runtime = "1.4.0-rc01" # use alpha for SnapshotStateList#toList
+compose-runtime = "1.4.2" # use alpha for SnapshotStateList#toList
 compose-lifecycle = "2.6.1" # use alpha for StateFlow#collectAsStateWithLifecycle
 compose-compiler = "1.4.3"
 compose-activity = "1.6.1"
-compose-accompanist = "0.28.0"
+compose-accompanist = "0.30.1"
 compose-lottie = "6.0.0"
 compose-camposer = "0.1.1"
 compose-customview-pooling-container = "1.0.0"
-compose-coil = "2.2.2"
+compose-coil = "2.3.0"
 
 # ktx
 ktx-core = "1.9.0"
@@ -80,7 +80,7 @@ analytics-anrwatchdog = "1.4.0"
 
 # firebase
 firebase-bom = "31.5.0"
-firebase-plugin-crashlytics = "2.9.4"
+firebase-plugin-crashlytics = "2.9.5"
 firebase-plugin-performance = "1.4.2"
 
 # login
@@ -118,8 +118,8 @@ test-junit-core = "4.13.2"
 test-junit-engine = "5.9.2"
 test-androidx-junit = "1.1.5"
 test-androidx-runner = "1.5.2"
-test-parameter-injector = "1.10"
-test-turbine = "0.12.1"
+test-parameter-injector = "1.11"
+test-turbine = "0.12.3"
 
 [plugins]
 gms-google-service = { id = "com.google.gms.google-services", version.ref = "plugin-build-google-service" }

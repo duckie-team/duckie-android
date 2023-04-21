@@ -26,6 +26,8 @@ sealed class ProfileSideEffect {
 
     class NavigateToExamDetail(val examId: Int) : ProfileSideEffect()
 
+    class NavigateToEditProfile(val userId: Int) : ProfileSideEffect()
+
     class SendToast(val message: String) : ProfileSideEffect()
 
     class NavigateToFriends(val friendType: FriendsType, val userId: Int) : ProfileSideEffect()
