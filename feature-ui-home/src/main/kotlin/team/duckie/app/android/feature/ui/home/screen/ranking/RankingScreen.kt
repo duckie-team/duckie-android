@@ -35,16 +35,19 @@ import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.ui.home.component.HomeIconSize
 import team.duckie.app.android.feature.ui.home.constants.RankingPage
-import team.duckie.app.android.feature.ui.home.screen.ranking.sideeffect.RankingSideEffect
-import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingSideEffect
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
+import team.duckie.app.android.shared.ui.compose.Create
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
+import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun RankingScreen(
     viewModel: RankingViewModel,
     navigateToCreateProblem: () -> Unit,
     navigateToDetail: (Int) -> Unit,
+    navigateToUserProfile: (Int) -> Unit,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -95,6 +98,10 @@ internal fun RankingScreen(
                         }
                     }
                 }
+
+                is RankingSideEffect.NavigateToUserProfile -> {
+                    navigateToUserProfile(sideEffect.userId)
+                }
             }
         }
     }
@@ -104,7 +111,7 @@ internal fun RankingScreen(
             title = stringResource(id = R.string.ranking),
             rightIcons = {
                 QuackImage(
-                    src = R.drawable.home_ic_create_24,
+                    src = QuackIcon.Create,
                     onClick = viewModel::clickAppBarRightIcon,
                     size = HomeIconSize,
                 )

@@ -17,11 +17,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -60,12 +58,6 @@ internal fun SearchResultScreen(
         it.title
     }.toPersistentList()
 
-    val focusManager = LocalFocusManager.current
-
-    LaunchedEffect(Unit) {
-        focusManager.clearFocus()
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -94,6 +86,7 @@ internal fun SearchResultScreen(
                     )
                 },
                 myUserId = state.me?.id ?: 1,
+                onClickUserProfile = vm::clickUserProfile,
             )
         }
         Spacer(space = 48.dp)
@@ -104,6 +97,7 @@ internal fun SearchResultScreen(
 private fun SearchResultForUser(
     searchUsers: LazyPagingItems<SearchState.SearchUser>,
     onClickFollow: (Int, Boolean) -> Unit,
+    onClickUserProfile: (Int) -> Unit,
     myUserId: Int,
 ) {
     if (searchUsers.itemCount == 0) {
@@ -139,6 +133,7 @@ private fun SearchResultForUser(
                         onClickFollow(item?.userId ?: 0, follow)
                     },
                     isMine = myUserId == item?.userId,
+                    onClickUserProfile = onClickUserProfile,
                 )
             }
         }
@@ -184,10 +179,12 @@ private fun SearchResultForExam(
                             nickname = exam?.user?.nickname ?: "",
                             title = exam?.title ?: "",
                             solvedCount = exam?.solvedCount ?: 0,
+                            heartCount = exam?.heartCount ?: 0,
                         ),
                         onItemClick = {
                             navigateDetail(exam?.id ?: 0)
                         },
+                        onMoreClick = {},
                     )
                 }
             }

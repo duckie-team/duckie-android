@@ -11,8 +11,6 @@
 package team.duckie.app.android.feature.ui.detail.screen
 
 import android.app.Activity
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,13 +24,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -53,24 +48,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.shared.ui.compose.DefaultProfile
-import team.duckie.app.android.shared.ui.compose.DuckieBottomSheetDialog
-import team.duckie.app.android.shared.ui.compose.DuckieDialog
-import team.duckie.app.android.shared.ui.compose.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
-import team.duckie.app.android.shared.ui.compose.duckieDialogPosition
+import team.duckie.app.android.shared.ui.compose.Spacer
+import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
+import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
@@ -85,7 +77,6 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackSmallButton
 import team.duckie.quackquack.ui.component.QuackSmallButtonType
-import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -123,11 +114,8 @@ internal fun DetailScreen(
         )
 
         state is DetailState.Success -> {
-            DuckieDialog(
-                modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
-                title = stringResource(id = R.string.detail_report_success),
-                rightButtonText = stringResource(id = R.string.check),
-                rightButtonOnClick = {
+            ReportDialog(
+                onClick = {
                     viewModel.updateReportDialogVisible(false)
                 },
                 visible = state.reportDialogVisible,
@@ -135,7 +123,7 @@ internal fun DetailScreen(
                     viewModel.updateReportDialogVisible(false)
                 },
             )
-            DetailBottomSheetDialog(
+            ReportBottomSheetDialog(
                 bottomSheetState = bottomSheetState,
                 closeSheet = {
                     coroutineScope.launch {
@@ -165,76 +153,6 @@ internal fun DetailScreen(
     }
 }
 
-/**
- * [DetailBottomSheetDialog] 에서 표시할 요소들을 정의합니다.
- */
-private data class DetailBottomSheetItem(
-    @DrawableRes
-    val icon: Int,
-    @StringRes
-    val text: Int,
-    val onClick: () -> Unit,
-)
-
-/** 더보기 클릭 시 사용되는 BottomSheetDialog */
-@Composable
-private fun DetailBottomSheetDialog(
-    bottomSheetState: ModalBottomSheetState,
-    closeSheet: () -> Unit,
-    onReport: () -> Unit,
-    content: @Composable () -> Unit,
-) {
-    val rememberBottomSheetItems = remember {
-        persistentListOf(
-            DetailBottomSheetItem(
-                icon = R.drawable.ic_report,
-                text = R.string.report,
-                onClick = onReport,
-            ),
-        )
-    }
-
-    DuckieBottomSheetDialog(
-        useHandle = true,
-        sheetState = bottomSheetState,
-        sheetContent = {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(bottom = 16.dp),
-            ) {
-                items(rememberBottomSheetItems) { item ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(44.dp)
-                            .quackClickable(
-                                rippleEnabled = false,
-                            ) {
-                                item.onClick()
-                                closeSheet()
-                            }
-                            .padding(start = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        QuackImage(
-                            src = item.icon,
-                            size = DpSize(width = 24.dp, height = 24.dp),
-                        )
-                        QuackSubtitle2(
-                            modifier = Modifier.padding(start = 8.dp),
-                            text = stringResource(id = item.text),
-                        )
-                    }
-                }
-            }
-        },
-    ) {
-        content()
-    }
-}
-
 /** 데이터 성공적으로 받은[DetailState.Success] 상세 화면 */
 @Composable
 private fun DetailSuccessScreen(
@@ -250,15 +168,16 @@ private fun DetailSuccessScreen(
             TopAppCustomBar(
                 modifier = Modifier.layoutId(DetailScreenTopAppBarLayoutId),
                 state = state,
+                onTagClick = viewModel::goToSearch,
             )
             // content Layout
             DetailContentLayout(
                 state = state,
                 tagItemClick = viewModel::goToSearch,
                 moreButtonClick = openBottomSheet,
-            ) {
-                viewModel.followUser()
-            }
+                followButtonClick = viewModel::followUser,
+                profileClick = viewModel::goToProfile,
+            )
             // 최하단 Layout
             DetailBottomLayout(
                 modifier = Modifier
@@ -322,6 +241,7 @@ private fun DetailContentLayout(
     tagItemClick: (String) -> Unit,
     moreButtonClick: () -> Unit,
     followButtonClick: () -> Unit,
+    profileClick: (Int) -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
@@ -391,7 +311,11 @@ private fun DetailContentLayout(
         // 구분선
         QuackDivider()
         // 프로필 Layout
-        DetailProfileLayout(state, followButtonClick = followButtonClick)
+        DetailProfileLayout(
+            state = state,
+            followButtonClick = followButtonClick,
+            profileClick = profileClick,
+        )
         // 구분선
         QuackDivider()
         // 공백
@@ -410,10 +334,9 @@ private fun DetailContentLayout(
 private fun DetailProfileLayout(
     state: DetailState.Success,
     followButtonClick: () -> Unit,
+    profileClick: (Int) -> Unit,
 ) {
     val isFollowed = remember(state.isFollowing) { state.isFollowing }
-    val toast = rememberToast()
-    val detailLoadingMypageToastMessage = stringResource(id = R.string.detail_loading_mypage_toast)
 
     Row(
         modifier = Modifier.padding(
@@ -442,15 +365,16 @@ private fun DetailProfileLayout(
         // 공백
         Spacer(modifier = Modifier.width(8.dp))
         // 닉네임, 응시자, 일자 Layout
-        Column {
+        Column(
+            modifier = Modifier.quackClickable(
+                onClick = { profileClick(state.exam.user?.id ?: 0) },
+                rippleEnabled = false,
+            ),
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임
                 QuackBody3(
                     text = state.nickname,
-                    onClick = {
-                        // TODO(riflockle7): 프로필 화면으로 이동
-                        toast(detailLoadingMypageToastMessage)
-                    },
                     color = QuackColor.Black,
                 )
 
@@ -536,6 +460,7 @@ private fun DetailBottomLayout(
     onChallengeClick: () -> Unit,
 ) {
     Column(modifier = modifier) {
+        Spacer(space = 20.dp)
         // 구분선
         QuackDivider()
         // 버튼 모음 Layout
@@ -571,7 +496,11 @@ private fun DetailBottomLayout(
 
 /** 상세 화면에서 사용하는 TopAppBar */
 @Composable
-private fun TopAppCustomBar(modifier: Modifier, state: DetailState.Success) {
+private fun TopAppCustomBar(
+    modifier: Modifier,
+    state: DetailState.Success,
+    onTagClick: (String) -> Unit,
+) {
     val activity = LocalContext.current as Activity
     Row(
         modifier = modifier
@@ -596,6 +525,7 @@ private fun TopAppCustomBar(modifier: Modifier, state: DetailState.Success) {
             text = state.mainTagNames,
             trailingIcon = QuackIcon.ArrowRight,
             isSelected = false,
+            onClick = { onTagClick(state.mainTagNames) },
         )
     }
 }

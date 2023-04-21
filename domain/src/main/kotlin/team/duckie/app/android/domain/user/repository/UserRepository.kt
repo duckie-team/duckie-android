@@ -12,6 +12,7 @@ import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
+import team.duckie.app.android.domain.user.model.UserProfile
 
 @Immutable
 interface UserRepository {
@@ -23,14 +24,21 @@ interface UserRepository {
         tags: List<Tag>?,
         profileImageUrl: String?,
         nickname: String?,
+        introduction: String?,
         status: String?,
     ): User
 
     suspend fun nicknameValidateCheck(nickname: String): Boolean
 
-    suspend fun fetchUserFollowing(userId: Int): UserFollowings
+    suspend fun fetchRecommendUserFollowing(userId: Int): UserFollowings
 
     suspend fun fetchMeFollowers(): List<User>
 
     suspend fun fetchMeFollowings(): List<User>
+
+    suspend fun fetchUserProfile(userId: Int): UserProfile
+
+    suspend fun fetchUserFollowings(userId: Int): List<User>
+
+    suspend fun fetchUserFollowers(userId: Int): List<User>
 }

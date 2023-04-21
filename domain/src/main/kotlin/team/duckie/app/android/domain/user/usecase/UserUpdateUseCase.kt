@@ -25,6 +25,7 @@ class UserUpdateUseCase @Inject constructor(
         profileImageUrl: String?,
         nickname: String?,
         status: String?,
+        introduction: String?,
         updateMeInstance: (me: User) -> Unit = {},
     ): Result<User> {
         return runCatching {
@@ -34,6 +35,7 @@ class UserUpdateUseCase @Inject constructor(
                 tags = tags,
                 profileImageUrl = profileImageUrl,
                 nickname = nickname,
+                introduction = introduction,
                 status = status,
             )
         }.also { result ->

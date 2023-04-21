@@ -61,7 +61,7 @@ internal fun SearchScreen(
             .padding(SearchHorizontalPadding)
             .imePadding(),
     ) {
-        Spacer(modifier = Modifier.height(22.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         if (state.recentSearch.isEmpty()) {
             RecentSearchNotFoundScreen()
         } else {

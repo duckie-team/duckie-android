@@ -22,6 +22,11 @@ fun ColumnScope.Spacer(space: Dp) {
 }
 
 @Composable
+fun ColumnScope.Spacer(weight: Float) {
+    Spacer(modifier = Modifier.weight(weight))
+}
+
+@Composable
 fun RowScope.Spacer(space: Dp) {
     Spacer(modifier = Modifier.width(width = space))
 }

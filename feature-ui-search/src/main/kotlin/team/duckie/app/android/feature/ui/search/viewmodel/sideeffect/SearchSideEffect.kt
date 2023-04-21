@@ -16,6 +16,7 @@ internal sealed class SearchSideEffect {
      */
     class ReportError(val exception: Throwable) : SearchSideEffect()
 
-    /** 검색 화면에서 키보드를 내립니다. */
-    object HideKeyBoard : SearchSideEffect()
+    class NavigateToDetail(val examId: Int) : SearchSideEffect()
+
+    class NavigateToUserProfile(val userId: Int) : SearchSideEffect()
 }

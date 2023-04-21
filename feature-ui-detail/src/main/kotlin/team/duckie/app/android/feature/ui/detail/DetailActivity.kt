@@ -13,6 +13,7 @@ import team.duckie.app.android.feature.ui.detail.screen.DetailScreen
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.ui.start.exam.screen.StartExamActivity
+import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
@@ -32,6 +33,9 @@ class DetailActivity : BaseActivity() {
 
     @Inject
     lateinit var searchNavigator: SearchNavigator
+
+    @Inject
+    lateinit var profileNavigator: ProfileNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +66,15 @@ class DetailActivity : BaseActivity() {
                         sideEffect.exception.reportToToast(getString(R.string.exam_already))
                     }
                 }
+            }
+
+            is DetailSideEffect.NavigateToMyPage -> {
+                profileNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.UserId, sideEffect.userId)
+                    },
+                )
             }
 
             is DetailSideEffect.StartExam -> startActivityWithAnimation<StartExamActivity>(

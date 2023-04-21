@@ -11,6 +11,7 @@ import com.github.kittinunf.fuel.Fuel
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
+import io.ktor.client.request.post
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,12 +22,14 @@ import team.duckie.app.android.data._util.jsonBody
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserFollowingsResponse
+import team.duckie.app.android.data.user.model.UserProfileData
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.data.user.model.UsersResponse
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
+import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.ExperimentalApi
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
@@ -52,11 +55,12 @@ class UserRemoteDataSourceImpl @Inject constructor(
         tags: List<Tag>?,
         profileImageUrl: String?,
         nickname: String?,
+        introduction: String?,
         status: String?,
     ): User {
         runtimeCheck(
             nickname != null || profileImageUrl != null || categories != null ||
-                    tags != null || status != null,
+                    tags != null || introduction != null || status != null,
         ) {
             "At least one of the parameters must be non-null"
         }
@@ -67,6 +71,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
                 tags?.let { "favoriteTags" withInts tags.fastMap { it.id } }
                 profileImageUrl?.let { "profileImageUrl" withString profileImageUrl }
                 nickname?.let { "nickName" withString nickname }
+                introduction?.let { "introduction" withString introduction }
                 status?.let { "status" withString status }
             }
         }
@@ -77,7 +82,11 @@ class UserRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun nicknameValidateCheck(nickname: String): Boolean {
-        val response = client.get("/users/$nickname/duplicate-check")
+        val response = client.post("/users/duplicate-check") {
+            jsonBody {
+                "nickName" withString nickname
+            }
+        }
 
         return responseCatching(response.status.value, response.bodyAsText()) { body ->
             val json = body.toStringJsonMap()
@@ -87,7 +96,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
 
     @AllowMagicNumber
     @ExperimentalApi
-    override suspend fun fetchUserFollowing(userId: Int): UserFollowings =
+    override suspend fun fetchRecommendUserFollowing(userId: Int): UserFollowings =
         withContext(Dispatchers.IO) {
             val (_, response) = fuel
                 .get(
@@ -119,6 +128,30 @@ class UserRemoteDataSourceImpl @Inject constructor(
 
         return responseCatchingFuel(
             response = response,
+            parse = UsersResponse::toDomain,
+        )
+    }
+
+    override suspend fun fetchUserProfile(userId: Int): UserProfile {
+        val response = client.get("/profile/$userId")
+        return responseCatching(
+            response = response.body(),
+            parse = UserProfileData::toDomain,
+        )
+    }
+
+    override suspend fun fetchUserFollowings(userId: Int): List<User> {
+        val response = client.get("/users/$userId/followings")
+        return responseCatching(
+            response = response.body(),
+            parse = UsersResponse::toDomain,
+        )
+    }
+
+    override suspend fun fetchUserFollowers(userId: Int): List<User> {
+        val response = client.get("/users/$userId/followers")
+        return responseCatching(
+            response = response.body(),
             parse = UsersResponse::toDomain,
         )
     }

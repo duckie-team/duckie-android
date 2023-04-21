@@ -7,7 +7,9 @@
 
 package team.duckie.app.android.shared.ui.compose
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,9 +24,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import team.duckie.app.android.util.kotlin.runIf
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
+import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackTitle2
+import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.ui.util.DpSize
 
 data class DuckTestCoverItem(
     val testId: Int,
@@ -32,6 +38,7 @@ data class DuckTestCoverItem(
     val nickname: String,
     val title: String,
     val solvedCount: Int,
+    val heartCount: Int,
 )
 
 private const val CoverRatio = 4f / 3f
@@ -41,12 +48,14 @@ fun DuckExamSmallCover(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: () -> Unit,
+    onMoreClick: (() -> Unit)? = null,
     isLoading: Boolean? = null,
 ) {
     DuckSmallCoverInternal(
         modifier = modifier.width(158.dp),
         duckTestCoverItem = duckTestCoverItem,
         onItemClick = onItemClick,
+        onMoreClick = onMoreClick,
         isLoading = isLoading,
     )
 }
@@ -56,12 +65,14 @@ fun DuckExamSmallCoverForColumn(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: () -> Unit,
+    onMoreClick: () -> Unit,
     isLoading: Boolean? = null,
 ) {
     DuckSmallCoverInternal(
         modifier = modifier.fillMaxWidth(),
         duckTestCoverItem = duckTestCoverItem,
         onItemClick = onItemClick,
+        onMoreClick = onMoreClick,
         isLoading = isLoading,
     )
 }
@@ -71,6 +82,7 @@ internal fun DuckSmallCoverInternal(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: () -> Unit,
+    onMoreClick: (() -> Unit)? = null,
     isLoading: Boolean? = null,
 ) {
     Column(
@@ -90,23 +102,44 @@ internal fun DuckSmallCoverInternal(
             contentScale = ContentScale.FillBounds,
             contentDescription = null,
         )
-        QuackBody2(
+        Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 8.dp)
                 .runIf(isLoading != null) { skeleton(isLoading!!) },
-            text = duckTestCoverItem.nickname,
-        )
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            QuackBody2(text = duckTestCoverItem.nickname)
+            if (onMoreClick != null) {
+                QuackImage(
+                    src = QuackIcon.More,
+                    size = DpSize(all = 16.dp),
+                    onClick = onMoreClick,
+                )
+            }
+        }
         QuackTitle2(
             modifier = Modifier
                 .padding(top = 4.dp)
                 .runIf(isLoading != null) { skeleton(isLoading!!) },
             text = duckTestCoverItem.title,
         )
-        QuackBody2(
+        Row(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .runIf(isLoading != null) { skeleton(isLoading!!) },
-            text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.solvedCount}",
-        )
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            QuackBody2(
+                text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.solvedCount}",
+                color = QuackColor.Gray2,
+            )
+            QuackBody2(text = "·")
+            QuackBody2(
+                text = "${stringResource(id = R.string.heart)} ${duckTestCoverItem.heartCount}",
+                color = QuackColor.Gray2,
+            )
+        }
     }
 }

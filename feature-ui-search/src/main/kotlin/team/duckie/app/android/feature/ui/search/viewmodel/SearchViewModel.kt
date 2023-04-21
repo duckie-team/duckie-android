@@ -43,6 +43,7 @@ import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.feature.ui.search.viewmodel.state.SearchState
+import team.duckie.app.android.feature.ui.search.viewmodel.state.toUiModel
 import team.duckie.app.android.util.ui.const.Debounce
 import javax.inject.Inject
 
@@ -81,7 +82,7 @@ internal class SearchViewModel @Inject constructor(
     }
 
     /**
-     * 추천 검색어 flow. [searchDebounce] 시간에 따라 추천 검색어를 가져온다.
+     * 추천 검색어 flow. [Debounce.SearchSecond] 시간에 따라 추천 검색어를 가져온다.
      * 현재는 추천 검색어 기능을 지원하지 않아 검색어 입력 시 [refreshSearchStep]를 실행시킨다.
      **/
     private val _getRecommendKeywords: MutableSharedFlow<String> = MutableSharedFlow<String>(
@@ -216,9 +217,6 @@ internal class SearchViewModel @Inject constructor(
                 fetchSearchExams(keyword = keyword)
                 fetchSearchUsers(keyword = keyword)
                 postRecentSearch(keyword = keyword)
-                if (state.searchStep == SearchStep.Search) {
-                    postSideEffect(SearchSideEffect.HideKeyBoard)
-                }
             }
         }
         reduce {
@@ -256,14 +254,12 @@ internal class SearchViewModel @Inject constructor(
             postSideEffect(SearchSideEffect.ReportError(exception))
         }
     }
-}
 
-internal fun User.toUiModel() =
-    SearchState.SearchUser(
-        userId = id,
-        nickname = nickname,
-        profileImgUrl = profileImageUrl ?: "",
-        isFollowing = follow != null,
-        favoriteTag = duckPower?.tag?.name ?: "",
-        tier = duckPower?.tier ?: "",
-    )
+    fun navigateToDetail(examId: Int) = intent {
+        postSideEffect(SearchSideEffect.NavigateToDetail(examId))
+    }
+
+    fun clickUserProfile(userId: Int) = intent {
+        postSideEffect(SearchSideEffect.NavigateToUserProfile(userId = userId))
+    }
+}

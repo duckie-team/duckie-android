@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.presentation.screen
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,17 +19,30 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.presentation.R
+import team.duckie.app.android.presentation.viewmodel.IntroViewModel
+import team.duckie.app.android.shared.ui.compose.constant.getAppPackageName
+import team.duckie.app.android.util.android.intent.goToMarket
+import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
+import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 
 @Composable
-internal fun IntroScreen() {
+internal fun IntroScreen(
+    viewModel: IntroViewModel = activityViewModel(),
+) {
+    val activity = LocalContext.current as Activity
+    val appPackageName = getAppPackageName()
+    val updateRequireTitle = stringResource(id = R.string.update_require_dialog_title)
+    val updateRequireDescription = stringResource(id = R.string.update_require_dialog_description)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,4 +80,21 @@ internal fun IntroScreen() {
             ),
         )
     }
+
+    // 덕키 업데이트 팝업
+    DuckieDialog(
+        title = updateRequireTitle,
+        message = updateRequireDescription,
+        visible = viewModel.collectAsState().value.isUpdateRequire,
+        leftButtonText = "앱 종료",
+        leftButtonOnClick = {
+            activity.finish()
+        },
+        rightButtonText = "지금 업데이트",
+        rightButtonOnClick = {
+            activity.goToMarket(appPackageName)
+            activity.finish()
+        },
+        onDismissRequest = {},
+    )
 }

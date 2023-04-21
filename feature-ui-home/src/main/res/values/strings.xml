@@ -7,7 +7,7 @@
 
 <resources>
     <string name="app_exit_toast">뒤로가기 버튼을 한번 더 누르면 종료됩니다.</string>
-    <string name="home_loading_mypage_toast">마이페이지 화면은 추후 제공되는 기능입니다.</string>
+    <string name="provide_after">추후 제공되는 기능입니다.</string>
 
     <string name="home_audio_volume_control_message">본 고사는 듣기 평가가 포함되어 있습니다. 미리 음량을 조절해주세요!</string>
     <string name="home_video_volume_control_message">본 고사는 영상이 포함되어 있습니다. 미리 음량을 조절해주세요!</string>
@@ -28,6 +28,9 @@
     <string name="search">검색</string>
     <string name="ranking">명예의 전당</string>
     <string name="mypage">마이페이지</string>
+    <string name="skip">건너뛰기</string>
+    <string name="next">다음</string>
+    <string name="start_duckie">덕키 시작하기</string>
 
     <!-- ranking -->
     <string name="exam">덕력고사</string>
@@ -35,4 +38,32 @@
     <string name="wrong_answer_rate_order">오답률순</string>
     <string name="popular_tag_ranking">인기태그 랭킹</string>
     <string name="total">전체</string>
+
+    <!-- guide -->
+    <string name="guide_start_message">덕키에 온걸 환영한덕!\n나와 같이 한 번 살펴볼까?</string>
+    <string name="guide_start_accept_message">좋아, 가보자고!</string>
+    <string name="guide_start_deny_message">아냐, 괜찮아</string>
+
+    <string name="guide_home_subtitle">내가 이 구역 찐덕후라면?</string>
+    <string name="guide_home_title">덕력고사로 검증해봐야지!</string>
+
+    <string name="guide_detail_subtitle">이 정도는 맞춰줘야지</string>
+    <string name="guide_detail_title">덕력고사 응시하기</string>
+
+    <string name="guide_create_subtitle">아 내가 더 많이 아는데…</string>
+    <string name="guide_create_title">문제 만들기</string>
+
+    <!-- mypage -->
+    <string name="duck_power">덕력</string>
+    <string name="follower">팔로워</string>
+    <string name="edit_profile">프로필 수정</string>
+    <string name="edit_tag">태그 편집</string>
+
+    <string name="submitted_exam">출제한 덕력고사</string>
+    <string name="solved_exam">응시한 덕력고사</string>
+    <string name="hearted_exam">좋아요한 덕력고사</string>
+
+    <!-- home -->
+    <string name="home_following_exam_not_found_title">팔로우한 유저 중에\n아직 올라온 덕력고사가 없어요.</string>
+    <string name="home_following_exam_not_found_subtitle">다른 유저들을 더 찾아보세요!</string>
 </resources>

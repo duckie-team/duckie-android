@@ -27,7 +27,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.itemsIndexedPagingKey
@@ -36,6 +36,7 @@ import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTitle2
+import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -62,6 +63,7 @@ internal fun ExamineeSection(
                 rank = index + 1,
                 user = user ?: User.empty(),
                 isLoading = examinees.loadState.refresh == LoadState.Loading || state.isPagingDataLoading,
+                onClick = viewModel::clickUser,
             )
         }
     }
@@ -72,10 +74,16 @@ private fun ExamineeContent(
     rank: Int,
     user: User,
     isLoading: Boolean,
+    onClick: (Int) -> Unit,
 ) = with(user) {
     Column {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .quackClickable(
+                    rippleEnabled = false,
+                    onClick = { onClick(user.id) },
+                ),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

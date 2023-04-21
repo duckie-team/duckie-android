@@ -10,7 +10,6 @@ package team.duckie.app.android.feature.ui.solve.problem
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -29,6 +28,7 @@ import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScree
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
+import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
@@ -54,7 +54,7 @@ class SolveProblemActivity : BaseActivity() {
                     viewModel.initState()
                 }
 
-                Crossfade(
+                QuackCrossfade(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = QuackColor.White.composeColor)

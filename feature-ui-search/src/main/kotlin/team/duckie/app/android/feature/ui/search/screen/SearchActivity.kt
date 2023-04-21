@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -39,17 +38,16 @@ import team.duckie.app.android.feature.ui.search.constants.SearchStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
+import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
+import team.duckie.app.android.shared.ui.compose.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.KeyboardUtil
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.app.android.util.ui.popStringExtra
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.theme.QuackTheme
@@ -63,6 +61,9 @@ class SearchActivity : BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
+
+    @Inject
+    lateinit var profileNavigator: ProfileNavigator
 
     private val vm: SearchViewModel by viewModels()
 
@@ -112,12 +113,7 @@ class SearchActivity : BaseActivity() {
                                 SearchStep.Search -> SearchScreen(vm = vm)
                                 SearchStep.SearchResult -> SearchResultScreen(
                                     navigateDetail = { examId ->
-                                        detailNavigator.navigateFrom(
-                                            activity = this@SearchActivity,
-                                            intentBuilder = {
-                                                putExtra(Extras.ExamId, examId)
-                                            },
-                                        )
+                                        vm.navigateToDetail(examId = examId)
                                     },
                                 )
                             }
@@ -137,8 +133,22 @@ class SearchActivity : BaseActivity() {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
 
-            is SearchSideEffect.HideKeyBoard -> {
-                KeyboardUtil.hideKeyboard(this)
+            is SearchSideEffect.NavigateToDetail -> {
+                detailNavigator.navigateFrom(
+                    activity = this@SearchActivity,
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                    },
+                )
+            }
+
+            is SearchSideEffect.NavigateToUserProfile -> {
+                profileNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.UserId, sideEffect.userId)
+                    },
+                )
             }
         }
     }
@@ -164,10 +174,7 @@ private fun SearchTextFieldTopBar(
             onClick = onPrevious,
         )
         Spacer(modifier = Modifier.width(8.dp))
-        // TODO(limsaehyun): QuackQuack를 통해서 underline이 없는 TextField로 교체해야 함
-        @AllowMagicNumber(because = "임시로 구현한 컴포넌트")
-        QuackBasicTextField(
-            modifier = Modifier.offset(y = (-4).dp),
+        QuackNoUnderlineTextField(
             text = searchKeyword,
             onTextChanged = { keyword ->
                 onSearchKeywordChanged(keyword)

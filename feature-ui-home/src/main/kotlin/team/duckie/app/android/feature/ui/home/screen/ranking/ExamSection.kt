@@ -37,7 +37,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.screen.ranking.viewmodel.RankingViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCoverForColumn
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.Spacer
@@ -117,6 +117,7 @@ internal fun ExamSection(
                             nickname = item.user?.nickname ?: "",
                             title = item.title,
                             solvedCount = item.solvedCount ?: 0,
+                            heartCount = item.heartCount ?: 0,
                         ),
                         onItemClick = viewModel::clickExam,
                         rank = index + 1,
@@ -169,6 +170,7 @@ private fun RankingItem(
             duckTestCoverItem = duckTestCoverItem,
             onItemClick = { onItemClick(duckTestCoverItem.testId) },
             isLoading = isLoading,
+            onMoreClick = {}, // TODO(EvergreenTree97) 신고하기 작업 필요
         )
         RankingEdge(rank = rank)
     }
