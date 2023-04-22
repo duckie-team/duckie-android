@@ -44,7 +44,7 @@ internal object FuelClient {
             baseHeaders = mutableMapOf(
                 DuckieHttpHeaders.Client to ClientName,
                 DuckieHttpHeaders.DeviceName to DeviceName,
-                DuckieHttpHeaders.Version to BuildConfig.APP_VERSION_NAME,
+                DuckieHttpHeaders.Version to BuildConfig.APP_VERSION_NAME_NUMBER,
                 Headers.CONTENT_TYPE to ContentTypeValues.ApplicationJson,
             ).apply {
                 addDuckieAuthorizationHeaderIfNeeded(headerKey = DuckieHttpHeaders.Authorization)
