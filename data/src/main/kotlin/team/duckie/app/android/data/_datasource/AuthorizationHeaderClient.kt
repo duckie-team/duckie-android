@@ -76,7 +76,7 @@ private object AuthorizationHeaderClient {
             contentType(ContentType.Application.Json)
             headers {
                 append(DuckieHttpHeaders.DeviceName, DeviceName)
-                append(DuckieHttpHeaders.Version, BuildConfig.APP_VERSION_NAME)
+                append(DuckieHttpHeaders.Version, BuildConfig.APP_VERSION_NAME_NUMBER)
                 append(DuckieHttpHeaders.Client, ClientName)
             }
         }
