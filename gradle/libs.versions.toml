@@ -40,7 +40,7 @@ apache-commons-io = "2.11.0"
 # androidx
 androidx-appcompat = "1.6.1" # needs for oss license activity
 androidx-lifecycle-savedstate = "2.6.1"
-androidx-splash = "1.0.0"
+androidx-splash = "1.0.1"
 androidx-datastore = "1.0.0"
 androidx-room = "2.5.1"
 androidx-profile-installer = "1.2.2"
