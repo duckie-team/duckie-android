@@ -68,7 +68,7 @@ ktx-activity = "1.7.1"
 ktx-lifecycle = "2.6.1"
 
 # ui
-ui-oss-license = "17.0.0"
+ui-oss-license = "17.0.1"
 ui-system-controller = "1.0.1"
 
 # exoplayer
