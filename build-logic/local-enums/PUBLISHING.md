@@ -1,4 +1,4 @@
 ## PUBLISHING NOTE
 
 1. DO NOT EDIT VERSION CONSTANT.
-2. JUST `./gradlew :local-enums:publishToMavenLocal`.
+2. JUST `./gradlew :build-logic:local-enums:publishToMavenLocal`.
