@@ -27,8 +27,8 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
-import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.QuackMaxWidthDivider
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
@@ -40,6 +40,7 @@ import team.duckie.quackquack.ui.component.QuackTitle2
 internal fun HomeRecommendFollowingScreen(
     modifier: Modifier = Modifier,
     vm: HomeViewModel = activityViewModel(),
+    navigateToCreateProblem: () -> Unit,
 ) {
     val state = vm.collectAsState().value
 
@@ -56,9 +57,7 @@ internal fun HomeRecommendFollowingScreen(
                 onTabSelected = { step ->
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
-                onClickedCreate = {
-                    vm.navigateToCreateProblem()
-                },
+                onClickedCreate = navigateToCreateProblem,
             )
         }
 

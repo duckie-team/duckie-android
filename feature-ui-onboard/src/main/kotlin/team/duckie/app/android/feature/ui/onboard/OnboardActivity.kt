@@ -29,7 +29,7 @@ import team.duckie.app.android.di.repository.ProvidesModule
 import team.duckie.app.android.di.usecase.kakao.KakaoUseCaseModule
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
-import team.duckie.app.android.feature.ui.home.screen.HomeActivity
+import team.duckie.app.android.feature.ui.home.screen.DuckieHomeActivity
 import team.duckie.app.android.feature.ui.onboard.constant.CollectInStep
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.screen.CategoryScreen
@@ -221,7 +221,7 @@ class OnboardActivity : BaseActivity() {
                     preference[PreferenceKey.Onboard.Finish] = true
                     sideEffect.userId?.let { preference[PreferenceKey.User.Id] = it }
                 }
-                changeActivityWithAnimation<HomeActivity>(
+                changeActivityWithAnimation<DuckieHomeActivity>(
                     intentBuilder = {
                         putExtra(Extras.StartGuide, true)
                     },

@@ -33,16 +33,14 @@ import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.usecase.FetchExamMeFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
-import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.usecase.FetchRecommendUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
-import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
+import team.duckie.app.android.feature.ui.home.viewmodel.DuckieHomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toFollowingModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
-import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.kotlin.exception.isFollowingAlreadyExists
 import team.duckie.app.android.util.kotlin.exception.isFollowingNotFound
 import team.duckie.app.android.util.kotlin.fastMap
@@ -56,7 +54,6 @@ internal class HomeViewModel @Inject constructor(
     private val fetchRecommendUserFollowingUseCase: FetchRecommendUserFollowingUseCase,
     private val followUseCase: FollowUseCase,
     private val getMeUseCase: GetMeUseCase,
-    private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
     override val container = container<HomeState, HomeSideEffect>(HomeState())
@@ -70,12 +67,15 @@ internal class HomeViewModel @Inject constructor(
     private val pullToRefreshMinLoadingDelay = 1000L
 
     init {
-        initState()
         fetchJumbotrons()
         fetchRecommendations()
     }
 
-    /** [HomeViewModel]의 초기 상태를 설정한다. */
+    init {
+        initState()
+    }
+
+    /** [DuckieHomeViewModel]의 초기 상태를 설정한다. */
     private fun initState() = intent {
         getMeUseCase()
             .onSuccess { me ->
@@ -237,19 +237,15 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    /** 인기 태그 목록을 가져옵니다. */
-    fun fetchPopularTags() = intent {
-        fetchPopularTagsUseCase()
-            .onSuccess { tags ->
-                reduce {
-                    state.copy(
-                        popularTags = tags,
-                    )
-                }
-            }
-            .onFailure { exception ->
-                postSideEffect(HomeSideEffect.ReportError(exception))
-            }
+    /** 홈 화면의 단계를 [step]으로 바꿉니다. */
+    fun changedHomeScreen(
+        step: HomeStep,
+    ) = intent {
+        reduce {
+            state.copy(
+                homeSelectedIndex = step,
+            )
+        }
     }
 
     /** 홈 화면의 추천 탭의 로딩 상태를 [loading]으로 바꿉니다. */
@@ -287,74 +283,8 @@ internal class HomeViewModel @Inject constructor(
         reduce {
             state.copy(
                 isHomeRecommendFollowingExamRefreshLoading = loading,
-                isHomeRecommendFollowingExamLoading = loading, // 스캘레톤 UI를 위해 업데이트)
+                isHomeRecommendFollowingExamLoading = loading, // 스캘레톤 UI를 위해 업데이트)\
             )
         }
-    }
-
-    /** 홈 화면의 BottomNavigation 상태를 [step]으로 바꿉니다. */
-    fun navigationPage(
-        step: BottomNavigationStep,
-    ) = intent {
-        if (step == BottomNavigationStep.RankingScreen && state.bottomNavigationStep == BottomNavigationStep.RankingScreen) {
-            postSideEffect(HomeSideEffect.ClickRankingRetry)
-        }
-        reduce {
-            state.copy(
-                bottomNavigationStep = step,
-            )
-        }
-    }
-
-    /** 홈 화면의 단계를 [step]으로 바꿉니다. */
-    fun changedHomeScreen(
-        step: HomeStep,
-    ) = intent {
-        reduce {
-            state.copy(
-                homeSelectedIndex = step,
-            )
-        }
-    }
-
-    /** 검색 화면으로 이동한다. */
-    fun navigateToSearch(
-        searchTag: String? = null,
-    ) = intent {
-        postSideEffect(HomeSideEffect.NavigateToSearch(searchTag))
-    }
-
-    /** 홈 디테일 화면으로 이동한다. */
-    fun navigateToHomeDetail(
-        examId: Int,
-    ) = intent {
-        postSideEffect(
-            HomeSideEffect.NavigateToHomeDetail(
-                examId = examId,
-            ),
-        )
-    }
-
-    /** 문제 만들기 화면으로 이동한다 */
-    fun navigateToCreateProblem() = intent {
-        postSideEffect(HomeSideEffect.NavigateToCreateProblem)
-    }
-
-    fun navigateFriends(friendType: FriendsType, userId: Int) = intent {
-        postSideEffect(HomeSideEffect.NavigateToFriends(friendType, userId))
-    }
-
-    /** 설정 화면으로 이동한다 */
-    fun navigateToSetting() = intent {
-        postSideEffect(HomeSideEffect.NavigateToSetting)
-    }
-
-    /** 알림 화면으로 이동한다 */
-    fun navigateToNotification() = intent {
-        postSideEffect(HomeSideEffect.NavigateToNotification)
-    }
-
-    fun updateGuideVisible(visible: Boolean) = intent {
-        reduce { state.copy(guideVisible = visible) }
     }
 }

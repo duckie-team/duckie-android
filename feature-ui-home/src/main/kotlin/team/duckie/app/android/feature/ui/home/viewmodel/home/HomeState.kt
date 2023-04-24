@@ -11,9 +11,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.recommendation.model.ExamType
-import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 
 internal data class HomeState(
@@ -25,7 +23,6 @@ internal data class HomeState(
     val isHomeRecommendFollowingExamRefreshLoading: Boolean = false,
     val isHomeRecommendPullRefreshLoading: Boolean = false,
 
-    val bottomNavigationStep: BottomNavigationStep = BottomNavigationStep.HomeScreen,
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
 
     val jumbotrons: ImmutableList<HomeRecommendJumbotron> = skeletonJumbotrons,
@@ -33,9 +30,6 @@ internal data class HomeState(
 
     val isFollowingExist: Boolean = true,
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
-    val popularTags: ImmutableList<Tag> = persistentListOf(),
-
-    val guideVisible: Boolean = false,
 ) {
     /**
      * 팔로잉의 덕질고사 추천 피드 data class [RecommendExam]

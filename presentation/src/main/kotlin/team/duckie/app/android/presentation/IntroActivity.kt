@@ -26,7 +26,7 @@ import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.domain.user.model.UserStatus
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
-import team.duckie.app.android.feature.ui.home.screen.HomeActivity
+import team.duckie.app.android.feature.ui.home.screen.DuckieHomeActivity
 import team.duckie.app.android.feature.ui.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
@@ -113,7 +113,7 @@ class IntroActivity : BaseActivity() {
     }
 
     private fun launchHomeActivity() {
-        changeActivityWithAnimation<HomeActivity>()
+        changeActivityWithAnimation<DuckieHomeActivity>()
     }
 
     private fun launchHomeOrOnboardActivity(isOnboardFinish: Boolean) {

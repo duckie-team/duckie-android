@@ -24,8 +24,8 @@ import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
 import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
-import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
-import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.DuckieHomeState
+import team.duckie.app.android.feature.ui.home.viewmodel.DuckieHomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.asLoose
@@ -94,10 +94,10 @@ private fun getHomeMeasurePolicy(
 
 @Composable
 internal fun DuckieHomeScreen(
-    homeViewModel: HomeViewModel,
+    duckieHomeViewModel: DuckieHomeViewModel,
     rankingViewModel: RankingViewModel,
     myPageViewModel: MyPageViewModel,
-    state: HomeState,
+    state: DuckieHomeState,
     navigateToUserProfile: (Int) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
 ) {
@@ -109,22 +109,33 @@ internal fun DuckieHomeScreen(
         content = {
             HomeGuideScreen(
                 modifier = Modifier.layoutId(HomeGuideLayoutId),
-                onClose = { homeViewModel.updateGuideVisible(visible = false) },
+                onClose = { duckieHomeViewModel.updateGuideVisible(visible = false) },
             )
             QuackCrossfade(
                 modifier = Modifier.layoutId(HomeCrossFacadeLayoutId),
                 targetState = state.bottomNavigationStep,
             ) { page ->
                 when (page) {
-                    BottomNavigationStep.HomeScreen -> HomeScreen()
+                    BottomNavigationStep.HomeScreen -> HomeScreen(
+                        navigateToSearch = { searchTag ->
+                            duckieHomeViewModel.navigateToSearch(searchTag)
+                        },
+                        navigateToHomeDetail = { examId ->
+                            duckieHomeViewModel.navigateToHomeDetail(examId)
+                        },
+                        navigateToCreateProblem = {
+                            duckieHomeViewModel.navigateToCreateProblem()
+                        },
+                    )
+
                     BottomNavigationStep.SearchScreen -> SearchMainScreen()
                     BottomNavigationStep.RankingScreen -> RankingScreen(
                         viewModel = rankingViewModel,
                         navigateToCreateProblem = {
-                            homeViewModel.navigateToCreateProblem()
+                            duckieHomeViewModel.navigateToCreateProblem()
                         },
                         navigateToDetail = { examId ->
-                            homeViewModel.navigateToHomeDetail(examId)
+                            duckieHomeViewModel.navigateToHomeDetail(examId)
                         },
                         navigateToUserProfile = { userId ->
                             navigateToUserProfile(userId)
@@ -134,22 +145,22 @@ internal fun DuckieHomeScreen(
                     BottomNavigationStep.MyPageScreen -> MyPageScreen(
                         viewModel = myPageViewModel,
                         navigateToSetting = {
-                            homeViewModel.navigateToSetting()
+                            duckieHomeViewModel.navigateToSetting()
                         },
                         navigateToNotification = {
-                            homeViewModel.navigateToNotification()
+                            duckieHomeViewModel.navigateToNotification()
                         },
                         navigateToExam = { examId ->
-                            homeViewModel.navigateToHomeDetail(examId)
+                            duckieHomeViewModel.navigateToHomeDetail(examId)
                         },
                         navigateToCreateProblem = {
-                            homeViewModel.navigateToCreateProblem()
+                            duckieHomeViewModel.navigateToCreateProblem()
                         },
                         navigateToSearch = { searchTag ->
-                            homeViewModel.navigateToSearch(searchTag)
+                            duckieHomeViewModel.navigateToSearch(searchTag)
                         },
                         navigateToFriend = { type: FriendsType, userId: Int ->
-                            homeViewModel.navigateFriends(type, userId)
+                            duckieHomeViewModel.navigateFriends(type, userId)
                         },
                         navigateToEditProfile = { userId ->
                             navigateToEditProfile(userId)
@@ -164,7 +175,7 @@ internal fun DuckieHomeScreen(
                 modifier = Modifier.layoutId(HomeBottomNavigationViewLayoutId),
                 selectedIndex = state.bottomNavigationStep.index,
                 onClick = { index ->
-                    homeViewModel.navigationPage(
+                    duckieHomeViewModel.navigationPage(
                         BottomNavigationStep.toStep(index),
                     )
                 },
