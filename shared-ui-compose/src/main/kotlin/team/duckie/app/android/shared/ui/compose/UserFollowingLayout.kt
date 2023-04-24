@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
@@ -24,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.compose.centerHorizontally
 import team.duckie.app.android.util.compose.centerVertical
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
@@ -144,7 +142,7 @@ fun UserFollowingLayout(
         measurePolicy = getUserFollowingLayoutMeasurePolicy(
             nameVisible = tier.isEmpty() || favoriteTag.isEmpty(),
             isMine = isMine,
-        )
+        ),
     )
 }
 

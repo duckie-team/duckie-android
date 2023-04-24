@@ -34,7 +34,6 @@ fun Constraints.centerHorizontally(width: Int, layoutDirection: LayoutDirection)
         layoutDirection = layoutDirection,
     )
 
-
 fun Constraints.centerVertical(size: Int): Int =
     Alignment.CenterVertically.align(
         size = size,

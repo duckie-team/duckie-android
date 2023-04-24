@@ -107,7 +107,7 @@ internal fun FriendScreen(
                 },
                 onClickUserProfile = { userId ->
                     viewModel.navigateToUserProfile(userId)
-                }
+                },
             )
         }
     }
