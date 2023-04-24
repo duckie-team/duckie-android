@@ -37,7 +37,6 @@ import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.usecase.FetchRecommendUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
-import team.duckie.app.android.feature.ui.home.viewmodel.DuckieHomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toFollowingModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mapper.toUiModel
@@ -75,7 +74,7 @@ internal class HomeViewModel @Inject constructor(
         initState()
     }
 
-    /** [DuckieHomeViewModel]의 초기 상태를 설정한다. */
+    /** [HomeViewModel]의 초기 상태를 설정한다. */
     private fun initState() = intent {
         getMeUseCase()
             .onSuccess { me ->
@@ -207,7 +206,7 @@ internal class HomeViewModel @Inject constructor(
             }
     }
 
-    /** [userId]를 팔로우합니다. 이미 팔로우가 되어있다면 언팔로우를 진행합니다. */
+    /** [userId]를 팔로우한다. 이미 팔로우가 되어있다면 언팔로우를 진행한다. */
     fun followUser(userId: Int, isFollowing: Boolean) = intent {
         followUseCase(
             followBody = FollowBody(
@@ -237,7 +236,7 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    /** 홈 화면의 단계를 [step]으로 바꿉니다. */
+    /** 홈 화면의 단계를 [step]으로 바꾼다. */
     fun changedHomeScreen(
         step: HomeStep,
     ) = intent {
@@ -248,7 +247,7 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    /** 홈 화면의 추천 탭의 로딩 상태를 [loading]으로 바꿉니다. */
+    /** 홈 화면의 추천 탭의 로딩 상태를 [loading]으로 바꾼다. */
     private fun updateHomeRecommendLoading(
         loading: Boolean,
     ) = intent {
@@ -257,7 +256,7 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    /** 홈 화면의 팔로잉 탭의 로딩 상태를 [loading]으로 바꿉니다. */
+    /** 홈 화면의 팔로잉 탭의 로딩 상태를 [loading]으로 바꾼다. */
     private fun updateHomeRecommendFollowingLoading(
         loading: Boolean,
     ) = intent {
@@ -266,24 +265,26 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /** 홈 화면의 추천 탭의 pull refresh 로딩 상태를 [loading]으로 바꾼다. */
     private fun updateHomeRecommendPullRefreshLoading(
         loading: Boolean,
     ) = intent {
         reduce {
             state.copy(
                 isHomeRecommendPullRefreshLoading = loading,
-                isHomeRecommendLoading = loading, // 스캘레톤 UI를 위해 업데이트
+                isHomeRecommendLoading = loading, // for skeleton UI
             )
         }
     }
 
+    /** 홈 화면의 팔로잉 추천 탭의 pull refresh 로딩 상태를 [loading]으로 바꾼다. */
     private fun updateHomeRecommendFollowingExamRefreshLoading(
         loading: Boolean,
     ) = intent {
         reduce {
             state.copy(
                 isHomeRecommendFollowingExamRefreshLoading = loading,
-                isHomeRecommendFollowingExamLoading = loading, // 스캘레톤 UI를 위해 업데이트)\
+                isHomeRecommendFollowingExamLoading = loading, // for skeleton UI
             )
         }
     }

@@ -20,15 +20,21 @@ import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.util.kotlin.FriendsType
 import javax.inject.Inject
 
+/**
+ * HomeActivity 의 [ViewModel]
+ * 홈의 Activity 딴에서 처리해야 하는 UI 로직들을 관리합니다.
+ */
 @HiltViewModel
 internal class DuckieHomeViewModel @Inject constructor(
-    private val getMeUseCase: GetMeUseCase,
     private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
 ) : ContainerHost<DuckieHomeState, DuckieHomeSideEffect>, ViewModel() {
 
     override val container = container<DuckieHomeState, DuckieHomeSideEffect>(DuckieHomeState())
 
-    /** 인기 태그 목록을 가져옵니다. */
+    /**
+     * 인기 태그 목록을 가져온다
+     * TODO(limsaehyun): 추후 검색 로직이 복잡해지면 분리해야 함
+     * */
     fun fetchPopularTags() = intent {
         fetchPopularTagsUseCase()
             .onSuccess { tags ->
@@ -43,7 +49,7 @@ internal class DuckieHomeViewModel @Inject constructor(
             }
     }
 
-    /** 홈 화면의 BottomNavigation 상태를 [step]으로 바꿉니다. */
+    /** 홈 화면의 BottomNavigation 상태를 [step]으로 바꾼다 */
     fun navigationPage(
         step: BottomNavigationStep,
     ) = intent {
@@ -57,14 +63,14 @@ internal class DuckieHomeViewModel @Inject constructor(
         }
     }
 
-    /** 검색 화면으로 이동한다. */
+    /** 검색 화면으로 이동한다 */
     fun navigateToSearch(
         searchTag: String? = null,
     ) = intent {
         postSideEffect(DuckieHomeSideEffect.NavigateToSearch(searchTag))
     }
 
-    /** 홈 디테일 화면으로 이동한다. */
+    /** 홈 디테일 화면으로 이동한다 */
     fun navigateToHomeDetail(
         examId: Int,
     ) = intent {
@@ -80,6 +86,7 @@ internal class DuckieHomeViewModel @Inject constructor(
         postSideEffect(DuckieHomeSideEffect.NavigateToCreateProblem)
     }
 
+    /** 친구 화면으로 이동한다 */
     fun navigateFriends(friendType: FriendsType, userId: Int) = intent {
         postSideEffect(DuckieHomeSideEffect.NavigateToFriends(friendType, userId))
     }
@@ -94,6 +101,7 @@ internal class DuckieHomeViewModel @Inject constructor(
         postSideEffect(DuckieHomeSideEffect.NavigateToNotification)
     }
 
+    /** 온보딩(가이드) 활성화 여부를 업데이트한다 */
     fun updateGuideVisible(visible: Boolean) = intent {
         reduce { state.copy(guideVisible = visible) }
     }
