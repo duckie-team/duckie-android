@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
-import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
@@ -70,9 +69,10 @@ private val HomeProfileSize: DpSize = DpSize(
 internal fun HomeRecommendFollowingExamScreen(
     modifier: Modifier = Modifier,
     vm: HomeViewModel = activityViewModel(),
+    state: HomeState,
+    navigateToCreateProblem: () -> Unit,
+    navigateToHomeDetail: (Int) -> Unit,
 ) {
-    val state = vm.collectAsState().value
-
     val followingExam =
         vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
 
@@ -89,13 +89,11 @@ internal fun HomeRecommendFollowingExamScreen(
 
     when (followingExam.itemCount) {
         0 -> HomeFollowingExamNotFoundScreen(
-            state = state,
+            homeSelectedIndex = state.homeSelectedIndex.index,
             changeHomeStep = { step ->
                 vm.changedHomeScreen(step)
             },
-            navigateToCreateProblem = {
-                vm.navigateToCreateProblem()
-            },
+            navigateToCreateProblem = navigateToCreateProblem,
         )
 
         else -> HomeRecommendFollowingSuccessScreen(
@@ -104,6 +102,8 @@ internal fun HomeRecommendFollowingExamScreen(
             state = state,
             vm = vm,
             followingExam = followingExam,
+            navigateToCreateProblem = navigateToCreateProblem,
+            navigateToHomeDetail = navigateToHomeDetail,
         )
     }
 }
@@ -115,6 +115,8 @@ private fun HomeRecommendFollowingSuccessScreen(
     state: HomeState,
     vm: HomeViewModel,
     followingExam: LazyPagingItems<HomeState.RecommendExam>,
+    navigateToCreateProblem: () -> Unit,
+    navigateToHomeDetail: (Int) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -132,9 +134,7 @@ private fun HomeRecommendFollowingSuccessScreen(
                     onTabSelected = { step ->
                         vm.changedHomeScreen(HomeStep.toStep(step))
                     },
-                    onClickedCreate = {
-                        vm.navigateToCreateProblem()
-                    },
+                    onClickedCreate = navigateToCreateProblem,
                 )
             }
 
@@ -151,7 +151,7 @@ private fun HomeRecommendFollowingSuccessScreen(
                         // TODO(limsaehyun): 마이페이지로 이동
                     },
                     onClickTestCover = {
-                        vm.navigateToHomeDetail(maker?.examId ?: 0)
+                        navigateToHomeDetail(maker?.examId ?: 0)
                     },
                     cover = maker?.coverUrl ?: "",
                     isLoading = state.isHomeRecommendFollowingExamLoading,
@@ -257,7 +257,7 @@ private fun TestMakerLayout(
 
 @Composable
 private fun HomeFollowingExamNotFoundScreen(
-    state: HomeState,
+    homeSelectedIndex: Int,
     changeHomeStep: (HomeStep) -> Unit,
     navigateToCreateProblem: () -> Unit,
 ) {
@@ -268,7 +268,7 @@ private fun HomeFollowingExamNotFoundScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         HomeTopAppBar(
-            selectedTabIndex = state.homeSelectedIndex.index,
+            selectedTabIndex = homeSelectedIndex,
             onTabSelected = { step ->
                 changeHomeStep(HomeStep.toStep(step))
             },

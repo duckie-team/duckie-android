@@ -21,11 +21,11 @@ import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.screen.guide.HomeGuideScreen
 import team.duckie.app.android.feature.ui.home.screen.home.HomeScreen
 import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
-import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
-import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
-import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.MainState
+import team.duckie.app.android.feature.ui.home.viewmodel.MainViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.asLoose
@@ -34,57 +34,57 @@ import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.quackquack.ui.component.QuackDivider
 
-private const val HomeCrossFacadeLayoutId = "HomeCrossFacade"
-private const val HomeBottomNavigationDividerLayoutId = "HomeBottomNavigationDivider"
-private const val HomeBottomNavigationViewLayoutId = "HomeBottomNavigation"
-private const val HomeGuideLayoutId = "HomeGuideLayoutId"
+private const val MainCrossFacadeLayoutId = "MainCrossFacade"
+private const val MainBottomNavigationDividerLayoutId = "MainBottomNavigationDivider"
+private const val MainBottomNavigationViewLayoutId = "MainBottomNavigationView"
+private const val MainGuideLayoutId = "MainGuide"
 
-private fun getHomeMeasurePolicy(
+private fun getMainScreenMeasurePolicy(
     guideVisible: Boolean,
 ) = MeasurePolicy { measurables, constraints ->
     val looseConstraints = constraints.asLoose()
     val extraLooseConstraints = constraints.asLoose(height = true)
 
-    val homeBottomNavigationDividerPlaceable =
-        measurables.getPlaceable(HomeBottomNavigationDividerLayoutId, looseConstraints)
+    val mainBottomNavigationDividerPlaceable =
+        measurables.getPlaceable(MainBottomNavigationDividerLayoutId, looseConstraints)
 
-    val homeBottomNavigationPlaceable =
-        measurables.getPlaceable(HomeBottomNavigationViewLayoutId, looseConstraints)
+    val mainBottomNavigationPlaceable =
+        measurables.getPlaceable(MainBottomNavigationViewLayoutId, looseConstraints)
 
-    val homeBottomNavigationHeight = homeBottomNavigationPlaceable.height
+    val mainBottomNavigationHeight = mainBottomNavigationPlaceable.height
 
-    val homeBottomNavigationDividerHeight = homeBottomNavigationDividerPlaceable.height
+    val mainBottomNavigationDividerHeight = mainBottomNavigationDividerPlaceable.height
 
-    val homeCrossFadeConstraints = constraints.copy(
+    val mainCrossFadeConstraints = constraints.copy(
         minHeight = 0,
-        maxHeight = constraints.maxHeight - homeBottomNavigationHeight,
+        maxHeight = constraints.maxHeight - mainBottomNavigationHeight,
     )
-    val homeCrossFacadePlaceable =
-        measurables.getPlaceable(HomeCrossFacadeLayoutId, homeCrossFadeConstraints)
+    val mainCrossFacadePlaceable =
+        measurables.getPlaceable(MainCrossFacadeLayoutId, mainCrossFadeConstraints)
 
-    val homeGuidePlaceable =
-        measurables.getPlaceable(HomeGuideLayoutId, extraLooseConstraints)
+    val mainGuidePlaceable =
+        measurables.getPlaceable(MainGuideLayoutId, extraLooseConstraints)
 
     layout(
         width = constraints.maxWidth,
         height = constraints.maxHeight,
     ) {
-        homeCrossFacadePlaceable.place(
+        mainCrossFacadePlaceable.place(
             x = 0,
             y = 0,
         )
 
-        homeBottomNavigationDividerPlaceable.place(
+        mainBottomNavigationDividerPlaceable.place(
             x = 0,
-            y = constraints.maxHeight - homeBottomNavigationHeight - homeBottomNavigationDividerHeight,
+            y = constraints.maxHeight - mainBottomNavigationHeight - mainBottomNavigationDividerHeight,
         )
 
-        homeBottomNavigationPlaceable.place(
+        mainBottomNavigationPlaceable.place(
             x = 0,
-            y = constraints.maxHeight - homeBottomNavigationHeight,
+            y = constraints.maxHeight - mainBottomNavigationHeight,
         )
         if (guideVisible) {
-            homeGuidePlaceable.place(
+            mainGuidePlaceable.place(
                 x = 0,
                 y = 0,
             )
@@ -93,11 +93,11 @@ private fun getHomeMeasurePolicy(
 }
 
 @Composable
-internal fun DuckieHomeScreen(
-    homeViewModel: HomeViewModel,
+internal fun MainScreen(
+    mainViewModel: MainViewModel,
     rankingViewModel: RankingViewModel,
     myPageViewModel: MyPageViewModel,
-    state: HomeState,
+    state: MainState,
     navigateToUserProfile: (Int) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
 ) {
@@ -108,23 +108,34 @@ internal fun DuckieHomeScreen(
             .padding(systemBarPaddings),
         content = {
             HomeGuideScreen(
-                modifier = Modifier.layoutId(HomeGuideLayoutId),
-                onClose = { homeViewModel.updateGuideVisible(visible = false) },
+                modifier = Modifier.layoutId(MainGuideLayoutId),
+                onClose = { mainViewModel.updateGuideVisible(visible = false) },
             )
             QuackCrossfade(
-                modifier = Modifier.layoutId(HomeCrossFacadeLayoutId),
+                modifier = Modifier.layoutId(MainCrossFacadeLayoutId),
                 targetState = state.bottomNavigationStep,
             ) { page ->
                 when (page) {
-                    BottomNavigationStep.HomeScreen -> HomeScreen()
+                    BottomNavigationStep.HomeScreen -> HomeScreen(
+                        navigateToSearch = { searchTag ->
+                            mainViewModel.navigateToSearch(searchTag)
+                        },
+                        navigateToHomeDetail = { examId ->
+                            mainViewModel.navigateToHomeDetail(examId)
+                        },
+                        navigateToCreateProblem = {
+                            mainViewModel.navigateToCreateProblem()
+                        },
+                    )
+
                     BottomNavigationStep.SearchScreen -> SearchMainScreen()
                     BottomNavigationStep.RankingScreen -> RankingScreen(
                         viewModel = rankingViewModel,
                         navigateToCreateProblem = {
-                            homeViewModel.navigateToCreateProblem()
+                            mainViewModel.navigateToCreateProblem()
                         },
                         navigateToDetail = { examId ->
-                            homeViewModel.navigateToHomeDetail(examId)
+                            mainViewModel.navigateToHomeDetail(examId)
                         },
                         navigateToUserProfile = { userId ->
                             navigateToUserProfile(userId)
@@ -134,22 +145,22 @@ internal fun DuckieHomeScreen(
                     BottomNavigationStep.MyPageScreen -> MyPageScreen(
                         viewModel = myPageViewModel,
                         navigateToSetting = {
-                            homeViewModel.navigateToSetting()
+                            mainViewModel.navigateToSetting()
                         },
                         navigateToNotification = {
-                            homeViewModel.navigateToNotification()
+                            mainViewModel.navigateToNotification()
                         },
                         navigateToExam = { examId ->
-                            homeViewModel.navigateToHomeDetail(examId)
+                            mainViewModel.navigateToHomeDetail(examId)
                         },
                         navigateToCreateProblem = {
-                            homeViewModel.navigateToCreateProblem()
+                            mainViewModel.navigateToCreateProblem()
                         },
                         navigateToSearch = { searchTag ->
-                            homeViewModel.navigateToSearch(searchTag)
+                            mainViewModel.navigateToSearch(searchTag)
                         },
                         navigateToFriend = { type: FriendsType, userId: Int ->
-                            homeViewModel.navigateFriends(type, userId)
+                            mainViewModel.navigateFriends(type, userId)
                         },
                         navigateToEditProfile = { userId ->
                             navigateToEditProfile(userId)
@@ -158,19 +169,19 @@ internal fun DuckieHomeScreen(
                 }
             }
             QuackDivider(
-                modifier = Modifier.layoutId(HomeBottomNavigationDividerLayoutId),
+                modifier = Modifier.layoutId(MainBottomNavigationDividerLayoutId),
             )
             DuckTestBottomNavigation(
-                modifier = Modifier.layoutId(HomeBottomNavigationViewLayoutId),
+                modifier = Modifier.layoutId(MainBottomNavigationViewLayoutId),
                 selectedIndex = state.bottomNavigationStep.index,
                 onClick = { index ->
-                    homeViewModel.navigationPage(
+                    mainViewModel.navigationPage(
                         BottomNavigationStep.toStep(index),
                     )
                 },
             )
         },
-        measurePolicy = getHomeMeasurePolicy(
+        measurePolicy = getMainScreenMeasurePolicy(
             guideVisible = state.guideVisible,
         ),
     )
