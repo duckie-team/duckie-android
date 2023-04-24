@@ -82,7 +82,9 @@ fun UserFollowingLayout(
             .padding(
                 vertical = 12.dp,
             )
-            .quackClickable {
+            .quackClickable(
+                rippleEnabled = false,
+            ) {
                 if (onClickUserProfile != null) {
                     onClickUserProfile(userId)
                 }
