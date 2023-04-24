@@ -26,12 +26,14 @@ import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.MainState
 import team.duckie.app.android.feature.ui.home.viewmodel.MainViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.getPlaceable
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.kotlin.FriendsType
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackDivider
 
 private const val MainCrossFacadeLayoutId = "MainCrossFacade"
@@ -62,8 +64,7 @@ private fun getMainScreenMeasurePolicy(
     val mainCrossFacadePlaceable =
         measurables.getPlaceable(MainCrossFacadeLayoutId, mainCrossFadeConstraints)
 
-    val mainGuidePlaceable =
-        measurables.getPlaceable(MainGuideLayoutId, extraLooseConstraints)
+    val mainGuidePlaceable = measurables.getPlaceable(MainGuideLayoutId, extraLooseConstraints)
 
     layout(
         width = constraints.maxWidth,
@@ -97,6 +98,7 @@ internal fun MainScreen(
     mainViewModel: MainViewModel,
     rankingViewModel: RankingViewModel,
     myPageViewModel: MyPageViewModel,
+    homeViewModel: HomeViewModel,
     state: MainState,
     navigateToUserProfile: (Int) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
@@ -104,7 +106,7 @@ internal fun MainScreen(
     Layout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colors.background)
+            .background(color = QuackColor.White.composeColor)
             .padding(systemBarPaddings),
         content = {
             HomeGuideScreen(
@@ -117,6 +119,7 @@ internal fun MainScreen(
             ) { page ->
                 when (page) {
                     BottomNavigationStep.HomeScreen -> HomeScreen(
+                        vm = homeViewModel,
                         navigateToSearch = { searchTag ->
                             mainViewModel.navigateToSearch(searchTag)
                         },
@@ -125,6 +128,12 @@ internal fun MainScreen(
                         },
                         navigateToCreateProblem = {
                             mainViewModel.navigateToCreateProblem()
+                        },
+                        setReportExamId = { examId ->
+                            mainViewModel.setReportExamId(examId)
+                        },
+                        onReport = {
+                            mainViewModel.report()
                         },
                     )
 
