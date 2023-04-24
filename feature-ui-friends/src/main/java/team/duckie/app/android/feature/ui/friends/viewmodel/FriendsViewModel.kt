@@ -138,6 +138,10 @@ internal class FriendsViewModel @Inject constructor(
         }
     }
 
+    fun navigateToUserProfile(userId: Int) = intent {
+        postSideEffect(FriendsSideEffect.NavigateToUserProfile(userId))
+    }
+
     private fun List<FriendsState.Friend>.changeFollowingState(
         filiterUserId: Int,
         isFollowing: Boolean,
