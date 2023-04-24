@@ -12,7 +12,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 
-internal data class DuckieHomeState(
+internal data class MainState(
     val bottomNavigationStep: BottomNavigationStep = BottomNavigationStep.HomeScreen,
 
     val popularTags: ImmutableList<Tag> = persistentListOf(),

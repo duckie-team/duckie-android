@@ -23,8 +23,8 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
-import team.duckie.app.android.feature.ui.home.viewmodel.DuckieHomeSideEffect
-import team.duckie.app.android.feature.ui.home.viewmodel.DuckieHomeViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.MainSideEffect
+import team.duckie.app.android.feature.ui.home.viewmodel.MainViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.feature.ui.search.screen.SearchActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
@@ -44,10 +44,10 @@ import javax.inject.Inject
 
 @AllowMagicNumber("앱 종료 시간에 대해서 매직 넘버 처리")
 @AndroidEntryPoint
-class DuckieHomeActivity : BaseActivity() {
+class MainActivity : BaseActivity() {
 
     private var waitTime = 2000L
-    private val duckieHomeViewModel: DuckieHomeViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
     private val rankingViewModel: RankingViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
 
@@ -82,10 +82,10 @@ class DuckieHomeActivity : BaseActivity() {
         startedGuide(intent)
 
         setContent {
-            val state by duckieHomeViewModel.collectAsState()
+            val state by mainViewModel.collectAsState()
 
-            LaunchedEffect(key1 = duckieHomeViewModel) {
-                duckieHomeViewModel.container.sideEffectFlow
+            LaunchedEffect(key1 = mainViewModel) {
+                mainViewModel.container.sideEffectFlow
                     .onEach(::handleSideEffect)
                     .launchIn(this)
             }
@@ -101,8 +101,8 @@ class DuckieHomeActivity : BaseActivity() {
             }
 
             QuackTheme {
-                DuckieHomeScreen(
-                    duckieHomeViewModel = duckieHomeViewModel,
+                MainScreen(
+                    mainViewModel = mainViewModel,
                     rankingViewModel = rankingViewModel,
                     myPageViewModel = myPageViewModel,
                     state = state,
@@ -130,19 +130,19 @@ class DuckieHomeActivity : BaseActivity() {
     private fun startedGuide(intent: Intent) {
         intent.getBooleanExtra(Extras.StartGuide, false).also { start ->
             if (start) {
-                duckieHomeViewModel.updateGuideVisible(visible = true)
+                mainViewModel.updateGuideVisible(visible = true)
                 intent.removeExtra(Extras.StartGuide)
             }
         }
     }
 
-    private fun handleSideEffect(sideEffect: DuckieHomeSideEffect) {
+    private fun handleSideEffect(sideEffect: MainSideEffect) {
         when (sideEffect) {
-            is DuckieHomeSideEffect.ReportError -> {
+            is MainSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
             }
 
-            is DuckieHomeSideEffect.NavigateToSearch -> {
+            is MainSideEffect.NavigateToSearch -> {
                 startActivityWithAnimation<SearchActivity>(
                     intentBuilder = {
                         putExtra(Extras.SearchTag, sideEffect.searchTag)
@@ -150,7 +150,7 @@ class DuckieHomeActivity : BaseActivity() {
                 )
             }
 
-            is DuckieHomeSideEffect.NavigateToDuckieHomeDetail -> {
+            is MainSideEffect.NavigateToMainDetail -> {
                 detailNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
@@ -159,23 +159,23 @@ class DuckieHomeActivity : BaseActivity() {
                 )
             }
 
-            is DuckieHomeSideEffect.NavigateToCreateProblem -> {
+            is MainSideEffect.NavigateToCreateProblem -> {
                 createProblemNavigator.navigateFrom(activity = this)
             }
 
-            is DuckieHomeSideEffect.NavigateToSetting -> {
+            is MainSideEffect.NavigateToSetting -> {
                 settingNavigator.navigateFrom(this)
             }
 
-            is DuckieHomeSideEffect.NavigateToNotification -> {
+            is MainSideEffect.NavigateToNotification -> {
                 notificationNavigator.navigateFrom(activity = this)
             }
 
-            DuckieHomeSideEffect.ClickRankingRetry -> {
+            MainSideEffect.ClickRankingRetry -> {
                 rankingViewModel.clickRetryRanking()
             }
 
-            is DuckieHomeSideEffect.NavigateToFriends -> {
+            is MainSideEffect.NavigateToFriends -> {
                 friendsNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {

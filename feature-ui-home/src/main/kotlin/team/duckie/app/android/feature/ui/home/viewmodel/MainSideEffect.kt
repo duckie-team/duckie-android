@@ -9,39 +9,39 @@ package team.duckie.app.android.feature.ui.home.viewmodel
 
 import team.duckie.app.android.util.kotlin.FriendsType
 
-internal sealed class DuckieHomeSideEffect {
+internal sealed class MainSideEffect {
 
     /**
-     * [DuckieHomeViewModel] 의 비즈니스 로직 처리 중에 발생한 예외를 [exception] 으로 받고
+     * [MainViewModel] 의 비즈니스 로직 처리 중에 발생한 예외를 [exception] 으로 받고
      * 해당 exception 을 [FirebaseCrashlytics] 에 제보합니다.
      *
      * @param exception 발생한 예외
      */
-    class ReportError(val exception: Throwable) : DuckieHomeSideEffect()
+    class ReportError(val exception: Throwable) : MainSideEffect()
 
     /**
      * [SearchResultActivity] 로 이동하는 SideEffect 입니다.
      */
-    class NavigateToSearch(val searchTag: String?) : DuckieHomeSideEffect()
+    class NavigateToSearch(val searchTag: String?) : MainSideEffect()
 
     /**
      * [HomeDetailActivity] 로 이동하는 SideEffect 입니다.
      */
-    class NavigateToDuckieHomeDetail(val examId: Int) : DuckieHomeSideEffect()
+    class NavigateToMainDetail(val examId: Int) : MainSideEffect()
 
     /**
      * [SettingActivity] 로 이동하는 SideEffect 입니다.
      */
-    object NavigateToSetting : DuckieHomeSideEffect()
+    object NavigateToSetting : MainSideEffect()
 
     /**
      * [CreateProblemActivity] 로 이동하는 SideEffect 입니다.
      */
-    object NavigateToCreateProblem : DuckieHomeSideEffect()
+    object NavigateToCreateProblem : MainSideEffect()
 
-    object NavigateToNotification : DuckieHomeSideEffect()
+    object NavigateToNotification : MainSideEffect()
 
-    object ClickRankingRetry : DuckieHomeSideEffect()
+    object ClickRankingRetry : MainSideEffect()
 
-    class NavigateToFriends(val friendType: FriendsType, val myUserId: Int) : DuckieHomeSideEffect()
+    class NavigateToFriends(val friendType: FriendsType, val myUserId: Int) : MainSideEffect()
 }

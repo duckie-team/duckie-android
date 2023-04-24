@@ -19,16 +19,12 @@ import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.util.kotlin.FriendsType
 import javax.inject.Inject
 
-/**
- * HomeActivity 의 [ViewModel]
- * 홈의 Activity 딴에서 처리해야 하는 UI 로직들을 관리합니다.
- */
 @HiltViewModel
-internal class DuckieHomeViewModel @Inject constructor(
+internal class MainViewModel @Inject constructor(
     private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
-) : ContainerHost<DuckieHomeState, DuckieHomeSideEffect>, ViewModel() {
+) : ContainerHost<MainState, MainSideEffect>, ViewModel() {
 
-    override val container = container<DuckieHomeState, DuckieHomeSideEffect>(DuckieHomeState())
+    override val container = container<MainState, MainSideEffect>(MainState())
 
     /**
      * 인기 태그 목록을 가져온다
@@ -44,7 +40,7 @@ internal class DuckieHomeViewModel @Inject constructor(
                 }
             }
             .onFailure { exception ->
-                postSideEffect(DuckieHomeSideEffect.ReportError(exception))
+                postSideEffect(MainSideEffect.ReportError(exception))
             }
     }
 
@@ -53,7 +49,7 @@ internal class DuckieHomeViewModel @Inject constructor(
         step: BottomNavigationStep,
     ) = intent {
         if (step == BottomNavigationStep.RankingScreen && state.bottomNavigationStep == BottomNavigationStep.RankingScreen) {
-            postSideEffect(DuckieHomeSideEffect.ClickRankingRetry)
+            postSideEffect(MainSideEffect.ClickRankingRetry)
         }
         reduce {
             state.copy(
@@ -66,7 +62,7 @@ internal class DuckieHomeViewModel @Inject constructor(
     fun navigateToSearch(
         searchTag: String? = null,
     ) = intent {
-        postSideEffect(DuckieHomeSideEffect.NavigateToSearch(searchTag))
+        postSideEffect(MainSideEffect.NavigateToSearch(searchTag))
     }
 
     /** 홈 디테일 화면으로 이동한다 */
@@ -74,7 +70,7 @@ internal class DuckieHomeViewModel @Inject constructor(
         examId: Int,
     ) = intent {
         postSideEffect(
-            DuckieHomeSideEffect.NavigateToDuckieHomeDetail(
+            MainSideEffect.NavigateToMainDetail(
                 examId = examId,
             ),
         )
@@ -82,22 +78,22 @@ internal class DuckieHomeViewModel @Inject constructor(
 
     /** 문제 만들기 화면으로 이동한다 */
     fun navigateToCreateProblem() = intent {
-        postSideEffect(DuckieHomeSideEffect.NavigateToCreateProblem)
+        postSideEffect(MainSideEffect.NavigateToCreateProblem)
     }
 
     /** 친구 화면으로 이동한다 */
     fun navigateFriends(friendType: FriendsType, userId: Int) = intent {
-        postSideEffect(DuckieHomeSideEffect.NavigateToFriends(friendType, userId))
+        postSideEffect(MainSideEffect.NavigateToFriends(friendType, userId))
     }
 
     /** 설정 화면으로 이동한다 */
     fun navigateToSetting() = intent {
-        postSideEffect(DuckieHomeSideEffect.NavigateToSetting)
+        postSideEffect(MainSideEffect.NavigateToSetting)
     }
 
     /** 알림 화면으로 이동한다 */
     fun navigateToNotification() = intent {
-        postSideEffect(DuckieHomeSideEffect.NavigateToNotification)
+        postSideEffect(MainSideEffect.NavigateToNotification)
     }
 
     /** 온보딩(가이드) 활성화 여부를 업데이트한다 */
