@@ -73,7 +73,6 @@ internal fun HomeRecommendFollowingExamScreen(
     navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
 ) {
-
     val followingExam =
         vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
 

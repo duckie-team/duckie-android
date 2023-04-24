@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.DuckieHomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.DuckieHomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel

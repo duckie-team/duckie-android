@@ -21,7 +21,7 @@ import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.ui.home.screen.guide.HomeGuideScreen
 import team.duckie.app.android.feature.ui.home.screen.home.HomeScreen
 import team.duckie.app.android.feature.ui.home.screen.mypage.MyPageScreen
-import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.ui.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.ui.home.viewmodel.DuckieHomeState

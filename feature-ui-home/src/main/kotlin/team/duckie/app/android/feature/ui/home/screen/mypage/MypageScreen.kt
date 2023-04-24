@@ -13,8 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.home.R
-import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.MyPageViewModel
-import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.sideeffect.MyPageSideEffect
+import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
+import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageSideEffect
 import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle

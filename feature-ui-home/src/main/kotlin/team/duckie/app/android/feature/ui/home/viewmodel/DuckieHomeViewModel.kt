@@ -15,7 +15,6 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
-import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
 import team.duckie.app.android.util.kotlin.FriendsType
 import javax.inject.Inject
