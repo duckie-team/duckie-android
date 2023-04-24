@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel
+package team.duckie.app.android.feature.ui.home.viewmodel.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,8 +18,6 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.user.usecase.FetchUserProfileUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
-import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.sideeffect.MyPageSideEffect
-import team.duckie.app.android.feature.ui.home.screen.mypage.viewmodel.state.MyPageState
 import team.duckie.app.android.feature.ui.profile.viewmodel.intent.MyPageIntent
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException

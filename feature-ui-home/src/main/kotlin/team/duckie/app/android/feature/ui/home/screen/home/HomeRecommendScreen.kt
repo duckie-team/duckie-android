@@ -47,14 +47,13 @@ import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
-import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeState
+import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
@@ -73,17 +72,20 @@ private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 @Composable
 internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
-    vm: HomeViewModel = activityViewModel(),
+    state: HomeState,
+    homeViewModel: HomeViewModel = activityViewModel(),
+    navigateToCreateProblem: () -> Unit,
+    navigateToHomeDetail: (Int) -> Unit,
+    navigateToSearch: (String) -> Unit,
 ) {
-    val state = vm.collectAsState().value
     val pageState = rememberPagerState()
 
-    val lazyRecommendations = vm.recommendations.collectAsLazyPagingItems()
+    val lazyRecommendations = homeViewModel.recommendations.collectAsLazyPagingItems()
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = state.isHomeRecommendPullRefreshLoading,
         onRefresh = {
-            vm.refreshRecommendations(forceLoading = true)
+            homeViewModel.refreshRecommendations(forceLoading = true)
         },
     )
 
@@ -102,10 +104,10 @@ internal fun HomeRecommendScreen(
                         .padding(bottom = 16.dp),
                     selectedTabIndex = state.homeSelectedIndex.index,
                     onTabSelected = { step ->
-                        vm.changedHomeScreen(HomeStep.toStep(step))
+                        homeViewModel.changedHomeScreen(HomeStep.toStep(step))
                     },
                     onClickedCreate = {
-                        vm.navigateToCreateProblem()
+                        navigateToCreateProblem()
                     },
                 )
             }
@@ -120,9 +122,7 @@ internal fun HomeRecommendScreen(
                             .padding(HomeHorizontalPadding),
                         recommendItem = state.jumbotrons[page],
                         onStartClicked = { examId ->
-                            vm.navigateToHomeDetail(
-                                examId = examId,
-                            )
+                            navigateToHomeDetail(examId)
                         },
                         isLoading = state.isHomeRecommendLoading,
                     )
@@ -151,8 +151,8 @@ internal fun HomeRecommendScreen(
                     title = item?.title ?: "",
                     tag = item?.tag?.name ?: "",
                     exams = item?.exams?.toImmutableList() ?: persistentListOf(),
-                    onExamClicked = { examId -> vm.navigateToHomeDetail(examId) },
-                    onTagClicked = { tag -> vm.navigateToSearch(tag) },
+                    onExamClicked = { examId -> navigateToHomeDetail(examId) },
+                    onTagClicked = { tag -> navigateToSearch(tag) },
                     isLoading = state.isHomeRecommendLoading,
                 )
             }
