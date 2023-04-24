@@ -172,7 +172,7 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     fun finishOnboard(newMe: User) = intent {
         setMeUseCase(newMe)
-        postSideEffect(OnboardSideEffect.FinishOnboard("${newMe.id}"))
+        postSideEffect(OnboardSideEffect.FinishOnboard(state.isNewUser, "${newMe.id}"))
     }
 
     // validation
@@ -285,13 +285,16 @@ internal class OnboardViewModel @AssistedInject constructor(
         joinUseCase(kakaoAccessToken)
             .onSuccess { response ->
                 reduce {
-                    state.copy(me = response.user)
+                    state.copy(
+                        me = response.user,
+                        isNewUser = response.isNewUser || response.user.status == UserStatus.NEW,
+                    )
                 }
                 postSideEffect(OnboardSideEffect.UpdateAccessToken(response.accessToken))
                 postSideEffect(OnboardSideEffect.AttachAccessTokenToHeader(response.accessToken))
                 postSideEffect(
                     OnboardSideEffect.Joined(
-                        isNewUser = response.isNewUser || response.user.status == UserStatus.NEW,
+                        isNewUser = state.isNewUser,
                         me = response.user,
                     ),
                 )

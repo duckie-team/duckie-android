@@ -25,6 +25,7 @@ internal data class OnboardState(
     val galleryImages: List<String> = emptyList(),
     val categories: List<Category> = emptyList(),
     val selectedCategories: List<Category> = emptyList(),
+    val isNewUser: Boolean = false,
 ) : Parcelable
 
 /** ProfileScreen 의 state */

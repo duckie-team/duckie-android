@@ -223,7 +223,7 @@ class OnboardActivity : BaseActivity() {
                 }
                 changeActivityWithAnimation<HomeActivity>(
                     intentBuilder = {
-                        putExtra(Extras.StartGuide, true)
+                        putExtra(Extras.StartGuide, sideEffect.isNewUser)
                     },
                 )
             }

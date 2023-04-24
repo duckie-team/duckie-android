@@ -33,7 +33,7 @@ internal sealed class OnboardSideEffect {
     class NicknameDuplicateChecked(val isUsable: Boolean) : OnboardSideEffect()
 
     @RequiredStep(OnboardStep.Activity, OnboardStep.Tag)
-    class FinishOnboard(val userId: String?) : OnboardSideEffect()
+    class FinishOnboard(val isNewUser: Boolean, val userId: String?) : OnboardSideEffect()
 
     class ReportError(val exception: Throwable) : OnboardSideEffect()
 }
