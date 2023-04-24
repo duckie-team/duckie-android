@@ -17,12 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.util.compose.asLoose
+import team.duckie.app.android.util.compose.centerHorizontally
+import team.duckie.app.android.util.compose.centerVertical
 import team.duckie.app.android.util.kotlin.fastFirstOrNull
 import team.duckie.app.android.util.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
@@ -78,7 +81,12 @@ fun UserFollowingLayout(
             .height(56.dp)
             .padding(
                 vertical = 12.dp,
-            ),
+            )
+            .quackClickable {
+                if (onClickUserProfile != null) {
+                    onClickUserProfile(userId)
+                }
+            },
         content = {
             if (profileImgUrl.isEmpty()) {
                 Image(
@@ -86,11 +94,6 @@ fun UserFollowingLayout(
                         .layoutId(UserInfoBlockUserProfileLayoutId)
                         .size(HomeProfileSize)
                         .clip(SquircleShape)
-                        .quackClickable {
-                            if (onClickUserProfile != null) {
-                                onClickUserProfile(userId)
-                            }
-                        }
                         .skeleton(isLoading),
                     painter = painterResource(id = QuackIcon.DefaultProfile),
                     contentDescription = null,
@@ -136,60 +139,63 @@ fun UserFollowingLayout(
                 rippleEnabled = false,
             )
         },
-    ) { measurables, constraints ->
-        val extraLooseConstraints = constraints.asLoose(width = true)
+        measurePolicy = getUserFollowingLayoutMeasurePolicy(
+            nameVisible = tier.isEmpty() || favoriteTag.isEmpty(),
+            isMine = isMine,
+        )
+    )
+}
 
-        val userProfilePlaceable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == UserInfoBlockUserProfileLayoutId
-        }?.measure(extraLooseConstraints) ?: npe()
+private fun getUserFollowingLayoutMeasurePolicy(
+    nameVisible: Boolean,
+    isMine: Boolean,
+) = MeasurePolicy { measurables, constraints ->
+    val extraLooseConstraints = constraints.asLoose(width = true)
 
-        val userNamePlaceable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == UserInfoBlockUserNameLayoutId
-        }?.measure(extraLooseConstraints) ?: npe()
+    val userProfilePlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == UserInfoBlockUserProfileLayoutId
+    }?.measure(extraLooseConstraints) ?: npe()
 
-        val userDescriptionPlaceable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == UserInfoBlockUserDescriptionLayoutId
-        }?.measure(extraLooseConstraints) ?: npe()
+    val userNamePlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == UserInfoBlockUserNameLayoutId
+    }?.measure(extraLooseConstraints) ?: npe()
 
-        val userFollowingButtonPlaceable = measurables.fastFirstOrNull { measurable ->
-            measurable.layoutId == UserInfoBlockFollowingButtonLayoutId
-        }?.measure(extraLooseConstraints) ?: npe()
+    val userDescriptionPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == UserInfoBlockUserDescriptionLayoutId
+    }?.measure(extraLooseConstraints) ?: npe()
 
-        layout(
-            width = constraints.maxWidth,
-            height = constraints.maxHeight,
-        ) {
-            userProfilePlaceable.place(
-                x = 0,
-                y = 0,
+    val userFollowingButtonPlaceable = measurables.fastFirstOrNull { measurable ->
+        measurable.layoutId == UserInfoBlockFollowingButtonLayoutId
+    }?.measure(extraLooseConstraints) ?: npe()
+
+    layout(
+        width = constraints.maxWidth,
+        height = constraints.maxHeight,
+    ) {
+        userProfilePlaceable.place(
+            x = 0,
+            y = 0,
+        )
+
+        userNamePlaceable.place(
+            x = userProfilePlaceable.width,
+            y = if (nameVisible) {
+                constraints.centerVertical(userNamePlaceable.height)
+            } else {
+                0
+            },
+        )
+
+        userDescriptionPlaceable.place(
+            x = userProfilePlaceable.width,
+            y = userNamePlaceable.height,
+        )
+
+        if (!isMine) {
+            userFollowingButtonPlaceable.place(
+                x = constraints.maxWidth - userFollowingButtonPlaceable.width,
+                y = constraints.centerVertical(userFollowingButtonPlaceable.height),
             )
-
-            userNamePlaceable.place(
-                x = userProfilePlaceable.width,
-                y = if (tier.isEmpty() || favoriteTag.isEmpty()) {
-                    Alignment.CenterVertically.align(
-                        size = userNamePlaceable.height,
-                        space = constraints.maxHeight,
-                    )
-                } else {
-                    0
-                },
-            )
-
-            userDescriptionPlaceable.place(
-                x = userProfilePlaceable.width,
-                y = userNamePlaceable.height,
-            )
-
-            if (!isMine) {
-                userFollowingButtonPlaceable.place(
-                    x = constraints.maxWidth - userFollowingButtonPlaceable.width,
-                    y = Alignment.CenterVertically.align(
-                        size = userFollowingButtonPlaceable.height,
-                        space = constraints.maxHeight,
-                    ),
-                )
-            }
         }
     }
 }
