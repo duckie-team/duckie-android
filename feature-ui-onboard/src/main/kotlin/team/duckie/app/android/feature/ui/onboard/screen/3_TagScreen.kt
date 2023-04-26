@@ -140,7 +140,6 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     val toast = rememberToast()
 
     var isLoadingToFinish by remember { mutableStateOf(false) }
-    var isStartable by remember { mutableStateOf(false) }
     val addedTags = remember { mutableStateListOf<String>() }
 
     val onboardState by vm.collectAsState()
@@ -200,9 +199,6 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                     requestRemoveAddedTag = { index ->
                         addedTags.remove(addedTags[index])
                     },
-                    startableUpdate = { startable ->
-                        isStartable = startable
-                    },
                 )
                 QuackLargeButton(
                     modifier = Modifier
@@ -210,7 +206,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                         .padding(horizontal = 20.dp),
                     text = stringResource(id = R.string.button_start_duckie),
                     type = QuackLargeButtonType.Fill,
-                    enabled = isStartable,
+                    enabled = true,
                     isLoading = isLoadingToFinish,
                 ) {
                     updateUserAndFinishOnboard(
@@ -276,7 +272,6 @@ private fun TagSelection(
     sheetState: ModalBottomSheetState,
     addedTags: SnapshotStateList<String>,
     requestRemoveAddedTag: (index: Int) -> Unit,
-    startableUpdate: (startable: Boolean) -> Unit,
     vm: OnboardViewModel = activityViewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -312,8 +307,6 @@ private fun TagSelection(
         // hottest tag 에 최소 1개가 선택됐거나, 사용자가 최소 1개의 태그를 추가했을 때
         hottestTagSelectionsFlow.combine(addedTagsFlow) { hottestTagSelections, addedTags ->
             hottestTagSelections.fastAny { it } || addedTags.isNotEmpty()
-        }.collect { startable ->
-            startableUpdate(startable)
         }
     }
 
