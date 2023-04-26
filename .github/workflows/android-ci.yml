@@ -14,7 +14,7 @@ jobs:
 
       - name: Unarchive keystore signing files
         run: |
-          gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.SECRET_GPG_PASSWORD }} --output secrets.tar secrets.tar.gpg
+          gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.DUCKIE_GPG_PASSWORD }} --output secrets.tar secrets.tar.gpg
           tar xvf secrets.tar
 
       - name: Validate Gradle Wrapper
