@@ -30,7 +30,6 @@ import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
-import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
@@ -65,6 +64,7 @@ internal fun HomeScreen(
     ReportBottomSheetDialog(
         modifier = Modifier.fillMaxSize(),
         bottomSheetState = bottomSheetDialogState,
+        navigationBarsPaddingVisible = false,
         closeSheet = {
             coroutineScope.launch {
                 bottomSheetDialogState.hide()
@@ -91,7 +91,7 @@ internal fun HomeScreen(
                             coroutineScope.launch {
                                 bottomSheetDialogState.show()
                             }
-                        }
+                        },
                     )
 
                     HomeStep.HomeFollowingScreen -> if (state.isFollowingExist) {

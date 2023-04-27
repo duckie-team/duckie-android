@@ -194,6 +194,10 @@ class MainActivity : BaseActivity() {
                     },
                 )
             }
+
+            is MainSideEffect.SendToast -> {
+                Toast.makeText(this, sideEffect.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

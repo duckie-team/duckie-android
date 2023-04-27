@@ -17,8 +17,9 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
-import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSideEffect
+import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.kotlin.FriendsType
+import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +48,13 @@ internal class MainViewModel @Inject constructor(
                 updateReportDialogVisible(true)
             }
             .onFailure { exception ->
-                postSideEffect(MainSideEffect.ReportError(exception))
+                when {
+                    exception.isReportAlreadyExists -> postSideEffect(
+                        MainSideEffect.SendToast(ReportAlreadyExists),
+                    )
+
+                    else -> postSideEffect(MainSideEffect.ReportError(exception))
+                }
             }
     }
 
