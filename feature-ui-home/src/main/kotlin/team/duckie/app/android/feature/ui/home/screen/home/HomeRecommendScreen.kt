@@ -77,6 +77,7 @@ internal fun HomeRecommendScreen(
     navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
+    openExamBottomSheet: (Int) -> Unit,
 ) {
     val pageState = rememberPagerState()
 
@@ -154,6 +155,7 @@ internal fun HomeRecommendScreen(
                     onExamClicked = { examId -> navigateToHomeDetail(examId) },
                     onTagClicked = { tag -> navigateToSearch(tag) },
                     isLoading = state.isHomeRecommendLoading,
+                    onMoreClick = openExamBottomSheet,
                 )
             }
         }
@@ -230,6 +232,7 @@ private fun HomeTopicRecommendLayout(
     exams: ImmutableList<Exam>,
     onExamClicked: (Int) -> Unit,
     onTagClicked: (String) -> Unit,
+    onMoreClick: (Int) -> Unit,
     isLoading: Boolean,
 ) {
     Column(
@@ -268,7 +271,9 @@ private fun HomeTopicRecommendLayout(
                     onItemClick = {
                         onExamClicked(item.id)
                     },
-                    onMoreClick = {}, // TODO(EvergreenTree97) 신고하기 작업 필요
+                    onMoreClick = {
+                        onMoreClick(item.id)
+                    },
                     isLoading = isLoading,
                 )
             }
