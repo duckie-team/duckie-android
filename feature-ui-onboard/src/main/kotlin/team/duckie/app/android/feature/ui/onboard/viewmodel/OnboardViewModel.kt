@@ -138,7 +138,7 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     val me get() = requireNotNull(container.stateFlow.value.me) { "User is not initialized." }
 
-    val profileImageUrl get() = requireNotNull(container.stateFlow.value.me?.profileImageUrl) { "User.profileImageUrl is not initialized." }
+    val profileImageUrl: String? get() = container.stateFlow.value.me?.profileImageUrl
 
     /* ----- Onboard Logic ----- */
 

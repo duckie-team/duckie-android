@@ -62,6 +62,7 @@ import team.duckie.app.android.feature.ui.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.ui.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.ui.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.ui.onboard.viewmodel.state.ProfileScreenState
+import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
@@ -172,7 +173,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
         }
 
     var photoPickerVisible by remember { mutableStateOf(false) }
-    var profilePhoto by remember { mutableStateOf<Any>(vm.profileImageUrl) }
+    var profilePhoto by remember { mutableStateOf<Any>(vm.profileImageUrl ?: "") }
 
     var profilePhotoLastSelectionIndex by remember { mutableStateOf<Int?>(null) }
     val profilePhotoSelections = remember {
@@ -368,7 +369,7 @@ private fun ProfilePhoto(
         targetState = profilePhoto,
     ) { photo ->
         QuackImage(
-            src = photo,
+            src = if (photo == "") SharedIcon.ic_default_profile else photo,
             size = ProfilePhotoSize,
             contentScale = ContentScale.Crop,
             onClick = openPhotoPicker ?: {}, // required when onLongClick is used
