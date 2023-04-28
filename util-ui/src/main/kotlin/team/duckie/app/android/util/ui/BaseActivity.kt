@@ -35,18 +35,18 @@ open class BaseActivity(
     private val systemUiController by lazy {
         SystemUiController(window)
     }
-    private val transparentColor by lazy {
-        ContextCompat.getColor(this, android.R.color.transparent)
+    private val whiteColor by lazy {
+        ContextCompat.getColor(this, android.R.color.white)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         systemUiController.setStatusBarColor(
-            color = transparentColor,
+            color = whiteColor,
             darkIcons = useDarkStatusBarIcons,
         )
         systemUiController.setNavigationBarColor(
-            color = transparentColor,
+            color = whiteColor,
             darkIcons = useDarkNavigationBarIcons,
         )
         super.onCreate(savedInstanceState)

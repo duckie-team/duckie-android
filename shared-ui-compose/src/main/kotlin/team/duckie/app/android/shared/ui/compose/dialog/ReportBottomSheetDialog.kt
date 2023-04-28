@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.shared.ui.compose.R
+import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
@@ -36,6 +38,7 @@ const val ReportAlreadyExists = "이미 신고한 게시물 입니다!"
 @Composable
 fun ReportBottomSheetDialog(
     modifier: Modifier = Modifier,
+    navigationBarsPaddingVisible: Boolean = true,
     bottomSheetState: ModalBottomSheetState,
     closeSheet: () -> Unit,
     onReport: () -> Unit,
@@ -59,7 +62,9 @@ fun ReportBottomSheetDialog(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .navigationBarsPadding()
+                    .runIf(navigationBarsPaddingVisible) {
+                        navigationBarsPadding()
+                    }
                     .padding(bottom = 16.dp),
             ) {
                 items(rememberBottomSheetItems) { item ->

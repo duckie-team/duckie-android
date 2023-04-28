@@ -14,17 +14,55 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.feature.ui.home.constants.BottomNavigationStep
+import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.kotlin.FriendsType
+import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import javax.inject.Inject
 
 @HiltViewModel
 internal class MainViewModel @Inject constructor(
     private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
+    private val reportUseCase: ReportUseCase,
 ) : ContainerHost<MainState, MainSideEffect>, ViewModel() {
 
     override val container = container<MainState, MainSideEffect>(MainState())
+
+    /**
+     * 신고할 게시물의 [examId] 를 업데이트합니다.
+     */
+    fun setReportExamId(examId: Int) = intent {
+        reduce {
+            state.copy(reportExamId = examId)
+        }
+    }
+
+    /**
+     * [state.reportExamId]에 해당하는 게시물을 신고합니다.
+     */
+    fun report() = intent {
+        reportUseCase(state.reportExamId)
+            .onSuccess {
+                updateReportDialogVisible(true)
+            }
+            .onFailure { exception ->
+                when {
+                    exception.isReportAlreadyExists -> postSideEffect(
+                        MainSideEffect.SendToast(ReportAlreadyExists),
+                    )
+
+                    else -> postSideEffect(MainSideEffect.ReportError(exception))
+                }
+            }
+    }
+
+    fun updateReportDialogVisible(visible: Boolean) = intent {
+        reduce {
+            state.copy(reportDialogVisible = visible)
+        }
+    }
 
     /**
      * 인기 태그 목록을 가져온다
