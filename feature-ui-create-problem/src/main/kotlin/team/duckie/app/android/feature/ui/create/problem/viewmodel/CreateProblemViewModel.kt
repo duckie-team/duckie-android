@@ -276,7 +276,7 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     /** 문제 만들기 화면을 종료한다. */
-    internal fun finishCreateProblem() = intent {
+    private fun finishCreateProblem() = intent {
         postSideEffect(CreateProblemSideEffect.FinishActivity)
     }
 
