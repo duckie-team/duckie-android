@@ -77,9 +77,7 @@ fun UserFollowingLayout(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
-            .padding(
-                vertical = 12.dp,
-            )
+            .padding(vertical = 12.dp)
             .quackClickable(
                 rippleEnabled = false,
             ) {
