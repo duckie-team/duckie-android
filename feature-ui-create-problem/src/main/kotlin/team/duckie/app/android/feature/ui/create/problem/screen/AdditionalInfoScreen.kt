@@ -110,7 +110,10 @@ internal fun AdditionalInformationScreen(
     val rootState = vm.collectAsState().value
     val state = rootState.additionalInfo
     val keyboard = LocalSoftwareKeyboardController.current
-    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val sheetState = rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true,
+    )
     val toast = rememberToast()
     val permissionErrorMessage =
         stringResource(id = R.string.create_problem_permission_toast_message)
