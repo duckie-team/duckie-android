@@ -7,7 +7,14 @@
 
 package team.duckie.app.android.feature.ui.exam.result.viewmodel
 
-data class ExamResultState(
-    val isReportLoading: Boolean = true,
-    val reportUrl: String = "",
-)
+sealed class ExamResultState {
+    object Loading: ExamResultState()
+
+    data class Success(
+        val reportUrl: String = "",
+    ): ExamResultState()
+
+    data class Error(
+        val exception: Throwable,
+    ): ExamResultState()
+}

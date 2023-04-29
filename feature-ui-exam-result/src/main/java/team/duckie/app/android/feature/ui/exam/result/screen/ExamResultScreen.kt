@@ -30,7 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.exam.result.ExamResultActivity
 import team.duckie.app.android.feature.ui.exam.result.R
+import team.duckie.app.android.feature.ui.exam.result.viewmodel.ExamResultState
 import team.duckie.app.android.feature.ui.exam.result.viewmodel.ExamResultViewModel
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.border.QuackBorder
@@ -99,13 +101,13 @@ internal fun ExamResultScreen(
             }
         },
     ) { padding ->
-        QuackCrossfade(targetState = state.isReportLoading) {
+        QuackCrossfade(targetState = state) {
             when (it) {
-                true -> {
+                is ExamResultState.Loading -> {
                     LoadingIndicator()
                 }
 
-                false -> {
+                is ExamResultState.Success -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -115,9 +117,17 @@ internal fun ExamResultScreen(
                     ) {
                         QuackImage(
                             modifier = Modifier.fillMaxSize(),
-                            src = state.reportUrl,
+                            src = it.reportUrl,
                         )
                     }
+                }
+
+                is ExamResultState.Error -> {
+                    ErrorScreen(
+                        Modifier,
+                        false,
+                        onRetryClick = viewModel::initState,
+                    )
                 }
             }
         }
