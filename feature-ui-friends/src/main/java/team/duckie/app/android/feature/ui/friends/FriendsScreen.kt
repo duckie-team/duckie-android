@@ -105,6 +105,9 @@ internal fun FriendScreen(
                         type = FriendsType.Following,
                     )
                 },
+                onClickUserProfile = { userId ->
+                    viewModel.navigateToUserProfile(userId)
+                },
             )
         }
     }
@@ -118,6 +121,7 @@ private fun FriendScreenInternal(
     state: FriendsState,
     onClickFollowByFollower: (Int, Boolean) -> Unit,
     onClickFollowByFollowing: (Int, Boolean) -> Unit,
+    onClickUserProfile: (Int) -> Unit,
 ) {
     when (type) {
         FriendsType.Follower -> {
@@ -134,6 +138,7 @@ private fun FriendScreenInternal(
                     friends = state.followers,
                     myUserId = state.me?.id ?: 0,
                     onClickFollow = onClickFollowByFollower,
+                    onClickUserProfile = onClickUserProfile,
                 )
             }
         }
@@ -152,6 +157,7 @@ private fun FriendScreenInternal(
                     friends = state.followings,
                     myUserId = state.me?.id ?: 0,
                     onClickFollow = onClickFollowByFollowing,
+                    onClickUserProfile = onClickUserProfile,
                 )
             }
         }
@@ -229,6 +235,7 @@ private fun FriendListScreen(
     friends: ImmutableList<FriendsState.Friend>,
     myUserId: Int,
     onClickFollow: (Int, Boolean) -> Unit,
+    onClickUserProfile: (Int) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -249,6 +256,7 @@ private fun FriendListScreen(
                     onClickFollow(item.userId, follow)
                 },
                 isMine = myUserId == item.userId,
+                onClickUserProfile = onClickUserProfile,
             )
         }
     }

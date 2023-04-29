@@ -9,4 +9,6 @@ package team.duckie.app.android.feature.ui.friends.viewmodel.sideeffect
 
 internal sealed class FriendsSideEffect {
     class ReportError(val exception: Throwable) : FriendsSideEffect()
+
+    class NavigateToUserProfile(val userId: Int) : FriendsSideEffect()
 }
