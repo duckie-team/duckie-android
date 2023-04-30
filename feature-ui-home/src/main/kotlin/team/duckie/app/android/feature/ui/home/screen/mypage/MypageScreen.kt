@@ -7,15 +7,20 @@
 
 package team.duckie.app.android.feature.ui.home.screen.mypage
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageSideEffect
 import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
+import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
@@ -86,17 +91,28 @@ internal fun MyPageScreen(
     }
 
     with(state) {
-        MyProfileScreen(
-            userProfile = userProfile,
-            isLoading = isLoading,
-            onClickSetting = viewModel::clickSetting,
-            onClickNotification = viewModel::clickNotification,
-            onClickEditProfile = viewModel::clickEditProfile,
-            onClickEditTag = { viewModel.clickEditTag(context.getString(R.string.provide_after)) },
-            onClickExam = viewModel::clickExam,
-            onClickMakeExam = viewModel::clickMakeExam,
-            onClickTag = viewModel::onClickTag,
-            onClickFriend = navigateToFriend,
-        )
+        if (isLoading) {
+            LoadingScreen(initState = {})
+        } else if (isError) {
+            ErrorScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding(),
+                onRetryClick = viewModel::getUserProfile,
+            )
+        } else {
+            MyProfileScreen(
+                userProfile = userProfile,
+                isLoading = false,
+                onClickSetting = viewModel::clickSetting,
+                onClickNotification = viewModel::clickNotification,
+                onClickEditProfile = viewModel::clickEditProfile,
+                onClickEditTag = { viewModel.clickEditTag(context.getString(R.string.provide_after)) },
+                onClickExam = viewModel::clickExam,
+                onClickMakeExam = viewModel::clickMakeExam,
+                onClickTag = viewModel::onClickTag,
+                onClickFriend = navigateToFriend,
+            )
+        }
     }
 }
