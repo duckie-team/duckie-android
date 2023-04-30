@@ -276,7 +276,8 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                         }
                     },
                     placeholderText = stringResource(R.string.profile_nickname_placeholder),
-                    isError = profileScreenState == ProfileScreenState.NicknameRuleError,
+                    isError = profileScreenState == ProfileScreenState.NicknameRuleError ||
+                            profileScreenState == ProfileScreenState.NicknameDuplicateError,
                     maxLength = MaxNicknameLength,
                     errorText = when (profileScreenState) {
                         ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
@@ -296,7 +297,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                     text = stringResource(R.string.button_next),
                     type = QuackLargeButtonType.Fill,
                     imeAnimation = true,
-                    enabled = profileScreenState == ProfileScreenState.Valid,
+                    enabled = profileScreenState == ProfileScreenState.Valid && nickname.isNotEmpty(),
                 ) {
                     navigateNextStep(
                         vm = vm,
