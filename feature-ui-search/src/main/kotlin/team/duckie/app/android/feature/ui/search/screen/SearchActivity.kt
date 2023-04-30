@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,13 +35,16 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.search.R
+import team.duckie.app.android.feature.ui.search.constants.SearchResultStep
 import team.duckie.app.android.feature.ui.search.constants.SearchStep
 import team.duckie.app.android.feature.ui.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.ui.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.util.compose.collectAndHandleState
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
@@ -80,6 +84,9 @@ class SearchActivity : BaseActivity() {
         setContent {
             val state = vm.collectAsState().value
 
+            vm.searchUsers.collectAndHandleState(handleLoadStates = vm::checkError)
+            vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
+
             LaunchedEffect(key1 = vm) {
                 vm.container.sideEffectFlow
                     .onEach(::handleSideEffect)
@@ -111,11 +118,39 @@ class SearchActivity : BaseActivity() {
                         ) { step ->
                             when (step) {
                                 SearchStep.Search -> SearchScreen(vm = vm)
-                                SearchStep.SearchResult -> SearchResultScreen(
-                                    navigateDetail = { examId ->
-                                        vm.navigateToDetail(examId = examId)
-                                    },
-                                )
+                                SearchStep.SearchResult -> {
+                                    if (state.isSearchProblemError
+                                        && state.tagSelectedTab == SearchResultStep.DuckExam
+                                    ) {
+                                        ErrorScreen(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .statusBarsPadding(),
+                                            false,
+                                            onRetryClick = {
+                                                vm.fetchSearchExams(state.searchKeyword)
+                                            },
+                                        )
+                                    } else if (state.isSearchUserError
+                                        && state.tagSelectedTab == SearchResultStep.User
+                                    ) {
+                                        ErrorScreen(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .statusBarsPadding(),
+                                            false,
+                                            onRetryClick = {
+                                                vm.fetchSearchUsers(state.searchKeyword)
+                                            },
+                                        )
+                                    } else {
+                                        SearchResultScreen(
+                                            navigateDetail = { examId ->
+                                                vm.navigateToDetail(examId = examId)
+                                            },
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
