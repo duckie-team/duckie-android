@@ -6,7 +6,11 @@
  */
 
 @file:OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
-@file:Suppress("ConstPropertyName", "PrivatePropertyName", "SpacingBetweenDeclarationsWithAnnotations")
+@file:Suppress(
+    "ConstPropertyName",
+    "PrivatePropertyName",
+    "SpacingBetweenDeclarationsWithAnnotations",
+)
 
 package team.duckie.app.android.feature.ui.onboard.screen
 
@@ -143,7 +147,11 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     val addedTags = remember { mutableStateListOf<String>() }
 
     val onboardState by vm.collectAsState()
-    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val sheetState =
+        rememberModalBottomSheetState(
+            ModalBottomSheetValue.Hidden,
+            skipHalfExpanded = true,
+        )
 
     LaunchedEffect(sheetState) {
         val sheetStateFlow = snapshotFlow { sheetState.currentValue }
@@ -247,7 +255,8 @@ private fun updateUserAndFinishOnboard(
             favoriteTagsDeferred,
         )
         @Suppress("UNCHECKED_CAST")
-        val favoriteTags = (favoriteTagsResult as List<Result<Tag>>).mapNotNull(Result<Tag>::getOrNull)
+        val favoriteTags =
+            (favoriteTagsResult as List<Result<Tag>>).mapNotNull(Result<Tag>::getOrNull)
         if (favoriteTags.size == addedTags.size) {
             vm.updateUser(
                 id = vm.me.id,
@@ -382,7 +391,8 @@ private fun TagSelection(
                     tagType = QuackTagType.Circle(),
                     contentPadding = PaddingValues(horizontal = 20.dp),
                     onClick = { tagIndex ->
-                        hottestTagSelections[categoryIndex][tagIndex] = !hottestTagSelections[categoryIndex][tagIndex]
+                        hottestTagSelections[categoryIndex][tagIndex] =
+                            !hottestTagSelections[categoryIndex][tagIndex]
                     },
                 )
             }
