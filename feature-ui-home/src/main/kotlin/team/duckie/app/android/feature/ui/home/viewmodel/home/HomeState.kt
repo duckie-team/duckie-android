@@ -17,6 +17,8 @@ import team.duckie.app.android.feature.ui.home.constants.HomeStep
 internal data class HomeState(
     val me: User? = null,
 
+    val isError: Boolean = false,
+
     val isHomeRecommendLoading: Boolean = false,
     val isHomeRecommendFollowingExamLoading: Boolean = false,
 
