@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,18 +31,14 @@ import team.duckie.app.android.feature.ui.exam.result.R
 import team.duckie.app.android.feature.ui.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSmallButton
 import team.duckie.quackquack.ui.component.QuackSmallButtonType
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackSurface
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-internal fun ExamResultScreen(
+internal fun QuizResultScreen(
     viewModel: ExamResultViewModel = activityViewModel(),
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
@@ -121,40 +115,5 @@ internal fun ExamResultScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-internal fun GrayBorderSmallButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
-) {
-    QuackSurface(
-        modifier = modifier,
-        backgroundColor = QuackColor.White,
-        border = QuackBorder(color = QuackColor.Gray3),
-        shape = RoundedCornerShape(size = 8.dp),
-        onClick = onClick,
-    ) {
-        QuackSubtitle(
-            modifier = Modifier.padding(
-                vertical = 12.dp,
-                horizontal = 12.dp,
-            ),
-            text = text,
-            singleLine = true,
-        )
-    }
-}
-
-// TODO(EvergreenTree97): QuackLoadingIndicator로 통합 필요
-@Composable
-internal fun LoadingIndicator() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        CircularProgressIndicator(color = QuackColor.DuckieOrange.composeColor)
     }
 }
