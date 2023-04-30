@@ -31,7 +31,7 @@ class ExamResultViewModel @Inject constructor(
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
     override val container: Container<ExamResultState, ExamResultSideEffect> = container(
-        ExamResultState(),
+        ExamResultState.Loading,
     )
 
     fun initState() {
@@ -51,20 +51,20 @@ class ExamResultViewModel @Inject constructor(
         submitted: ExamInstanceSubmitBody,
     ) = intent {
         reduce {
-            state.copy(isReportLoading = true)
+            ExamResultState.Loading
         }
         makeExamInstanceSubmitUseCase(
             id = examId,
             body = submitted,
         ).onSuccess { submit: ExamInstanceSubmit ->
             reduce {
-                state.copy(
-                    isReportLoading = false,
-                    reportUrl = submit.examScoreImageUrl,
-                )
+                ExamResultState.Success(reportUrl = submit.examScoreImageUrl)
             }
         }.onFailure {
             it.printStackTrace()
+            reduce {
+                ExamResultState.Error(exception = it)
+            }
             postSideEffect(ExamResultSideEffect.ReportError(it))
         }
     }

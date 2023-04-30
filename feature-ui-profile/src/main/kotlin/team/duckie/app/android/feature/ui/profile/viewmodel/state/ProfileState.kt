@@ -13,6 +13,7 @@ import team.duckie.app.android.feature.ui.profile.dummy.skeletonUserProfile
 
 data class ProfileState(
     val isLoading: Boolean = true,
+    val isError: Boolean = false,
     val userProfile: UserProfile = skeletonUserProfile(),
     val me: User? = null,
     val isMe: Boolean = false,

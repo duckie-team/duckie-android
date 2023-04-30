@@ -10,7 +10,9 @@ package team.duckie.app.android.feature.ui.profile
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,6 +29,7 @@ import team.duckie.app.android.navigator.feature.notification.NotificationNaviga
 import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle
@@ -37,6 +40,7 @@ import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
@@ -72,15 +76,28 @@ class ProfileActivity : BaseActivity() {
             systemBarPaddings
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
             QuackTheme {
-                when (state.isLoading) {
-                    true -> {
+                when {
+                    state.isLoading -> {
                         LoadingScreen(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = QuackColor.White.composeColor)
+                                .statusBarsPadding(),
                             initState = { viewModel.init() },
                         )
                     }
 
-                    false -> {
+                    state.isError -> {
+                        ErrorScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = QuackColor.White.composeColor)
+                                .statusBarsPadding(),
+                            onRetryClick = { viewModel.init() },
+                        )
+                    }
+
+                    else -> {
                         when (state.isMe) {
                             true -> {
                                 LaunchOnLifecycle {
@@ -88,7 +105,7 @@ class ProfileActivity : BaseActivity() {
                                 }
                                 MyProfileScreen(
                                     userProfile = state.userProfile,
-                                    isLoading = state.isLoading,
+                                    isLoading = false,
                                     onClickSetting = viewModel::clickSetting,
                                     onClickNotification = viewModel::clickNotification,
                                     onClickEditProfile = viewModel::clickEditProfile,

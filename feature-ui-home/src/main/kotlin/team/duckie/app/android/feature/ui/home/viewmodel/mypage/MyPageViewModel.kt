@@ -31,12 +31,14 @@ internal class MyPageViewModel @Inject constructor(
 
     override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
     fun getUserProfile() = intent {
-        updateLoading(true)
+        startLoading()
+
         val job = viewModelScope.launch {
             getMeUseCase()
                 .onSuccess { me ->
                     reduce { state.copy(me = me) }
                 }.onFailure {
+                    reduce { state.copy(isLoading = false, isError = true) }
                     postSideEffect(MyPageSideEffect.ReportError(it))
                 }
         }.apply { join() }
@@ -45,26 +47,28 @@ internal class MyPageViewModel @Inject constructor(
                 viewModelScope.launch {
                     fetchUserProfileUseCase(it.id).onSuccess { profile ->
                         reduce {
-                            state.copy(userProfile = profile)
+                            state.copy(
+                                isLoading = false,
+                                isError = false,
+                                userProfile = profile,
+                            )
                         }
                     }.onFailure {
+                        reduce { state.copy(isLoading = false, isError = true) }
                         postSideEffect(MyPageSideEffect.ReportError(it))
                     }
                 }
             }
         }
-        updateLoading(false)
     }
 
     fun onClickTag(tag: String) = intent {
         postSideEffect(MyPageSideEffect.NavigateToSearch(tag))
     }
 
-    private fun updateLoading(
-        loading: Boolean,
-    ) = intent {
+    private fun startLoading() = intent {
         reduce {
-            state.copy(isLoading = loading)
+            state.copy(isLoading = true, isError = false)
         }
     }
 
