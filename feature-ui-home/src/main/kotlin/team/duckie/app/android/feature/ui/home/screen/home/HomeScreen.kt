@@ -83,7 +83,7 @@ internal fun HomeScreen(
                 when {
                     state.isError -> ErrorScreen(
                         modifier = Modifier.fillMaxSize(),
-                        onRetryClick = vm::fetchJumbotrons
+                        onRetryClick = vm::fetchJumbotrons,
                     )
 
                     page == HomeStep.HomeRecommendScreen -> HomeRecommendScreen(

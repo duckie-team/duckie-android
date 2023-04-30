@@ -8,13 +8,13 @@
 package team.duckie.app.android.feature.ui.exam.result.viewmodel
 
 sealed class ExamResultState {
-    object Loading: ExamResultState()
+    object Loading : ExamResultState()
 
     data class Success(
         val reportUrl: String = "",
-    ): ExamResultState()
+    ) : ExamResultState()
 
     data class Error(
         val exception: Throwable,
-    ): ExamResultState()
+    ) : ExamResultState()
 }

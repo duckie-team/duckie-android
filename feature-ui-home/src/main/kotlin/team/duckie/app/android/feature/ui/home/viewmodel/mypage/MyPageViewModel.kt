@@ -50,7 +50,7 @@ internal class MyPageViewModel @Inject constructor(
                             state.copy(
                                 isLoading = false,
                                 isError = false,
-                                userProfile = profile
+                                userProfile = profile,
                             )
                         }
                     }.onFailure {
@@ -66,8 +66,7 @@ internal class MyPageViewModel @Inject constructor(
         postSideEffect(MyPageSideEffect.NavigateToSearch(tag))
     }
 
-    private fun startLoading(
-    ) = intent {
+    private fun startLoading() = intent {
         reduce {
             state.copy(isLoading = true, isError = false)
         }
