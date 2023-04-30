@@ -15,6 +15,7 @@ import team.duckie.app.android.util.kotlin.fastMap
 
 internal data class RankingState(
     val isTagLoading: Boolean = true,
+    val isError: Boolean = false,
     val isPagingDataLoading: Boolean = true,
     val selectedTab: Int = 0,
     val examTags: ImmutableList<Tag> = skeletonTags,

@@ -14,6 +14,7 @@ package team.duckie.app.android.feature.ui.home.screen.ranking
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -38,6 +39,7 @@ import team.duckie.app.android.feature.ui.home.constants.RankingPage
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.Create
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -67,9 +69,7 @@ internal fun RankingScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.fetchPopularTags()
-        viewModel.getExams()
-        viewModel.getUserRankings()
+        viewModel.refresh()
     }
 
     LaunchedEffect(Unit) {
@@ -117,35 +117,45 @@ internal fun RankingScreen(
                 )
             },
         )
-        QuackMainTab(
-            titles = tabs,
-            selectedTabIndex = state.selectedTab,
-            onTabSelected = {
-                viewModel.setSelectedTab(it)
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(it)
-                }
-            },
-        )
-        HorizontalPager(
-            modifier = Modifier.fillMaxSize(),
-            state = pagerState,
-            pageCount = tabs.size,
-            key = { tabs[it] },
-        ) { page ->
-            when (page) {
-                RankingPage.Examinee.index -> {
-                    ExamineeSection(
-                        viewModel = viewModel,
-                        lazyListState = lazyListState,
-                    )
-                }
 
-                RankingPage.Exam.index -> {
-                    ExamSection(
-                        viewModel = viewModel,
-                        lazyGridState = lazyGridState,
-                    )
+        if (state.isError) {
+            ErrorScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding(),
+                onRetryClick = viewModel::refresh,
+            )
+        } else {
+            QuackMainTab(
+                titles = tabs,
+                selectedTabIndex = state.selectedTab,
+                onTabSelected = {
+                    viewModel.setSelectedTab(it)
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(it)
+                    }
+                },
+            )
+            HorizontalPager(
+                modifier = Modifier.fillMaxSize(),
+                state = pagerState,
+                pageCount = tabs.size,
+                key = { tabs[it] },
+            ) { page ->
+                when (page) {
+                    RankingPage.Examinee.index -> {
+                        ExamineeSection(
+                            viewModel = viewModel,
+                            lazyListState = lazyListState,
+                        )
+                    }
+
+                    RankingPage.Exam.index -> {
+                        ExamSection(
+                            viewModel = viewModel,
+                            lazyGridState = lazyGridState,
+                        )
+                    }
                 }
             }
         }
