@@ -9,7 +9,7 @@
 @file:Suppress(
     "ConstPropertyName",
     "PrivatePropertyName",
-    "SpacingBetweenDeclarationsWithAnnotations"
+    "SpacingBetweenDeclarationsWithAnnotations",
 )
 
 package team.duckie.app.android.feature.ui.onboard.screen
