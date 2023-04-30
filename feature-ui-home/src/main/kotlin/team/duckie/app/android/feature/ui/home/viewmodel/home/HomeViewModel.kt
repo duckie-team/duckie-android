@@ -126,21 +126,21 @@ internal class HomeViewModel @Inject constructor(
     }
 
     /** 홈 화면의 jumbotron을 가져온다. */
-    private fun fetchJumbotrons() = intent {
-        updateHomeRecommendLoading(true)
+    internal fun fetchJumbotrons() = intent {
+        startHomeRecommendLoading()
         fetchJumbotronsUseCase()
             .onSuccess { jumbotrons ->
                 reduce {
                     state.copy(
+                        isHomeRecommendLoading = false,
                         jumbotrons = jumbotrons
                             .fastMap(Exam::toJumbotronModel)
                             .toPersistentList(),
                     )
                 }
             }.onFailure { exception ->
+                reduce { state.copy(isHomeRecommendLoading = false, isError = true) }
                 postSideEffect(HomeSideEffect.ReportError(exception))
-            }.also {
-                updateHomeRecommendLoading(false)
             }
     }
 
@@ -248,11 +248,9 @@ internal class HomeViewModel @Inject constructor(
     }
 
     /** 홈 화면의 추천 탭의 로딩 상태를 [loading]으로 바꾼다. */
-    private fun updateHomeRecommendLoading(
-        loading: Boolean,
-    ) = intent {
+    private fun startHomeRecommendLoading() = intent {
         reduce {
-            state.copy(isHomeRecommendLoading = loading)
+            state.copy(isHomeRecommendLoading = true, isError = false)
         }
     }
 
@@ -261,7 +259,7 @@ internal class HomeViewModel @Inject constructor(
         loading: Boolean,
     ) = intent {
         reduce {
-            state.copy(isHomeRecommendFollowingExamLoading = loading)
+            state.copy(isHomeRecommendFollowingExamLoading = loading, isError = false)
         }
     }
 
@@ -273,6 +271,7 @@ internal class HomeViewModel @Inject constructor(
             state.copy(
                 isHomeRecommendPullRefreshLoading = loading,
                 isHomeRecommendLoading = loading, // for skeleton UI
+                isError = false,
             )
         }
     }
@@ -285,6 +284,7 @@ internal class HomeViewModel @Inject constructor(
             state.copy(
                 isHomeRecommendFollowingExamRefreshLoading = loading,
                 isHomeRecommendFollowingExamLoading = loading, // for skeleton UI
+                isError = false,
             )
         }
     }

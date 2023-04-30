@@ -28,6 +28,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
@@ -79,8 +80,13 @@ internal fun HomeScreen(
             QuackCrossfade(
                 targetState = state.homeSelectedIndex,
             ) { page ->
-                when (page) {
-                    HomeStep.HomeRecommendScreen -> HomeRecommendScreen(
+                when {
+                    state.isError -> ErrorScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        onRetryClick = vm::fetchJumbotrons
+                    )
+
+                    page == HomeStep.HomeRecommendScreen -> HomeRecommendScreen(
                         state = state,
                         homeViewModel = vm,
                         navigateToCreateProblem = navigateToCreateProblem,
@@ -94,7 +100,7 @@ internal fun HomeScreen(
                         },
                     )
 
-                    HomeStep.HomeFollowingScreen -> if (state.isFollowingExist) {
+                    page == HomeStep.HomeFollowingScreen -> if (state.isFollowingExist) {
                         HomeRecommendFollowingExamScreen(
                             modifier = Modifier.padding(HomeHorizontalPadding),
                             state = state,
