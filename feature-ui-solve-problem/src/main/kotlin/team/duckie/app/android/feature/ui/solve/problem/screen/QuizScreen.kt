@@ -9,16 +9,20 @@
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,19 +42,21 @@ import team.duckie.app.android.feature.ui.solve.problem.common.CloseAndPageTopBa
 import team.duckie.app.android.feature.ui.solve.problem.common.DoubleButtonBottomBar
 import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel.Companion.TimerCount
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
+import team.duckie.app.android.shared.ui.compose.LinearProgressBar
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.moveNextPage
 import team.duckie.app.android.util.compose.movePreviousPage
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 
-private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
-private const val SolveProblemContentLayoutId = "SolveProblemContent"
-private const val SolveProblemBottomBarLayoutId = "SolveProblemBottomBar"
+private const val QuizTopAppBarLayoutId = "QuizTopAppBar"
+private const val QuizContentLayoutId = "QuizContent"
+private const val QuizBottomBarLayoutId = "QuizBottomBar"
 
 @Composable
-internal fun SolveProblemScreen(
+internal fun QuizScreen(
     viewModel: SolveProblemViewModel = activityViewModel(),
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
@@ -92,7 +98,7 @@ internal fun SolveProblemScreen(
         content = {
             CloseAndPageTopBar(
                 modifier = Modifier
-                    .layoutId(SolveProblemTopAppBarLayoutId)
+                    .layoutId(QuizTopAppBarLayoutId)
                     .padding(vertical = 12.dp)
                     .padding(end = 16.dp),
                 onCloseClick = {
@@ -102,13 +108,13 @@ internal fun SolveProblemScreen(
                 totalPage = totalPage,
             )
             ContentSection(
-                modifier = Modifier.layoutId(SolveProblemContentLayoutId),
+                modifier = Modifier.layoutId(QuizContentLayoutId),
                 viewModel = viewModel,
                 pagerState = pagerState,
                 state = state,
             )
             DoubleButtonBottomBar(
-                modifier = Modifier.layoutId(SolveProblemBottomBarLayoutId),
+                modifier = Modifier.layoutId(QuizBottomBarLayoutId),
                 isFirstPage = pagerState.currentPage == 0,
                 isLastPage = pagerState.currentPage == totalPage - 1,
                 onLeftButtonClick = {
@@ -128,9 +134,9 @@ internal fun SolveProblemScreen(
             )
         },
         measurePolicy = screenMeasurePolicy(
-            topLayoutId = SolveProblemTopAppBarLayoutId,
-            contentLayoutId = SolveProblemContentLayoutId,
-            bottomLayoutId = SolveProblemBottomBarLayoutId,
+            topLayoutId = QuizTopAppBarLayoutId,
+            contentLayoutId = QuizContentLayoutId,
+            bottomLayoutId = QuizBottomBarLayoutId,
         ),
     )
 }
@@ -142,6 +148,22 @@ private fun ContentSection(
     pagerState: PagerState,
     state: SolveProblemState,
 ) {
+    val progress by viewModel.timerCount.collectAsStateWithLifecycle()
+    val timeOver by remember {
+        derivedStateOf { progress == 0 }
+    }
+    LaunchedEffect(timeOver) {
+        if (timeOver) {
+            Log.d("timeOver", "timeOver")
+            // TODO(EvergreenTree97) 추후 덕퀴즈 종료로 이동 viewModel.finishExam()
+        }
+    }
+    DisposableEffect(state.currentPageIndex) {
+        viewModel.startTimer()
+        onDispose {
+            viewModel.stopTimer()
+        }
+    }
     HorizontalPager(
         modifier = modifier,
         pageCount = state.totalPage,
@@ -151,6 +173,9 @@ private fun ContentSection(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(space = 24.dp),
         ) {
+            progressSection(
+                progress = { progress.toFloat() / TimerCount },
+            )
             questionSection(
                 page = pageIndex,
                 question = state.problems[pageIndex].problem.question,
@@ -171,5 +196,17 @@ private fun ContentSection(
                 onClickAnswer = viewModel::inputAnswer,
             )
         }
+    }
+}
+
+fun LazyListScope.progressSection(
+    modifier: Modifier = Modifier,
+    progress: () -> Float,
+) {
+    item {
+        LinearProgressBar(
+            modifier = modifier,
+            progress = progress(),
+        )
     }
 }
