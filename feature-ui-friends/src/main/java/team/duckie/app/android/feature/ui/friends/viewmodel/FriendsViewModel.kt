@@ -41,72 +41,65 @@ internal class FriendsViewModel @Inject constructor(
     override val container = container<FriendsState, FriendsSideEffect>(FriendsState())
 
     init {
-        val userId = savedStateHandle.getStateFlow(Extras.UserId, 0)
-        initState(userId.value)
+        initState()
     }
 
-    private fun initState(
-        userId: Int,
-    ) = intent {
-        updateLoadingState(true)
-        val result = getMeUseCase()
+    internal fun initState() = intent {
+        val userId = savedStateHandle.getStateFlow(Extras.UserId, 0).value
+        startLoadingState()
+
+        getMeUseCase()
             .onSuccess { me ->
-                reduce { state.copy(me = me) }
+                val myId = me.id
+                val isMine = userId == myId
+
+                reduce { state.copy(me = me, isMine = isMine) }
+
+                val targetId = if (isMine) myId else userId
+                fetchUserFollowers(targetId)
+                fetchUserFollowings(targetId)
             }
             .onFailure {
+                reduce { state.copy(isError = true, isLoading = false) }
                 postSideEffect(FriendsSideEffect.ReportError(it))
-            }.also {
-                updateLoadingState(false)
             }
-
-        if (result.isSuccess) {
-            val myId = result.getOrNull()?.id ?: 0
-            val isMine = userId == myId
-
-            reduce { state.copy(isMine = isMine) }
-
-            val targetId = if (isMine) myId else userId
-            fetchUserFollowers(targetId)
-            fetchUserFollowings(targetId)
-        }
     }
 
     private fun fetchUserFollowers(userId: Int) = intent {
-        updateLoadingState(true)
         fetchUserFollowersUseCase(userId)
             .onSuccess { followers ->
                 reduce {
                     state.copy(
+                        isLoading = false,
                         followers = followers.fastMap(User::toUiModel).toImmutableList(),
                     )
                 }
             }.onFailure {
+                reduce { state.copy(isError = true, isLoading = false) }
                 postSideEffect(FriendsSideEffect.ReportError(it))
-            }.also {
-                updateLoadingState(false)
             }
     }
 
     private fun fetchUserFollowings(userId: Int) = intent {
-        updateLoadingState(true)
         fetchUserFollowingsUseCase(userId)
             .onSuccess { followers ->
                 reduce {
                     state.copy(
+                        isLoading = false,
                         followings = followers.fastMap(User::toUiModel).toImmutableList(),
                     )
                 }
             }.onFailure {
+                reduce { state.copy(isError = true, isLoading = false) }
                 postSideEffect(FriendsSideEffect.ReportError(it))
-            }.also {
-                updateLoadingState(false)
             }
     }
 
-    private fun updateLoadingState(loading: Boolean) = intent {
+    private fun startLoadingState() = intent {
         reduce {
             state.copy(
-                isLoading = loading,
+                isError = false,
+                isLoading = true,
             )
         }
     }

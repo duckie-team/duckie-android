@@ -77,12 +77,14 @@ internal class ProfileViewModel @Inject constructor(
 
     fun init() = intent {
         val userId = savedStateHandle.getStateFlow(Extras.UserId, 0).value
-        updateLoading(true)
+        startLoading()
+
         val job = viewModelScope.launch {
             getMeUseCase()
                 .onSuccess { me ->
                     reduce { state.copy(me = me) }
                 }.onFailure {
+                    reduce { state.copy(isLoading = false, isError = true) }
                     postSideEffect(ProfileSideEffect.ReportError(it))
                 }
         }.apply { join() }
@@ -92,6 +94,8 @@ internal class ProfileViewModel @Inject constructor(
                     fetchUserProfileUseCase(userId).onSuccess { profile ->
                         reduce {
                             state.copy(
+                                isLoading = false,
+                                isError = false,
                                 userProfile = profile,
                                 isMe = it.id == userId,
                                 follow = profile.user?.follow == null,
@@ -99,12 +103,12 @@ internal class ProfileViewModel @Inject constructor(
                             )
                         }
                     }.onFailure {
+                        reduce { state.copy(isLoading = false, isError = true) }
                         postSideEffect(ProfileSideEffect.ReportError(it))
                     }
                 }
             }
         }
-        updateLoading(false)
     }
 
     fun getUserProfile() = intent {
@@ -178,11 +182,9 @@ internal class ProfileViewModel @Inject constructor(
         postSideEffect(ProfileSideEffect.NavigateToMakeExam)
     }
 
-    private fun updateLoading(
-        loading: Boolean,
-    ) = intent {
+    private fun startLoading() = intent {
         reduce {
-            state.copy(isLoading = loading)
+            state.copy(isLoading = true, isError = false)
         }
     }
 }

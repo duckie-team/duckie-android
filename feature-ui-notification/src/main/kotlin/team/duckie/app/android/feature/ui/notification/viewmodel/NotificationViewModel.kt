@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -31,17 +30,24 @@ internal class NotificationViewModel @Inject constructor(
         container<NotificationState, NotificationSideEffect>(NotificationState())
 
     fun getNotifications() = intent {
-        updateLoading(true)
+        startLoading()
         getNotificationsUseCase().onSuccess { notifications ->
             reduce {
-                state.copy(notifications = notifications.toImmutableList())
+                state.copy(
+                    isLoading = false,
+                    isError = false,
+                    notifications = notifications.toImmutableList(),
+                )
             }
         }.onFailure {
             reduce {
-                state.copy(notifications = emptyList<Notification>().toImmutableList())
+                state.copy(
+                    isLoading = false,
+                    isError = true,
+                    notifications = emptyList<Notification>().toImmutableList(),
+                )
             }
         }
-        updateLoading(false)
     }
 
     fun clickBackPress() = intent { postSideEffect(NotificationSideEffect.FinishActivity) }
@@ -54,8 +60,9 @@ internal class NotificationViewModel @Inject constructor(
         }
     }
 
-    private suspend fun SimpleSyntax<NotificationState, *>.updateLoading(isLoading: Boolean) =
+    private suspend fun startLoading() = intent {
         reduce {
-            state.copy(isLoading = isLoading)
+            state.copy(isLoading = true, isError = false)
         }
+    }
 }

@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.notification.screen
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -27,7 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.ui.notification.R
 import team.duckie.app.android.feature.ui.notification.viewmodel.NotificationViewModel
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.NoItemScreen
+import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.kotlin.getDiffDayFromToday
@@ -58,9 +60,20 @@ internal fun NotificationScreen(
             leadingText = stringResource(id = R.string.notification),
             onLeadingIconClick = viewModel::clickBackPress,
         )
-        Crossfade(state.notifications.isEmpty()) { isEmpty ->
-            when (isEmpty) {
-                true -> {
+        QuackCrossfade(
+            targetState = state.notifications.isEmpty(),
+        ) { isEmpty ->
+            when {
+                state.isError -> {
+                    ErrorScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .statusBarsPadding(),
+                        onRetryClick = viewModel::getNotifications,
+                    )
+                }
+
+                isEmpty -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center,
@@ -72,7 +85,7 @@ internal fun NotificationScreen(
                     }
                 }
 
-                false -> {
+                else -> {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()

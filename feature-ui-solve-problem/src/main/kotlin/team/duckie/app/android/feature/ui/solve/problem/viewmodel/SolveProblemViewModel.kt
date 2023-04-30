@@ -74,7 +74,8 @@ internal class SolveProblemViewModel @Inject constructor(
     }
 
     private suspend fun getProblems(examId: Int) = intent {
-        reduce { state.copy(isProblemsLoading = true) }
+        reduce { state.copy(isProblemsLoading = true, isError = false) }
+
         getExamInstanceUseCase(id = examId).onSuccess { examInstance ->
             val problemInstances = examInstance.problemInstances?.toImmutableList()
             if (problemInstances == null) {
@@ -90,6 +91,9 @@ internal class SolveProblemViewModel @Inject constructor(
             }
         }.onFailure {
             it.printStackTrace()
+            reduce {
+                state.copy(isError = true, isProblemsLoading = false)
+            }
             postSideEffect(SolveProblemSideEffect.ReportError(it))
         }
     }

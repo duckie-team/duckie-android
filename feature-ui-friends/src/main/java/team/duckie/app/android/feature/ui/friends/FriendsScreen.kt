@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.ui.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.shared.ui.compose.BackPressedHeadLine2TopAppBar
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.NoItemScreen
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
@@ -86,29 +87,37 @@ internal fun FriendScreen(
             pageCount = FriendsType.values().size,
             state = pagerState,
         ) { index ->
-            FriendScreenInternal(
-                isLoading = state.isLoading,
-                isMine = state.isMine,
-                type = FriendsType.fromIndex(index),
-                state = state,
-                onClickFollowByFollower = { userId, follow ->
-                    viewModel.followUser(
-                        userId = userId,
-                        isFollowing = follow,
-                        type = FriendsType.Follower,
-                    )
-                },
-                onClickFollowByFollowing = { userId, follow ->
-                    viewModel.followUser(
-                        userId = userId,
-                        isFollowing = follow,
-                        type = FriendsType.Following,
-                    )
-                },
-                onClickUserProfile = { userId ->
-                    viewModel.navigateToUserProfile(userId)
-                },
-            )
+            if (state.isError) {
+                ErrorScreen(
+                    Modifier,
+                    false,
+                    onRetryClick = { viewModel.initState() },
+                )
+            } else {
+                FriendScreenInternal(
+                    isLoading = state.isLoading,
+                    isMine = state.isMine,
+                    type = FriendsType.fromIndex(index),
+                    state = state,
+                    onClickFollowByFollower = { userId, follow ->
+                        viewModel.followUser(
+                            userId = userId,
+                            isFollowing = follow,
+                            type = FriendsType.Follower,
+                        )
+                    },
+                    onClickFollowByFollowing = { userId, follow ->
+                        viewModel.followUser(
+                            userId = userId,
+                            isFollowing = follow,
+                            type = FriendsType.Following,
+                        )
+                    },
+                    onClickUserProfile = { userId ->
+                        viewModel.navigateToUserProfile(userId)
+                    },
+                )
+            }
         }
     }
 }

@@ -46,8 +46,13 @@ internal class RankingViewModel @Inject constructor(
     private val _userRankings = MutableStateFlow(PagingData.from(skeletonExamineeItems))
     val userRankings: Flow<PagingData<User>> = _userRankings
 
-    fun getUserRankings() = intent {
-        updatePagingDataLoading(true)
+    fun refresh() {
+        fetchPopularTags()
+        getExams()
+        getUserRankings()
+    }
+
+    private fun getUserRankings() = intent {
         getUserRankingsUseCase()
             .cachedIn(viewModelScope)
             .catch {
@@ -55,11 +60,10 @@ internal class RankingViewModel @Inject constructor(
             }
             .collect { pagingUser ->
                 _userRankings.value = pagingUser
-                updatePagingDataLoading(false)
             }
     }
 
-    fun getExams() = with(container.stateFlow.value) {
+    private fun getExams() = with(container.stateFlow.value) {
         val tagId = run {
             val index = tagSelections.indexOf(true)
             if (index == 0) {
@@ -104,19 +108,25 @@ internal class RankingViewModel @Inject constructor(
             }
     }
 
-    fun fetchPopularTags() = intent {
-        updateTagLoading(true)
+    private fun fetchPopularTags() = intent {
+        startTagLoading()
         fetchPopularTagsUseCase()
             .onSuccess { tags ->
                 reduce {
                     state.copy(
+                        isTagLoading = false,
                         examTags = tags.addAllTag(),
                         tagSelections = tags.fastMap { false }.toImmutableList().addAllSelection(),
                     )
                 }
-                updateTagLoading(false)
             }
             .onFailure { exception ->
+                reduce {
+                    state.copy(
+                        isTagLoading = false,
+                        isError = true,
+                    )
+                }
                 postSideEffect(RankingSideEffect.ReportError(exception))
             }
     }
@@ -171,12 +181,11 @@ internal class RankingViewModel @Inject constructor(
         }
     }
 
-    private fun updateTagLoading(
-        loading: Boolean,
-    ) = intent {
+    private fun startTagLoading() = intent {
         reduce {
             state.copy(
-                isTagLoading = loading,
+                isTagLoading = true,
+                isError = false,
             )
         }
     }

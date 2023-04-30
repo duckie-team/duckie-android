@@ -14,6 +14,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +29,7 @@ import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScree
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
@@ -61,11 +63,21 @@ class SolveProblemActivity : BaseActivity() {
                         .systemBarsPadding()
                         .navigationBarsPadding()
                         .imePadding(),
-                    targetState = state.isProblemsLoading,
-                ) { isLoading ->
-                    when (isLoading) {
-                        true -> {
+                    targetState = state,
+                ) {
+                    when {
+                        state.isProblemsLoading -> {
                             LoadingIndicator()
+                        }
+
+                        state.isError -> {
+                            ErrorScreen(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .statusBarsPadding(),
+                                isNetworkError = false,
+                                onRetryClick = viewModel::initState,
+                            )
                         }
 
                         else -> {
