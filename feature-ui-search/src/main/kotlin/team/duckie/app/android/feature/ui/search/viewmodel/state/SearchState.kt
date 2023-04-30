@@ -30,6 +30,8 @@ import team.duckie.app.android.feature.ui.search.constants.SearchStep
 internal data class SearchState(
     val me: User? = null,
     val isSearchLoading: Boolean = false,
+    val isSearchProblemError: Boolean = false,
+    val isSearchUserError: Boolean = false,
     val searchStep: SearchStep = SearchStep.Search,
     val recentSearch: ImmutableList<String> = persistentListOf(),
     val recommendSearchs: Flow<PagingData<Tag>> = flow { PagingData.empty<Tag>() },

@@ -9,6 +9,8 @@ package team.duckie.app.android.feature.ui.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
@@ -148,23 +150,29 @@ internal class SearchViewModel @Inject constructor(
     }
 
     /** [keyword]에 따른 덕질고사 검색 결과를 가져온다. */
-    private fun fetchSearchExams(keyword: String) {
+    internal fun fetchSearchExams(keyword: String) {
+        intent { reduce { state.copy(isSearchProblemError = false) } }
+
         viewModelScope.launch {
             searchExamsUseCase(exam = keyword)
                 .cachedIn(viewModelScope)
                 .collect { pagingExam ->
+                    intent { reduce { state.copy(isSearchProblemError = false) } }
                     _searchExams.value = pagingExam
                 }
         }
     }
 
     /** [keyword]에 따른 유저 검색 결과를 가져온다. */
-    private fun fetchSearchUsers(keyword: String) {
+    internal fun fetchSearchUsers(keyword: String) {
+        intent { reduce { state.copy(isSearchUserError = false) } }
+
         viewModelScope.launch {
             searchUsersUseCase(user = keyword)
                 .cachedIn(viewModelScope)
                 .map { paging -> paging.map(User::toUiModel) }
                 .collect { pagingUser ->
+                    intent { reduce { state.copy(isSearchUserError = false) } }
                     _searchUsers.value = pagingUser
                 }
         }
@@ -214,6 +222,7 @@ internal class SearchViewModel @Inject constructor(
             }
 
             SearchStep.SearchResult -> {
+                reduce { state.copy(isSearchProblemError = false, isSearchUserError = false) }
                 fetchSearchExams(keyword = keyword)
                 fetchSearchUsers(keyword = keyword)
                 postRecentSearch(keyword = keyword)
@@ -261,5 +270,26 @@ internal class SearchViewModel @Inject constructor(
 
     fun clickUserProfile(userId: Int) = intent {
         postSideEffect(SearchSideEffect.NavigateToUserProfile(userId = userId))
+    }
+
+    fun checkError(loadStates: LoadStates) = intent {
+        val errorLoadState = arrayOf(
+            loadStates.append,
+            loadStates.prepend,
+            loadStates.refresh,
+        ).filterIsInstance(LoadState.Error::class.java).firstOrNull()
+
+        val exception = errorLoadState?.error
+
+        if (exception != null) {
+            if (state.tagSelectedTab == SearchResultStep.DuckExam) {
+                reduce { state.copy(isSearchProblemError = true) }
+            }
+            if (state.tagSelectedTab == SearchResultStep.User) {
+                reduce { state.copy(isSearchUserError = true) }
+            }
+
+            postSideEffect(SearchSideEffect.ReportError(exception))
+        }
     }
 }
