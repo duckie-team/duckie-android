@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalFoundationApi::class)
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
@@ -24,7 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
@@ -42,16 +41,14 @@ import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemVi
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.compose.asLoose
+import team.duckie.app.android.util.compose.moveNextPage
+import team.duckie.app.android.util.compose.movePreviousPage
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
-import team.duckie.app.android.util.kotlin.npe
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
 private const val SolveProblemBottomBarLayoutId = "SolveProblemBottomBar"
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SolveProblemScreen(
     viewModel: SolveProblemViewModel = activityViewModel(),
@@ -130,50 +127,16 @@ internal fun SolveProblemScreen(
                 },
             )
         },
-    ) { measurableItems, constraints ->
-        val looseConstraints = constraints.asLoose()
-
-        val topAppBarMeasurable = measurableItems.fastFirstOrNull { measureItem ->
-            measureItem.layoutId == SolveProblemTopAppBarLayoutId
-        }?.measure(looseConstraints) ?: npe()
-        val topAppBarHeight = topAppBarMeasurable.height
-
-        val bottomBarMeasurable = measurableItems.fastFirstOrNull { measurable ->
-            measurable.layoutId == SolveProblemBottomBarLayoutId
-        }?.measure(looseConstraints) ?: npe()
-        val bottomBarHeight = bottomBarMeasurable.height
-
-        val contentHeight = constraints.maxHeight - topAppBarHeight - bottomBarHeight
-        val contentConstraints = constraints.copy(
-            minHeight = contentHeight,
-            maxHeight = contentHeight,
+        measurePolicy = screenMeasurePolicy(
+            topLayoutId = SolveProblemTopAppBarLayoutId,
+            contentLayoutId = SolveProblemContentLayoutId,
+            bottomLayoutId = SolveProblemBottomBarLayoutId,
         )
-        val contentMeasurable = measurableItems.fastFirstOrNull { measurable ->
-            measurable.layoutId == SolveProblemContentLayoutId
-        }?.measure(contentConstraints) ?: npe()
-
-        layout(
-            width = constraints.maxWidth,
-            height = constraints.maxHeight,
-        ) {
-            topAppBarMeasurable.place(
-                x = 0,
-                y = 0,
-            )
-            contentMeasurable.place(
-                x = 0,
-                y = topAppBarHeight,
-            )
-            bottomBarMeasurable.place(
-                x = 0,
-                y = topAppBarHeight + contentHeight,
-            )
-        }
-    }
+    )
 }
 
 @Composable
-internal fun ContentSection(
+private fun ContentSection(
     modifier: Modifier = Modifier,
     viewModel: SolveProblemViewModel,
     pagerState: PagerState,
@@ -207,28 +170,6 @@ internal fun ContentSection(
                 inputAnswers = state.inputAnswers,
                 onClickAnswer = viewModel::inputAnswer,
             )
-        }
-    }
-}
-
-suspend inline fun PagerState.moveNextPage(
-    onMovePage: (Int) -> Unit,
-) {
-    if (canScrollForward) {
-        currentPage.plus(1).also {
-            animateScrollToPage(it)
-            onMovePage(it)
-        }
-    }
-}
-
-suspend inline fun PagerState.movePreviousPage(
-    onMovePage: (Int) -> Unit,
-) {
-    if (canScrollBackward) {
-        currentPage.minus(1).also {
-            animateScrollToPage(it)
-            onMovePage(it)
         }
     }
 }
