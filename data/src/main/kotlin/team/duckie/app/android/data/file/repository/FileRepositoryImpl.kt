@@ -17,6 +17,7 @@ import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.domain.file.repository.FileRepository
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import timber.log.Timber
 
 class FileRepositoryImpl @Inject constructor(private val client: Fuel) : FileRepository {
     override suspend fun upload(file: File, type: String): String {
@@ -30,7 +31,7 @@ class FileRepositoryImpl @Inject constructor(private val client: Fuel) : FileRep
             .progress { readBytes, totalBytes ->
                 @AllowMagicNumber(because = "100")
                 val progress = readBytes.toFloat() / totalBytes.toFloat() * 100
-                println("Uploading... $progress%")
+                Timber.e("Uploading... $progress%")
             }
         val response = request.awaitString().toStringJsonMap()
         return response["url"] ?: duckieResponseFieldNpe("url")

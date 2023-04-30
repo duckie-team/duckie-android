@@ -22,6 +22,7 @@ import team.duckie.app.android.data.exam.repository.ExamRepositoryImpl
 import team.duckie.app.android.data.util.ApiTest
 import team.duckie.app.android.data.util.buildMockHttpClient
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import timber.log.Timber
 
 class ExamRepositoryTest : ApiTest(
     client = buildMockHttpClient(content = ExamDummyResponse.RawData),
@@ -38,7 +39,7 @@ class ExamRepositoryTest : ApiTest(
 
             expectThat(actual).isEqualTo(expected)
         } else {
-            println(actual)
+            Timber.e(actual.toString())
         }
     }
 }

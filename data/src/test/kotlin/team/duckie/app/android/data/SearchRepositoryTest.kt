@@ -33,7 +33,7 @@ class SearchRepositoryTest : ApiTest(
 //
 //            expectThat(actual).isEqualTo(expected)
 //        } else {
-//            println(actual)
+//            Timber.e(actual.toString())
 //        }
         expectThat(true).isTrue()
     }
