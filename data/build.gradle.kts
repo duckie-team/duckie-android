@@ -54,6 +54,7 @@ dependencies {
         libs.bundles.fuel,
         libs.bundles.moshi,
         libs.bundles.ktor.client,
+        libs.logging.timber,
         projects.domain,
         projects.utilKotlin,
         projects.pluginKtorClient,
