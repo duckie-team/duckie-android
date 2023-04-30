@@ -12,5 +12,6 @@ import team.duckie.app.android.domain.notification.model.Notification
 
 data class NotificationState(
     val isLoading: Boolean = true,
+    val isError: Boolean = false,
     val notifications: ImmutableList<Notification> = skeletonNotifications,
 )
