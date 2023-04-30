@@ -13,7 +13,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -43,10 +42,15 @@ internal class SolveProblemViewModel @Inject constructor(
         SolveProblemState(),
     )
 
+    companion object {
+        internal const val TimerCount = 3
+        internal val DuringMillis = 1.seconds
+    }
+
     private val problemTimer = ProblemTimer(
-        count = 3,
+        count = TimerCount,
         coroutineScope = viewModelScope,
-        duringMillis = 1.seconds,
+        duringMillis = DuringMillis,
     )
 
     val timerCount: StateFlow<Int> = problemTimer.remainingTime

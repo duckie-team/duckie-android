@@ -34,7 +34,7 @@ fun LinearProgressBar(
         modifier = modifier
             .clip(CircleShape)
             .height(strokeWidth)
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         val strokeSize = size.height
         drawLinearIndicatorBackground(
@@ -52,19 +52,19 @@ fun LinearProgressBar(
 
 private fun DrawScope.drawLinearIndicatorBackground(
     color: QuackColor,
-    strokeWidth: Float
+    strokeWidth: Float,
 ) = drawLinearIndicator(
     startFraction = 0f,
     endFraction = 1f,
     color = color,
-    strokeWidth = strokeWidth
+    strokeWidth = strokeWidth,
 )
 
 private fun DrawScope.drawLinearIndicator(
     startFraction: Float,
     endFraction: Float,
     color: QuackColor,
-    strokeWidth: Float
+    strokeWidth: Float,
 ) {
     val width = size.width
     val height = size.height

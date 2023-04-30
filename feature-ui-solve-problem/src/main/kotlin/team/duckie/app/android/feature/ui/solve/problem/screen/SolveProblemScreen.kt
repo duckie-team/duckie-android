@@ -131,7 +131,7 @@ internal fun SolveProblemScreen(
             topLayoutId = SolveProblemTopAppBarLayoutId,
             contentLayoutId = SolveProblemContentLayoutId,
             bottomLayoutId = SolveProblemBottomBarLayoutId,
-        )
+        ),
     )
 }
 

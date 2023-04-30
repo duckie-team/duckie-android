@@ -42,6 +42,7 @@ import team.duckie.app.android.feature.ui.solve.problem.common.CloseAndPageTopBa
 import team.duckie.app.android.feature.ui.solve.problem.common.DoubleButtonBottomBar
 import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel.Companion.TimerCount
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.shared.ui.compose.LinearProgressBar
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
@@ -136,7 +137,7 @@ internal fun QuizScreen(
             topLayoutId = QuizTopAppBarLayoutId,
             contentLayoutId = QuizContentLayoutId,
             bottomLayoutId = QuizBottomBarLayoutId,
-        )
+        ),
     )
 }
 
@@ -152,7 +153,7 @@ private fun ContentSection(
         derivedStateOf { progress == 0 }
     }
     LaunchedEffect(timeOver) {
-        if(timeOver){
+        if (timeOver) {
             Log.d("timeOver", "timeOver")
             // TODO(EvergreenTree97) 추후 덕퀴즈 종료로 이동 viewModel.finishExam()
         }
@@ -173,7 +174,7 @@ private fun ContentSection(
             verticalArrangement = Arrangement.spacedBy(space = 24.dp),
         ) {
             progressSection(
-                progress = { progress.toFloat() / 3 },
+                progress = { progress.toFloat() / TimerCount },
             )
             questionSection(
                 page = pageIndex,
