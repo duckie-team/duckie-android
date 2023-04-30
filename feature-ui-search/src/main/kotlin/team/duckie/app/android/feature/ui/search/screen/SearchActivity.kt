@@ -119,8 +119,8 @@ class SearchActivity : BaseActivity() {
                             when (step) {
                                 SearchStep.Search -> SearchScreen(vm = vm)
                                 SearchStep.SearchResult -> {
-                                    if (state.isSearchProblemError
-                                        && state.tagSelectedTab == SearchResultStep.DuckExam
+                                    if (state.isSearchProblemError &&
+                                        state.tagSelectedTab == SearchResultStep.DuckExam
                                     ) {
                                         ErrorScreen(
                                             modifier = Modifier
@@ -131,8 +131,8 @@ class SearchActivity : BaseActivity() {
                                                 vm.fetchSearchExams(state.searchKeyword)
                                             },
                                         )
-                                    } else if (state.isSearchUserError
-                                        && state.tagSelectedTab == SearchResultStep.User
+                                    } else if (state.isSearchUserError &&
+                                        state.tagSelectedTab == SearchResultStep.User
                                     ) {
                                         ErrorScreen(
                                             modifier = Modifier

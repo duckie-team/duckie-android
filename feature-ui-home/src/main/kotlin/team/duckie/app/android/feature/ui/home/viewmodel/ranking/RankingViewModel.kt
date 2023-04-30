@@ -181,8 +181,7 @@ internal class RankingViewModel @Inject constructor(
         }
     }
 
-    private fun startTagLoading(
-    ) = intent {
+    private fun startTagLoading() = intent {
         reduce {
             state.copy(
                 isTagLoading = true,
