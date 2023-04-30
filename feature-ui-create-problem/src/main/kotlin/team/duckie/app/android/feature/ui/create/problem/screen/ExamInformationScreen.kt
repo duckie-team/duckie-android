@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.create.problem.screen
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -79,6 +81,7 @@ internal fun ExamInformationScreen(
     viewModel: CreateProblemViewModel = activityViewModel(),
     modifier: Modifier,
 ) {
+    val activity = LocalContext.current as Activity
     val state = viewModel.collectAsState().value.examInformation
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
@@ -270,7 +273,7 @@ internal fun ExamInformationScreen(
         rightButtonText = stringResource(id = R.string.ok),
         rightButtonOnClick = {
             createProblemExitDialogVisible = false
-            viewModel.finishCreateProblem()
+            activity.finish()
         },
         onDismissRequest = { createProblemExitDialogVisible = false },
     )
