@@ -9,8 +9,10 @@ package team.duckie.app.android.feature.ui.solve.problem.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.StateFlow
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -21,10 +23,12 @@ import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCas
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
+import team.duckie.app.android.util.android.timer.ProblemTimer
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -37,6 +41,27 @@ internal class SolveProblemViewModel @Inject constructor(
     override val container: Container<SolveProblemState, SolveProblemSideEffect> = container(
         SolveProblemState(),
     )
+
+    companion object {
+        internal const val TimerCount = 3
+        internal val DuringMillis = 1.seconds
+    }
+
+    private val problemTimer = ProblemTimer(
+        count = TimerCount,
+        coroutineScope = viewModelScope,
+        duringMillis = DuringMillis,
+    )
+
+    val timerCount: StateFlow<Int> = problemTimer.remainingTime
+
+    fun startTimer() {
+        problemTimer.start()
+    }
+
+    fun stopTimer() {
+        problemTimer.stop()
+    }
 
     suspend fun initState() = intent {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
