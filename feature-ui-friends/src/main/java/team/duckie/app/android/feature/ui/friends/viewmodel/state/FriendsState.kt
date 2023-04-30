@@ -16,6 +16,7 @@ internal data class FriendsState(
     val me: User ? = null,
 
     val isLoading: Boolean = true,
+    val isError: Boolean = false,
     val isMine: Boolean = true,
 
     val followers: ImmutableList<Friend> = skeletonFriends,
