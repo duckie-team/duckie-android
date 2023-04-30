@@ -14,6 +14,7 @@ import team.duckie.app.android.domain.examInstance.model.ProblemInstance
 internal data class SolveProblemState(
     val examId: Int = -1,
     val isProblemsLoading: Boolean = true,
+    val isError: Boolean = false,
     val currentPageIndex: Int = 0,
     val problems: ImmutableList<ProblemInstance> = persistentListOf(),
     val inputAnswers: ImmutableList<InputAnswer> = persistentListOf(),
