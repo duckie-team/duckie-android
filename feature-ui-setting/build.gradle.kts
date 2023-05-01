@@ -5,6 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+import AppVersionNameProvider.App.VersionCode
 import AppVersionNameProvider.App.VersionName
 import DependencyHandler.Extensions.implementations
 
@@ -23,7 +24,7 @@ android {
     }
 
     defaultConfig {
-        buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName\"")
+        buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName.$VersionCode\"")
     }
 }
 
