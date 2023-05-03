@@ -115,7 +115,7 @@ quack-lint-compose = "1.0.2"
 # test
 test-strikt = "0.34.1"
 test-junit-core = "4.13.2"
-test-junit-engine = "5.9.2"
+test-junit-engine = "5.9.3"
 test-androidx-junit = "1.1.5"
 test-androidx-runner = "1.5.2"
 test-parameter-injector = "1.11"
