@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
+<resources>
+    <string name="title">태그 편집</string>
+
+    <string name="my_favorite_tag">내 관심 태그</string>
+    <string name="not_yet_add_favorite_tag">추가한 관심태그가 없어요 :(</string>
+    <string name="add_favorite_tag">직접 태그 추가하기</string>
+</resources>

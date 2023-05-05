@@ -56,6 +56,7 @@ include(
     ":feature-ui-exam-result",
     ":feature-ui-profile",
     ":feature-ui-friends",
+    ":feature-ui-tag-edit",
     ":shared-ui-compose",
     ":util-ui",
     ":util-kotlin",
