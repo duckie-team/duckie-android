@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
