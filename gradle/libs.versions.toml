@@ -97,7 +97,7 @@ ktor-core = "2.3.0"
 fuel-core = "2.3.1"
 
 # jackson
-jackson-core = "2.14.2"
+jackson-core = "2.15.0"
 
 # moshi
 moshi-core = "1.14.0"
