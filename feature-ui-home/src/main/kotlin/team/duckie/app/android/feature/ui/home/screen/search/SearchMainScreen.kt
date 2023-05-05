@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -77,7 +76,7 @@ internal fun SearchMainScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight()
+                    .height(36.dp)
                     .background(
                         color = QuackColor.Gray4.composeColor,
                         shape = RoundedCornerShape(
@@ -89,8 +88,7 @@ internal fun SearchMainScreen(
                     ) {
                         vm.navigateToSearch()
                     }
-                    .padding(start = 12.dp)
-                    .padding(horizontal = 8.dp),
+                    .padding(start = 12.dp),
                 contentAlignment = Alignment.CenterStart,
             ) {
                 QuackBody1(
