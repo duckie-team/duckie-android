@@ -11,7 +11,7 @@ plugin-code-ktlint-source = "0.45.2"
 plugin-code-detekt = "1.22.0"
 
 # plugin - kotlin
-plugin-kotlin-ksp = "1.8.10-1.0.9"
+plugin-kotlin-ksp = "1.8.21-1.0.11"
 
 # plugin - compose
 plugin-compose-paparazzi = "1.2.0"
