@@ -20,7 +20,7 @@ plugin-compose-paparazzi = "1.2.0"
 plugin-ui-oss-license = "0.10.6"
 
 # plugin - util
-plugin-util-dependency-graph = "1.0.0"
+plugin-util-dependency-graph = "1.1.0"
 plugin-util-dependency-handler-extensions = "1.0.3"
 plugin-util-secrets = "2.0.1"
 
