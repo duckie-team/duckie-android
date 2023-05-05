@@ -14,5 +14,6 @@ class AppVersionNameProvider : Plugin<Project> {
 
     companion object App {
         const val VersionName = ApplicationConstants.versionName
+        const val VersionCode = ApplicationConstants.versionCode
     }
 }
