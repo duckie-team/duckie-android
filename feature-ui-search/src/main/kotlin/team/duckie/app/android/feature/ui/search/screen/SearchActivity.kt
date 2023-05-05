@@ -21,11 +21,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.firebase.crashlytics.ktx.crashlytics
@@ -43,9 +45,9 @@ import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
+import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
 import team.duckie.app.android.shared.ui.compose.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.util.compose.collectAndHandleState
-import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
@@ -95,13 +97,13 @@ class SearchActivity : BaseActivity() {
 
             QuackTheme {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .systemBarsPadding(),
                     contentAlignment = Alignment.Center,
                 ) {
                     Column(
-                        modifier = Modifier
-                            .background(QuackColor.White.composeColor)
-                            .padding(systemBarPaddings),
+                        modifier = Modifier.background(QuackColor.White.composeColor),
                     ) {
                         SearchTextFieldTopBar(
                             modifier = Modifier.padding(SearchHorizontalPadding),
@@ -111,6 +113,9 @@ class SearchActivity : BaseActivity() {
                             },
                             onPrevious = {
                                 finishWithAnimation()
+                            },
+                            clearSearchKeyword = {
+                                vm.clearSearchKeyword()
                             },
                         )
                         QuackAnimatedContent(
@@ -194,12 +199,13 @@ private fun SearchTextFieldTopBar(
     modifier: Modifier = Modifier,
     searchKeyword: String,
     onSearchKeywordChanged: (String) -> Unit,
+    clearSearchKeyword: () -> Unit,
     onPrevious: () -> Unit,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -215,6 +221,9 @@ private fun SearchTextFieldTopBar(
                 onSearchKeywordChanged(keyword)
             },
             placeholderText = stringResource(id = R.string.try_search),
+            trailingIcon = SharedIcon.ic_textfield_delete_16,
+            trailingIconOnClick = clearSearchKeyword,
+            trailingEndPadding = 13.dp,
         )
     }
 }

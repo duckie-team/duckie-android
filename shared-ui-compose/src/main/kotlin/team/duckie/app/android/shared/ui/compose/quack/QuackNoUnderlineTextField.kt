@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.shared.ui.compose.quack
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,7 +42,8 @@ fun QuackNoUnderlineTextField(
     onTextChanged: (text: String) -> Unit,
     placeholderText: String? = null,
     trailingEndPadding: Dp = 0.dp,
-    trailingIcon: QuackIcon? = null,
+    @DrawableRes
+    trailingIcon: Int? = null,
     trailingIconOnClick: (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
     keyboardActions: KeyboardActions = KeyboardActions(),
@@ -101,7 +103,8 @@ private fun TextFieldDecoration(
     textField: @Composable () -> Unit,
     isPlaceholder: Boolean,
     placeholderText: String?,
-    trailingIcon: QuackIcon?,
+    @DrawableRes
+    trailingIcon: Int?,
     trailingEndPadding: Dp = 0.dp,
     trailingIconOnClick: (() -> Unit)?,
 ) {
@@ -136,7 +139,7 @@ private fun TextFieldDecoration(
                     src = trailingIcon,
                     modifier = Modifier.padding(end = trailingEndPadding),
                     onClick = trailingIconOnClick,
-                    size = DpSize(24.dp, 24.dp),
+                    size = DpSize(16.dp, 16.dp),
                     rippleEnabled = false,
                 )
             }
