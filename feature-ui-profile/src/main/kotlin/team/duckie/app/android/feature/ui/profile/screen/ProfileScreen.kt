@@ -43,7 +43,7 @@ fun ProfileScreen(
     submittedExamSection: @Composable () -> Unit,
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMore: (() -> Unit)? = null,
-    onClickFriend: (FriendsType, Int) -> Unit,
+    onClickFriend: (FriendsType, Int, String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val solvedExams = remember(userProfile.solvedExamInstances) {
@@ -82,8 +82,9 @@ fun ProfileScreen(
                         ?: stringResource(id = R.string.please_input_introduce),
                     isLoading = isLoading,
                     onClickFriend = { friendsType, userId ->
+                        val nickname = user?.nickname ?: ""
                         if (!isLoading) {
-                            onClickFriend(friendsType, userId)
+                            onClickFriend(friendsType, userId, nickname)
                         }
                     },
                 )

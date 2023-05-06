@@ -167,8 +167,8 @@ internal fun MainScreen(
                         navigateToSearch = { searchTag ->
                             mainViewModel.navigateToSearch(searchTag)
                         },
-                        navigateToFriend = { type: FriendsType, userId: Int ->
-                            mainViewModel.navigateFriends(type, userId)
+                        navigateToFriend = { type: FriendsType, userId: Int, nickname: String ->
+                            mainViewModel.navigateFriends(type, userId, nickname)
                         },
                         navigateToEditProfile = { userId ->
                             navigateToEditProfile(userId)
