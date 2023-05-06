@@ -50,10 +50,6 @@ class TagEditActivity : BaseActivity() {
             is TagEditSideEffect.FinishTagEdit -> {
                 finish()
             }
-
-            TagEditSideEffect.AddTagEdit -> {
-                // TODO(riflockle7): 태그 추가 화면으로 이동
-            }
         }
     }
 }

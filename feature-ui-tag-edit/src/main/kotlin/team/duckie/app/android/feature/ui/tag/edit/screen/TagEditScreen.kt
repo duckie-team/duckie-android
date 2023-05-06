@@ -25,6 +25,7 @@ import team.duckie.app.android.feature.ui.tag.edit.viewmodel.TagEditViewModel
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.FavoriteTagSection
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
+import team.duckie.app.android.shared.ui.compose.screen.SearchTagScreen
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackLargeButton
@@ -54,6 +55,19 @@ internal fun TagEditScreen(
             onTrailingClick = vm::onTrailingClick,
             onAddTagClick = vm::onAddTagClick,
             onTagClick = vm::onTagClick,
+        )
+
+        is TagEditState.AddTag -> SearchTagScreen(
+            modifier = modifier,
+            title = stringResource(id = R.string.add_tag_title),
+            placeholderText = stringResource(id = R.string.add_tag_placeholder),
+            multiSelectMode = false,
+            onCloseClick = vm::onAddFinishClick,
+            onBackPressed = vm::onAddFinishClick,
+            onClickSearchListHeader = { vm.onSearchTagClick(0) },
+            onClickSearchList = { index -> vm.onSearchTagClick(index) },
+            onTextChanged = { newSearchTextValue -> vm.onSearchTextChanged(newSearchTextValue) },
+            onSearchTextValidate = { searchTextValue -> vm.onSearchTextValidate(searchTextValue) },
         )
 
         is TagEditState.Error -> ErrorScreen(

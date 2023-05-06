@@ -10,16 +10,18 @@ package team.duckie.app.android.feature.ui.tag.edit.viewmodel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.domain.user.model.User
 
 
 sealed class TagEditState {
     object Loading : TagEditState()
 
     class Success(
-        val me: User,
         val myTags: ImmutableList<Tag> = persistentListOf(),
         val categoryTagList: ImmutableList<ImmutableList<Tag>> = persistentListOf(),
+    ) : TagEditState()
+
+    class AddTag(
+        val searchResults: ImmutableList<Tag> = persistentListOf(),
     ) : TagEditState()
 
     data class Error(val exception: Throwable) : TagEditState()

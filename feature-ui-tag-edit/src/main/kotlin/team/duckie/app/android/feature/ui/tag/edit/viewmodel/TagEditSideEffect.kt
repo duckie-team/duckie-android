@@ -22,11 +22,4 @@ sealed interface TagEditSideEffect {
      * @param needRefresh 새로고침 필요한 지 여부 (ex. 태그 수정 성공했을 때 새로고침 필요)
      */
     class FinishTagEdit(val needRefresh: Boolean) : TagEditSideEffect
-
-    /**
-     * 태그 추가 버튼 클릭 시 동작하는 SideEffect
-     *
-     * @param needRefresh 새로고침 필요한 지 여부 (ex. 태그 수정 성공했을 때 새로고침 필요)
-     */
-    object AddTagEdit : TagEditSideEffect
 }
