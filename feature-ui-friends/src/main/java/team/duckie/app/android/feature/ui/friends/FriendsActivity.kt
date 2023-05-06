@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.friends
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -17,7 +16,6 @@ import team.duckie.app.android.feature.ui.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.ui.friends.viewmodel.sideeffect.FriendsSideEffect
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation

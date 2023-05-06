@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.friends.viewmodel
 
-import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
