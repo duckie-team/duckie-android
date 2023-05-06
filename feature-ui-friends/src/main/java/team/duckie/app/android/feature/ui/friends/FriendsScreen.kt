@@ -50,7 +50,6 @@ import team.duckie.quackquack.ui.component.QuackMainTab
 internal fun FriendScreen(
     viewModel: FriendsViewModel,
     onPrevious: () -> Unit = { },
-    initialFriendsType: FriendsType,
 ) {
     val context = LocalContext.current
     val tabs = remember {
@@ -60,7 +59,7 @@ internal fun FriendScreen(
         )
     }
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    val pagerState = rememberPagerState(initialPage = initialFriendsType.index)
+    val pagerState = rememberPagerState(initialPage = state.friendType.index)
     val coroutineScope = rememberCoroutineScope()
 
     Column(

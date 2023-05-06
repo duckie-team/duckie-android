@@ -35,8 +35,6 @@ class FriendsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val friendType = getFriendType(intent)
-
         viewModel.observe(
             lifecycleOwner = this,
             sideEffect = ::handleSideEffect,
@@ -49,7 +47,6 @@ class FriendsActivity : BaseActivity() {
                     onPrevious = {
                         finishWithAnimation()
                     },
-                    initialFriendsType = friendType,
                 )
             }
         }
@@ -73,10 +70,5 @@ class FriendsActivity : BaseActivity() {
                 )
             }
         }
-    }
-
-    private fun getFriendType(intent: Intent): FriendsType {
-        val friendTypeIndex = intent.getIntExtra(Extras.FriendType, 0)
-        return FriendsType.fromIndex(friendTypeIndex)
     }
 }

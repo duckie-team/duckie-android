@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.friends.viewmodel
 
+import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,6 +44,7 @@ internal class FriendsViewModel @Inject constructor(
     init {
         initState()
         initNickName()
+        initFriendType()
     }
 
     internal fun initState() = intent {
@@ -64,6 +66,15 @@ internal class FriendsViewModel @Inject constructor(
                 reduce { state.copy(isError = true, isLoading = false) }
                 postSideEffect(FriendsSideEffect.ReportError(it))
             }
+    }
+
+    private fun initFriendType() = intent {
+        val friendType: FriendsType =
+            savedStateHandle.getStateFlow(Extras.FriendType, 0).value.let { friendTypeIndex ->
+                FriendsType.fromIndex(friendTypeIndex)
+            }
+
+        reduce { state.copy(friendType = friendType) }
     }
 
     private fun initNickName() = intent {
