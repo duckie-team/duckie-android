@@ -101,6 +101,7 @@ internal fun MainScreen(
     state: MainState,
     navigateToUserProfile: (Int) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
+    navigateToTagEdit: (Int) -> Unit,
 ) {
     Layout(
         modifier = Modifier
@@ -172,6 +173,9 @@ internal fun MainScreen(
                         },
                         navigateToEditProfile = { userId ->
                             navigateToEditProfile(userId)
+                        },
+                        navigateToTagEdit = { userId ->
+                            navigateToTagEdit(userId)
                         },
                     )
                 }

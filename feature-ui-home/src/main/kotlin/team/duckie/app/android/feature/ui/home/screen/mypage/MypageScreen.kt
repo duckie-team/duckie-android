@@ -37,6 +37,7 @@ internal fun MyPageScreen(
     navigateToSearch: (String) -> Unit,
     navigateToFriend: (FriendsType, Int) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
+    navigateToTagEdit: (Int) -> Unit,
     viewModel: MyPageViewModel,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
@@ -86,6 +87,10 @@ internal fun MyPageScreen(
                 is MyPageSideEffect.NavigateToEditProfile -> {
                     navigateToEditProfile(sideEffect.userId)
                 }
+
+                is MyPageSideEffect.NavigateToTagEdit -> {
+                    navigateToTagEdit(sideEffect.userId)
+                }
             }
         }
     }
@@ -107,7 +112,7 @@ internal fun MyPageScreen(
                 onClickSetting = viewModel::clickSetting,
                 onClickNotification = viewModel::clickNotification,
                 onClickEditProfile = viewModel::clickEditProfile,
-                onClickEditTag = { viewModel.clickEditTag(context.getString(R.string.provide_after)) },
+                onClickEditTag = viewModel::clickEditTag,
                 onClickExam = viewModel::clickExam,
                 onClickMakeExam = viewModel::clickMakeExam,
                 onClickTag = viewModel::onClickTag,

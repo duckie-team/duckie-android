@@ -93,8 +93,13 @@ internal class MyPageViewModel @Inject constructor(
         )
     }
 
-    override fun clickEditTag(message: String) = intent {
-        postSideEffect(MyPageSideEffect.SendToast(message))
+    override fun clickEditTag() = intent {
+        postSideEffect(
+            MyPageSideEffect.NavigateToTagEdit(
+                userId = state.userProfile.user?.id
+                    ?: throw DuckieClientLogicProblemException(code = "User is null"),
+            ),
+        )
     }
 
     override fun clickMakeExam() = intent {

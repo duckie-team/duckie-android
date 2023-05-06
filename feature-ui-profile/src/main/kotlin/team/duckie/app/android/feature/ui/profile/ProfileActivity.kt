@@ -30,6 +30,7 @@ import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
+import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle
@@ -56,6 +57,9 @@ class ProfileActivity : BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
+
+    @Inject
+    lateinit var tagEditNavigator: TagEditNavigator
 
     @Inject
     lateinit var settingNavigator: SettingNavigator
@@ -109,7 +113,7 @@ class ProfileActivity : BaseActivity() {
                                     onClickSetting = viewModel::clickSetting,
                                     onClickNotification = viewModel::clickNotification,
                                     onClickEditProfile = viewModel::clickEditProfile,
-                                    onClickEditTag = { viewModel.clickEditTag(getString(R.string.provide_after)) },
+                                    onClickEditTag = viewModel::clickEditTag,
                                     onClickExam = viewModel::clickExam,
                                     onClickMakeExam = viewModel::clickMakeExam,
                                     onClickTag = viewModel::onClickTag,
@@ -154,6 +158,15 @@ class ProfileActivity : BaseActivity() {
                     activity = this@ProfileActivity,
                     intentBuilder = {
                         putExtra(Extras.ExamId, sideEffect.examId)
+                    },
+                )
+            }
+
+            is ProfileSideEffect.NavigateToTagEdit -> {
+                tagEditNavigator.navigateFrom(
+                    activity = this@ProfileActivity,
+                    intentBuilder = {
+                        putExtra(Extras.UserId, sideEffect.userId)
                     },
                 )
             }
