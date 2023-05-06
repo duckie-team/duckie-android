@@ -50,7 +50,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -212,7 +211,6 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
         nicknameInputFlow
             .onEach { vm.readyToScreenCheck(currentStep) }
             .debounce(Debounce.SearchSecond)
-            .filterNot(String::isEmpty)
             .collect { nickname ->
                 vm.checkNickname(nickname)
             }
@@ -277,12 +275,12 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                         }
                     },
                     placeholderText = stringResource(R.string.profile_nickname_placeholder),
-                    isError = profileScreenState == ProfileScreenState.NicknameRuleError ||
-                            profileScreenState == ProfileScreenState.NicknameDuplicateError,
+                    isError = ProfileScreenState.errorState.contains(profileScreenState),
                     maxLength = MaxNicknameLength,
                     errorText = when (profileScreenState) {
                         ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
                         ProfileScreenState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
+                        ProfileScreenState.NicknameEmpty -> stringResource(R.string.profile_nickname_empty)
                         else -> lastErrorText // 안하면 invisible 될 때 갑자기 텍스트가 사라짐 (애니메이션 X)
                     }.also { errorText ->
                         lastErrorText = errorText
