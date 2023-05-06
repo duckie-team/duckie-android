@@ -42,6 +42,7 @@ internal class FriendsViewModel @Inject constructor(
 
     init {
         initState()
+        initNickName()
     }
 
     internal fun initState() = intent {
@@ -63,6 +64,12 @@ internal class FriendsViewModel @Inject constructor(
                 reduce { state.copy(isError = true, isLoading = false) }
                 postSideEffect(FriendsSideEffect.ReportError(it))
             }
+    }
+
+    private fun initNickName() = intent {
+        val nickname = savedStateHandle.getStateFlow(Extras.ProfileNickName, "").value
+
+        reduce { state.copy(targetName = nickname) }
     }
 
     private fun fetchUserFollowers(userId: Int) = intent {

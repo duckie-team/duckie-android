@@ -70,7 +70,7 @@ internal fun FriendScreen(
             .padding(systemBarPaddings),
     ) {
         BackPressedHeadLine2TopAppBar(
-            title = state.me?.nickname ?: "",
+            title = state.targetName,
             onBackPressed = onPrevious,
         )
         QuackMainTab(

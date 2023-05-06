@@ -13,6 +13,7 @@ import team.duckie.app.android.feature.ui.friends.viewmodel.skeletonFriends
 import team.duckie.app.android.util.kotlin.randomString
 
 internal data class FriendsState(
+    val targetName: String = "",
     val me: User ? = null,
 
     val isLoading: Boolean = true,
