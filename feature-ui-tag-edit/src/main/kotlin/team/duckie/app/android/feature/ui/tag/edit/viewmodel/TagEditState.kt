@@ -11,7 +11,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.tag.model.Tag
 
-
 sealed class TagEditState {
     object Loading : TagEditState()
 

@@ -42,7 +42,7 @@ class TagEditActivity : BaseActivity() {
     }
 
     private fun handleSideEffect(sideEffect: TagEditSideEffect) {
-        when(sideEffect) {
+        when (sideEffect) {
             is TagEditSideEffect.ReportError -> {
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
             }

@@ -40,6 +40,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
  * @param onAddTagClick 태그 추가 버튼 클릭 시 처리
  * @param addButtonTitle 추가 버튼 제목
  */
+@Suppress("unused")
 @Composable
 fun FavoriteTagSection(
     modifier: Modifier = Modifier,
@@ -47,7 +48,7 @@ fun FavoriteTagSection(
     horizontalPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(0.dp),
     trailingIcon: QuackIcon? = null,
-    onTrailingClick: (() -> Unit)? = null,
+    onTrailingClick: ((Int) -> Unit)? = null,
     singleLine: Boolean = true,
     emptySection: @Composable () -> Unit,
     tags: ImmutableList<String>,

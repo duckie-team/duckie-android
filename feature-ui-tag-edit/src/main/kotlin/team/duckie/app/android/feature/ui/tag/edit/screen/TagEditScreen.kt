@@ -80,7 +80,7 @@ fun TagEditSuccessScreen(
     modifier: Modifier,
     state: TagEditState.Success,
     onEditFinishClick: () -> Unit,
-    onTrailingClick: () -> Unit,
+    onTrailingClick: (Int) -> Unit,
     onAddTagClick: () -> Unit,
     onTagClick: (Int) -> Unit,
 ) {
@@ -108,7 +108,7 @@ fun TagEditSuccessScreen(
                     color = QuackColor.DuckieOrange,
                     singleLine = true,
                 )
-            }
+            },
         )
 
         // 내 관심 태그 영역

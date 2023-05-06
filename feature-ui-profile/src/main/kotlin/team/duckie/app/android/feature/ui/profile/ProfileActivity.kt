@@ -44,6 +44,7 @@ import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
+import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 
 @AndroidEntryPoint
 class ProfileActivity : BaseActivity() {
@@ -135,6 +136,7 @@ class ProfileActivity : BaseActivity() {
         )
     }
 
+    @AllowCyclomaticComplexMethod
     private fun handleSideEffect(sideEffect: ProfileSideEffect) {
         when (sideEffect) {
             ProfileSideEffect.NavigateToBack -> {
