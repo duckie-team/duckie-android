@@ -32,16 +32,27 @@ internal class TagEditViewModel @Inject constructor(
                         TagEditState.Success(me = me)
                     }
                 }.onFailure {
+                    reduce { TagEditState.Error(it) }
                     postSideEffect(TagEditSideEffect.ReportError(it))
                 }
         }
     }
 
-    fun onAddTagClick() {
-
+    /** 수정완료 버튼 누를 시 동작 */
+    fun onEditFinishClick() {
+        intent { postSideEffect(TagEditSideEffect.FinishTagEdit(true)) }
     }
 
-    fun onTagClick(tag: String) {
+    /** + 직접 태그 추가하기 버튼 클릭 시 동작 */
+    fun onAddTagClick() {
+        intent { postSideEffect(TagEditSideEffect.AddTagEdit) }
+    }
 
+    /** 각 태그 항목의 x 버튼 클릭 시 동작 */
+    fun onTrailingClick() {
+    }
+
+    /** 각 태그 항목 클릭 시 동작 */
+    fun onTagClick(index: Int) {
     }
 }

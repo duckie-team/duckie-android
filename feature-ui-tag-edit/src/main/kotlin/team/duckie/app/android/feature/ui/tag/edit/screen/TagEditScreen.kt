@@ -7,10 +7,14 @@
 
 package team.duckie.app.android.feature.ui.tag.edit.screen
 
+import android.app.Activity
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toPersistentList
@@ -22,8 +26,13 @@ import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.FavoriteTagSection
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
+import team.duckie.quackquack.ui.component.QuackSubtitle
+import team.duckie.quackquack.ui.component.QuackTopAppBar
+import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.modifier.quackClickable
 
 @Composable
 internal fun TagEditScreen(
@@ -41,6 +50,8 @@ internal fun TagEditScreen(
         is TagEditState.Success -> TagEditSuccessScreen(
             modifier = modifier,
             state = state,
+            onEditFinishClick = vm::onEditFinishClick,
+            onTrailingClick = vm::onTrailingClick,
             onAddTagClick = vm::onAddTagClick,
             onTagClick = vm::onTagClick,
         )
@@ -56,24 +67,57 @@ internal fun TagEditScreen(
 fun TagEditSuccessScreen(
     modifier: Modifier,
     state: TagEditState.Success,
+    onEditFinishClick: () -> Unit,
+    onTrailingClick: () -> Unit,
     onAddTagClick: () -> Unit,
-    onTagClick: (String) -> Unit,
+    onTagClick: (Int) -> Unit,
 ) {
-    Column {
+    val activity = LocalContext.current as Activity
+
+    Column(modifier = modifier) {
+        // 상단 탭바
+        QuackTopAppBar(
+            leadingIcon = QuackIcon.ArrowBack,
+            leadingText = stringResource(R.string.title),
+            onLeadingIconClick = activity::finish,
+            trailingContent = {
+                QuackSubtitle(
+                    modifier = Modifier
+                        .then(Modifier) // prevent Modifier.Companion
+                        .quackClickable(
+                            rippleEnabled = false,
+                            onClick = onEditFinishClick,
+                        )
+                        .padding(
+                            vertical = 4.dp,
+                            horizontal = 16.dp,
+                        ),
+                    text = stringResource(R.string.edit_finish),
+                    color = QuackColor.DuckieOrange,
+                    singleLine = true,
+                )
+            }
+        )
+
+        // 내 관심 태그 영역
         FavoriteTagSection(
-            modifier = modifier,
+            modifier = Modifier.padding(vertical = 20.dp),
             title = stringResource(id = R.string.my_favorite_tag),
-            contentPadding = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp),
+            horizontalPadding = PaddingValues(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            trailingIcon = QuackIcon.Close,
+            onTrailingClick = onTrailingClick,
             tags = state.myTags.map { it.name }.toPersistentList(),
             emptySection = {
                 QuackLargeButton(
                     type = QuackLargeButtonType.Compact,
-                    text = stringResource(id = R.string.add_favorite_tag),
+                    text = stringResource(id = R.string.tag_edit_add_favorite_tag),
                     onClick = onAddTagClick,
                 )
             },
+            singleLine = false,
             onTagClick = onTagClick,
-            addButtonTitle = stringResource(id = R.string.add_favorite_tag),
+            addButtonTitle = stringResource(id = R.string.tag_edit_add_favorite_tag),
             onAddTagClick = onAddTagClick,
         )
     }

@@ -12,6 +12,7 @@ import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.tag.edit.screen.TagEditScreen
 import team.duckie.app.android.feature.ui.tag.edit.viewmodel.TagEditSideEffect
 import team.duckie.app.android.feature.ui.tag.edit.viewmodel.TagEditViewModel
+import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
@@ -41,6 +42,18 @@ class TagEditActivity : BaseActivity() {
     }
 
     private fun handleSideEffect(sideEffect: TagEditSideEffect) {
+        when(sideEffect) {
+            is TagEditSideEffect.ReportError -> {
+                sideEffect.exception.reportToCrashlyticsIfNeeded()
+            }
 
+            is TagEditSideEffect.FinishTagEdit -> {
+                finish()
+            }
+
+            TagEditSideEffect.AddTagEdit -> {
+                // TODO(riflockle7): 태그 추가 화면으로 이동
+            }
+        }
     }
 }

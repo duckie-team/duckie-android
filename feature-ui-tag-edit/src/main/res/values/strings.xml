@@ -7,8 +7,10 @@
 
 <resources>
     <string name="title">태그 편집</string>
+    <string name="edit_finish">수정완료</string>
 
     <string name="my_favorite_tag">내 관심 태그</string>
+    <!-- TODO(riflockle7): 왜 add_favorite_tag 로 하면 feature-ui-profile 모듈의 resource 가 잡히는 지 모르겠음 -->
+    <string name="tag_edit_add_favorite_tag">+ 직접 태그 추가하기</string>
     <string name="not_yet_add_favorite_tag">추가한 관심태그가 없어요 :(</string>
-    <string name="add_favorite_tag">직접 태그 추가하기</string>
 </resources>
