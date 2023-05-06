@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.tag.edit.R
@@ -28,8 +29,6 @@ import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.screen.SearchTagScreen
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -40,9 +39,7 @@ internal fun TagEditScreen(
     vm: TagEditViewModel = activityViewModel(),
     modifier: Modifier,
 ) {
-    val state = vm.collectAsState().value
-
-    when (state) {
+    when (val state = vm.collectAsState().value) {
         is TagEditState.Loading -> LoadingScreen(
             modifier = modifier,
             initState = vm::initState,
@@ -64,10 +61,11 @@ internal fun TagEditScreen(
             multiSelectMode = false,
             onCloseClick = vm::onAddFinishClick,
             onBackPressed = vm::onAddFinishClick,
-            onClickSearchListHeader = { vm.onSearchTagClick(0) },
+            onClickSearchListHeader = vm::onSearchTagHeaderClick,
             onClickSearchList = { index -> vm.onSearchTagClick(index) },
             onTextChanged = { newSearchTextValue -> vm.onSearchTextChanged(newSearchTextValue) },
             onSearchTextValidate = { searchTextValue -> vm.onSearchTextValidate(searchTextValue) },
+            searchResults = state.searchResults.map { it.name }.toImmutableList(),
         )
 
         is TagEditState.Error -> ErrorScreen(
@@ -122,13 +120,7 @@ fun TagEditSuccessScreen(
             trailingIcon = QuackIcon.Close,
             onTrailingClick = onTrailingClick,
             tags = state.myTags.map { it.name }.toPersistentList(),
-            emptySection = {
-                QuackLargeButton(
-                    type = QuackLargeButtonType.Compact,
-                    text = stringResource(id = R.string.tag_edit_add_favorite_tag),
-                    onClick = onAddTagClick,
-                )
-            },
+            emptySection = {},
             singleLine = false,
             onTagClick = onTagClick,
             addButtonTitle = stringResource(id = R.string.tag_edit_add_favorite_tag),

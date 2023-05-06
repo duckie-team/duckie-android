@@ -51,11 +51,12 @@ fun SearchTagScreen(
     onBackPressed: () -> Unit,
     onTagClick: (index: Int) -> Unit = {},
     onClickCloseTag: (index: Int) -> Unit = {},
-    onClickSearchListHeader: () -> Unit = {},
+    onClickSearchListHeader: (tag: String) -> Unit = {},
     onClickSearchList: (index: Int) -> Unit = {},
     onTextChanged: (newSearchTextValue: String) -> Unit,
     onSearchTextValidate: (searchTextValue: String) -> Boolean = { true },
     tags: ImmutableList<String> = persistentListOf(),
+    searchResults: ImmutableList<String> = persistentListOf(),
     bottomLayout: @Composable (() -> Unit)? = null,
 ) {
     if (tags.isNotEmpty()) {
@@ -110,16 +111,16 @@ fun SearchTagScreen(
             leadingIcon = QuackIcon.Search,
             text = searchTextFieldValue.value,
             onTextChanged = { textFieldValue ->
-                Log.i("riflockle7", "textFieldValue: $textFieldValue")
                 searchTextFieldValue.value = textFieldValue
                 onTextChanged(textFieldValue)
             },
             placeholderText = placeholderText,
             keyboardActions = KeyboardActions(
                 onDone = {
-                    Log.i("riflockle7", "onSearchTextValidate $searchTextFieldValue")
                     if (onSearchTextValidate(searchTextFieldValue.value)) {
-                        coroutineScope.launch { onClickSearchListHeader() }
+                        coroutineScope.launch {
+                            onClickSearchListHeader(searchTextFieldValue.value)
+                        }
                     }
                 },
             ),
@@ -134,30 +135,32 @@ fun SearchTagScreen(
             visible = searchTextFieldValue.value.isNotEmpty(),
         ) {
             LazyColumn {
-                item {
-                    SearchTagItemScreen(
-                        text = stringResource(
-                            id = R.string.tag_header_title,
-                            searchTextFieldValue.value,
-                        ),
-                        onClick = {
-                            if (onSearchTextValidate(searchTextFieldValue.value)) {
-                                coroutineScope.launch { onClickSearchListHeader() }
-                            }
-                        },
-                    )
+                if (onSearchTextValidate(searchTextFieldValue.value)) {
+                    item {
+                        SearchTagItemScreen(
+                            text = stringResource(
+                                id = R.string.tag_header_title,
+                                searchTextFieldValue.value,
+                            ),
+                            onClick = {
+                                if (onSearchTextValidate(searchTextFieldValue.value)) {
+                                    coroutineScope.launch {
+                                        onClickSearchListHeader(searchTextFieldValue.value)
+                                    }
+                                }
+                            },
+                        )
+                    }
                 }
 
                 itemsIndexed(
-                    items = tags,
+                    items = searchResults,
                     key = { _, item -> item },
                 ) { index: Int, item: String ->
                     SearchTagItemScreen(
                         text = item,
                         onClick = {
-                            if (onSearchTextValidate(searchTextFieldValue.value)) {
-                                coroutineScope.launch { onClickSearchList(index) }
-                            }
+                            coroutineScope.launch { onClickSearchList(index) }
                         },
                     )
                 }
