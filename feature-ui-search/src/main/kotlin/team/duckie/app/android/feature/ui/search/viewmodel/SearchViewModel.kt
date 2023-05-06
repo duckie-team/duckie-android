@@ -196,6 +196,11 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
+    /** 검색 키워드를 초기화 합니다.*/
+    fun clearSearchKeyword() {
+        updateSearchKeyword(keyword = "")
+    }
+
     /** 검색 키워드가 없다면 검색 화면으로 이동하고, 검색 키워드가 있다면 검색 결과로 이동한다. */
     private fun refreshSearchStep(keyword: String) = intent {
         if (keyword.isEmpty()) {
