@@ -188,12 +188,20 @@ internal class OnboardViewModel @AssistedInject constructor(
     /** 닉네임을 체크한다. */
     fun checkNickname(nickname: String) {
         val isNicknameRuleError = checkNicknameRule(nickname)
-        if (isNicknameRuleError) {
-            intent { reduce { state.copy(profileState = ProfileScreenState.NicknameRuleError) } }
-            return
-        }
+        intent {
+            when {
+                nickname.isEmpty() -> {
+                    reduce { state.copy(profileState = ProfileScreenState.NicknameEmpty) }
+                    return@intent
+                }
 
-        checkNicknameDuplicate(nickname)
+                isNicknameRuleError -> {
+                    reduce { state.copy(profileState = ProfileScreenState.NicknameRuleError) }
+                    return@intent
+                }
+            }
+            checkNicknameDuplicate(nickname)
+        }
     }
 
     /** 닉네임 룰을 지켰는지 체크한다. */
