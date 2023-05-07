@@ -120,8 +120,8 @@ internal class MainViewModel @Inject constructor(
     }
 
     /** 친구 화면으로 이동한다 */
-    fun navigateFriends(friendType: FriendsType, userId: Int) = intent {
-        postSideEffect(MainSideEffect.NavigateToFriends(friendType, userId))
+    fun navigateFriends(friendType: FriendsType, userId: Int, nickname: String) = intent {
+        postSideEffect(MainSideEffect.NavigateToFriends(friendType, userId, nickname))
     }
 
     /** 설정 화면으로 이동한다 */

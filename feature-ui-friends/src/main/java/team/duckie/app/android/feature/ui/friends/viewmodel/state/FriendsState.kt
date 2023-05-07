@@ -10,10 +10,14 @@ package team.duckie.app.android.feature.ui.friends.viewmodel.state
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.friends.viewmodel.skeletonFriends
+import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.kotlin.randomString
 
 internal data class FriendsState(
     val me: User ? = null,
+
+    val friendType: FriendsType = FriendsType.Follower,
+    val targetName: String = "",
 
     val isLoading: Boolean = true,
     val isError: Boolean = false,

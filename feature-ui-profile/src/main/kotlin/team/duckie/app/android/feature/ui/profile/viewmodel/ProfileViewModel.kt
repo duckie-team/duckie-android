@@ -146,8 +146,8 @@ internal class ProfileViewModel @Inject constructor(
         postSideEffect(ProfileSideEffect.NavigateToSearch(tag))
     }
 
-    fun navigateFriends(friendType: FriendsType, userId: Int) = intent {
-        postSideEffect(ProfileSideEffect.NavigateToFriends(friendType, userId))
+    fun navigateFriends(friendType: FriendsType, userId: Int, nickname: String) = intent {
+        postSideEffect(ProfileSideEffect.NavigateToFriends(friendType, userId, nickname))
     }
 
     override fun clickBackPress() = intent {

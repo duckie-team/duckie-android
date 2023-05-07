@@ -35,7 +35,7 @@ internal fun MyPageScreen(
     navigateToExam: (Int) -> Unit,
     navigateToCreateProblem: () -> Unit,
     navigateToSearch: (String) -> Unit,
-    navigateToFriend: (FriendsType, Int) -> Unit,
+    navigateToFriend: (FriendsType, Int, String) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
     viewModel: MyPageViewModel,
 ) {

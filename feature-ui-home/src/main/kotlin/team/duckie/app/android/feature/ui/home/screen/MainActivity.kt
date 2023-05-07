@@ -191,6 +191,7 @@ class MainActivity : BaseActivity() {
                     intentBuilder = {
                         putExtra(Extras.FriendType, sideEffect.friendType.index)
                         putExtra(Extras.UserId, sideEffect.myUserId)
+                        putExtra(Extras.ProfileNickName, sideEffect.nickname)
                     },
                 )
             }
