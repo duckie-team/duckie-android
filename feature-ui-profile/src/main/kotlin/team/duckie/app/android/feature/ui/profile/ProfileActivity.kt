@@ -30,6 +30,7 @@ import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
+import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle
@@ -43,6 +44,7 @@ import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
+import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 
 @AndroidEntryPoint
 class ProfileActivity : BaseActivity() {
@@ -56,6 +58,9 @@ class ProfileActivity : BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
+
+    @Inject
+    lateinit var tagEditNavigator: TagEditNavigator
 
     @Inject
     lateinit var settingNavigator: SettingNavigator
@@ -109,7 +114,7 @@ class ProfileActivity : BaseActivity() {
                                     onClickSetting = viewModel::clickSetting,
                                     onClickNotification = viewModel::clickNotification,
                                     onClickEditProfile = viewModel::clickEditProfile,
-                                    onClickEditTag = { viewModel.clickEditTag(getString(R.string.provide_after)) },
+                                    onClickEditTag = viewModel::clickEditTag,
                                     onClickExam = viewModel::clickExam,
                                     onClickMakeExam = viewModel::clickMakeExam,
                                     onClickTag = viewModel::onClickTag,
@@ -131,6 +136,7 @@ class ProfileActivity : BaseActivity() {
         )
     }
 
+    @AllowCyclomaticComplexMethod
     private fun handleSideEffect(sideEffect: ProfileSideEffect) {
         when (sideEffect) {
             ProfileSideEffect.NavigateToBack -> {
@@ -154,6 +160,15 @@ class ProfileActivity : BaseActivity() {
                     activity = this@ProfileActivity,
                     intentBuilder = {
                         putExtra(Extras.ExamId, sideEffect.examId)
+                    },
+                )
+            }
+
+            is ProfileSideEffect.NavigateToTagEdit -> {
+                tagEditNavigator.navigateFrom(
+                    activity = this@ProfileActivity,
+                    intentBuilder = {
+                        putExtra(Extras.UserId, sideEffect.userId)
                     },
                 )
             }

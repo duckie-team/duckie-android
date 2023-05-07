@@ -26,4 +26,6 @@
     <string name="report">신고하기</string>
     <string name="report_success">신고가 정상 접수되었어요!</string>
     <string name="check">확인</string>
+
+    <string name="tag_header_title">+%s 추가하기</string>
 </resources>

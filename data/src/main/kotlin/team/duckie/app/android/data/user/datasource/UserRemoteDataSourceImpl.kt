@@ -68,7 +68,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
         val response = client.patch("/users/$id") {
             jsonBody {
                 categories?.let { "favoriteCategories" withInts categories.fastMap { it.id } }
-                tags?.let { "favoriteTags" withInts tags.fastMap { it.id } }
+                tags?.let { "favoriteTagIds" withInts tags.fastMap { it.id } }
                 profileImageUrl?.let { "profileImageUrl" withString profileImageUrl }
                 nickname?.let { "nickName" withString nickname }
                 introduction?.let { "introduction" withString introduction }

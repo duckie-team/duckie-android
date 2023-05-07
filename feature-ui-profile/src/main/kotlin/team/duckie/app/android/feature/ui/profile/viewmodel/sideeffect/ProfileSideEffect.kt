@@ -28,6 +28,8 @@ sealed class ProfileSideEffect {
 
     class NavigateToEditProfile(val userId: Int) : ProfileSideEffect()
 
+    class NavigateToTagEdit(val userId: Int) : ProfileSideEffect()
+
     class SendToast(val message: String) : ProfileSideEffect()
 
     class NavigateToFriends(

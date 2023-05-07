@@ -36,6 +36,7 @@ import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
+import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 import team.duckie.app.android.util.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.ui.BaseActivity
@@ -62,6 +63,9 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
+
+    @Inject
+    lateinit var tagEditNavigator: TagEditNavigator
 
     @Inject
     lateinit var settingNavigator: SettingNavigator
@@ -126,6 +130,14 @@ class MainActivity : BaseActivity() {
                     },
                     navigateToEditProfile = {
                         profileEditNavigator.navigateFrom(
+                            activity = this,
+                            intentBuilder = {
+                                putExtra(Extras.UserId, it)
+                            },
+                        )
+                    },
+                    navigateToTagEdit = {
+                        tagEditNavigator.navigateFrom(
                             activity = this,
                             intentBuilder = {
                                 putExtra(Extras.UserId, it)

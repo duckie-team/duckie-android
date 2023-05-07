@@ -15,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import team.duckie.app.android.feature.ui.home.R
 import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageSideEffect
 import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
@@ -37,6 +36,7 @@ internal fun MyPageScreen(
     navigateToSearch: (String) -> Unit,
     navigateToFriend: (FriendsType, Int, String) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
+    navigateToTagEdit: (Int) -> Unit,
     viewModel: MyPageViewModel,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
@@ -86,6 +86,10 @@ internal fun MyPageScreen(
                 is MyPageSideEffect.NavigateToEditProfile -> {
                     navigateToEditProfile(sideEffect.userId)
                 }
+
+                is MyPageSideEffect.NavigateToTagEdit -> {
+                    navigateToTagEdit(sideEffect.userId)
+                }
             }
         }
     }
@@ -107,7 +111,7 @@ internal fun MyPageScreen(
                 onClickSetting = viewModel::clickSetting,
                 onClickNotification = viewModel::clickNotification,
                 onClickEditProfile = viewModel::clickEditProfile,
-                onClickEditTag = { viewModel.clickEditTag(context.getString(R.string.provide_after)) },
+                onClickEditTag = viewModel::clickEditTag,
                 onClickExam = viewModel::clickExam,
                 onClickMakeExam = viewModel::clickMakeExam,
                 onClickTag = viewModel::onClickTag,
