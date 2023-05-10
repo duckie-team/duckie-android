@@ -37,5 +37,6 @@ dependencies {
         libs.compose.ui.material, // needs for Scaffold
         libs.compose.lifecycle.runtime,
         libs.quack.ui.components,
+        libs.compose.ui.coil,
     )
 }
