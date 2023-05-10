@@ -15,6 +15,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.data.auth.repository.AuthRepositoryImpl
 import team.duckie.app.android.data.category.repository.CategoryRepositoryImpl
+import team.duckie.app.android.data.quiz.repository.QuizRepositoryImpl
 import team.duckie.app.android.data.device.repository.DeviceRepositoryImpl
 import team.duckie.app.android.data.exam.repository.ExamRepositoryImpl
 import team.duckie.app.android.data.examInstance.repository.ExamInstanceRepositoryImpl
@@ -33,6 +34,7 @@ import team.duckie.app.android.data.terms.repository.TermsRepositoryImpl
 import team.duckie.app.android.data.user.repository.UserRepositoryImpl
 import team.duckie.app.android.domain.auth.repository.AuthRepository
 import team.duckie.app.android.domain.category.repository.CategoryRepository
+import team.duckie.app.android.domain.quiz.repository.QuizRepository
 import team.duckie.app.android.domain.device.repository.DeviceRepository
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.examInstance.repository.ExamInstanceRepository
@@ -49,6 +51,7 @@ import team.duckie.app.android.domain.search.repository.SearchRepository
 import team.duckie.app.android.domain.tag.repository.TagRepository
 import team.duckie.app.android.domain.terms.repository.TermsRepository
 import team.duckie.app.android.domain.user.repository.UserRepository
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -105,5 +108,9 @@ abstract class BindsModule {
     abstract fun provideNotificationRepository(impl: NotificationRepositoryImpl): NotificationRepository
 
     @Binds
-    abstract fun provideReportRepository(imple: ReportRepositoryImpl): ReportRepository
+    abstract fun provideReportRepository(impl: ReportRepositoryImpl): ReportRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindsQuizRepository(impl: QuizRepositoryImpl): QuizRepository
 }
