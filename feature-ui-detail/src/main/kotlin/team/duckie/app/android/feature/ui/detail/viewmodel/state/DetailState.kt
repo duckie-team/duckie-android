@@ -59,6 +59,9 @@ sealed class DetailState {
 
         val isHeart: Boolean
             get() = exam.heart?.id != null
+
+        val isQuiz: Boolean
+            get() = exam.quizs != null
     }
 
     /**
