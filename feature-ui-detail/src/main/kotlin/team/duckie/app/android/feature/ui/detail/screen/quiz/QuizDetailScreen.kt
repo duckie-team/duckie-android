@@ -55,10 +55,12 @@ internal fun QuizDetailContentLayout(
         followButtonClick = followButtonClick,
         profileClick = profileClick,
         additionalInfo = {
-            RankingSection(
-                state = state,
-                userContentClick = profileClick,
-            )
+            if (state.exam.quizs.isNullOrEmpty().not()) {
+                RankingSection(
+                    state = state,
+                    userContentClick = profileClick,
+                )
+            }
         },
     )
 }
