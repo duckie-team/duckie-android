@@ -143,7 +143,6 @@ internal fun ExamDetailScreen(
                         profileClick = viewModel::goToProfile,
                     )
                 }
-
             }
             // 최하단 Layout
             DetailBottomLayout(

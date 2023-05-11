@@ -9,12 +9,10 @@ package team.duckie.app.android.feature.ui.detail.screen.quiz
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
@@ -61,7 +59,7 @@ internal fun QuizDetailContentLayout(
                 state = state,
                 userContentClick = profileClick,
             )
-        }
+        },
     )
 }
 
@@ -78,7 +76,7 @@ private fun RankingSection(
     ) {
         QuackTitle2(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = stringResource(id = R.string.quiz_ranking_title, state.mainTagNames)
+            text = stringResource(id = R.string.quiz_ranking_title, state.mainTagNames),
         )
         Spacer(space = 8.dp)
         quizRankings.fastForEachIndexed { index, item ->
@@ -124,9 +122,9 @@ private fun RankingContent(
             ) {
                 Column(
                     modifier = Modifier.widthIn(min = 28.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    if(rank == 1){
+                    if (rank == 1) {
                         QuackImage(
                             src = QuackIcon.Crown,
                             size = DpSize(all = 12.dp),

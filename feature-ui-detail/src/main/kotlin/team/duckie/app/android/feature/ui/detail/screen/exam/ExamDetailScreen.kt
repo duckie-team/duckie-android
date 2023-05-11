@@ -33,7 +33,6 @@ internal fun ExamDetailContentLayout(
         profileClick = profileClick,
         additionalInfo = {
             // TODO(EvergreenTree97) 시험 정보 추후 삽입
-        }
+        },
     )
 }
-
