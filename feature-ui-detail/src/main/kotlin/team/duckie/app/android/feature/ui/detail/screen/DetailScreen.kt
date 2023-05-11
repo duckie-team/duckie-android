@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -42,12 +43,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.detail.R
@@ -243,10 +244,6 @@ private fun DetailContentLayout(
     followButtonClick: () -> Unit,
     profileClick: (Int) -> Unit,
 ) {
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp.dp
-    val detailImageWidthDp = screenWidthDp - 32.dp
-
     Column(
         modifier = Modifier
             .layoutId(DetailScreenContentLayoutId)
@@ -254,19 +251,19 @@ private fun DetailContentLayout(
             .verticalScroll(rememberScrollState()),
     ) {
         // 그림
-        QuackImage(
-            size = DpSize(
-                detailImageWidthDp,
-                detailImageWidthDp * GetHeightRatioW328H240,
-            ),
-            padding = PaddingValues(
-                top = 16.dp,
-                start = 16.dp,
-                end = 16.dp,
-            ),
-            shape = RoundedCornerShape(size = 8.dp),
-            contentScale = ContentScale.FillWidth,
-            src = state.exam.thumbnailUrl,
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(ratio = GetHeightRatioW328H240)
+                .padding(
+                    top = 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                )
+                .clip(RoundedCornerShape(size = 8.dp)),
+            model = state.exam.thumbnailUrl,
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
         )
         // 공백
         Spacer(modifier = Modifier.height(12.dp))
