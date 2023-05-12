@@ -63,8 +63,8 @@ internal fun QuizResultContent(
             QuackBody1(
                 text = stringResource(
                     id = R.string.correct_problem_unit,
-                    correctProblemCount.toString()
-                )
+                    correctProblemCount.toString(),
+                ),
             )
         }
         Spacer(space = 28.dp)

@@ -82,9 +82,9 @@ internal fun ExamResultScreen(
                         QuizResultContent(
                             resultImageUrl = it.reportUrl,
                             correctProblemCount = 1,
-                            score = 2,
-                            time = 3,
+                            time = 2,
                             mainTag = "메인",
+                            rank = 3,
                         )
                     } else {
                         ExamResultContent(
