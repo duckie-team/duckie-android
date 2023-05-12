@@ -30,7 +30,7 @@ import team.duckie.quackquack.ui.component.QuackSurface
 internal fun ResultBottomBar(
     onClickRetryButton: () -> Unit,
     onClickExitButton: () -> Unit,
-){
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

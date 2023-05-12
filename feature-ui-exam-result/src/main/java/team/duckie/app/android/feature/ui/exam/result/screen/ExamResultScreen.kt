@@ -91,7 +91,6 @@ internal fun ExamResultScreen(
                             resultImageUrl = it.reportUrl,
                         )
                     }
-
                 }
 
                 is ExamResultState.Error -> {

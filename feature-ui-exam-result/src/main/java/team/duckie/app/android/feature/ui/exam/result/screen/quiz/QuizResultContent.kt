@@ -15,22 +15,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.feature.ui.exam.result.R
 import team.duckie.app.android.shared.ui.compose.QuackAnnotatedText
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.util.kotlin.toHourMinuteSecond
 import team.duckie.quackquack.ui.component.QuackBody1
+import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
 internal fun QuizResultContent(
     resultImageUrl: String,
-    correctProblemCount: Int,
-    score: Int,
     time: Int,
+    correctProblemCount: Int,
     mainTag: String,
+    rank: Int,
 ) {
     Column(
         modifier = Modifier
@@ -41,30 +44,38 @@ internal fun QuizResultContent(
             modifier = Modifier.fillMaxWidth(),
             src = resultImageUrl,
         )
-        Spacer(space = 48.dp)
+        Spacer(space = 28.dp)
+        QuackDivider()
+        Spacer(space = 20.dp)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackBody1(text = "총 응시시간")
-            QuackBody1(text = correctProblemCount.toString()+"덕")
+            QuackBody1(text = stringResource(id = R.string.total_time))
+            QuackBody1(text = time.toHourMinuteSecond())
         }
         Spacer(space = 8.dp)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackBody1(text = "맞은 문제")
-            QuackBody1(text = score.toHourMinuteSecond())
+            QuackBody1(text = stringResource(id = R.string.correct_problem))
+            QuackBody1(
+                text = stringResource(
+                    id = R.string.correct_problem_unit,
+                    correctProblemCount.toString()
+                )
+            )
         }
         Spacer(space = 28.dp)
         QuackAnnotatedText(
-            text = "당신은 로맨스 영역 10위 입니다.",
+            text = stringResource(id = R.string.rank_by_tag, mainTag, rank.toString()),
             highlightTextPairs = persistentListOf(
-                "로맨스" to null,
-                "10위" to null,
+                mainTag to null,
+                rank.toString() to null,
             ),
             style = QuackTextStyle.HeadLine1,
         )
+        Spacer(space = 38.dp)
     }
 }

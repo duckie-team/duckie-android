@@ -9,4 +9,8 @@
     <string name="solve_retry">다시 풀기</string>
     <string name="exit_exam">시험 끝내기</string>
     <string name="feature_prepare">준비 중인 기능입니다.</string>
+    <string name="total_time">총 응시시간</string>
+    <string name="correct_problem">맞은 문제</string>
+    <string name="correct_problem_unit">%s덕</string>
+    <string name="rank_by_tag">당신은 %s 영역 %s위 입니다.</string>
 </resources>
