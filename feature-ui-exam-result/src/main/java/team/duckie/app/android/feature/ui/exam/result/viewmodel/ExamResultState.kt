@@ -12,6 +12,7 @@ sealed class ExamResultState {
 
     data class Success(
         val reportUrl: String = "",
+        val isQuiz: Boolean = true,
     ) : ExamResultState()
 
     data class Error(
