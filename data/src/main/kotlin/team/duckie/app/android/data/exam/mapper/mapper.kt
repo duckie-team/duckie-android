@@ -24,6 +24,7 @@ import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.ProfileExamData
 import team.duckie.app.android.data.exam.model.QuestionData
+import team.duckie.app.android.data.exam.model.QuizInfoResponse
 import team.duckie.app.android.data.heart.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
@@ -42,6 +43,7 @@ import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.quiz.model.QuizInfo
 import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.util.kotlin.fastMap
@@ -66,6 +68,8 @@ internal fun ExamData.toDomain() = Exam(
     status = status,
     heart = heart?.toDomain(),
     heartCount = heartCount,
+    quizs = quizs?.fastMap(QuizInfoResponse::toDomain)?.toImmutableList(),
+    perfectScoreImageUrl = perfectScoreImageUrl,
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
@@ -242,4 +246,13 @@ internal fun ProfileExamData.toDomain() = ProfileExam(
     solvedCount = solvedCount,
     heartCount = heartCount,
     user = user?.toDomain(),
+)
+
+internal fun QuizInfoResponse.toDomain() = QuizInfo(
+    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
+    correctProblemCount = correctProblemCount
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.correctProblemCount"),
+    score = score ?: duckieResponseFieldNpe("${this::class.java.simpleName}.score"),
+    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+    time = time ?: duckieResponseFieldNpe("${this::class.java.simpleName}.time"),
 )

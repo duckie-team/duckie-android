@@ -64,6 +64,12 @@ data class ExamData(
 
     @field:JsonProperty("heartCount")
     val heartCount: Int? = null,
+
+    @field:JsonProperty("challenges")
+    val quizs: List<QuizInfoResponse>? = null,
+
+    @field:JsonProperty("perfectScoreImageUrl")
+    val perfectScoreImageUrl: String? = null,
 )
 
 data class ExamsData(
