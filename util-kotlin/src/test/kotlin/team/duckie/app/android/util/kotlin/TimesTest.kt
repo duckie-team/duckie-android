@@ -65,4 +65,18 @@ class TimesTest {
         expectThat(900.minutes).isEqualTo(54000000L)
         expectThat(1000.minutes).isEqualTo(60000000L)
     }
+
+    @Test
+    fun `should HH,MM,SS when convert the seconds contains minute`() {
+        val actual = 100.toHourMinuteSecond()
+        val expected = "00:01:40"
+        expectThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `should HH,MM,SS when convert the seconds cointains hour`() {
+        val actual = 10000.toHourMinuteSecond()
+        val expected = "02:46:40"
+        expectThat(actual).isEqualTo(expected)
+    }
 }
