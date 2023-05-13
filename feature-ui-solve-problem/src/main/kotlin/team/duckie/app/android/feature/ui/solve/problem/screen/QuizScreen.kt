@@ -48,7 +48,7 @@ import team.duckie.app.android.shared.ui.compose.LinearProgressBar
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.moveNextPage
-import team.duckie.app.android.util.compose.movePreviousPage
+import team.duckie.app.android.util.compose.movePrevPage
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 
 private const val QuizTopAppBarLayoutId = "QuizTopAppBar"
@@ -65,10 +65,6 @@ internal fun QuizScreen(
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = pagerState.currentPage) {
-        viewModel.setPage(pagerState.currentPage)
-    }
 
     // 시험 종료 다이얼로그
     DuckieDialog(
@@ -119,15 +115,16 @@ internal fun QuizScreen(
                 isLastPage = pagerState.currentPage == totalPage - 1,
                 onLeftButtonClick = {
                     coroutineScope.launch {
-                        pagerState.movePreviousPage(viewModel::onMovePreviousPage)
+                        pagerState.movePrevPage()
                     }
                 },
                 onRightButtonClick = {
                     coroutineScope.launch {
-                        if (pagerState.currentPage == totalPage - 1) {
+                        val maximumPage = totalPage - 1
+                        if (pagerState.currentPage == maximumPage) {
                             examSubmitDialogVisible = true
                         } else {
-                            pagerState.moveNextPage(viewModel::onMoveNextPage)
+                            pagerState.moveNextPage(maximumPage)
                         }
                     }
                 },
@@ -158,7 +155,7 @@ private fun ContentSection(
             // TODO(EvergreenTree97) 추후 덕퀴즈 종료로 이동 viewModel.finishExam()
         }
     }
-    DisposableEffect(state.currentPageIndex) {
+    DisposableEffect(Unit) {
         viewModel.startTimer()
         onDispose {
             viewModel.stopTimer()
