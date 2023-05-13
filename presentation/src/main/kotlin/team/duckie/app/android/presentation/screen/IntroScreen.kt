@@ -41,8 +41,7 @@ internal fun IntroScreen(
 ) {
     val activity = LocalContext.current as Activity
     val appPackageName = getAppPackageName()
-    val updateRequireTitle = stringResource(id = R.string.update_require_dialog_title)
-    val updateRequireDescription = stringResource(id = R.string.update_require_dialog_description)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,19 +81,44 @@ internal fun IntroScreen(
     }
 
     // 덕키 업데이트 팝업
-    DuckieDialog(
-        title = updateRequireTitle,
-        message = updateRequireDescription,
-        visible = viewModel.collectAsState().value.isUpdateRequire,
-        leftButtonText = "앱 종료",
-        leftButtonOnClick = {
-            activity.finish()
-        },
-        rightButtonText = "지금 업데이트",
-        rightButtonOnClick = {
-            activity.goToMarket(appPackageName)
-            activity.finish()
-        },
-        onDismissRequest = {},
-    )
+    viewModel.collectAsState().value.introDialogType?.let { introDialogType ->
+        DuckieDialog(
+            title = activity.getString(introDialogType.titleRes),
+            message = activity.getString(introDialogType.messageRes),
+            visible = true,
+            leftButtonText = activity.getString(introDialogType.leftBtnTitleRes),
+            leftButtonOnClick = { activity.finish() },
+            rightButtonText = activity.getString(introDialogType.rightBtnTitleRes),
+            rightButtonOnClick = {
+                if (introDialogType != IntroDialogType.Error) {
+                    activity.goToMarket(appPackageName)
+                    activity.finish()
+                } else {
+                    viewModel.checkUpdateRequire()
+                }
+            },
+            onDismissRequest = {},
+        )
+    }
+}
+
+/** IntroActivity 에서 띄워지는 Dialog 타입 */
+enum class IntroDialogType(
+    val titleRes: Int,
+    val messageRes: Int,
+    val leftBtnTitleRes: Int,
+    val rightBtnTitleRes: Int,
+) {
+    UpdateRequire(
+        R.string.update_require_dialog_title,
+        R.string.update_require_dialog_description,
+        R.string.update_require_dialog_left_button_title,
+        R.string.update_require_dialog_right_button_title,
+    ),
+    Error(
+        R.string.error_dialog_title,
+        R.string.error_dialog_description,
+        R.string.error_dialog_left_button_title,
+        R.string.error_dialog_right_button_title,
+    ),
 }

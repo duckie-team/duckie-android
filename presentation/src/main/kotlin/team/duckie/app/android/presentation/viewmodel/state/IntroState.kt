@@ -9,8 +9,9 @@ package team.duckie.app.android.presentation.viewmodel.state
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import team.duckie.app.android.presentation.screen.IntroDialogType
 
 @Parcelize
 internal data class IntroState(
-    val isUpdateRequire: Boolean = false,
+    val introDialogType: IntroDialogType? = null,
 ) : Parcelable
