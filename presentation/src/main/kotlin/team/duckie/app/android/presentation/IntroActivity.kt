@@ -99,8 +99,6 @@ class IntroActivity : BaseActivity() {
                 launchOnboardActivity()
             }
 
-            is IntroSideEffect.UpdateRequireError -> {}
-
             is IntroSideEffect.ReportError -> {
                 sideEffect.exception.printStackTrace()
                 sideEffect.exception.reportToCrashlyticsIfNeeded()
