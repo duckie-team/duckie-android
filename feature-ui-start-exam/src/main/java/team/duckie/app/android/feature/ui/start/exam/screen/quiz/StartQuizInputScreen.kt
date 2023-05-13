@@ -60,8 +60,9 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
             onLeadingIconClick = viewModel::finishStartExam,
         )
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp)
-                .fillMaxWidth()
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
         ) {
             InfoBox(
                 modifier = Modifier
