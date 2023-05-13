@@ -18,6 +18,7 @@ sealed class StartExamState {
         val examId: Int,
         val certifyingStatement: String,
         val certifyingStatementInputText: String = "",
+        val isQuiz: Boolean = true,
     ) : StartExamState() {
         val isCertified: Boolean
             get() = certifyingStatement == certifyingStatementInputText
