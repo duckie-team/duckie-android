@@ -5,8 +5,8 @@
     <string name="start_button">시험시작</string>
     <string name="information_before_quiz_title">[ 퀴즈 시작 전 안내사항 ]</string>
     <string name="information_before_quiz_line1">※ 문제를 틀릴 경우 바로 도전이 종료됩니다.</string>
-    <string name="information_before_quiz_line2_prefix">※ 문제당 </string>
-    <string name="information_before_quiz_line2_infix">약 %s초의 제한시간이 있습니다. </string>
-    <string name="information_before_quiz_line2_postfix">※ 문제당 </string>
-    <string name="challenge_condition">&lt;도전 조건&lt;</string>
+    <string name="information_before_quiz_line2_prefix">※ 문제당&#160;</string>
+    <string name="information_before_quiz_line2_infix">약 %s초의 제한시간이 있습니다.&#160;</string>
+    <string name="information_before_quiz_line2_postfix">문제를 잘 읽고 시간 내에 물음에 답해주세요.</string>
+    <string name="challenge_condition">&lt;도전 조건&gt;</string>
 </resources>
