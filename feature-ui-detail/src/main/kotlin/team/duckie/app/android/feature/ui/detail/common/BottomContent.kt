@@ -34,7 +34,6 @@ internal fun DetailBottomLayout(
     onChallengeClick: () -> Unit,
 ) {
     Column(modifier = modifier) {
-        Spacer(space = 20.dp)
         // 구분선
         QuackDivider()
         // 버튼 모음 Layout
