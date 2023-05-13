@@ -19,6 +19,7 @@ import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.quiz.mapper.toDomain
 import team.duckie.app.android.data.quiz.model.GetQuizResponse
 import team.duckie.app.android.data.quiz.model.PatchQuizBody
+import team.duckie.app.android.data.quiz.model.PostQuizBody
 import team.duckie.app.android.data.quiz.model.PostQuizResponse
 import team.duckie.app.android.domain.quiz.model.Quiz
 import team.duckie.app.android.domain.quiz.model.QuizResult
@@ -29,7 +30,7 @@ class QuizRemoteDataSourceImpl @Inject constructor() : QuizDataSource {
     override suspend fun postQuiz(examId: Int): Quiz {
         val response = client.post {
             url("/challenges")
-            setBody(examId)
+            setBody(PostQuizBody(examId = examId))
         }
         return responseCatching(
             response,

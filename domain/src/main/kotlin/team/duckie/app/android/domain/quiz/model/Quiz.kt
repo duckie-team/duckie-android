@@ -15,7 +15,7 @@ import team.duckie.app.android.domain.user.model.User
 data class Quiz(
     val id: Int,
     val correctProblemCount: Int,
-    val exam: Exam,
+    val exam: QuizExam,
     val score: Int,
     val time: Int,
     val user: User,
