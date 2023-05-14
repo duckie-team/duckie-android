@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
@@ -28,9 +28,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -48,7 +51,7 @@ import team.duckie.app.android.shared.ui.compose.LinearProgressBar
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.moveNextPage
-import team.duckie.app.android.util.compose.movePreviousPage
+import team.duckie.app.android.util.compose.movePrevPage
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 
 private const val QuizTopAppBarLayoutId = "QuizTopAppBar"
@@ -61,14 +64,15 @@ internal fun QuizScreen(
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val totalPage = remember { state.totalPage }
+
     val pagerState = rememberPagerState()
+    val isCurrentPageOffsetFractionZero = remember {
+        derivedStateOf { pagerState.currentPageOffsetFraction == 0f }
+    }
+
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = pagerState.currentPage) {
-        viewModel.setPage(pagerState.currentPage)
-    }
 
     // 시험 종료 다이얼로그
     DuckieDialog(
@@ -112,6 +116,7 @@ internal fun QuizScreen(
                 viewModel = viewModel,
                 pagerState = pagerState,
                 state = state,
+                isCurrentPageOffsetFractionZero = isCurrentPageOffsetFractionZero.value,
             )
             DoubleButtonBottomBar(
                 modifier = Modifier.layoutId(QuizBottomBarLayoutId),
@@ -119,15 +124,16 @@ internal fun QuizScreen(
                 isLastPage = pagerState.currentPage == totalPage - 1,
                 onLeftButtonClick = {
                     coroutineScope.launch {
-                        pagerState.movePreviousPage(viewModel::onMovePreviousPage)
+                        pagerState.movePrevPage()
                     }
                 },
                 onRightButtonClick = {
                     coroutineScope.launch {
-                        if (pagerState.currentPage == totalPage - 1) {
+                        val maximumPage = totalPage - 1
+                        if (pagerState.currentPage == maximumPage) {
                             examSubmitDialogVisible = true
                         } else {
-                            pagerState.moveNextPage(viewModel::onMoveNextPage)
+                            pagerState.moveNextPage(maximumPage)
                         }
                     }
                 },
@@ -147,7 +153,21 @@ private fun ContentSection(
     viewModel: SolveProblemViewModel,
     pagerState: PagerState,
     state: SolveProblemState,
+    isCurrentPageOffsetFractionZero: Boolean,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    val currentProblem = state.problems[pagerState.currentPage].problem
+
+    LaunchedEffect(isCurrentPageOffsetFractionZero) {
+        if (currentProblem.answer?.isShortAnswer() == true) {
+            keyboardController?.show()
+            focusRequester.requestFocus()
+        } else {
+            keyboardController?.hide()
+        }
+    }
+
     val progress by viewModel.timerCount.collectAsStateWithLifecycle()
     val timeOver by remember {
         derivedStateOf { progress == 0 }
@@ -158,7 +178,7 @@ private fun ContentSection(
             // TODO(EvergreenTree97) 추후 덕퀴즈 종료로 이동 viewModel.finishExam()
         }
     }
-    DisposableEffect(state.currentPageIndex) {
+    DisposableEffect(pagerState.currentPage) {
         viewModel.startTimer()
         onDispose {
             viewModel.stopTimer()
@@ -194,6 +214,8 @@ private fun ContentSection(
                 },
                 inputAnswers = state.inputAnswers,
                 onClickAnswer = viewModel::inputAnswer,
+                focusRequester = focusRequester,
+                keyboardController = keyboardController,
             )
         }
     }

@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
@@ -19,17 +19,20 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.feature.ui.solve.problem.R
@@ -37,12 +40,11 @@ import team.duckie.app.android.feature.ui.solve.problem.answer.answerSection
 import team.duckie.app.android.feature.ui.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.ui.solve.problem.common.DoubleButtonBottomBar
 import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
-import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
-import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.moveNextPage
-import team.duckie.app.android.util.compose.movePreviousPage
+import team.duckie.app.android.util.compose.movePrevPage
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
@@ -51,18 +53,21 @@ private const val SolveProblemBottomBarLayoutId = "SolveProblemBottomBar"
 
 @Composable
 internal fun SolveProblemScreen(
-    viewModel: SolveProblemViewModel = activityViewModel(),
+    state: SolveProblemState,
+    inputAnswer: (Int, InputAnswer) -> Unit,
+    stopExam: () -> Unit,
+    finishExam: () -> Unit,
 ) {
-    val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val totalPage = remember { state.totalPage }
+
     val pagerState = rememberPagerState()
+    val isCurrentPageOffsetFractionZero = remember {
+        derivedStateOf { pagerState.currentPageOffsetFraction == 0f }
+    }
+
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = pagerState.currentPage) {
-        viewModel.setPage(pagerState.currentPage)
-    }
 
     // 시험 종료 다이얼로그
     DuckieDialog(
@@ -71,7 +76,7 @@ internal fun SolveProblemScreen(
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { examExitDialogVisible = false },
         rightButtonText = stringResource(id = R.string.quit),
-        rightButtonOnClick = { viewModel.stopExam() },
+        rightButtonOnClick = stopExam,
         visible = examExitDialogVisible,
         onDismissRequest = { examExitDialogVisible = false },
     )
@@ -83,7 +88,7 @@ internal fun SolveProblemScreen(
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { examSubmitDialogVisible = false },
         rightButtonText = stringResource(id = R.string.submit),
-        rightButtonOnClick = { viewModel.finishExam() },
+        rightButtonOnClick = finishExam,
         visible = examSubmitDialogVisible,
         onDismissRequest = { examSubmitDialogVisible = false },
     )
@@ -103,9 +108,10 @@ internal fun SolveProblemScreen(
             )
             ContentSection(
                 modifier = Modifier.layoutId(SolveProblemContentLayoutId),
-                viewModel = viewModel,
                 pagerState = pagerState,
                 state = state,
+                inputAnswer = inputAnswer,
+                isCurrentPageOffsetFractionZero = isCurrentPageOffsetFractionZero.value,
             )
             DoubleButtonBottomBar(
                 modifier = Modifier.layoutId(SolveProblemBottomBarLayoutId),
@@ -113,15 +119,17 @@ internal fun SolveProblemScreen(
                 isLastPage = pagerState.currentPage == totalPage - 1,
                 onLeftButtonClick = {
                     coroutineScope.launch {
-                        pagerState.movePreviousPage(viewModel::onMovePreviousPage)
+                        pagerState.movePrevPage()
                     }
                 },
                 onRightButtonClick = {
                     coroutineScope.launch {
-                        if (pagerState.currentPage == totalPage - 1) {
+                        val maximumPage = totalPage - 1
+
+                        if (pagerState.currentPage == maximumPage) {
                             examSubmitDialogVisible = true
                         } else {
-                            pagerState.moveNextPage(viewModel::onMoveNextPage)
+                            pagerState.moveNextPage(maximumPage)
                         }
                     }
                 },
@@ -138,29 +146,45 @@ internal fun SolveProblemScreen(
 @Composable
 private fun ContentSection(
     modifier: Modifier = Modifier,
-    viewModel: SolveProblemViewModel,
+    inputAnswer: (Int, InputAnswer) -> Unit,
     pagerState: PagerState,
     state: SolveProblemState,
+    isCurrentPageOffsetFractionZero: Boolean,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    val currentProblem = state.problems[pagerState.currentPage].problem
+
+    LaunchedEffect(key1 = isCurrentPageOffsetFractionZero) {
+        if (currentProblem.answer?.isShortAnswer() == true) {
+            keyboardController?.show()
+            focusRequester.requestFocus()
+        } else {
+            keyboardController?.hide()
+        }
+    }
+
     HorizontalPager(
         modifier = modifier,
         pageCount = state.totalPage,
         state = pagerState,
     ) { pageIndex ->
+        val problem = state.problems[pageIndex].problem
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(space = 24.dp),
         ) {
             questionSection(
                 page = pageIndex,
-                question = state.problems[pageIndex].problem.question,
+                question = problem.question,
             )
-            val answer = state.problems[pageIndex].problem.answer
+            val answer = problem.answer
             answerSection(
                 page = pageIndex,
                 answer = when (answer) {
                     is Answer.Short -> Answer.Short(
-                        state.problems[pageIndex].problem.correctAnswer
+                        problem.correctAnswer
                             ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
                     )
 
@@ -168,7 +192,9 @@ private fun ContentSection(
                     else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
                 },
                 inputAnswers = state.inputAnswers,
-                onClickAnswer = viewModel::inputAnswer,
+                onClickAnswer = inputAnswer,
+                keyboardController = keyboardController,
+                focusRequester = focusRequester,
             )
         }
     }

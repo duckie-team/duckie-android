@@ -81,7 +81,12 @@ class SolveProblemActivity : BaseActivity() {
                         }
 
                         else -> {
-                            SolveProblemScreen()
+                            SolveProblemScreen(
+                                state = state,
+                                inputAnswer = viewModel::inputAnswer,
+                                stopExam = viewModel::stopExam,
+                                finishExam = viewModel::finishExam,
+                            )
                         }
                     }
                 }

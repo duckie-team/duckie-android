@@ -98,26 +98,6 @@ internal class SolveProblemViewModel @Inject constructor(
         }
     }
 
-    fun setPage(page: Int) = intent {
-        reduce {
-            state.copy(
-                currentPageIndex = page,
-            )
-        }
-    }
-
-    fun onMoveNextPage(page: Int) = intent {
-        if (state.currentPageIndex < state.totalPage - 1) {
-            setPage(page = page)
-        }
-    }
-
-    fun onMovePreviousPage(page: Int) = intent {
-        if (state.currentPageIndex > 0) {
-            setPage(page = page)
-        }
-    }
-
     fun inputAnswer(
         pageIndex: Int,
         inputAnswer: InputAnswer,
