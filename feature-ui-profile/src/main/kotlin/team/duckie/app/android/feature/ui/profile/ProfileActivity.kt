@@ -31,7 +31,6 @@ import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
-import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
