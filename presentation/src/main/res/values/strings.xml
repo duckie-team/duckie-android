@@ -14,4 +14,11 @@
 
     <string name="update_require_dialog_title">덕키 업데이트 알림</string>
     <string name="update_require_dialog_description">덕키에 새로운 기능이 업데이트 되었어요!\n스토어에서 업데이트 후 사용해 주세요.</string>
+    <string name="update_require_dialog_left_button_title">앱 종료</string>
+    <string name="update_require_dialog_right_button_title">지금 업데이트</string>
+
+    <string name="error_dialog_title">네트워크가 불안정합니다.</string>
+    <string name="error_dialog_description">앱 종료 후 앱에 다시 접속해 주세요.</string>
+    <string name="error_dialog_left_button_title">앱 종료</string>
+    <string name="error_dialog_right_button_title">재 시도</string>
 </resources>
