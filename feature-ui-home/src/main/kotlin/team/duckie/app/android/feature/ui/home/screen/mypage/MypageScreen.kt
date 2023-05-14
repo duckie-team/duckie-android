@@ -19,7 +19,6 @@ import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageSideEffect
 import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
-import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
@@ -94,29 +93,25 @@ internal fun MyPageScreen(
         }
     }
 
-    with(state) {
-        if (isLoading) {
-            LoadingScreen(initState = {})
-        } else if (isError) {
-            ErrorScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .statusBarsPadding(),
-                onRetryClick = viewModel::getUserProfile,
-            )
-        } else {
-            MyProfileScreen(
-                userProfile = userProfile,
-                isLoading = false,
-                onClickSetting = viewModel::clickSetting,
-                onClickNotification = viewModel::clickNotification,
-                onClickEditProfile = viewModel::clickEditProfile,
-                onClickEditTag = viewModel::clickEditTag,
-                onClickExam = viewModel::clickExam,
-                onClickMakeExam = viewModel::clickMakeExam,
-                onClickTag = viewModel::onClickTag,
-                onClickFriend = navigateToFriend,
-            )
-        }
+    when {
+        state.isError -> ErrorScreen(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding(),
+            onRetryClick = viewModel::getUserProfile,
+        )
+
+        else -> MyProfileScreen(
+            userProfile = state.userProfile,
+            isLoading = state.isLoading,
+            onClickSetting = viewModel::clickSetting,
+            onClickNotification = viewModel::clickNotification,
+            onClickEditProfile = viewModel::clickEditProfile,
+            onClickEditTag = viewModel::clickEditTag,
+            onClickExam = viewModel::clickExam,
+            onClickMakeExam = viewModel::clickMakeExam,
+            onClickTag = viewModel::onClickTag,
+            onClickFriend = navigateToFriend,
+        )
     }
 }

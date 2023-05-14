@@ -105,6 +105,7 @@ fun ProfileScreen(
                 emptySection = {
                     EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
                 },
+                isLoading = isLoading,
             )
             Spacer(space = 44.dp)
             ExamSection(
@@ -116,6 +117,7 @@ fun ProfileScreen(
                 emptySection = {
                     EmptyText(message = stringResource(id = R.string.not_yet_heart_exam))
                 },
+                isLoading = isLoading,
             )
         }
     }

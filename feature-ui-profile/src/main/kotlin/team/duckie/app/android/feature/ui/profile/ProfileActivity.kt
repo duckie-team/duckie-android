@@ -31,7 +31,6 @@ import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
-import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
@@ -82,16 +81,6 @@ class ProfileActivity : BaseActivity() {
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
             QuackTheme {
                 when {
-                    state.isLoading -> {
-                        LoadingScreen(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = QuackColor.White.composeColor)
-                                .statusBarsPadding(),
-                            initState = { viewModel.init() },
-                        )
-                    }
-
                     state.isError -> {
                         ErrorScreen(
                             modifier = Modifier
@@ -110,7 +99,7 @@ class ProfileActivity : BaseActivity() {
                                 }
                                 MyProfileScreen(
                                     userProfile = state.userProfile,
-                                    isLoading = false,
+                                    isLoading = state.isLoading,
                                     onClickSetting = viewModel::clickSetting,
                                     onClickNotification = viewModel::clickNotification,
                                     onClickEditProfile = viewModel::clickEditProfile,
