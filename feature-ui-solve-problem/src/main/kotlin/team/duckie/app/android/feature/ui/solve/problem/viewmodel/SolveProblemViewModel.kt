@@ -77,7 +77,7 @@ internal class SolveProblemViewModel @Inject constructor(
         if (isQuiz) {
             setQuizMode(examId)
         } else {
-            throw DuckieClientLogicProblemException(code = "failed_import_extra")
+            setExamMode(examId)
         }
     }
 
