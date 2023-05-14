@@ -13,6 +13,7 @@ object Extras {
     const val CertifyingStatement = "ExtraCertifyingStatement"
     const val Submitted = "ExtraSubmitted"
     const val UserId: String = "ExtraUserId"
+    const val IsQuiz: String = "ExtraIsQuiz"
 
     const val SearchTag = "ExtraSearchTag"
     const val StartGuide = "StartGuide"
