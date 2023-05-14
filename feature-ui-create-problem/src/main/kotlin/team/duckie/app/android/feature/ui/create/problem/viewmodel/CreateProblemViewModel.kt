@@ -251,6 +251,7 @@ internal class CreateProblemViewModel @Inject constructor(
                 serverCorrectAnswers[index],
                 createProblemState.hints[index],
                 createProblemState.memos[index],
+                null,
             )
         }.toPersistentList()
 
