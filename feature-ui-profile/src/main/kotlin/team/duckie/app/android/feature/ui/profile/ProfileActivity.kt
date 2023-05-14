@@ -82,16 +82,6 @@ class ProfileActivity : BaseActivity() {
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
             QuackTheme {
                 when {
-                    state.isLoading -> {
-                        LoadingScreen(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = QuackColor.White.composeColor)
-                                .statusBarsPadding(),
-                            initState = { viewModel.init() },
-                        )
-                    }
-
                     state.isError -> {
                         ErrorScreen(
                             modifier = Modifier
@@ -110,7 +100,7 @@ class ProfileActivity : BaseActivity() {
                                 }
                                 MyProfileScreen(
                                     userProfile = state.userProfile,
-                                    isLoading = false,
+                                    isLoading = state.isLoading,
                                     onClickSetting = viewModel::clickSetting,
                                     onClickNotification = viewModel::clickNotification,
                                     onClickEditProfile = viewModel::clickEditProfile,
