@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
@@ -18,14 +18,18 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -55,6 +59,7 @@ internal fun SolveProblemScreen(
 ) {
     val totalPage = remember { state.totalPage }
     val pagerState = rememberPagerState()
+
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
@@ -139,25 +144,40 @@ private fun ContentSection(
     pagerState: PagerState,
     state: SolveProblemState,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    val currentProblem = state.problems[pagerState.currentPage].problem
+
+    LaunchedEffect(pagerState.currentPageOffsetFraction) {
+        if (currentProblem.answer?.isShortAnswer() == true && pagerState.currentPageOffsetFraction == 0f) {
+            keyboardController?.show()
+            focusRequester.requestFocus()
+        } else {
+            keyboardController?.hide()
+        }
+    }
+
     HorizontalPager(
         modifier = modifier,
         pageCount = state.totalPage,
         state = pagerState,
     ) { pageIndex ->
+        val problem = state.problems[pageIndex].problem
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(space = 24.dp),
         ) {
             questionSection(
                 page = pageIndex,
-                question = state.problems[pageIndex].problem.question,
+                question = problem.question,
             )
-            val answer = state.problems[pageIndex].problem.answer
+            val answer = problem.answer
             answerSection(
                 page = pageIndex,
                 answer = when (answer) {
                     is Answer.Short -> Answer.Short(
-                        state.problems[pageIndex].problem.correctAnswer
+                        problem.correctAnswer
                             ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
                     )
 
@@ -166,6 +186,8 @@ private fun ContentSection(
                 },
                 inputAnswers = state.inputAnswers,
                 onClickAnswer = inputAnswer,
+                keyboardController = keyboardController,
+                focusRequester = focusRequester,
             )
         }
     }

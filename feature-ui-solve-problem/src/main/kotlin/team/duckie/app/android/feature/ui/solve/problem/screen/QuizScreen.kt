@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
@@ -28,9 +28,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -145,6 +148,19 @@ private fun ContentSection(
     pagerState: PagerState,
     state: SolveProblemState,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    val currentProblem = state.problems[pagerState.currentPage].problem
+
+    LaunchedEffect(pagerState.currentPageOffsetFraction) {
+        if (currentProblem.answer?.isShortAnswer() == true && pagerState.currentPageOffsetFraction == 0f) {
+            keyboardController?.show()
+            focusRequester.requestFocus()
+        } else {
+            keyboardController?.hide()
+        }
+    }
+
     val progress by viewModel.timerCount.collectAsStateWithLifecycle()
     val timeOver by remember {
         derivedStateOf { progress == 0 }
@@ -191,6 +207,8 @@ private fun ContentSection(
                 },
                 inputAnswers = state.inputAnswers,
                 onClickAnswer = viewModel::inputAnswer,
+                focusRequester = focusRequester,
+                keyboardController = keyboardController,
             )
         }
     }

@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package team.duckie.app.android.feature.ui.solve.problem.answer
 
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +14,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.exam.model.Answer
@@ -29,6 +34,8 @@ internal fun LazyListScope.answerSection(
     answer: Answer,
     inputAnswers: ImmutableList<InputAnswer>,
     onClickAnswer: (page: Int, inputAnswer: InputAnswer) -> Unit,
+    focusRequester: FocusRequester,
+    keyboardController: SoftwareKeyboardController?,
 ) {
     when (answer) {
         is Answer.Choice -> {
@@ -97,6 +104,8 @@ internal fun LazyListScope.answerSection(
                             ),
                         )
                     },
+                    focusRequester = focusRequester,
+                    keyboardController = keyboardController,
                 )
             }
         }

@@ -16,7 +16,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import team.duckie.app.android.feature.ui.solve.problem.R
@@ -27,12 +29,14 @@ internal fun ShortAnswerForm(
     modifier: Modifier = Modifier,
     answer: String,
     onDone: (String) -> Unit,
+    keyboardController: SoftwareKeyboardController?,
+    focusRequester: FocusRequester,
 ) {
     var value by remember { mutableStateOf("") }
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     QuackGrayscaleTextField(
-        modifier = modifier,
+        modifier = modifier
+            .focusRequester(focusRequester),
         text = value,
         onTextChanged = {
             if (it.length <= answer.length) {
