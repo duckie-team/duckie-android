@@ -64,7 +64,12 @@ internal fun QuizScreen(
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val totalPage = remember { state.totalPage }
+
     val pagerState = rememberPagerState()
+    val isCurrentPageOffsetFractionZero = remember {
+        derivedStateOf { pagerState.currentPageOffsetFraction == 0f }
+    }
+
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
@@ -111,6 +116,7 @@ internal fun QuizScreen(
                 viewModel = viewModel,
                 pagerState = pagerState,
                 state = state,
+                isCurrentPageOffsetFractionZero = isCurrentPageOffsetFractionZero.value,
             )
             DoubleButtonBottomBar(
                 modifier = Modifier.layoutId(QuizBottomBarLayoutId),
@@ -147,13 +153,14 @@ private fun ContentSection(
     viewModel: SolveProblemViewModel,
     pagerState: PagerState,
     state: SolveProblemState,
+    isCurrentPageOffsetFractionZero: Boolean,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     val currentProblem = state.problems[pagerState.currentPage].problem
 
-    LaunchedEffect(pagerState.currentPageOffsetFraction) {
-        if (currentProblem.answer?.isShortAnswer() == true && pagerState.currentPageOffsetFraction == 0f) {
+    LaunchedEffect(isCurrentPageOffsetFractionZero) {
+        if (currentProblem.answer?.isShortAnswer() == true) {
             keyboardController?.show()
             focusRequester.requestFocus()
         } else {

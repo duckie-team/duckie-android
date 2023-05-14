@@ -19,6 +19,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,7 +59,11 @@ internal fun SolveProblemScreen(
     finishExam: () -> Unit,
 ) {
     val totalPage = remember { state.totalPage }
+
     val pagerState = rememberPagerState()
+    val isCurrentPageOffsetFractionZero = remember {
+        derivedStateOf { pagerState.currentPageOffsetFraction == 0f }
+    }
 
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
@@ -106,6 +111,7 @@ internal fun SolveProblemScreen(
                 pagerState = pagerState,
                 state = state,
                 inputAnswer = inputAnswer,
+                isCurrentPageOffsetFractionZero = isCurrentPageOffsetFractionZero.value,
             )
             DoubleButtonBottomBar(
                 modifier = Modifier.layoutId(SolveProblemBottomBarLayoutId),
@@ -143,13 +149,14 @@ private fun ContentSection(
     inputAnswer: (Int, InputAnswer) -> Unit,
     pagerState: PagerState,
     state: SolveProblemState,
+    isCurrentPageOffsetFractionZero: Boolean,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     val currentProblem = state.problems[pagerState.currentPage].problem
 
-    LaunchedEffect(pagerState.currentPageOffsetFraction) {
-        if (currentProblem.answer?.isShortAnswer() == true && pagerState.currentPageOffsetFraction == 0f) {
+    LaunchedEffect(key1 = isCurrentPageOffsetFractionZero) {
+        if (currentProblem.answer?.isShortAnswer() == true) {
             keyboardController?.show()
             focusRequester.requestFocus()
         } else {
