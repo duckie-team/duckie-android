@@ -13,6 +13,7 @@ internal sealed class StartExamSideEffect {
     data class NavigateToSolveProblem(
         val certified: Boolean,
         val examId: Int,
+        val isQuiz: Boolean,
     ) : StartExamSideEffect()
 
     data class ReportError(val exception: Throwable) : StartExamSideEffect()
