@@ -171,7 +171,7 @@ private fun ContentSection(
             // TODO(EvergreenTree97) 추후 덕퀴즈 종료로 이동 viewModel.finishExam()
         }
     }
-    DisposableEffect(Unit) {
+    DisposableEffect(pagerState.currentPage) {
         viewModel.startTimer()
         onDispose {
             viewModel.stopTimer()
