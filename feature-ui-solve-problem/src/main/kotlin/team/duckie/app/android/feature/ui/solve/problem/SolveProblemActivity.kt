@@ -25,6 +25,7 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.solve.problem.common.LoadingIndicator
+import team.duckie.app.android.feature.ui.solve.problem.screen.QuizScreen
 import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScreen
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
@@ -81,12 +82,15 @@ class SolveProblemActivity : BaseActivity() {
                         }
 
                         else -> {
-                            SolveProblemScreen(
-                                state = state,
-                                inputAnswer = viewModel::inputAnswer,
-                                stopExam = viewModel::stopExam,
-                                finishExam = viewModel::finishExam,
-                            )
+                            when (state.isQuiz) {
+                                true -> QuizScreen()
+                                false -> SolveProblemScreen(
+                                    state = state,
+                                    inputAnswer = viewModel::inputAnswer,
+                                    stopExam = viewModel::stopExam,
+                                    finishExam = viewModel::finishExam,
+                                )
+                            }
                         }
                     }
                 }

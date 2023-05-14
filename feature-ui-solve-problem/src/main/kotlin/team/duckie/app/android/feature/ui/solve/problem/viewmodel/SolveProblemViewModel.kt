@@ -20,6 +20,7 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
+import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
@@ -36,6 +37,7 @@ import javax.inject.Inject
 internal class SolveProblemViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getExamInstanceUseCase: GetExamInstanceUseCase,
+    private val getQuizUseCase: GetQuizUseCase,
 ) : ViewModel(),
     ContainerHost<SolveProblemState, SolveProblemSideEffect> {
     override val container: Container<SolveProblemState, SolveProblemSideEffect> = container(
@@ -45,6 +47,7 @@ internal class SolveProblemViewModel @Inject constructor(
     companion object {
         internal const val TimerCount = 3
         internal val DuringMillis = 1.seconds
+        private const val FAILED_IMPORT_EXTRA = "failed_import_extra"
     }
 
     private val problemTimer = ProblemTimer(
@@ -63,17 +66,30 @@ internal class SolveProblemViewModel @Inject constructor(
         problemTimer.stop()
     }
 
-    suspend fun initState() = intent {
-        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        if (examId != -1) {
-            reduce { state.copy(examId = examId) }
-            getProblems(examId)
+    fun initState() = intent {
+        val examId = savedStateHandle.get<Int>(Extras.ExamId)
+            ?: throw DuckieClientLogicProblemException(code = FAILED_IMPORT_EXTRA)
+        val isQuiz = savedStateHandle.get<Boolean>(Extras.IsQuiz)
+            ?: throw DuckieClientLogicProblemException(code = FAILED_IMPORT_EXTRA)
+        reduce {
+            state.copy(isQuiz = isQuiz)
+        }
+        if (isQuiz) {
+            setQuizMode(examId)
         } else {
             throw DuckieClientLogicProblemException(code = "failed_import_extra")
         }
     }
 
-    private suspend fun getProblems(examId: Int) = intent {
+    private suspend fun setExamMode(examId: Int) {
+        getExams(examId)
+    }
+
+    private suspend fun setQuizMode(examId: Int) {
+        getQuizs(examId)
+    }
+
+    private suspend fun getExams(examId: Int) = intent {
         reduce { state.copy(isProblemsLoading = true, isError = false) }
 
         getExamInstanceUseCase(id = examId).onSuccess { examInstance ->
@@ -86,6 +102,31 @@ internal class SolveProblemViewModel @Inject constructor(
                         isProblemsLoading = false,
                         problems = problemInstances,
                         inputAnswers = ImmutableList(problemInstances.size) { InputAnswer() },
+                    )
+                }
+            }
+        }.onFailure {
+            it.printStackTrace()
+            reduce {
+                state.copy(isError = true, isProblemsLoading = false)
+            }
+            postSideEffect(SolveProblemSideEffect.ReportError(it))
+        }
+    }
+
+    private suspend fun getQuizs(examId: Int) = intent {
+        reduce { state.copy(isProblemsLoading = true, isError = false) }
+
+        getQuizUseCase(examId = examId).onSuccess { quizResult ->
+            val quizProblems = quizResult.exam.problems
+            if (quizProblems == null) {
+                stopExam()
+            } else {
+                reduce {
+                    state.copy(
+                        isProblemsLoading = false,
+                        quizProblems = quizProblems.toImmutableList(),
+                        inputAnswers = ImmutableList(quizProblems.size) { InputAnswer() },
                     )
                 }
             }
@@ -121,4 +162,5 @@ internal class SolveProblemViewModel @Inject constructor(
     }
 
     fun stopExam() = intent { postSideEffect(SolveProblemSideEffect.NavigatePreviousScreen) }
+
 }
