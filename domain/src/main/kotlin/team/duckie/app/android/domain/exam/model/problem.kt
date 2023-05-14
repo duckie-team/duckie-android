@@ -130,6 +130,8 @@ sealed class Answer(val type: Type) {
         return type.hashCode()
     }
 
+    fun isShortAnswer(): Boolean = this.type == Type.ShortAnswer
+
     fun validate(): Boolean = when (this) {
         is Short -> true
 
