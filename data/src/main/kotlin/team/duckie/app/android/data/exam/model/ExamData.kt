@@ -13,7 +13,7 @@ import team.duckie.app.android.data.heart.model.HeartData
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.model.UserResponse
 
-data class ExamData(
+internal data class ExamData(
     @field:JsonProperty("id")
     val id: Int? = null,
 
@@ -70,9 +70,12 @@ data class ExamData(
 
     @field:JsonProperty("perfectScoreImageUrl")
     val perfectScoreImageUrl: String? = null,
+
+    @field:JsonProperty("problems")
+    val problems: List<ProblemData>? = null,
 )
 
-data class ExamsData(
+internal data class ExamsData(
     @field:JsonProperty("exams")
     val exams: List<ExamData>? = null,
 )
