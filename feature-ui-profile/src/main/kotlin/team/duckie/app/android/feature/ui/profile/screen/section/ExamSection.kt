@@ -22,12 +22,14 @@ import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.Spacer
+import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
 fun ExamSection(
+    isLoading: Boolean,
     @DrawableRes icon: Int,
     title: String,
     exams: ImmutableList<DuckTestCoverItem>,
@@ -48,10 +50,14 @@ fun ExamSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 QuackImage(
+                    modifier = Modifier.skeleton(isLoading),
                     src = icon,
                     size = DpSize(all = 24.dp),
                 )
-                QuackTitle2(text = title)
+                QuackTitle2(
+                    modifier = Modifier.skeleton(isLoading),
+                    text = title,
+                )
             }
             /* TODO (EvergreenTree97) 전체 보기 추후 구현
             QuackBody2(
@@ -69,6 +75,7 @@ fun ExamSection(
             ) {
                 items(exams) { item ->
                     DuckExamSmallCover(
+                        isLoading = isLoading,
                         duckTestCoverItem = DuckTestCoverItem(
                             testId = item.testId,
                             thumbnailUrl = item.thumbnailUrl,

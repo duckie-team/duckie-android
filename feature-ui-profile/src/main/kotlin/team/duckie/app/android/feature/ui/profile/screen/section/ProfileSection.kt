@@ -49,6 +49,7 @@ internal fun ProfileSection(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             QuackImage(
+                modifier = Modifier.skeleton(isLoading),
                 src = profile.ifEmpty { QuackIcon.DefaultProfile },
                 size = DpSize(all = 44.dp),
                 shape = SquircleShape,
