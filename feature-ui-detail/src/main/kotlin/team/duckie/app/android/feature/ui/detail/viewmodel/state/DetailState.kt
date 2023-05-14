@@ -11,6 +11,7 @@ package team.duckie.app.android.feature.ui.detail.viewmodel.state
 
 import androidx.compose.material.ExperimentalMaterialApi
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
@@ -61,7 +62,7 @@ sealed class DetailState {
             get() = exam.heart?.id != null
 
         val isQuiz: Boolean
-            get() = exam.quizs != null
+            get() = ExamType.toExamType(exam.type ?: "") == ExamType.Challenge
     }
 
     /**

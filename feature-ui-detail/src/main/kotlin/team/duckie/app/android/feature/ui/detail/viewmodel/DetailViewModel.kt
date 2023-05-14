@@ -24,6 +24,7 @@ import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.heart.usecase.DeleteHeartUseCase
 import team.duckie.app.android.domain.heart.usecase.PostHeartUseCase
+import team.duckie.app.android.domain.quiz.usecase.MakeQuizUseCase
 import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.ui.detail.viewmodel.sideeffect.DetailSideEffect
@@ -43,6 +44,7 @@ class DetailViewModel @Inject constructor(
     private val postHeartUseCase: PostHeartUseCase,
     private val deleteHeartUseCase: DeleteHeartUseCase,
     private val makeExamInstanceUseCase: MakeExamInstanceUseCase,
+    private val makeQuizUseCase: MakeQuizUseCase,
     private val reportUseCase: ReportUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
@@ -149,18 +151,37 @@ class DetailViewModel @Inject constructor(
     fun startExam() = viewModelScope.launch {
         intent {
             require(state is DetailState.Success)
-            (state as DetailState.Success).run {
-                makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
-                    (state as DetailState.Success).run {
-                        postSideEffect(
-                            DetailSideEffect.StartExam(
-                                result.id,
-                                certifyingStatement,
-                            ),
-                        )
+            val successState = state as DetailState.Success
+            successState.run {
+                when (isQuiz) {
+                    true -> {
+                        makeQuizUseCase(examId = exam.id).onSuccess { result ->
+                            postSideEffect(
+                                DetailSideEffect.StartQuiz(
+                                    examId = result.id,
+                                    certifyingStatement = certifyingStatement,
+                                    isQuiz = isQuiz,
+                                )
+                            )
+
+                        }.onFailure {
+                            postSideEffect(DetailSideEffect.ReportError(it))
+                        }
                     }
-                }.onFailure {
-                    postSideEffect(DetailSideEffect.ReportError(it))
+
+                    false -> {
+                        makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
+                            postSideEffect(
+                                DetailSideEffect.StartExam(
+                                    examId = result.id,
+                                    certifyingStatement = certifyingStatement,
+                                    isQuiz = isQuiz,
+                                )
+                            )
+                        }.onFailure {
+                            postSideEffect(DetailSideEffect.ReportError(it))
+                        }
+                    }
                 }
             }
         }
