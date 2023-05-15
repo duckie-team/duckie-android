@@ -16,18 +16,19 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.ui.solve.problem.common.LoadingIndicator
 import team.duckie.app.android.feature.ui.solve.problem.screen.QuizScreen
 import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScreen
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel
+import team.duckie.app.android.feature.ui.solve.problem.viewmodel.SolveProblemViewModel.Companion.TimerCount
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
@@ -51,11 +52,8 @@ class SolveProblemActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             QuackTheme {
-                val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-
-                LaunchedEffect(Unit) {
-                    viewModel.initState()
-                }
+                val state by viewModel.collectAsState()
+                val progress by viewModel.timerCount.collectAsStateWithLifecycle()
 
                 QuackCrossfade(
                     modifier = Modifier
@@ -83,7 +81,16 @@ class SolveProblemActivity : BaseActivity() {
 
                         else -> {
                             when (state.isQuiz) {
-                                true -> QuizScreen()
+                                true -> QuizScreen(
+                                    state = state,
+                                    inputAnswer = viewModel::inputAnswer,
+                                    stopExam = viewModel::stopExam,
+                                    finishQuiz = viewModel::finishQuiz,
+                                    startTimer = viewModel::startTimer,
+                                    onNextPage = viewModel::moveNextPage,
+                                    progress = { (progress.toFloat() / TimerCount) },
+                                )
+
                                 false -> SolveProblemScreen(
                                     state = state,
                                     inputAnswer = viewModel::inputAnswer,
@@ -123,6 +130,8 @@ class SolveProblemActivity : BaseActivity() {
             SolveProblemSideEffect.NavigatePreviousScreen -> {
                 finishWithAnimation()
             }
+
+            is SolveProblemSideEffect.FinishQuiz -> TODO()
         }
     }
 }

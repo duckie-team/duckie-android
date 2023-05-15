@@ -191,8 +191,9 @@ private fun ContentSection(
                     is Answer.Choice, is Answer.ImageChoice -> answer
                     else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
                 },
+                shortAnswerText = state.inputAnswers[pageIndex].answer,
                 inputAnswers = state.inputAnswers,
-                onClickAnswer = inputAnswer,
+                onAnswerChanged = inputAnswer,
                 keyboardController = keyboardController,
                 focusRequester = focusRequester,
             )

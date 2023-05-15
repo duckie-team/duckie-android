@@ -33,8 +33,9 @@ internal fun LazyListScope.answerSection(
     page: Int,
     answer: Answer,
     inputAnswers: ImmutableList<InputAnswer>,
-    onClickAnswer: (page: Int, inputAnswer: InputAnswer) -> Unit,
+    onAnswerChanged: (page: Int, inputAnswer: InputAnswer) -> Unit,
     focusRequester: FocusRequester,
+    shortAnswerText: String,
     keyboardController: SoftwareKeyboardController?,
 ) {
     when (answer) {
@@ -49,7 +50,7 @@ internal fun LazyListScope.answerSection(
                             text = choice.text,
                             selected = index != -1 && index == inputAnswers[page].number,
                             onClick = {
-                                onClickAnswer(
+                                onAnswerChanged(
                                     page,
                                     InputAnswer(
                                         number = index,
@@ -77,7 +78,7 @@ internal fun LazyListScope.answerSection(
                         text = imageChoice.text,
                         selected = index != -1 && index == inputAnswers[page].number,
                         onClick = {
-                            onClickAnswer(
+                            onAnswerChanged(
                                 page,
                                 InputAnswer(
                                     number = index,
@@ -95,8 +96,18 @@ internal fun LazyListScope.answerSection(
                 ShortAnswerForm(
                     modifier = Modifier.padding(paddingValues = HorizontalPadding),
                     answer = answer.correctAnswer,
-                    onDone = { inputText -> // TODO(EvergreenTree97): 서버에 보낼 정답 text
-                        onClickAnswer(
+                    text = shortAnswerText,
+                    onTextChanged = { inputText ->
+                        onAnswerChanged(
+                            page,
+                            InputAnswer(
+                                number = 0,
+                                answer = inputText,
+                            ),
+                        )
+                    },
+                    onDone = { inputText ->
+                        onAnswerChanged(
                             page,
                             InputAnswer(
                                 number = 0,

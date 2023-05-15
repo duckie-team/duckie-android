@@ -35,8 +35,7 @@ internal fun GetQuizResponse.toDomain() = QuizResult(
     exam = exam?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exam"),
     score = score ?: duckieResponseFieldNpe("${this::class.java.simpleName}.score"),
     user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
-    wrongProblem = wrongProblem?.toDomain()
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.wrongProblem"),
+    wrongProblem = wrongProblem?.toDomain(),
 )
 
 internal fun QuizExamData.toDomain() = QuizExam(

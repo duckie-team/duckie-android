@@ -27,20 +27,19 @@ import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
 @Composable
 internal fun ShortAnswerForm(
     modifier: Modifier = Modifier,
+    text: String,
+    onTextChanged: (String) -> Unit,
     answer: String,
     onDone: (String) -> Unit,
     keyboardController: SoftwareKeyboardController?,
     focusRequester: FocusRequester,
 ) {
-    var value by remember { mutableStateOf("") }
-
     QuackGrayscaleTextField(
-        modifier = modifier
-            .focusRequester(focusRequester),
-        text = value,
+        modifier = modifier.focusRequester(focusRequester),
+        text = text,
         onTextChanged = {
             if (it.length <= answer.length) {
-                value = it
+                onTextChanged(it)
             }
         },
         placeholderText = stringResource(id = R.string.length_contains_space, answer.length),
@@ -50,7 +49,7 @@ internal fun ShortAnswerForm(
         keyboardActions = KeyboardActions(
             onDone = {
                 keyboardController?.hide()
-                onDone(value)
+                onDone(text)
             },
         ),
     )

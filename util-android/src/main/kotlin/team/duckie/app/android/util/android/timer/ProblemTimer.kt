@@ -23,6 +23,9 @@ class ProblemTimer(
     private val _remainingTime = MutableStateFlow(count)
     val remainingTime: StateFlow<Int> = _remainingTime
 
+    var totalTime = 0
+        private set
+
     private var timerJob: Job? = null
 
     fun start() {
@@ -32,6 +35,7 @@ class ProblemTimer(
             while (_remainingTime.value > 0) {
                 delay(duringMillis)
                 _remainingTime.value--
+                totalTime++
             }
         }
     }

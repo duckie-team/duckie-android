@@ -44,10 +44,15 @@ internal class SolveProblemViewModel @Inject constructor(
         SolveProblemState(),
     )
 
+    init {
+        initState()
+    }
+
     companion object {
-        internal const val TimerCount = 3
+        internal const val TimerCount = 10
         internal val DuringMillis = 1.seconds
         private const val FAILED_IMPORT_EXTRA = "failed_import_extra"
+        private const val CORRECT_ANSWER_IS_NULL = "correct_answer_is_null"
     }
 
     private val problemTimer = ProblemTimer(
@@ -75,18 +80,10 @@ internal class SolveProblemViewModel @Inject constructor(
             state.copy(isQuiz = isQuiz)
         }
         if (isQuiz) {
-            setQuizMode(examId)
+            getQuizs(examId)
         } else {
-            setExamMode(examId)
+            getExams(examId)
         }
-    }
-
-    private suspend fun setExamMode(examId: Int) {
-        getExams(examId)
-    }
-
-    private suspend fun setQuizMode(examId: Int) {
-        getQuizs(examId)
     }
 
     private suspend fun getExams(examId: Int) = intent {
@@ -102,6 +99,7 @@ internal class SolveProblemViewModel @Inject constructor(
                         isProblemsLoading = false,
                         problems = problemInstances,
                         inputAnswers = ImmutableList(problemInstances.size) { InputAnswer() },
+                        totalPage = problemInstances.size,
                     )
                 }
             }
@@ -127,6 +125,7 @@ internal class SolveProblemViewModel @Inject constructor(
                         isProblemsLoading = false,
                         quizProblems = quizProblems.toImmutableList(),
                         inputAnswers = ImmutableList(quizProblems.size) { InputAnswer() },
+                        totalPage = quizProblems.size,
                     )
                 }
             }
@@ -152,11 +151,33 @@ internal class SolveProblemViewModel @Inject constructor(
         }
     }
 
+    fun moveNextPage(
+        pageIndex: Int,
+    ) = intent {
+        val correctAnswer = state.quizProblems[pageIndex].correctAnswer
+            ?: throw DuckieClientLogicProblemException(code = CORRECT_ANSWER_IS_NULL)
+        if (correctAnswer != state.inputAnswers[pageIndex].answer) {
+            finishQuiz(pageIndex)
+        }
+    }
+
     fun finishExam() = intent {
+        stopTimer()
         postSideEffect(
             SolveProblemSideEffect.FinishSolveProblem(
                 examId = state.examId,
                 answers = state.inputAnswers.fastMap { it.answer },
+            ),
+        )
+    }
+
+    fun finishQuiz(index: Int) = intent {
+        postSideEffect(
+            SolveProblemSideEffect.FinishQuiz(
+                examId = state.examId,
+                time = problemTimer.totalTime,
+                correctProblemCount = index, // 현재 페이지 인덱스 == 맞은 개수
+                problemId = state.quizProblems[index].id,
             ),
         )
     }
