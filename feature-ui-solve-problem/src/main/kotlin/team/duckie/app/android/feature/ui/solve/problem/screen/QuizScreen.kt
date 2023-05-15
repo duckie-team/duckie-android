@@ -119,7 +119,7 @@ internal fun QuizScreen(
                         if (pagerState.currentPage == maximumPage) {
                             finishQuiz(pagerState.currentPage)
                         } else {
-                            onNextPage(pagerState.currentPage)
+                            //onNextPage(pagerState.currentPage)
                             pagerState.moveNextPage(maximumPage)
                         }
                     }
