@@ -48,9 +48,12 @@ class QuizRemoteDataSourceImpl @Inject constructor() : QuizDataSource {
         )
     }
 
-    override suspend fun patchQuiz(body: PatchQuizBody): Boolean {
+    override suspend fun patchQuiz(
+        examId: Int,
+        body: PatchQuizBody,
+    ): Boolean {
         val response = client.patch {
-            url("/challenges")
+            url("/challenges/$examId")
             setBody(body)
         }
         return responseCatching(response.status.value, response.bodyAsText()) { responseBody ->

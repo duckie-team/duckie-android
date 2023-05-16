@@ -18,6 +18,7 @@ interface QuizRepository {
     suspend fun getQuiz(examId: Int): QuizResult
 
     suspend fun updateQuiz(
+        examId: Int,
         correctProblemCount: Int,
         time: Int?,
         problemId: Int?,

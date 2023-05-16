@@ -9,6 +9,7 @@ package team.duckie.app.android.domain.quiz.usecase
 
 import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.quiz.repository.QuizRepository
+import java.io.Serializable
 import javax.inject.Inject
 
 @Immutable
@@ -16,14 +17,20 @@ class UpdateQuizUseCase @Inject constructor(
     private val repository: QuizRepository,
 ) {
     suspend operator fun invoke(
-        correctProblemCount: Int,
-        time: Int?,
-        problemId: Int?,
+        examId: Int,
+        param: Param,
     ) = runCatching {
         repository.updateQuiz(
-            correctProblemCount = correctProblemCount,
-            time = time,
-            problemId = problemId,
+            examId = examId,
+            correctProblemCount = param.correctProblemCount,
+            time = param.time,
+            problemId = param.problemId,
         )
     }
+
+    class Param(
+        val correctProblemCount: Int,
+        val time: Int?,
+        val problemId: Int?,
+    ) : Serializable
 }
