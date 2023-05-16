@@ -24,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.domain.quiz.usecase.UpdateQuizUseCase
 import team.duckie.app.android.feature.ui.solve.problem.common.LoadingIndicator
 import team.duckie.app.android.feature.ui.solve.problem.screen.QuizScreen
 import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScreen
@@ -83,12 +84,11 @@ class SolveProblemActivity : BaseActivity() {
                             when (state.isQuiz) {
                                 true -> QuizScreen(
                                     state = state,
-                                    inputAnswer = viewModel::inputAnswer,
+                                    progress = {(progress.toFloat() / SolveProblemViewModel.TimerCount)},
                                     stopExam = viewModel::stopExam,
                                     finishQuiz = viewModel::finishQuiz,
                                     startTimer = viewModel::startTimer,
                                     onNextPage = viewModel::moveNextPage,
-                                    progress = { (progress.toFloat() / TimerCount) },
                                 )
 
                                 false -> SolveProblemScreen(
@@ -118,6 +118,7 @@ class SolveProblemActivity : BaseActivity() {
                     intentBuilder = {
                         putExtra(Extras.ExamId, sideEffect.examId)
                         putExtra(Extras.Submitted, sideEffect.answers.toTypedArray())
+                        putExtra(Extras.IsQuiz, false)
                     },
                     withFinish = true,
                 )
@@ -131,7 +132,23 @@ class SolveProblemActivity : BaseActivity() {
                 finishWithAnimation()
             }
 
-            is SolveProblemSideEffect.FinishQuiz -> TODO()
+            is SolveProblemSideEffect.FinishQuiz -> {
+                examResultNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                        putExtra(
+                            Extras.UpdateQuizParam, UpdateQuizUseCase.Param(
+                                correctProblemCount = sideEffect.correctProblemCount,
+                                time = sideEffect.time,
+                                problemId = sideEffect.problemId,
+                            )
+                        )
+                        putExtra(Extras.IsQuiz, true)
+                    },
+                    withFinish = true,
+                )
+            }
         }
     }
 }

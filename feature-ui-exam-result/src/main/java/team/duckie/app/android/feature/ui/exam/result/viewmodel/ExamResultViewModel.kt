@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.exam.result.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
+import team.duckie.app.android.domain.quiz.usecase.UpdateQuizUseCase
 import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
@@ -30,18 +32,30 @@ class ExamResultViewModel @Inject constructor(
     private val makeExamInstanceSubmitUseCase: MakeExamInstanceSubmitUseCase,
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
+
+    companion object {
+        private const val FAILED_IMPORT_EXTRAS = "failed_import_extra"
+    }
+
     override val container: Container<ExamResultState, ExamResultSideEffect> = container(
         ExamResultState.Loading,
     )
 
     fun initState() {
-        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        val submitted =
-            savedStateHandle.getStateFlow(Extras.Submitted, emptyArray<String>()).value.toList()
-
-        if (examId == -1 || submitted.isEmpty()) {
-            throw DuckieClientLogicProblemException(code = "failed_import_extra")
+        val examId = savedStateHandle.get<Int>(Extras.ExamId)
+            ?: throw DuckieClientLogicProblemException(code = FAILED_IMPORT_EXTRAS)
+        val isQuiz =
+            savedStateHandle.get<Boolean>(Extras.IsQuiz) ?: throw DuckieClientLogicProblemException(
+                code = FAILED_IMPORT_EXTRAS
+            )
+        if (isQuiz) {
+            val updateQuizParam =
+                savedStateHandle.get<UpdateQuizUseCase.Param>(Extras.UpdateQuizParam).also {
+                    Log.d("ExamResultViewModel", "initState: ${it.toString()}")
+                }
         } else {
+            val submitted = savedStateHandle.get<Array<String>>(Extras.Submitted)?.toList()
+                ?: throw DuckieClientLogicProblemException(code = FAILED_IMPORT_EXTRAS)
             getReport(examId, ExamInstanceSubmitBody(submitted = submitted.toImmutableList()))
         }
     }

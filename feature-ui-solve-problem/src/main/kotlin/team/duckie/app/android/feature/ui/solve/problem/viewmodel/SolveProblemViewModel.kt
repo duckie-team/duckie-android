@@ -53,6 +53,7 @@ internal class SolveProblemViewModel @Inject constructor(
         internal val DuringMillis = 1.seconds
         private const val FAILED_IMPORT_EXTRA = "failed_import_extra"
         private const val CORRECT_ANSWER_IS_NULL = "correct_answer_is_null"
+        private const val ANSWER_IS_NULL = "answer_is_null"
     }
 
     private val problemTimer = ProblemTimer(
@@ -153,10 +154,12 @@ internal class SolveProblemViewModel @Inject constructor(
 
     fun moveNextPage(
         pageIndex: Int,
+        inputAnswer: InputAnswer,
     ) = intent {
         val correctAnswer = state.quizProblems[pageIndex].correctAnswer
             ?: throw DuckieClientLogicProblemException(code = CORRECT_ANSWER_IS_NULL)
-        if (correctAnswer != state.inputAnswers[pageIndex].answer) {
+        state.quizProblems[pageIndex].answer
+        if (correctAnswer != inputAnswer.answer) {
             finishQuiz(pageIndex)
         }
     }

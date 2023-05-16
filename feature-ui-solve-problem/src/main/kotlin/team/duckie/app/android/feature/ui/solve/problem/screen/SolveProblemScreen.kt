@@ -64,7 +64,6 @@ internal fun SolveProblemScreen(
     val isCurrentPageOffsetFractionZero = remember {
         derivedStateOf { pagerState.currentPageOffsetFraction == 0f }
     }
-
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
@@ -110,7 +109,7 @@ internal fun SolveProblemScreen(
                 modifier = Modifier.layoutId(SolveProblemContentLayoutId),
                 pagerState = pagerState,
                 state = state,
-                inputAnswer = inputAnswer,
+                updateInputAnswers = inputAnswer,
                 isCurrentPageOffsetFractionZero = isCurrentPageOffsetFractionZero.value,
             )
             DoubleButtonBottomBar(
@@ -146,9 +145,9 @@ internal fun SolveProblemScreen(
 @Composable
 private fun ContentSection(
     modifier: Modifier = Modifier,
-    inputAnswer: (Int, InputAnswer) -> Unit,
     pagerState: PagerState,
     state: SolveProblemState,
+    updateInputAnswers: (Int, InputAnswer) -> Unit,
     isCurrentPageOffsetFractionZero: Boolean,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -181,7 +180,7 @@ private fun ContentSection(
             )
             val answer = problem.answer
             answerSection(
-                page = pageIndex,
+                pageIndex = pageIndex,
                 answer = when (answer) {
                     is Answer.Short -> Answer.Short(
                         problem.correctAnswer
@@ -191,11 +190,10 @@ private fun ContentSection(
                     is Answer.Choice, is Answer.ImageChoice -> answer
                     else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
                 },
-                shortAnswerText = state.inputAnswers[pageIndex].answer,
                 inputAnswers = state.inputAnswers,
-                onAnswerChanged = inputAnswer,
-                keyboardController = keyboardController,
+                updateInputAnswers = updateInputAnswers,
                 focusRequester = focusRequester,
+                keyboardController = keyboardController,
             )
         }
     }

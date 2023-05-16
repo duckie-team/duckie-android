@@ -12,7 +12,6 @@
 
 package team.duckie.app.android.feature.ui.solve.problem.screen
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,6 +38,8 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.feature.ui.solve.problem.R
@@ -59,10 +61,9 @@ private const val QuizBottomBarLayoutId = "QuizBottomBar"
 internal fun QuizScreen(
     state: SolveProblemState,
     progress: () -> Float,
-    inputAnswer: (Int, InputAnswer) -> Unit,
     stopExam: () -> Unit,
     finishQuiz: (Int) -> Unit,
-    onNextPage: (Int) -> Unit,
+    onNextPage: (Int, InputAnswer) -> Unit,
     startTimer: () -> Unit,
 ) {
     val totalPage = remember { state.totalPage }
@@ -72,6 +73,15 @@ internal fun QuizScreen(
 
     val timeOver by remember {
         derivedStateOf { progress() == 0f }
+    }
+
+    val inputAnswers = remember {
+        mutableStateListOf(
+            elements = Array(
+                size = state.quizProblems.size,
+                init = { InputAnswer() },
+            ),
+        )
     }
 
     LaunchedEffect(pagerState.targetPage) {
@@ -108,7 +118,10 @@ internal fun QuizScreen(
                 modifier = Modifier.layoutId(QuizContentLayoutId),
                 pagerState = pagerState,
                 state = state,
-                inputAnswer = inputAnswer,
+                inputAnswers = inputAnswers.toImmutableList(),
+                updateInputAnswers = { index, answer ->
+                    inputAnswers[index] = answer
+                },
             )
             ButtonBottomBar(
                 modifier = Modifier.layoutId(QuizBottomBarLayoutId),
@@ -119,7 +132,10 @@ internal fun QuizScreen(
                         if (pagerState.currentPage == maximumPage) {
                             finishQuiz(pagerState.currentPage)
                         } else {
-                            //onNextPage(pagerState.currentPage)
+                            onNextPage(
+                                pagerState.currentPage,
+                                inputAnswers[pagerState.currentPage]
+                            )
                             pagerState.moveNextPage(maximumPage)
                         }
                     }
@@ -139,7 +155,8 @@ private fun ContentSection(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
     state: SolveProblemState,
-    inputAnswer: (page: Int, inputAnswer: InputAnswer) -> Unit,
+    inputAnswers: ImmutableList<InputAnswer>,
+    updateInputAnswers: (page: Int, inputAnswer: InputAnswer) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     HorizontalPager(
@@ -161,7 +178,7 @@ private fun ContentSection(
             )
             val answer = state.quizProblems[pageIndex].answer
             answerSection(
-                page = pageIndex,
+                pageIndex = pageIndex,
                 answer = when (answer) {
                     is Answer.Short -> Answer.Short(
                         state.quizProblems[pageIndex].correctAnswer
@@ -171,9 +188,8 @@ private fun ContentSection(
                     is Answer.Choice, is Answer.ImageChoice -> answer
                     else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
                 },
-                shortAnswerText = state.inputAnswers[pageIndex].answer,
-                inputAnswers = state.inputAnswers,
-                onAnswerChanged = inputAnswer,
+                inputAnswers = inputAnswers,
+                updateInputAnswers = updateInputAnswers,
                 focusRequester = focusRequester,
                 keyboardController = keyboardController,
             )
