@@ -24,6 +24,7 @@ import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
+import team.duckie.app.android.util.android.savedstate.getOrThrow
 import team.duckie.app.android.util.android.timer.ProblemTimer
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
@@ -51,9 +52,7 @@ internal class SolveProblemViewModel @Inject constructor(
     companion object {
         internal const val TimerCount = 10
         internal val DuringMillis = 1.seconds
-        private const val FAILED_IMPORT_EXTRA = "failed_import_extra"
         private const val CORRECT_ANSWER_IS_NULL = "correct_answer_is_null"
-        private const val ANSWER_IS_NULL = "answer_is_null"
     }
 
     private val problemTimer = ProblemTimer(
@@ -73,10 +72,8 @@ internal class SolveProblemViewModel @Inject constructor(
     }
 
     fun initState() = intent {
-        val examId = savedStateHandle.get<Int>(Extras.ExamId)
-            ?: throw DuckieClientLogicProblemException(code = FAILED_IMPORT_EXTRA)
-        val isQuiz = savedStateHandle.get<Boolean>(Extras.IsQuiz)
-            ?: throw DuckieClientLogicProblemException(code = FAILED_IMPORT_EXTRA)
+        val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
+        val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
         reduce {
             state.copy(isQuiz = isQuiz)
         }

@@ -22,7 +22,7 @@ import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.quiz.usecase.UpdateQuizUseCase
-import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
+import team.duckie.app.android.util.android.savedstate.getOrThrow
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -33,30 +33,24 @@ class ExamResultViewModel @Inject constructor(
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
 
-    companion object {
-        private const val FAILED_IMPORT_EXTRAS = "failed_import_extra"
-    }
-
     override val container: Container<ExamResultState, ExamResultSideEffect> = container(
         ExamResultState.Loading,
     )
 
     fun initState() {
-        val examId = savedStateHandle.get<Int>(Extras.ExamId)
-            ?: throw DuckieClientLogicProblemException(code = FAILED_IMPORT_EXTRAS)
-        val isQuiz =
-            savedStateHandle.get<Boolean>(Extras.IsQuiz) ?: throw DuckieClientLogicProblemException(
-                code = FAILED_IMPORT_EXTRAS
-            )
+        val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
+        val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
         if (isQuiz) {
             val updateQuizParam =
-                savedStateHandle.get<UpdateQuizUseCase.Param>(Extras.UpdateQuizParam).also {
+                savedStateHandle.getOrThrow<UpdateQuizUseCase.Param>(Extras.UpdateQuizParam).also {
                     Log.d("ExamResultViewModel", "initState: ${it.toString()}")
                 }
         } else {
-            val submitted = savedStateHandle.get<Array<String>>(Extras.Submitted)?.toList()
-                ?: throw DuckieClientLogicProblemException(code = FAILED_IMPORT_EXTRAS)
-            getReport(examId, ExamInstanceSubmitBody(submitted = submitted.toImmutableList()))
+            val submitted = savedStateHandle.getOrThrow<Array<String>>(Extras.Submitted)
+            getReport(
+                examId = examId,
+                submitted = ExamInstanceSubmitBody(submitted = submitted.toList().toImmutableList())
+            )
         }
     }
 
