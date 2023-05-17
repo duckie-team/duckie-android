@@ -173,7 +173,7 @@ private fun ContentSection(
 
         LaunchedEffect(key1 = requestFocus) {
             if (requestFocus) {
-                if(problem.isSubjective()) {
+                if (problem.isSubjective()) {
                     focusRequester.requestFocus()
                     keyboardController?.show()
                 } else {
