@@ -50,7 +50,6 @@ import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
-import team.duckie.app.android.util.compose.moveNextPage
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 
 private const val QuizTopAppBarLayoutId = "QuizTopAppBar"
@@ -63,14 +62,14 @@ internal fun QuizScreen(
     progress: () -> Float,
     stopExam: () -> Unit,
     finishQuiz: (Int) -> Unit,
-    onNextPage: (Int, InputAnswer) -> Unit,
+    onNextPage: (Int, InputAnswer, Int) -> Unit,
     startTimer: () -> Unit,
 ) {
     val totalPage = remember { state.totalPage }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
-
+    
     val timeOver by remember {
         derivedStateOf { progress() == 0f }
     }
@@ -134,9 +133,9 @@ internal fun QuizScreen(
                         } else {
                             onNextPage(
                                 pagerState.currentPage,
-                                inputAnswers[pagerState.currentPage]
+                                inputAnswers[pagerState.currentPage],
+                                maximumPage,
                             )
-                            pagerState.moveNextPage(maximumPage)
                         }
                     }
                 },

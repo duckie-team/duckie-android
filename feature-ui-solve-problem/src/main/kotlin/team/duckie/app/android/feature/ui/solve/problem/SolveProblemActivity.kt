@@ -5,17 +5,23 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package team.duckie.app.android.feature.ui.solve.problem
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,7 +29,6 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectAsState
-import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.domain.quiz.usecase.UpdateQuizUseCase
 import team.duckie.app.android.feature.ui.solve.problem.common.LoadingIndicator
 import team.duckie.app.android.feature.ui.solve.problem.screen.QuizScreen
@@ -34,6 +39,7 @@ import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.Sol
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
+import team.duckie.app.android.util.compose.moveNextPage
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation
@@ -55,6 +61,16 @@ class SolveProblemActivity : BaseActivity() {
             QuackTheme {
                 val state by viewModel.collectAsState()
                 val progress by viewModel.timerCount.collectAsStateWithLifecycle()
+                val pagerState = rememberPagerState()
+
+                LaunchedEffect(viewModel.container.sideEffectFlow) {
+                    viewModel.container.sideEffectFlow.collect { sideEffect ->
+                        handleSideEffect(
+                            sideEffect = sideEffect,
+                            pagerState = pagerState,
+                        )
+                    }
+                }
 
                 QuackCrossfade(
                     modifier = Modifier
@@ -84,7 +100,7 @@ class SolveProblemActivity : BaseActivity() {
                             when (state.isQuiz) {
                                 true -> QuizScreen(
                                     state = state,
-                                    progress = {(progress.toFloat() / SolveProblemViewModel.TimerCount)},
+                                    progress = { (progress.toFloat() / TimerCount) },
                                     stopExam = viewModel::stopExam,
                                     finishQuiz = viewModel::finishQuiz,
                                     startTimer = viewModel::startTimer,
@@ -103,14 +119,12 @@ class SolveProblemActivity : BaseActivity() {
                 }
             }
         }
-
-        viewModel.observe(
-            lifecycleOwner = this,
-            sideEffect = ::handleSideEffect,
-        )
     }
 
-    private fun handleSideEffect(sideEffect: SolveProblemSideEffect) {
+    private suspend fun handleSideEffect(
+        sideEffect: SolveProblemSideEffect,
+        pagerState: PagerState,
+    ) {
         when (sideEffect) {
             is SolveProblemSideEffect.FinishSolveProblem -> {
                 examResultNavigator.navigateFrom(
@@ -148,6 +162,10 @@ class SolveProblemActivity : BaseActivity() {
                     },
                     withFinish = true,
                 )
+            }
+
+            is SolveProblemSideEffect.MoveNextPage -> {
+                pagerState.moveNextPage(sideEffect.maxPage)
             }
         }
     }

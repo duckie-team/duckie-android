@@ -152,12 +152,15 @@ internal class SolveProblemViewModel @Inject constructor(
     fun moveNextPage(
         pageIndex: Int,
         inputAnswer: InputAnswer,
+        maxPage: Int,
     ) = intent {
         val correctAnswer = state.quizProblems[pageIndex].correctAnswer
             ?: throw DuckieClientLogicProblemException(code = CORRECT_ANSWER_IS_NULL)
         state.quizProblems[pageIndex].answer
         if (correctAnswer != inputAnswer.answer) {
             finishQuiz(pageIndex)
+        } else {
+            postSideEffect(SolveProblemSideEffect.MoveNextPage(maxPage))
         }
     }
 

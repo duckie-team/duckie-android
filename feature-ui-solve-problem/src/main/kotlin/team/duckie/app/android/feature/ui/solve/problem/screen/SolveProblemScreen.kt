@@ -59,7 +59,6 @@ internal fun SolveProblemScreen(
     finishExam: () -> Unit,
 ) {
     val totalPage = remember { state.totalPage }
-
     val pagerState = rememberPagerState()
     val isCurrentPageOffsetFractionZero = remember {
         derivedStateOf { pagerState.currentPageOffsetFraction == 0f }

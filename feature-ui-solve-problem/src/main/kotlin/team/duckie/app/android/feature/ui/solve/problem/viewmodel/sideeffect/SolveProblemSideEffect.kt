@@ -23,4 +23,6 @@ internal sealed class SolveProblemSideEffect {
     class ReportError(val exception: Throwable) : SolveProblemSideEffect()
 
     object NavigatePreviousScreen : SolveProblemSideEffect()
+
+    class MoveNextPage(val maxPage: Int) : SolveProblemSideEffect()
 }
