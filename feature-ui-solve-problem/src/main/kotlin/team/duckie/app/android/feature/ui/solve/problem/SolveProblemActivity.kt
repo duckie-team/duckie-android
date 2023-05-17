@@ -100,6 +100,7 @@ class SolveProblemActivity : BaseActivity() {
                             when (state.isQuiz) {
                                 true -> QuizScreen(
                                     state = state,
+                                    pagerState = pagerState,
                                     progress = { (progress.toFloat() / TimerCount) },
                                     stopExam = viewModel::stopExam,
                                     finishQuiz = viewModel::finishQuiz,
@@ -109,6 +110,7 @@ class SolveProblemActivity : BaseActivity() {
 
                                 false -> SolveProblemScreen(
                                     state = state,
+                                    pagerState = pagerState,
                                     inputAnswer = viewModel::inputAnswer,
                                     stopExam = viewModel::stopExam,
                                     finishExam = viewModel::finishExam,

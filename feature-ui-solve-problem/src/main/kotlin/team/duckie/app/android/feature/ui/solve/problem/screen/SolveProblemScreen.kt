@@ -54,12 +54,12 @@ private const val SolveProblemBottomBarLayoutId = "SolveProblemBottomBar"
 @Composable
 internal fun SolveProblemScreen(
     state: SolveProblemState,
+    pagerState: PagerState,
     inputAnswer: (Int, InputAnswer) -> Unit,
     stopExam: () -> Unit,
     finishExam: () -> Unit,
 ) {
     val totalPage = remember { state.totalPage }
-    val pagerState = rememberPagerState()
     val isCurrentPageOffsetFractionZero = remember {
         derivedStateOf { pagerState.currentPageOffsetFraction == 0f }
     }

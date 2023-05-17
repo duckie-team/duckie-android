@@ -59,6 +59,7 @@ private const val QuizBottomBarLayoutId = "QuizBottomBar"
 @Composable
 internal fun QuizScreen(
     state: SolveProblemState,
+    pagerState: PagerState,
     progress: () -> Float,
     stopExam: () -> Unit,
     finishQuiz: (Int) -> Unit,
@@ -66,10 +67,9 @@ internal fun QuizScreen(
     startTimer: () -> Unit,
 ) {
     val totalPage = remember { state.totalPage }
-    val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
-    
+
     val timeOver by remember {
         derivedStateOf { progress() == 0f }
     }
@@ -162,6 +162,7 @@ private fun ContentSection(
         modifier = modifier,
         pageCount = state.totalPage,
         state = pagerState,
+        userScrollEnabled = false,
     ) { pageIndex ->
         val focusRequester = remember(pagerState.currentPage) { FocusRequester() }
         LazyColumn(
