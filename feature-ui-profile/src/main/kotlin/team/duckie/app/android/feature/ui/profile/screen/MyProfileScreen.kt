@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.ui.profile.R
 import team.duckie.app.android.feature.ui.profile.component.EmptyText
@@ -27,6 +28,7 @@ import team.duckie.app.android.feature.ui.profile.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.ui.profile.screen.section.EditSection
 import team.duckie.app.android.feature.ui.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.ui.profile.screen.section.FavoriteTagSection
+import team.duckie.app.android.feature.ui.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.app.android.shared.ui.compose.Create
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.Notice
@@ -54,7 +56,7 @@ fun MyProfileScreen(
         userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
     }
     val submittedExams = remember(userProfile.createdExams) {
-        persistentListOf<DuckTestCoverItem>()
+        userProfile.createdExams?.map(ProfileExam::toUiModel)?.toImmutableList() ?: persistentListOf()
     }
 
     ProfileScreen(
