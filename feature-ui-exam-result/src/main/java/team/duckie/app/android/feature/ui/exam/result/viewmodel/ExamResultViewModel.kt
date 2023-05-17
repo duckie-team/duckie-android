@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.ui.exam.result.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +20,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
+import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.UpdateQuizUseCase
 import team.duckie.app.android.util.android.savedstate.getOrThrow
 import team.duckie.app.android.util.ui.const.Extras
@@ -30,6 +30,8 @@ import javax.inject.Inject
 class ExamResultViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val makeExamInstanceSubmitUseCase: MakeExamInstanceSubmitUseCase,
+    private val updateQuizUseCase: UpdateQuizUseCase,
+    private val getQuizUseCase: GetQuizUseCase,
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
 
@@ -41,10 +43,11 @@ class ExamResultViewModel @Inject constructor(
         val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
         val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
         if (isQuiz) {
-            val updateQuizParam =
-                savedStateHandle.getOrThrow<UpdateQuizUseCase.Param>(Extras.UpdateQuizParam).also {
-                    Log.d("ExamResultViewModel", "initState: ${it.toString()}")
-                }
+            val updateQuizParam = savedStateHandle.getOrThrow<UpdateQuizUseCase.Param>(Extras.UpdateQuizParam)
+            updateQuiz(
+                examId = examId,
+                updateQuizParam = updateQuizParam,
+            )
         } else {
             val submitted = savedStateHandle.getOrThrow<Array<String>>(Extras.Submitted)
             getReport(
@@ -66,7 +69,48 @@ class ExamResultViewModel @Inject constructor(
             body = submitted,
         ).onSuccess { submit: ExamInstanceSubmit ->
             reduce {
-                ExamResultState.Success(reportUrl = submit.examScoreImageUrl)
+                ExamResultState.Success(
+                    reportUrl = submit.examScoreImageUrl,
+                    isQuiz = false,
+                )
+            }
+        }.onFailure {
+            it.printStackTrace()
+            reduce {
+                ExamResultState.Error(exception = it)
+            }
+            postSideEffect(ExamResultSideEffect.ReportError(it))
+        }
+    }
+
+    private fun updateQuiz(
+        examId: Int,
+        updateQuizParam: UpdateQuizUseCase.Param,
+    ) = intent {
+        reduce {
+            ExamResultState.Loading
+        }
+        updateQuizUseCase(examId, updateQuizParam).onFailure {
+            it.printStackTrace()
+            reduce {
+                ExamResultState.Error(exception = it)
+            }
+            postSideEffect(ExamResultSideEffect.ReportError(it))
+        }
+        getQuizUseCase(examId).onSuccess { quizResult ->
+            reduce {
+                ExamResultState.Success(
+                    reportUrl = if (quizResult.wrongProblem == null) {
+                        quizResult.exam.perfectScoreImageUrl ?: ""
+                    } else {
+                        quizResult.wrongProblem?.solution?.solutionImageUrl ?: ""
+                    },
+                    isQuiz = true,
+                    correctProblemCount = quizResult.correctProblemCount,
+                    time = quizResult.time,
+                    mainTag = quizResult.exam.mainTag?.name ?: "",
+                    rank = quizResult.score,
+                )
             }
         }.onFailure {
             it.printStackTrace()

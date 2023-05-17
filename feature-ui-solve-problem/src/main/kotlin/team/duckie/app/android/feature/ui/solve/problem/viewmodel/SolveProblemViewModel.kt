@@ -75,7 +75,10 @@ internal class SolveProblemViewModel @Inject constructor(
         val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
         val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
         reduce {
-            state.copy(isQuiz = isQuiz)
+            state.copy(
+                examId = examId,
+                isQuiz = isQuiz,
+            )
         }
         if (isQuiz) {
             getQuizs(examId)

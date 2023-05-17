@@ -14,17 +14,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.ui.exam.result.R
-import team.duckie.app.android.shared.ui.compose.QuackAnnotatedText
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.util.kotlin.toHourMinuteSecond
+import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackImage
+import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
@@ -68,12 +73,29 @@ internal fun QuizResultContent(
             )
         }
         Spacer(space = 28.dp)
-        QuackAnnotatedText(
-            text = stringResource(id = R.string.rank_by_tag, mainTag, rank.toString()),
-            highlightTextPairs = persistentListOf(
-                mainTag to null,
-                rank.toString() to null,
-            ),
+        QuackText(
+            modifier = Modifier.align(Alignment.End),
+            annotatedText = buildAnnotatedString {
+                append("당신은 ")
+                withStyle(
+                    SpanStyle(
+                        color = QuackColor.DuckieOrange.composeColor,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                ) {
+                    append(mainTag)
+                }
+                append(" 영역 ")
+                withStyle(
+                    SpanStyle(
+                        color = QuackColor.DuckieOrange.composeColor,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                ) {
+                    append("${rank}위")
+                }
+                append(" 입니다.")
+            },
             style = QuackTextStyle.HeadLine1,
         )
         Spacer(space = 38.dp)

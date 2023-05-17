@@ -81,10 +81,10 @@ internal fun ExamResultScreen(
                     if (it.isQuiz) {
                         QuizResultContent(
                             resultImageUrl = it.reportUrl,
-                            correctProblemCount = 1,
-                            time = 2,
-                            mainTag = "메인",
-                            rank = 3,
+                            correctProblemCount = it.correctProblemCount,
+                            time = it.time,
+                            mainTag = it.mainTag,
+                            rank = it.rank,
                         )
                     } else {
                         ExamResultContent(
