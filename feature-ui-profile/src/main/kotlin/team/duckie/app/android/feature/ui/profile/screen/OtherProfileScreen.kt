@@ -9,6 +9,8 @@
 
 package team.duckie.app.android.feature.ui.profile.screen
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -16,19 +18,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.feature.ui.profile.R
 import team.duckie.app.android.feature.ui.profile.component.EmptyText
+import team.duckie.app.android.feature.ui.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.ui.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.ui.profile.screen.section.FollowSection
 import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileViewModel
+import team.duckie.app.android.feature.ui.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.app.android.shared.ui.compose.BackPressedHeadLineTopAppBar
+import team.duckie.app.android.shared.ui.compose.Create
 import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
+import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun OtherProfileScreen(
@@ -39,6 +48,10 @@ internal fun OtherProfileScreen(
     val coroutineScope = rememberCoroutineScope()
     val tags = remember(state.userProfile.user?.favoriteTags) {
         state.userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
+    }
+    val submittedExams = remember(state.userProfile.createdExams) {
+        state.userProfile.createdExams?.map(ProfileExam::toUiModel)?.toImmutableList()
+            ?: persistentListOf()
     }
 
     ReportDialog(
@@ -81,7 +94,22 @@ internal fun OtherProfileScreen(
                 )
             },
             submittedExamSection = {
-                EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
+                ExamSection(
+                    isLoading = state.isLoading,
+                    icon = QuackIcon.Create,
+                    title = stringResource(id = R.string.submitted_exam),
+                    exams = submittedExams,
+                    onClickExam = viewModel::clickExam,
+                    onClickMore = null,
+                    emptySection = {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
+                        }
+                    },
+                )
             },
             onClickExam = viewModel::clickExam,
             onClickMore = {
