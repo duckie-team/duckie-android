@@ -87,6 +87,7 @@ fun MyProfileScreen(
         },
         tagSection = {
             FavoriteTagSection(
+                isLoading = isLoading,
                 title = stringResource(id = R.string.my_favorite_tag),
                 tags = tags,
                 emptySection = {
@@ -101,6 +102,7 @@ fun MyProfileScreen(
         },
         submittedExamSection = {
             ExamSection(
+                isLoading = isLoading,
                 icon = QuackIcon.Create,
                 title = stringResource(id = R.string.submitted_exam),
                 exams = submittedExams,

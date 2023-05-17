@@ -71,6 +71,7 @@ internal fun OtherProfileScreen(
             },
             tagSection = {
                 FavoriteTagSection(
+                    isLoading = state.isLoading,
                     title = stringResource(id = R.string.favorite_tag),
                     emptySection = {
                         EmptyText(message = stringResource(id = R.string.not_yet_add_favorite_tag))

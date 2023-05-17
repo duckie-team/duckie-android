@@ -76,7 +76,11 @@ fun SearchTagScreen(
         focusRequester.requestFocus()
     }
 
-    Column(modifier = modifier.navigationBarsPadding()) {
+    Column(
+        modifier = modifier
+            .navigationBarsPadding()
+            .padding(horizontal = 16.dp),
+    ) {
         QuackTopAppBar(
             leadingText = title,
             trailingIcon = QuackIcon.Close,
@@ -101,11 +105,7 @@ fun SearchTagScreen(
 
         QuackBasicTextField(
             modifier = Modifier
-                .padding(
-                    top = 16.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                )
+                .padding(top = 16.dp)
                 .focusRequester(focusRequester),
             leadingIcon = QuackIcon.Search,
             text = searchTextFieldValue.value,
@@ -128,8 +128,6 @@ fun SearchTagScreen(
         QuackAnimatedVisibility(
             modifier = Modifier.padding(
                 top = 8.dp,
-                start = 16.dp,
-                end = 16.dp,
             ),
             visible = searchTextFieldValue.value.isNotEmpty(),
         ) {

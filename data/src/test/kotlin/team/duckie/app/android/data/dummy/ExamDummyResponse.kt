@@ -59,7 +59,9 @@ object ExamDummyResponse {
             },
             "status": "PENDING",
             "heart": null,
-            "heartCount": 3
+            "heartCount": 3,
+            "challenges": [],
+            "perfectScoreImageUrl": null
         }
     """
 
@@ -102,7 +104,7 @@ object ExamDummyResponse {
         heart = null,
         heartCount = 3,
         problems = null,
-        quizs = null,
+        quizs = persistentListOf(),
         perfectScoreImageUrl = null,
     )
 }

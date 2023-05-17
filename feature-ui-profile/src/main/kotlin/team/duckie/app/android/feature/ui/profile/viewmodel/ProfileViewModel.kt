@@ -75,6 +75,10 @@ internal class ProfileViewModel @Inject constructor(
         }
     }
 
+    init {
+        init()
+    }
+
     fun init() = intent {
         val userId = savedStateHandle.getStateFlow(Extras.UserId, 0).value
         startLoading()
@@ -84,17 +88,19 @@ internal class ProfileViewModel @Inject constructor(
                 .onSuccess { me ->
                     reduce { state.copy(me = me) }
                 }.onFailure {
-                    reduce { state.copy(isLoading = false, isError = true) }
+                    reduce { state.copy(isError = true) }
                     postSideEffect(ProfileSideEffect.ReportError(it))
+                }.also {
+                    stopLoading()
                 }
         }.apply { join() }
+
         if (job.isCancelled.not()) {
             state.me?.let {
                 viewModelScope.launch {
                     fetchUserProfileUseCase(userId).onSuccess { profile ->
                         reduce {
                             state.copy(
-                                isLoading = false,
                                 isError = false,
                                 userProfile = profile,
                                 isMe = it.id == userId,
@@ -103,8 +109,10 @@ internal class ProfileViewModel @Inject constructor(
                             )
                         }
                     }.onFailure {
-                        reduce { state.copy(isLoading = false, isError = true) }
+                        reduce { state.copy(isError = true) }
                         postSideEffect(ProfileSideEffect.ReportError(it))
+                    }.also {
+                        stopLoading()
                     }
                 }
             }
@@ -112,17 +120,22 @@ internal class ProfileViewModel @Inject constructor(
     }
 
     fun getUserProfile() = intent {
+        startLoading()
         viewModelScope.launch {
-            fetchUserProfileUseCase(state.userId).onSuccess { profile ->
-                reduce {
-                    state.copy(
-                        userProfile = profile,
-                        isMe = state.isMe,
-                    )
+            fetchUserProfileUseCase(state.userId)
+                .onSuccess { profile ->
+                    reduce {
+                        state.copy(
+                            userProfile = profile,
+                            isMe = state.isMe,
+                        )
+                    }
                 }
-            }.onFailure {
-                postSideEffect(ProfileSideEffect.ReportError(it))
-            }
+                .onFailure {
+                    postSideEffect(ProfileSideEffect.ReportError(it))
+                }.also {
+                    stopLoading()
+                }
         }
     }
 
@@ -185,6 +198,12 @@ internal class ProfileViewModel @Inject constructor(
     private fun startLoading() = intent {
         reduce {
             state.copy(isLoading = true, isError = false)
+        }
+    }
+
+    private fun stopLoading() = intent {
+        reduce {
+            state.copy(isLoading = false)
         }
     }
 }
