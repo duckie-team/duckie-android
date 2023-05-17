@@ -93,6 +93,6 @@ internal fun UserProfileData.toDomain() = UserProfile(
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.followingCount"),
     createdExams = createdExams?.map(ProfileExamData::toDomain),
     solvedExamInstances = solvedExamInstances?.map(ProfileExamInstanceData::toDomain),
-    heartExams = createdExams?.map(ProfileExamData::toDomain),
+    heartExams = heartExams?.map(ProfileExamData::toDomain),
     user = user?.toDomain(),
 )
