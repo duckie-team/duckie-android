@@ -161,9 +161,8 @@ class DetailViewModel @Inject constructor(
                                     examId = result.id,
                                     certifyingStatement = certifyingStatement,
                                     isQuiz = isQuiz,
-                                )
+                                ),
                             )
-
                         }.onFailure {
                             postSideEffect(DetailSideEffect.ReportError(it))
                         }
@@ -176,7 +175,7 @@ class DetailViewModel @Inject constructor(
                                     examId = result.id,
                                     certifyingStatement = certifyingStatement,
                                     isQuiz = isQuiz,
-                                )
+                                ),
                             )
                         }.onFailure {
                             postSideEffect(DetailSideEffect.ReportError(it))

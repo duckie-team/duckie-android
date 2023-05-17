@@ -161,7 +161,6 @@ data class Solution(
     val description: String?,
 )
 
-
 /** [문제 타입][Answer.Type]에 맞는 기본 [답안][Answer] 를 가져옵니다. */
 fun Answer.Type.getDefaultAnswer(): Answer = when (this) {
     Answer.Type.ShortAnswer -> Answer.Short()

@@ -101,5 +101,8 @@ object ExamDummyResponse {
         status = "PENDING",
         heart = null,
         heartCount = 3,
+        problems = null,
+        quizs = null,
+        perfectScoreImageUrl = null,
     )
 }

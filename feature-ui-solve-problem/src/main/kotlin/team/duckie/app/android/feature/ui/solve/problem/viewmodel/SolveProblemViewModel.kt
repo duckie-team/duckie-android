@@ -200,5 +200,4 @@ internal class SolveProblemViewModel @Inject constructor(
     }
 
     fun stopExam() = intent { postSideEffect(SolveProblemSideEffect.NavigatePreviousScreen) }
-
 }

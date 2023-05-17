@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
-import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.quackquack.ui.R
 import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackImage

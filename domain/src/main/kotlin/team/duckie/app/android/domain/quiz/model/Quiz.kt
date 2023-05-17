@@ -8,7 +8,6 @@
 package team.duckie.app.android.domain.quiz.model
 
 import androidx.compose.runtime.Immutable
-import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.user.model.User
 
 @Immutable

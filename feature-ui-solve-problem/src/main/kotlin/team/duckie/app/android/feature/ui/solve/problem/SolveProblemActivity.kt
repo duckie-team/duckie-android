@@ -154,11 +154,12 @@ class SolveProblemActivity : BaseActivity() {
                     intentBuilder = {
                         putExtra(Extras.ExamId, sideEffect.examId)
                         putExtra(
-                            Extras.UpdateQuizParam, UpdateQuizUseCase.Param(
+                            Extras.UpdateQuizParam,
+                            UpdateQuizUseCase.Param(
                                 correctProblemCount = sideEffect.correctProblemCount,
                                 time = sideEffect.time,
                                 problemId = sideEffect.problemId,
-                            )
+                            ),
                         )
                         putExtra(Extras.IsQuiz, true)
                     },

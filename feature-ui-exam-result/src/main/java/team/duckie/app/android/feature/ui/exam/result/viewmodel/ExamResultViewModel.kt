@@ -52,7 +52,7 @@ class ExamResultViewModel @Inject constructor(
             val submitted = savedStateHandle.getOrThrow<Array<String>>(Extras.Submitted)
             getReport(
                 examId = examId,
-                submitted = ExamInstanceSubmitBody(submitted = submitted.toList().toImmutableList())
+                submitted = ExamInstanceSubmitBody(submitted = submitted.toList().toImmutableList()),
             )
         }
     }
