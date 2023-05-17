@@ -123,7 +123,6 @@ internal fun SolveProblemScreen(
                 onRightButtonClick = {
                     coroutineScope.launch {
                         val maximumPage = totalPage - 1
-
                         if (pagerState.currentPage == maximumPage) {
                             examSubmitDialogVisible = true
                         } else {

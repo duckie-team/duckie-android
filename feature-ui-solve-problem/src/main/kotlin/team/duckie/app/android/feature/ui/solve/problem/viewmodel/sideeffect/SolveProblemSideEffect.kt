@@ -17,7 +17,7 @@ internal sealed class SolveProblemSideEffect {
         val examId: Int,
         val correctProblemCount: Int,
         val time: Int,
-        val problemId: Int,
+        val problemId: Int?,
     ) : SolveProblemSideEffect()
 
     class ReportError(val exception: Throwable) : SolveProblemSideEffect()

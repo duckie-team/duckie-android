@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -62,7 +61,7 @@ internal fun QuizScreen(
     pagerState: PagerState,
     progress: () -> Float,
     stopExam: () -> Unit,
-    finishQuiz: (Int) -> Unit,
+    finishQuiz: (Int, Boolean) -> Unit,
     onNextPage: (Int, InputAnswer, Int) -> Unit,
     startTimer: () -> Unit,
 ) {
@@ -89,7 +88,7 @@ internal fun QuizScreen(
 
     LaunchedEffect(timeOver) {
         if (timeOver) {
-            finishQuiz(pagerState.currentPage)
+            finishQuiz(pagerState.currentPage, false)
         }
     }
 
@@ -129,7 +128,7 @@ internal fun QuizScreen(
                     coroutineScope.launch {
                         val maximumPage = totalPage - 1
                         if (pagerState.currentPage == maximumPage) {
-                            finishQuiz(pagerState.currentPage)
+                            finishQuiz(pagerState.currentPage, true)
                         } else {
                             onNextPage(
                                 pagerState.currentPage,

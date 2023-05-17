@@ -158,7 +158,7 @@ internal class SolveProblemViewModel @Inject constructor(
             ?: throw DuckieClientLogicProblemException(code = CORRECT_ANSWER_IS_NULL)
         state.quizProblems[pageIndex].answer
         if (correctAnswer != inputAnswer.answer) {
-            finishQuiz(pageIndex)
+            finishQuiz(pageIndex, false)
         } else {
             postSideEffect(SolveProblemSideEffect.MoveNextPage(maxPage))
         }
@@ -174,13 +174,24 @@ internal class SolveProblemViewModel @Inject constructor(
         )
     }
 
-    fun finishQuiz(index: Int) = intent {
+    fun finishQuiz(
+        index: Int,
+        isSuccess: Boolean,
+    ) = intent {
         postSideEffect(
             SolveProblemSideEffect.FinishQuiz(
                 examId = state.examId,
                 time = problemTimer.totalTime,
-                correctProblemCount = index, // 현재 페이지 인덱스 == 맞은 개수
-                problemId = state.quizProblems[index].id,
+                correctProblemCount = if (isSuccess) { // 현재 페이지 인덱스 == 맞은 개수
+                    index + 1
+                } else {
+                    index
+                },
+                problemId = if (isSuccess) {
+                    null
+                } else {
+                    state.quizProblems[index].id
+                },
             ),
         )
     }
