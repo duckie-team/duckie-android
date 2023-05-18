@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -77,21 +78,11 @@ internal fun QuizResultContent(
             modifier = Modifier.align(Alignment.End),
             annotatedText = buildAnnotatedString {
                 append("당신은 ")
-                withStyle(
-                    SpanStyle(
-                        color = QuackColor.DuckieOrange.composeColor,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                ) {
+                withDuckieOrangeBoldStyle {
                     append(mainTag)
                 }
                 append(" 영역 ")
-                withStyle(
-                    SpanStyle(
-                        color = QuackColor.DuckieOrange.composeColor,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                ) {
+                withDuckieOrangeBoldStyle {
                     append("${rank}위")
                 }
                 append(" 입니다.")
@@ -99,5 +90,18 @@ internal fun QuizResultContent(
             style = QuackTextStyle.HeadLine1,
         )
         Spacer(space = 38.dp)
+    }
+}
+
+inline fun <R : Any> AnnotatedString.Builder.withDuckieOrangeBoldStyle(
+    block: AnnotatedString.Builder.() -> R
+): R {
+    withStyle(
+        SpanStyle(
+            color = QuackColor.DuckieOrange.composeColor,
+            fontWeight = FontWeight.Bold,
+        ),
+    ) {
+        return block()
     }
 }
