@@ -23,7 +23,14 @@ data class Problem(
     val correctAnswer: String?,
     val hint: String?,
     val memo: String?,
-)
+    val solution: Solution?,
+) {
+    companion object {
+        fun Problem.isSubjective(): Boolean {
+            return answer?.isShortAnswer() == true
+        }
+    }
+}
 
 @Immutable
 sealed class Question(val type: Type, open val text: String) {
@@ -148,6 +155,17 @@ sealed class Answer(val type: Type) {
                 .reduce { acc, next -> acc && next }
     }
 }
+
+@Immutable
+data class Solution(
+    val id: Int,
+    val solutionImageUrl: String?,
+    val correctAnswer: String?,
+    val wrongAnswerMessage: String?,
+    val emptyAnswerMessage: String?,
+    val title: String?,
+    val description: String?,
+)
 
 /** [문제 타입][Answer.Type]에 맞는 기본 [답안][Answer] 를 가져옵니다. */
 fun Answer.Type.getDefaultAnswer(): Answer = when (this) {

@@ -20,7 +20,9 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
-import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
+import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
+import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
+import team.duckie.app.android.util.android.savedstate.getOrThrow
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 
@@ -28,21 +30,30 @@ import javax.inject.Inject
 class ExamResultViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val makeExamInstanceSubmitUseCase: MakeExamInstanceSubmitUseCase,
+    private val submitQuizUseCase: SubmitQuizUseCase,
+    private val getQuizUseCase: GetQuizUseCase,
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
+
     override val container: Container<ExamResultState, ExamResultSideEffect> = container(
         ExamResultState.Loading,
     )
 
     fun initState() {
-        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        val submitted =
-            savedStateHandle.getStateFlow(Extras.Submitted, emptyArray<String>()).value.toList()
-
-        if (examId == -1 || submitted.isEmpty()) {
-            throw DuckieClientLogicProblemException(code = "failed_import_extra")
+        val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
+        val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
+        if (isQuiz) {
+            val updateQuizParam = savedStateHandle.getOrThrow<SubmitQuizUseCase.Param>(Extras.UpdateQuizParam)
+            updateQuiz(
+                examId = examId,
+                updateQuizParam = updateQuizParam,
+            )
         } else {
-            getReport(examId, ExamInstanceSubmitBody(submitted = submitted.toImmutableList()))
+            val submitted = savedStateHandle.getOrThrow<Array<String>>(Extras.Submitted)
+            getReport(
+                examId = examId,
+                submitted = ExamInstanceSubmitBody(submitted = submitted.toList().toImmutableList()),
+            )
         }
     }
 
@@ -58,7 +69,48 @@ class ExamResultViewModel @Inject constructor(
             body = submitted,
         ).onSuccess { submit: ExamInstanceSubmit ->
             reduce {
-                ExamResultState.Success(reportUrl = submit.examScoreImageUrl)
+                ExamResultState.Success(
+                    reportUrl = submit.examScoreImageUrl,
+                    isQuiz = false,
+                )
+            }
+        }.onFailure {
+            it.printStackTrace()
+            reduce {
+                ExamResultState.Error(exception = it)
+            }
+            postSideEffect(ExamResultSideEffect.ReportError(it))
+        }
+    }
+
+    private fun updateQuiz(
+        examId: Int,
+        updateQuizParam: SubmitQuizUseCase.Param,
+    ) = intent {
+        reduce {
+            ExamResultState.Loading
+        }
+        submitQuizUseCase(examId, updateQuizParam).onFailure {
+            it.printStackTrace()
+            reduce {
+                ExamResultState.Error(exception = it)
+            }
+            postSideEffect(ExamResultSideEffect.ReportError(it))
+        }
+        getQuizUseCase(examId).onSuccess { quizResult ->
+            reduce {
+                ExamResultState.Success(
+                    reportUrl = if (quizResult.wrongProblem == null) {
+                        quizResult.exam.perfectScoreImageUrl ?: ""
+                    } else {
+                        quizResult.wrongProblem?.solution?.solutionImageUrl ?: ""
+                    },
+                    isQuiz = true,
+                    correctProblemCount = quizResult.correctProblemCount,
+                    time = quizResult.time,
+                    mainTag = quizResult.exam.mainTag?.name ?: "",
+                    rank = quizResult.score,
+                )
             }
         }.onFailure {
             it.printStackTrace()

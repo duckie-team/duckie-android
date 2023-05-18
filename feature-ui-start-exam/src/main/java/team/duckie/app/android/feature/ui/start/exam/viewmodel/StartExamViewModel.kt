@@ -32,13 +32,18 @@ internal class StartExamViewModel @Inject constructor(
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
         val certifyingStatement = savedStateHandle
             .getStateFlow(Extras.CertifyingStatement, "").value
+        val isQuiz = savedStateHandle.getStateFlow(Extras.IsQuiz, false).value
 
         intent {
             reduce {
                 if (examId == -1 || certifyingStatement == "") {
                     StartExamState.Error(DuckieClientLogicProblemException(code = ""))
                 } else {
-                    StartExamState.Input(examId, certifyingStatement)
+                    StartExamState.Input(
+                        examId = examId,
+                        certifyingStatement = certifyingStatement,
+                        isQuiz = isQuiz,
+                    )
                 }
             }
         }
@@ -61,8 +66,9 @@ internal class StartExamViewModel @Inject constructor(
         val inputState = state as StartExamState.Input
         postSideEffect(
             StartExamSideEffect.NavigateToSolveProblem(
-                startExamValidate(),
-                inputState.examId,
+                certified = startExamValidate(),
+                examId = inputState.examId,
+                isQuiz = inputState.isQuiz,
             ),
         )
     }

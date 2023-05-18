@@ -36,6 +36,7 @@ data class Exam(
     val status: String?,
     val heart: Heart?,
     val heartCount: Int?,
+    val problems: ImmutableList<Problem>?,
     val quizs: ImmutableList<QuizInfo>?,
     val perfectScoreImageUrl: String?,
 ) {
@@ -64,6 +65,7 @@ data class Exam(
             heartCount = null,
             quizs = null,
             perfectScoreImageUrl = null,
+            problems = null,
         )
     }
 }

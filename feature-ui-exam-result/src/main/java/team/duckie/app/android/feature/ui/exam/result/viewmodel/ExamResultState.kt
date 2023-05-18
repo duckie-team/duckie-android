@@ -13,6 +13,10 @@ sealed class ExamResultState {
     data class Success(
         val reportUrl: String = "",
         val isQuiz: Boolean = true,
+        val correctProblemCount: Int = 0,
+        val time: Int = 0,
+        val mainTag: String = "",
+        val rank: Int = 0,
     ) : ExamResultState()
 
     data class Error(

@@ -21,14 +21,17 @@ sealed class DetailSideEffect {
      */
     class ReportError(val exception: Throwable) : DetailSideEffect()
 
-    /**
-     * 시험 시작 화면으로 이동하기 위한 부수 효과 입니다.
-     * 시험 시작을 위해 필요한 데이터를 함께 보내줍니다.
-     *
-     * @param examId 시험 id
-     * @param certifyingStatement 필적 확인 문구
-     */
-    class StartExam(val examId: Int, val certifyingStatement: String) : DetailSideEffect()
+    class StartExam(
+        val examId: Int,
+        val certifyingStatement: String,
+        val isQuiz: Boolean,
+    ) : DetailSideEffect()
+
+    class StartQuiz(
+        val examId: Int,
+        val certifyingStatement: String,
+        val isQuiz: Boolean,
+    ) : DetailSideEffect()
 
     /**
      * [SearchActivity] 로 이동하는 SideEffect 입니다.

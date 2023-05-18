@@ -17,6 +17,7 @@ android {
 
 dependencies {
     implementations(
+        projects.utilKotlin,
         libs.androidx.lifecycle.savedstate,
         libs.ktx.lifecycle.runtime,
         libs.ktx.lifecycle.viewmodel,

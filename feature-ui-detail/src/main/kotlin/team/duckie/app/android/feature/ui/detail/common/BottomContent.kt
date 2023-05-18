@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
-import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.quackquack.ui.R
 import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackImage
@@ -34,7 +33,6 @@ internal fun DetailBottomLayout(
     onChallengeClick: () -> Unit,
 ) {
     Column(modifier = modifier) {
-        Spacer(space = 20.dp)
         // 구분선
         QuackDivider()
         // 버튼 모음 Layout

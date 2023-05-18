@@ -16,7 +16,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -61,7 +65,8 @@ internal fun HomeGuideScreen(
     ) {
         if (state.isGuideStarted) {
             HomeGuideStartScreen(
-                modifier = Modifier.quackClickable( // 하위 컴포저블의 clickable 막기 위함
+                modifier = Modifier.quackClickable(
+                    // 하위 컴포저블의 clickable 막기 위함
                     rippleEnabled = false,
                     onClick = {},
                 ),
@@ -71,15 +76,30 @@ internal fun HomeGuideScreen(
                 onClosed = onClose,
             )
         } else {
-            HorizontalPager(
-                modifier = Modifier.fillMaxSize(),
-                pageCount = pageCount,
-                state = pagerState,
-            ) { index ->
-                HomeGuideFeatureScreen(
-                    guideStep = GuideStep.getGuideStepByIndex(index),
-                    onClose = onClose,
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                QuackBody2(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.End)
+                        .padding(top = 40.dp, end = 16.dp),
+                    text = stringResource(id = R.string.skip),
+                    color = QuackColor.Gray3,
+                    onClick = onClose,
                 )
+                HorizontalPager(
+                    modifier = Modifier.fillMaxSize(),
+                    pageCount = pageCount,
+                    state = pagerState,
+                ) { index ->
+                    HomeGuideFeatureScreen(
+                        guideStep = GuideStep.getGuideStepByIndex(index),
+                    )
+                }
             }
             HomeGuideFeatureBottomLayout(
                 pagerState = pagerState,

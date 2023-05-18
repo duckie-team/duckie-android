@@ -115,7 +115,6 @@ fun PhotoPicker(
             leadingIcon = QuackIcon.Close,
             onLeadingIconClick = onCloseClick,
             centerText = stringResource(R.string.topappbar_filter_full),
-            centerTextTrailingIcon = QuackIcon.ArrowDown,
             trailingContent = {
                 QuackSubtitle(
                     modifier = Modifier

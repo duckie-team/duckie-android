@@ -14,5 +14,8 @@ import team.duckie.app.android.domain.quiz.model.QuizResult
 interface QuizDataSource {
     suspend fun postQuiz(examId: Int): Quiz
     suspend fun getQuizs(examId: Int): QuizResult
-    suspend fun patchQuiz(body: PatchQuizBody): Boolean
+    suspend fun patchQuiz(
+        examId: Int,
+        body: PatchQuizBody,
+    ): Boolean
 }

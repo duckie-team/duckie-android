@@ -32,6 +32,9 @@ internal data class ProblemData(
 
     @field:JsonProperty("memo")
     val memo: String? = null,
+
+    @field:JsonProperty("solution")
+    val solution: SolutionData? = null,
 )
 
 @JsonTypeInfo(
@@ -125,4 +128,21 @@ internal data class ImageChoiceData(
 
     @field:JsonProperty("imageUrl")
     val imageUrl: String? = null,
+)
+
+internal data class SolutionData(
+    @field:JsonProperty("id")
+    val id: Int? = null,
+    @field:JsonProperty("solutionImageUrl")
+    val solutionImageUrl: String? = null,
+    @field:JsonProperty("correctAnswer")
+    val correctAnswer: String? = null,
+    @field:JsonProperty("wrongAnswerMessage")
+    val wrongAnswerMessage: String? = null,
+    @field:JsonProperty("emptyAnswerMessage")
+    val emptyAnswerMessage: String? = null,
+    @field:JsonProperty("title")
+    val title: String? = null,
+    @field:JsonProperty("description")
+    val description: String? = null,
 )

@@ -20,9 +20,11 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
+import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
+import team.duckie.app.android.util.android.savedstate.getOrThrow
 import team.duckie.app.android.util.android.timer.ProblemTimer
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
@@ -36,15 +38,21 @@ import javax.inject.Inject
 internal class SolveProblemViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getExamInstanceUseCase: GetExamInstanceUseCase,
+    private val getQuizUseCase: GetQuizUseCase,
 ) : ViewModel(),
     ContainerHost<SolveProblemState, SolveProblemSideEffect> {
     override val container: Container<SolveProblemState, SolveProblemSideEffect> = container(
         SolveProblemState(),
     )
 
+    init {
+        initState()
+    }
+
     companion object {
-        internal const val TimerCount = 3
+        internal const val TimerCount = 10
         internal val DuringMillis = 1.seconds
+        private const val CORRECT_ANSWER_IS_NULL = "correct_answer_is_null"
     }
 
     private val problemTimer = ProblemTimer(
@@ -63,17 +71,23 @@ internal class SolveProblemViewModel @Inject constructor(
         problemTimer.stop()
     }
 
-    suspend fun initState() = intent {
-        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        if (examId != -1) {
-            reduce { state.copy(examId = examId) }
-            getProblems(examId)
+    fun initState() = intent {
+        val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
+        val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
+        reduce {
+            state.copy(
+                examId = examId,
+                isQuiz = isQuiz,
+            )
+        }
+        if (isQuiz) {
+            getQuizs(examId)
         } else {
-            throw DuckieClientLogicProblemException(code = "failed_import_extra")
+            getExams(examId)
         }
     }
 
-    private suspend fun getProblems(examId: Int) = intent {
+    private suspend fun getExams(examId: Int) = intent {
         reduce { state.copy(isProblemsLoading = true, isError = false) }
 
         getExamInstanceUseCase(id = examId).onSuccess { examInstance ->
@@ -86,6 +100,33 @@ internal class SolveProblemViewModel @Inject constructor(
                         isProblemsLoading = false,
                         problems = problemInstances,
                         inputAnswers = ImmutableList(problemInstances.size) { InputAnswer() },
+                        totalPage = problemInstances.size,
+                    )
+                }
+            }
+        }.onFailure {
+            it.printStackTrace()
+            reduce {
+                state.copy(isError = true, isProblemsLoading = false)
+            }
+            postSideEffect(SolveProblemSideEffect.ReportError(it))
+        }
+    }
+
+    private suspend fun getQuizs(examId: Int) = intent {
+        reduce { state.copy(isProblemsLoading = true, isError = false) }
+
+        getQuizUseCase(examId = examId).onSuccess { quizResult ->
+            val quizProblems = quizResult.exam.problems
+            if (quizProblems == null) {
+                stopExam()
+            } else {
+                reduce {
+                    state.copy(
+                        isProblemsLoading = false,
+                        quizProblems = quizProblems.toImmutableList(),
+                        inputAnswers = ImmutableList(quizProblems.size) { InputAnswer() },
+                        totalPage = quizProblems.size,
                     )
                 }
             }
@@ -111,11 +152,49 @@ internal class SolveProblemViewModel @Inject constructor(
         }
     }
 
+    fun moveNextPage(
+        pageIndex: Int,
+        inputAnswer: InputAnswer,
+        maxPage: Int,
+    ) = intent {
+        val correctAnswer = state.quizProblems[pageIndex].correctAnswer
+            ?: throw DuckieClientLogicProblemException(code = CORRECT_ANSWER_IS_NULL)
+        state.quizProblems[pageIndex].answer
+        if (correctAnswer != inputAnswer.answer) {
+            finishQuiz(pageIndex, false)
+        } else {
+            postSideEffect(SolveProblemSideEffect.MoveNextPage(maxPage))
+        }
+    }
+
     fun finishExam() = intent {
+        stopTimer()
         postSideEffect(
             SolveProblemSideEffect.FinishSolveProblem(
                 examId = state.examId,
                 answers = state.inputAnswers.fastMap { it.answer },
+            ),
+        )
+    }
+
+    fun finishQuiz(
+        index: Int,
+        isSuccess: Boolean,
+    ) = intent {
+        postSideEffect(
+            SolveProblemSideEffect.FinishQuiz(
+                examId = state.examId,
+                time = problemTimer.totalTime,
+                correctProblemCount = if (isSuccess) { // 현재 페이지 인덱스 == 맞은 개수
+                    index + 1
+                } else {
+                    index
+                },
+                problemId = if (isSuccess) {
+                    null
+                } else {
+                    state.quizProblems[index].id
+                },
             ),
         )
     }

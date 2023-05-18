@@ -7,16 +7,27 @@
 
 package team.duckie.app.android.feature.ui.solve.problem.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.shared.ui.compose.Clock
+import team.duckie.app.android.shared.ui.compose.LinearProgressBar
 import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
 internal fun CloseAndPageTopBar(
@@ -36,6 +47,39 @@ internal fun CloseAndPageTopBar(
             )
         },
     )
+}
+
+@Composable
+internal fun TimerTopBar(
+    modifier: Modifier = Modifier,
+    onCloseClick: () -> Unit,
+    progress: () -> Float,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+    ) {
+        QuackTopAppBar(
+            leadingIcon = QuackIcon.Close,
+            onLeadingIconClick = onCloseClick,
+        )
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            LinearProgressBar(
+                progress = progress(),
+            )
+            QuackImage(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(QuackColor.White.composeColor),
+                src = QuackIcon.Clock,
+                size = DpSize(all = 16.dp),
+            )
+        }
+    }
 }
 
 @Composable

@@ -78,18 +78,20 @@ internal fun ExamResultScreen(
                 }
 
                 is ExamResultState.Success -> {
-                    if (it.isQuiz) {
-                        QuizResultContent(
-                            resultImageUrl = it.reportUrl,
-                            correctProblemCount = 1,
-                            time = 2,
-                            mainTag = "메인",
-                            rank = 3,
-                        )
-                    } else {
-                        ExamResultContent(
-                            resultImageUrl = it.reportUrl,
-                        )
+                    with(it) {
+                        if (isQuiz) {
+                            QuizResultContent(
+                                resultImageUrl = reportUrl,
+                                correctProblemCount = correctProblemCount,
+                                time = time,
+                                mainTag = mainTag,
+                                rank = rank,
+                            )
+                        } else {
+                            ExamResultContent(
+                                resultImageUrl = reportUrl,
+                            )
+                        }
                     }
                 }
 

@@ -20,5 +20,5 @@ data class QuizResult(
     val score: Int,
     val time: Int,
     val user: User,
-    val wrongProblem: Problem,
+    val wrongProblem: Problem?,
 )

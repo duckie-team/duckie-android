@@ -29,6 +29,46 @@ import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
+internal fun ButtonBottomBar(
+    modifier: Modifier = Modifier,
+    isLastPage: Boolean = false,
+    onRightButtonClick: () -> Unit,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        QuackDivider()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    vertical = 9.dp,
+                    horizontal = 16.dp,
+                ),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Spacer(modifier = Modifier)
+            QuackAnimatedContent(targetState = isLastPage) {
+                when (it) {
+                    false -> MediumButton(
+                        text = stringResource(id = R.string.next),
+                        onClick = onRightButtonClick,
+                    )
+
+                    true -> MediumButton(
+                        text = stringResource(id = R.string.submit),
+                        onClick = onRightButtonClick,
+                        backgroundColor = QuackColor.DuckieOrange,
+                        border = null,
+                        textColor = QuackColor.White,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 internal fun DoubleButtonBottomBar(
     modifier: Modifier = Modifier,
     isFirstPage: Boolean = false,

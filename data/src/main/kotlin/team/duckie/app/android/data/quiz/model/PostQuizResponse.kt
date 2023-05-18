@@ -8,7 +8,6 @@
 package team.duckie.app.android.data.quiz.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.user.model.UserResponse
 
 internal data class PostQuizResponse(
@@ -17,7 +16,7 @@ internal data class PostQuizResponse(
     @JsonProperty("correctProblemCount")
     val correctProblemCount: Int? = null,
     @JsonProperty("exam")
-    val exam: ExamData? = null,
+    val exam: QuizExamData? = null,
     @JsonProperty("score")
     val score: Int? = null,
     @JsonProperty("time")

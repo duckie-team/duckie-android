@@ -10,10 +10,6 @@ package team.duckie.app.android.feature.ui.solve.problem.answer.shortanswer
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -27,20 +23,19 @@ import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
 @Composable
 internal fun ShortAnswerForm(
     modifier: Modifier = Modifier,
+    text: String,
+    onTextChanged: (String) -> Unit,
     answer: String,
     onDone: (String) -> Unit,
     keyboardController: SoftwareKeyboardController?,
     focusRequester: FocusRequester,
 ) {
-    var value by remember { mutableStateOf("") }
-
     QuackGrayscaleTextField(
-        modifier = modifier
-            .focusRequester(focusRequester),
-        text = value,
+        modifier = modifier.focusRequester(focusRequester),
+        text = text,
         onTextChanged = {
             if (it.length <= answer.length) {
-                value = it
+                onTextChanged(it)
             }
         },
         placeholderText = stringResource(id = R.string.length_contains_space, answer.length),
@@ -50,7 +45,7 @@ internal fun ShortAnswerForm(
         keyboardActions = KeyboardActions(
             onDone = {
                 keyboardController?.hide()
-                onDone(value)
+                onDone(text)
             },
         ),
     )
