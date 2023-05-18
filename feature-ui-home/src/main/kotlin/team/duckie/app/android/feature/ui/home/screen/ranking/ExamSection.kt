@@ -55,6 +55,7 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 internal fun ExamSection(
     viewModel: RankingViewModel,
     lazyGridState: LazyGridState,
+    openReportDialog: (Int) -> Unit,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -122,6 +123,7 @@ internal fun ExamSection(
                         onItemClick = viewModel::clickExam,
                         rank = index + 1,
                         isLoading = examRankings.loadState.refresh == LoadState.Loading || state.isPagingDataLoading,
+                        onMoreClick = openReportDialog,
                     )
                 }
             }
@@ -164,13 +166,16 @@ private fun RankingItem(
     onItemClick: (Int) -> Unit,
     rank: Int,
     isLoading: Boolean,
+    onMoreClick: (Int) -> Unit,
 ) {
     Box(modifier = modifier.clip(RoundedCornerShape(8.dp))) {
         DuckExamSmallCoverForColumn(
             duckTestCoverItem = duckTestCoverItem,
             onItemClick = { onItemClick(duckTestCoverItem.testId) },
             isLoading = isLoading,
-            onMoreClick = {}, // TODO(EvergreenTree97) 신고하기 작업 필요
+            onMoreClick = {
+                onMoreClick(duckTestCoverItem.testId)
+            },
         )
         RankingEdge(rank = rank)
     }

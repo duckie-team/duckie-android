@@ -149,6 +149,8 @@ internal fun MainScreen(
                         navigateToUserProfile = { userId ->
                             navigateToUserProfile(userId)
                         },
+                        setReportExamId = mainViewModel::setReportExamId,
+                        onReport = mainViewModel::report,
                     )
 
                     BottomNavigationStep.MyPageScreen -> MyPageScreen(

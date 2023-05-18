@@ -7,6 +7,7 @@
 
 @file:OptIn(
     ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class,
 )
 
 package team.duckie.app.android.feature.ui.home.screen.ranking
@@ -19,6 +20,9 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,6 +44,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingSideEffe
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.Create
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
+import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -50,6 +55,8 @@ internal fun RankingScreen(
     navigateToCreateProblem: () -> Unit,
     navigateToDetail: (Int) -> Unit,
     navigateToUserProfile: (Int) -> Unit,
+    onReport: () -> Unit,
+    setReportExamId: (Int) -> Unit,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -63,6 +70,7 @@ internal fun RankingScreen(
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
     val lazyGridState = rememberLazyGridState()
+    val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     LaunchedEffect(key1 = pagerState.currentPage) {
         viewModel.setSelectedTab(pagerState.currentPage)
@@ -106,55 +114,73 @@ internal fun RankingScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        HeadLineTopAppBar(
-            title = stringResource(id = R.string.ranking),
-            rightIcons = {
-                QuackImage(
-                    src = QuackIcon.Create,
-                    onClick = viewModel::clickAppBarRightIcon,
-                    size = HomeIconSize,
-                )
-            },
-        )
-
-        if (state.isError) {
-            ErrorScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .statusBarsPadding(),
-                onRetryClick = viewModel::refresh,
-            )
-        } else {
-            QuackMainTab(
-                titles = tabs,
-                selectedTabIndex = state.selectedTab,
-                onTabSelected = {
-                    viewModel.setSelectedTab(it)
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(it)
-                    }
+    ReportBottomSheetDialog(
+        modifier = Modifier.fillMaxSize(),
+        bottomSheetState = bottomSheetDialogState,
+        navigationBarsPaddingVisible = false,
+        closeSheet = {
+            coroutineScope.launch {
+                bottomSheetDialogState.hide()
+            }
+        },
+        onReport = onReport,
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            HeadLineTopAppBar(
+                title = stringResource(id = R.string.ranking),
+                rightIcons = {
+                    QuackImage(
+                        src = QuackIcon.Create,
+                        onClick = viewModel::clickAppBarRightIcon,
+                        size = HomeIconSize,
+                    )
                 },
             )
-            HorizontalPager(
-                modifier = Modifier.fillMaxSize(),
-                state = pagerState,
-                pageCount = tabs.size,
-                key = { tabs[it] },
-            ) { page ->
-                when (page) {
-                    RankingPage.Examinee.index -> {
-                        ExamineeSection(
-                            viewModel = viewModel,
-                            lazyListState = lazyListState,
-                        )
-                    }
 
-                    RankingPage.Exam.index -> {
-                        ExamSection(
-                            viewModel = viewModel,
-                            lazyGridState = lazyGridState,
-                        )
+            if (state.isError) {
+                ErrorScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .statusBarsPadding(),
+                    onRetryClick = viewModel::refresh,
+                )
+            } else {
+                QuackMainTab(
+                    titles = tabs,
+                    selectedTabIndex = state.selectedTab,
+                    onTabSelected = {
+                        viewModel.setSelectedTab(it)
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(it)
+                        }
+                    },
+                )
+                HorizontalPager(
+                    modifier = Modifier.fillMaxSize(),
+                    state = pagerState,
+                    pageCount = tabs.size,
+                    key = { tabs[it] },
+                ) { page ->
+                    when (page) {
+                        RankingPage.Examinee.index -> {
+                            ExamineeSection(
+                                viewModel = viewModel,
+                                lazyListState = lazyListState,
+                            )
+                        }
+
+                        RankingPage.Exam.index -> {
+                            ExamSection(
+                                viewModel = viewModel,
+                                lazyGridState = lazyGridState,
+                                openReportDialog = { exam ->
+                                    setReportExamId(exam)
+                                    coroutineScope.launch {
+                                        bottomSheetDialogState.show()
+                                    }
+                                },
+                            )
+                        }
                     }
                 }
             }
