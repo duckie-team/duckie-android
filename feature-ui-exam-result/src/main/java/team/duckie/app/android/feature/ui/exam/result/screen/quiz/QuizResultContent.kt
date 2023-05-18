@@ -95,7 +95,7 @@ internal fun QuizResultContent(
 }
 
 private inline fun <R : Any> AnnotatedString.Builder.withDuckieOrangeBoldStyle(
-    block: AnnotatedString.Builder.() -> R
+    block: AnnotatedString.Builder.() -> R,
 ): R {
     withStyle(
         SpanStyle(

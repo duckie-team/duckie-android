@@ -25,7 +25,7 @@ class QuizRepositoryImpl @Inject constructor(
         return quizDataSource.getQuizs(examId)
     }
 
-    override suspend fun updateQuiz(
+    override suspend fun submitQuiz(
         examId: Int,
         correctProblemCount: Int,
         time: Int?,
