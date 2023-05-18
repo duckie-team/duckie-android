@@ -47,7 +47,6 @@ internal fun ButtonBottomBar(
                 ),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Spacer(modifier = Modifier)
             QuackAnimatedContent(targetState = isLastPage) {
                 when (it) {
                     false -> MediumButton(

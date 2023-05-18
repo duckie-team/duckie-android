@@ -14,14 +14,14 @@ import team.duckie.app.android.domain.quiz.repository.QuizRepository
 import javax.inject.Inject
 
 @Immutable
-class UpdateQuizUseCase @Inject constructor(
+class SubmitQuizUseCase @Inject constructor(
     private val repository: QuizRepository,
 ) {
     suspend operator fun invoke(
         examId: Int,
         param: Param,
     ) = runCatching {
-        repository.updateQuiz(
+        repository.submitQuiz(
             examId = examId,
             correctProblemCount = param.correctProblemCount,
             time = param.time,

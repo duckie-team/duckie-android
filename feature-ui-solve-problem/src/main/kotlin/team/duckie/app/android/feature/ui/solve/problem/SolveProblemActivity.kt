@@ -29,7 +29,7 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.domain.quiz.usecase.UpdateQuizUseCase
+import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
 import team.duckie.app.android.feature.ui.solve.problem.common.LoadingIndicator
 import team.duckie.app.android.feature.ui.solve.problem.screen.QuizScreen
 import team.duckie.app.android.feature.ui.solve.problem.screen.SolveProblemScreen
@@ -155,7 +155,7 @@ class SolveProblemActivity : BaseActivity() {
                         putExtra(Extras.ExamId, sideEffect.examId)
                         putExtra(
                             Extras.UpdateQuizParam,
-                            UpdateQuizUseCase.Param(
+                            SubmitQuizUseCase.Param(
                                 correctProblemCount = sideEffect.correctProblemCount,
                                 time = sideEffect.time,
                                 problemId = sideEffect.problemId,

@@ -61,7 +61,6 @@ internal fun TimerTopBar(
             .padding(horizontal = 16.dp),
     ) {
         QuackTopAppBar(
-            modifier = modifier,
             leadingIcon = QuackIcon.Close,
             onLeadingIconClick = onCloseClick,
         )

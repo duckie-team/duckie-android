@@ -21,7 +21,7 @@ import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
-import team.duckie.app.android.domain.quiz.usecase.UpdateQuizUseCase
+import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
 import team.duckie.app.android.util.android.savedstate.getOrThrow
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class ExamResultViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val makeExamInstanceSubmitUseCase: MakeExamInstanceSubmitUseCase,
-    private val updateQuizUseCase: UpdateQuizUseCase,
+    private val submitQuizUseCase: SubmitQuizUseCase,
     private val getQuizUseCase: GetQuizUseCase,
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
@@ -43,7 +43,7 @@ class ExamResultViewModel @Inject constructor(
         val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
         val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
         if (isQuiz) {
-            val updateQuizParam = savedStateHandle.getOrThrow<UpdateQuizUseCase.Param>(Extras.UpdateQuizParam)
+            val updateQuizParam = savedStateHandle.getOrThrow<SubmitQuizUseCase.Param>(Extras.UpdateQuizParam)
             updateQuiz(
                 examId = examId,
                 updateQuizParam = updateQuizParam,
@@ -85,12 +85,12 @@ class ExamResultViewModel @Inject constructor(
 
     private fun updateQuiz(
         examId: Int,
-        updateQuizParam: UpdateQuizUseCase.Param,
+        updateQuizParam: SubmitQuizUseCase.Param,
     ) = intent {
         reduce {
             ExamResultState.Loading
         }
-        updateQuizUseCase(examId, updateQuizParam).onFailure {
+        submitQuizUseCase(examId, updateQuizParam).onFailure {
             it.printStackTrace()
             reduce {
                 ExamResultState.Error(exception = it)

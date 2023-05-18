@@ -98,7 +98,7 @@ internal fun QuizScreen(
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { examExitDialogVisible = false },
         rightButtonText = stringResource(id = R.string.quit),
-        rightButtonOnClick = { stopExam() },
+        rightButtonOnClick = stopExam,
         visible = examExitDialogVisible,
         onDismissRequest = { examExitDialogVisible = false },
     )
