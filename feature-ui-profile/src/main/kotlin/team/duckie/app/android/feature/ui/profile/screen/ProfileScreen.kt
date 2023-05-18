@@ -59,8 +59,7 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = QuackColor.White.composeColor)
-            .systemBarsPadding(),
+            .background(color = QuackColor.White.composeColor),
     ) {
         topBar()
         Column(
@@ -68,7 +67,7 @@ fun ProfileScreen(
                 .verticalScroll(scrollState)
                 .padding(
                     horizontal = 16.dp,
-                    vertical = 36.dp,
+                    vertical = 24.dp,
                 ),
         ) {
             with(userProfile) {
@@ -107,7 +106,7 @@ fun ProfileScreen(
                 },
                 isLoading = isLoading,
             )
-            Spacer(space = 44.dp)
+            Spacer(space = 40.dp)
             ExamSection(
                 icon = QuackIcon.Heart.drawableId,
                 title = stringResource(id = R.string.hearted_exam),

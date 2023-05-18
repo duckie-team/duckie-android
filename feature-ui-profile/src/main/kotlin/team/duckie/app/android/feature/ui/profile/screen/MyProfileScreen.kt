@@ -72,7 +72,7 @@ fun MyProfileScreen(
             HeadLineTopAppBar(
                 title = stringResource(id = R.string.mypage),
                 rightIcons = {
-                    Row(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         QuackImage(
                             src = QuackIcon.Setting,
                             size = DpSize(all = 24.dp),
