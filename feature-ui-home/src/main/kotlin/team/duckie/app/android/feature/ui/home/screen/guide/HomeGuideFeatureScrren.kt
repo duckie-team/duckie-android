@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,7 +33,6 @@ import team.duckie.app.android.feature.ui.home.component.BaseBottomLayout
 import team.duckie.app.android.feature.ui.home.constants.GuideStep
 import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackSubtitle
@@ -43,23 +41,11 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 @Composable
 internal fun HomeGuideFeatureScreen(
     guideStep: GuideStep,
-    onClose: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .navigationBarsPadding(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
-            QuackBody2(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.End)
-                    .padding(top = 40.dp, end = 16.dp),
-                text = stringResource(id = R.string.skip),
-                color = QuackColor.Gray3,
-                onClick = onClose,
-            )
             QuackHeadLine2(
                 modifier = Modifier
                     .padding(top = 41.dp),
