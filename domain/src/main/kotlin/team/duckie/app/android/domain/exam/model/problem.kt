@@ -24,7 +24,13 @@ data class Problem(
     val hint: String?,
     val memo: String?,
     val solution: Solution?,
-)
+) {
+    companion object {
+        fun Problem.isSubjective(): Boolean {
+            return answer?.isShortAnswer() == true
+        }
+    }
+}
 
 @Immutable
 sealed class Question(val type: Type, open val text: String) {
