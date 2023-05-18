@@ -15,6 +15,8 @@ import team.duckie.app.android.data.auth.datasource.AuthDataSource
 import team.duckie.app.android.data.auth.datasource.AuthRemoteDataSourceImpl
 import team.duckie.app.android.data.exam.datasource.ExamInfoDataSource
 import team.duckie.app.android.data.exam.datasource.ExamInfoLocalDataSourceImpl
+import team.duckie.app.android.data.ignore.datasource.IgnoreRemoteDataSource
+import team.duckie.app.android.data.ignore.datasource.IgnoreRemoteDataSourceImpl
 import team.duckie.app.android.data.notification.datasource.NotificationDataSource
 import team.duckie.app.android.data.notification.datasource.NotificationRemoteDataSourceImpl
 import team.duckie.app.android.data.quiz.datasource.QuizDataSource
@@ -69,4 +71,8 @@ abstract class BindsModule {
     @Singleton
     @Binds
     abstract fun bindsQuizRemoteDataSource(impl: QuizRemoteDataSourceImpl): QuizDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindIgnoreRemoteDataSource(impl: IgnoreRemoteDataSourceImpl): IgnoreRemoteDataSource
 }

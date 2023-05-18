@@ -113,4 +113,8 @@ abstract class BindsModule {
     @Singleton
     @Binds
     abstract fun bindsQuizRepository(impl: QuizRepositoryImpl): QuizRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindIgnoreRepository(impl: ReportRepositoryImpl): ReportRepository
 }
