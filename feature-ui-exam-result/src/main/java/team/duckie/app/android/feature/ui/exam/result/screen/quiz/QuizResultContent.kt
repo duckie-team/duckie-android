@@ -93,7 +93,7 @@ internal fun QuizResultContent(
     }
 }
 
-inline fun <R : Any> AnnotatedString.Builder.withDuckieOrangeBoldStyle(
+private inline fun <R : Any> AnnotatedString.Builder.withDuckieOrangeBoldStyle(
     block: AnnotatedString.Builder.() -> R
 ): R {
     withStyle(
