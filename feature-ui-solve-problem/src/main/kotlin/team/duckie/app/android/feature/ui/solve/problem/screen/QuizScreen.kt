@@ -41,6 +41,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
 import team.duckie.app.android.feature.ui.solve.problem.R
 import team.duckie.app.android.feature.ui.solve.problem.answer.answerSection
 import team.duckie.app.android.feature.ui.solve.problem.common.ButtonBottomBar
@@ -49,6 +50,7 @@ import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
+import team.duckie.app.android.util.compose.isCurrentPage
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
 
 private const val QuizTopAppBarLayoutId = "QuizTopAppBar"
@@ -157,13 +159,29 @@ private fun ContentSection(
     updateInputAnswers: (page: Int, inputAnswer: InputAnswer) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+
     HorizontalPager(
         modifier = modifier,
         pageCount = state.totalPage,
         state = pagerState,
         userScrollEnabled = false,
     ) { pageIndex ->
-        val focusRequester = remember(pagerState.currentPage) { FocusRequester() }
+        val problem = state.quizProblems[pageIndex]
+
+        val focusRequester = remember { FocusRequester() }
+        val requestFocus by remember { derivedStateOf { pagerState.isCurrentPage(pageIndex) } }
+
+        LaunchedEffect(key1 = requestFocus) {
+            if (requestFocus) {
+                if (problem.isSubjective()) {
+                    focusRequester.requestFocus()
+                    keyboardController?.show()
+                } else {
+                    keyboardController?.hide()
+                }
+            }
+        }
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(space = 24.dp),
@@ -173,14 +191,14 @@ private fun ContentSection(
             }
             questionSection(
                 page = pageIndex,
-                question = state.quizProblems[pageIndex].question,
+                question = problem.question,
             )
-            val answer = state.quizProblems[pageIndex].answer
+            val answer = problem.answer
             answerSection(
                 pageIndex = pageIndex,
                 answer = when (answer) {
                     is Answer.Short -> Answer.Short(
-                        state.quizProblems[pageIndex].correctAnswer
+                        problem.correctAnswer
                             ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
                     )
 

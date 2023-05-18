@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.Answer
+import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
 import team.duckie.app.android.feature.ui.solve.problem.R
 import team.duckie.app.android.feature.ui.solve.problem.answer.answerSection
 import team.duckie.app.android.feature.ui.solve.problem.common.CloseAndPageTopBar
@@ -42,6 +43,7 @@ import team.duckie.app.android.feature.ui.solve.problem.question.questionSection
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.ui.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
+import team.duckie.app.android.util.compose.isCurrentPage
 import team.duckie.app.android.util.compose.moveNextPage
 import team.duckie.app.android.util.compose.movePrevPage
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
@@ -59,9 +61,7 @@ internal fun SolveProblemScreen(
     finishExam: () -> Unit,
 ) {
     val totalPage = remember { state.totalPage }
-    val isCurrentPageOffsetFractionZero = remember {
-        derivedStateOf { pagerState.currentPageOffsetFraction == 0f }
-    }
+
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
@@ -108,7 +108,6 @@ internal fun SolveProblemScreen(
                 pagerState = pagerState,
                 state = state,
                 updateInputAnswers = inputAnswer,
-                isCurrentPageOffsetFractionZero = isCurrentPageOffsetFractionZero.value,
             )
             DoubleButtonBottomBar(
                 modifier = Modifier.layoutId(SolveProblemBottomBarLayoutId),
@@ -145,20 +144,8 @@ private fun ContentSection(
     pagerState: PagerState,
     state: SolveProblemState,
     updateInputAnswers: (Int, InputAnswer) -> Unit,
-    isCurrentPageOffsetFractionZero: Boolean,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusRequester = remember { FocusRequester() }
-    val currentProblem = state.problems[pagerState.currentPage].problem
-
-    LaunchedEffect(key1 = isCurrentPageOffsetFractionZero) {
-        if (currentProblem.answer?.isShortAnswer() == true) {
-            keyboardController?.show()
-            focusRequester.requestFocus()
-        } else {
-            keyboardController?.hide()
-        }
-    }
 
     HorizontalPager(
         modifier = modifier,
@@ -166,6 +153,20 @@ private fun ContentSection(
         state = pagerState,
     ) { pageIndex ->
         val problem = state.problems[pageIndex].problem
+
+        val focusRequester = remember { FocusRequester() }
+        val requestFocus by remember { derivedStateOf { pagerState.isCurrentPage(pageIndex) } }
+
+        LaunchedEffect(key1 = requestFocus) {
+            if (requestFocus) {
+                if (problem.isSubjective()) {
+                    focusRequester.requestFocus()
+                    keyboardController?.show()
+                } else {
+                    keyboardController?.hide()
+                }
+            }
+        }
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
