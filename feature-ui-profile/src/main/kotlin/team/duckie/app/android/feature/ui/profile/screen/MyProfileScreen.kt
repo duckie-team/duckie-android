@@ -41,6 +41,7 @@ import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
 fun MyProfileScreen(
+    modifier: Modifier = Modifier,
     userProfile: UserProfile,
     isLoading: Boolean,
     onClickSetting: () -> Unit,
@@ -56,10 +57,12 @@ fun MyProfileScreen(
         userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
     }
     val submittedExams = remember(userProfile.createdExams) {
-        userProfile.createdExams?.map(ProfileExam::toUiModel)?.toImmutableList() ?: persistentListOf()
+        userProfile.createdExams?.map(ProfileExam::toUiModel)?.toImmutableList()
+            ?: persistentListOf()
     }
 
     ProfileScreen(
+        modifier = modifier,
         userProfile = userProfile,
         isLoading = isLoading,
         editSection = {
