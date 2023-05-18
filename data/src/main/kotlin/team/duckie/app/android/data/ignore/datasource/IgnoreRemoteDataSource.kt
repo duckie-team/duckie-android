@@ -9,6 +9,6 @@ package team.duckie.app.android.data.ignore.datasource
 
 interface IgnoreRemoteDataSource {
 
-    suspend fun ignoreUser(userId: Int)
-    suspend fun deleteIgnoreUser(userId: Int)
+    suspend fun ignoreUser(targetId: Int)
+    suspend fun deleteIgnoreUser(targetId: Int)
 }
