@@ -220,6 +220,8 @@ private fun HomeRecommendJumbotronLayout(
                 modifier = Modifier.skeleton(isLoading),
                 text = stringResource(id = R.string.home_video_volume_control_message),
             )
+
+            else -> {}
         }
     }
 }

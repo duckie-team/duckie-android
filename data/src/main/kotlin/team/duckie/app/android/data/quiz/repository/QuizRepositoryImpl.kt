@@ -25,12 +25,14 @@ class QuizRepositoryImpl @Inject constructor(
         return quizDataSource.getQuizs(examId)
     }
 
-    override suspend fun updateQuiz(
+    override suspend fun submitQuiz(
+        examId: Int,
         correctProblemCount: Int,
         time: Int?,
         problemId: Int?,
     ): Boolean {
         return quizDataSource.patchQuiz(
+            examId = examId,
             body = PatchQuizBody(
                 correctProblemCount = correctProblemCount,
                 time = time,

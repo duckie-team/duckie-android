@@ -30,10 +30,10 @@ import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 private val HorizontalPadding = PaddingValues(horizontal = 16.dp)
 
 internal fun LazyListScope.answerSection(
-    page: Int,
+    pageIndex: Int,
     answer: Answer,
     inputAnswers: ImmutableList<InputAnswer>,
-    onClickAnswer: (page: Int, inputAnswer: InputAnswer) -> Unit,
+    updateInputAnswers: (page: Int, inputAnswer: InputAnswer) -> Unit,
     focusRequester: FocusRequester,
     keyboardController: SoftwareKeyboardController?,
 ) {
@@ -47,10 +47,10 @@ internal fun LazyListScope.answerSection(
                     answer.choices.forEachIndexed { index, choice ->
                         TextAnswerBox(
                             text = choice.text,
-                            selected = index != -1 && index == inputAnswers[page].number,
+                            selected = index != -1 && index == inputAnswers[pageIndex].number,
                             onClick = {
-                                onClickAnswer(
-                                    page,
+                                updateInputAnswers(
+                                    pageIndex,
                                     InputAnswer(
                                         number = index,
                                         answer = choice.text,
@@ -75,10 +75,10 @@ internal fun LazyListScope.answerSection(
                     ImageAnswerBox(
                         imageSrc = imageChoice.imageUrl,
                         text = imageChoice.text,
-                        selected = index != -1 && index == inputAnswers[page].number,
+                        selected = index != -1 && index == inputAnswers[pageIndex].number,
                         onClick = {
-                            onClickAnswer(
-                                page,
+                            updateInputAnswers(
+                                pageIndex,
                                 InputAnswer(
                                     number = index,
                                     answer = imageChoice.text,
@@ -95,14 +95,12 @@ internal fun LazyListScope.answerSection(
                 ShortAnswerForm(
                     modifier = Modifier.padding(paddingValues = HorizontalPadding),
                     answer = answer.correctAnswer,
-                    onDone = { inputText -> // TODO(EvergreenTree97): 서버에 보낼 정답 text
-                        onClickAnswer(
-                            page,
-                            InputAnswer(
-                                number = 0,
-                                answer = inputText,
-                            ),
-                        )
+                    text = inputAnswers[pageIndex].answer,
+                    onTextChanged = { inputText ->
+                        updateInputAnswers(pageIndex, InputAnswer(0, inputText))
+                    },
+                    onDone = { inputText ->
+                        updateInputAnswers(pageIndex, InputAnswer(0, inputText))
                     },
                     focusRequester = focusRequester,
                     keyboardController = keyboardController,

@@ -81,6 +81,7 @@ class DetailActivity : BaseActivity() {
                 intentBuilder = {
                     putExtra(Extras.ExamId, sideEffect.examId)
                     putExtra(Extras.CertifyingStatement, sideEffect.certifyingStatement)
+                    putExtra(Extras.IsQuiz, sideEffect.isQuiz)
                 },
             )
 
@@ -94,6 +95,13 @@ class DetailActivity : BaseActivity() {
             }
 
             is DetailSideEffect.SendToast -> ToastWrapper(this).invoke(sideEffect.message)
+            is DetailSideEffect.StartQuiz -> startActivityWithAnimation<StartExamActivity>(
+                intentBuilder = {
+                    putExtra(Extras.ExamId, sideEffect.examId)
+                    putExtra(Extras.CertifyingStatement, sideEffect.certifyingStatement)
+                    putExtra(Extras.IsQuiz, sideEffect.isQuiz)
+                },
+            )
         }
     }
 }

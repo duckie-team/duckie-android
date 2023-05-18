@@ -61,7 +61,10 @@ class StartExamActivity : BaseActivity() {
                 if (sideEffect.certified) {
                     solveProblemNavigator.navigateFrom(
                         activity = this,
-                        intentBuilder = { putExtra(Extras.ExamId, sideEffect.examId) },
+                        intentBuilder = {
+                            putExtra(Extras.ExamId, sideEffect.examId)
+                            putExtra(Extras.IsQuiz, sideEffect.isQuiz)
+                        },
                         withFinish = true,
                     )
                 } else {

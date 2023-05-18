@@ -7,23 +7,32 @@
 
 package team.duckie.app.android.domain.quiz.usecase
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import kotlinx.parcelize.Parcelize
 import team.duckie.app.android.domain.quiz.repository.QuizRepository
 import javax.inject.Inject
 
 @Immutable
-class UpdateQuizUseCase @Inject constructor(
+class SubmitQuizUseCase @Inject constructor(
     private val repository: QuizRepository,
 ) {
     suspend operator fun invoke(
-        correctProblemCount: Int,
-        time: Int?,
-        problemId: Int?,
+        examId: Int,
+        param: Param,
     ) = runCatching {
-        repository.updateQuiz(
-            correctProblemCount = correctProblemCount,
-            time = time,
-            problemId = problemId,
+        repository.submitQuiz(
+            examId = examId,
+            correctProblemCount = param.correctProblemCount,
+            time = param.time,
+            problemId = param.problemId,
         )
     }
+
+    @Parcelize
+    data class Param(
+        val correctProblemCount: Int,
+        val time: Int?,
+        val problemId: Int?,
+    ) : Parcelable
 }

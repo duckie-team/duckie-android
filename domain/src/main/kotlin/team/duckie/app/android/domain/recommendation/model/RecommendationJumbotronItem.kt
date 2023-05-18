@@ -22,6 +22,7 @@ enum class ExamType(
     Text("text"),
     Audio("audio"),
     Video("video"),
+    Challenge("challenge"),
     ;
 
     companion object {

@@ -13,7 +13,16 @@ internal sealed class SolveProblemSideEffect {
         val answers: List<String>,
     ) : SolveProblemSideEffect()
 
+    class FinishQuiz(
+        val examId: Int,
+        val correctProblemCount: Int,
+        val time: Int,
+        val problemId: Int?,
+    ) : SolveProblemSideEffect()
+
     class ReportError(val exception: Throwable) : SolveProblemSideEffect()
 
     object NavigatePreviousScreen : SolveProblemSideEffect()
+
+    class MoveNextPage(val maxPage: Int) : SolveProblemSideEffect()
 }

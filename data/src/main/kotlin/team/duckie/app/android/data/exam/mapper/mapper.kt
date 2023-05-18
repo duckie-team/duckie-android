@@ -25,6 +25,7 @@ import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.ProfileExamData
 import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.data.exam.model.QuizInfoResponse
+import team.duckie.app.android.data.exam.model.SolutionData
 import team.duckie.app.android.data.heart.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
@@ -43,6 +44,7 @@ import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.exam.model.Solution
 import team.duckie.app.android.domain.quiz.model.QuizInfo
 import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
@@ -70,6 +72,7 @@ internal fun ExamData.toDomain() = Exam(
     heartCount = heartCount,
     quizs = quizs?.fastMap(QuizInfoResponse::toDomain)?.toImmutableList(),
     perfectScoreImageUrl = perfectScoreImageUrl,
+    problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList(),
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
@@ -83,6 +86,7 @@ internal fun ProblemData.toDomain() = Problem(
     correctAnswer = correctAnswer,
     hint = hint,
     memo = memo,
+    solution = solution?.toDomain(),
 )
 
 internal fun QuestionData.toDomain() = when (this) {
@@ -255,4 +259,14 @@ internal fun QuizInfoResponse.toDomain() = QuizInfo(
     score = score ?: duckieResponseFieldNpe("${this::class.java.simpleName}.score"),
     user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
     time = time ?: duckieResponseFieldNpe("${this::class.java.simpleName}.time"),
+)
+
+internal fun SolutionData.toDomain() = Solution(
+    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
+    solutionImageUrl = solutionImageUrl,
+    correctAnswer = correctAnswer,
+    wrongAnswerMessage = wrongAnswerMessage,
+    emptyAnswerMessage = emptyAnswerMessage,
+    title = title,
+    description = description,
 )
