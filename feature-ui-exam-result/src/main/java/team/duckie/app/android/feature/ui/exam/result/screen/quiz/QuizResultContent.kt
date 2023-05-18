@@ -50,6 +50,7 @@ internal fun QuizResultContent(
             modifier = Modifier.fillMaxWidth(),
             src = resultImageUrl,
         )
+        // TODO(EvergreenTree97) : 시험 결과지 스펙에 맞게 수정 및 문구 출력
         Spacer(space = 28.dp)
         QuackDivider()
         Spacer(space = 20.dp)
