@@ -34,9 +34,10 @@ class IgnoreRemoteDataSourceImpl @Inject constructor() : IgnoreRemoteDataSource 
     }
 
     override suspend fun deleteIgnoreUser(targetId: Int) {
-        val response = client.delete {
-            url("/user-block")
-            setBody("targetId" to targetId)
+        val response = client.delete("/user-block") {
+            jsonBody {
+                "targetId" withInt targetId
+            }
         }
 
         return responseCatching(response.status.value, response.bodyAsText()) { body ->
