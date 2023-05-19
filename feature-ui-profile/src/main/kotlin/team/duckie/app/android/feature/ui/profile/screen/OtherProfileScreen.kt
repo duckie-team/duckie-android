@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class)
 
 package team.duckie.app.android.feature.ui.profile.screen
 
@@ -26,6 +26,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.ProfileExam
+import team.duckie.app.android.domain.user.model.UserProfile.Companion.username
 import team.duckie.app.android.feature.ui.profile.R
 import team.duckie.app.android.feature.ui.profile.component.EmptyText
 import team.duckie.app.android.feature.ui.profile.screen.section.ExamSection
@@ -35,7 +36,9 @@ import team.duckie.app.android.feature.ui.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.ui.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.app.android.shared.ui.compose.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.shared.ui.compose.Create
-import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableType
+import team.duckie.app.android.shared.ui.compose.dialog.IgnoreCheckDialog
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 import team.duckie.quackquack.ui.icon.QuackIcon
 
@@ -59,12 +62,30 @@ internal fun OtherProfileScreen(
         visible = state.reportDialogVisible,
         onDismissRequest = { viewModel.updateReportDialogVisible(false) },
     )
-    ReportBottomSheetDialog(
+
+    IgnoreCheckDialog(
+        visible = state.ignoreDialogVisible,
+        targetName = state.userProfile.username(),
+        onIgnoreRequest = {
+            coroutineScope.launch {
+                bottomSheetState.hide()
+            }
+            viewModel.ignore(state.userId)
+            viewModel.updateIgnoreDialogVisible(false)
+        },
+        onDismissRequest = { viewModel.updateIgnoreDialogVisible(false) },
+    )
+
+    DuckieSelectableBottomSheetDialog(
+        types = state.bottomSheetDialogType,
         bottomSheetState = bottomSheetState,
         closeSheet = {
             coroutineScope.launch { bottomSheetState.hide() }
         },
         onReport = viewModel::report,
+        onIgnore = {
+            viewModel.updateIgnoreDialogVisible(true)
+        },
     ) {
         ProfileScreen(
             userProfile = state.userProfile,
@@ -77,9 +98,16 @@ internal fun OtherProfileScreen(
             },
             topBar = {
                 BackPressedHeadLineTopAppBar(
-                    title = state.userProfile.user?.nickname ?: "",
+                    title = state.userProfile.username(),
                     isLoading = state.isLoading,
                     onBackPressed = viewModel::clickBackPress,
+                    trailingIcon = QuackIcon.More,
+                    onTrailingIconClick = {
+                        viewModel.updateBottomSheetDialogType(DuckieSelectableType.Ignore)
+                        coroutineScope.launch {
+                            bottomSheetState.show()
+                        }
+                    },
                 )
             },
             tagSection = {
@@ -113,7 +141,10 @@ internal fun OtherProfileScreen(
             },
             onClickExam = viewModel::clickExam,
             onClickMore = {
-                coroutineScope.launch { bottomSheetState.show() }
+                viewModel.updateBottomSheetDialogType(type = DuckieSelectableType.Report)
+                coroutineScope.launch {
+                    bottomSheetState.show()
+                }
             },
             onClickFriend = viewModel::navigateFriends,
         )
