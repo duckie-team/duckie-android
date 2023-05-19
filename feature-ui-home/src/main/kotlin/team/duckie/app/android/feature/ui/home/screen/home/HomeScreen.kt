@@ -22,14 +22,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.ui.home.constants.HomeStep
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeSideEffect
 import team.duckie.app.android.feature.ui.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
-import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 
@@ -62,7 +61,7 @@ internal fun HomeScreen(
         }
     }
 
-    ReportBottomSheetDialog(
+    DuckieSelectableBottomSheetDialog(
         modifier = Modifier.fillMaxSize(),
         bottomSheetState = bottomSheetDialogState,
         navigationBarsPaddingVisible = false,
