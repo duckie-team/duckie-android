@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.ui.home.screen.mypage
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
@@ -15,8 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageSideEffect
+import team.duckie.app.android.feature.ui.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.ui.profile.screen.MyProfileScreen
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
@@ -25,6 +26,7 @@ import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
+import team.duckie.quackquack.ui.color.QuackColor
 
 @Composable
 internal fun MyPageScreen(
@@ -102,6 +104,9 @@ internal fun MyPageScreen(
         )
 
         else -> MyProfileScreen(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = QuackColor.White.composeColor),
             userProfile = state.userProfile,
             isLoading = state.isLoading,
             onClickSetting = viewModel::clickSetting,
