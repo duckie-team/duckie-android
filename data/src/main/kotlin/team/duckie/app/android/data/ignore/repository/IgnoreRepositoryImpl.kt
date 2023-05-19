@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class IgnoreRepositoryImpl @Inject constructor(
     private val ignoreRemoteDataSourceImpl: IgnoreRemoteDataSourceImpl,
-): IgnoreRepository {
+) : IgnoreRepository {
     override suspend fun ignoreUser(targetId: Int) {
         ignoreRemoteDataSourceImpl.ignoreUser(targetId = targetId)
     }
