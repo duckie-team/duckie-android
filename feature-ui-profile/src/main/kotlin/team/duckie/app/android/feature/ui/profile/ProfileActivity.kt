@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,13 +30,14 @@ import team.duckie.app.android.navigator.feature.notification.NotificationNaviga
 import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
-import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
+import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
@@ -43,7 +45,6 @@ import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
-import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
 
 @AndroidEntryPoint
 class ProfileActivity : BaseActivity() {
@@ -98,6 +99,10 @@ class ProfileActivity : BaseActivity() {
                                     viewModel.getUserProfile()
                                 }
                                 MyProfileScreen(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(color = QuackColor.White.composeColor)
+                                        .systemBarsPadding(),
                                     userProfile = state.userProfile,
                                     isLoading = state.isLoading,
                                     onClickSetting = viewModel::clickSetting,
@@ -112,7 +117,13 @@ class ProfileActivity : BaseActivity() {
                             }
 
                             false -> {
-                                OtherProfileScreen(viewModel)
+                                OtherProfileScreen(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(color = QuackColor.White.composeColor)
+                                        .systemBarsPadding(),
+                                    viewModel = viewModel,
+                                )
                             }
                         }
                     }

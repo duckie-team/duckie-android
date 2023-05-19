@@ -44,6 +44,7 @@ import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun OtherProfileScreen(
+    modifier: Modifier = Modifier,
     viewModel: ProfileViewModel,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
@@ -88,6 +89,7 @@ internal fun OtherProfileScreen(
         },
     ) {
         ProfileScreen(
+            modifier = modifier,
             userProfile = state.userProfile,
             isLoading = state.isLoading,
             editSection = {
