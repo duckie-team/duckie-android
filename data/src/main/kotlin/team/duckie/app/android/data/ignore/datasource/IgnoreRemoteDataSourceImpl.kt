@@ -9,8 +9,6 @@ package team.duckie.app.android.data.ignore.datasource
 
 import io.ktor.client.request.delete
 import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
