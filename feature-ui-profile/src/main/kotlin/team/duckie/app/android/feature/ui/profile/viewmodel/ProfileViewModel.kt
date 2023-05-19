@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,6 +27,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
+import team.duckie.app.android.domain.ignore.usecase.UserIgnoreUseCase
 import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserProfileUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
@@ -34,6 +36,7 @@ import team.duckie.app.android.feature.ui.profile.viewmodel.intent.OtherPageInte
 import team.duckie.app.android.feature.ui.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.feature.ui.profile.viewmodel.state.ProfileState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableType
 import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.app.android.util.kotlin.FriendsType
 import team.duckie.app.android.util.ui.const.Extras
@@ -46,6 +49,7 @@ internal class ProfileViewModel @Inject constructor(
     private val reportUseCase: ReportUseCase,
     private val followUseCase: FollowUseCase,
     private val savedStateHandle: SavedStateHandle,
+    private val ignoreUseCase: UserIgnoreUseCase,
 ) : ContainerHost<ProfileState, ProfileSideEffect>, ViewModel(), MyPageIntent, OtherPageIntent {
 
     override val container = container<ProfileState, ProfileSideEffect>(ProfileState())
@@ -116,6 +120,28 @@ internal class ProfileViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun updateBottomSheetDialogType(type: DuckieSelectableType) = intent {
+        reduce {
+            state.copy(bottomSheetDialogType = persistentListOf(type))
+        }
+    }
+
+    fun ignore(targetId: Int) = intent {
+        ignoreUseCase(targetId)
+            .onFailure { exception ->
+                postSideEffect(ProfileSideEffect.ReportError(exception))
+            }
+            .also {
+                updateIgnoreDialogVisible(false)
+            }
+    }
+
+    fun updateIgnoreDialogVisible(visible: Boolean) = intent {
+        reduce {
+            state.copy(ignoreDialogVisible = visible)
         }
     }
 
