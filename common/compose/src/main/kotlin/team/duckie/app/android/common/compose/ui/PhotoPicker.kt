@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.photopicker
+package team.duckie.app.android.common.compose.ui
 
 import android.net.Uri
 import androidx.compose.foundation.clickable
@@ -29,6 +29,7 @@ import com.ujizin.camposer.state.CamSelector
 import com.ujizin.camposer.state.rememberCamSelector
 import com.ujizin.camposer.state.rememberCameraState
 import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.kotlin.fastAny
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility

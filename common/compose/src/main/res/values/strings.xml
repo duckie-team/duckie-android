@@ -33,4 +33,7 @@
     <string name="ignore_check_content">차단하면 %s님의 글을 볼 수 없어요.</string>
 
     <string name="tag_header_title">+%s 추가하기</string>
+
+    <string name="topappbar_filter_full">전체보기</string>
+    <string name="topappbar_add">추가</string>
 </resources>

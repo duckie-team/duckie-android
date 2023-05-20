@@ -22,7 +22,6 @@ dependencies {
         platform(libs.firebase.bom),
         projects.domain,
         projects.di,
-        projects.featurePhotopicker,
         projects.navigator,
         projects.common.android,
         projects.common.kotlin,

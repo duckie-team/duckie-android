@@ -68,7 +68,7 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.feature.photopicker.PhotoPicker
+import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.feature.create.problem.R
 import team.duckie.app.android.feature.create.problem.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.create.problem.common.NoLazyGridItems

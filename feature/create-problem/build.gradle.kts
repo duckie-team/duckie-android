@@ -27,7 +27,6 @@ dependencies {
         projects.common.android,
         projects.common.compose,
         projects.core.datastore,
-        projects.featurePhotopicker,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,

@@ -41,7 +41,6 @@ include(
     ":domain",
     ":presentation",
     ":navigator",
-    ":feature-photopicker",
     ":core:datastore",
     ":core:sync",
     ":feature:search",

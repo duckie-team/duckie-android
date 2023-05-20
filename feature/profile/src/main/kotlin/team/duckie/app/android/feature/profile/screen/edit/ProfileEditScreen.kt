@@ -36,7 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
-import team.duckie.app.android.feature.photopicker.PhotoPicker
+import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.feature.profile.R
 import team.duckie.app.android.feature.profile.component.EditTopAppBar
 import team.duckie.app.android.feature.profile.component.GrayBorderButton

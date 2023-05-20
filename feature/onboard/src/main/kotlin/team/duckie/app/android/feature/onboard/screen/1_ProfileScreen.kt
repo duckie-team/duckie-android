@@ -53,8 +53,8 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.feature.photopicker.PhotoPicker
-import team.duckie.app.android.feature.photopicker.PhotoPickerConstants
+import team.duckie.app.android.common.compose.ui.PhotoPicker
+import team.duckie.app.android.common.compose.ui.PhotoPickerConstants
 import team.duckie.app.android.feature.onboard.R
 import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.onboard.common.TitleAndDescription
