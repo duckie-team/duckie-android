@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.exam.result.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -22,7 +29,7 @@ import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
-import team.duckie.app.android.util.android.savedstate.getOrThrow
+import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 

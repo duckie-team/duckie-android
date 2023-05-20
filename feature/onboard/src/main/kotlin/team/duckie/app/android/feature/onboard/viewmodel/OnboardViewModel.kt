@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.onboard.viewmodel
@@ -56,9 +63,9 @@ import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.feature.onboard.viewmodel.state.ProfileScreenState
-import team.duckie.app.android.util.android.permission.PermissionCompat
-import team.duckie.app.android.util.android.savedstate.SaveableMutableStateFlow
-import team.duckie.app.android.util.android.viewmodel.context
+import team.duckie.app.android.common.android.permission.PermissionCompat
+import team.duckie.app.android.common.android.savedstate.SaveableMutableStateFlow
+import team.duckie.app.android.common.android.viewmodel.context
 import team.duckie.app.android.util.kotlin.fastMap
 import team.duckie.app.android.util.kotlin.seconds
 

@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.create.problem.viewmodel
@@ -60,9 +67,9 @@ import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProb
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemState
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.feature.create.problem.viewmodel.state.FindResultType
-import team.duckie.app.android.util.android.image.MediaUtil
-import team.duckie.app.android.util.android.network.NetworkUtil
-import team.duckie.app.android.util.android.viewmodel.context
+import team.duckie.app.android.common.android.image.MediaUtil
+import team.duckie.app.android.common.android.network.NetworkUtil
+import team.duckie.app.android.common.android.viewmodel.context
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.exception.duckieClientLogicProblemException
 import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe

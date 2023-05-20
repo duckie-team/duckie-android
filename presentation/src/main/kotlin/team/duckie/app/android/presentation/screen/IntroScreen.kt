@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.presentation.R
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.shared.ui.compose.constant.getAppPackageName
-import team.duckie.app.android.util.android.intent.goToMarket
+import team.duckie.app.android.common.android.intent.goToMarket
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.quackquack.ui.color.QuackColor

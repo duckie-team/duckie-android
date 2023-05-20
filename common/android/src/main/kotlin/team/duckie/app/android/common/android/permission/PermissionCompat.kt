@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.android.permission
+package team.duckie.app.android.common.android.permission
 
 import android.Manifest
 import android.os.Build

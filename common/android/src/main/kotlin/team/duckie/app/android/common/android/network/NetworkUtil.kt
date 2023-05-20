@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.android.network
+package team.duckie.app.android.common.android.network
 
 import android.content.Context
 import android.net.ConnectivityManager

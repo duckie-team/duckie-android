@@ -26,7 +26,7 @@ dependencies {
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
-        projects.utilAndroid,
+        projects.common.android,
         projects.sharedUiCompose,
         projects.utilExceptionHandling,
         libs.orbit.viewmodel,

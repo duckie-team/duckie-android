@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.android.savedstate
+package team.duckie.app.android.common.android.savedstate
 
 import androidx.lifecycle.SavedStateHandle
 import kotlin.properties.ReadWriteProperty

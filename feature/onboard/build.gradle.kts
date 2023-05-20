@@ -27,7 +27,7 @@ dependencies {
         projects.utilUi,
         projects.utilKotlin,
         projects.utilCompose,
-        projects.utilAndroid,
+        projects.common.android,
         projects.utilExceptionHandling,
         projects.core.datastore,
         projects.featurePhotopicker,

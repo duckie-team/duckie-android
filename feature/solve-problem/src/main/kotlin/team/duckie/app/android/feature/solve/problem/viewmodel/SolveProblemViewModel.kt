@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.solve.problem.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -24,8 +31,8 @@ import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.feature.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
-import team.duckie.app.android.util.android.savedstate.getOrThrow
-import team.duckie.app.android.util.android.timer.ProblemTimer
+import team.duckie.app.android.common.android.savedstate.getOrThrow
+import team.duckie.app.android.common.android.timer.ProblemTimer
 import team.duckie.app.android.util.kotlin.ImmutableList
 import team.duckie.app.android.util.kotlin.copy
 import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException

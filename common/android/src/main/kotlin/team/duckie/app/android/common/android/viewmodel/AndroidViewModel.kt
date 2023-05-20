@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.android.viewmodel
+package team.duckie.app.android.common.android.viewmodel
 
 import android.app.Application
 import android.content.Context

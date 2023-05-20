@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.android.intent
+package team.duckie.app.android.common.android.intent
 
 import android.app.Activity
 import android.content.ActivityNotFoundException

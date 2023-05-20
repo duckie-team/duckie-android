@@ -46,8 +46,8 @@ import team.duckie.app.android.feature.onboard.screen.TagScreen
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
-import team.duckie.app.android.util.android.lifecycle.repeatOnCreated
-import team.duckie.app.android.util.android.network.NetworkUtil
+import team.duckie.app.android.common.android.lifecycle.repeatOnCreated
+import team.duckie.app.android.common.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
