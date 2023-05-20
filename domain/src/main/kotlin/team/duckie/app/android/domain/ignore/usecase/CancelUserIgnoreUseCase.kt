@@ -17,6 +17,6 @@ class CancelUserIgnoreUseCase @Inject constructor(
 ) {
 
      suspend operator fun invoke(targetId: Int) = runCatching {
-         ignoreRepository.deleteIgnoreUser(targetId)
+         ignoreRepository.cancelIgnoreUser(targetId)
      }
 }

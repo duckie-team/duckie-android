@@ -18,7 +18,7 @@ class IgnoreRepositoryImpl @Inject constructor(
         ignoreRemoteDataSourceImpl.ignoreUser(targetId = targetId)
     }
 
-    override suspend fun deleteIgnoreUser(targetId: Int) {
+    override suspend fun cancelIgnoreUser(targetId: Int) {
         ignoreRemoteDataSourceImpl.deleteIgnoreUser(targetId = targetId)
     }
 }

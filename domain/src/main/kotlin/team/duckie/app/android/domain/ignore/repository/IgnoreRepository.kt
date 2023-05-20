@@ -12,5 +12,5 @@ import androidx.compose.runtime.Immutable
 @Immutable
 interface IgnoreRepository {
     suspend fun ignoreUser(targetId: Int)
-    suspend fun deleteIgnoreUser(targetId: Int)
+    suspend fun cancelIgnoreUser(targetId: Int)
 }
