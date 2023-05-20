@@ -61,6 +61,5 @@ include(
     ":common:kotlin",
     ":common:android",
     ":util-compose",
-    ":util-exception-handling",
     ":plugin-ktor-client",
 )

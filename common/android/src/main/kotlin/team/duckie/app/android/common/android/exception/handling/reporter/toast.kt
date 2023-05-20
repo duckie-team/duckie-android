@@ -7,7 +7,7 @@
 
 @file:Suppress("PrivatePropertyName")
 
-package team.duckie.app.android.util.exception.handling.reporter
+package team.duckie.app.android.common.android.exception.handling.reporter
 
 import android.app.Activity
 import android.widget.Toast

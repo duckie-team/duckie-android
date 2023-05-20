@@ -27,7 +27,6 @@ dependencies {
         projects.common.kotlin,
         projects.utilCompose,
         projects.common.android,
-        projects.utilExceptionHandling,
         projects.core.datastore,
         projects.featurePhotopicker,
         projects.sharedUiCompose,

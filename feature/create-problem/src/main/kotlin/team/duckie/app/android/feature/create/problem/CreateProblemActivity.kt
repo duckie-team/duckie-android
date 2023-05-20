@@ -5,13 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 package team.duckie.app.android.feature.create.problem
 
 import android.os.Bundle
@@ -46,7 +39,7 @@ import team.duckie.app.android.feature.create.problem.viewmodel.sideeffect.Creat
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemStep
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
-import team.duckie.app.android.util.exception.handling.reporter.reportToToast
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.finishWithAnimation

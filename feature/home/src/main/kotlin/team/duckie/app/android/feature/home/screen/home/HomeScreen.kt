@@ -30,7 +30,7 @@ import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
-import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 

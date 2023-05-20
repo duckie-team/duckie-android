@@ -5,13 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 package team.duckie.app.android.feature.onboard
 
 import android.Manifest
@@ -49,8 +42,8 @@ import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.common.android.lifecycle.repeatOnCreated
 import team.duckie.app.android.common.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.ToastWrapper
-import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.util.exception.handling.reporter.reportToToast
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotConnectedAccount
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.changeActivityWithAnimation

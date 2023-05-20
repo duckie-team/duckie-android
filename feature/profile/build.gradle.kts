@@ -27,7 +27,6 @@ dependencies {
         projects.sharedUiCompose,
         projects.common.android,
         projects.common.kotlin,
-        projects.utilExceptionHandling,
         projects.utilCompose,
         libs.orbit.viewmodel,
         libs.orbit.compose,

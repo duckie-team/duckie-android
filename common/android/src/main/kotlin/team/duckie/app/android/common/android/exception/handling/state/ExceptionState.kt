@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.exception.handling.state
+package team.duckie.app.android.common.android.exception.handling.state
 
 import android.annotation.SuppressLint
 import androidx.annotation.Discouraged

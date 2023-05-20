@@ -31,7 +31,7 @@ import team.duckie.app.android.feature.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
-import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.changeActivityWithAnimation

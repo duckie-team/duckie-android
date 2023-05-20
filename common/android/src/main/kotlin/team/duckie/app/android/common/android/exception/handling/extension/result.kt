@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.exception.handling.extension
+package team.duckie.app.android.common.android.exception.handling.extension
 
 // FIXME(sungbin): 에러 해결
 // context(BaseViewModel<out ExceptionState, out ExceptionSideEffect>)

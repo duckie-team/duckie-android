@@ -5,11 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.exception.handling.reporter
+package team.duckie.app.android.common.android.exception.handling.reporter
 
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
-import team.duckie.app.android.util.exception.handling.BuildConfig
+import team.duckie.app.android.common.android.BuildConfig
 
 fun Throwable.reportToCrashlyticsIfNeeded() {
     if (!BuildConfig.DEBUG) {

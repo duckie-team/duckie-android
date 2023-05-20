@@ -19,7 +19,7 @@ import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.tag.edit.screen.TagEditScreen
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditSideEffect
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditViewModel
-import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
