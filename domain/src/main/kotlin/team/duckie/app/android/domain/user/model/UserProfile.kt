@@ -33,5 +33,8 @@ data class UserProfile(
             heartExams = null,
             user = User.empty(),
         )
+
+        fun UserProfile.username(): String =
+            this.user?.nickname ?: ""
     }
 }

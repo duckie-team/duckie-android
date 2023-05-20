@@ -34,7 +34,7 @@ import team.duckie.app.android.feature.ui.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.ui.detail.viewmodel.state.DetailState
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.LoadingScreen
-import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 import team.duckie.app.android.util.android.network.NetworkUtil
 import team.duckie.app.android.util.compose.activityViewModel
@@ -74,7 +74,7 @@ internal fun DetailScreen(
                     viewModel.updateReportDialogVisible(false)
                 },
             )
-            ReportBottomSheetDialog(
+            DuckieSelectableBottomSheetDialog(
                 bottomSheetState = bottomSheetState,
                 closeSheet = {
                     coroutineScope.launch {

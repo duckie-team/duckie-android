@@ -14,46 +14,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.shared.ui.compose.R
+import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.util.kotlin.runIf
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
 
-const val ReportAlreadyExists = "이미 신고한 게시물 입니다!"
-
+/** 여러 아이템 중 하나를 선택하는 형태의 [DuckieBottomSheetDialog] */
 @Composable
-fun ReportBottomSheetDialog(
+fun SelectableItemBottomSheetDialog(
     modifier: Modifier = Modifier,
+    items: ImmutableList<BottomSheetItem>,
     navigationBarsPaddingVisible: Boolean = true,
     bottomSheetState: ModalBottomSheetState,
     closeSheet: () -> Unit,
-    onReport: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val rememberBottomSheetItems = remember {
-        persistentListOf(
-            BottomSheetItem(
-                icon = R.drawable.ic_report,
-                text = R.string.report,
-                onClick = onReport,
-            ),
-        )
-    }
-
     DuckieBottomSheetDialog(
         modifier = modifier,
         useHandle = true,
@@ -67,7 +53,7 @@ fun ReportBottomSheetDialog(
                     }
                     .padding(bottom = 16.dp),
             ) {
-                items(rememberBottomSheetItems) { item ->
+                items(items) { item ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()

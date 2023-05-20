@@ -26,6 +26,11 @@
     <string name="report">신고하기</string>
     <string name="report_success">신고가 정상 접수되었어요!</string>
     <string name="check">확인</string>
+    <string name="cancel">취소</string>
+
+    <string name="ignore">차단하기</string>
+    <string name="ignore_check_title">%s님을 차단하시겠어요?</string>
+    <string name="ignore_check_content">차단하면 %s님의 글을 볼 수 없어요.</string>
 
     <string name="tag_header_title">+%s 추가하기</string>
 </resources>

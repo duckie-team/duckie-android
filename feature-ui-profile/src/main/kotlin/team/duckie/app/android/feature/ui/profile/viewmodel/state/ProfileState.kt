@@ -7,9 +7,12 @@
 
 package team.duckie.app.android.feature.ui.profile.viewmodel.state
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.ui.profile.dummy.skeletonUserProfile
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableType
 
 data class ProfileState(
     val isLoading: Boolean = true,
@@ -21,4 +24,7 @@ data class ProfileState(
     val follow: Boolean = false,
     val reportExamId: Int = 0,
     val userId: Int = 0,
+
+    val bottomSheetDialogType: ImmutableList<DuckieSelectableType> = persistentListOf(),
+    val ignoreDialogVisible: Boolean = false,
 )

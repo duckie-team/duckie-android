@@ -44,7 +44,7 @@ import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingSideEffe
 import team.duckie.app.android.feature.ui.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.Create
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
-import team.duckie.app.android.shared.ui.compose.dialog.ReportBottomSheetDialog
+import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -114,7 +114,7 @@ internal fun RankingScreen(
         }
     }
 
-    ReportBottomSheetDialog(
+    DuckieSelectableBottomSheetDialog(
         modifier = Modifier.fillMaxSize(),
         bottomSheetState = bottomSheetDialogState,
         navigationBarsPaddingVisible = false,
