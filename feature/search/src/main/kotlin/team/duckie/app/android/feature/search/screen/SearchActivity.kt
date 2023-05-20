@@ -49,10 +49,10 @@ import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
-import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
-import team.duckie.app.android.shared.ui.compose.ErrorScreen
-import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
-import team.duckie.app.android.shared.ui.compose.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.ui.DuckieCircularProgressIndicator
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.constant.SharedIcon
+import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.collectAndHandleState
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.popStringExtra

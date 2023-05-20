@@ -29,7 +29,6 @@ dependencies {
         projects.feature.home,
         projects.feature.onboard,
         projects.domain,
-        projects.sharedUiCompose,
         libs.orbit.viewmodel,
         libs.androidx.splash,
         libs.quack.ui.components,

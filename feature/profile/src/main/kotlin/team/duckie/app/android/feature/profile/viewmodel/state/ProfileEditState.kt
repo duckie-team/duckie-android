@@ -9,7 +9,7 @@ package team.duckie.app.android.feature.profile.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
+import team.duckie.app.android.common.compose.ui.constant.SharedIcon
 
 data class ProfileEditState(
     val isLoading: Boolean = true,

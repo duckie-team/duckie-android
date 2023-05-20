@@ -36,7 +36,7 @@ import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
+import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.kotlin.exception.DuckieResponseFieldNPE
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists

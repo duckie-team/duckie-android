@@ -31,8 +31,8 @@ import team.duckie.app.android.feature.profile.component.EmptyText
 import team.duckie.app.android.feature.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.profile.screen.section.ProfileSection
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.shared.ui.compose.Spacer
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.quackquack.ui.icon.QuackIcon
 

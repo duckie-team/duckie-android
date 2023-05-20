@@ -44,7 +44,7 @@ import team.duckie.app.android.feature.create.problem.common.SearchResultText
 import team.duckie.app.android.feature.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.problem.viewmodel.state.FindResultType
 import team.duckie.app.android.feature.create.problem.viewmodel.state.SearchScreenData
-import team.duckie.app.android.shared.ui.compose.ImeSpacer
+import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility

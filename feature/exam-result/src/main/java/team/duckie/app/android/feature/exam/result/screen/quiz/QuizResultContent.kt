@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.exam.result.R
-import team.duckie.app.android.shared.ui.compose.Spacer
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1

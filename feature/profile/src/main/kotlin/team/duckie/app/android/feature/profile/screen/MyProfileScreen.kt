@@ -36,9 +36,9 @@ import team.duckie.app.android.feature.profile.screen.section.EditSection
 import team.duckie.app.android.feature.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.app.android.shared.ui.compose.Create
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.shared.ui.compose.Notice
+import team.duckie.app.android.common.compose.ui.Create
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.Notice
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton

@@ -26,7 +26,6 @@ dependencies {
         projects.common.android,
         projects.common.kotlin,
         projects.common.compose,
-        projects.sharedUiCompose,
         projects.feature.search,
         projects.core.datastore,
         projects.feature.profile,

@@ -25,7 +25,7 @@ import team.duckie.app.android.feature.solve.problem.answer.choice.ImageAnswerBo
 import team.duckie.app.android.feature.solve.problem.answer.choice.TextAnswerBox
 import team.duckie.app.android.feature.solve.problem.answer.shortanswer.ShortAnswerForm
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
-import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
+import team.duckie.app.android.common.compose.ui.DuckieGridLayout
 
 private val HorizontalPadding = PaddingValues(horizontal = 16.dp)
 

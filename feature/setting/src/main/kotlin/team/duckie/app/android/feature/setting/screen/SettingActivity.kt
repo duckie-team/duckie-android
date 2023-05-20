@@ -40,11 +40,11 @@ import team.duckie.app.android.feature.setting.constans.SettingType
 import team.duckie.app.android.feature.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.setting.viewmodel.sideeffect.SettingSideEffect
 import team.duckie.app.android.navigator.feature.intro.IntroNavigator
-import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
-import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
-import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
+import team.duckie.app.android.common.compose.ui.DuckieTodoScreen
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
+import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
+import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.startActivityWithAnimation

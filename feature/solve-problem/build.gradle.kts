@@ -26,7 +26,6 @@ dependencies {
         projects.common.kotlin,
         projects.common.compose,
         projects.common.android,
-        projects.sharedUiCompose,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,

@@ -56,10 +56,10 @@ import team.duckie.app.android.feature.create.problem.common.TitleAndComponent
 import team.duckie.app.android.feature.create.problem.common.getCreateProblemMeasurePolicy
 import team.duckie.app.android.feature.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.create.problem.viewmodel.CreateProblemViewModel
-import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
-import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
+import team.duckie.app.android.common.compose.ui.DuckieGridLayout
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
+import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility

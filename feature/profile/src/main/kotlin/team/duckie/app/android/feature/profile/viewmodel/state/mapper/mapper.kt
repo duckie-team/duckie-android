@@ -9,7 +9,7 @@ package team.duckie.app.android.feature.profile.viewmodel.state.mapper
 
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 
 fun ProfileExam.toUiModel() = DuckTestCoverItem(
     testId = id,

@@ -33,10 +33,10 @@ import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.search.viewmodel.state.SearchState
-import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.UserFollowingLayout
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1

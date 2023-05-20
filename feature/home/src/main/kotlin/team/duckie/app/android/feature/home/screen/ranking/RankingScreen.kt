@@ -42,9 +42,9 @@ import team.duckie.app.android.feature.home.component.HomeIconSize
 import team.duckie.app.android.feature.home.constants.RankingPage
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingSideEffect
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
-import team.duckie.app.android.shared.ui.compose.Create
-import team.duckie.app.android.shared.ui.compose.ErrorScreen
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.Create
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.icon.QuackIcon

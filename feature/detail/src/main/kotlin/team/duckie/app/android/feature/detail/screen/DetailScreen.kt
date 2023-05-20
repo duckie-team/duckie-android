@@ -32,10 +32,10 @@ import team.duckie.app.android.feature.detail.screen.exam.ExamDetailContentLayou
 import team.duckie.app.android.feature.detail.screen.quiz.QuizDetailContentLayout
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.app.android.shared.ui.compose.ErrorScreen
-import team.duckie.app.android.shared.ui.compose.LoadingScreen
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableBottomSheetDialog
-import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.LoadingScreen
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.app.android.common.android.network.NetworkUtil
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor

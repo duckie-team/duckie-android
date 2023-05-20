@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
-import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
+import team.duckie.app.android.common.compose.ui.DuckieCircularProgressIndicator
 
 private const val TermsOfServiceLink = "https://rickkyok.tistory.com/9"
 

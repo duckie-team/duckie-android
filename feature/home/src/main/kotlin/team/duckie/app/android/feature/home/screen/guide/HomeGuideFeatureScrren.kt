@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.BaseBottomLayout
 import team.duckie.app.android.feature.home.constants.GuideStep
-import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
+import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackHeadLine2

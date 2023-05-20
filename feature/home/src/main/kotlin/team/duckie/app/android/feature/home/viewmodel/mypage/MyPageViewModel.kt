@@ -26,7 +26,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.user.usecase.FetchUserProfileUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.profile.viewmodel.intent.MyPageIntent
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
 import javax.inject.Inject
 

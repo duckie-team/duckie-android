@@ -24,7 +24,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.feature.home.constants.BottomNavigationStep
-import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
+import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import javax.inject.Inject

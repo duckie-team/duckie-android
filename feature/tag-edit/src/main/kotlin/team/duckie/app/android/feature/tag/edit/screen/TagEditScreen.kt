@@ -23,10 +23,10 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.tag.edit.R
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditState
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditViewModel
-import team.duckie.app.android.shared.ui.compose.ErrorScreen
-import team.duckie.app.android.shared.ui.compose.FavoriteTagSection
-import team.duckie.app.android.shared.ui.compose.LoadingScreen
-import team.duckie.app.android.shared.ui.compose.screen.SearchTagScreen
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.FavoriteTagSection
+import team.duckie.app.android.common.compose.ui.LoadingScreen
+import team.duckie.app.android.common.compose.ui.screen.SearchTagScreen
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackSubtitle

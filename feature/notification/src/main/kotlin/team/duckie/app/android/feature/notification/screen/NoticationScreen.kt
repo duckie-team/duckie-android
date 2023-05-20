@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.notification.R
 import team.duckie.app.android.feature.notification.viewmodel.NotificationViewModel
-import team.duckie.app.android.shared.ui.compose.ErrorScreen
-import team.duckie.app.android.shared.ui.compose.NoItemScreen
-import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
-import team.duckie.app.android.shared.ui.compose.skeleton
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.NoItemScreen
+import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.kotlin.getDiffDayFromToday
 import team.duckie.quackquack.ui.component.QuackBody2

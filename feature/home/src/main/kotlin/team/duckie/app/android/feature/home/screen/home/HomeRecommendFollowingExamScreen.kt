@@ -45,8 +45,8 @@ import team.duckie.app.android.feature.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
-import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.app.android.shared.ui.compose.skeleton
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.collectAndHandleState
 import team.duckie.quackquack.ui.color.QuackColor

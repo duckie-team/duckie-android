@@ -34,12 +34,12 @@ import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.profile.screen.section.FollowSection
 import team.duckie.app.android.feature.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.app.android.shared.ui.compose.BackPressedHeadLineTopAppBar
-import team.duckie.app.android.shared.ui.compose.Create
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableType
-import team.duckie.app.android.shared.ui.compose.dialog.IgnoreCheckDialog
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableBottomSheetDialog
-import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
+import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
+import team.duckie.app.android.common.compose.ui.Create
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
+import team.duckie.app.android.common.compose.ui.dialog.IgnoreCheckDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable

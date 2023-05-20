@@ -12,7 +12,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.profile.dummy.skeletonUserProfile
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableType
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 
 data class ProfileState(
     val isLoading: Boolean = true,

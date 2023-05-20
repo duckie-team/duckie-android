@@ -42,8 +42,8 @@ import team.duckie.app.android.feature.profile.viewmodel.intent.MyPageIntent
 import team.duckie.app.android.feature.profile.viewmodel.intent.OtherPageIntent
 import team.duckie.app.android.feature.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileState
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableType
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.android.ui.const.Debounce
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.common.android.ui.const.Extras

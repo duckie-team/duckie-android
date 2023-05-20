@@ -5,13 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 @file:OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalComposeUiApi::class,
@@ -84,9 +77,9 @@ import team.duckie.app.android.feature.create.problem.common.getCreateProblemMea
 import team.duckie.app.android.feature.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemStep
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
-import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
+import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings

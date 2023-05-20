@@ -45,11 +45,11 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
-import team.duckie.app.android.shared.ui.compose.DuckExamSmallCoverForColumn
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.app.android.shared.ui.compose.TextTabLayout
-import team.duckie.app.android.shared.ui.compose.skeleton
+import team.duckie.app.android.common.compose.ui.DuckExamSmallCoverForColumn
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.TextTabLayout
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.compose.itemsPagingKey
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.quackquack.ui.color.QuackColor

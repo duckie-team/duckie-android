@@ -44,7 +44,7 @@ import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
-import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
+import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras

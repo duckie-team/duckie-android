@@ -29,7 +29,6 @@ dependencies {
         projects.common.android,
         projects.core.datastore,
         projects.featurePhotopicker,
-        projects.sharedUiCompose,
         libs.apache.commons.io,
         libs.orbit.viewmodel,
         libs.orbit.compose,

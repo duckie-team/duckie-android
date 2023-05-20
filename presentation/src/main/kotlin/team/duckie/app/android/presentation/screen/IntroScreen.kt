@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.presentation.R
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
-import team.duckie.app.android.shared.ui.compose.constant.getAppPackageName
+import team.duckie.app.android.common.compose.ui.constant.getAppPackageName
 import team.duckie.app.android.common.android.intent.goToMarket
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.systemBarPaddings
@@ -33,7 +33,7 @@ import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackImage
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 
 @Composable
 internal fun IntroScreen(

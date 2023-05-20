@@ -36,7 +36,7 @@ import team.duckie.app.android.feature.profile.viewmodel.sideeffect.ProfileEditS
 import team.duckie.app.android.feature.profile.viewmodel.state.GalleryState
 import team.duckie.app.android.feature.profile.viewmodel.state.NicknameState
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileEditState
-import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
+import team.duckie.app.android.common.compose.ui.constant.SharedIcon
 import team.duckie.app.android.common.kotlin.ImmutableList
 import team.duckie.app.android.common.kotlin.MutableDebounceFlow
 import team.duckie.app.android.common.kotlin.debounceAction

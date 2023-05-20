@@ -22,6 +22,9 @@ dependencies {
         libs.compose.lifecycle.viewmodel,
         libs.quack.ui.components,
         libs.compose.ui.activity,
+        libs.compose.ui.material,
+        libs.compose.ui.coil,
+        libs.compose.ui.accompanist.placeholder,
         libs.paging.compose,
     )
 }

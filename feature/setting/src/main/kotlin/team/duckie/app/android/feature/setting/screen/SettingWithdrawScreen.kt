@@ -8,7 +8,7 @@
 package team.duckie.app.android.feature.setting.screen
 
 import androidx.compose.runtime.Composable
-import team.duckie.app.android.shared.ui.compose.DuckieTodoScreen
+import team.duckie.app.android.common.compose.ui.DuckieTodoScreen
 
 @Composable
 fun SettingWithdrawScreen() {

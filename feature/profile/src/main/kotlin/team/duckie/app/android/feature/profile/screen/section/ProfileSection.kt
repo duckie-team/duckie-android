@@ -24,10 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.profile.R
-import team.duckie.app.android.shared.ui.compose.DefaultProfile
-import team.duckie.app.android.shared.ui.compose.Divider
-import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.app.android.shared.ui.compose.skeleton
+import team.duckie.app.android.common.compose.ui.DefaultProfile
+import team.duckie.app.android.common.compose.ui.Divider
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3

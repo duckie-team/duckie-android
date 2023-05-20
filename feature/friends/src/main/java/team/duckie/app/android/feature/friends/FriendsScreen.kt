@@ -5,13 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-/*
- * Designed and developed by Duckie Team, 2022
- *
- * Licensed under the MIT.
- * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
- */
-
 @file:OptIn(ExperimentalFoundationApi::class)
 
 package team.duckie.app.android.feature.friends
@@ -41,12 +34,12 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
-import team.duckie.app.android.shared.ui.compose.BackPressedHeadLine2TopAppBar
-import team.duckie.app.android.shared.ui.compose.ErrorScreen
-import team.duckie.app.android.shared.ui.compose.NoItemScreen
-import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
-import team.duckie.app.android.shared.ui.compose.skeleton
+import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.NoItemScreen
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.quackquack.ui.color.QuackColor

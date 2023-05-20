@@ -61,11 +61,11 @@ import team.duckie.app.android.feature.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
-import team.duckie.app.android.shared.ui.compose.DuckExamSmallCover
-import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
-import team.duckie.app.android.shared.ui.compose.QuackAnnotatedText
-import team.duckie.app.android.shared.ui.compose.skeleton
+import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
+import team.duckie.app.android.common.compose.ui.QuackAnnotatedText
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.kotlin.addHashTag
 import team.duckie.quackquack.ui.component.QuackBody1

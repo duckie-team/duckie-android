@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
 import team.duckie.app.android.feature.setting.constans.SettingType
-import team.duckie.app.android.shared.ui.compose.Spacer
+import team.duckie.app.android.common.compose.ui.Spacer
 
 @Composable
 fun SettingMainPolicyScreen(

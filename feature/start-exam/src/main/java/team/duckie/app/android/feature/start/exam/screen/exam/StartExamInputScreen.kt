@@ -27,7 +27,7 @@ import team.duckie.app.android.feature.start.exam.R
 import team.duckie.app.android.feature.start.exam.screen.StartExamScreen
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
-import team.duckie.app.android.shared.ui.compose.ImeSpacer
+import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
 import team.duckie.quackquack.ui.component.QuackHeadLine1

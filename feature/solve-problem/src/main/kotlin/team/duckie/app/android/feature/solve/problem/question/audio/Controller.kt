@@ -22,7 +22,7 @@ import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
+import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackSurface
