@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import team.duckie.app.android.util.kotlin.fastForEach
+import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHighlightTextInfo
 import team.duckie.quackquack.ui.component.internal.QuackClickableText

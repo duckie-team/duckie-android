@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.create.problem.common
 
 import androidx.compose.foundation.background
@@ -23,8 +30,8 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
-import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.common.kotlin.fastFirstOrNull
+import team.duckie.app.android.common.kotlin.npe
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
 import team.duckie.quackquack.ui.color.QuackColor

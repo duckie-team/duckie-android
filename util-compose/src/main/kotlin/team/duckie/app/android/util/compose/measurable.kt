@@ -11,8 +11,8 @@ import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.Constraints
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
-import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.common.kotlin.fastFirstOrNull
+import team.duckie.app.android.common.kotlin.npe
 
 fun List<Measurable>.getPlaceable(layoutId: String, constraints: Constraints): Placeable =
     fastFirstOrNull { measureable ->

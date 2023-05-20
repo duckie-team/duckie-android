@@ -5,13 +5,20 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.friends.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.friends.viewmodel.skeletonFriends
-import team.duckie.app.android.util.kotlin.FriendsType
-import team.duckie.app.android.util.kotlin.randomString
+import team.duckie.app.android.common.kotlin.FriendsType
+import team.duckie.app.android.common.kotlin.randomString
 
 internal data class FriendsState(
     val me: User ? = null,

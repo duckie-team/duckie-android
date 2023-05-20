@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.centerVertical
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
-import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.common.kotlin.fastFirstOrNull
+import team.duckie.app.android.common.kotlin.npe
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3

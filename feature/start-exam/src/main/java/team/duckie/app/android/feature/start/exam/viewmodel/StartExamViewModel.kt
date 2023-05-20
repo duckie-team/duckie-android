@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.start.exam.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -15,8 +22,8 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
-import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 

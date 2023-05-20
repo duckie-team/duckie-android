@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.tag.edit.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -35,7 +42,7 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.domain.user.usecase.SetMeUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.util.ui.const.Debounce
 import javax.inject.Inject
 

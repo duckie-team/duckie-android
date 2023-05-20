@@ -4,6 +4,13 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
 @file:Suppress("MagicNumber")
 
 package team.duckie.app.android.feature.home.viewmodel.ranking
@@ -14,7 +21,7 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.DuckPower
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.util.kotlin.randomString
+import team.duckie.app.android.common.kotlin.randomString
 
 internal val skeletonExamineeItems = (1..10).map {
     User.empty().copy(

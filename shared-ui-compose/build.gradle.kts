@@ -24,6 +24,6 @@ dependencies {
         libs.compose.ui.material,
         libs.compose.ui.accompanist.placeholder,
         projects.utilCompose,
-        projects.utilKotlin,
+        projects.common.kotlin,
     )
 }

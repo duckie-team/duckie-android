@@ -24,7 +24,7 @@ dependencies {
         projects.domain,
         projects.utilUi,
         projects.navigator,
-        projects.utilKotlin,
+        projects.common.kotlin,
         projects.utilCompose,
         projects.sharedUiCompose,
         libs.orbit.viewmodel,

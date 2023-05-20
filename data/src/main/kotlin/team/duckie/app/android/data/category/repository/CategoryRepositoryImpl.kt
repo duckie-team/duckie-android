@@ -19,8 +19,8 @@ import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.category.model.CategoryData
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.category.repository.CategoryRepository
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
 
 class CategoryRepositoryImpl @Inject constructor() : CategoryRepository {
     override suspend fun getCategories(withPopularTags: Boolean?): List<Category> {

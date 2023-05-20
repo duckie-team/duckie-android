@@ -25,7 +25,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import team.duckie.app.android.util.kotlin.runIf
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackDivider

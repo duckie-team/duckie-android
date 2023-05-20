@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.viewmodel.mapper
 
 import kotlinx.collections.immutable.toPersistentList
@@ -13,7 +20,7 @@ import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.fastMap
 
 internal fun UserFollowing.toUiModel() =
     HomeState.RecommendUserByTopic(

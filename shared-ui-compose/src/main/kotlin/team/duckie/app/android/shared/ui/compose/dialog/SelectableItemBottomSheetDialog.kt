@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import team.duckie.app.android.util.kotlin.runIf
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.modifier.quackClickable

@@ -8,7 +8,7 @@
 package team.duckie.app.android.common.android.savedstate
 
 import androidx.lifecycle.SavedStateHandle
-import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
+import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
 
 fun <T : Any> SavedStateHandle.getOrThrow(
     key: String,

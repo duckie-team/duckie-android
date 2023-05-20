@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.profile
 
 import android.os.Bundle
@@ -37,8 +44,8 @@ import team.duckie.app.android.util.compose.LaunchOnLifecycle
 import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
+import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
+import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.finishWithAnimation

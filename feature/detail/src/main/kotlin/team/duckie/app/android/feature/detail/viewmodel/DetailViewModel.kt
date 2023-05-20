@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.detail.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -30,9 +37,9 @@ import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
-import team.duckie.app.android.util.kotlin.exception.DuckieResponseFieldNPE
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
+import team.duckie.app.android.common.kotlin.exception.DuckieResponseFieldNPE
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 

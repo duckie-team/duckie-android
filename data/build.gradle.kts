@@ -56,7 +56,7 @@ dependencies {
         libs.bundles.ktor.client,
         libs.logging.timber,
         projects.domain,
-        projects.utilKotlin,
+        projects.common.kotlin,
         projects.pluginKtorClient,
         projects.core.datastore,
     )

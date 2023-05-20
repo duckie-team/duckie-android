@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.shared.ui.compose.R
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.fastMap
 
 const val ReportAlreadyExists = "이미 신고한 게시물 입니다!"
 

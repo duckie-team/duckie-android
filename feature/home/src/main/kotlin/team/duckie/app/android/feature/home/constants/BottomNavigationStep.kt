@@ -12,9 +12,16 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.constants
 
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 
 /**
  * BototmNavigation의 Step을 관리하는 enum class

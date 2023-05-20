@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import team.duckie.app.android.util.kotlin.fastForEachIndexed
+import team.duckie.app.android.common.kotlin.fastForEachIndexed
 
 @Composable
 fun <T> DuckieGridLayout(

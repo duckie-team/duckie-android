@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalFoundationApi::class,
@@ -60,7 +67,7 @@ import team.duckie.app.android.shared.ui.compose.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.shared.ui.compose.QuackAnnotatedText
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.kotlin.addHashTag
+import team.duckie.app.android.common.kotlin.addHashTag
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1

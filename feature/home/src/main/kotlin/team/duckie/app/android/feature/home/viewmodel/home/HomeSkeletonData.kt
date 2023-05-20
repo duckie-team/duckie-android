@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.viewmodel.home
 
 import kotlinx.collections.immutable.persistentListOf
@@ -13,7 +20,7 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.util.kotlin.randomString
+import team.duckie.app.android.common.kotlin.randomString
 
 internal val skeletonJumbotrons = persistentListOf(
     HomeState.HomeRecommendJumbotron(

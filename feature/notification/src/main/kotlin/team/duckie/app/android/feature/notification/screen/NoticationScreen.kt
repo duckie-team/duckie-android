@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.notification.screen
 
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +39,7 @@ import team.duckie.app.android.shared.ui.compose.NoItemScreen
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.kotlin.getDiffDayFromToday
+import team.duckie.app.android.common.kotlin.getDiffDayFromToday
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage

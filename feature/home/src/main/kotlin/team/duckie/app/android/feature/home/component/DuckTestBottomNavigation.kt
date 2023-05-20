@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.component
 
 import android.graphics.drawable.Icon
@@ -27,7 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import okhttp3.internal.immutableListOf
 import team.duckie.app.android.feature.home.R
-import team.duckie.app.android.util.kotlin.fastForEachIndexed
+import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackImage

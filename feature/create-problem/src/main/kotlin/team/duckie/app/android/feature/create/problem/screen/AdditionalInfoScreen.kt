@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalComposeUiApi::class,
@@ -80,8 +87,8 @@ import team.duckie.app.android.util.compose.GetHeightRatioW328H240
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.kotlin.fastMap
-import team.duckie.app.android.util.kotlin.takeBy
+import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackImage

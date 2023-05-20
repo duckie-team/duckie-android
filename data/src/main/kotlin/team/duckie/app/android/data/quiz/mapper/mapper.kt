@@ -15,7 +15,7 @@ import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.domain.quiz.model.Quiz
 import team.duckie.app.android.domain.quiz.model.QuizExam
 import team.duckie.app.android.domain.quiz.model.QuizResult
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 internal fun PostQuizResponse.toDomain() = Quiz(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),

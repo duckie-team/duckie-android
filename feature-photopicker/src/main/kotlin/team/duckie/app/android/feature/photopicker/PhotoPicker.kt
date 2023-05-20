@@ -29,8 +29,8 @@ import com.ujizin.camposer.state.CamSelector
 import com.ujizin.camposer.state.rememberCamSelector
 import com.ujizin.camposer.state.rememberCameraState
 import kotlinx.collections.immutable.ImmutableList
-import team.duckie.app.android.util.kotlin.fastAny
-import team.duckie.app.android.util.kotlin.runIf
+import team.duckie.app.android.common.kotlin.fastAny
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackGridLayout

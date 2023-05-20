@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.util.kotlin.runIf
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle

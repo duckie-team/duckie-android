@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(FlowPreview::class, ExperimentalComposeUiApi::class)
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
@@ -66,9 +73,9 @@ import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
-import team.duckie.app.android.util.kotlin.npe
-import team.duckie.app.android.util.kotlin.runIf
+import team.duckie.app.android.common.kotlin.fastFirstOrNull
+import team.duckie.app.android.common.kotlin.npe
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor

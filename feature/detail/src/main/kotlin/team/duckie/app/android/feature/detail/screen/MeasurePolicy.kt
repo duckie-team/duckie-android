@@ -5,13 +5,20 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.detail.screen
 
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
-import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.common.kotlin.fastFirstOrNull
+import team.duckie.app.android.common.kotlin.npe
 
 internal const val DetailScreenTopAppBarLayoutId = "DetailScreenTopAppBar"
 internal const val DetailScreenContentLayoutId = "DetailScreenContent"

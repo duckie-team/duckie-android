@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.create.problem.screen
 
 import android.app.Activity
@@ -54,7 +61,7 @@ import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.kotlin.takeBy
+import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor

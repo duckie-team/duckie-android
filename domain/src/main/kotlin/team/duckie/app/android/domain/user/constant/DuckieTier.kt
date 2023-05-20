@@ -10,7 +10,7 @@
 package team.duckie.app.android.domain.user.constant
 
 import androidx.compose.runtime.Immutable
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 
 @AllowMagicNumber
 @Immutable

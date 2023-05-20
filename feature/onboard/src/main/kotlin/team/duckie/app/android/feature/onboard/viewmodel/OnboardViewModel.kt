@@ -66,8 +66,8 @@ import team.duckie.app.android.feature.onboard.viewmodel.state.ProfileScreenStat
 import team.duckie.app.android.common.android.permission.PermissionCompat
 import team.duckie.app.android.common.android.savedstate.SaveableMutableStateFlow
 import team.duckie.app.android.common.android.viewmodel.context
-import team.duckie.app.android.util.kotlin.fastMap
-import team.duckie.app.android.util.kotlin.seconds
+import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.seconds
 
 private val NextStepNavigateThrottle = 1.seconds
 private const val ProfileImageCompressQuality = 100

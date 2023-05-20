@@ -18,7 +18,7 @@ android {
 
 dependencies {
     implementations(
-        projects.utilKotlin,
+        projects.common.kotlin,
         libs.compose.lifecycle.viewmodel,
         libs.quack.ui.components,
         libs.compose.ui.activity,

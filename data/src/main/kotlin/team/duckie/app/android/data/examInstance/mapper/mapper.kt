@@ -12,8 +12,8 @@ import team.duckie.app.android.data.examInstance.model.ExamInstanceData
 import team.duckie.app.android.data.examInstance.model.ProblemInstanceData
 import team.duckie.app.android.domain.examInstance.model.ExamInstance
 import team.duckie.app.android.domain.examInstance.model.ProblemInstance
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
 
 internal fun ExamInstanceData.toDomain() = ExamInstance(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),

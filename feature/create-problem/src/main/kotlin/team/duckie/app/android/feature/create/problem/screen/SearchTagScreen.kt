@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.create.problem.screen
 
 import androidx.activity.compose.BackHandler
@@ -39,7 +46,7 @@ import team.duckie.app.android.feature.create.problem.viewmodel.state.FindResult
 import team.duckie.app.android.feature.create.problem.viewmodel.state.SearchScreenData
 import team.duckie.app.android.shared.ui.compose.ImeSpacer
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag

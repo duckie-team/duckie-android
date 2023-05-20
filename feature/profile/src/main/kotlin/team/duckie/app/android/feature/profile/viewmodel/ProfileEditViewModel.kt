@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.profile.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -30,11 +37,11 @@ import team.duckie.app.android.feature.profile.viewmodel.state.GalleryState
 import team.duckie.app.android.feature.profile.viewmodel.state.NicknameState
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileEditState
 import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
-import team.duckie.app.android.util.kotlin.ImmutableList
-import team.duckie.app.android.util.kotlin.MutableDebounceFlow
-import team.duckie.app.android.util.kotlin.debounceAction
-import team.duckie.app.android.util.kotlin.fastAll
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.ImmutableList
+import team.duckie.app.android.common.kotlin.MutableDebounceFlow
+import team.duckie.app.android.common.kotlin.debounceAction
+import team.duckie.app.android.common.kotlin.fastAll
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.util.ui.const.Debounce
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject

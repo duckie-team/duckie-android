@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -18,8 +25,8 @@ import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.feature.home.constants.BottomNavigationStep
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
-import team.duckie.app.android.util.kotlin.FriendsType
-import team.duckie.app.android.util.kotlin.exception.isReportAlreadyExists
+import team.duckie.app.android.common.kotlin.FriendsType
+import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import javax.inject.Inject
 
 @HiltViewModel

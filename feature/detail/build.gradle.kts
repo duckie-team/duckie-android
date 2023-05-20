@@ -27,7 +27,7 @@ dependencies {
         projects.core.datastore,
         projects.sharedUiCompose,
         projects.common.android,
-        projects.utilKotlin,
+        projects.common.kotlin,
         projects.utilExceptionHandling,
         projects.utilCompose,
         projects.feature.startExam,

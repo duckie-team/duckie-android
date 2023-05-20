@@ -11,7 +11,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.search.dao.SearchDao
 import team.duckie.app.android.data.tag.model.SearchEntity
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.fastMap
 import javax.inject.Inject
 
 class SearchLocalDataSourceImpl @Inject constructor(

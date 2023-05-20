@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.screen
 
 import android.content.Intent
@@ -38,7 +45,7 @@ import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.const.Extras
 import team.duckie.app.android.util.ui.startActivityWithAnimation

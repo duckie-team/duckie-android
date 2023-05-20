@@ -31,8 +31,8 @@ import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.domain.user.model.toUserAuthStatus
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
 import kotlin.random.Random
 
 private const val NicknameSuffixMaxLength = 10_000

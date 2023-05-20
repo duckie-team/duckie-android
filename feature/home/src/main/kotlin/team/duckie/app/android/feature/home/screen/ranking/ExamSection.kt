@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.screen.ranking
 
 import androidx.compose.foundation.background
@@ -44,7 +51,7 @@ import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.itemsPagingKey
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackTagType

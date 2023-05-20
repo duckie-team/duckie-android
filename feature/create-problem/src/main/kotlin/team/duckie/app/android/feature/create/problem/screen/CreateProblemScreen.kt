@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalComposeUiApi::class,
@@ -83,9 +90,9 @@ import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.rememberToast
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.kotlin.fastForEach
-import team.duckie.app.android.util.kotlin.fastForEachIndexed
-import team.duckie.app.android.util.kotlin.takeBy
+import team.duckie.app.android.common.kotlin.fastForEach
+import team.duckie.app.android.common.kotlin.fastForEachIndexed
+import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
 import team.duckie.quackquack.ui.color.QuackColor

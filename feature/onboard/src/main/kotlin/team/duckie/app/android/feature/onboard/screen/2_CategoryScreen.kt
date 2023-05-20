@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.onboard.screen
@@ -36,10 +43,10 @@ import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.util.compose.activityViewModel
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.kotlin.fastAny
-import team.duckie.app.android.util.kotlin.fastFirstOrNull
-import team.duckie.app.android.util.kotlin.fastMapIndexedNotNull
-import team.duckie.app.android.util.kotlin.npe
+import team.duckie.app.android.common.kotlin.fastAny
+import team.duckie.app.android.common.kotlin.fastFirstOrNull
+import team.duckie.app.android.common.kotlin.fastMapIndexedNotNull
+import team.duckie.app.android.common.kotlin.npe
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackGridLayout
 import team.duckie.quackquack.ui.component.QuackLargeButton

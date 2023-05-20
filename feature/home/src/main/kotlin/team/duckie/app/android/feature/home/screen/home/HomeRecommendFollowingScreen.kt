@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.screen.home
 
 import androidx.compose.foundation.layout.Box
@@ -32,7 +39,7 @@ import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.QuackMaxWidthDivider
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.kotlin.fastForEach
+import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTitle2
 

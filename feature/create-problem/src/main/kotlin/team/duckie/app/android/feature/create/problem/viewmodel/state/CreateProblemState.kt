@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.create.problem.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
@@ -17,7 +24,7 @@ import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 internal data class CreateProblemState(
     val me: User? = null,

@@ -14,8 +14,8 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.domain.user.repository.UserRepository
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
-import team.duckie.app.android.util.kotlin.ExperimentalApi
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.ExperimentalApi
 import javax.inject.Inject
 import javax.inject.Singleton
 

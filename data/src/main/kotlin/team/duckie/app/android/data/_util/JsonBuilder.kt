@@ -7,8 +7,8 @@
 
 package team.duckie.app.android.data._util
 
-import team.duckie.app.android.util.kotlin.DuckieDsl
-import team.duckie.app.android.util.kotlin.fastForEach
+import team.duckie.app.android.common.kotlin.DuckieDsl
+import team.duckie.app.android.common.kotlin.fastForEach
 
 @DuckieDsl
 internal interface JsonBuilder {

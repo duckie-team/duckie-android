@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 
 package team.duckie.app.android.feature.solve.problem.screen
@@ -46,7 +53,7 @@ import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.util.compose.isCurrentPage
 import team.duckie.app.android.util.compose.moveNextPage
 import team.duckie.app.android.util.compose.movePrevPage
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"

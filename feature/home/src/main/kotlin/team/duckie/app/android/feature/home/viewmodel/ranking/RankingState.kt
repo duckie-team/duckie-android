@@ -5,13 +5,20 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.viewmodel.ranking
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.util.kotlin.copy
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.copy
+import team.duckie.app.android.common.kotlin.fastMap
 
 internal data class RankingState(
     val isTagLoading: Boolean = true,

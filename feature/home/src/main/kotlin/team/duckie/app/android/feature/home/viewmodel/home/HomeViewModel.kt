@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.viewmodel.home
 
 import androidx.lifecycle.ViewModel
@@ -40,9 +47,9 @@ import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.viewmodel.mapper.toFollowingModel
 import team.duckie.app.android.feature.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.home.viewmodel.mapper.toUiModel
-import team.duckie.app.android.util.kotlin.exception.isFollowingAlreadyExists
-import team.duckie.app.android.util.kotlin.exception.isFollowingNotFound
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.exception.isFollowingAlreadyExists
+import team.duckie.app.android.common.kotlin.exception.isFollowingNotFound
+import team.duckie.app.android.common.kotlin.fastMap
 import javax.inject.Inject
 
 @HiltViewModel

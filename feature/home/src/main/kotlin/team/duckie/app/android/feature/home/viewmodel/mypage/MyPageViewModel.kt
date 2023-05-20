@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.viewmodel.mypage
 
 import androidx.lifecycle.ViewModel
@@ -20,7 +27,7 @@ import team.duckie.app.android.domain.user.usecase.FetchUserProfileUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.profile.viewmodel.intent.MyPageIntent
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
-import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
+import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
 import javax.inject.Inject
 
 @HiltViewModel

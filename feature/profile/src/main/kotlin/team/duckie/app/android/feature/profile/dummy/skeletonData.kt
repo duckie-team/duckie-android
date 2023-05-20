@@ -4,6 +4,13 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
 @file:Suppress("MagicNumber")
 
 package team.duckie.app.android.feature.profile.dummy
@@ -13,7 +20,7 @@ import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserProfile
-import team.duckie.app.android.util.kotlin.randomString
+import team.duckie.app.android.common.kotlin.randomString
 
 fun skeletonUserProfile() = UserProfile.empty().copy(
     createdExams = skeletonProfileExams(),

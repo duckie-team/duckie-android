@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.friends.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -25,8 +32,8 @@ import team.duckie.app.android.domain.user.usecase.FetchUserFollowingsUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.friends.viewmodel.sideeffect.FriendsSideEffect
 import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
-import team.duckie.app.android.util.kotlin.FriendsType
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.FriendsType
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 

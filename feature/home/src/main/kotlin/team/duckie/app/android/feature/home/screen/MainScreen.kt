@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.home.screen
 
 import androidx.compose.foundation.background
@@ -31,7 +38,7 @@ import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.asLoose
 import team.duckie.app.android.util.compose.getPlaceable
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.kotlin.FriendsType
+import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackDivider
 

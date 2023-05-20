@@ -20,8 +20,8 @@ import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
 
 internal fun RecommendationData.toDomain() = RecommendationFeeds(
     jumbotrons = jumbotrons?.fastMap(ExamData::toDomain)?.toPersistentList(),

@@ -59,7 +59,7 @@ include(
     ":feature:tag-edit",
     ":shared-ui-compose",
     ":util-ui",
-    ":util-kotlin",
+    ":common:kotlin",
     ":common:android",
     ":util-compose",
     ":util-exception-handling",

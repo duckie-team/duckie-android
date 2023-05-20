@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(ExperimentalFoundationApi::class)
 
 package team.duckie.app.android.feature.friends
@@ -41,7 +48,7 @@ import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.shared.ui.compose.skeleton
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.kotlin.FriendsType
+import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackMainTab

@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(ExperimentalMaterialApi::class)
 
 package team.duckie.app.android.feature.detail.viewmodel.state
@@ -15,7 +22,7 @@ import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.fastMap
 
 /**
  * [DetailViewModel] 의 상태를 나타냅니다.

@@ -10,7 +10,7 @@ package team.duckie.app.android
 import android.app.Application
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
-import team.duckie.app.android.util.kotlin.seconds
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.quackquack.ui.animation.QuackAnimationMillis
 import team.duckie.quackquack.ui.modifier.QuackAlwaysShowRipple
 import timber.log.Timber

@@ -33,11 +33,11 @@ import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.timer.ProblemTimer
-import team.duckie.app.android.util.kotlin.ImmutableList
-import team.duckie.app.android.util.kotlin.copy
-import team.duckie.app.android.util.kotlin.exception.DuckieClientLogicProblemException
-import team.duckie.app.android.util.kotlin.fastMap
-import team.duckie.app.android.util.kotlin.seconds
+import team.duckie.app.android.common.kotlin.ImmutableList
+import team.duckie.app.android.common.kotlin.copy
+import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
+import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.util.ui.const.Extras
 import javax.inject.Inject
 

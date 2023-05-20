@@ -46,9 +46,9 @@ import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.Solution
 import team.duckie.app.android.domain.quiz.model.QuizInfo
-import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
 
 @AllowCyclomaticComplexMethod
 internal fun ExamData.toDomain() = Exam(
