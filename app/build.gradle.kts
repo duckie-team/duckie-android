@@ -78,6 +78,7 @@ dependencies {
         libs.firebase.crashlytics,
         libs.login.kakao, // for KakaoSDK initialization
         libs.quack.ui.components, // for debug setting
+        libs.logging.timber,
         projects.presentation, // for launch IntroActivity
         projects.utilKotlin,
         projects.featureUiExamResult,

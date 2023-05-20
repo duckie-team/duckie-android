@@ -13,6 +13,7 @@ import dagger.hilt.android.HiltAndroidApp
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.quackquack.ui.animation.QuackAnimationMillis
 import team.duckie.quackquack.ui.modifier.QuackAlwaysShowRipple
+import timber.log.Timber
 
 @HiltAndroidApp
 class App : Application() {
@@ -24,6 +25,9 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
         KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }

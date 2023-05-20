@@ -121,6 +121,9 @@ test-androidx-runner = "1.5.2"
 test-parameter-injector = "1.11"
 test-turbine = "0.12.3"
 
+# logging
+logging-timber = "5.0.1"
+
 [plugins]
 gms-google-service = { id = "com.google.gms.google-services", version.ref = "plugin-build-google-service" }
 
@@ -261,6 +264,8 @@ test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", ve
 test-ktor-client = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-core" }
 test-ktor-server = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-core" }
 test-orbit = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit-core" }
+
+logging-timber = { module = "com.jakewharton.timber:timber", version.ref = "logging-timber" }
 
 detekt-plugin-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "plugin-code-detekt" }
 

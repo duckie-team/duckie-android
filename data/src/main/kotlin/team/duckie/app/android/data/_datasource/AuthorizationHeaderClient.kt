@@ -26,6 +26,7 @@ import io.ktor.serialization.jackson.jackson
 import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlugin
+import timber.log.Timber
 
 /** token 이 필요한 HttpClient */
 internal var client = AuthorizationHeaderClient()
@@ -94,7 +95,7 @@ private object AuthorizationHeaderClient {
         install(plugin = Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
-                   println(message)
+                   Timber.e(message)
                 }
             }
             level = LogLevel.ALL

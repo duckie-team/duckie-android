@@ -15,13 +15,12 @@ val LoggingRequestHeadersPlugin = createClientPlugin(
     createConfiguration = ::LogWriterConfig,
 ) {
     on(SendingRequest) { request, _ ->
-        println("Request headers:")
         request.headers.entries().forEach(pluginConfig::printHeader)
     }
 }
 
 class LogWriterConfig {
-    var writer: (log: String) -> Unit = ::println
+    var writer: (log: String) -> Unit = {}
 }
 
 private fun LogWriterConfig.printHeader(entry: Map.Entry<String, List<String>>) {
