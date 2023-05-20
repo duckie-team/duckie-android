@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.onboard
 
 import android.Manifest
@@ -27,8 +34,8 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.di.repository.ProvidesModule
 import team.duckie.app.android.di.usecase.kakao.KakaoUseCaseModule
-import team.duckie.app.android.feature.datastore.PreferenceKey
-import team.duckie.app.android.feature.datastore.dataStore
+import team.duckie.app.android.core.datastore.PreferenceKey
+import team.duckie.app.android.core.datastore.dataStore
 import team.duckie.app.android.feature.home.screen.MainActivity
 import team.duckie.app.android.feature.onboard.constant.CollectInStep
 import team.duckie.app.android.feature.onboard.constant.OnboardStep

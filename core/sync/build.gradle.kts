@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-    namespace = "team.duckie.app.android.feature.messaging"
+    namespace = "team.duckie.app.android.core.sync"
 }
 
 dependencies {

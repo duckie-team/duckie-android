@@ -86,11 +86,11 @@ dependencies {
         projects.feature.notification,
         projects.feature.createProblem,
         projects.feature.detail,
-        projects.featureMessaging,
         projects.feature.profile,
         projects.feature.setting,
         projects.feature.friends,
         projects.feature.tagEdit,
+        projects.core.sync,
         projects.navigator,
     )
     debugImplementation(libs.analytics.leakcanary)

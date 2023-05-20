@@ -15,7 +15,7 @@ import team.duckie.app.android.data.auth.datasource.AuthDataSource
 import team.duckie.app.android.data.user.datasource.UserDataSource
 import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.feature.datastore.PreferenceKey
+import team.duckie.app.android.core.datastore.PreferenceKey
 import team.duckie.app.android.util.kotlin.exception.ExceptionCode.ClientMeIdNull
 import team.duckie.app.android.util.kotlin.exception.ExceptionCode.ClientMeTokenNull
 import team.duckie.app.android.util.kotlin.exception.ExceptionCode.ServerUserIdStrange

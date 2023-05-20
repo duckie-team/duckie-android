@@ -5,7 +5,14 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.datastore
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
+package team.duckie.app.android.core.datastore
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -13,6 +20,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 
 object PreferenceKey {
+    // 결국 레거시가 되어 버렸다 😂
     private const val PackageName = "team.duckie.app.android.feature.datastore"
     internal val Name = buildPreferenceKey(token = "root")
 

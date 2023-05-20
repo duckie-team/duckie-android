@@ -26,7 +26,7 @@ dependencies {
         projects.utilCompose,
         projects.utilKotlin,
         projects.utilAndroid,
-        projects.featureDatastore,
+        projects.core.datastore,
         projects.feature.home,
         projects.feature.onboard,
         projects.utilExceptionHandling,

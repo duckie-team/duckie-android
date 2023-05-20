@@ -29,7 +29,7 @@ dependencies {
         projects.utilExceptionHandling,
         projects.sharedUiCompose,
         projects.feature.search,
-        projects.featureDatastore,
+        projects.core.datastore,
         projects.feature.profile,
         projects.navigator,
         libs.orbit.viewmodel,

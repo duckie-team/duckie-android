@@ -29,7 +29,7 @@ dependencies {
         projects.utilCompose,
         projects.utilAndroid,
         projects.utilExceptionHandling,
-        projects.featureDatastore,
+        projects.core.datastore,
         projects.featurePhotopicker,
         projects.sharedUiCompose,
         libs.apache.commons.io,
