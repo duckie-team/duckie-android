@@ -26,8 +26,8 @@ import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.domain.user.model.UserStatus
 import team.duckie.app.android.feature.datastore.PreferenceKey
 import team.duckie.app.android.feature.datastore.dataStore
-import team.duckie.app.android.feature.ui.home.screen.MainActivity
-import team.duckie.app.android.feature.ui.onboard.OnboardActivity
+import team.duckie.app.android.feature.home.screen.MainActivity
+import team.duckie.app.android.feature.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
