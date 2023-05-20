@@ -38,7 +38,7 @@ import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.constants.GuideStep
 import team.duckie.app.android.feature.home.viewmodel.guide.HomeGuideViewModel
 import team.duckie.app.android.shared.ui.compose.Spacer
-import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackHeadLine1

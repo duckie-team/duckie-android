@@ -37,7 +37,7 @@ import team.duckie.app.android.shared.ui.compose.LoadingScreen
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 import team.duckie.app.android.common.android.network.NetworkUtil
-import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 
 @Composable

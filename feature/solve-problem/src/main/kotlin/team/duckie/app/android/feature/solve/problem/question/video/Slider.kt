@@ -13,7 +13,7 @@ import androidx.compose.material.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import team.duckie.app.android.util.compose.rememberNoRippleInteractionSource
+import team.duckie.app.android.common.compose.rememberNoRippleInteractionSource
 import team.duckie.quackquack.ui.color.QuackColor
 
 @Composable

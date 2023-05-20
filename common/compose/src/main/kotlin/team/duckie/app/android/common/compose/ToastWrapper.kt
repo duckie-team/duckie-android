@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.compose
+package team.duckie.app.android.common.compose
 
 import android.content.Context
 import android.widget.Toast

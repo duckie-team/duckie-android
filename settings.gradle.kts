@@ -60,6 +60,6 @@ include(
     ":shared-ui-compose",
     ":common:kotlin",
     ":common:android",
-    ":util-compose",
+    ":common:compose",
     ":plugin-ktor-client",
 )

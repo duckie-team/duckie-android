@@ -30,7 +30,7 @@ import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.skeleton
-import team.duckie.app.android.util.compose.itemsIndexedPagingKey
+import team.duckie.app.android.common.compose.itemsIndexedPagingKey
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackImage

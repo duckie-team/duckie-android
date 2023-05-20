@@ -38,7 +38,7 @@ import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.QuackMaxWidthDivider
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
-import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTitle2

@@ -25,7 +25,7 @@ dependencies {
         projects.navigator,
         projects.common.kotlin,
         projects.common.android,
-        projects.utilCompose,
+        projects.common.compose,
         projects.core.datastore,
         projects.featurePhotopicker,
         projects.sharedUiCompose,

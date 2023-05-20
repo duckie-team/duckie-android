@@ -83,10 +83,10 @@ import team.duckie.app.android.feature.create.problem.common.getCreateProblemMea
 import team.duckie.app.android.feature.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemStep
-import team.duckie.app.android.util.compose.GetHeightRatioW328H240
-import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.compose.rememberToast
-import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.GetHeightRatioW328H240
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.rememberToast
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.quackquack.ui.color.QuackColor

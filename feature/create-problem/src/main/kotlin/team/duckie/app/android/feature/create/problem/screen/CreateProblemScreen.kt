@@ -87,9 +87,9 @@ import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProb
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
-import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.compose.rememberToast
-import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.rememberToast
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.common.kotlin.takeBy

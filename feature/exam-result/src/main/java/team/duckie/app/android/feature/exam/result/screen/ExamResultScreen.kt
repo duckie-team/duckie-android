@@ -29,7 +29,7 @@ import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
-import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
 

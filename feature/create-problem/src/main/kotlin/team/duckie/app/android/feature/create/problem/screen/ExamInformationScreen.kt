@@ -60,7 +60,7 @@ import team.duckie.app.android.shared.ui.compose.DuckieGridLayout
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
-import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder

@@ -22,7 +22,7 @@ import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEff
 import team.duckie.app.android.feature.start.exam.screen.StartExamActivity
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
-import team.duckie.app.android.util.compose.ToastWrapper
+import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.kotlin.exception.DuckieResponseException

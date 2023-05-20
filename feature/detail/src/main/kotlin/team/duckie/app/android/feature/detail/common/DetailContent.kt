@@ -36,7 +36,7 @@ import coil.compose.AsyncImage
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.app.android.shared.ui.compose.DefaultProfile
-import team.duckie.app.android.util.compose.GetHeightRatioW328H240
+import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3

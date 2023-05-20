@@ -23,7 +23,7 @@ dependencies {
         libs.compose.ui.coil,
         libs.compose.ui.material,
         libs.compose.ui.accompanist.placeholder,
-        projects.utilCompose,
+        projects.common.compose,
         projects.common.kotlin,
     )
 }

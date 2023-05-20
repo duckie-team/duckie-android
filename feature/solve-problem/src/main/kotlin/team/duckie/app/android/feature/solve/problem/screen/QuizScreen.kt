@@ -58,7 +58,7 @@ import team.duckie.app.android.feature.solve.problem.question.questionSection
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
-import team.duckie.app.android.util.compose.isCurrentPage
+import team.duckie.app.android.common.compose.isCurrentPage
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 private const val QuizTopAppBarLayoutId = "QuizTopAppBar"

@@ -41,7 +41,7 @@ import team.duckie.app.android.feature.onboard.viewmodel.sideeffect.OnboardSideE
 import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.common.android.lifecycle.repeatOnCreated
 import team.duckie.app.android.common.android.network.NetworkUtil
-import team.duckie.app.android.util.compose.ToastWrapper
+import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotConnectedAccount

@@ -45,8 +45,7 @@ import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialog
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
-import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor

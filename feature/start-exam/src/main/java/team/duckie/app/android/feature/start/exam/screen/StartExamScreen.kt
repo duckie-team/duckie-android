@@ -19,7 +19,7 @@ import team.duckie.app.android.feature.start.exam.screen.exam.StartExamInputScre
 import team.duckie.app.android.feature.start.exam.screen.quiz.StartQuizInputScreen
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
-import team.duckie.app.android.util.compose.activityViewModel
+import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackTitle1
 

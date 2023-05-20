@@ -18,7 +18,7 @@ import team.duckie.app.android.feature.exam.result.screen.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultSideEffect
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.app.android.navigator.feature.home.HomeNavigator
-import team.duckie.app.android.util.compose.ToastWrapper
+import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.android.ui.BaseActivity

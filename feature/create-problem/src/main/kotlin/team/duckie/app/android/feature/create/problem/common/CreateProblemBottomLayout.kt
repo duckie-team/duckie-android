@@ -29,7 +29,7 @@ import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.util.compose.asLoose
+import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.npe
 import team.duckie.quackquack.ui.border.QuackBorder

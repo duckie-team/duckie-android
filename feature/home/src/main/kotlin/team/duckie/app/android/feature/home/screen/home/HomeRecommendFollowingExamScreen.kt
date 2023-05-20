@@ -47,8 +47,8 @@ import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.skeleton
-import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.compose.collectAndHandleState
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.collectAndHandleState
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3

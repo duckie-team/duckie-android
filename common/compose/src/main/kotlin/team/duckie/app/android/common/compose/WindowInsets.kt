@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/ApiLibrary/blob/trunk/LICENSE
  */
 
-package team.duckie.app.android.util.compose
+package team.duckie.app.android.common.compose
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets

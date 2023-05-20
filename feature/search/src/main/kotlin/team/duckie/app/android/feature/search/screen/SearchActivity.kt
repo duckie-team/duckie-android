@@ -53,9 +53,7 @@ import team.duckie.app.android.shared.ui.compose.DuckieCircularProgressIndicator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
 import team.duckie.app.android.shared.ui.compose.quack.QuackNoUnderlineTextField
-import team.duckie.app.android.util.compose.collectAndHandleState
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.compose.collectAndHandleState
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.popStringExtra
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent

@@ -40,9 +40,9 @@ import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.util.compose.activityViewModel
-import team.duckie.app.android.util.compose.asLoose
-import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.asLoose
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.kotlin.fastAny
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.fastMapIndexedNotNull

@@ -47,7 +47,7 @@ import team.duckie.app.android.shared.ui.compose.NoItemScreen
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.UserFollowingLayout
 import team.duckie.app.android.shared.ui.compose.skeleton
-import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine2

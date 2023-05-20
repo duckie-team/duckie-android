@@ -46,7 +46,7 @@ import team.duckie.app.android.feature.solve.problem.viewmodel.sideeffect.SolveP
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
-import team.duckie.app.android.util.compose.moveNextPage
+import team.duckie.app.android.common.compose.moveNextPage
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation

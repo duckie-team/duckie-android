@@ -50,7 +50,7 @@ import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.Spacer
 import team.duckie.app.android.shared.ui.compose.TextTabLayout
 import team.duckie.app.android.shared.ui.compose.skeleton
-import team.duckie.app.android.util.compose.itemsPagingKey
+import team.duckie.app.android.common.compose.itemsPagingKey
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag

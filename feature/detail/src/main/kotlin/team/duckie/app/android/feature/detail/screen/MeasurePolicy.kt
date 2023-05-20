@@ -16,7 +16,7 @@ package team.duckie.app.android.feature.detail.screen
 
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
-import team.duckie.app.android.util.compose.asLoose
+import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.npe
 

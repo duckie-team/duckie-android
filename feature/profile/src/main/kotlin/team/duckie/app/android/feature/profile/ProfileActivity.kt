@@ -33,9 +33,9 @@ import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
-import team.duckie.app.android.util.compose.LaunchOnLifecycle
-import team.duckie.app.android.util.compose.ToastWrapper
-import team.duckie.app.android.util.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.LaunchOnLifecycle
+import team.duckie.app.android.common.compose.ToastWrapper
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists

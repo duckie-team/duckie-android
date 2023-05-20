@@ -13,7 +13,7 @@ plugins {
 }
 
 android {
-    namespace = "team.duckie.app.android.util.compose"
+    namespace = "team.duckie.app.android.common.compose"
 }
 
 dependencies {

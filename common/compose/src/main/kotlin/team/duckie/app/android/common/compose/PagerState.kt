@@ -7,7 +7,7 @@
 
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package team.duckie.app.android.util.compose
+package team.duckie.app.android.common.compose
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState
