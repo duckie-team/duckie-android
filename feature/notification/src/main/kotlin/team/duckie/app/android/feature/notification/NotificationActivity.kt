@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.notification
 
 import android.os.Bundle
@@ -26,13 +33,13 @@ import team.duckie.app.android.feature.notification.screen.NotificationScreen
 import team.duckie.app.android.feature.notification.viewmodel.NotificationSideEffect
 import team.duckie.app.android.feature.notification.viewmodel.NotificationViewModel
 import team.duckie.app.android.navigator.feature.home.HomeNavigator
-import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NotificationActivity : BaseActivity() {
+class NotificationActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
 
     private val viewModel: NotificationViewModel by viewModels()
 

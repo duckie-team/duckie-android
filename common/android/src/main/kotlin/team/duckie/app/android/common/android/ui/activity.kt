@@ -7,7 +7,7 @@
 
 @file:Suppress("unused")
 
-package team.duckie.app.android.util.ui
+package team.duckie.app.android.common.android.ui
 
 import android.app.Activity
 import android.content.Intent

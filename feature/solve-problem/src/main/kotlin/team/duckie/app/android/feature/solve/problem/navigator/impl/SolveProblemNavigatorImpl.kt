@@ -11,7 +11,7 @@ import android.app.Activity
 import android.content.Intent
 import team.duckie.app.android.feature.solve.problem.SolveProblemActivity
 import team.duckie.app.android.navigator.feature.solveproblem.SolveProblemNavigator
-import team.duckie.app.android.util.ui.startActivityWithAnimation
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import javax.inject.Inject
 
 internal class SolveProblemNavigatorImpl @Inject constructor() : SolveProblemNavigator {

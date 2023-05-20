@@ -23,7 +23,6 @@ dependencies {
         projects.domain,
         projects.di,
         projects.navigator,
-        projects.utilUi,
         projects.core.datastore,
         projects.sharedUiCompose,
         projects.common.android,

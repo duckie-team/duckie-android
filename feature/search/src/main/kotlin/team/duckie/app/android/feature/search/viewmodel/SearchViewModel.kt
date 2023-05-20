@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.search.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -46,7 +53,7 @@ import team.duckie.app.android.feature.search.constants.SearchStep
 import team.duckie.app.android.feature.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.feature.search.viewmodel.state.SearchState
 import team.duckie.app.android.feature.search.viewmodel.state.toUiModel
-import team.duckie.app.android.util.ui.const.Debounce
+import team.duckie.app.android.common.android.ui.const.Debounce
 import javax.inject.Inject
 
 @HiltViewModel
@@ -93,7 +100,7 @@ internal class SearchViewModel @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     ).apply {
         intent {
-            this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
+            this@apply.debounce(team.duckie.app.android.common.android.ui.const.Debounce.SearchSecond).collectLatest { query ->
                 refreshSearchStep(keyword = state.searchKeyword)
                 // TODO(limsaehyun): 추후 추천 검색어 비즈니스 로직을 이곳에서 작업해야 함
             }

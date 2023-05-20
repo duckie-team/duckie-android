@@ -22,7 +22,7 @@ dependencies {
         platform(libs.firebase.bom),
         projects.di,
         projects.domain,
-        projects.utilUi,
+        projects.common.android,
         projects.navigator,
         projects.common.kotlin,
         projects.utilCompose,

@@ -38,7 +38,7 @@ import team.duckie.app.android.common.kotlin.copy
 import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.common.kotlin.seconds
-import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel

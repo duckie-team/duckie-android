@@ -44,9 +44,9 @@ import team.duckie.app.android.feature.profile.viewmodel.sideeffect.ProfileSideE
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileState
 import team.duckie.app.android.shared.ui.compose.DuckTestCoverItem
 import team.duckie.app.android.shared.ui.compose.dialog.DuckieSelectableType
-import team.duckie.app.android.util.ui.const.Debounce
+import team.duckie.app.android.common.android.ui.const.Debounce
 import team.duckie.app.android.common.kotlin.FriendsType
-import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel

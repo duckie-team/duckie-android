@@ -43,7 +43,7 @@ import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.domain.user.usecase.SetMeUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 import team.duckie.app.android.common.kotlin.fastMap
-import team.duckie.app.android.util.ui.const.Debounce
+import team.duckie.app.android.common.android.ui.const.Debounce
 import javax.inject.Inject
 
 private const val TagsMaximumCount = 10
@@ -71,7 +71,7 @@ internal class TagEditViewModel @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     ).apply {
         viewModelScope.launch {
-            this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
+            this@apply.debounce(team.duckie.app.android.common.android.ui.const.Debounce.SearchSecond).collectLatest { query ->
                 intent {
                     getSearchUseCase(query = query, page = 1, type = SearchType.Tags)
                         .onSuccess {

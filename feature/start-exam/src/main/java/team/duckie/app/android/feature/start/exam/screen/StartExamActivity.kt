@@ -21,9 +21,9 @@ import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamSideEffect
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
 import team.duckie.app.android.navigator.feature.solveproblem.SolveProblemNavigator
-import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.const.Extras
-import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject

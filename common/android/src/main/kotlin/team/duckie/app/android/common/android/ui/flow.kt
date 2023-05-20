@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.ui
+package team.duckie.app.android.common.android.ui
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle

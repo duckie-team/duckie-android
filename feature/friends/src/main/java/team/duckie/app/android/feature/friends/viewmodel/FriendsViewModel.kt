@@ -34,7 +34,7 @@ import team.duckie.app.android.feature.friends.viewmodel.sideeffect.FriendsSideE
 import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.common.kotlin.fastMap
-import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel

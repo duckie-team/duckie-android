@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.search.screen
 
 import android.os.Bundle
@@ -47,10 +54,10 @@ import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.constant.SharedIcon
 import team.duckie.app.android.shared.ui.compose.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.util.compose.collectAndHandleState
-import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.const.Extras
-import team.duckie.app.android.util.ui.finishWithAnimation
-import team.duckie.app.android.util.ui.popStringExtra
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.popStringExtra
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
@@ -62,7 +69,7 @@ import javax.inject.Inject
 internal val SearchHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
 @AndroidEntryPoint
-class SearchActivity : BaseActivity() {
+class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
@@ -75,7 +82,7 @@ class SearchActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        intent.popStringExtra(Extras.SearchTag)?.let { str ->
+        intent.popStringExtra(team.duckie.app.android.common.android.ui.const.Extras.SearchTag)?.let { str ->
             vm.updateSearchKeyword(
                 keyword = str,
                 debounce = false,
@@ -176,7 +183,7 @@ class SearchActivity : BaseActivity() {
                 detailNavigator.navigateFrom(
                     activity = this@SearchActivity,
                     intentBuilder = {
-                        putExtra(Extras.ExamId, sideEffect.examId)
+                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.ExamId, sideEffect.examId)
                     },
                 )
             }
@@ -185,7 +192,7 @@ class SearchActivity : BaseActivity() {
                 profileNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
-                        putExtra(Extras.UserId, sideEffect.userId)
+                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.UserId, sideEffect.userId)
                     },
                 )
             }

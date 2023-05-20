@@ -58,7 +58,6 @@ include(
     ":feature:friends",
     ":feature:tag-edit",
     ":shared-ui-compose",
-    ":util-ui",
     ":common:kotlin",
     ":common:android",
     ":util-compose",

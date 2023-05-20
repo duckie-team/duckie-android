@@ -46,9 +46,9 @@ import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
-import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.const.Extras
-import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject

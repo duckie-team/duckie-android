@@ -24,7 +24,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
-import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel

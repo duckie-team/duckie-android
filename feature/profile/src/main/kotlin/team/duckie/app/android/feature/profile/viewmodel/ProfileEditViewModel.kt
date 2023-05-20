@@ -42,8 +42,8 @@ import team.duckie.app.android.common.kotlin.MutableDebounceFlow
 import team.duckie.app.android.common.kotlin.debounceAction
 import team.duckie.app.android.common.kotlin.fastAll
 import team.duckie.app.android.common.kotlin.fastMap
-import team.duckie.app.android.util.ui.const.Debounce
-import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.common.android.ui.const.Debounce
+import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel

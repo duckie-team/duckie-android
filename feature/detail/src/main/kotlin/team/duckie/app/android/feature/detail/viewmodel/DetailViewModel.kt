@@ -40,7 +40,7 @@ import team.duckie.app.android.shared.ui.compose.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.kotlin.exception.DuckieResponseFieldNPE
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
-import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel

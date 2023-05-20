@@ -46,15 +46,15 @@ import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
 import team.duckie.app.android.shared.ui.compose.dialog.ReportDialog
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
-import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.const.Extras
-import team.duckie.app.android.util.ui.startActivityWithAnimation
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
 @AllowMagicNumber("앱 종료 시간에 대해서 매직 넘버 처리")
 @AndroidEntryPoint
-class MainActivity : BaseActivity() {
+class MainActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
 
     private var waitTime = 2000L
     private val mainViewModel: MainViewModel by viewModels()
@@ -131,7 +131,7 @@ class MainActivity : BaseActivity() {
                         profileNavigator.navigateFrom(
                             activity = this,
                             intentBuilder = {
-                                putExtra(Extras.UserId, it)
+                                putExtra(team.duckie.app.android.common.android.ui.const.Extras.UserId, it)
                             },
                         )
                     },
@@ -139,7 +139,7 @@ class MainActivity : BaseActivity() {
                         profileEditNavigator.navigateFrom(
                             activity = this,
                             intentBuilder = {
-                                putExtra(Extras.UserId, it)
+                                putExtra(team.duckie.app.android.common.android.ui.const.Extras.UserId, it)
                             },
                         )
                     },
@@ -147,7 +147,7 @@ class MainActivity : BaseActivity() {
                         tagEditNavigator.navigateFrom(
                             activity = this,
                             intentBuilder = {
-                                putExtra(Extras.UserId, it)
+                                putExtra(team.duckie.app.android.common.android.ui.const.Extras.UserId, it)
                             },
                         )
                     },
@@ -162,10 +162,10 @@ class MainActivity : BaseActivity() {
     }
 
     private fun startedGuide(intent: Intent) {
-        intent.getBooleanExtra(Extras.StartGuide, false).also { start ->
+        intent.getBooleanExtra(team.duckie.app.android.common.android.ui.const.Extras.StartGuide, false).also { start ->
             if (start) {
                 mainViewModel.updateGuideVisible(visible = true)
-                intent.removeExtra(Extras.StartGuide)
+                intent.removeExtra(team.duckie.app.android.common.android.ui.const.Extras.StartGuide)
             }
         }
     }
@@ -179,7 +179,7 @@ class MainActivity : BaseActivity() {
             is MainSideEffect.NavigateToSearch -> {
                 startActivityWithAnimation<SearchActivity>(
                     intentBuilder = {
-                        putExtra(Extras.SearchTag, sideEffect.searchTag)
+                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.SearchTag, sideEffect.searchTag)
                     },
                 )
             }
@@ -188,7 +188,7 @@ class MainActivity : BaseActivity() {
                 detailNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
-                        putExtra(Extras.ExamId, sideEffect.examId)
+                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.ExamId, sideEffect.examId)
                     },
                 )
             }
@@ -213,9 +213,9 @@ class MainActivity : BaseActivity() {
                 friendsNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
-                        putExtra(Extras.FriendType, sideEffect.friendType.index)
-                        putExtra(Extras.UserId, sideEffect.myUserId)
-                        putExtra(Extras.ProfileNickName, sideEffect.nickname)
+                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.FriendType, sideEffect.friendType.index)
+                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.UserId, sideEffect.myUserId)
+                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.ProfileNickName, sideEffect.nickname)
                     },
                 )
             }

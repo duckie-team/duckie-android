@@ -24,7 +24,6 @@ dependencies {
         projects.di,
         projects.domain,
         projects.navigator,
-        projects.utilUi,
         projects.common.kotlin,
         projects.utilCompose,
         projects.common.android,

@@ -1,3 +1,10 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.tag.edit
 
 import android.os.Bundle
@@ -13,12 +20,12 @@ import team.duckie.app.android.feature.tag.edit.screen.TagEditScreen
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditSideEffect
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditViewModel
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.util.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
-class TagEditActivity : BaseActivity() {
+class TagEditActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
     private val viewModel: TagEditViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

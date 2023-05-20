@@ -11,7 +11,7 @@ import android.app.Activity
 import android.content.Intent
 import team.duckie.app.android.feature.setting.screen.SettingActivity
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
-import team.duckie.app.android.util.ui.startActivityWithAnimation
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import javax.inject.Inject
 
 internal class SettingNavigatorImpl @Inject constructor() : SettingNavigator {

@@ -11,7 +11,7 @@ import android.app.Activity
 import android.content.Intent
 import team.duckie.app.android.feature.notification.NotificationActivity
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
-import team.duckie.app.android.util.ui.startActivityWithAnimation
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import javax.inject.Inject
 
 class NotificationNavigatorImpl @Inject constructor() : NotificationNavigator {

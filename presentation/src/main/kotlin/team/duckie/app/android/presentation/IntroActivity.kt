@@ -33,8 +33,8 @@ import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.kotlin.seconds
-import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.changeActivityWithAnimation
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 private val SplashScreenExitAnimationDurationMillis = 0.2.seconds

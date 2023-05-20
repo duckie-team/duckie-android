@@ -11,7 +11,7 @@ import android.app.Activity
 import android.content.Intent
 import team.duckie.app.android.feature.home.screen.MainActivity
 import team.duckie.app.android.navigator.feature.home.HomeNavigator
-import team.duckie.app.android.util.ui.startActivityWithAnimation
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import javax.inject.Inject
 
 internal class HomeNavigatorImpl @Inject constructor() : HomeNavigator {

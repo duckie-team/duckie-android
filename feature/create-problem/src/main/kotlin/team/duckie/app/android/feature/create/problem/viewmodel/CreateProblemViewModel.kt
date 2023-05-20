@@ -75,8 +75,8 @@ import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemE
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.common.kotlin.exception.isTagAlreadyExist
 import team.duckie.app.android.common.kotlin.fastMapIndexed
-import team.duckie.app.android.util.ui.const.Debounce
-import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.common.android.ui.const.Debounce
+import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 private const val TagsMaximumCount = 10

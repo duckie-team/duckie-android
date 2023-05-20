@@ -52,11 +52,11 @@ import team.duckie.app.android.util.compose.ToastWrapper
 import team.duckie.app.android.util.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.util.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotConnectedAccount
-import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.changeActivityWithAnimation
-import team.duckie.app.android.util.ui.collectWithLifecycle
-import team.duckie.app.android.util.ui.const.Extras
-import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
+import team.duckie.app.android.common.android.ui.collectWithLifecycle
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme

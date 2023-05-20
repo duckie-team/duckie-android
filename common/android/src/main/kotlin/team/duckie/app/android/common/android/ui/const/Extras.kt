@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.util.ui.const
+package team.duckie.app.android.common.android.ui.const
 
 /** Intent.Extra Key 값 모음 */
 object Extras {

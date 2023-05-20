@@ -22,7 +22,6 @@ dependencies {
     implementations(
         projects.di,
         projects.navigator,
-        projects.utilUi,
         projects.utilCompose,
         projects.common.kotlin,
         projects.common.android,

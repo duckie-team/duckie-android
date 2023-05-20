@@ -30,7 +30,7 @@ import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmi
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
 import team.duckie.app.android.common.android.savedstate.getOrThrow
-import team.duckie.app.android.util.ui.const.Extras
+import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel

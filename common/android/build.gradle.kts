@@ -22,5 +22,6 @@ dependencies {
         libs.ktx.lifecycle.runtime,
         libs.ktx.lifecycle.viewmodel,
         libs.compose.ui.activity,
+        libs.ui.system.controller,
     )
 }

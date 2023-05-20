@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 @file:OptIn(ExperimentalFoundationApi::class)
 
 package team.duckie.app.android.feature.solve.problem
@@ -40,9 +47,9 @@ import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.app.android.shared.ui.compose.ErrorScreen
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.moveNextPage
-import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.const.Extras
-import team.duckie.app.android.util.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject

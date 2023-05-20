@@ -5,6 +5,13 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
 package team.duckie.app.android.feature.setting.screen
 
 import android.content.Intent
@@ -39,9 +46,9 @@ import team.duckie.app.android.shared.ui.compose.dialog.DuckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.dialog.duckieDialogPosition
 import team.duckie.app.android.shared.ui.compose.quack.QuackCrossfade
 import team.duckie.app.android.util.compose.systemBarPaddings
-import team.duckie.app.android.util.ui.BaseActivity
-import team.duckie.app.android.util.ui.finishWithAnimation
-import team.duckie.app.android.util.ui.startActivityWithAnimation
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -49,7 +56,7 @@ import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingActivity : BaseActivity() {
+class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
 
     @Inject
     lateinit var introNavigator: IntroNavigator
