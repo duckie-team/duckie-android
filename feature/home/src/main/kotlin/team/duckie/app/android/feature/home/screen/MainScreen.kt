@@ -129,6 +129,7 @@ internal fun MainScreen(
                 ) {
                     composable(BottomNavigationStep.HomeScreen.name) {
                         HomeScreen(
+                            initState = mainViewModel::initState,
                             vm = homeViewModel,
                             navigateToSearch = { searchTag ->
                                 mainViewModel.navigateToSearch(searchTag)
@@ -200,6 +201,7 @@ internal fun MainScreen(
                     }
                 }
             }
+
             QuackDivider(
                 modifier = Modifier.layoutId(MainBottomNavigationDividerLayoutId),
             )

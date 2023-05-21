@@ -31,11 +31,13 @@ import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.feature.home.constants.MainScreenType
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
 @Composable
 internal fun HomeScreen(
+    initState: (MainScreenType, () -> Unit) -> Unit,
     vm: HomeViewModel,
     setReportExamId: (Int) -> Unit,
     onReport: () -> Unit,
@@ -101,6 +103,7 @@ internal fun HomeScreen(
 
                     page == HomeStep.HomeFollowingScreen -> if (state.isFollowingExist) {
                         HomeRecommendFollowingExamScreen(
+                            initState = initState,
                             modifier = Modifier.padding(HomeHorizontalPadding),
                             state = state,
                             navigateToHomeDetail = navigateToHomeDetail,
@@ -108,6 +111,7 @@ internal fun HomeScreen(
                         )
                     } else {
                         HomeRecommendFollowingScreen(
+                            initState = initState,
                             modifier = Modifier.padding(HomeHorizontalPadding),
                             navigateToCreateProblem = navigateToCreateProblem,
                         )

@@ -49,6 +49,7 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.collectAndHandleState
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -67,6 +68,7 @@ private val HomeProfileSize: DpSize = DpSize(
 
 @Composable
 internal fun HomeRecommendFollowingExamScreen(
+    initState: (MainScreenType, () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
     vm: HomeViewModel = activityViewModel(),
     state: HomeState,
@@ -77,7 +79,7 @@ internal fun HomeRecommendFollowingExamScreen(
         vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
 
     LaunchedEffect(Unit) {
-        vm.initFollowingExams()
+        initState(MainScreenType.HomeRecommendFollowingExam) { vm.initFollowingExams() }
     }
 
     val pullRefreshState = rememberPullRefreshState(
