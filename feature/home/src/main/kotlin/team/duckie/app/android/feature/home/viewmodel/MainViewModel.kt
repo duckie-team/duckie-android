@@ -20,6 +20,7 @@ import team.duckie.app.android.feature.home.constants.BottomNavigationStep
 import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,6 +30,21 @@ internal class MainViewModel @Inject constructor(
 ) : ContainerHost<MainState, MainSideEffect>, ViewModel() {
 
     override val container = container<MainState, MainSideEffect>(MainState())
+
+    // 각 화면 초기화 여부를 관리하는 Map
+    private val initStateMap: MutableMap<MainScreenType, Boolean> =
+        MainScreenType.values().associateWith { false }.toMutableMap()
+
+    /** MainScreen 에 띄워지는 화면을 초기화한다. 이미 된 경우에는 하지 않는다. */
+    fun initState(
+        mainScreenType: MainScreenType,
+        onInitStateMainScreen: () -> Unit,
+    ) {
+        if (initStateMap[mainScreenType] == false) {
+            onInitStateMainScreen()
+            initStateMap[mainScreenType] = true
+        }
+    }
 
     /**
      * 신고할 게시물의 [examId] 를 업데이트합니다.
