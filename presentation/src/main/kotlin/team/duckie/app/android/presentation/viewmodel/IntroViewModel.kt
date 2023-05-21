@@ -19,10 +19,10 @@ import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.presentation.screen.IntroDialogType
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.app.android.presentation.viewmodel.state.IntroState
-import team.duckie.app.android.util.kotlin.exception.isAppUpgradeRequire
-import team.duckie.app.android.util.kotlin.exception.isLoginRequireCode
-import team.duckie.app.android.util.kotlin.exception.isTokenExpired
-import team.duckie.app.android.util.kotlin.exception.isUserNotFound
+import team.duckie.app.android.common.kotlin.exception.isAppUpgradeRequire
+import team.duckie.app.android.common.kotlin.exception.isLoginRequireCode
+import team.duckie.app.android.common.kotlin.exception.isTokenExpired
+import team.duckie.app.android.common.kotlin.exception.isUserNotFound
 import javax.inject.Inject
 
 @HiltViewModel

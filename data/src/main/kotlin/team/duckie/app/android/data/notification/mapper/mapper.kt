@@ -11,8 +11,8 @@ import team.duckie.app.android.data._util.toDate
 import team.duckie.app.android.data.notification.model.NotificationResponse
 import team.duckie.app.android.data.notification.model.NotificationsResponse
 import team.duckie.app.android.domain.notification.model.Notification
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
 
 internal fun NotificationsResponse.toDomain() =
     notifications?.fastMap(NotificationResponse::toDomain)

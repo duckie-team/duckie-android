@@ -80,17 +80,17 @@ dependencies {
         libs.quack.ui.components, // for debug setting
         libs.logging.timber,
         projects.presentation, // for launch IntroActivity
-        projects.utilKotlin,
-        projects.featureUiExamResult,
-        projects.featureUiSolveProblem,
-        projects.featureUiNotification,
-        projects.featureUiCreateProblem,
-        projects.featureUiDetail,
-        projects.featureMessaging,
-        projects.featureUiProfile,
-        projects.featureUiSetting,
-        projects.featureUiFriends,
-        projects.featureUiTagEdit,
+        projects.feature.examResult,
+        projects.feature.solveProblem,
+        projects.feature.notification,
+        projects.feature.createProblem,
+        projects.feature.detail,
+        projects.feature.profile,
+        projects.feature.setting,
+        projects.feature.friends,
+        projects.feature.tagEdit,
+        projects.core.sync,
+        projects.common.kotlin,
         projects.navigator,
     )
     debugImplementation(libs.analytics.leakcanary)

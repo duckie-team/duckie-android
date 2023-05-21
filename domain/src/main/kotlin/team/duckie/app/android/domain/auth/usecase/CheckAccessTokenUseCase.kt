@@ -13,7 +13,7 @@ import androidx.compose.runtime.Immutable
 import javax.inject.Inject
 import team.duckie.app.android.domain.auth.model.AccessTokenValidation
 import team.duckie.app.android.domain.auth.repository.AuthRepository
-import team.duckie.app.android.util.kotlin.exception.ExceptionCode
+import team.duckie.app.android.common.kotlin.exception.ExceptionCode
 
 @Immutable
 class CheckAccessTokenUseCase @Inject constructor(private val repository: AuthRepository) {

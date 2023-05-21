@@ -23,6 +23,6 @@ dependencies {
         libs.jackson.annotation,
         libs.di.inject,
         libs.paging.common,
-        projects.utilKotlin,
+        projects.common.kotlin,
     )
 }

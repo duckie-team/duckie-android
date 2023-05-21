@@ -11,7 +11,7 @@ import androidx.compose.runtime.Immutable
 import javax.inject.Inject
 import team.duckie.app.android.domain.terms.model.Terms
 import team.duckie.app.android.domain.terms.repository.TermsRepository
-import team.duckie.app.android.util.kotlin.ExperimentalApi
+import team.duckie.app.android.common.kotlin.ExperimentalApi
 
 @Immutable
 class GetTermsUseCase @Inject constructor(

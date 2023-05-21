@@ -23,7 +23,7 @@ import team.duckie.app.android.data.quiz.model.PostQuizBody
 import team.duckie.app.android.data.quiz.model.PostQuizResponse
 import team.duckie.app.android.domain.quiz.model.Quiz
 import team.duckie.app.android.domain.quiz.model.QuizResult
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import javax.inject.Inject
 
 class QuizRemoteDataSourceImpl @Inject constructor() : QuizDataSource {

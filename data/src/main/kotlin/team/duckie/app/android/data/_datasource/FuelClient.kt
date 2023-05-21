@@ -19,7 +19,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.data.BuildConfig
-import team.duckie.app.android.util.kotlin.seconds
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.ktor.client.plugin.addDuckieAuthorizationHeaderIfNeeded
 
 private object ContentTypeValues {

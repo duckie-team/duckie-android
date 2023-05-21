@@ -12,8 +12,8 @@ import com.kakao.sdk.common.model.AuthError
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.suspendCancellableCoroutine
 import team.duckie.app.android.domain.kakao.repository.KakaoRepository
-import team.duckie.app.android.util.kotlin.exception.DuckieThirdPartyException
-import team.duckie.app.android.util.kotlin.exception.ExceptionCode
+import team.duckie.app.android.common.kotlin.exception.DuckieThirdPartyException
+import team.duckie.app.android.common.kotlin.exception.ExceptionCode
 import java.lang.ref.WeakReference
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success

@@ -14,7 +14,7 @@ import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.jsonBody
 import team.duckie.app.android.data._util.toStringJsonMap
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import javax.inject.Inject
 
 class IgnoreRemoteDataSourceImpl @Inject constructor() : IgnoreRemoteDataSource {

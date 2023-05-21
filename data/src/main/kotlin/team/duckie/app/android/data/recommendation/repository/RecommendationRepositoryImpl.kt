@@ -25,8 +25,8 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
-import team.duckie.app.android.util.kotlin.ExperimentalApi
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.ExperimentalApi
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import javax.inject.Inject
 
 class RecommendationRepositoryImpl @Inject constructor(

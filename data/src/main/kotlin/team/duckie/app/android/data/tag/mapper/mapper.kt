@@ -12,8 +12,8 @@ import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.data.tag.model.PopularTagsData
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
 
 internal fun TagData.toDomain() = Tag(
     id = id ?: duckieResponseFieldNpe("id"),

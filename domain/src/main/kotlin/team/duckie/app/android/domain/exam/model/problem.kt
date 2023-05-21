@@ -13,7 +13,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import team.duckie.app.android.util.kotlin.fastMapIndexed
+import team.duckie.app.android.common.kotlin.fastMapIndexed
 
 @Immutable
 data class Problem(
