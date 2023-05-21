@@ -42,10 +42,10 @@ import team.duckie.app.android.util.compose.systemBarPaddings
 import team.duckie.app.android.util.ui.BaseActivity
 import team.duckie.app.android.util.ui.finishWithAnimation
 import team.duckie.app.android.util.ui.startActivityWithAnimation
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.theme.QuackTheme
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -93,7 +93,7 @@ class SettingActivity : BaseActivity() {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(QuackColor.White.composeColor)
+                        .background(QuackColor.White.value)
                         .padding(systemBarPaddings),
                 ) {
                     QuackTopAppBar(
