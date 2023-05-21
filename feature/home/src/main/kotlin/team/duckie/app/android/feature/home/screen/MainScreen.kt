@@ -173,6 +173,7 @@ internal fun MainScreen(
 
                     composable(BottomNavigationStep.MyPageScreen.name) {
                         MyPageScreen(
+                            initState = mainViewModel::initState,
                             viewModel = myPageViewModel,
                             navigateToSetting = {
                                 mainViewModel.navigateToSetting()

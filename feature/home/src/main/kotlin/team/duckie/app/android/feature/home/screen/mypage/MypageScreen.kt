@@ -26,10 +26,12 @@ import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.color.QuackColor
 
 @Composable
 internal fun MyPageScreen(
+    initState: (MainScreenType, () -> Unit) -> Unit,
     navigateToSetting: () -> Unit,
     navigateToNotification: () -> Unit,
     navigateToExam: (Int) -> Unit,
@@ -43,8 +45,8 @@ internal fun MyPageScreen(
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    LaunchOnLifecycle {
-        viewModel.getUserProfile()
+    LaunchedEffect(Unit) {
+        initState(MainScreenType.MyPage) { viewModel.getUserProfile() }
     }
 
     LaunchedEffect(Unit) {
