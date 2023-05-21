@@ -21,6 +21,7 @@ dependencies {
         projects.utilKotlin,
         libs.compose.lifecycle.viewmodel,
         libs.quack.ui.components,
+        libs.quack.v2.ui,
         libs.compose.ui.activity,
         libs.paging.compose,
     )
