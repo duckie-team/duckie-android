@@ -33,11 +33,13 @@ import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.UserFollowingLayout
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.kotlin.fastForEach
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTitle2
 
 @Composable
 internal fun HomeRecommendFollowingScreen(
+    initState: (MainScreenType, () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
     vm: HomeViewModel = activityViewModel(),
     navigateToCreateProblem: () -> Unit,
@@ -45,7 +47,7 @@ internal fun HomeRecommendFollowingScreen(
     val state = vm.collectAsState().value
 
     LaunchedEffect(Unit) {
-        vm.fetchRecommendFollowing()
+        initState(MainScreenType.HomeRecommendFollowing) { vm.fetchRecommendFollowing() }
     }
 
     LazyColumn(

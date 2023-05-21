@@ -13,6 +13,7 @@
 package team.duckie.app.android.feature.home.screen.ranking
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -22,12 +23,18 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -35,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.HeadLineTopAppBar
@@ -45,12 +53,15 @@ import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.common.compose.ui.Create
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun RankingScreen(
+    initState: (MainScreenType, () -> Unit) -> Unit,
     viewModel: RankingViewModel,
     navigateToCreateProblem: () -> Unit,
     navigateToDetail: (Int) -> Unit,
@@ -71,13 +82,27 @@ internal fun RankingScreen(
     val lazyListState = rememberLazyListState()
     val lazyGridState = rememberLazyGridState()
     val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    var isPullRefresh by remember { mutableStateOf(false) }
+
+    @AllowMagicNumber
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isPullRefresh,
+        onRefresh = {
+            isPullRefresh = true
+            viewModel.refresh()
+            coroutineScope.launch {
+                delay(1000)
+                isPullRefresh = false
+            }
+        },
+    )
 
     LaunchedEffect(key1 = pagerState.currentPage) {
         viewModel.setSelectedTab(pagerState.currentPage)
     }
 
     LaunchedEffect(Unit) {
-        viewModel.refresh()
+        initState(MainScreenType.Ranking) { viewModel.refresh() }
     }
 
     LaunchedEffect(Unit) {
@@ -125,65 +150,76 @@ internal fun RankingScreen(
         },
         onReport = onReport,
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            HeadLineTopAppBar(
-                title = stringResource(id = R.string.ranking),
-                rightIcons = {
-                    QuackImage(
-                        src = QuackIcon.Create,
-                        onClick = viewModel::clickAppBarRightIcon,
-                        size = HomeIconSize,
-                    )
-                },
-            )
-
-            if (state.isError) {
-                ErrorScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .statusBarsPadding(),
-                    onRetryClick = viewModel::refresh,
-                )
-            } else {
-                QuackMainTab(
-                    titles = tabs,
-                    selectedTabIndex = state.selectedTab,
-                    onTabSelected = {
-                        viewModel.setSelectedTab(it)
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(it)
-                        }
+        Box(Modifier.pullRefresh(pullRefreshState)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+            ) {
+                HeadLineTopAppBar(
+                    title = stringResource(id = R.string.ranking),
+                    rightIcons = {
+                        QuackImage(
+                            src = QuackIcon.Create,
+                            onClick = viewModel::clickAppBarRightIcon,
+                            size = HomeIconSize,
+                        )
                     },
                 )
-                HorizontalPager(
-                    modifier = Modifier.fillMaxSize(),
-                    state = pagerState,
-                    pageCount = tabs.size,
-                    key = { tabs[it] },
-                ) { page ->
-                    when (page) {
-                        RankingPage.Examinee.index -> {
-                            ExamineeSection(
-                                viewModel = viewModel,
-                                lazyListState = lazyListState,
-                            )
-                        }
 
-                        RankingPage.Exam.index -> {
-                            ExamSection(
-                                viewModel = viewModel,
-                                lazyGridState = lazyGridState,
-                                openReportDialog = { exam ->
-                                    setReportExamId(exam)
-                                    coroutineScope.launch {
-                                        bottomSheetDialogState.show()
-                                    }
-                                },
-                            )
+                if (state.isError) {
+                    ErrorScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .statusBarsPadding(),
+                        onRetryClick = viewModel::refresh,
+                    )
+                } else {
+                    QuackMainTab(
+                        titles = tabs,
+                        selectedTabIndex = state.selectedTab,
+                        onTabSelected = {
+                            viewModel.setSelectedTab(it)
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(it)
+                            }
+                        },
+                    )
+                    HorizontalPager(
+                        modifier = Modifier.fillMaxSize(),
+                        state = pagerState,
+                        pageCount = tabs.size,
+                        key = { tabs[it] },
+                    ) { page ->
+                        when (page) {
+                            RankingPage.Examinee.index -> {
+                                ExamineeSection(
+                                    viewModel = viewModel,
+                                    lazyListState = lazyListState,
+                                )
+                            }
+
+                            RankingPage.Exam.index -> {
+                                ExamSection(
+                                    viewModel = viewModel,
+                                    lazyGridState = lazyGridState,
+                                    openReportDialog = { exam ->
+                                        setReportExamId(exam)
+                                        coroutineScope.launch {
+                                            bottomSheetDialogState.show()
+                                        }
+                                    },
+                                )
+                            }
                         }
                     }
                 }
             }
+
+            PullRefreshIndicator(
+                modifier = Modifier.align(Alignment.TopCenter),
+                refreshing = isPullRefresh,
+                state = pullRefreshState,
+            )
         }
     }
 }
