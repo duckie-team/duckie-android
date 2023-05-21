@@ -45,12 +45,14 @@ import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.common.compose.ui.Create
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun RankingScreen(
+    initState: (MainScreenType, () -> Unit) -> Unit,
     viewModel: RankingViewModel,
     navigateToCreateProblem: () -> Unit,
     navigateToDetail: (Int) -> Unit,
@@ -77,7 +79,7 @@ internal fun RankingScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.refresh()
+        initState(MainScreenType.Ranking) { viewModel.refresh() }
     }
 
     LaunchedEffect(Unit) {

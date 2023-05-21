@@ -155,6 +155,7 @@ internal fun MainScreen(
 
                     composable(BottomNavigationStep.RankingScreen.name) {
                         RankingScreen(
+                            initState = mainViewModel::initState,
                             viewModel = rankingViewModel,
                             navigateToCreateProblem = {
                                 mainViewModel.navigateToCreateProblem()
