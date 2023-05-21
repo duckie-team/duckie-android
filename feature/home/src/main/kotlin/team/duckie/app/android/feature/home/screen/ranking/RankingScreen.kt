@@ -53,6 +53,7 @@ import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.common.compose.ui.Create
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
@@ -83,6 +84,7 @@ internal fun RankingScreen(
     val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     var isPullRefresh by remember { mutableStateOf(false) }
 
+    @AllowMagicNumber
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isPullRefresh,
         onRefresh = {

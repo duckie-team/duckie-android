@@ -32,7 +32,6 @@ import team.duckie.app.android.feature.home.viewmodel.MainState
 import team.duckie.app.android.feature.home.viewmodel.MainViewModel
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
-import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.getPlaceable
 import team.duckie.app.android.common.compose.systemBarPaddings

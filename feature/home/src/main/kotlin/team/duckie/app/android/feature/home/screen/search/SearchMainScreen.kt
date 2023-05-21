@@ -41,6 +41,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.viewmodel.MainViewModel
 import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
@@ -68,6 +69,7 @@ internal fun SearchMainScreen(
         initState(MainScreenType.Search) { vm.fetchPopularTags() }
     }
 
+    @AllowMagicNumber
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isPullRefresh,
         onRefresh = {
@@ -86,7 +88,7 @@ internal fun SearchMainScreen(
                 .fillMaxSize()
                 .background(
                     color = QuackColor.White.composeColor,
-                )
+                ),
         ) {
             Row(
                 modifier = Modifier

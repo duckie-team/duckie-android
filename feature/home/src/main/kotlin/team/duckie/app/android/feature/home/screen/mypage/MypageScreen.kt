@@ -37,6 +37,7 @@ import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.feature.home.constants.MainScreenType
@@ -60,6 +61,7 @@ internal fun MyPageScreen(
     var isPullRefresh by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
+    @AllowMagicNumber
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isPullRefresh,
         onRefresh = {
