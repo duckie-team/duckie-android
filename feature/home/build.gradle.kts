@@ -34,6 +34,7 @@ dependencies {
         libs.orbit.compose,
         libs.quack.ui.components,
         libs.compose.lifecycle.runtime,
+        libs.compose.ui.navigation,
         libs.compose.ui.coil,
         libs.compose.ui.material,
         libs.firebase.crashlytics,
