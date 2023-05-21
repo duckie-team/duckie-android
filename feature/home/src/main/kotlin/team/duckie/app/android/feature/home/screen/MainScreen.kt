@@ -150,7 +150,7 @@ internal fun MainScreen(
                     }
 
                     composable(BottomNavigationStep.SearchScreen.name) {
-                        SearchMainScreen()
+                        SearchMainScreen(initState = mainViewModel::initState)
                     }
 
                     composable(BottomNavigationStep.RankingScreen.name) {

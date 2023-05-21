@@ -28,6 +28,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.viewmodel.MainViewModel
 import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackImage
@@ -42,13 +43,14 @@ private val SearchScreenHorizontalPaddingDp = 16.dp
 
 @Composable
 internal fun SearchMainScreen(
+    initState: (MainScreenType, () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
     vm: MainViewModel = activityViewModel(),
 ) {
     val state = vm.collectAsState().value
 
     LaunchedEffect(Unit) {
-        vm.fetchPopularTags()
+        initState(MainScreenType.Search) { vm.fetchPopularTags() }
     }
 
     Column(
