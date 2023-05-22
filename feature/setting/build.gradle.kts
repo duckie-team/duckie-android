@@ -40,6 +40,7 @@ dependencies {
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.quack.ui.components,
+        libs.quack.v2.ui,
         libs.compose.lifecycle.runtime,
         libs.compose.ui.accompanist.webview,
         libs.firebase.crashlytics,
