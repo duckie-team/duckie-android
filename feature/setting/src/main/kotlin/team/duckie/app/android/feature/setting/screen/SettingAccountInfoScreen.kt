@@ -29,14 +29,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSubtitle2
 
 private val KakaoColor: Color = Color(0xFFFEE500)
 
@@ -56,9 +56,10 @@ fun SettingAccountInfoScreen(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        QuackSubtitle2(
+        QuackText(
             modifier = Modifier.padding(vertical = 12.dp),
             text = stringResource(id = R.string.sign_in_account),
+            typography = QuackTypography.Subtitle2,
         )
         Row(
             modifier = Modifier
@@ -66,7 +67,10 @@ fun SettingAccountInfoScreen(
                 .height(44.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            QuackBody1(text = stringResource(id = R.string.email))
+            QuackText(
+                text = stringResource(id = R.string.email),
+                typography = QuackTypography.Body1,
+            )
             Spacer(space = 12.dp)
             Box(
                 modifier = Modifier
@@ -83,11 +87,14 @@ fun SettingAccountInfoScreen(
                 )
             }
             Spacer(space = 4.dp)
-            QuackBody1(
+            QuackText(
                 text = email,
-                color = QuackColor.Gray1,
+                    typography = QuackTypography.Body1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
         }
+
         QuackDivider(modifier = Modifier.padding(vertical = 16.dp))
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(4.dp),

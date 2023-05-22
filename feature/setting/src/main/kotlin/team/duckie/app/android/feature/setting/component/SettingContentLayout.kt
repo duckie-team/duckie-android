@@ -16,9 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackTitle2
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.modifier.quackClickable
 
 @Composable
@@ -44,27 +44,31 @@ internal fun SettingContentLayout(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         if (isBold) {
-            QuackTitle2(
+            QuackText(
                 text = title,
-                color = QuackColor.Black,
+                typography = QuackTypography.Title2,
             )
         } else {
-            QuackBody1(
+            QuackText(
                 text = title,
-                color = QuackColor.Black,
+                typography = QuackTypography.Body1,
             )
         }
         if (content != null) {
-            QuackBody1(
+            QuackText(
                 modifier = Modifier.padding(start = 12.dp),
                 text = content,
-                color = QuackColor.Gray1,
+                typography = QuackTypography.Body1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
         }
         if (trailingText != null) {
-            QuackBody1(
+            QuackText(
                 text = trailingText,
-                color = QuackColor.Gray1,
+                typography = QuackTypography.Body1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
         }
     }

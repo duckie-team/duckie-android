@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.setting.constans.SettingNotificationType
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackBody2
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.component.QuackSwitch
 
 /**
@@ -65,11 +65,16 @@ private fun SettingNotificationLayout(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
-            QuackBody1(text = title)
-            QuackBody2(
+            QuackText(
+                text = title,
+                typography = QuackTypography.Body1,
+            )
+            QuackText(
                 modifier = Modifier.padding(top = 4.dp),
                 text = description,
-                color = QuackColor.Gray1,
+                typography = QuackTypography.Body2.change(
+                    color = QuackColor.Gray1,
+                ),
             )
         }
         Spacer(modifier = Modifier.weight(1f))
