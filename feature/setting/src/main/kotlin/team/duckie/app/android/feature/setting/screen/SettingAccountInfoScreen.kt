@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
@@ -91,8 +92,7 @@ fun SettingAccountInfoScreen(
                 typography = SettingHorizontalResultTypography,
             )
         }
-
-        QuackDivider(modifier = Modifier.padding(vertical = 16.dp))
+        QuackMaxWidthDivider(modifier = Modifier.padding(vertical = 16.dp))
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
