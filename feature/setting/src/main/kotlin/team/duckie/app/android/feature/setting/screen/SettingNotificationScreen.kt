@@ -22,10 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.setting.constans.SettingNotificationType
-import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.material.QuackTypography
+import team.duckie.app.android.feature.setting.constans.SettingDesignToken
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.component.QuackSwitch
+import team.duckie.quackquack.ui.sugar.QuackBody1
 
 /**
  * 알림 설정 화면
@@ -57,7 +57,7 @@ private fun SettingNotificationLayout(
     description: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-) {
+) = with(SettingDesignToken) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,16 +65,13 @@ private fun SettingNotificationLayout(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
-            QuackText(
+            QuackBody1(
                 text = title,
-                typography = QuackTypography.Body1,
             )
             QuackText(
                 modifier = Modifier.padding(top = 4.dp),
                 text = description,
-                typography = QuackTypography.Body2.change(
-                    color = QuackColor.Gray1,
-                ),
+                typography = SettingVerticalResultTypography,
             )
         }
         Spacer(modifier = Modifier.weight(1f))

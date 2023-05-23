@@ -32,11 +32,12 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
-import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.material.QuackTypography
+import team.duckie.app.android.feature.setting.constans.SettingDesignToken
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.component.QuackDivider
+import team.duckie.quackquack.ui.sugar.QuackBody1
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 private val KakaoColor: Color = Color(0xFFFEE500)
 
@@ -45,7 +46,7 @@ fun SettingAccountInfoScreen(
     email: String,
     onClickLogOut: () -> Unit,
     onClickWithdraw: () -> Unit,
-) {
+) = with(SettingDesignToken) {
     val rememberAccountInfoItems: ImmutableList<Pair<Int, () -> Unit>> = remember {
         persistentListOf(
             R.string.log_out to onClickLogOut,
@@ -56,10 +57,9 @@ fun SettingAccountInfoScreen(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        QuackText(
+        QuackSubtitle2(
             modifier = Modifier.padding(vertical = 12.dp),
             text = stringResource(id = R.string.sign_in_account),
-            typography = QuackTypography.Subtitle2,
         )
         Row(
             modifier = Modifier
@@ -67,9 +67,8 @@ fun SettingAccountInfoScreen(
                 .height(44.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            QuackText(
+            QuackBody1(
                 text = stringResource(id = R.string.email),
-                typography = QuackTypography.Body1,
             )
             Spacer(space = 12.dp)
             Box(
@@ -89,9 +88,7 @@ fun SettingAccountInfoScreen(
             Spacer(space = 4.dp)
             QuackText(
                 text = email,
-                    typography = QuackTypography.Body1.change(
-                    color = QuackColor.Gray1,
-                ),
+                typography = SettingHorizontalResultTypography,
             )
         }
 

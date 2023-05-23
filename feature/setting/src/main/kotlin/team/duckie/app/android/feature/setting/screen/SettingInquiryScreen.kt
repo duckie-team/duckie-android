@@ -22,8 +22,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
-import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 /**
  * 덕키 공식 이메일
@@ -47,10 +46,9 @@ fun SettingInquiryScreen() {
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        QuackText(
+        QuackSubtitle2(
             modifier = Modifier.padding(vertical = 12.dp),
             text = stringResource(id = R.string.contact_inquiry),
-            typography = QuackTypography.Subtitle2,
         )
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(4.dp),
