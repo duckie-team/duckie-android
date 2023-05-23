@@ -21,7 +21,7 @@ import team.duckie.quackquack.ui.component.QuackDivider
  */
 @Composable
 fun QuackMaxWidthDivider(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current

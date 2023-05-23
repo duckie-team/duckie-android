@@ -36,7 +36,6 @@ import team.duckie.app.android.feature.setting.component.SettingContentLayout
 import team.duckie.app.android.feature.setting.constans.SettingDesignToken
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
