@@ -60,13 +60,13 @@ internal fun SettingWithdrawScreen(
     }
 
     LazyColumn(
-        modifier = Modifier.imePadding()
+        modifier = Modifier.imePadding(),
     ) {
         item {
             QuackImage(src = R.drawable.ic_sign_out_character)
             QuackHeadLine2(
                 modifier = Modifier.padding(top = 4.dp),
-                text = stringResource(id = R.string.withdraw_check_msg, nickname)
+                text = stringResource(id = R.string.withdraw_check_msg, nickname),
             )
             QuackBody1(
                 modifier = Modifier.padding(top = 4.dp),
@@ -96,6 +96,7 @@ internal fun SettingWithdrawScreen(
                 QuackReviewTextArea(
                     modifier = Modifier
                         .padding(top = 4.dp)
+                        .height(140.dp)
                         .focusRequester(focusRequester = focusRequester)
                         .onFocusChanged { state ->
                             vm.updateWithDrawFocus(state.isFocused)
@@ -106,8 +107,9 @@ internal fun SettingWithdrawScreen(
                     },
                     focused = state.withdrawIsFocused,
                     placeholderText = stringResource(
+                        // TODO(limsaehyun): placeholder의 maxline을 설정할 수 있어야 함
                         id = R.string.withdraw_others_text_field_hint,
-                    )
+                    ),
                 )
             }
         }
@@ -116,7 +118,7 @@ internal fun SettingWithdrawScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp)
-                    .padding(horizontal = 4.dp, vertical = 12.dp)
+                    .padding(horizontal = 4.dp, vertical = 12.dp),
             ) {
                 val buttonModifier = Modifier
                     .weight(1f)
@@ -133,9 +135,9 @@ internal fun SettingWithdrawScreen(
                     modifier = buttonModifier,
                     type = QuackLargeButtonType.Fill,
                     text = stringResource(id = R.string.withdraw),
-                    enabled = state.withdrawReasonSelected != Withdraweason.INITIAL
+                    enabled = state.withdrawReasonSelected != Withdraweason.INITIAL,
                 ) {
-                    // 버튼 클릭 시 실행될 동작
+                    vm.changeWithdrawDialogVisible(true)
                 }
             }
         }
@@ -170,7 +172,7 @@ internal fun SettingCheckBox(
                 horizontal = 12.dp,
                 vertical = 14.dp,
             ),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         QuackRoundCheckBox(checked = visible)
         Spacer(space = 10.dp)
