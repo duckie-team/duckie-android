@@ -23,6 +23,8 @@ import team.duckie.app.android.feature.setting.viewmodel.sideeffect.SettingSideE
 import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
 import javax.inject.Inject
 
+private const val WithdrawCommingSoonMessage: String = "회원탈퇴는 아직 준비중인 기능입니다."
+
 @HiltViewModel
 internal class SettingViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
@@ -62,6 +64,10 @@ internal class SettingViewModel @Inject constructor(
         reduce { state.copy(logoutDialogVisible = visible) }
     }
 
+    fun changeWithdrawDialogVisible(visible: Boolean) = intent {
+        reduce { state.copy(withdrawDialogVisible = visible) }
+    }
+
     fun logout() = intent {
         clearTokenUseCase()
             .onSuccess {
@@ -72,17 +78,25 @@ internal class SettingViewModel @Inject constructor(
             }
     }
 
+    fun withdraw() = intent { // TODO(limsaehyun): 회원탈퇴 로직 구현해야 함
+        postSideEffect(SettingSideEffect.ShowToast(WithdrawCommingSoonMessage))
+        changeWithdrawDialogVisible(visible = false)
+    }
+
     fun navigateBack() = intent {
         when (state.settingType) {
             SettingType.Main -> {
                 postSideEffect(SettingSideEffect.NavigateBack)
             }
+
             SettingType.WithDraw -> {
                 navigateStep(step = SettingType.AccountInfo)
             }
+
             in policyPages -> {
                 navigateStep(step = SettingType.MainPolicy)
             }
+
             else -> {
                 navigateStep(step = SettingType.Main)
             }

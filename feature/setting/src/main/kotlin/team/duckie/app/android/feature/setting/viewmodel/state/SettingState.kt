@@ -16,6 +16,7 @@ internal data class SettingState(
     val settingType: SettingType = SettingType.Main,
 
     val logoutDialogVisible: Boolean = false,
+    val withdrawDialogVisible: Boolean = false,
 
     // 회원탈퇴 관련
     val withdrawReasonSelected: Withdraweason = Withdraweason.INITIAL,

@@ -20,6 +20,8 @@
     <string name="log_out">로그아웃</string>
     <string name="withdraw">탈퇴하기</string>
     <string name="log_out_check_message">앗, 정말 로그아웃 하시겠어요?</string>
+    <string name="withdraw_check_message">정말 탈퇴하시겠어요?</string>
+    <string name="withdraw_cancel">안 할래요</string>
 
     <string name="sign_in_account">로그인 계정</string>
     <string name="email">이메일</string>
@@ -38,8 +40,7 @@
     <string name="withdraw_new_account_registration">새 계정으로 가입하려구요.</string>
     <string name="withdraw_others">기타</string>
     <string name="withdraw_others_text_field_hint">어떤 점이 불편하셨나요?\n다시 덕키를 방문했을 때, 더 나은 덕키가 될 수 있도록 노력할게요!</string>
-
-    <string name="withdraw_cancel_msg">조금 더 이용하기.</string>
+    <string name="withdraw_cancel_msg">조금 더 이용하기</string>
 
     <!--  앱 알림 설정  -->
     <string name="setting_notification_exam_review">덕력고사 검토</string>

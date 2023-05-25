@@ -21,4 +21,6 @@ sealed class SettingSideEffect {
     object NavigateOssLicense : SettingSideEffect()
 
     object NavigateIntro : SettingSideEffect()
+
+    class ShowToast(val message: String) : SettingSideEffect()
 }

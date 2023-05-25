@@ -16,6 +16,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -41,6 +42,8 @@ import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.startActivityWithAnimation
+import team.duckie.app.android.common.compose.ToastWrapper
+import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -72,22 +75,7 @@ class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity()
             val state = vm.collectAsState().value
 
             QuackTheme {
-                DuckieDialog(
-                    modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
-                    title = stringResource(id = R.string.log_out_check_message),
-                    leftButtonText = stringResource(id = R.string.cancel),
-                    leftButtonOnClick = {
-                        vm.changeLogoutDialogVisible(false)
-                    },
-                    rightButtonText = stringResource(id = R.string.log_out),
-                    rightButtonOnClick = {
-                        vm.logout()
-                    },
-                    visible = state.logoutDialogVisible,
-                    onDismissRequest = {
-                        vm.changeLogoutDialogVisible(false)
-                    },
-                )
+                SettingDialog(state = state)
 
                 Column(
                     modifier = Modifier
@@ -144,6 +132,7 @@ class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity()
                                     vm = vm,
                                     state = state,
                                 )
+
                                 else -> Unit
                             }
                         }
@@ -151,6 +140,43 @@ class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity()
                 }
             }
         }
+    }
+
+    @Composable
+    private fun SettingDialog(
+        state: SettingState,
+    ) {
+        DuckieDialog(
+            modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
+            title = stringResource(id = R.string.log_out_check_message),
+            leftButtonText = stringResource(id = R.string.cancel),
+            leftButtonOnClick = {
+                vm.changeLogoutDialogVisible(false)
+            },
+            rightButtonText = stringResource(id = R.string.log_out),
+            rightButtonOnClick = {
+                vm.logout()
+            },
+            visible = state.logoutDialogVisible,
+            onDismissRequest = {
+                vm.changeLogoutDialogVisible(false)
+            },
+        )
+
+        DuckieDialog(
+            modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
+            title = stringResource(id = R.string.withdraw_check_message),
+            leftButtonText = stringResource(id = R.string.withdraw_cancel_msg),
+            leftButtonOnClick = {
+                vm.changeWithdrawDialogVisible(false)
+            },
+            rightButtonText = stringResource(id = R.string.withdraw),
+            rightButtonOnClick = vm::withdraw,
+            visible = state.withdrawDialogVisible,
+            onDismissRequest = {
+                vm.changeWithdrawDialogVisible(false)
+            },
+        )
     }
 
     private fun handleSideEffect(sideEffect: SettingSideEffect) {
@@ -174,6 +200,10 @@ class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity()
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     },
                 )
+            }
+
+            is SettingSideEffect.ShowToast -> {
+                ToastWrapper(context = applicationContext).invoke(sideEffect.message)
             }
         }
     }

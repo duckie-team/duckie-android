@@ -20,27 +20,27 @@ internal enum class Withdraweason(
 
     /** 원하는 콘텐츠가 별로 없어요. */
     LACK_OF_CONTENT(
-        description = R.string.withdraw_lack_of_content
+        description = R.string.withdraw_lack_of_content,
     ),
 
     /** 자주 사용하지 않는 앱이에요. */
     INFREQUENT_USE(
-        description = R.string.withdraw_infrequent_use
+        description = R.string.withdraw_infrequent_use,
     ),
 
     /** 잦은 오류가 발생해서 쓸 수가 없어요. */
     FREQUENT_ERRORS(
-        description = R.string.withdraw_frequent_errors
+        description = R.string.withdraw_frequent_errors,
     ),
 
     /** 새 계정으로 가입하려구요. */
     NEW_ACCOUNT_REGISTRATION(
-        description = R.string.withdraw_new_account_registration
+        description = R.string.withdraw_new_account_registration,
     ),
 
     /** 기타 */
     OTHERS(
-        description = R.string.withdraw_others
+        description = R.string.withdraw_others,
     ),
     ;
 
