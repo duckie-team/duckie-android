@@ -9,10 +9,16 @@ package team.duckie.app.android.feature.setting.viewmodel.state
 
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.setting.constans.SettingType
+import team.duckie.app.android.feature.setting.constans.Withdraweason
 
-data class SettingState(
+internal data class SettingState(
     val me: User? = null,
     val settingType: SettingType = SettingType.Main,
 
     val logoutDialogVisible: Boolean = false,
+
+    // 회원탈퇴 관련
+    val withdrawReasonSelected: Withdraweason = Withdraweason.INITIAL,
+    val withdrawUserInputReason: String = "",
+    val withdrawIsFocused: Boolean = false,
 )

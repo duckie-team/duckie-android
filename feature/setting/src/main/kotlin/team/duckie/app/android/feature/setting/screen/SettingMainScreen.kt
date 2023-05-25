@@ -16,7 +16,7 @@ import team.duckie.app.android.feature.setting.constans.SettingType
 import team.duckie.app.android.feature.setting.viewmodel.SettingViewModel
 
 @Composable
-fun SettingMainScreen(
+internal fun SettingMainScreen(
     vm: SettingViewModel,
     version: String,
 ) {
