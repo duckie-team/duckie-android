@@ -140,7 +140,10 @@ class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity()
 
                                 SettingType.PrivacyPolicy -> SettingPrivacyPolicy()
                                 SettingType.TermsOfService -> SettingTermsOfServiceScreen()
-                                SettingType.WithDraw -> SettingWithdrawScreen()
+                                SettingType.WithDraw -> SettingWithdrawScreen(
+                                    vm = vm,
+                                    state = state,
+                                )
                                 else -> Unit
                             }
                         }

@@ -27,6 +27,20 @@
     <string name="instagram">인스타그램</string>
     <string name="cancel">취소</string>
 
+    <string name="withdraw_check_msg">정말 탈퇴하시겠어요?\n%s님과 이별하려니 너무 아쉬워요..</string>
+    <string name="withdraw_privacy_msg">계정을 삭제하면 개인정보 및 출제한 덕력고사, 관심 등 모든 활동 정보가 삭제돼요.</string>
+
+    <!-- 회원 탈퇴 사유 -->
+    <string name="withdraw_reason_msg">탈퇴하시려는 이유가 무엇인지 궁금해요.</string>
+    <string name="withdraw_lack_of_content">원하는 콘텐츠가 별로 없어요.</string>
+    <string name="withdraw_infrequent_use">자주 사용하지 않는 앱이에요.</string>
+    <string name="withdraw_frequent_errors">잦은 오류가 발생해서 쓸 수가 없어요.</string>
+    <string name="withdraw_new_account_registration">새 계정으로 가입하려구요.</string>
+    <string name="withdraw_others">기타</string>
+    <string name="withdraw_others_text_field_hint">어떤 점이 불편하셨나요?\n다시 덕키를 방문했을 때, 더 나은 덕키가 될 수 있도록 노력할게요!</string>
+
+    <string name="withdraw_cancel_msg">조금 더 이용하기.</string>
+
     <!--  앱 알림 설정  -->
     <string name="setting_notification_exam_review">덕력고사 검토</string>
     <string name="setting_notification_exam_like">덕력고사 좋아요</string>
