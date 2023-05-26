@@ -131,6 +131,9 @@ internal class ProfileViewModel @Inject constructor(
 
     fun ignore(targetId: Int) = intent {
         ignoreUseCase(targetId)
+            .onSuccess {
+                postSideEffect(ProfileSideEffect.NavigateToBack)
+            }
             .onFailure { exception ->
                 postSideEffect(ProfileSideEffect.ReportError(exception))
             }
