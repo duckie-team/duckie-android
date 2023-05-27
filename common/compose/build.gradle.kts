@@ -21,6 +21,7 @@ dependencies {
         projects.common.kotlin,
         libs.compose.lifecycle.viewmodel,
         libs.quack.ui.components,
+        libs.quack.v2.ui,
         libs.compose.ui.activity,
         libs.compose.ui.material,
         libs.compose.ui.camposer,
