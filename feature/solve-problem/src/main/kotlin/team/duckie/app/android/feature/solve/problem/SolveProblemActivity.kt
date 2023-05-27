@@ -111,7 +111,6 @@ class SolveProblemActivity : BaseActivity() {
                                 false -> SolveProblemScreen(
                                     state = state,
                                     pagerState = pagerState,
-                                    inputAnswer = viewModel::inputAnswer,
                                     stopExam = viewModel::stopExam,
                                     finishExam = viewModel::finishExam,
                                 )

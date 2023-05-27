@@ -32,7 +32,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -53,6 +52,7 @@ import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProble
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.isCurrentPage
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.quackquack.ui.component.QuackHeadLine1
 
 private const val QuizTopAppBarLayoutId = "QuizTopAppBar"
 private const val QuizContentLayoutId = "QuizContent"
@@ -171,17 +171,13 @@ private fun ContentSection(
     ) { pageIndex ->
         val problem = state.quizProblems[pageIndex]
 
-        val focusRequester = remember { FocusRequester() }
-        val requestFocus by remember { derivedStateOf { pagerState.isCurrentPage(pageIndex) } }
+        val requestFocus by remember(key1 = pagerState.currentPage) {
+            derivedStateOf { pagerState.isCurrentPage(pageIndex) }
+        }
 
         LaunchedEffect(key1 = requestFocus) {
-            if (requestFocus) {
-                if (problem.isSubjective()) {
-                    focusRequester.requestFocus()
-                    keyboardController?.show()
-                } else {
-                    keyboardController?.hide()
-                }
+            if (!problem.isSubjective()) {
+                keyboardController?.hide()
             }
         }
 
@@ -210,7 +206,7 @@ private fun ContentSection(
                 },
                 inputAnswers = inputAnswers,
                 updateInputAnswers = updateInputAnswers,
-                focusRequester = focusRequester,
+                requestFocus = requestFocus,
                 keyboardController = keyboardController,
             )
         }
