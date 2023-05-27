@@ -192,17 +192,13 @@ private fun ContentSection(
     ) { pageIndex ->
         val problem = state.quizProblems[pageIndex]
 
-        val focusRequester = remember { FocusRequester() }
-        val requestFocus by remember { derivedStateOf { pagerState.isCurrentPage(pageIndex) } }
+        val requestFocus by remember(key1 = pagerState.currentPage) {
+            derivedStateOf { pagerState.isCurrentPage(pageIndex) }
+        }
 
         LaunchedEffect(key1 = requestFocus) {
-            if (requestFocus) {
-                if (problem.isSubjective()) {
-                    focusRequester.requestFocus()
-                    keyboardController?.show()
-                } else {
-                    keyboardController?.hide()
-                }
+            if (!problem.isSubjective()) {
+                keyboardController?.hide()
             }
         }
 
@@ -212,7 +208,7 @@ private fun ContentSection(
                 pageIndex = pageIndex,
                 inputAnswers = inputAnswers,
                 updateInputAnswers = updateInputAnswers,
-                focusRequester = focusRequester,
+                requestFocus = requestFocus,
                 keyboardController = keyboardController,
             )
             else -> LazyColumn(

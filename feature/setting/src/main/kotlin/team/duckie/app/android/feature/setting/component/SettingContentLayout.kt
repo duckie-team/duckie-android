@@ -16,10 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackTitle2
+import team.duckie.app.android.feature.setting.constans.SettingDesignToken
+import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.ui.sugar.QuackBody1
+import team.duckie.quackquack.ui.sugar.QuackTitle2
 
 @Composable
 internal fun SettingContentLayout(
@@ -28,7 +29,7 @@ internal fun SettingContentLayout(
     trailingText: String? = null,
     isBold: Boolean,
     onClick: (() -> Unit)? = null,
-) {
+) = with(SettingDesignToken) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,25 +47,23 @@ internal fun SettingContentLayout(
         if (isBold) {
             QuackTitle2(
                 text = title,
-                color = QuackColor.Black,
             )
         } else {
             QuackBody1(
                 text = title,
-                color = QuackColor.Black,
             )
         }
         if (content != null) {
-            QuackBody1(
+            QuackText(
                 modifier = Modifier.padding(start = 12.dp),
                 text = content,
-                color = QuackColor.Gray1,
+                typography = SettingHorizontalResultTypography,
             )
         }
         if (trailingText != null) {
-            QuackBody1(
+            QuackText(
                 text = trailingText,
-                color = QuackColor.Gray1,
+                typography = SettingHorizontalResultTypography,
             )
         }
     }

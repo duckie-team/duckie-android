@@ -29,14 +29,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSubtitle2
+import team.duckie.app.android.feature.setting.constans.SettingDesignToken
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackBody1
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 private val KakaoColor: Color = Color(0xFFFEE500)
 
@@ -45,7 +46,7 @@ fun SettingAccountInfoScreen(
     email: String,
     onClickLogOut: () -> Unit,
     onClickWithdraw: () -> Unit,
-) {
+) = with(SettingDesignToken) {
     val rememberAccountInfoItems: ImmutableList<Pair<Int, () -> Unit>> = remember {
         persistentListOf(
             R.string.log_out to onClickLogOut,
@@ -66,7 +67,9 @@ fun SettingAccountInfoScreen(
                 .height(44.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            QuackBody1(text = stringResource(id = R.string.email))
+            QuackBody1(
+                text = stringResource(id = R.string.email),
+            )
             Spacer(space = 12.dp)
             Box(
                 modifier = Modifier
@@ -83,12 +86,12 @@ fun SettingAccountInfoScreen(
                 )
             }
             Spacer(space = 4.dp)
-            QuackBody1(
+            QuackText(
                 text = email,
-                color = QuackColor.Gray1,
+                typography = SettingHorizontalResultTypography,
             )
         }
-        QuackDivider(modifier = Modifier.padding(vertical = 16.dp))
+        QuackMaxWidthDivider(modifier = Modifier.padding(vertical = 16.dp))
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
