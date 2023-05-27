@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.Answer
@@ -49,6 +50,7 @@ import team.duckie.app.android.common.compose.isCurrentPage
 import team.duckie.app.android.common.compose.moveNextPage
 import team.duckie.app.android.common.compose.movePrevPage
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.quackquack.ui.component.QuackHeadLine1
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
@@ -59,7 +61,7 @@ private const val SolveProblemBottomBarLayoutId = "SolveProblemBottomBar"
 internal fun SolveProblemScreen(
     state: SolveProblemState,
     stopExam: () -> Unit,
-    finishExam: () -> Unit,
+    finishExam: (List<String>) -> Unit,
     pagerState: PagerState,
 ) {
     val totalPage = remember { state.totalPage }
@@ -68,7 +70,6 @@ internal fun SolveProblemScreen(
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
 
-    // TODO(limsaehyun): inputAnswers를 제출할 때 Intent 해주는 로직 추가 작업 필요
     val inputAnswers = remember {
         mutableStateListOf(
             elements = Array(
@@ -97,7 +98,9 @@ internal fun SolveProblemScreen(
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { examSubmitDialogVisible = false },
         rightButtonText = stringResource(id = R.string.submit),
-        rightButtonOnClick = finishExam,
+        rightButtonOnClick = {
+            finishExam(inputAnswers.map { it.answer }.toImmutableList())
+        },
         visible = examSubmitDialogVisible,
         onDismissRequest = { examSubmitDialogVisible = false },
     )
