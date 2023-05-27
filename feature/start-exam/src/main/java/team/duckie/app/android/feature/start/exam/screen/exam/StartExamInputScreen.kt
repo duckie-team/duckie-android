@@ -68,7 +68,7 @@ internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 start = 16.dp,
                 end = 16.dp,
             ),
-            text = stringResource(id = R.string.information_before_title),
+            text = stringResource(id = R.string.start_exam_title),
         )
 
         // 필적 확인 문구 TextField
@@ -93,7 +93,7 @@ internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 horizontal = 16.dp,
             ),
             type = QuackLargeButtonType.Fill,
-            text = stringResource(id = R.string.start_button),
+            text = stringResource(id = R.string.start_exam_start_button),
             enabled = viewModel.startExamValidate(),
             onClick = viewModel::startSolveProblem,
         )

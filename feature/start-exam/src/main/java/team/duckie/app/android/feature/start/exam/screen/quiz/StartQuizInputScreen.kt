@@ -72,7 +72,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
             )
             QuackTitle2(
                 modifier = Modifier.padding(top = 34.dp),
-                text = stringResource(id = R.string.challenge_condition),
+                text = stringResource(id = R.string.start_exam_challenge_condition),
             )
             Spacer(space = 4.dp)
             QuackHeadLine1(
@@ -93,7 +93,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 horizontal = 16.dp,
             ),
             type = QuackLargeButtonType.Fill,
-            text = stringResource(id = R.string.start_button),
+            text = stringResource(id = R.string.start_exam_start_button),
             enabled = viewModel.startExamValidate(),
             onClick = viewModel::startSolveProblem,
         )
@@ -113,12 +113,12 @@ internal fun InfoBox(
             .clip(RoundedCornerShape(8.dp)),
         verticalArrangement = Arrangement.Center,
     ) {
-        QuackTitle2(text = stringResource(id = R.string.information_before_quiz_title))
+        QuackTitle2(text = stringResource(id = R.string.start_exam_information_before_quiz_title))
         Spacer(space = 4.dp)
-        QuackBody2(text = stringResource(id = R.string.information_before_quiz_line1))
+        QuackBody2(text = stringResource(id = R.string.start_exam_information_before_quiz_line1))
         QuackText(
             annotatedText = buildAnnotatedString {
-                append(stringResource(id = R.string.information_before_quiz_line2_prefix))
+                append(stringResource(id = R.string.start_exam_information_before_quiz_line2_prefix))
                 withStyle(
                     SpanStyle(
                         color = QuackColor.Black.composeColor,
@@ -127,12 +127,14 @@ internal fun InfoBox(
                 ) {
                     append(
                         stringResource(
-                            id = R.string.information_before_quiz_line2_infix,
+                            id = R.string.start_exam_information_before_quiz_line2_infix,
                             limitTime.toString(),
                         ),
                     )
                 }
-                append(stringResource(id = R.string.information_before_quiz_line2_postfix))
+                append(
+                    stringResource(id = R.string.start_exam_information_before_quiz_line2_postfix),
+                )
             },
             style = QuackTextStyle.Body2,
         )
