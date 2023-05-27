@@ -50,7 +50,6 @@ import team.duckie.app.android.common.compose.isCurrentPage
 import team.duckie.app.android.common.compose.moveNextPage
 import team.duckie.app.android.common.compose.movePrevPage
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.quackquack.ui.component.QuackHeadLine1
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"

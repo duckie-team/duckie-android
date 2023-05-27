@@ -139,7 +139,7 @@ internal class SolveProblemViewModel @Inject constructor(
     }
 
     fun updateInputAnswer(
-        inputAnswer: ImmutableList<InputAnswer>
+        inputAnswer: ImmutableList<InputAnswer>,
     ) = intent {
         reduce {
             state.copy(inputAnswers = inputAnswer)
