@@ -7,15 +7,21 @@
 
 package team.duckie.app.android.feature.exam.result.screen.quiz
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -23,6 +29,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
 import team.duckie.app.android.feature.exam.result.R
@@ -46,10 +53,19 @@ internal fun QuizResultContent(
             .fillMaxSize()
             .padding(all = 16.dp),
     ) {
-        QuackImage(
-            modifier = Modifier.fillMaxWidth(),
-            src = resultImageUrl,
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(GetHeightRatioW328H240)
+                .clip(RoundedCornerShape(8.dp))
+                .background(QuackColor.Black.composeColor),
+            contentAlignment = Alignment.Center,
+        ) {
+            QuackImage(
+                src = resultImageUrl,
+                contentScale = ContentScale.Inside,
+            )
+        }
         // TODO(EvergreenTree97) : 시험 결과지 스펙에 맞게 수정 및 문구 출력
         Spacer(space = 28.dp)
         QuackDivider()
