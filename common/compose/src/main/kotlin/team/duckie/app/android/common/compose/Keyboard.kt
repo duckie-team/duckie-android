@@ -15,11 +15,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalView
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 
 /**
  * 키보드의 Show/Hide 상태를 가져온다.
  * @return 키보드의 visible 상태
  */
+@AllowMagicNumber("keyboard visible 상태 계산")
 @Composable
 fun rememberKeyboardVisible(
     initialKeyboardState: Boolean = false,

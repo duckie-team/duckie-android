@@ -16,6 +16,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,6 +43,8 @@ import team.duckie.app.android.feature.setting.constans.SettingType
 import team.duckie.app.android.feature.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.setting.viewmodel.sideeffect.SettingSideEffect
 import team.duckie.app.android.navigator.feature.intro.IntroNavigator
+import team.duckie.app.android.common.compose.ToastWrapper
+import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.theme.QuackTheme
 import team.duckie.quackquack.ui.component.QuackTopAppBar
@@ -73,22 +76,7 @@ class SettingActivity : BaseActivity() {
             val state = vm.collectAsState().value
 
             QuackTheme {
-                DuckieDialog(
-                    modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
-                    title = stringResource(id = R.string.log_out_check_message),
-                    leftButtonText = stringResource(id = R.string.cancel),
-                    leftButtonOnClick = {
-                        vm.changeLogoutDialogVisible(false)
-                    },
-                    rightButtonText = stringResource(id = R.string.log_out),
-                    rightButtonOnClick = {
-                        vm.logout()
-                    },
-                    visible = state.logoutDialogVisible,
-                    onDismissRequest = {
-                        vm.changeLogoutDialogVisible(false)
-                    },
-                )
+                SettingDialog(state = state)
 
                 Column(
                     modifier = Modifier
@@ -141,7 +129,11 @@ class SettingActivity : BaseActivity() {
 
                                 SettingType.PrivacyPolicy -> SettingPrivacyPolicy()
                                 SettingType.TermsOfService -> SettingTermsOfServiceScreen()
-                                SettingType.WithDraw -> SettingWithdrawScreen()
+                                SettingType.WithDraw -> SettingWithdrawScreen(
+                                    vm = vm,
+                                    state = state,
+                                )
+
                                 else -> Unit
                             }
                         }
@@ -149,6 +141,45 @@ class SettingActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    @Composable
+    private fun SettingDialog(
+        state: SettingState,
+    ) {
+        // 로그아웃 확인 목적의 Dialog
+        DuckieDialog(
+            modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
+            title = stringResource(id = R.string.log_out_check_message),
+            leftButtonText = stringResource(id = R.string.cancel),
+            leftButtonOnClick = {
+                vm.changeLogoutDialogVisible(false)
+            },
+            rightButtonText = stringResource(id = R.string.log_out),
+            rightButtonOnClick = {
+                vm.logout()
+            },
+            visible = state.logoutDialogVisible,
+            onDismissRequest = {
+                vm.changeLogoutDialogVisible(false)
+            },
+        )
+
+        // 회원탈퇴 확인 목적의 Dialog
+        DuckieDialog(
+            modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
+            title = stringResource(id = R.string.withdraw_check_message),
+            leftButtonText = stringResource(id = R.string.withdraw_cancel_msg),
+            leftButtonOnClick = {
+                vm.changeWithdrawDialogVisible(false)
+            },
+            rightButtonText = stringResource(id = R.string.withdraw),
+            rightButtonOnClick = vm::withdraw,
+            visible = state.withdrawDialogVisible,
+            onDismissRequest = {
+                vm.changeWithdrawDialogVisible(false)
+            },
+        )
     }
 
     private fun handleSideEffect(sideEffect: SettingSideEffect) {
@@ -172,6 +203,10 @@ class SettingActivity : BaseActivity() {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     },
                 )
+            }
+
+            is SettingSideEffect.ShowToast -> {
+                ToastWrapper(context = applicationContext).invoke(sideEffect.message)
             }
         }
     }

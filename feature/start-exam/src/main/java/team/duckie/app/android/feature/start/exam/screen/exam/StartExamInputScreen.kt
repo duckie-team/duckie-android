@@ -68,7 +68,7 @@ internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 start = 16.dp,
                 end = 16.dp,
             ),
-            text = stringResource(id = R.string.title),
+            text = stringResource(id = R.string.information_before_title),
         )
 
         // 필적 확인 문구 TextField
