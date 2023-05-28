@@ -18,12 +18,15 @@ import team.duckie.app.android.domain.auth.usecase.ClearTokenUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.setting.constans.SettingType
 import team.duckie.app.android.feature.setting.constans.SettingType.Companion.policyPages
+import team.duckie.app.android.feature.setting.constans.Withdraweason
 import team.duckie.app.android.feature.setting.viewmodel.sideeffect.SettingSideEffect
 import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
 import javax.inject.Inject
 
+private const val WithdrawCommingSoonMessage: String = "회원탈퇴는 아직 준비중인 기능입니다."
+
 @HiltViewModel
-class SettingViewModel @Inject constructor(
+internal class SettingViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
     private val clearTokenUseCase: ClearTokenUseCase,
 ) : ContainerHost<SettingState, SettingSideEffect>, ViewModel() {
@@ -45,8 +48,24 @@ class SettingViewModel @Inject constructor(
             }
     }
 
+    fun updateWithdrawReason(reason: Withdraweason) = intent {
+        reduce { state.copy(withdrawReasonSelected = reason) }
+    }
+
+    fun updateWithDrawFocus(isFocused: Boolean) = intent {
+        reduce { state.copy(withdrawIsFocused = isFocused) }
+    }
+
+    fun updateWithdrawUserInputReason(reason: String) = intent {
+        reduce { state.copy(withdrawUserInputReason = reason) }
+    }
+
     fun changeLogoutDialogVisible(visible: Boolean) = intent {
         reduce { state.copy(logoutDialogVisible = visible) }
+    }
+
+    fun changeWithdrawDialogVisible(visible: Boolean) = intent {
+        reduce { state.copy(withdrawDialogVisible = visible) }
     }
 
     fun logout() = intent {
@@ -59,14 +78,25 @@ class SettingViewModel @Inject constructor(
             }
     }
 
+    fun withdraw() = intent { // TODO(limsaehyun): 회원탈퇴 로직 구현해야 함
+        postSideEffect(SettingSideEffect.ShowToast(WithdrawCommingSoonMessage))
+        changeWithdrawDialogVisible(visible = false)
+    }
+
     fun navigateBack() = intent {
         when (state.settingType) {
             SettingType.Main -> {
                 postSideEffect(SettingSideEffect.NavigateBack)
             }
+
+            SettingType.WithDraw -> {
+                navigateStep(step = SettingType.AccountInfo)
+            }
+
             in policyPages -> {
                 navigateStep(step = SettingType.MainPolicy)
             }
+
             else -> {
                 navigateStep(step = SettingType.Main)
             }
