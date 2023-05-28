@@ -138,14 +138,6 @@ internal class SolveProblemViewModel @Inject constructor(
         }
     }
 
-    fun updateInputAnswer(
-        inputAnswer: ImmutableList<InputAnswer>,
-    ) = intent {
-        reduce {
-            state.copy(inputAnswers = inputAnswer)
-        }
-    }
-
     fun moveNextPage(
         pageIndex: Int,
         inputAnswer: InputAnswer,
