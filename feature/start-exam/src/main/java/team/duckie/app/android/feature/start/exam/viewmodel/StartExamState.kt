@@ -16,8 +16,11 @@ sealed class StartExamState {
     /** [StartExamViewModel] 데이터를 잘 받았을 때의 상태를 나타냅니다. */
     data class Input(
         val examId: Int,
-        val certifyingStatement: String,
+        val certifyingStatement: String = "",
         val certifyingStatementInputText: String = "",
+        val requirementQuestion: String = "",
+        val requirementPlaceholder: String = "",
+        val timer: Int = 0,
         val isQuiz: Boolean = true,
     ) : StartExamState() {
         val isCertified: Boolean

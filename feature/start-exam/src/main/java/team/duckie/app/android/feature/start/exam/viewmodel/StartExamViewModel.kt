@@ -15,9 +15,9 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import team.duckie.app.android.common.kotlin.AllowMagicNumber
-import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
+import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,20 +29,29 @@ internal class StartExamViewModel @Inject constructor(
 
     /** state 를 초기 설정한다. */
     fun initState() {
-        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        val certifyingStatement = savedStateHandle
-            .getStateFlow(Extras.CertifyingStatement, "").value
-        val isQuiz = savedStateHandle.getStateFlow(Extras.IsQuiz, false).value
-
         intent {
-            reduce {
-                if (examId == -1 || certifyingStatement == "") {
-                    StartExamState.Error(DuckieClientLogicProblemException(code = ""))
-                } else {
+            val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
+            val isQuiz = savedStateHandle.getStateFlow(Extras.IsQuiz, false).value
+            if (isQuiz) {
+                val requirementQuestion = savedStateHandle.getOrThrow<String>(Extras.RequirementQuestion)
+                val requirementPlaceholder = savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
+                val timer = savedStateHandle.getOrThrow<Int>(Extras.Timer)
+                reduce {
+                    StartExamState.Input(
+                        examId = examId,
+                        requirementQuestion = requirementQuestion,
+                        requirementPlaceholder = requirementPlaceholder,
+                        timer = timer,
+                        isQuiz = true,
+                    )
+                }
+            } else {
+                val certifyingStatement = savedStateHandle.getOrThrow<String>(Extras.CertifyingStatement)
+                reduce {
                     StartExamState.Input(
                         examId = examId,
                         certifyingStatement = certifyingStatement,
-                        isQuiz = isQuiz,
+                        isQuiz = false,
                     )
                 }
             }

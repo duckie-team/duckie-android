@@ -159,7 +159,9 @@ class DetailViewModel @Inject constructor(
                             postSideEffect(
                                 DetailSideEffect.StartQuiz(
                                     examId = result.id,
-                                    certifyingStatement = certifyingStatement,
+                                    requirementQuestion = exam.requirementQuestion ?: "",
+                                    requirementPlaceholder = exam.requirementPlaceholder ?: "",
+                                    timer = exam.timer ?: 0,
                                     isQuiz = isQuiz,
                                 ),
                             )

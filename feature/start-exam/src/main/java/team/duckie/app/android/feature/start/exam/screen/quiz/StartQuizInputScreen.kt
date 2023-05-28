@@ -25,11 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import team.duckie.app.android.common.compose.ui.ImeSpacer
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.start.exam.R
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
-import team.duckie.app.android.common.compose.ui.ImeSpacer
-import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
@@ -68,7 +68,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 modifier = Modifier
                     .padding(top = 12.dp)
                     .fillMaxWidth(),
-                limitTime = 10,
+                limitTime = state.timer,
             )
             QuackTitle2(
                 modifier = Modifier.padding(top = 34.dp),
@@ -77,13 +77,13 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
             Spacer(space = 4.dp)
             QuackHeadLine1(
                 modifier = Modifier.padding(top = 4.dp),
-                text = state.certifyingStatement, // TODO(EvergreenTree97) 추후 도전 조건 response 생기면 변경
+                text = state.requirementQuestion, // TODO(EvergreenTree97) 추후 도전 조건 response 생기면 변경
             )
             QuackGrayscaleTextField(
                 modifier = Modifier.padding(top = 14.dp),
                 text = certifyingStatementText,
                 onTextChanged = viewModel::inputCertifyingStatement,
-                placeholderText = "ex) $certifyingStatement",
+                placeholderText = "ex) ${state.requirementPlaceholder}",
             )
         }
         Spacer(modifier = Modifier.weight(1f))

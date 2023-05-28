@@ -39,6 +39,9 @@ data class Exam(
     val problems: ImmutableList<Problem>?,
     val quizs: ImmutableList<QuizInfo>?,
     val perfectScoreImageUrl: String?,
+    val timer: Int?,
+    val requirementQuestion: String?,
+    val requirementPlaceholder: String?,
 ) {
     companion object {
         /*
@@ -66,6 +69,9 @@ data class Exam(
             quizs = null,
             perfectScoreImageUrl = null,
             problems = null,
+            timer = null,
+            requirementQuestion = null,
+            requirementPlaceholder = null,
         )
     }
 }
