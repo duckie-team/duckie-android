@@ -29,7 +29,9 @@ sealed class DetailSideEffect {
 
     class StartQuiz(
         val examId: Int,
-        val certifyingStatement: String,
+        val requirementQuestion: String,
+        val requirementPlaceholder: String,
+        val timer: Int,
         val isQuiz: Boolean,
     ) : DetailSideEffect()
 

@@ -16,19 +16,19 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
+import team.duckie.app.android.common.compose.ToastWrapper
+import team.duckie.app.android.common.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.feature.detail.screen.DetailScreen
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.start.exam.screen.StartExamActivity
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
-import team.duckie.app.android.common.compose.ToastWrapper
-import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
-import team.duckie.app.android.common.kotlin.exception.DuckieResponseException
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.const.Extras
-import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
@@ -105,7 +105,9 @@ class DetailActivity : BaseActivity() {
             is DetailSideEffect.StartQuiz -> startActivityWithAnimation<StartExamActivity>(
                 intentBuilder = {
                     putExtra(Extras.ExamId, sideEffect.examId)
-                    putExtra(Extras.CertifyingStatement, sideEffect.certifyingStatement)
+                    putExtra(Extras.Timer, sideEffect.timer)
+                    putExtra(Extras.RequirementQuestion, sideEffect.requirementQuestion)
+                    putExtra(Extras.RequirementPlaceholder, sideEffect.requirementPlaceholder)
                     putExtra(Extras.IsQuiz, sideEffect.isQuiz)
                 },
             )

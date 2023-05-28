@@ -22,4 +22,9 @@ object Extras {
     /** using for FriendsActivity */
     const val FriendType = "ExtraFriendType"
     const val ProfileNickName = "ProfileNickName"
+
+    /** using for StartActivity */
+    const val RequirementQuestion = "ExtraRequirementQuestion"
+    const val RequirementPlaceholder = "ExtraRequirementPlaceholder"
+    const val Timer = "ExtraTimer"
 }
