@@ -50,6 +50,7 @@ import team.duckie.app.android.common.compose.isCurrentPage
 import team.duckie.app.android.common.compose.moveNextPage
 import team.duckie.app.android.common.compose.movePrevPage
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.feature.solve.problem.common.FlexibleSubjectiveQuestionSection
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
@@ -184,31 +185,43 @@ private fun ContentSection(
             }
         }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(space = 24.dp),
-        ) {
-            questionSection(
-                page = pageIndex,
-                question = problem.question,
-            )
-            val answer = problem.answer
-            answerSection(
+        when {
+            // for keyboard flexible image height
+            problem.isSubjective() && problem.question.isImage() -> FlexibleSubjectiveQuestionSection(
+                problem = problem,
                 pageIndex = pageIndex,
-                answer = when (answer) {
-                    is Answer.Short -> Answer.Short(
-                        problem.correctAnswer
-                            ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
-                    )
-
-                    is Answer.Choice, is Answer.ImageChoice -> answer
-                    else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
-                },
                 inputAnswers = inputAnswers,
                 updateInputAnswers = updateInputAnswers,
                 requestFocus = requestFocus,
                 keyboardController = keyboardController,
             )
+
+            else -> LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(space = 24.dp),
+            ) {
+                questionSection(
+                    page = pageIndex,
+                    question = problem.question,
+                )
+                val answer = problem.answer
+                answerSection(
+                    pageIndex = pageIndex,
+                    answer = when (answer) {
+                        is Answer.Short -> Answer.Short(
+                            problem.correctAnswer
+                                ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
+                        )
+
+                        is Answer.Choice, is Answer.ImageChoice -> answer
+                        else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
+                    },
+                    inputAnswers = inputAnswers,
+                    updateInputAnswers = updateInputAnswers,
+                    requestFocus = requestFocus,
+                    keyboardController = keyboardController,
+                )
+            }
         }
     }
 }

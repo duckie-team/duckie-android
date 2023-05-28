@@ -32,6 +32,7 @@ internal fun ShortAnswerForm(
     keyboardController: SoftwareKeyboardController?,
     requestFocus: Boolean,
 ) {
+
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(key1 = requestFocus) {

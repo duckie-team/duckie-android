@@ -92,6 +92,8 @@ sealed class Question(val type: Type, open val text: String) {
         is Audio -> this.text.isNotEmpty() && this.audioUrl.isNotEmpty()
         is Video -> this.text.isNotEmpty() && this.videoUrl.isNotEmpty()
     }
+
+    fun isImage(): Boolean = this.type == Type.Image
 }
 
 @Immutable
