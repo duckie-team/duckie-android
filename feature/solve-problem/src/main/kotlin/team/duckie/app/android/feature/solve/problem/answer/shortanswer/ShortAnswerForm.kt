@@ -10,6 +10,8 @@ package team.duckie.app.android.feature.solve.problem.answer.shortanswer
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -28,8 +30,17 @@ internal fun ShortAnswerForm(
     answer: String,
     onDone: (String) -> Unit,
     keyboardController: SoftwareKeyboardController?,
-    focusRequester: FocusRequester,
+    requestFocus: Boolean,
 ) {
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(key1 = requestFocus) {
+        if (requestFocus) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
+    }
+
     QuackGrayscaleTextField(
         modifier = modifier.focusRequester(focusRequester),
         text = text,

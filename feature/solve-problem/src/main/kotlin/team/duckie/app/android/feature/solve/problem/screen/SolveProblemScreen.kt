@@ -20,18 +20,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
@@ -52,19 +55,28 @@ private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
 private const val SolveProblemBottomBarLayoutId = "SolveProblemBottomBar"
 
+// 6번호
 @Composable
 internal fun SolveProblemScreen(
     state: SolveProblemState,
-    pagerState: PagerState,
-    inputAnswer: (Int, InputAnswer) -> Unit,
     stopExam: () -> Unit,
-    finishExam: () -> Unit,
+    finishExam: (List<String>) -> Unit,
+    pagerState: PagerState,
 ) {
     val totalPage = remember { state.totalPage }
 
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
+
+    val inputAnswers = remember {
+        mutableStateListOf(
+            elements = Array(
+                size = state.problems.size,
+                init = { InputAnswer() },
+            ),
+        )
+    }
 
     // 시험 종료 다이얼로그
     DuckieDialog(
@@ -85,7 +97,9 @@ internal fun SolveProblemScreen(
         leftButtonText = stringResource(id = R.string.cancel),
         leftButtonOnClick = { examSubmitDialogVisible = false },
         rightButtonText = stringResource(id = R.string.submit),
-        rightButtonOnClick = finishExam,
+        rightButtonOnClick = {
+            finishExam(inputAnswers.map { it.answer }.toImmutableList())
+        },
         visible = examSubmitDialogVisible,
         onDismissRequest = { examSubmitDialogVisible = false },
     )
@@ -107,7 +121,10 @@ internal fun SolveProblemScreen(
                 modifier = Modifier.layoutId(SolveProblemContentLayoutId),
                 pagerState = pagerState,
                 state = state,
-                updateInputAnswers = inputAnswer,
+                updateInputAnswers = { page, answer ->
+                    inputAnswers[page] = answer
+                },
+                inputAnswers = inputAnswers.toPersistentList(),
             )
             DoubleButtonBottomBar(
                 modifier = Modifier.layoutId(SolveProblemBottomBarLayoutId),
@@ -143,6 +160,7 @@ private fun ContentSection(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
     state: SolveProblemState,
+    inputAnswers: ImmutableList<InputAnswer>,
     updateInputAnswers: (Int, InputAnswer) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -154,17 +172,15 @@ private fun ContentSection(
     ) { pageIndex ->
         val problem = state.problems[pageIndex].problem
 
-        val focusRequester = remember { FocusRequester() }
-        val requestFocus by remember { derivedStateOf { pagerState.isCurrentPage(pageIndex) } }
+        val requestFocus by remember(key1 = pagerState.currentPage) {
+            derivedStateOf {
+                pagerState.isCurrentPage(pageIndex)
+            }
+        }
 
         LaunchedEffect(key1 = requestFocus) {
-            if (requestFocus) {
-                if (problem.isSubjective()) {
-                    focusRequester.requestFocus()
-                    keyboardController?.show()
-                } else {
-                    keyboardController?.hide()
-                }
+            if (!problem.isSubjective()) {
+                keyboardController?.hide()
             }
         }
 
@@ -188,9 +204,9 @@ private fun ContentSection(
                     is Answer.Choice, is Answer.ImageChoice -> answer
                     else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
                 },
-                inputAnswers = state.inputAnswers,
+                inputAnswers = inputAnswers,
                 updateInputAnswers = updateInputAnswers,
-                focusRequester = focusRequester,
+                requestFocus = requestFocus,
                 keyboardController = keyboardController,
             )
         }

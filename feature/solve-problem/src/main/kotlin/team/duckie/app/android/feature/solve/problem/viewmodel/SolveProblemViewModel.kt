@@ -11,6 +11,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.StateFlow
 import org.orbitmvi.orbit.Container
@@ -27,9 +28,7 @@ import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProble
 import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.timer.ProblemTimer
 import team.duckie.app.android.common.kotlin.ImmutableList
-import team.duckie.app.android.common.kotlin.copy
 import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
-import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
@@ -139,19 +138,6 @@ internal class SolveProblemViewModel @Inject constructor(
         }
     }
 
-    fun inputAnswer(
-        pageIndex: Int,
-        inputAnswer: InputAnswer,
-    ) = intent {
-        reduce {
-            state.copy(
-                inputAnswers = state.inputAnswers.copy {
-                    this[pageIndex] = inputAnswer
-                },
-            )
-        }
-    }
-
     fun moveNextPage(
         pageIndex: Int,
         inputAnswer: InputAnswer,
@@ -167,12 +153,14 @@ internal class SolveProblemViewModel @Inject constructor(
         }
     }
 
-    fun finishExam() = intent {
+    fun finishExam(
+        userInputAnswers: List<String>,
+    ) = intent {
         stopTimer()
         postSideEffect(
             SolveProblemSideEffect.FinishSolveProblem(
                 examId = state.examId,
-                answers = state.inputAnswers.fastMap { it.answer },
+                answers = userInputAnswers,
             ),
         )
     }

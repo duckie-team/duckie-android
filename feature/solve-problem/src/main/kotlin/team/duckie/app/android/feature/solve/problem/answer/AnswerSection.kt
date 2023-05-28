@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -34,7 +33,7 @@ internal fun LazyListScope.answerSection(
     answer: Answer,
     inputAnswers: ImmutableList<InputAnswer>,
     updateInputAnswers: (page: Int, inputAnswer: InputAnswer) -> Unit,
-    focusRequester: FocusRequester,
+    requestFocus: Boolean,
     keyboardController: SoftwareKeyboardController?,
 ) {
     when (answer) {
@@ -102,7 +101,7 @@ internal fun LazyListScope.answerSection(
                     onDone = { inputText ->
                         updateInputAnswers(pageIndex, InputAnswer(0, inputText))
                     },
-                    focusRequester = focusRequester,
+                    requestFocus = requestFocus,
                     keyboardController = keyboardController,
                 )
             }
