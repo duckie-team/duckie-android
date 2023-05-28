@@ -22,15 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.CoverImageRatio
-import team.duckie.app.android.common.compose.rememberKeyboardVisible
+import team.duckie.app.android.common.compose.composedWithKeyboardVisibility
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.solve.problem.answer.shortanswer.ShortAnswerForm
@@ -53,8 +51,6 @@ fun FlexibleSubjectiveQuestionSection(
 ) {
     val question = problem.question as Question.Image
 
-    val keyboardVisible = rememberKeyboardVisible(initialKeyboardState = true)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,17 +64,13 @@ fun FlexibleSubjectiveQuestionSection(
         Spacer(space = 12.dp)
         Box(
             modifier = Modifier
-                .composed {
-                    runIf(keyboardVisible.value) {
-                        weight(1f)
-                    }
-                }
-                .composed {
-                    runIf(!keyboardVisible.value) {
+                .composedWithKeyboardVisibility(
+                    whenKeyboardVisible = { weight(1f) },
+                    whenKeyboardHidden = {
                         fillMaxWidth()
                         aspectRatio(CoverImageRatio)
-                    }
-                }
+                    },
+                )
                 .padding(horizontal = 16.dp)
                 .background(
                     color = QuackColor.Black.value,

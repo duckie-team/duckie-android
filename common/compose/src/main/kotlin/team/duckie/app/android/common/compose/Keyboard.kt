@@ -14,6 +14,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.platform.LocalView
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 
@@ -45,4 +47,19 @@ fun rememberKeyboardVisible(
     }
 
     return keyboardVisibleState
+}
+
+/**
+ * 키보드 상태에 따른 Modifier 조합
+ */
+@Composable
+fun Modifier.composedWithKeyboardVisibility(
+    whenKeyboardVisible: Modifier.() -> Modifier = { this },
+    whenKeyboardHidden: Modifier.() -> Modifier = { this },
+): Modifier {
+    val keyboardVisible = rememberKeyboardVisible(initialKeyboardState = true)
+
+    return this
+        .composed { if (keyboardVisible.value) whenKeyboardVisible() else this }
+        .composed { if (!keyboardVisible.value) whenKeyboardHidden() else this }
 }
