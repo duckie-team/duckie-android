@@ -33,10 +33,11 @@ import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
 import team.duckie.app.android.feature.exam.result.R
+import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackImage
+import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
@@ -46,6 +47,7 @@ internal fun QuizResultContent(
     time: Int,
     correctProblemCount: Int,
     mainTag: String,
+    wrongAnswerMessage: String,
     rank: Int,
 ) {
     Column(
@@ -62,11 +64,23 @@ internal fun QuizResultContent(
             contentAlignment = Alignment.Center,
         ) {
             QuackImage(
+                modifier = Modifier.fillMaxSize(),
                 src = resultImageUrl,
-                contentScale = ContentScale.Inside,
+                contentScale = ContentScale.Fit,
             )
         }
-        // TODO(EvergreenTree97) : 시험 결과지 스펙에 맞게 수정 및 문구 출력
+        Spacer(space = 16.dp)
+        // TODO(EvergreenTree97) : 에러 문구 폰트 변경 필요
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            QuackHeadLine1(text = "\"")
+            QuackHeadLine1(text = wrongAnswerMessage)
+            QuackHeadLine1(text = "\"")
+        }
         Spacer(space = 28.dp)
         QuackDivider()
         Spacer(space = 20.dp)

@@ -86,6 +86,7 @@ internal fun ExamResultScreen(
                                 time = time,
                                 mainTag = mainTag,
                                 rank = rank,
+                                wrongAnswerMessage = wrongAnswerMessage,
                             )
                         } else {
                             ExamResultContent(

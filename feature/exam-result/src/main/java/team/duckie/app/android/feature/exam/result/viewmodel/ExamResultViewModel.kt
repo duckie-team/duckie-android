@@ -17,13 +17,13 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.savedstate.getOrThrow
+import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
-import team.duckie.app.android.common.android.savedstate.getOrThrow
-import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +43,8 @@ class ExamResultViewModel @Inject constructor(
         val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
         val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
         if (isQuiz) {
-            val updateQuizParam = savedStateHandle.getOrThrow<SubmitQuizUseCase.Param>(Extras.UpdateQuizParam)
+            val updateQuizParam =
+                savedStateHandle.getOrThrow<SubmitQuizUseCase.Param>(Extras.UpdateQuizParam)
             updateQuiz(
                 examId = examId,
                 updateQuizParam = updateQuizParam,
@@ -52,7 +53,9 @@ class ExamResultViewModel @Inject constructor(
             val submitted = savedStateHandle.getOrThrow<Array<String>>(Extras.Submitted)
             getReport(
                 examId = examId,
-                submitted = ExamInstanceSubmitBody(submitted = submitted.toList().toImmutableList()),
+                submitted = ExamInstanceSubmitBody(
+                    submitted = submitted.toList().toImmutableList()
+                ),
             )
         }
     }
@@ -110,6 +113,7 @@ class ExamResultViewModel @Inject constructor(
                     time = quizResult.time,
                     mainTag = quizResult.exam.mainTag?.name ?: "",
                     rank = quizResult.score,
+                    wrongAnswerMessage = quizResult.wrongProblem?.solution?.wrongAnswerMessage ?: "",
                 )
             }
         }.onFailure {
