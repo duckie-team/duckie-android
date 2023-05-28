@@ -23,13 +23,14 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.feature.exam.result.R
+import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
+import team.duckie.app.android.feature.exam.result.R
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackImage
+import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.internal.QuackText
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
@@ -39,18 +40,27 @@ internal fun QuizResultContent(
     time: Int,
     correctProblemCount: Int,
     mainTag: String,
-    rank: Int,
+    message: String,
+    ranking: Int,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(all = 16.dp),
     ) {
-        QuackImage(
-            modifier = Modifier.fillMaxWidth(),
-            src = resultImageUrl,
-        )
-        // TODO(EvergreenTree97) : 시험 결과지 스펙에 맞게 수정 및 문구 출력
+        DuckieFitImage(imageUrl = resultImageUrl)
+        Spacer(space = 16.dp)
+        // TODO(EvergreenTree97) : 에러 문구 폰트 변경 필요
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            QuackHeadLine1(text = "\"")
+            QuackHeadLine1(text = message)
+            QuackHeadLine1(text = "\"")
+        }
         Spacer(space = 28.dp)
         QuackDivider()
         Spacer(space = 20.dp)
@@ -58,7 +68,7 @@ internal fun QuizResultContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackBody1(text = stringResource(id = R.string.total_time))
+            QuackBody1(text = stringResource(id = R.string.exam_result_total_time))
             QuackBody1(text = time.toHourMinuteSecond())
         }
         Spacer(space = 8.dp)
@@ -66,10 +76,10 @@ internal fun QuizResultContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackBody1(text = stringResource(id = R.string.correct_problem))
+            QuackBody1(text = stringResource(id = R.string.exam_result_correct_problem))
             QuackBody1(
                 text = stringResource(
-                    id = R.string.correct_problem_unit,
+                    id = R.string.exam_result_correct_problem_unit,
                     correctProblemCount.toString(),
                 ),
             )
@@ -84,7 +94,7 @@ internal fun QuizResultContent(
                 }
                 append(" 영역 ")
                 withDuckieOrangeBoldStyle {
-                    append("${rank}위")
+                    append("${ranking}위")
                 }
                 append(" 입니다.")
             },

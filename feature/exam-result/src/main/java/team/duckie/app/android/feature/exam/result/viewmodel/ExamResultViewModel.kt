@@ -17,13 +17,13 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.savedstate.getOrThrow
+import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
-import team.duckie.app.android.common.android.savedstate.getOrThrow
-import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +43,8 @@ class ExamResultViewModel @Inject constructor(
         val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
         val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
         if (isQuiz) {
-            val updateQuizParam = savedStateHandle.getOrThrow<SubmitQuizUseCase.Param>(Extras.UpdateQuizParam)
+            val updateQuizParam =
+                savedStateHandle.getOrThrow<SubmitQuizUseCase.Param>(Extras.UpdateQuizParam)
             updateQuiz(
                 examId = examId,
                 updateQuizParam = updateQuizParam,
@@ -52,7 +53,9 @@ class ExamResultViewModel @Inject constructor(
             val submitted = savedStateHandle.getOrThrow<Array<String>>(Extras.Submitted)
             getReport(
                 examId = examId,
-                submitted = ExamInstanceSubmitBody(submitted = submitted.toList().toImmutableList()),
+                submitted = ExamInstanceSubmitBody(
+                    submitted = submitted.toList().toImmutableList(),
+                ),
             )
         }
     }
@@ -98,9 +101,10 @@ class ExamResultViewModel @Inject constructor(
             postSideEffect(ExamResultSideEffect.ReportError(it))
         }
         getQuizUseCase(examId).onSuccess { quizResult ->
+            val isPerfectScore = quizResult.wrongProblem == null
             reduce {
                 ExamResultState.Success(
-                    reportUrl = if (quizResult.wrongProblem == null) {
+                    reportUrl = if (isPerfectScore) {
                         quizResult.exam.perfectScoreImageUrl ?: ""
                     } else {
                         quizResult.wrongProblem?.solution?.solutionImageUrl ?: ""
@@ -109,7 +113,8 @@ class ExamResultViewModel @Inject constructor(
                     correctProblemCount = quizResult.correctProblemCount,
                     time = quizResult.time,
                     mainTag = quizResult.exam.mainTag?.name ?: "",
-                    rank = quizResult.score,
+                    ranking = quizResult.ranking ?: 0,
+                    wrongAnswerMessage = quizResult.wrongProblem?.solution?.wrongAnswerMessage ?: "",
                 )
             }
         }.onFailure {

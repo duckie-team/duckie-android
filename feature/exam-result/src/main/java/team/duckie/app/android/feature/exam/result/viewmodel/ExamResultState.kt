@@ -16,7 +16,9 @@ sealed class ExamResultState {
         val correctProblemCount: Int = 0,
         val time: Int = 0,
         val mainTag: String = "",
-        val rank: Int = 0,
+        val ranking: Int = 0,
+        val wrongAnswerMessage: String = "",
+        val isPerfectScore: Boolean = false,
     ) : ExamResultState()
 
     data class Error(
