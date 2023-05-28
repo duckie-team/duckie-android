@@ -23,9 +23,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
+import team.duckie.app.android.feature.exam.result.R
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackDivider
@@ -58,7 +58,7 @@ internal fun QuizResultContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackBody1(text = stringResource(id = R.string.total_time))
+            QuackBody1(text = stringResource(id = R.string.exam_result_total_time))
             QuackBody1(text = time.toHourMinuteSecond())
         }
         Spacer(space = 8.dp)
@@ -66,10 +66,10 @@ internal fun QuizResultContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackBody1(text = stringResource(id = R.string.correct_problem))
+            QuackBody1(text = stringResource(id = R.string.exam_result_correct_problem))
             QuackBody1(
                 text = stringResource(
-                    id = R.string.correct_problem_unit,
+                    id = R.string.exam_result_correct_problem_unit,
                     correctProblemCount.toString(),
                 ),
             )

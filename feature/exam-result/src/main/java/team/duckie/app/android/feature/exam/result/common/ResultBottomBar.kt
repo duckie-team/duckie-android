@@ -45,7 +45,7 @@ internal fun ResultBottomBar(
             modifier = Modifier
                 .heightIn(min = 44.dp)
                 .weight(1f),
-            text = stringResource(id = R.string.solve_retry),
+            text = stringResource(id = R.string.exam_result_solve_retry),
             onClick = onClickRetryButton,
         )
         QuackSmallButton(
@@ -53,7 +53,7 @@ internal fun ResultBottomBar(
                 .heightIn(44.dp)
                 .weight(1f),
             type = QuackSmallButtonType.Fill,
-            text = stringResource(id = R.string.exit_exam),
+            text = stringResource(id = R.string.exam_result_exit_exam),
             enabled = true,
             onClick = onClickExitButton,
         )

@@ -60,7 +60,7 @@ internal fun ExamResultScreen(
         bottomBar = {
             ResultBottomBar(
                 onClickRetryButton = {
-                    viewModel.clickRetry(activity.getString(R.string.feature_prepare))
+                    viewModel.clickRetry(activity.getString(R.string.exam_result_feature_prepare))
                 },
                 onClickExitButton = viewModel::exitExam,
             )
