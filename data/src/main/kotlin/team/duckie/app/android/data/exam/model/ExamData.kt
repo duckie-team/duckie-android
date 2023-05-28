@@ -73,6 +73,15 @@ internal data class ExamData(
 
     @field:JsonProperty("problems")
     val problems: List<ProblemData>? = null,
+
+    @field:JsonProperty("timer")
+    val timer: Int? = null,
+
+    @field:JsonProperty("requirementQuestion")
+    val requirementQuestion: String? = null,
+
+    @field:JsonProperty("requirementPlaceholder")
+    val requirementPlaceholder: String? = null,
 )
 
 internal data class ExamsData(

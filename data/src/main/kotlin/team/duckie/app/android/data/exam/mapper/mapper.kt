@@ -8,6 +8,9 @@
 package team.duckie.app.android.data.exam.mapper
 
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
@@ -46,9 +49,6 @@ import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.Solution
 import team.duckie.app.android.domain.quiz.model.QuizInfo
-import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.common.kotlin.fastMap
 
 @AllowCyclomaticComplexMethod
 internal fun ExamData.toDomain() = Exam(
@@ -73,6 +73,9 @@ internal fun ExamData.toDomain() = Exam(
     quizs = quizs?.fastMap(QuizInfoResponse::toDomain)?.toImmutableList(),
     perfectScoreImageUrl = perfectScoreImageUrl,
     problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList(),
+    timer = timer,
+    requirementPlaceholder = requirementPlaceholder,
+    requirementQuestion = requirementQuestion,
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
