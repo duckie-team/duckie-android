@@ -12,13 +12,12 @@ package team.duckie.app.android.feature.solve.problem.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -28,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.common.compose.CoverImageRatio
 import team.duckie.app.android.common.compose.rememberKeyboardVisible
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.runIf
@@ -58,8 +58,7 @@ fun FlexibleSubjectiveQuestionSection(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .imePadding()
-            .verticalScroll(rememberScrollState()),
+            .imePadding(),
     ) {
         Spacer(space = 16.dp)
         QuackHeadLine2(
@@ -69,27 +68,26 @@ fun FlexibleSubjectiveQuestionSection(
         Spacer(space = 12.dp)
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = QuackColor.Black.value,
-                    shape = RoundedCornerShape(8.dp),
-                )
                 .composed {
                     runIf(keyboardVisible.value) {
                         weight(1f)
                     }
-                },
+                }
+                .composed {
+                    runIf(!keyboardVisible.value) {
+                        fillMaxWidth()
+                        aspectRatio(CoverImageRatio)
+                    }
+                }
+                .padding(horizontal = 16.dp)
+                .background(
+                    color = QuackColor.Black.value,
+                    shape = RoundedCornerShape(8.dp),
+                ),
             contentAlignment = Alignment.Center,
         ) {
             QuackImage(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .composed {
-                        runIf(keyboardVisible.value) {
-                            fillMaxSize()
-                        }
-                    }
-                    .align(Alignment.Center),
+                modifier = Modifier.fillMaxSize(),
                 src = question.imageUrl,
                 contentScale = ContentScale.Fit,
             )
