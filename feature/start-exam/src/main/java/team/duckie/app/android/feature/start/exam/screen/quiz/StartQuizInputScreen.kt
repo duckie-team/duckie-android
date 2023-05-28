@@ -47,9 +47,6 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
     val state =
         viewModel.container.stateFlow.collectAsStateWithLifecycle().value as StartExamState.Input
 
-    val certifyingStatement: String = remember(state.certifyingStatement) {
-        state.certifyingStatement
-    }
     val certifyingStatementText: String = remember(state.certifyingStatementInputText) {
         state.certifyingStatementInputText
     }
@@ -94,7 +91,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
             ),
             type = QuackLargeButtonType.Fill,
             text = stringResource(id = R.string.start_exam_start_button),
-            enabled = viewModel.startExamValidate(),
+            enabled = certifyingStatementText.isNotEmpty(),
             onClick = viewModel::startSolveProblem,
         )
         ImeSpacer()

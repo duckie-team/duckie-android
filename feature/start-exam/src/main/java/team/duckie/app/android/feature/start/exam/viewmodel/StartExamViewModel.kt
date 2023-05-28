@@ -33,8 +33,10 @@ internal class StartExamViewModel @Inject constructor(
             val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
             val isQuiz = savedStateHandle.getStateFlow(Extras.IsQuiz, false).value
             if (isQuiz) {
-                val requirementQuestion = savedStateHandle.getOrThrow<String>(Extras.RequirementQuestion)
-                val requirementPlaceholder = savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
+                val requirementQuestion =
+                    savedStateHandle.getOrThrow<String>(Extras.RequirementQuestion)
+                val requirementPlaceholder =
+                    savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
                 val timer = savedStateHandle.getOrThrow<Int>(Extras.Timer)
                 reduce {
                     StartExamState.Input(
@@ -46,7 +48,8 @@ internal class StartExamViewModel @Inject constructor(
                     )
                 }
             } else {
-                val certifyingStatement = savedStateHandle.getOrThrow<String>(Extras.CertifyingStatement)
+                val certifyingStatement =
+                    savedStateHandle.getOrThrow<String>(Extras.CertifyingStatement)
                 reduce {
                     StartExamState.Input(
                         examId = examId,
@@ -75,7 +78,11 @@ internal class StartExamViewModel @Inject constructor(
         val inputState = state as StartExamState.Input
         postSideEffect(
             StartExamSideEffect.NavigateToSolveProblem(
-                certified = startExamValidate(),
+                certified = if (inputState.isQuiz) {
+                    true
+                } else {
+                    startExamValidate()
+                },
                 examId = inputState.examId,
                 isQuiz = inputState.isQuiz,
             ),
