@@ -27,4 +27,8 @@ internal data class GetQuizResponse(
     val user: UserResponse? = null,
     @JsonProperty("wrongProblem")
     val wrongProblem: ProblemData? = null,
+    @JsonProperty("ranking")
+    val ranking: Int? = null,
+    @JsonProperty("requirementAnswer")
+    val requirementAnswer: String? = null,
 )

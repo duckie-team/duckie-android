@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.data.quiz.mapper
 
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.quiz.model.GetQuizResponse
 import team.duckie.app.android.data.quiz.model.PostQuizResponse
@@ -15,7 +16,6 @@ import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.domain.quiz.model.Quiz
 import team.duckie.app.android.domain.quiz.model.QuizExam
 import team.duckie.app.android.domain.quiz.model.QuizResult
-import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 internal fun PostQuizResponse.toDomain() = Quiz(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
@@ -36,6 +36,8 @@ internal fun GetQuizResponse.toDomain() = QuizResult(
     score = score ?: duckieResponseFieldNpe("${this::class.java.simpleName}.score"),
     user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
     wrongProblem = wrongProblem?.toDomain(),
+    ranking = ranking,
+    requirementAnswer = requirementAnswer,
 )
 
 internal fun QuizExamData.toDomain() = QuizExam(
