@@ -54,7 +54,7 @@ class ExamResultViewModel @Inject constructor(
             getReport(
                 examId = examId,
                 submitted = ExamInstanceSubmitBody(
-                    submitted = submitted.toList().toImmutableList()
+                    submitted = submitted.toList().toImmutableList(),
                 ),
             )
         }
