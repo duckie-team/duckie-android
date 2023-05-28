@@ -22,7 +22,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
-import team.duckie.quackquack.ui.component.QuackSubtitle2
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 /**
  * 덕키 공식 이메일

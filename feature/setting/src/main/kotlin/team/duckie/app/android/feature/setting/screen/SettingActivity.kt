@@ -28,30 +28,31 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
+import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.ui.DuckieTodoScreen
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
+import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
+import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.feature.setting.BuildConfig
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.constans.SettingType
 import team.duckie.app.android.feature.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.setting.viewmodel.sideeffect.SettingSideEffect
 import team.duckie.app.android.navigator.feature.intro.IntroNavigator
-import team.duckie.app.android.common.compose.ui.DuckieTodoScreen
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
-import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
-import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
-import team.duckie.app.android.common.compose.systemBarPaddings
-import team.duckie.app.android.common.android.ui.finishWithAnimation
-import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.theme.QuackTheme
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
+class SettingActivity : BaseActivity() {
 
     @Inject
     lateinit var introNavigator: IntroNavigator
@@ -80,7 +81,7 @@ class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity()
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(QuackColor.White.composeColor)
+                        .background(QuackColor.White.value)
                         .padding(systemBarPaddings),
                 ) {
                     QuackTopAppBar(

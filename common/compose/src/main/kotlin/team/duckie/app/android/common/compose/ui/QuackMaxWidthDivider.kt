@@ -20,14 +20,16 @@ import team.duckie.quackquack.ui.component.QuackDivider
  * 스크린의 크기만큼 QuackDivider를 그립니다.
  */
 @Composable
-fun QuackMaxWidthDivider() {
+fun QuackMaxWidthDivider(
+    modifier: Modifier = Modifier,
+) {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
 
     val screenWidthPx = remember { configuration.screenWidthDp * density.density }
 
     QuackDivider(
-        modifier = Modifier
+        modifier = modifier
             .layout { measurable, constraints ->
                 val placeable = measurable.measure(
                     constraints.copy(
