@@ -12,12 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.solve.problem.question.audio.AudioPlayer
 import team.duckie.app.android.feature.solve.problem.question.video.VideoPlayer
 import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.util.DpSize
 
 private val HorizontalPadding = PaddingValues(horizontal = 16.dp)
 internal fun LazyListScope.questionSection(
@@ -34,10 +33,8 @@ internal fun LazyListScope.questionSection(
         is Question.Text -> {}
         is Question.Image -> {
             item {
-                QuackImage(
-                    src = question.imageUrl,
-                    size = DpSize(all = 200.dp),
-                    padding = HorizontalPadding,
+                DuckieFitImage(
+                    imageUrl = question.imageUrl,
                 )
             }
         }
