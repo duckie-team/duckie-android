@@ -17,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.feature.exam.result.ExamResultActivity
@@ -85,8 +86,12 @@ internal fun ExamResultScreen(
                                 correctProblemCount = correctProblemCount,
                                 time = time,
                                 mainTag = mainTag,
-                                rank = rank,
-                                wrongAnswerMessage = wrongAnswerMessage,
+                                ranking = ranking,
+                                message = if (isPerfectScore) {
+                                    stringResource(id = R.string.exam_result_correct_problem_all, mainTag)
+                                } else {
+                                    wrongAnswerMessage
+                                },
                             )
                         } else {
                             ExamResultContent(

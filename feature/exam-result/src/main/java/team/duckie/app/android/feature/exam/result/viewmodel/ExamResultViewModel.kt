@@ -101,9 +101,10 @@ class ExamResultViewModel @Inject constructor(
             postSideEffect(ExamResultSideEffect.ReportError(it))
         }
         getQuizUseCase(examId).onSuccess { quizResult ->
+            val isPerfectScore = quizResult.wrongProblem == null
             reduce {
                 ExamResultState.Success(
-                    reportUrl = if (quizResult.wrongProblem == null) {
+                    reportUrl = if (isPerfectScore) {
                         quizResult.exam.perfectScoreImageUrl ?: ""
                     } else {
                         quizResult.wrongProblem?.solution?.solutionImageUrl ?: ""
@@ -112,7 +113,7 @@ class ExamResultViewModel @Inject constructor(
                     correctProblemCount = quizResult.correctProblemCount,
                     time = quizResult.time,
                     mainTag = quizResult.exam.mainTag?.name ?: "",
-                    rank = quizResult.score,
+                    ranking = quizResult.ranking ?: 0,
                     wrongAnswerMessage = quizResult.wrongProblem?.solution?.wrongAnswerMessage ?: "",
                 )
             }

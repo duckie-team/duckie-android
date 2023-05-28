@@ -12,4 +12,5 @@
     <string name="exam_result_total_time">총 응시시간</string>
     <string name="exam_result_correct_problem">맞은 문제</string>
     <string name="exam_result_correct_problem_unit">%s덕</string>
+    <string name="exam_result_correct_problem_all">모든 문제를 맞혔습니다. 당신은 %s 영역 씹덕입니다.</string>
 </resources>

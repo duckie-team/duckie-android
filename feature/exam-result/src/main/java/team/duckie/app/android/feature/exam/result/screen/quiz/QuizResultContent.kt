@@ -47,8 +47,8 @@ internal fun QuizResultContent(
     time: Int,
     correctProblemCount: Int,
     mainTag: String,
-    wrongAnswerMessage: String,
-    rank: Int,
+    message: String,
+    ranking: Int,
 ) {
     Column(
         modifier = Modifier
@@ -78,7 +78,7 @@ internal fun QuizResultContent(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             QuackHeadLine1(text = "\"")
-            QuackHeadLine1(text = wrongAnswerMessage)
+            QuackHeadLine1(text = message)
             QuackHeadLine1(text = "\"")
         }
         Spacer(space = 28.dp)
@@ -114,7 +114,7 @@ internal fun QuizResultContent(
                 }
                 append(" 영역 ")
                 withDuckieOrangeBoldStyle {
-                    append("${rank}위")
+                    append("${ranking}위")
                 }
                 append(" 입니다.")
             },
