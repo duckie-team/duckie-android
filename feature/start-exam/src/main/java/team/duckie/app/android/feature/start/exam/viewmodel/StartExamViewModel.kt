@@ -18,7 +18,6 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
-import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
 import javax.inject.Inject
 
 @HiltViewModel
