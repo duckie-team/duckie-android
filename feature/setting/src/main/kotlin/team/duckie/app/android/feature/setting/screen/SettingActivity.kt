@@ -146,6 +146,7 @@ class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity()
     private fun SettingDialog(
         state: SettingState,
     ) {
+        // 로그아웃 확인 목적의 Dialog
         DuckieDialog(
             modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
             title = stringResource(id = R.string.log_out_check_message),
@@ -163,6 +164,7 @@ class SettingActivity : team.duckie.app.android.common.android.ui.BaseActivity()
             },
         )
 
+        // 회원탈퇴 확인 목적의 Dialog
         DuckieDialog(
             modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
             title = stringResource(id = R.string.withdraw_check_message),
