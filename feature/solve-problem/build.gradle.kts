@@ -32,6 +32,7 @@ dependencies {
         libs.compose.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
         libs.quack.ui.components,
+        libs.quack.v2.ui,
         libs.firebase.crashlytics,
         libs.exoplayer.core,
         libs.exoplayer.ui,
