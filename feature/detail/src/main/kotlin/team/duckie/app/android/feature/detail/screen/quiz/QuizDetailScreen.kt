@@ -156,10 +156,8 @@ private fun RankingContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                user.duckPower?.tier?.let {
-                    QuackBody2(text = it)
-                    QuackBody2(text = "|")
-                }
+                QuackBody2(text = "${correctProblemCount}덕")
+                QuackBody2(text = "|")
                 QuackBody2(text = "${time}초")
             }
         }
