@@ -61,10 +61,13 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
         ) {
+            Spacer(space = 12.dp)
             InfoBox(
                 modifier = Modifier
-                    .padding(top = 12.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(color = QuackColor.Gray4.composeColor)
+                    .padding(all = 12.dp),
                 limitTime = state.timer,
             )
             QuackTitle2(
@@ -99,15 +102,12 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
 }
 
 @Composable
-internal fun InfoBox(
+private fun InfoBox(
     modifier: Modifier = Modifier,
     limitTime: Int,
 ) {
     Column(
-        modifier = modifier
-            .background(color = QuackColor.Gray4.composeColor)
-            .padding(all = 12.dp)
-            .clip(RoundedCornerShape(8.dp)),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
     ) {
         QuackTitle2(text = stringResource(id = R.string.start_exam_information_before_quiz_title))
