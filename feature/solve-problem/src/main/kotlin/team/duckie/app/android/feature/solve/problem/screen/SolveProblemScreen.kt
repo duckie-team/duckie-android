@@ -36,21 +36,23 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
+import team.duckie.app.android.common.compose.isCurrentPage
+import team.duckie.app.android.common.compose.moveNextPage
+import team.duckie.app.android.common.compose.movePrevPage
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
+import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
 import team.duckie.app.android.feature.solve.problem.R
 import team.duckie.app.android.feature.solve.problem.answer.answerSection
 import team.duckie.app.android.feature.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.solve.problem.common.DoubleButtonBottomBar
+import team.duckie.app.android.feature.solve.problem.common.FlexibleSubjectiveQuestionSection
 import team.duckie.app.android.feature.solve.problem.question.questionSection
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
-import team.duckie.app.android.common.compose.isCurrentPage
-import team.duckie.app.android.common.compose.moveNextPage
-import team.duckie.app.android.common.compose.movePrevPage
-import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.feature.solve.problem.common.FlexibleSubjectiveQuestionSection
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
@@ -81,6 +83,7 @@ internal fun SolveProblemScreen(
 
     // 시험 종료 다이얼로그
     DuckieDialog(
+        modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(id = R.string.quit_exam),
         message = stringResource(id = R.string.not_saved),
         leftButtonText = stringResource(id = R.string.cancel),
