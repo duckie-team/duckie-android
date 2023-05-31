@@ -8,6 +8,7 @@ package team.duckie.app.android.common.compose.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -21,12 +22,9 @@ import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
-fun BackPressedHeadLineTopAppBar(
-    title: String,
-    isLoading: Boolean,
-    trailingIcon: QuackIcon? = null,
-    onTrailingIconClick: (() -> Unit)? = null,
+fun BackPressedTopAppBar(
     onBackPressed: () -> Unit,
+    trailingSlot: @Composable (RowScope.() -> Unit)? = null,
 ) {
     Row(
         modifier = Modifier
@@ -42,6 +40,20 @@ fun BackPressedHeadLineTopAppBar(
             src = QuackIcon.ArrowBack,
             onClick = onBackPressed,
         )
+        if (trailingSlot != null) trailingSlot()
+    }
+}
+
+
+@Composable
+fun BackPressedHeadLineTopAppBar(
+    title: String,
+    isLoading: Boolean,
+    trailingIcon: QuackIcon? = null,
+    onTrailingIconClick: (() -> Unit)? = null,
+    onBackPressed: () -> Unit,
+) {
+    BackPressedTopAppBar(onBackPressed = onBackPressed) {
         QuackHeadLine1(
             modifier = Modifier.skeleton(isLoading),
             text = title,
@@ -65,20 +77,7 @@ fun BackPressedHeadLine2TopAppBar(
     isLoading: Boolean = false,
     onBackPressed: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = 16.dp,
-                vertical = 12.dp,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        QuackImage(
-            src = QuackIcon.ArrowBack,
-            onClick = onBackPressed,
-        )
+    BackPressedTopAppBar(onBackPressed = onBackPressed) {
         QuackHeadLine2(
             modifier = Modifier.skeleton(isLoading),
             text = title,
