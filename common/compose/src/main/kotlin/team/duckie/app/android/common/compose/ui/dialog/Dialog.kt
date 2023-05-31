@@ -131,17 +131,12 @@ fun DuckieDialog(
                                 modifier = Modifier
                                     .weight(1f)
                                     .quackClickable(
-                                        rippleEnabled = false,
                                         onClick = leftButtonOnClick,
                                     ),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 QuackSubtitle(
                                     modifier = Modifier
-                                        .quackClickable(
-                                            rippleEnabled = false,
-                                            onClick = leftButtonOnClick,
-                                        )
                                         .padding(
                                             vertical = 12.dp,
                                             horizontal = 16.dp,
@@ -157,17 +152,12 @@ fun DuckieDialog(
                                     .weight(1f)
                                     .background(color = QuackColor.DuckieOrange.composeColor)
                                     .quackClickable(
-                                        rippleEnabled = false,
-                                        onClick = leftButtonOnClick,
+                                        onClick = rightButtonOnClick,
                                     ),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 QuackSubtitle(
                                     modifier = Modifier
-                                        .quackClickable(
-                                            rippleEnabled = false,
-                                            onClick = rightButtonOnClick,
-                                        )
                                         .padding(
                                             vertical = 12.dp,
                                             horizontal = 16.dp,
