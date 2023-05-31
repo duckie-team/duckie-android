@@ -46,7 +46,8 @@ internal fun QuizResultContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(all = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 16.dp),
     ) {
         DuckieFitImage(imageUrl = resultImageUrl)
         Spacer(space = 16.dp)

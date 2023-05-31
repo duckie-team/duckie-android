@@ -54,7 +54,7 @@ internal fun ExamResultScreen(
                 modifier = Modifier
                     .padding(vertical = 12.dp)
                     .padding(horizontal = 16.dp),
-                leadingIcon = QuackIcon.Close,
+                leadingIcon = QuackIcon.ArrowBack,
                 onLeadingIconClick = viewModel::exitExam,
             )
         },
