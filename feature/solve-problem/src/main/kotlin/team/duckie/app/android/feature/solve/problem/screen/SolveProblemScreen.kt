@@ -96,6 +96,7 @@ internal fun SolveProblemScreen(
 
     // 답안 제출 다이얼로그
     DuckieDialog(
+        modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(id = R.string.submit_answer),
         message = stringResource(id = R.string.submit_answer_warning),
         leftButtonText = stringResource(id = R.string.cancel),
