@@ -111,6 +111,7 @@ internal fun SolveProblemScreen(
                 modifier = Modifier
                     .layoutId(SolveProblemTopAppBarLayoutId)
                     .padding(vertical = 12.dp)
+                    .padding(start = 12.dp)
                     .padding(end = 16.dp),
                 onCloseClick = {
                     examExitDialogVisible = true
