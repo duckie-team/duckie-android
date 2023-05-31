@@ -93,7 +93,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 horizontal = 16.dp,
             ),
             type = QuackLargeButtonType.Fill,
-            text = stringResource(id = R.string.start_exam_start_button),
+            text = stringResource(id = R.string.start_exam_quiz_start_button),
             enabled = certifyingStatementText.isNotEmpty(),
             onClick = viewModel::startSolveProblem,
         )
