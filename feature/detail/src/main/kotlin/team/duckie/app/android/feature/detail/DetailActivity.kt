@@ -20,15 +20,14 @@ import team.duckie.app.android.common.android.exception.handling.reporter.report
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
-import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.feature.detail.screen.DetailScreen
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEffect
-import team.duckie.app.android.feature.start.exam.screen.StartExamActivity
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
+import team.duckie.app.android.navigator.feature.startexam.StartExamNavigator
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
@@ -43,6 +42,9 @@ class DetailActivity : BaseActivity() {
 
     @Inject
     lateinit var profileNavigator: ProfileNavigator
+
+    @Inject
+    lateinit var startExamNavigator: StartExamNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +86,8 @@ class DetailActivity : BaseActivity() {
                 )
             }
 
-            is DetailSideEffect.StartExam -> startActivityWithAnimation<StartExamActivity>(
+            is DetailSideEffect.StartExam -> startExamNavigator.navigateFrom(
+                activity = this,
                 intentBuilder = {
                     putExtra(Extras.ExamId, sideEffect.examId)
                     putExtra(Extras.CertifyingStatement, sideEffect.certifyingStatement)
@@ -102,7 +105,8 @@ class DetailActivity : BaseActivity() {
             }
 
             is DetailSideEffect.SendToast -> ToastWrapper(this).invoke(sideEffect.message)
-            is DetailSideEffect.StartQuiz -> startActivityWithAnimation<StartExamActivity>(
+            is DetailSideEffect.StartQuiz -> startExamNavigator.navigateFrom(
+                activity = this,
                 intentBuilder = {
                     putExtra(Extras.ExamId, sideEffect.examId)
                     putExtra(Extras.Timer, sideEffect.timer)
