@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.exam.result.screen.quiz
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,7 +50,10 @@ internal fun QuizResultContent(
             .padding(horizontal = 16.dp)
             .padding(bottom = 16.dp),
     ) {
-        DuckieFitImage(imageUrl = resultImageUrl)
+        DuckieFitImage(
+            imageUrl = resultImageUrl,
+            horizontalPadding = PaddingValues(horizontal = 0.dp),
+        )
         Spacer(space = 16.dp)
         // TODO(EvergreenTree97) : 에러 문구 폰트 변경 필요
         Row(

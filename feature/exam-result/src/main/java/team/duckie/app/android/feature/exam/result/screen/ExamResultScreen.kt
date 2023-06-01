@@ -52,7 +52,7 @@ internal fun ExamResultScreen(
         topBar = {
             QuackTopAppBar(
                 modifier = Modifier
-                    .padding(vertical = 12.dp)
+                    .padding(vertical = 8.dp)
                     .padding(horizontal = 16.dp),
                 leadingIcon = QuackIcon.ArrowBack,
                 onLeadingIconClick = viewModel::exitExam,

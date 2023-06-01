@@ -43,11 +43,12 @@ private object DuckieFitImageStyle {
 fun DuckieFitImage(
     modifier: Modifier = Modifier,
     imageUrl: String,
+    horizontalPadding: PaddingValues = DuckieFitImageStyle.HorizontalPadding,
 ) = with(DuckieFitImageStyle) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(HorizontalPadding)
+            .padding(horizontalPadding)
             .background(
                 color = BackgroundColor,
                 shape = BackgroundShape,
