@@ -42,7 +42,7 @@ internal fun ResultBottomBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
     ) {
-        if(isQuiz){
+        if (isQuiz) {
             GrayBorderSmallButton(
                 modifier = Modifier
                     .heightIn(min = 44.dp)

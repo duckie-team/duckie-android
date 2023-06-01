@@ -140,7 +140,7 @@ class ExamResultViewModel @Inject constructor(
                 requirementQuestion = state.requirementQuestion,
                 requirementPlaceholder = state.requirementPlaceholder,
                 timer = state.timer,
-            )
+            ),
         )
     }
 

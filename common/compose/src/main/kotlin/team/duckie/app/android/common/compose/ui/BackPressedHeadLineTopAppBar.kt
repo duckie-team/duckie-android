@@ -44,7 +44,6 @@ fun BackPressedTopAppBar(
     }
 }
 
-
 @Composable
 fun BackPressedHeadLineTopAppBar(
     title: String,

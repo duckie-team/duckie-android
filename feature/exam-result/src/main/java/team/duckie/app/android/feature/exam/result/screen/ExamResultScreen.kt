@@ -39,7 +39,6 @@ internal fun ExamResultScreen(
     viewModel: ExamResultViewModel = activityViewModel(),
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    val activity = LocalContext.current as ExamResultActivity
 
     LaunchedEffect(Unit) {
         viewModel.initState()
@@ -59,7 +58,7 @@ internal fun ExamResultScreen(
             )
         },
         bottomBar = {
-            if((state is ExamResultState.Loading).not()){
+            if ((state is ExamResultState.Loading).not()) {
                 ResultBottomBar(
                     isQuiz = state.isQuiz(),
                     onClickRetryButton = {
