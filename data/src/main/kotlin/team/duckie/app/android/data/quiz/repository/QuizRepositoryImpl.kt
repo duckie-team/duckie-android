@@ -29,6 +29,7 @@ class QuizRepositoryImpl @Inject constructor(
         examId: Int,
         correctProblemCount: Int,
         time: Int?,
+        requirementAnswer: String?,
         problemId: Int?,
     ): Boolean {
         return quizDataSource.patchQuiz(
@@ -37,6 +38,7 @@ class QuizRepositoryImpl @Inject constructor(
                 correctProblemCount = correctProblemCount,
                 time = time,
                 problemId = problemId,
+                requirementAnswer = requirementAnswer,
             ),
         )
     }
