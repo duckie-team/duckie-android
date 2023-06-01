@@ -7,21 +7,21 @@
 
 package team.duckie.app.android.feature.exam.result
 
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
-import team.duckie.app.android.feature.exam.result.screen.ExamResultScreen
-import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultSideEffect
-import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
-import team.duckie.app.android.navigator.feature.home.HomeNavigator
-import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.feature.exam.result.screen.ExamResultScreen
+import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultSideEffect
+import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
+import team.duckie.app.android.navigator.feature.startexam.StartExamNavigator
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class ExamResultActivity : BaseActivity() {
     private val viewModel: ExamResultViewModel by viewModels()
 
     @Inject
-    lateinit var homeNavigator: HomeNavigator
+    lateinit var startExamNavigator: StartExamNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,13 +40,7 @@ class ExamResultActivity : BaseActivity() {
         )
         setContent {
             BackHandler {
-                homeNavigator.navigateFrom(
-                    activity = this,
-                    intentBuilder = {
-                        addFlags(FLAG_ACTIVITY_CLEAR_TOP)
-                    },
-                    withFinish = true,
-                )
+                viewModel.exitExam()
             }
 
             QuackTheme {
@@ -65,18 +59,22 @@ class ExamResultActivity : BaseActivity() {
                 }
             }
 
-            ExamResultSideEffect.FinishExamResult -> {
-                homeNavigator.navigateFrom(
+            is ExamResultSideEffect.FinishExamResult -> {
+                finishWithAnimation()
+            }
+
+            is ExamResultSideEffect.NavigateToStartExam -> {
+                startExamNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
-                        addFlags(FLAG_ACTIVITY_CLEAR_TOP)
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                        putExtra(Extras.Timer, sideEffect.timer)
+                        putExtra(Extras.RequirementQuestion, sideEffect.requirementQuestion)
+                        putExtra(Extras.RequirementPlaceholder, sideEffect.requirementPlaceholder)
+                        putExtra(Extras.IsQuiz, true)
                     },
                     withFinish = true,
                 )
-            }
-
-            is ExamResultSideEffect.SendToast -> {
-                ToastWrapper(this).invoke(message = sideEffect.message)
             }
         }
     }

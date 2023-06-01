@@ -32,7 +32,6 @@ internal class StartExamViewModel @Inject constructor(
     /** state 를 초기 설정한다. */
     fun initState() {
         intent {
-
             val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
             val isQuiz = savedStateHandle.getStateFlow(Extras.IsQuiz, false).value
             if (isQuiz) {
@@ -41,15 +40,19 @@ internal class StartExamViewModel @Inject constructor(
                 val requirementPlaceholder =
                     savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
                 val timer = savedStateHandle.getOrThrow<Int>(Extras.Timer)
-                getRequirementAnswer(examId)
-                reduce {
-                    StartExamState.Input(
-                        examId = examId,
-                        requirementQuestion = requirementQuestion,
-                        requirementPlaceholder = requirementPlaceholder,
-                        timer = timer,
-                        isQuiz = true,
-                    )
+                getQuizUseCase(examId).onSuccess {
+                    reduce {
+                        StartExamState.Input(
+                            examId = examId,
+                            requirementQuestion = requirementQuestion,
+                            requirementPlaceholder = requirementPlaceholder,
+                            certifyingStatementInputText = it.requirementAnswer ?: "",
+                            timer = timer,
+                            isQuiz = true,
+                        )
+                    }
+                }.onFailure {
+                    postSideEffect(StartExamSideEffect.ReportError(it))
                 }
             } else {
                 val certifyingStatement =
@@ -70,19 +73,6 @@ internal class StartExamViewModel @Inject constructor(
         reduce {
             (state as StartExamState.Input).copy(certifyingStatementInputText = text)
         }
-    }
-
-    private fun getRequirementAnswer(examId: Int) = intent {
-        getQuizUseCase(examId).onSuccess {
-            reduce {
-                (state as StartExamState.Input).copy(
-                    certifyingStatementInputText = it.requirementAnswer ?: "",
-                )
-            }
-        }.onFailure {
-            postSideEffect(StartExamSideEffect.ReportError(it))
-        }
-
     }
 
     /** validate 를 체크한다. */

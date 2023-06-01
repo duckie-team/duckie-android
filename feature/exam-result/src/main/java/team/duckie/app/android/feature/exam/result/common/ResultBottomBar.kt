@@ -28,6 +28,7 @@ import team.duckie.quackquack.ui.component.QuackSurface
 
 @Composable
 internal fun ResultBottomBar(
+    isQuiz: Boolean,
     onClickRetryButton: () -> Unit,
     onClickExitButton: () -> Unit,
 ) {
@@ -41,13 +42,15 @@ internal fun ResultBottomBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
     ) {
-        GrayBorderSmallButton(
-            modifier = Modifier
-                .heightIn(min = 44.dp)
-                .weight(1f),
-            text = stringResource(id = R.string.exam_result_solve_retry),
-            onClick = onClickRetryButton,
-        )
+        if(isQuiz){
+            GrayBorderSmallButton(
+                modifier = Modifier
+                    .heightIn(min = 44.dp)
+                    .weight(1f),
+                text = stringResource(id = R.string.exam_result_solve_retry),
+                onClick = onClickRetryButton,
+            )
+        }
         QuackSmallButton(
             modifier = Modifier
                 .heightIn(44.dp)

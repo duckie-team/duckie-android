@@ -20,6 +20,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.feature.exam.result.ExamResultActivity
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.LoadingIndicator
@@ -28,9 +31,6 @@ import team.duckie.app.android.feature.exam.result.screen.exam.ExamResultContent
 import team.duckie.app.android.feature.exam.result.screen.quiz.QuizResultContent
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
-import team.duckie.app.android.common.compose.ui.ErrorScreen
-import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
-import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
 
@@ -59,12 +59,15 @@ internal fun ExamResultScreen(
             )
         },
         bottomBar = {
-            ResultBottomBar(
-                onClickRetryButton = {
-                    viewModel.clickRetry(activity.getString(R.string.exam_result_feature_prepare))
-                },
-                onClickExitButton = viewModel::exitExam,
-            )
+            if((state is ExamResultState.Loading).not()){
+                ResultBottomBar(
+                    isQuiz = state.isQuiz(),
+                    onClickRetryButton = {
+                        viewModel.clickRetry()
+                    },
+                    onClickExitButton = viewModel::exitExam,
+                )
+            }
         },
     ) { padding ->
         QuackCrossfade(
@@ -88,7 +91,10 @@ internal fun ExamResultScreen(
                                 mainTag = mainTag,
                                 ranking = ranking,
                                 message = if (isPerfectScore) {
-                                    stringResource(id = R.string.exam_result_correct_problem_all, mainTag)
+                                    stringResource(
+                                        id = R.string.exam_result_correct_problem_all,
+                                        mainTag
+                                    )
                                 } else {
                                     wrongAnswerMessage
                                 },
@@ -112,3 +118,5 @@ internal fun ExamResultScreen(
         }
     }
 }
+
+private fun ExamResultState.isQuiz() = this is ExamResultState.Success && this.isQuiz
