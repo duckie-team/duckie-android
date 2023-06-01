@@ -16,14 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
-import team.duckie.app.android.feature.exam.result.ExamResultActivity
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.LoadingIndicator
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
@@ -92,7 +90,7 @@ internal fun ExamResultScreen(
                                 message = if (isPerfectScore) {
                                     stringResource(
                                         id = R.string.exam_result_correct_problem_all,
-                                        mainTag
+                                        mainTag,
                                     )
                                 } else {
                                     wrongAnswerMessage
