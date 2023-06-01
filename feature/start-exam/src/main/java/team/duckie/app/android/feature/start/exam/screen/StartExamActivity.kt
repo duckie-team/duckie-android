@@ -18,12 +18,12 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
-import team.duckie.app.android.feature.start.exam.viewmodel.StartExamSideEffect
-import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
-import team.duckie.app.android.navigator.feature.solveproblem.SolveProblemNavigator
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.feature.start.exam.viewmodel.StartExamSideEffect
+import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
+import team.duckie.app.android.navigator.feature.solveproblem.SolveProblemNavigator
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
@@ -64,6 +64,7 @@ class StartExamActivity : BaseActivity() {
                         intentBuilder = {
                             putExtra(Extras.ExamId, sideEffect.examId)
                             putExtra(Extras.IsQuiz, sideEffect.isQuiz)
+                            putExtra(Extras.RequirementAnswer, sideEffect.requirementAnswer)
                         },
                         withFinish = true,
                     )

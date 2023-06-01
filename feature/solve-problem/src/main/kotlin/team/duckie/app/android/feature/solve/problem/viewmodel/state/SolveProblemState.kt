@@ -21,6 +21,7 @@ data class SolveProblemState(
     val problems: ImmutableList<ProblemInstance> = persistentListOf(),
     val quizProblems: ImmutableList<Problem> = persistentListOf(),
     val inputAnswers: ImmutableList<InputAnswer> = persistentListOf(),
+    val requirementAnswer: String = "",
     val totalPage: Int = 0,
 )
 

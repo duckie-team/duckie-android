@@ -29,6 +29,12 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.compose.moveNextPage
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
 import team.duckie.app.android.feature.solve.problem.common.LoadingIndicator
 import team.duckie.app.android.feature.solve.problem.screen.QuizScreen
@@ -37,12 +43,6 @@ import team.duckie.app.android.feature.solve.problem.viewmodel.SolveProblemViewM
 import team.duckie.app.android.feature.solve.problem.viewmodel.SolveProblemViewModel.Companion.TimerCount
 import team.duckie.app.android.feature.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
-import team.duckie.app.android.common.compose.ui.ErrorScreen
-import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
-import team.duckie.app.android.common.compose.moveNextPage
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.const.Extras
-import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
@@ -158,6 +158,7 @@ class SolveProblemActivity : BaseActivity() {
                                 correctProblemCount = sideEffect.correctProblemCount,
                                 time = sideEffect.time,
                                 problemId = sideEffect.problemId,
+                                requirementAnswer = sideEffect.requirementAnswer,
                             ),
                         )
                         putExtra(Extras.IsQuiz, true)

@@ -17,6 +17,11 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
+import team.duckie.app.android.common.kotlin.exception.DuckieResponseFieldNPE
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceUseCase
@@ -29,11 +34,6 @@ import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEffect
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
-import team.duckie.app.android.common.kotlin.exception.DuckieResponseFieldNPE
-import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
-import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel

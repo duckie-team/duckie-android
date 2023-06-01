@@ -18,18 +18,21 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 @AllowMagicNumber
 internal class StartExamViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val getQuizUseCase: GetQuizUseCase,
 ) : ContainerHost<StartExamState, StartExamSideEffect>, ViewModel() {
     override val container = container<StartExamState, StartExamSideEffect>(StartExamState.Loading)
 
     /** state 를 초기 설정한다. */
     fun initState() {
         intent {
+
             val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
             val isQuiz = savedStateHandle.getStateFlow(Extras.IsQuiz, false).value
             if (isQuiz) {
@@ -38,6 +41,7 @@ internal class StartExamViewModel @Inject constructor(
                 val requirementPlaceholder =
                     savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
                 val timer = savedStateHandle.getOrThrow<Int>(Extras.Timer)
+                getRequirementAnswer(examId)
                 reduce {
                     StartExamState.Input(
                         examId = examId,
@@ -68,6 +72,19 @@ internal class StartExamViewModel @Inject constructor(
         }
     }
 
+    private fun getRequirementAnswer(examId: Int) = intent {
+        getQuizUseCase(examId).onSuccess {
+            reduce {
+                (state as StartExamState.Input).copy(
+                    certifyingStatementInputText = it.requirementAnswer ?: "",
+                )
+            }
+        }.onFailure {
+            postSideEffect(StartExamSideEffect.ReportError(it))
+        }
+
+    }
+
     /** validate 를 체크한다. */
     fun startExamValidate(): Boolean {
         return (container.stateFlow.value as? StartExamState.Input)?.isCertified == true
@@ -85,6 +102,7 @@ internal class StartExamViewModel @Inject constructor(
                 },
                 examId = inputState.examId,
                 isQuiz = inputState.isQuiz,
+                requirementAnswer = inputState.certifyingStatementInputText,
             ),
         )
     }

@@ -14,6 +14,7 @@ internal sealed class StartExamSideEffect {
         val certified: Boolean,
         val examId: Int,
         val isQuiz: Boolean,
+        val requirementAnswer: String,
     ) : StartExamSideEffect()
 
     data class ReportError(val exception: Throwable) : StartExamSideEffect()
