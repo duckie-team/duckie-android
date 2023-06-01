@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.common.compose.ui.dialog
 
+import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,10 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -37,30 +39,13 @@ enum class DuckieDialogPosition {
     BOTTOM, CENTER, TOP
 }
 
-fun Modifier.duckieDialogPosition(pos: DuckieDialogPosition) = layout { measurable, constraints ->
-
-    val placeable = measurable.measure(constraints)
-    layout(constraints.maxWidth, constraints.maxHeight) {
-        when (pos) {
-            DuckieDialogPosition.BOTTOM -> {
-                placeable.place(0, constraints.maxHeight - placeable.height)
-            }
-
-            DuckieDialogPosition.CENTER -> {
-                placeable.place(
-                    x = 0,
-                    y = Alignment.CenterVertically.align(
-                        size = placeable.height,
-                        space = constraints.maxHeight,
-                    ),
-                )
-            }
-
-            DuckieDialogPosition.TOP -> {
-                placeable.place(0, 0)
-            }
-        }
+private fun DialogWindowProvider.setGravity(position: DuckieDialogPosition) {
+    val gravity = when (position) {
+        DuckieDialogPosition.BOTTOM -> Gravity.BOTTOM
+        DuckieDialogPosition.CENTER -> Gravity.CENTER
+        DuckieDialogPosition.TOP -> Gravity.TOP
     }
+    window.setGravity(gravity)
 }
 
 @Composable
@@ -74,6 +59,7 @@ fun DuckieDialog(
     rightButtonOnClick: (() -> Unit)? = null,
     visible: Boolean,
     onDismissRequest: () -> Unit,
+    dialogPosition: DuckieDialogPosition = DuckieDialogPosition.CENTER,
     properties: DialogProperties = DialogProperties(
         usePlatformDefaultWidth = false,
     ),
@@ -83,6 +69,9 @@ fun DuckieDialog(
             properties = properties,
             onDismissRequest = onDismissRequest,
         ) {
+            val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
+            dialogWindowProvider.setGravity(position = dialogPosition)
+
             Box(
                 modifier = Modifier
                     .padding(horizontal = 30.dp)

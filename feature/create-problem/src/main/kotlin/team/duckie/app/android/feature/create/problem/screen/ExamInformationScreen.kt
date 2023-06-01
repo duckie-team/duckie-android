@@ -41,6 +41,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.DuckieGridLayout
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.app.android.feature.create.problem.R
 import team.duckie.app.android.feature.create.problem.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.create.problem.common.ImeActionNext
@@ -49,12 +53,6 @@ import team.duckie.app.android.feature.create.problem.common.TitleAndComponent
 import team.duckie.app.android.feature.create.problem.common.getCreateProblemMeasurePolicy
 import team.duckie.app.android.feature.create.problem.common.moveDownFocus
 import team.duckie.app.android.feature.create.problem.viewmodel.CreateProblemViewModel
-import team.duckie.app.android.common.compose.ui.DuckieGridLayout
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
-import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
@@ -264,7 +262,6 @@ internal fun ExamInformationScreen(
     )
 
     DuckieDialog(
-        modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(id = R.string.create_problem_exit_dialog_title),
         message = stringResource(id = R.string.create_problem_exit_dialog_message),
         visible = createProblemExitDialogVisible,

@@ -40,8 +40,6 @@ import team.duckie.app.android.common.compose.isCurrentPage
 import team.duckie.app.android.common.compose.moveNextPage
 import team.duckie.app.android.common.compose.movePrevPage
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
-import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
@@ -83,7 +81,6 @@ internal fun SolveProblemScreen(
 
     // 시험 종료 다이얼로그
     DuckieDialog(
-        modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(id = R.string.quit_exam),
         message = stringResource(id = R.string.not_saved),
         leftButtonText = stringResource(id = R.string.cancel),
@@ -96,7 +93,6 @@ internal fun SolveProblemScreen(
 
     // 답안 제출 다이얼로그
     DuckieDialog(
-        modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(id = R.string.submit_answer),
         message = stringResource(id = R.string.submit_answer_warning),
         leftButtonText = stringResource(id = R.string.cancel),

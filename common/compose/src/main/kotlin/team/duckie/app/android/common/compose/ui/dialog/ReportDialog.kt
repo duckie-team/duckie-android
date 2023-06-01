@@ -20,7 +20,6 @@ fun ReportDialog(
     onDismissRequest: () -> Unit,
 ) {
     DuckieDialog(
-        modifier = modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(id = R.string.report_success),
         rightButtonText = stringResource(id = R.string.check),
         rightButtonOnClick = onClick,

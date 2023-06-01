@@ -43,8 +43,6 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.isCurrentPage
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
-import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
@@ -99,7 +97,6 @@ internal fun QuizScreen(
     }
 
     DuckieDialog(
-        modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(id = R.string.quit_exam),
         message = stringResource(id = R.string.not_saved),
         leftButtonText = stringResource(id = R.string.cancel),

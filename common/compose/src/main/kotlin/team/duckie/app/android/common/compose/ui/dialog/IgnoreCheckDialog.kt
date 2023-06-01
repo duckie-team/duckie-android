@@ -21,7 +21,6 @@ fun IgnoreCheckDialog(
     onDismissRequest: () -> Unit,
 ) {
     DuckieDialog(
-        modifier = modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(id = R.string.ignore_check_title, targetName),
         message = stringResource(id = R.string.ignore_check_content, targetName),
         leftButtonText = stringResource(id = R.string.cancel),
