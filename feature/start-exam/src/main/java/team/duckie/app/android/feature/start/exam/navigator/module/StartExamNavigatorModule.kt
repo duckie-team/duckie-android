@@ -15,7 +15,6 @@ import team.duckie.app.android.feature.start.exam.navigator.impl.StartExamNaviga
 import team.duckie.app.android.navigator.feature.startexam.StartExamNavigator
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class StartExamNavigatorModule {

@@ -24,19 +24,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
+import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.feature.start.exam.R
 import team.duckie.app.android.feature.start.exam.screen.StartExamScreen
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
-import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 /**
