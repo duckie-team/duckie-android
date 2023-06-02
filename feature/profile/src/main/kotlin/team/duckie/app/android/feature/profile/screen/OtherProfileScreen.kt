@@ -37,7 +37,7 @@ import team.duckie.app.android.feature.profile.screen.section.FollowSection
 import team.duckie.app.android.feature.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
-import team.duckie.app.android.common.compose.ui.Create
+import team.duckie.app.android.common.compose.ui.icon.v1.Create
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.compose.ui.dialog.IgnoreCheckDialog
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog

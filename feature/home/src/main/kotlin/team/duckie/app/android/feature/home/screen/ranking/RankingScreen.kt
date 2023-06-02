@@ -50,7 +50,7 @@ import team.duckie.app.android.feature.home.component.HomeIconSize
 import team.duckie.app.android.feature.home.constants.RankingPage
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingSideEffect
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
-import team.duckie.app.android.common.compose.ui.Create
+import team.duckie.app.android.common.compose.ui.icon.v1.Create
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.common.kotlin.AllowMagicNumber

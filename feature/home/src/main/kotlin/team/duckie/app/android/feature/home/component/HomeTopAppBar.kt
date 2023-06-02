@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
 import okhttp3.internal.immutableListOf
 import team.duckie.app.android.feature.home.R
-import team.duckie.app.android.common.compose.ui.Create
+import team.duckie.app.android.common.compose.ui.icon.v1.Create
 import team.duckie.app.android.common.compose.ui.TextTabLayout
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
