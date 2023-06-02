@@ -103,19 +103,25 @@ class ExamResultViewModel @Inject constructor(
         getQuizUseCase(examId).onSuccess { quizResult ->
             val isPerfectScore = quizResult.wrongProblem == null
             reduce {
-                ExamResultState.Success(
-                    reportUrl = if (isPerfectScore) {
-                        quizResult.exam.perfectScoreImageUrl ?: ""
-                    } else {
-                        quizResult.wrongProblem?.solution?.solutionImageUrl ?: ""
-                    },
-                    isQuiz = true,
-                    correctProblemCount = quizResult.correctProblemCount,
-                    time = quizResult.time,
-                    mainTag = quizResult.exam.mainTag?.name ?: "",
-                    ranking = quizResult.ranking ?: 0,
-                    wrongAnswerMessage = quizResult.wrongProblem?.solution?.wrongAnswerMessage ?: "",
-                )
+                with(quizResult) {
+                    ExamResultState.Success(
+                        examId = id,
+                        reportUrl = if (isPerfectScore) {
+                            exam.perfectScoreImageUrl ?: ""
+                        } else {
+                            wrongProblem?.solution?.solutionImageUrl ?: ""
+                        },
+                        isQuiz = true,
+                        correctProblemCount = correctProblemCount,
+                        time = time,
+                        mainTag = exam.mainTag?.name ?: "",
+                        ranking = ranking ?: 0,
+                        wrongAnswerMessage = wrongProblem?.solution?.wrongAnswerMessage ?: "",
+                        requirementPlaceholder = exam.requirementPlaceholder ?: "",
+                        requirementQuestion = exam.requirementQuestion ?: "",
+                        timer = exam.timer ?: 0,
+                    )
+                }
             }
         }.onFailure {
             it.printStackTrace()
@@ -126,8 +132,16 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
-    fun clickRetry(message: String) = intent {
-        postSideEffect(ExamResultSideEffect.SendToast(message))
+    fun clickRetry() = intent {
+        val state = state as ExamResultState.Success
+        postSideEffect(
+            ExamResultSideEffect.NavigateToStartExam(
+                examId = state.examId,
+                requirementQuestion = state.requirementQuestion,
+                requirementPlaceholder = state.requirementPlaceholder,
+                timer = state.timer,
+            ),
+        )
     }
 
     fun exitExam() = intent {

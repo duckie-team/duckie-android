@@ -84,6 +84,7 @@ dependencies {
         projects.feature.solveProblem,
         projects.feature.notification,
         projects.feature.createProblem,
+        projects.feature.startExam,
         projects.feature.detail,
         projects.feature.profile,
         projects.feature.setting,

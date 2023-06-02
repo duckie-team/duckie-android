@@ -8,7 +8,9 @@
 package team.duckie.app.android.feature.exam.result.screen.quiz
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,8 +32,8 @@ import team.duckie.app.android.feature.exam.result.R
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.internal.QuackText
+import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
@@ -46,19 +48,28 @@ internal fun QuizResultContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(all = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 16.dp),
     ) {
-        DuckieFitImage(imageUrl = resultImageUrl)
+        DuckieFitImage(
+            imageUrl = resultImageUrl,
+            horizontalPadding = PaddingValues(horizontal = 0.dp),
+        )
         Spacer(space = 16.dp)
         // TODO(EvergreenTree97) : 에러 문구 폰트 변경 필요
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 30.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             QuackHeadLine1(text = "\"")
-            QuackHeadLine1(text = message)
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center,
+            ) {
+                QuackHeadLine1(text = message)
+            }
             QuackHeadLine1(text = "\"")
         }
         Spacer(space = 28.dp)

@@ -27,4 +27,5 @@ object Extras {
     const val RequirementQuestion = "ExtraRequirementQuestion"
     const val RequirementPlaceholder = "ExtraRequirementPlaceholder"
     const val Timer = "ExtraTimer"
+    const val RequirementAnswer = "ExtraRequirementAnswer"
 }

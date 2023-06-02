@@ -16,4 +16,6 @@ data class PatchQuizBody(
     val correctProblemCount: Int? = null,
     @JsonProperty("time")
     val time: Int? = null,
+    @JsonProperty("requirementAnswer")
+    val requirementAnswer: String? = null,
 )

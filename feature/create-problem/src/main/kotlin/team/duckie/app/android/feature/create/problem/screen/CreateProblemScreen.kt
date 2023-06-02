@@ -66,9 +66,16 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.rememberToast
+import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.ui.PhotoPicker
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.kotlin.fastForEach
+import team.duckie.app.android.common.kotlin.fastForEachIndexed
+import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.feature.create.problem.R
 import team.duckie.app.android.feature.create.problem.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.create.problem.common.NoLazyGridItems
@@ -77,15 +84,6 @@ import team.duckie.app.android.feature.create.problem.common.getCreateProblemMea
 import team.duckie.app.android.feature.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemStep
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialogPosition
-import team.duckie.app.android.common.compose.ui.dialog.duckieDialogPosition
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.compose.rememberToast
-import team.duckie.app.android.common.compose.systemBarPaddings
-import team.duckie.app.android.common.kotlin.fastForEach
-import team.duckie.app.android.common.kotlin.fastForEachIndexed
-import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
@@ -572,7 +570,6 @@ internal fun CreateProblemScreen(
     }
 
     DuckieDialog(
-        modifier = Modifier.duckieDialogPosition(DuckieDialogPosition.CENTER),
         title = stringResource(
             id = R.string.create_problem_delete_dialog_title,
             (deleteDialogNo?.first?.let { "${it + 1}번 문제" } ?: "") +

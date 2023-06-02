@@ -12,6 +12,7 @@ sealed class ExamResultState {
 
     data class Success(
         val reportUrl: String = "",
+        val examId: Int = 0,
         val isQuiz: Boolean = true,
         val correctProblemCount: Int = 0,
         val time: Int = 0,
@@ -19,6 +20,9 @@ sealed class ExamResultState {
         val ranking: Int = 0,
         val wrongAnswerMessage: String = "",
         val isPerfectScore: Boolean = false,
+        val requirementQuestion: String = "",
+        val requirementPlaceholder: String = "",
+        val timer: Int = 0,
     ) : ExamResultState()
 
     data class Error(

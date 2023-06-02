@@ -27,7 +27,6 @@ dependencies {
         projects.common.android,
         projects.common.kotlin,
         projects.common.compose,
-        projects.feature.startExam,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,

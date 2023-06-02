@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.start.exam.R
@@ -37,9 +38,7 @@ import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 
 @Composable
@@ -52,19 +51,19 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
     }
 
     Column(modifier = modifier) {
-        QuackTopAppBar(
-            leadingIcon = QuackIcon.ArrowBack,
-            onLeadingIconClick = viewModel::finishStartExam,
-        )
+        BackPressedTopAppBar(onBackPressed = viewModel::finishStartExam)
         Column(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
         ) {
+            Spacer(space = 12.dp)
             InfoBox(
                 modifier = Modifier
-                    .padding(top = 12.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(color = QuackColor.Gray4.composeColor)
+                    .padding(all = 12.dp),
                 limitTime = state.timer,
             )
             QuackTitle2(
@@ -90,7 +89,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 horizontal = 16.dp,
             ),
             type = QuackLargeButtonType.Fill,
-            text = stringResource(id = R.string.start_exam_start_button),
+            text = stringResource(id = R.string.start_exam_quiz_start_button),
             enabled = certifyingStatementText.isNotEmpty(),
             onClick = viewModel::startSolveProblem,
         )
@@ -99,15 +98,12 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
 }
 
 @Composable
-internal fun InfoBox(
+private fun InfoBox(
     modifier: Modifier = Modifier,
     limitTime: Int,
 ) {
     Column(
-        modifier = modifier
-            .background(color = QuackColor.Gray4.composeColor)
-            .padding(all = 12.dp)
-            .clip(RoundedCornerShape(8.dp)),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
     ) {
         QuackTitle2(text = stringResource(id = R.string.start_exam_information_before_quiz_title))

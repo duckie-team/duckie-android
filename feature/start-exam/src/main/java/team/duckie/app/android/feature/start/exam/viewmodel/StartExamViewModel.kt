@@ -18,12 +18,14 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 @AllowMagicNumber
 internal class StartExamViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val getQuizUseCase: GetQuizUseCase,
 ) : ContainerHost<StartExamState, StartExamSideEffect>, ViewModel() {
     override val container = container<StartExamState, StartExamSideEffect>(StartExamState.Loading)
 
@@ -38,14 +40,19 @@ internal class StartExamViewModel @Inject constructor(
                 val requirementPlaceholder =
                     savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
                 val timer = savedStateHandle.getOrThrow<Int>(Extras.Timer)
-                reduce {
-                    StartExamState.Input(
-                        examId = examId,
-                        requirementQuestion = requirementQuestion,
-                        requirementPlaceholder = requirementPlaceholder,
-                        timer = timer,
-                        isQuiz = true,
-                    )
+                getQuizUseCase(examId).onSuccess {
+                    reduce {
+                        StartExamState.Input(
+                            examId = examId,
+                            requirementQuestion = requirementQuestion,
+                            requirementPlaceholder = requirementPlaceholder,
+                            certifyingStatementInputText = it.requirementAnswer ?: "",
+                            timer = timer,
+                            isQuiz = true,
+                        )
+                    }
+                }.onFailure {
+                    postSideEffect(StartExamSideEffect.ReportError(it))
                 }
             } else {
                 val certifyingStatement =
@@ -85,6 +92,7 @@ internal class StartExamViewModel @Inject constructor(
                 },
                 examId = inputState.examId,
                 isQuiz = inputState.isQuiz,
+                requirementAnswer = inputState.certifyingStatementInputText,
             ),
         )
     }

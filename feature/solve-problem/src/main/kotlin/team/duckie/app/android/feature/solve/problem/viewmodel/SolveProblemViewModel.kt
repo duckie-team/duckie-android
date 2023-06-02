@@ -11,7 +11,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.StateFlow
 import org.orbitmvi.orbit.Container
@@ -20,17 +19,17 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.savedstate.getOrThrow
+import team.duckie.app.android.common.android.timer.ProblemTimer
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.kotlin.ImmutableList
+import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.feature.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
-import team.duckie.app.android.common.android.savedstate.getOrThrow
-import team.duckie.app.android.common.android.timer.ProblemTimer
-import team.duckie.app.android.common.kotlin.ImmutableList
-import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
-import team.duckie.app.android.common.kotlin.seconds
-import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel
@@ -80,6 +79,10 @@ internal class SolveProblemViewModel @Inject constructor(
             )
         }
         if (isQuiz) {
+            val requirementAnswer = savedStateHandle.getOrThrow<String>(Extras.RequirementAnswer)
+            reduce {
+                state.copy(requirementAnswer = requirementAnswer)
+            }
             getQuizs(examId)
         } else {
             getExams(examId)
@@ -183,6 +186,7 @@ internal class SolveProblemViewModel @Inject constructor(
                 } else {
                     state.quizProblems[index].id
                 },
+                requirementAnswer = state.requirementAnswer,
             ),
         )
     }

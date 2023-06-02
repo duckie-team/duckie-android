@@ -9,4 +9,5 @@
     <string name="start_exam_information_before_quiz_line2_infix">약 %s초의 제한시간이 있습니다.&#160;</string>
     <string name="start_exam_information_before_quiz_line2_postfix">문제를 잘 읽고 시간 내에 물음에 답해주세요.</string>
     <string name="start_exam_challenge_condition">&lt;도전 조건&gt;</string>
+    <string name="start_exam_quiz_start_button">덕퀴즈 도전</string>
 </resources>

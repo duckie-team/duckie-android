@@ -41,20 +41,19 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import team.duckie.app.android.common.compose.isCurrentPage
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
 import team.duckie.app.android.feature.solve.problem.R
 import team.duckie.app.android.feature.solve.problem.answer.answerSection
 import team.duckie.app.android.feature.solve.problem.common.ButtonBottomBar
+import team.duckie.app.android.feature.solve.problem.common.FlexibleSubjectiveQuestionSection
 import team.duckie.app.android.feature.solve.problem.common.TimerTopBar
 import team.duckie.app.android.feature.solve.problem.question.questionSection
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
-import team.duckie.app.android.common.compose.isCurrentPage
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.feature.solve.problem.common.FlexibleSubjectiveQuestionSection
 
 private const val QuizTopAppBarLayoutId = "QuizTopAppBar"
 private const val QuizContentLayoutId = "QuizContent"
