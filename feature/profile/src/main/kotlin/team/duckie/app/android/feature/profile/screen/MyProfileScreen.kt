@@ -73,18 +73,18 @@ fun MyProfileScreen(
         },
         topBar = {
             HeadLineTopAppBar(
-                title = stringResource(id = R.string.mypage),
+                title = userProfile.user?.nickname ?: "",
                 rightIcons = {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        QuackImage(
-                            src = QuackIcon.Setting,
-                            size = DpSize(all = 24.dp),
-                            onClick = onClickSetting,
-                        )
                         QuackImage(
                             src = QuackIcon.Notice,
                             size = DpSize(all = 24.dp),
                             onClick = onClickNotification,
+                        )
+                        QuackImage(
+                            src = QuackIcon.Setting,
+                            size = DpSize(all = 24.dp),
+                            onClick = onClickSetting,
                         )
                     }
                 },
