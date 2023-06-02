@@ -13,6 +13,7 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -22,13 +23,8 @@ import androidx.savedstate.SavedStateRegistryOwner
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import java.io.File
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.apache.commons.io.FileUtils
@@ -37,6 +33,10 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.permission.PermissionCompat
+import team.duckie.app.android.common.android.savedstate.SaveableMutableStateFlow
+import team.duckie.app.android.common.android.viewmodel.context
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.JoinUseCase
 import team.duckie.app.android.domain.category.model.Category
@@ -56,11 +56,9 @@ import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
 import team.duckie.app.android.feature.onboard.viewmodel.state.ProfileScreenState
-import team.duckie.app.android.common.android.permission.PermissionCompat
-import team.duckie.app.android.common.android.savedstate.SaveableMutableStateFlow
-import team.duckie.app.android.common.android.viewmodel.context
-import team.duckie.app.android.common.kotlin.fastMap
-import team.duckie.app.android.common.kotlin.seconds
+import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 private val NextStepNavigateThrottle = 1.seconds
 private const val ProfileImageCompressQuality = 100
@@ -262,17 +260,6 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    suspend fun updateUserFavoriteTags(names: List<String>): List<Result<Tag>> {
-        return suspendCancellableCoroutine { continuation ->
-            viewModelScope.launch {
-                val tags = names.fastMap { name ->
-                    async { createTag(name) }
-                }.awaitAll()
-                continuation.resume(tags)
-            }
-        }
-    }
-
     /* ----- Permission ----- */
 
     fun updateImagePermissionGrantState(isGranted: Boolean?) {
@@ -329,6 +316,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             viewModelScope.launch {
                 fileUploadUseCase(file, FileType.Profile)
                     .onSuccess { url ->
+                        Log.i("riflockle7", url);
                         continuation.resume(url)
                     }
                     .onFailure { exception ->
@@ -338,15 +326,16 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun createTag(name: String): Result<Tag> {
+    suspend fun createTag(name: String): Tag? {
         return suspendCancellableCoroutine { continuation ->
             viewModelScope.launch {
                 tagCreateUseCase(name)
                     .onSuccess { tag ->
-                        continuation.resume(Result.success(tag))
+                        continuation.resume(tag)
                     }
                     .onFailure { exception ->
-                        continuation.resume(Result.failure(exception))
+                        intent { postSideEffect(OnboardSideEffect.ReportError(exception)) }
+                        continuation.resume(null)
                     }
             }
         }

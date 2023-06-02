@@ -16,19 +16,14 @@ package team.duckie.app.android.feature.onboard.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -42,38 +37,24 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.app.android.feature.onboard.R
-import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
-import team.duckie.app.android.feature.onboard.common.TitleAndDescription
-import team.duckie.app.android.feature.onboard.constant.OnboardStep
-import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
-import team.duckie.app.android.common.compose.ui.ImeSpacer
-import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.asLoose
-import team.duckie.app.android.common.compose.invisible
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.ui.domain.DuckieTagAddBottomSheet
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.fastAny
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
@@ -81,14 +62,19 @@ import team.duckie.app.android.common.kotlin.fastFlatten
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.common.kotlin.npe
+import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.feature.onboard.R
+import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
+import team.duckie.app.android.feature.onboard.common.TitleAndDescription
+import team.duckie.app.android.feature.onboard.constant.OnboardStep
+import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
+import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
 import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBasic2TextField
 import team.duckie.quackquack.ui.component.QuackCircleTag
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
-import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -144,7 +130,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     val toast = rememberToast()
 
     var isLoadingToFinish by remember { mutableStateOf(false) }
-    val addedTags = remember { mutableStateListOf<String>() }
+    val addedTags = remember { mutableStateListOf<Tag>() }
 
     val onboardState by vm.collectAsState()
     val sheetState =
@@ -168,110 +154,86 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
         }
     }
 
-    ModalBottomSheetLayout(
-        modifier = Modifier.fillMaxSize(),
+    DuckieTagAddBottomSheet(
         sheetState = sheetState,
-        sheetBackgroundColor = QuackColor.White.composeColor,
-        scrimColor = QuackColor.Dimmed.composeColor,
-        sheetShape = RoundedCornerShape(
-            topStart = 16.dp,
-            topEnd = 16.dp,
-        ),
-        sheetContent = {
-            TagScreenModalBottomSheetContent(
-                onDismissRequest = { newAddedTags, clearAction ->
-                    coroutineScope.launch {
-                        addedTags.addAll(newAddedTags)
-                        clearAction()
-                        sheetState.hide()
-                    }
-                },
-            )
+        onDismissRequest = { newAddedTags, clearAction ->
+            coroutineScope.launch {
+                addedTags.addAll(newAddedTags)
+                clearAction()
+                sheetState.hide()
+            }
         },
-    ) {
-        Layout(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = systemBarPaddings.calculateBottomPadding() + 16.dp),
-            content = {
-                OnboardTopAppBar(
-                    modifier = Modifier.layoutId(TagScreenTopAppBarLayoutId),
-                    currentStep = currentStep,
-                )
-                TagSelection(
-                    modifier = Modifier
-                        .layoutId(TagScreenTagSelectionLayoutId)
-                        .padding(vertical = 12.dp),
-                    sheetState = sheetState,
-                    addedTags = addedTags,
-                    requestRemoveAddedTag = { index ->
-                        addedTags.remove(addedTags[index])
-                    },
-                )
-                QuackLargeButton(
-                    modifier = Modifier
-                        .layoutId(TagScreenQuackLargeButtonLayoutId)
-                        .padding(horizontal = 20.dp),
-                    text = stringResource(id = R.string.button_start_duckie),
-                    type = QuackLargeButtonType.Fill,
-                    enabled = true,
-                    isLoading = isLoadingToFinish,
-                ) {
-                    updateUserAndFinishOnboard(
-                        coroutineScope = coroutineScope,
-                        toast = toast,
-                        vm = vm,
-                        onboardState = onboardState,
+        requestAddTag = vm::createTag,
+        content = {
+            Layout(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = systemBarPaddings.calculateBottomPadding() + 16.dp),
+                content = {
+                    OnboardTopAppBar(
+                        modifier = Modifier.layoutId(TagScreenTopAppBarLayoutId),
+                        currentStep = currentStep,
+                    )
+                    TagSelection(
+                        modifier = Modifier
+                            .layoutId(TagScreenTagSelectionLayoutId)
+                            .padding(vertical = 12.dp),
+                        sheetState = sheetState,
                         addedTags = addedTags,
-                        updateIsLoadingToFinishState = { isLoading ->
-                            isLoadingToFinish = isLoading
+                        requestRemoveAddedTag = { index ->
+                            addedTags.remove(addedTags[index])
                         },
                     )
-                }
-            },
-            measurePolicy = TagScreenMeasurePolicy,
-        )
-    }
+                    QuackLargeButton(
+                        modifier = Modifier
+                            .layoutId(TagScreenQuackLargeButtonLayoutId)
+                            .padding(horizontal = 20.dp),
+                        text = stringResource(id = R.string.button_start_duckie),
+                        type = QuackLargeButtonType.Fill,
+                        enabled = true,
+                        isLoading = isLoadingToFinish,
+                    ) {
+                        updateUserAndFinishOnboard(
+                            coroutineScope = coroutineScope,
+                            vm = vm,
+                            onboardState = onboardState,
+                            addedTags = addedTags,
+                            updateIsLoadingToFinishState = { isLoading ->
+                                isLoadingToFinish = isLoading
+                            },
+                        )
+                    }
+                },
+                measurePolicy = TagScreenMeasurePolicy,
+            )
+        },
+    )
 }
 
 private fun updateUserAndFinishOnboard(
     coroutineScope: CoroutineScope,
-    toast: ToastWrapper,
     vm: OnboardViewModel,
     onboardState: OnboardState,
-    addedTags: List<String>,
+    addedTags: List<Tag>,
     updateIsLoadingToFinishState: (isLoading: Boolean) -> Unit,
 ) {
     updateIsLoadingToFinishState(true)
     coroutineScope.launch {
         val profileImageUrlDeferred = onboardState.temporaryProfileImageFile?.let {
-            async { vm.uploadProfileImage(file = it) }
+            vm.uploadProfileImage(file = it)
         }
-        val favoriteTagsDeferred = async {
-            vm.updateUserFavoriteTags(names = addedTags)
-        }
-        val (profileImageUrl, favoriteTagsResult) = awaitAll(
-            profileImageUrlDeferred ?: async { "" },
-            favoriteTagsDeferred,
+
+        val profileImageUrl = profileImageUrlDeferred ?: ""
+
+        vm.updateUser(
+            id = vm.me.id,
+            nickname = onboardState.temporaryNickname,
+            profileImageUrl = profileImageUrl.takeIf { profileImageUrlDeferred != null },
+            favoriteCategories = onboardState.selectedCategories,
+            favoriteTags = addedTags,
         )
-        @Suppress("UNCHECKED_CAST")
-        val favoriteTags =
-            (favoriteTagsResult as List<Result<Tag>>).mapNotNull(Result<Tag>::getOrNull)
-        if (favoriteTags.size == addedTags.size) {
-            vm.updateUser(
-                id = vm.me.id,
-                nickname = onboardState.temporaryNickname,
-                profileImageUrl = (profileImageUrl as String).takeIf { profileImageUrlDeferred != null },
-                favoriteCategories = onboardState.selectedCategories,
-                favoriteTags = favoriteTags,
-            )
-            updateIsLoadingToFinishState(false)
-        } else {
-            val favoriteTagNames = favoriteTags.fastMap(Tag::name)
-            val createFailedTags = addedTags.dropWhile(favoriteTagNames::contains)
-            toast(stringRes = R.string.tag_toast_create_failed, createFailedTags.joinToString(", "))
-            updateIsLoadingToFinishState(false)
-        }
+
+        updateIsLoadingToFinishState(false)
     }
 }
 
@@ -279,7 +241,7 @@ private fun updateUserAndFinishOnboard(
 private fun TagSelection(
     modifier: Modifier,
     sheetState: ModalBottomSheetState,
-    addedTags: SnapshotStateList<String>,
+    addedTags: SnapshotStateList<Tag>,
     requestRemoveAddedTag: (index: Int) -> Unit,
     vm: OnboardViewModel = activityViewModel(),
 ) {
@@ -346,7 +308,7 @@ private fun TagSelection(
                 ) {
                     addedTags.fastForEachIndexed { index, tag ->
                         QuackCircleTag(
-                            text = tag,
+                            text = tag.name,
                             isSelected = false,
                             trailingIcon = QuackIcon.Close,
                         ) {
@@ -397,100 +359,5 @@ private fun TagSelection(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun TagScreenModalBottomSheetContent(
-    onDismissRequest: (addedTags: List<String>, clearAction: () -> Unit) -> Unit,
-) {
-    val toast = rememberToast()
-    val context = LocalContext.current
-
-    val inputtedTags = remember { mutableStateListOf<String>() }
-    var tagInput by remember { mutableStateOf("") }
-
-    fun updateTagInput() {
-        if (tagInput.isNotBlank()) {
-            if (inputtedTags.contains(tagInput)) {
-                toast(context.getString(R.string.tag_toast_already_added))
-                return
-            }
-            inputtedTags.add(0, tagInput)
-            tagInput = ""
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = systemBarPaddings.calculateBottomPadding()),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    vertical = 16.dp,
-                    horizontal = 16.dp,
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            QuackTitle2(text = stringResource(R.string.tag_added_tag))
-            QuackSubtitle(
-                text = stringResource(R.string.button_done),
-                color = QuackColor.DuckieOrange,
-                padding = PaddingValues(vertical = 4.dp),
-                onClick = {
-                    onDismissRequest(inputtedTags) {
-                        inputtedTags.clear()
-                    }
-                },
-            )
-        }
-        if (inputtedTags.isNotEmpty()) {
-            Box(modifier = Modifier.padding()) {
-                QuackCircleTag(
-                    modifier = Modifier
-                        .zIndex(0f)
-                        .invisible(),
-                    text = "",
-                    isSelected = false,
-                )
-
-                // TODO(sungbin): 애니메이션 출처 밝히기
-                FlowRow(
-                    modifier = Modifier
-                        .zIndex(1f)
-                        .padding(
-                            vertical = 12.dp,
-                            horizontal = 16.dp,
-                        ),
-                    mainAxisSpacing = 8.dp,
-                    crossAxisSpacing = 8.dp,
-                ) {
-                    inputtedTags.fastForEachIndexed { index, tag ->
-                        QuackCircleTag(
-                            text = tag,
-                            isSelected = false,
-                            trailingIcon = QuackIcon.Close,
-                        ) {
-                            inputtedTags.remove(inputtedTags[index])
-                        }
-                    }
-                }
-            }
-        }
-        QuackBasic2TextField(
-            text = tagInput,
-            onTextChanged = { tagInput = it },
-            placeholderText = stringResource(R.string.tag_add_manual_placeholder),
-            leadingStartPadding = 16.dp,
-            trailingEndPadding = 10.dp,
-            trailingIcon = QuackIcon.ArrowSend,
-            trailingIconOnClick = ::updateTagInput,
-            keyboardActions = KeyboardActions { updateTagInput() },
-        )
-        ImeSpacer()
     }
 }
