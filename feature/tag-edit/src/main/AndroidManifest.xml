@@ -10,6 +10,7 @@
     <application>
         <activity
             android:name="TagEditActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 </manifest>
