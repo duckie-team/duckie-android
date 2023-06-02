@@ -18,4 +18,7 @@
     <string name="report">신고하기</string>
     <string name="check">확인</string>
     <string name="quiz_ranking_title">%s 덕퀴즈 랭킹</string>
+    <string name="detail_exam_info">시험정보</string>
+    <string name="detail_total_exam_count">총 문제 수 : %d개</string>
+    <string name="detail_total_examinee">응시자 : %d명</string>
 </resources>
