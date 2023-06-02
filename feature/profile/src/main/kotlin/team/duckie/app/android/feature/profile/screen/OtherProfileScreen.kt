@@ -21,6 +21,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -40,6 +42,7 @@ import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.compose.ui.dialog.IgnoreCheckDialog
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
+import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
@@ -103,12 +106,17 @@ internal fun OtherProfileScreen(
                     title = state.userProfile.username(),
                     isLoading = state.isLoading,
                     onBackPressed = viewModel::clickBackPress,
-                    trailingIcon = QuackIcon.More,
-                    onTrailingIconClick = {
-                        viewModel.updateBottomSheetDialogType(DuckieSelectableType.Ignore)
-                        coroutineScope.launch {
-                            bottomSheetState.show()
-                        }
+                    trailingContent = {
+                        QuackImage(
+                            size = DpSize(24.dp, 24.dp),
+                            src = QuackIcon.More,
+                            onClick = {
+                                viewModel.updateBottomSheetDialogType(DuckieSelectableType.Ignore)
+                                coroutineScope.launch {
+                                    bottomSheetState.show()
+                                }
+                            },
+                        )
                     },
                 )
             },
