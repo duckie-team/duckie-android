@@ -58,7 +58,6 @@ internal fun SearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(SearchHorizontalPadding)
             .imePadding(),
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -148,6 +147,7 @@ private fun LazyListScope.recentKeywordSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(SearchHorizontalPadding)
                 .padding(bottom = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -185,6 +185,7 @@ private fun RecentSearchLayout(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick(keyword) }
+            .padding(SearchHorizontalPadding)
             .padding(vertical = 12.dp),
     ) {
         QuackImage(
