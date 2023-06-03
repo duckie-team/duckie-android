@@ -106,5 +106,8 @@ object ExamDummyResponse {
         problems = null,
         quizs = persistentListOf(),
         perfectScoreImageUrl = null,
+        timer = null,
+        requirementQuestion = null,
+        requirementPlaceholder = null,
     )
 }
