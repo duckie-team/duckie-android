@@ -61,7 +61,10 @@ object ExamDummyResponse {
             "heart": null,
             "heartCount": 3,
             "challenges": [],
-            "perfectScoreImageUrl": null
+            "perfectScoreImageUrl": null,
+            "timer": 0,
+            "requirementQuestion": "",
+            "requirementPlaceholder": ""
         }
     """
 
@@ -106,5 +109,8 @@ object ExamDummyResponse {
         problems = null,
         quizs = persistentListOf(),
         perfectScoreImageUrl = null,
+        timer = 0,
+        requirementQuestion = "",
+        requirementPlaceholder = "",
     )
 }
