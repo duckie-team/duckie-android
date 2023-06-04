@@ -31,6 +31,7 @@ import team.duckie.quackquack.ui.textstyle.QuackTextStyle
 @Composable
 internal fun ButtonBottomBar(
     modifier: Modifier = Modifier,
+    enabled: Boolean,
     isLastPage: Boolean = false,
     onRightButtonClick: () -> Unit,
 ) {
@@ -50,15 +51,21 @@ internal fun ButtonBottomBar(
             Spacer(modifier = Modifier)
             QuackAnimatedContent(targetState = isLastPage) {
                 when (it) {
-                    false -> MediumButton(
+                    true -> MediumButton(
                         text = stringResource(id = R.string.next),
+                        enabled = enabled,
                         onClick = onRightButtonClick,
                     )
 
-                    true -> MediumButton(
+                    false -> MediumButton(
                         text = stringResource(id = R.string.submit),
+                        enabled = enabled,
                         onClick = onRightButtonClick,
-                        backgroundColor = QuackColor.DuckieOrange,
+                        backgroundColor = if (enabled) {
+                            QuackColor.DuckieOrange
+                        } else {
+                            QuackColor.Gray2
+                        },
                         border = null,
                         textColor = QuackColor.White,
                     )
@@ -91,14 +98,14 @@ internal fun DoubleButtonBottomBar(
         ) {
             QuackAnimatedContent(targetState = isFirstPage) {
                 when (it) {
-                    false -> {
+                    true -> {
                         MediumButton(
                             text = stringResource(id = R.string.previous),
                             onClick = onLeftButtonClick,
                         )
                     }
 
-                    true -> {
+                    false -> {
                         Spacer(modifier = Modifier)
                     }
                 }
@@ -127,17 +134,22 @@ internal fun DoubleButtonBottomBar(
 @Composable
 private fun MediumButton(
     text: String,
+    enabled: Boolean = true,
     onClick: () -> Unit,
-    backgroundColor: QuackColor = QuackColor.White,
-    border: QuackBorder? = QuackBorder(color = QuackColor.Gray3),
-    textColor: QuackColor = QuackColor.Gray1,
+    backgroundColor: QuackColor = backgroundFor(enabled),
+    border: QuackBorder? = borderFor(enabled),
+    textColor: QuackColor = textColorFor(enabled),
 ) {
     QuackSurface(
         modifier = Modifier,
         backgroundColor = backgroundColor,
         border = border,
         shape = RoundedCornerShape(size = 8.dp),
-        onClick = onClick,
+        onClick = if (enabled) {
+            onClick
+        } else {
+            null
+        },
     ) {
         QuackText(
             modifier = Modifier.padding(
@@ -151,5 +163,32 @@ private fun MediumButton(
             ),
             singleLine = true,
         )
+    }
+}
+
+@Composable
+private fun backgroundFor(enabled: Boolean): QuackColor {
+    return if (enabled) {
+        QuackColor.White
+    } else {
+        QuackColor.Gray2
+    }
+}
+
+@Composable
+private fun borderFor(enabled: Boolean): QuackBorder? {
+    return if (enabled) {
+        QuackBorder(color = QuackColor.Gray3)
+    } else {
+        null
+    }
+}
+
+@Composable
+private fun textColorFor(enabled: Boolean): QuackColor {
+    return if (enabled) {
+        QuackColor.Gray1
+    } else {
+        QuackColor.White
     }
 }
