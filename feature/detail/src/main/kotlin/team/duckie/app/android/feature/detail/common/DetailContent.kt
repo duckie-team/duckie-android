@@ -151,10 +151,15 @@ private fun DetailProfileLayout(
     val isFollowed = remember(state.isFollowing) { state.isFollowing }
 
     Row(
-        modifier = Modifier.padding(
-            horizontal = 16.dp,
-            vertical = 12.dp,
-        ),
+        modifier = Modifier
+            .quackClickable(
+                onClick = { profileClick(state.exam.user?.id ?: 0) },
+                rippleEnabled = false,
+            )
+            .padding(
+                horizontal = 16.dp,
+                vertical = 12.dp,
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // 작성자 프로필 이미지
@@ -177,12 +182,7 @@ private fun DetailProfileLayout(
         // 공백
         Spacer(modifier = Modifier.width(8.dp))
         // 닉네임, 응시자, 일자 Layout
-        Column(
-            modifier = Modifier.quackClickable(
-                onClick = { profileClick(state.exam.user?.id ?: 0) },
-                rippleEnabled = false,
-            ),
-        ) {
+        Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임
                 QuackBody3(
