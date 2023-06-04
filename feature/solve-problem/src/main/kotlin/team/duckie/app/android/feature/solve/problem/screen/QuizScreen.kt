@@ -130,7 +130,6 @@ internal fun QuizScreen(
                     .layoutId(QuizBottomBarLayoutId)
                     .fillMaxWidth(),
                 isLastPage = pagerState.currentPage == totalPage - 1,
-                enabled = inputAnswers[pagerState.currentPage].answer.isNotEmpty(),
                 onRightButtonClick = {
                     coroutineScope.launch {
                         val maximumPage = totalPage - 1
