@@ -38,7 +38,7 @@ dependencies {
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,
         libs.compose.lifecycle.runtime,
-        libs.quack.ui.components,
+        libs.quack.v2.ui,
         libs.firebase.crashlytics,
     )
 }

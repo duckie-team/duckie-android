@@ -17,9 +17,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.feature.skeleton.viewmodel.viewmodel.sideeffect.SkeletonSideEffect
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.theme.QuackTheme
+import team.duckie.quackquack.ui.QuackText
 
 /** UI 모듈 추가 skeleton(template) 액티비티 */
 @AndroidEntryPoint
@@ -51,6 +51,6 @@ fun DuckieScreen(text: String) {
     QuackText(
         modifier = Modifier,
         text = text,
-        style = QuackTextStyle.Body1,
+        typography = QuackTypography.Body1,
     )
 }
