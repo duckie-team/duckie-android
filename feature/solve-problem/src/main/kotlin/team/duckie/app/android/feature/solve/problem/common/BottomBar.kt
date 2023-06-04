@@ -145,11 +145,7 @@ private fun MediumButton(
         backgroundColor = backgroundColor,
         border = border,
         shape = RoundedCornerShape(size = 8.dp),
-        onClick = if (enabled) {
-            onClick
-        } else {
-            null
-        },
+        onClick = onClickFor(enabled, onClick),
     ) {
         QuackText(
             modifier = Modifier.padding(
@@ -163,6 +159,18 @@ private fun MediumButton(
             ),
             singleLine = true,
         )
+    }
+}
+
+@Composable
+private fun onClickFor(
+    enabled: Boolean,
+    onClick: (() -> Unit)?,
+): (() -> Unit)? {
+    return if (enabled) {
+        onClick
+    } else {
+        null
     }
 }
 
