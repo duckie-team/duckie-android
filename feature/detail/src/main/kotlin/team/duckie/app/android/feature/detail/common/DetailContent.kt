@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.feature.detail.common
 
 import androidx.compose.foundation.Image
@@ -19,6 +21,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -33,6 +37,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import team.duckie.app.android.common.compose.GetHeightRatioW328H240
+import team.duckie.app.android.common.compose.ui.DefaultProfile
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
@@ -43,11 +49,10 @@ import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackHeadLine2
 import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
-import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /** 상세 화면 컨텐츠 Layout */
 @Suppress("MagicNumber")
@@ -111,14 +116,24 @@ internal fun DetailContentLayout(
         }
         // 공백
         Spacer(modifier = Modifier.height(12.dp))
+
         // 태그 목록
-        QuackSingeLazyRowTag(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-            horizontalSpace = 4.dp,
-            items = state.tagNames,
-            tagType = QuackTagType.Grayscale(""),
-            onClick = { index -> tagItemClick(state.tagNames[index]) },
-        )
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            contentPadding = PaddingValues(
+                horizontal = 16.dp,
+                vertical = 4.dp,
+            ),
+        ) {
+            items(items = state.tagNames) { tagName ->
+                QuackTag(
+                    text = tagName,
+                    style = QuackTagStyle.GrayscaleFlat,
+                    onClick = { tagItemClick(tagName) }
+                )
+            }
+        }
+
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
         // 구분선
