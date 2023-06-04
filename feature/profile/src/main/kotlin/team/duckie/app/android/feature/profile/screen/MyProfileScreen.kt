@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.profile.R
@@ -42,6 +43,8 @@ import team.duckie.quackquack.ui.util.DpSize
 @Composable
 fun MyProfileScreen(
     modifier: Modifier = Modifier,
+    isAccessedProfile: Boolean = false,
+    navigateBack: (() -> Unit)? = null,
     userProfile: UserProfile,
     isLoading: Boolean,
     onClickSetting: () -> Unit,
@@ -53,6 +56,22 @@ fun MyProfileScreen(
     onClickTag: (String) -> Unit,
     onClickFriend: (FriendsType, Int, String) -> Unit,
 ) {
+    @Composable
+    fun BackPressedHeadLineTopBarInternal() {
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            QuackImage(
+                src = QuackIcon.Notice,
+                size = DpSize(all = 24.dp),
+                onClick = onClickNotification,
+            )
+            QuackImage(
+                src = QuackIcon.Setting,
+                size = DpSize(all = 24.dp),
+                onClick = onClickSetting,
+            )
+        }
+    }
+
     val tags = remember(userProfile.user?.favoriteTags) {
         userProfile.user?.favoriteTags?.toImmutableList() ?: persistentListOf()
     }
@@ -72,23 +91,23 @@ fun MyProfileScreen(
             )
         },
         topBar = {
-            HeadLineTopAppBar(
-                title = stringResource(id = R.string.mypage),
-                rightIcons = {
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        QuackImage(
-                            src = QuackIcon.Setting,
-                            size = DpSize(all = 24.dp),
-                            onClick = onClickSetting,
-                        )
-                        QuackImage(
-                            src = QuackIcon.Notice,
-                            size = DpSize(all = 24.dp),
-                            onClick = onClickNotification,
-                        )
-                    }
-                },
-            )
+            if (isAccessedProfile) {
+                BackPressedHeadLineTopAppBar(
+                    isLoading = isLoading,
+                    title = userProfile.user?.nickname ?: "",
+                    trailingContent = {
+                        BackPressedHeadLineTopBarInternal()
+                    },
+                    onBackPressed = { navigateBack?.invoke() },
+                )
+            } else {
+                HeadLineTopAppBar(
+                    title = userProfile.user?.nickname ?: "",
+                    rightIcons = {
+                        BackPressedHeadLineTopBarInternal()
+                    },
+                )
+            }
         },
         tagSection = {
             FavoriteTagSection(

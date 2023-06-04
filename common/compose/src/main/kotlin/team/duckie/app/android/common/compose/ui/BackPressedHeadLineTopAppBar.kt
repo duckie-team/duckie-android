@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.quackquack.ui.component.QuackHeadLine1
 import team.duckie.quackquack.ui.component.QuackHeadLine2
@@ -47,9 +46,8 @@ fun BackPressedTopAppBar(
 @Composable
 fun BackPressedHeadLineTopAppBar(
     title: String,
-    isLoading: Boolean,
-    trailingIcon: QuackIcon? = null,
-    onTrailingIconClick: (() -> Unit)? = null,
+    isLoading: Boolean = false,
+    trailingContent: (@Composable () -> Unit)? = null,
     onBackPressed: () -> Unit,
 ) {
     BackPressedTopAppBar(onBackPressed = onBackPressed) {
@@ -58,14 +56,8 @@ fun BackPressedHeadLineTopAppBar(
             text = title,
         )
         Spacer(weight = 1f)
-        if (trailingIcon != null) {
-            QuackImage(
-                size = DpSize(24.dp, 24.dp),
-                src = trailingIcon,
-                onClick = {
-                    if (onTrailingIconClick != null) onTrailingIconClick()
-                },
-            )
+        if (trailingContent != null) {
+            trailingContent()
         }
     }
 }

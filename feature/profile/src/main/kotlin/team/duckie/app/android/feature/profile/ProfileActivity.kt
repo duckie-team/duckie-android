@@ -113,6 +113,8 @@ class ProfileActivity : BaseActivity() {
                                     onClickMakeExam = viewModel::clickMakeExam,
                                     onClickTag = viewModel::onClickTag,
                                     onClickFriend = viewModel::navigateFriends,
+                                    isAccessedProfile = true,
+                                    navigateBack = viewModel::clickBackPress,
                                 )
                             }
 
