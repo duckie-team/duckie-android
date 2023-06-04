@@ -51,13 +51,13 @@ internal fun ButtonBottomBar(
             Spacer(modifier = Modifier)
             QuackAnimatedContent(targetState = isLastPage) {
                 when (it) {
-                    true -> MediumButton(
+                    false -> MediumButton(
                         text = stringResource(id = R.string.next),
                         enabled = enabled,
                         onClick = onRightButtonClick,
                     )
 
-                    false -> MediumButton(
+                    true -> MediumButton(
                         text = stringResource(id = R.string.submit),
                         enabled = enabled,
                         onClick = onRightButtonClick,
