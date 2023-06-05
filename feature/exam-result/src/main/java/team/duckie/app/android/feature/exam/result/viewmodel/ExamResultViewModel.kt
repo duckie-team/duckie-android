@@ -180,5 +180,4 @@ class ExamResultViewModel @Inject constructor(
     fun exitExam() = intent {
         postSideEffect(ExamResultSideEffect.FinishExamResult)
     }
-
 }
