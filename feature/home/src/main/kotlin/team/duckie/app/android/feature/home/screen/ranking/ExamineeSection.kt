@@ -31,11 +31,13 @@ import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.compose.itemsIndexedPagingKey
+import team.duckie.app.android.common.compose.ui.DefaultProfile
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTitle2
+import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
@@ -105,7 +107,7 @@ private fun ExamineeContent(
                 Spacer(space = 12.dp)
                 QuackImage(
                     modifier = Modifier.skeleton(isLoading),
-                    src = profileImageUrl,
+                    src = profileImageUrl.takeIf { it != null } ?: QuackIcon.DefaultProfile,
                     shape = SquircleShape,
                     size = DpSize(all = 44.dp),
                 )
@@ -124,9 +126,9 @@ private fun ExamineeContent(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 duckPower?.tier?.let { QuackBody2(text = it) }
-                favoriteTags?.let {
+                duckPower?.tag?.let {
                     QuackBody2(text = "|")
-                    QuackBody2(text = it.first().name)
+                    QuackBody2(text = it.name)
                 }
             }
         }
