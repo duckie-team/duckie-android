@@ -65,7 +65,7 @@ object ExamDummyResponse {
             "timer": 0,
             "requirementQuestion": "",
             "requirementPlaceholder": "",
-            "problemCount": null,
+            "problemCount": null
         }
     """
 

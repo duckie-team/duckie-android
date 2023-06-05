@@ -13,7 +13,6 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -316,7 +315,6 @@ internal class OnboardViewModel @AssistedInject constructor(
             viewModelScope.launch {
                 fileUploadUseCase(file, FileType.Profile)
                     .onSuccess { url ->
-                        Log.i("riflockle7", url);
                         continuation.resume(url)
                     }
                     .onFailure { exception ->

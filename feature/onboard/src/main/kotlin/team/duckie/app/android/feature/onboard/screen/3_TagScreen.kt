@@ -52,7 +52,6 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.asLoose
-import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.domain.DuckieTagAddBottomSheet
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
@@ -127,7 +126,6 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
     val keyboard = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
-    val toast = rememberToast()
 
     var isLoadingToFinish by remember { mutableStateOf(false) }
     val addedTags = remember { mutableStateListOf<Tag>() }

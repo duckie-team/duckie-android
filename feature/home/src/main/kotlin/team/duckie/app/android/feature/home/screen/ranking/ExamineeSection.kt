@@ -26,12 +26,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
+import team.duckie.app.android.common.compose.itemsIndexedPagingKey
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.itemsIndexedPagingKey
-import team.duckie.app.android.common.compose.ui.DefaultProfile
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackImage

@@ -30,6 +30,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.ui.const.Debounce
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
@@ -46,7 +47,6 @@ import team.duckie.app.android.feature.search.constants.SearchStep
 import team.duckie.app.android.feature.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.feature.search.viewmodel.state.SearchState
 import team.duckie.app.android.feature.search.viewmodel.state.toUiModel
-import team.duckie.app.android.common.android.ui.const.Debounce
 import javax.inject.Inject
 
 @HiltViewModel
@@ -93,7 +93,7 @@ internal class SearchViewModel @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     ).apply {
         intent {
-            this@apply.debounce(team.duckie.app.android.common.android.ui.const.Debounce.SearchSecond).collectLatest { query ->
+            this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
                 refreshSearchStep(keyword = state.searchKeyword)
                 // TODO(limsaehyun): 추후 추천 검색어 비즈니스 로직을 이곳에서 작업해야 함
             }

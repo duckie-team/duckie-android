@@ -18,7 +18,6 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 import team.duckie.app.android.domain.user.model.User
@@ -27,13 +26,10 @@ import team.duckie.app.android.domain.user.usecase.SetMeUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
 import javax.inject.Inject
 
-private const val TagsMaximumCount = 10
-
 @HiltViewModel
 internal class TagEditViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
     private val setMeUseCase: SetMeUseCase,
-    private val getSearchUseCase: GetSearchUseCase,
     private val tagCreateUseCase: TagCreateUseCase,
     private val userUpdateUseCase: UserUpdateUseCase,
 ) : ContainerHost<TagEditState, TagEditSideEffect>, ViewModel() {
@@ -78,7 +74,7 @@ internal class TagEditViewModel @Inject constructor(
 
     /** 태그 추가 화면에서, 태그 추가한 새로운 me 정보를 갱신하고 [TagEditViewModel] 내 정보 또한 갱신한다. */
     private suspend fun updateMe() {
-        val tagSuccessState = container.stateFlow.value;
+        val tagSuccessState = container.stateFlow.value
         require(tagSuccessState is TagEditState.Success)
 
         userUpdateUseCase(
