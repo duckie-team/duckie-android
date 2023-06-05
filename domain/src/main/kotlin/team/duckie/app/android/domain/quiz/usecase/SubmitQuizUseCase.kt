@@ -36,5 +36,6 @@ class SubmitQuizUseCase @Inject constructor(
         val time: Int?,
         val problemId: Int?,
         val requirementAnswer: String?,
+        val wrongAnswer: String?,
     ) : Parcelable
 }
