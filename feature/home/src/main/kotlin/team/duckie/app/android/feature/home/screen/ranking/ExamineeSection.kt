@@ -126,9 +126,9 @@ private fun ExamineeContent(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 duckPower?.tier?.let { QuackBody2(text = it) }
-                favoriteTags?.let {
+                duckPower?.tag?.let {
                     QuackBody2(text = "|")
-                    QuackBody2(text = it.first().name)
+                    QuackBody2(text = it.name)
                 }
             }
         }
