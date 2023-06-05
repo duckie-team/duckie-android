@@ -76,6 +76,7 @@ internal fun ExamData.toDomain() = Exam(
     timer = timer,
     requirementPlaceholder = requirementPlaceholder,
     requirementQuestion = requirementQuestion,
+    problemCount = problemCount,
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }

@@ -64,7 +64,8 @@ object ExamDummyResponse {
             "perfectScoreImageUrl": null,
             "timer": 0,
             "requirementQuestion": "",
-            "requirementPlaceholder": ""
+            "requirementPlaceholder": "",
+            "problemCount": null,
         }
     """
 
@@ -112,5 +113,6 @@ object ExamDummyResponse {
         timer = 0,
         requirementQuestion = "",
         requirementPlaceholder = "",
+        problemCount = null,
     )
 }

@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.common.compose.ui.icon.v2.Paper
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.detail.R
@@ -40,7 +39,7 @@ internal fun ExamDetailContentLayout(
     followButtonClick: () -> Unit,
     profileClick: (Int) -> Unit,
 ) {
-    val totalExamCount = remember { (state.exam.problems ?: persistentListOf()).size }
+    val totalExamCount = remember { state.exam.problemCount ?: 0 }
     val solvedCount = remember { state.exam.solvedCount ?: 0 }
 
     DetailContentLayout(

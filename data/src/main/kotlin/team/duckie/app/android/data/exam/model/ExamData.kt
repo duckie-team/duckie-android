@@ -82,6 +82,9 @@ internal data class ExamData(
 
     @field:JsonProperty("requirementPlaceholder")
     val requirementPlaceholder: String? = null,
+
+    @field:JsonProperty("problemCount")
+    val problemCount: Int? = null,
 )
 
 internal data class ExamsData(
