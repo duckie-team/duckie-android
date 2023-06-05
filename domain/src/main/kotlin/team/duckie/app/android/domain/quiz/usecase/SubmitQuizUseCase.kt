@@ -27,6 +27,7 @@ class SubmitQuizUseCase @Inject constructor(
             time = param.time,
             problemId = param.problemId,
             requirementAnswer = param.requirementAnswer,
+            wrongAnswer = param.wrongAnswer,
         )
     }
 
