@@ -65,7 +65,7 @@ internal fun QuizScreen(
     pagerState: PagerState,
     progress: () -> Float,
     stopExam: () -> Unit,
-    finishQuiz: (Int, Boolean) -> Unit,
+    finishQuiz: (Int, Boolean, String) -> Unit,
     onNextPage: (Int, InputAnswer, Int) -> Unit,
     startTimer: () -> Unit,
 ) {
@@ -92,7 +92,7 @@ internal fun QuizScreen(
 
     LaunchedEffect(timeOver) {
         if (timeOver) {
-            finishQuiz(pagerState.currentPage, false)
+            finishQuiz(pagerState.currentPage, false, inputAnswers[pagerState.currentPage].answer)
         }
     }
 
@@ -135,7 +135,7 @@ internal fun QuizScreen(
                     coroutineScope.launch {
                         val maximumPage = totalPage - 1
                         if (pagerState.currentPage == maximumPage) {
-                            finishQuiz(pagerState.currentPage, true)
+                            finishQuiz(pagerState.currentPage, true, inputAnswers[pagerState.currentPage].answer)
                         } else {
                             onNextPage(
                                 pagerState.currentPage,

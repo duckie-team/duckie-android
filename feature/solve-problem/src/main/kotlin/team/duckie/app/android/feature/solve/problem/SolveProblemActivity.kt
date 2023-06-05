@@ -159,6 +159,7 @@ class SolveProblemActivity : BaseActivity() {
                                 time = sideEffect.time,
                                 problemId = sideEffect.problemId,
                                 requirementAnswer = sideEffect.requirementAnswer,
+                                wrongAnswer = sideEffect.inputCurrentAnswer,
                             ),
                         )
                         putExtra(Extras.IsQuiz, true)
