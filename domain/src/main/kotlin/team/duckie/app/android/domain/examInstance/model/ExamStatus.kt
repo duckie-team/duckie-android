@@ -9,7 +9,8 @@ package team.duckie.app.android.domain.examInstance.model
 
 enum class ExamStatus(val text: String) {
     Ready("READY"),
-    Submitted("SUBMITTED");
+    Submitted("SUBMITTED"),
+    ;
 
     companion object {
         fun from(text: String) = values().firstOrNull { it.text == text }
