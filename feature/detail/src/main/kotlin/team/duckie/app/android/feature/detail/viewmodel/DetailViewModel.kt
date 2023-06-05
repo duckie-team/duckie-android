@@ -190,7 +190,6 @@ class DetailViewModel @Inject constructor(
                                     )
                                 }
                             }
-
                         }.onFailure {
                             postSideEffect(DetailSideEffect.ReportError(it))
                         }
