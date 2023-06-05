@@ -30,11 +30,11 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.model.UserProfile
-import team.duckie.app.android.util.kotlin.AllowMagicNumber
-import team.duckie.app.android.util.kotlin.ExperimentalApi
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
-import team.duckie.app.android.util.kotlin.runtimeCheck
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.ExperimentalApi
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.runtimeCheck
 import javax.inject.Inject
 
 class UserRemoteDataSourceImpl @Inject constructor(
@@ -68,7 +68,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
         val response = client.patch("/users/$id") {
             jsonBody {
                 categories?.let { "favoriteCategories" withInts categories.fastMap { it.id } }
-                tags?.let { "favoriteTags" withInts tags.fastMap { it.id } }
+                tags?.let { "favoriteTagIds" withInts tags.fastMap { it.id } }
                 profileImageUrl?.let { "profileImageUrl" withString profileImageUrl }
                 nickname?.let { "nickName" withString nickname }
                 introduction?.let { "introduction" withString introduction }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.heart.model.Heart
+import team.duckie.app.android.domain.quiz.model.QuizInfo
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 
@@ -35,6 +36,13 @@ data class Exam(
     val status: String?,
     val heart: Heart?,
     val heartCount: Int?,
+    val problems: ImmutableList<Problem>?,
+    val quizs: ImmutableList<QuizInfo>?,
+    val perfectScoreImageUrl: String?,
+    val timer: Int?,
+    val requirementQuestion: String?,
+    val requirementPlaceholder: String?,
+    val problemCount: Int?,
 ) {
     companion object {
         /*
@@ -59,6 +67,13 @@ data class Exam(
             status = null,
             heart = null,
             heartCount = null,
+            quizs = null,
+            perfectScoreImageUrl = null,
+            problems = null,
+            timer = null,
+            requirementQuestion = null,
+            requirementPlaceholder = null,
+            problemCount = null,
         )
     }
 }

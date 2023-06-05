@@ -23,9 +23,10 @@ import io.ktor.client.request.headers
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.jackson.jackson
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.data.BuildConfig
-import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlugin
+import timber.log.Timber
 
 /** token 이 필요한 HttpClient */
 internal var client = AuthorizationHeaderClient()
@@ -61,7 +62,7 @@ internal object DuckieHttpHeaders {
 private object AuthorizationHeaderClient {
     private val MaxTimeoutMillis = 3.seconds
     private const val MaxRetryCount = 3
-    private const val BaseUrl = "https://api-staging.goose-duckie.com:3000"
+    private const val BaseUrl = "https://api.goose-duckie.com:3000"
     private const val ClientName = "android"
 
     operator fun invoke(authorizationCheck: Boolean = true) = HttpClient(engineFactory = CIO) {
@@ -76,7 +77,7 @@ private object AuthorizationHeaderClient {
             contentType(ContentType.Application.Json)
             headers {
                 append(DuckieHttpHeaders.DeviceName, DeviceName)
-                append(DuckieHttpHeaders.Version, BuildConfig.APP_VERSION_NAME)
+                append(DuckieHttpHeaders.Version, BuildConfig.APP_VERSION_NAME_NUMBER)
                 append(DuckieHttpHeaders.Client, ClientName)
             }
         }
@@ -94,7 +95,7 @@ private object AuthorizationHeaderClient {
         install(plugin = Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
-                   println(message)
+                   Timber.e(message)
                 }
             }
             level = LogLevel.ALL

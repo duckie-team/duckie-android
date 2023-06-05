@@ -16,12 +16,13 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
+import team.duckie.app.android.presentation.screen.IntroDialogType
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.app.android.presentation.viewmodel.state.IntroState
-import team.duckie.app.android.util.kotlin.exception.isAppUpgradeRequire
-import team.duckie.app.android.util.kotlin.exception.isLoginRequireCode
-import team.duckie.app.android.util.kotlin.exception.isTokenExpired
-import team.duckie.app.android.util.kotlin.exception.isUserNotFound
+import team.duckie.app.android.common.kotlin.exception.isAppUpgradeRequire
+import team.duckie.app.android.common.kotlin.exception.isLoginRequireCode
+import team.duckie.app.android.common.kotlin.exception.isTokenExpired
+import team.duckie.app.android.common.kotlin.exception.isUserNotFound
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,7 +37,9 @@ internal class IntroViewModel @Inject constructor(
     )
 
     /** 앱 업데이트 여부를 체크한다. */
-    suspend fun checkUpdateRequire() = intent {
+    fun checkUpdateRequire() = intent {
+        reduce { state.copy(introDialogType = null) }
+
         getMeUseCase()
             .onSuccess { user ->
                 postSideEffect(
@@ -50,7 +53,7 @@ internal class IntroViewModel @Inject constructor(
         onFailure { exception ->
             when {
                 exception.isAppUpgradeRequire -> {
-                    reduce { state.copy(isUpdateRequire = true) }
+                    reduce { state.copy(introDialogType = IntroDialogType.UpdateRequire) }
                 }
 
                 exception.isLoginRequireCode || exception.isUserNotFound -> {
@@ -63,6 +66,7 @@ internal class IntroViewModel @Inject constructor(
 
                 else -> {
                     postSideEffect(IntroSideEffect.ReportError(exception))
+                    reduce { state.copy(introDialogType = IntroDialogType.Error) }
                 }
             }
         }

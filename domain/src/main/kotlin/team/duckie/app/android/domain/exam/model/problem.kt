@@ -13,7 +13,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import team.duckie.app.android.util.kotlin.fastMapIndexed
+import team.duckie.app.android.common.kotlin.fastMapIndexed
 
 @Immutable
 data class Problem(
@@ -23,7 +23,14 @@ data class Problem(
     val correctAnswer: String?,
     val hint: String?,
     val memo: String?,
-)
+    val solution: Solution?,
+) {
+    companion object {
+        fun Problem.isSubjective(): Boolean {
+            return answer?.isShortAnswer() == true
+        }
+    }
+}
 
 @Immutable
 sealed class Question(val type: Type, open val text: String) {
@@ -85,6 +92,8 @@ sealed class Question(val type: Type, open val text: String) {
         is Audio -> this.text.isNotEmpty() && this.audioUrl.isNotEmpty()
         is Video -> this.text.isNotEmpty() && this.videoUrl.isNotEmpty()
     }
+
+    fun isImage(): Boolean = this.type == Type.Image
 }
 
 @Immutable
@@ -130,6 +139,8 @@ sealed class Answer(val type: Type) {
         return type.hashCode()
     }
 
+    fun isShortAnswer(): Boolean = this.type == Type.ShortAnswer
+
     fun validate(): Boolean = when (this) {
         is Short -> true
 
@@ -146,6 +157,17 @@ sealed class Answer(val type: Type) {
                 .reduce { acc, next -> acc && next }
     }
 }
+
+@Immutable
+data class Solution(
+    val id: Int,
+    val solutionImageUrl: String?,
+    val correctAnswer: String?,
+    val wrongAnswerMessage: String?,
+    val emptyAnswerMessage: String?,
+    val title: String?,
+    val description: String?,
+)
 
 /** [문제 타입][Answer.Type]에 맞는 기본 [답안][Answer] 를 가져옵니다. */
 fun Answer.Type.getDefaultAnswer(): Answer = when (this) {

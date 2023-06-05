@@ -21,6 +21,7 @@ import team.duckie.app.android.data.dummy.CategoryDummyResponse
 import team.duckie.app.android.data.util.ApiTest
 import team.duckie.app.android.data.util.buildMockHttpClient
 import team.duckie.app.android.domain.category.repository.CategoryRepository
+import timber.log.Timber
 
 class CategoryRepositoryTest : ApiTest(
     isMock = true,
@@ -37,7 +38,7 @@ class CategoryRepositoryTest : ApiTest(
 
             expectThat(actual).containsExactly(expected)
         } else {
-            println(actual.first())
+            Timber.e(actual.first().toString())
             expectThat(actual).isNotEmpty()
         }
     }

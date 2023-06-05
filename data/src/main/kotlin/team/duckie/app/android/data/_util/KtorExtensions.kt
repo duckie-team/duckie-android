@@ -12,7 +12,7 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.setBody
 import team.duckie.app.android.data._datasource.updateClient
-import team.duckie.app.android.util.kotlin.DuckieDsl
+import team.duckie.app.android.common.kotlin.DuckieDsl
 
 @DuckieDsl
 internal inline fun HttpRequestBuilder.jsonBody(builder: JsonBuilder.() -> Unit) {

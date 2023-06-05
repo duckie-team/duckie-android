@@ -18,8 +18,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.data.BuildConfig
-import team.duckie.app.android.util.kotlin.seconds
 import team.duckie.app.ktor.client.plugin.addDuckieAuthorizationHeaderIfNeeded
 
 private object ContentTypeValues {
@@ -31,7 +31,7 @@ private object ContentTypeValues {
 @InstallIn(SingletonComponent::class)
 internal object FuelClient {
     private val MaxTimeoutMillis = 3.seconds
-    private const val BaseUrl = "https://api-staging.goose-duckie.com:3000"
+    private const val BaseUrl = "https://api.goose-duckie.com:3000"
 
     private var DeviceName = Build.MODEL
     private const val ClientName = "android"
@@ -44,7 +44,7 @@ internal object FuelClient {
             baseHeaders = mutableMapOf(
                 DuckieHttpHeaders.Client to ClientName,
                 DuckieHttpHeaders.DeviceName to DeviceName,
-                DuckieHttpHeaders.Version to BuildConfig.APP_VERSION_NAME,
+                DuckieHttpHeaders.Version to BuildConfig.APP_VERSION_NAME_NUMBER,
                 Headers.CONTENT_TYPE to ContentTypeValues.ApplicationJson,
             ).apply {
                 addDuckieAuthorizationHeaderIfNeeded(headerKey = DuckieHttpHeaders.Authorization)

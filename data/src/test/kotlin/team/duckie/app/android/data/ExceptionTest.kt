@@ -26,8 +26,8 @@ import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.data.util.buildMockHttpClient
-import team.duckie.app.android.util.kotlin.exception.DuckieResponseException
-import team.duckie.app.android.util.kotlin.exception.DuckieStatusCode
+import team.duckie.app.android.common.kotlin.exception.DuckieResponseException
+import team.duckie.app.android.common.kotlin.exception.DuckieStatusCode
 
 @Ignore("statusCode 400 이상의 dummy HttpResponse 만들기 전까지는 비활성화")
 class ExceptionTest {

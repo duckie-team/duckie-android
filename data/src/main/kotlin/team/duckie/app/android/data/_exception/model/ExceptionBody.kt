@@ -9,9 +9,9 @@ package team.duckie.app.android.data._exception.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import team.duckie.app.android.util.kotlin.exception.DuckieStatusCode
-import team.duckie.app.android.util.kotlin.exception.duckieResponseException
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.DuckieStatusCode
+import team.duckie.app.android.common.kotlin.exception.duckieResponseException
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 internal data class ExceptionBody(
     @JsonIgnore

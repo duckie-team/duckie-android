@@ -7,7 +7,7 @@
 
 package team.duckie.app.android.domain.user.model
 
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 enum class UserStatus(val value: String) {
     NEW("NEW"),

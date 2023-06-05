@@ -1,10 +1,10 @@
 [versions]
 # plugin - build
-plugin-build-gradle-android = "8.0.0-alpha08"
+plugin-build-gradle-android = "8.0.1"
 plugin-build-google-service = "4.3.15"
 
 # plugin - code
-plugin-code-ktlint-core = "11.3.1"
+plugin-code-ktlint-core = "11.3.2"
 # https://github.com/JLLeitschuh/ktlint-gradle/issues/589
 # klint 최신 버전과 사용 불가
 plugin-code-ktlint-source = "0.45.2"
@@ -17,7 +17,7 @@ plugin-kotlin-ksp = "1.8.10-1.0.9"
 plugin-compose-paparazzi = "1.2.0"
 
 # plugin - ui
-plugin-ui-oss-license = "0.10.5"
+plugin-ui-oss-license = "0.10.6"
 
 # plugin - util
 plugin-util-dependency-graph = "1.0.0"
@@ -40,58 +40,59 @@ apache-commons-io = "2.11.0"
 # androidx
 androidx-appcompat = "1.6.1" # needs for oss license activity
 androidx-lifecycle-savedstate = "2.6.1"
-androidx-splash = "1.0.0"
+androidx-splash = "1.0.1"
 androidx-datastore = "1.0.0"
 androidx-room = "2.5.1"
-androidx-profile-installer = "1.2.2"
+androidx-profile-installer = "1.3.0"
 androidx-paging = "3.1.1"
 androidx-paging-compose = "1.0.0-alpha18"
 androidx-annotation = "1.6.0"
 
 # compose
-compose-core = "1.3.1"
+compose-core = "1.4.2"
 compose-foundation = "1.4.0-beta01" # use alpha for HorizontalPager
-compose-material = "1.4.0"
-compose-runtime = "1.4.0-rc01" # use alpha for SnapshotStateList#toList
+compose-material = "1.4.2"
+compose-runtime = "1.5.0-alpha03" # use alpha for SnapshotStateList#toList
 compose-lifecycle = "2.6.1" # use alpha for StateFlow#collectAsStateWithLifecycle
 compose-compiler = "1.4.3"
-compose-activity = "1.6.1"
-compose-accompanist = "0.28.0"
+compose-activity = "1.7.1"
+compose-accompanist = "0.30.1"
 compose-lottie = "6.0.0"
-compose-camposer = "0.1.1"
+compose-camposer = "0.2.1"
 compose-customview-pooling-container = "1.0.0"
-compose-coil = "2.2.2"
+compose-coil = "2.3.0"
+compose-navigation = "2.5.3"
 
 # ktx
-ktx-core = "1.9.0"
-ktx-activity = "1.7.0"
+ktx-core = "1.10.0"
+ktx-activity = "1.7.1"
 ktx-lifecycle = "2.6.1"
 
 # ui
-ui-oss-license = "17.0.0"
+ui-oss-license = "17.0.1"
 ui-system-controller = "1.0.1"
 
 # exoplayer
-exoplayer-core = "2.18.5"
+exoplayer-core = "2.18.6"
 
 # analytics
 analytics-leakcanary = "2.10"
 analytics-anrwatchdog = "1.4.0"
 
 # firebase
-firebase-bom = "31.2.3"
-firebase-plugin-crashlytics = "2.9.4"
+firebase-bom = "32.0.0"
+firebase-plugin-crashlytics = "2.9.5"
 firebase-plugin-performance = "1.4.2"
 
 # login
 login-kakao = "2.13.0"
 
 # di
-di-hilt = "2.45"
+di-hilt = "2.46"
 di-inject = "1"
 
 # ktor
-ktor-core = "2.2.4"
+ktor-core = "2.3.0"
 
 # fuel
 fuel-core = "2.3.1"
@@ -112,14 +113,20 @@ quack-lint-quack = "1.0.1"
 quack-lint-compose = "1.0.2"
 # TODO(sungbin): quack-lint-writing
 
+# quack v2
+quack-v2-ui = "2.0.0-alpha04"
+
 # test
 test-strikt = "0.34.1"
 test-junit-core = "4.13.2"
-test-junit-engine = "5.9.2"
+test-junit-engine = "5.9.3"
 test-androidx-junit = "1.1.5"
 test-androidx-runner = "1.5.2"
-test-parameter-injector = "1.10"
-test-turbine = "0.12.1"
+test-parameter-injector = "1.11"
+test-turbine = "0.12.3"
+
+# logging
+logging-timber = "5.0.1"
 
 [plugins]
 gms-google-service = { id = "com.google.gms.google-services", version.ref = "plugin-build-google-service" }
@@ -190,6 +197,7 @@ compose-util-tooling-preview = { module = "androidx.compose.ui:ui-tooling-previe
 compose-util-customview-pooling-container = { module = "androidx.customview:customview-poolingcontainer", version.ref = "compose-customview-pooling-container" } # debugImplementation
 compose-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
 compose-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
+compose-ui-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
 
 ktx-core = { module = "androidx.core:core-ktx", version.ref = "ktx-core" }
 ktx-activiy = { module = "androidx.activity:activity-ktx", version.ref = "ktx-activity" }
@@ -248,6 +256,8 @@ quack-lint-core = { module = "team.duckie.quack:quack-lint-core", version.ref = 
 quack-lint-quack = { module = "team.duckie.quack:quack-lint-quack", version.ref = "quack-lint-quack" }
 quack-lint-compose = { module = "team.duckie.quack:quack-lint-compose", version.ref = "quack-lint-compose" }
 
+quack-v2-ui = { module = "team.duckie.quackquack.ui:ui", version.ref = "quack-v2-ui" }
+
 test-strikt = { module = "io.strikt:strikt-core", version.ref = "test-strikt" }
 test-junit-core = { module = "junit:junit", version.ref = "test-junit-core" }
 test-junit-engine = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "test-junit-engine" } # testRuntimeOnly
@@ -261,6 +271,8 @@ test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", ve
 test-ktor-client = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-core" }
 test-ktor-server = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-core" }
 test-orbit = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit-core" }
+
+logging-timber = { module = "com.jakewharton.timber:timber", version.ref = "logging-timber" }
 
 detekt-plugin-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "plugin-code-detekt" }
 

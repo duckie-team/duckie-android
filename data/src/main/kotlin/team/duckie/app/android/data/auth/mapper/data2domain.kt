@@ -12,7 +12,7 @@ import team.duckie.app.android.data.auth.model.AuthJoinResponseData
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.domain.auth.model.AccessTokenCheckResponse
 import team.duckie.app.android.domain.auth.model.JoinResponse
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 internal fun AuthJoinResponseData.toDomain() = JoinResponse(
     isNewUser = isNewUser ?: duckieResponseFieldNpe("isNewUser"),

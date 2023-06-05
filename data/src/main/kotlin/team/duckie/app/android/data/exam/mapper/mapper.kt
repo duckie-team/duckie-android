@@ -8,6 +8,9 @@
 package team.duckie.app.android.data.exam.mapper
 
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
@@ -24,6 +27,8 @@ import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.ProfileExamData
 import team.duckie.app.android.data.exam.model.QuestionData
+import team.duckie.app.android.data.exam.model.QuizInfoResponse
+import team.duckie.app.android.data.exam.model.SolutionData
 import team.duckie.app.android.data.heart.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
@@ -42,9 +47,8 @@ import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.model.Question
-import team.duckie.app.android.util.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.util.kotlin.exception.duckieResponseFieldNpe
-import team.duckie.app.android.util.kotlin.fastMap
+import team.duckie.app.android.domain.exam.model.Solution
+import team.duckie.app.android.domain.quiz.model.QuizInfo
 
 @AllowCyclomaticComplexMethod
 internal fun ExamData.toDomain() = Exam(
@@ -66,6 +70,13 @@ internal fun ExamData.toDomain() = Exam(
     status = status,
     heart = heart?.toDomain(),
     heartCount = heartCount,
+    quizs = quizs?.fastMap(QuizInfoResponse::toDomain)?.toImmutableList(),
+    perfectScoreImageUrl = perfectScoreImageUrl,
+    problems = problems?.fastMap(ProblemData::toDomain)?.toImmutableList(),
+    timer = timer,
+    requirementPlaceholder = requirementPlaceholder,
+    requirementQuestion = requirementQuestion,
+    problemCount = problemCount,
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
@@ -79,6 +90,7 @@ internal fun ProblemData.toDomain() = Problem(
     correctAnswer = correctAnswer,
     hint = hint,
     memo = memo,
+    solution = solution?.toDomain(),
 )
 
 internal fun QuestionData.toDomain() = when (this) {
@@ -242,4 +254,23 @@ internal fun ProfileExamData.toDomain() = ProfileExam(
     solvedCount = solvedCount,
     heartCount = heartCount,
     user = user?.toDomain(),
+)
+
+internal fun QuizInfoResponse.toDomain() = QuizInfo(
+    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
+    correctProblemCount = correctProblemCount
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.correctProblemCount"),
+    score = score ?: duckieResponseFieldNpe("${this::class.java.simpleName}.score"),
+    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+    time = time ?: duckieResponseFieldNpe("${this::class.java.simpleName}.time"),
+)
+
+internal fun SolutionData.toDomain() = Solution(
+    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
+    solutionImageUrl = solutionImageUrl,
+    correctAnswer = correctAnswer,
+    wrongAnswerMessage = wrongAnswerMessage,
+    emptyAnswerMessage = emptyAnswerMessage,
+    title = title,
+    description = description,
 )

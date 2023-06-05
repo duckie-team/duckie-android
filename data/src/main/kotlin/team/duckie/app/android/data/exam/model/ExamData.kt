@@ -13,7 +13,7 @@ import team.duckie.app.android.data.heart.model.HeartData
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.model.UserResponse
 
-data class ExamData(
+internal data class ExamData(
     @field:JsonProperty("id")
     val id: Int? = null,
 
@@ -64,9 +64,30 @@ data class ExamData(
 
     @field:JsonProperty("heartCount")
     val heartCount: Int? = null,
+
+    @field:JsonProperty("challenges")
+    val quizs: List<QuizInfoResponse>? = null,
+
+    @field:JsonProperty("perfectScoreImageUrl")
+    val perfectScoreImageUrl: String? = null,
+
+    @field:JsonProperty("problems")
+    val problems: List<ProblemData>? = null,
+
+    @field:JsonProperty("timer")
+    val timer: Int? = null,
+
+    @field:JsonProperty("requirementQuestion")
+    val requirementQuestion: String? = null,
+
+    @field:JsonProperty("requirementPlaceholder")
+    val requirementPlaceholder: String? = null,
+
+    @field:JsonProperty("problemCount")
+    val problemCount: Int? = null,
 )
 
-data class ExamsData(
+internal data class ExamsData(
     @field:JsonProperty("exams")
     val exams: List<ExamData>? = null,
 )

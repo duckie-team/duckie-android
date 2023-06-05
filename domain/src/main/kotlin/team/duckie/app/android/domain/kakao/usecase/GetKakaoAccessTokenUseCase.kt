@@ -9,7 +9,7 @@ package team.duckie.app.android.domain.kakao.usecase
 
 import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.kakao.repository.KakaoRepository
-import team.duckie.app.android.util.kotlin.exception.isKakaoTalkNotSupportAccount
+import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotSupportAccount
 
 /**
  * 카카오 AccessToken 을 가져오는 유즈케이스

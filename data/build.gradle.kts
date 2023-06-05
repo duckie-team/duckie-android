@@ -31,6 +31,11 @@ android {
 
     defaultConfig {
         buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName\"")
+        // 정규식 패턴 설정
+        val pattern = Regex("\\d+\\.\\d+\\.\\d+")
+        // 정규식 패턴에 맞게 검색하여 결과 출력
+        val versionNameNumber = pattern.findAll(VersionName).map { it.value }.first()
+        buildConfigField("String", "APP_VERSION_NAME_NUMBER", "\"$versionNameNumber\"")
         manifestPlaceholders["KAKAO_MANIFEST_SCHEME"] =
             gradleLocalProperties(rootDir).getProperty("KAKAO_MANIFEST_SCHEME")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -49,10 +54,11 @@ dependencies {
         libs.bundles.fuel,
         libs.bundles.moshi,
         libs.bundles.ktor.client,
+        libs.logging.timber,
         projects.domain,
-        projects.utilKotlin,
+        projects.common.kotlin,
         projects.pluginKtorClient,
-        projects.featureDatastore,
+        projects.core.datastore,
     )
     testImplementations(
         libs.test.coroutines,
