@@ -15,5 +15,6 @@ data class ExamInstance(
     val id: Int,
     val exam: Exam?,
     val problemInstances: List<ProblemInstance>?,
-    val status: String,
+    val status: ExamStatus,
+    val scoreImageUrl: String?,
 )

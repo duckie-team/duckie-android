@@ -22,4 +22,7 @@ internal data class ExamInstanceData(
 
     @JsonProperty("status")
     val status: String? = null,
+
+    @JsonProperty("scoreImageUrl")
+    val scoreImageUrl: String? = null,
 )

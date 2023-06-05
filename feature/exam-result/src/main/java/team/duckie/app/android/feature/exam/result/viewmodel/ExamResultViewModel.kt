@@ -9,8 +9,10 @@ package team.duckie.app.android.feature.exam.result.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -21,6 +23,8 @@ import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
+import team.duckie.app.android.domain.examInstance.model.ExamInstance
+import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
@@ -30,6 +34,7 @@ import javax.inject.Inject
 class ExamResultViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val makeExamInstanceSubmitUseCase: MakeExamInstanceSubmitUseCase,
+    private val getExamInstanceUseCase: GetExamInstanceUseCase,
     private val submitQuizUseCase: SubmitQuizUseCase,
     private val getQuizUseCase: GetQuizUseCase,
 ) : ViewModel(),
@@ -50,13 +55,19 @@ class ExamResultViewModel @Inject constructor(
                 updateQuizParam = updateQuizParam,
             )
         } else {
-            val submitted = savedStateHandle.getOrThrow<Array<String>>(Extras.Submitted)
-            getReport(
-                examId = examId,
-                submitted = ExamInstanceSubmitBody(
-                    submitted = submitted.toList().toImmutableList(),
-                ),
-            )
+            val submitted =
+                savedStateHandle.getStateFlow<Array<String>>(Extras.Submitted, emptyArray()).value
+            val isPassed = savedStateHandle.getOrThrow<Boolean>(Extras.IsPassed)
+            if (isPassed) {
+                getReportWhenAlreadySolved(examId = examId)
+            } else {
+                getReport(
+                    examId = examId,
+                    submitted = ExamInstanceSubmitBody(
+                        submitted = submitted.toList().toImmutableList(),
+                    ),
+                )
+            }
         }
     }
 
@@ -86,42 +97,14 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
-    private fun updateQuiz(
-        examId: Int,
-        updateQuizParam: SubmitQuizUseCase.Param,
-    ) = intent {
-        reduce {
-            ExamResultState.Loading
-        }
-        submitQuizUseCase(examId, updateQuizParam).onFailure {
-            it.printStackTrace()
+    private fun getReportWhenAlreadySolved(examId: Int) = intent {
+        reduce { ExamResultState.Loading }
+        getExamInstanceUseCase(examId).onSuccess { result: ExamInstance ->
             reduce {
-                ExamResultState.Error(exception = it)
-            }
-            postSideEffect(ExamResultSideEffect.ReportError(it))
-        }
-        getQuizUseCase(examId).onSuccess { quizResult ->
-            val isPerfectScore = quizResult.wrongProblem == null
-            reduce {
-                with(quizResult) {
-                    ExamResultState.Success(
-                        examId = id,
-                        reportUrl = if (isPerfectScore) {
-                            exam.perfectScoreImageUrl ?: ""
-                        } else {
-                            wrongProblem?.solution?.solutionImageUrl ?: ""
-                        },
-                        isQuiz = true,
-                        correctProblemCount = correctProblemCount,
-                        time = time,
-                        mainTag = exam.mainTag?.name ?: "",
-                        ranking = ranking ?: 0,
-                        wrongAnswerMessage = wrongProblem?.solution?.wrongAnswerMessage ?: "",
-                        requirementPlaceholder = exam.requirementPlaceholder ?: "",
-                        requirementQuestion = exam.requirementQuestion ?: "",
-                        timer = exam.timer ?: 0,
-                    )
-                }
+                ExamResultState.Success(
+                    reportUrl = result.scoreImageUrl ?: "",
+                    isQuiz = false,
+                )
             }
         }.onFailure {
             it.printStackTrace()
@@ -129,6 +112,56 @@ class ExamResultViewModel @Inject constructor(
                 ExamResultState.Error(exception = it)
             }
             postSideEffect(ExamResultSideEffect.ReportError(it))
+        }
+    }
+
+    private fun updateQuiz(
+        examId: Int,
+        updateQuizParam: SubmitQuizUseCase.Param,
+    ) = intent {
+        reduce {
+            ExamResultState.Loading
+        }
+        viewModelScope.launch {
+            submitQuizUseCase(examId, updateQuizParam).onFailure {
+                it.printStackTrace()
+                reduce {
+                    ExamResultState.Error(exception = it)
+                }
+                postSideEffect(ExamResultSideEffect.ReportError(it))
+            }
+        }.join()
+        viewModelScope.launch {
+            getQuizUseCase(examId).onSuccess { quizResult ->
+                val isPerfectScore = quizResult.wrongProblem == null
+                reduce {
+                    with(quizResult) {
+                        ExamResultState.Success(
+                            examId = id,
+                            reportUrl = if (isPerfectScore) {
+                                exam.perfectScoreImageUrl ?: ""
+                            } else {
+                                wrongProblem?.solution?.solutionImageUrl ?: ""
+                            },
+                            isQuiz = true,
+                            correctProblemCount = correctProblemCount,
+                            time = time,
+                            mainTag = exam.mainTag?.name ?: "",
+                            ranking = ranking ?: 0,
+                            wrongAnswerMessage = wrongProblem?.solution?.wrongAnswerMessage ?: "",
+                            requirementPlaceholder = exam.requirementPlaceholder ?: "",
+                            requirementQuestion = exam.requirementQuestion ?: "",
+                            timer = exam.timer ?: 0,
+                        )
+                    }
+                }
+            }.onFailure {
+                it.printStackTrace()
+                reduce {
+                    ExamResultState.Error(exception = it)
+                }
+                postSideEffect(ExamResultSideEffect.ReportError(it))
+            }
         }
     }
 

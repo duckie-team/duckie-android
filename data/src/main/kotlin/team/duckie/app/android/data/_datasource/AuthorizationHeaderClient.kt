@@ -23,8 +23,8 @@ import io.ktor.client.request.headers
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.jackson.jackson
-import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.android.common.kotlin.seconds
+import team.duckie.app.android.data.BuildConfig
 import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlugin
 import timber.log.Timber
 
@@ -62,7 +62,7 @@ internal object DuckieHttpHeaders {
 private object AuthorizationHeaderClient {
     private val MaxTimeoutMillis = 3.seconds
     private const val MaxRetryCount = 3
-    private const val BaseUrl = "https://api-staging.goose-duckie.com:3000"
+    private const val BaseUrl = "https://api.goose-duckie.com:3000"
     private const val ClientName = "android"
 
     operator fun invoke(authorizationCheck: Boolean = true) = HttpClient(engineFactory = CIO) {

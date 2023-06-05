@@ -106,7 +106,7 @@ internal fun ExamResultScreen(
 
                 is ExamResultState.Error -> {
                     ErrorScreen(
-                        Modifier,
+                        Modifier.fillMaxSize(),
                         false,
                         onRetryClick = viewModel::initState,
                     )
