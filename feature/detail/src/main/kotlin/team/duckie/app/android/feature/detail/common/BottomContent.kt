@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.feature.detail.common
 
 import androidx.compose.foundation.layout.Arrangement
@@ -12,17 +14,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.quackquack.ui.R
-import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSmallButton
-import team.duckie.quackquack.ui.component.QuackSmallButtonType
+import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /** 상세 화면 최하단 Layout */
 @Composable
@@ -34,7 +39,8 @@ internal fun DetailBottomLayout(
 ) {
     Column(modifier = modifier) {
         // 구분선
-        QuackDivider()
+        QuackMaxWidthDivider()
+
         // 버튼 모음 Layout
         // TODO(riflockle7): 추후 Layout 을 활용해 처리하기
         Row(
@@ -46,20 +52,20 @@ internal fun DetailBottomLayout(
         ) {
             // 좋아요 버튼
             QuackImage(
+                modifier = Modifier
+                    .size(DpSize(24.dp, 24.dp))
+                    .quackClickable(onClick = onHeartClick),
                 src = if (state.isHeart) {
-                    R.drawable.quack_ic_heart_filled_24
+                    QuackIcon.FilledHeart.drawableId
                 } else {
-                    R.drawable.quack_ic_heart_24
+                    QuackIcon.Heart.drawableId
                 },
-                size = DpSize(24.dp, 24.dp),
-                onClick = onHeartClick,
             )
 
             // 버튼
-            QuackSmallButton(
+            QuackButton(
+                style = QuackButtonStyle.PrimaryFilledSmall,
                 text = state.buttonTitle,
-                type = QuackSmallButtonType.Fill,
-                enabled = true,
                 onClick = onChallengeClick,
             )
         }

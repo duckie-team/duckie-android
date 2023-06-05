@@ -27,12 +27,12 @@ dependencies {
         projects.common.android,
         projects.common.kotlin,
         projects.common.compose,
+        libs.kotlin.collections.immutable,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
         libs.compose.lifecycle.runtime,
-        libs.quack.ui.components,
         libs.quack.v2.ui,
         libs.compose.ui.coil,
     )

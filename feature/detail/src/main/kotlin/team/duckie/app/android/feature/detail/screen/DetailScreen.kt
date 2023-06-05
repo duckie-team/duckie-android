@@ -26,19 +26,19 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.network.NetworkUtil
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.LoadingScreen
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.app.android.feature.detail.common.DetailBottomLayout
 import team.duckie.app.android.feature.detail.common.TopAppCustomBar
 import team.duckie.app.android.feature.detail.screen.exam.ExamDetailContentLayout
 import team.duckie.app.android.feature.detail.screen.quiz.QuizDetailContentLayout
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.app.android.common.compose.ui.ErrorScreen
-import team.duckie.app.android.common.compose.ui.LoadingScreen
-import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
-import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
-import team.duckie.app.android.common.android.network.NetworkUtil
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 
 @Composable
 internal fun DetailScreen(
@@ -148,7 +148,7 @@ internal fun ExamDetailScreen(
             DetailBottomLayout(
                 modifier = Modifier
                     .layoutId(DetailScreenBottomBarLayoutId)
-                    .background(color = QuackColor.White.composeColor),
+                    .background(color = QuackColor.White.value),
                 state = state,
                 onHeartClick = viewModel::heartExam,
                 onChallengeClick = viewModel::startExam,

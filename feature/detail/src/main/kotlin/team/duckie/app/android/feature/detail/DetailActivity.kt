@@ -28,8 +28,8 @@ import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEff
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.startexam.StartExamNavigator
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 /** 상세 화면 */
@@ -53,7 +53,7 @@ class DetailActivity : BaseActivity() {
                 DetailScreen(
                     Modifier
                         .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor)
+                        .background(color = QuackColor.White.value)
                         .systemBarsPadding(),
                 )
             }
