@@ -86,6 +86,24 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
+    private fun getReportWhenAlreadySolved(examId: Int) = intent {
+        reduce { ExamResultState.Loading }
+        getExamInstanceUseCase(examId).onSuccess { result: ExamInstance ->
+            reduce {
+                ExamResultState.Success(
+                    reportUrl = result.scoreImageUrl ?: "",
+                    isQuiz = false,
+                )
+            }
+        }.onFailure {
+            it.printStackTrace()
+            reduce {
+                ExamResultState.Error(exception = it)
+            }
+            postSideEffect(ExamResultSideEffect.ReportError(it))
+        }
+    }
+
     private fun updateQuiz(
         examId: Int,
         updateQuizParam: SubmitQuizUseCase.Param,
