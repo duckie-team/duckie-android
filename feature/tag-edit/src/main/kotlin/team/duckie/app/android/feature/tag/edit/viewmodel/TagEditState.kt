@@ -19,9 +19,5 @@ sealed class TagEditState {
         val categoryTagList: ImmutableList<ImmutableList<Tag>> = persistentListOf(),
     ) : TagEditState()
 
-    class AddTag(
-        val searchResults: ImmutableList<Tag> = persistentListOf(),
-    ) : TagEditState()
-
     data class Error(val exception: Throwable) : TagEditState()
 }

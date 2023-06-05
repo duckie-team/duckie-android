@@ -18,6 +18,7 @@ android {
 
 dependencies {
     implementations(
+        projects.domain,
         projects.common.kotlin,
         libs.compose.lifecycle.viewmodel,
         libs.quack.ui.components,
@@ -28,5 +29,6 @@ dependencies {
         libs.compose.ui.coil,
         libs.compose.ui.accompanist.placeholder,
         libs.paging.compose,
+        libs.compose.ui.accompanist.flowlayout,
     )
 }
