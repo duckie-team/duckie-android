@@ -42,6 +42,7 @@ data class Exam(
     val timer: Int?,
     val requirementQuestion: String?,
     val requirementPlaceholder: String?,
+    val problemCount: Int?,
 ) {
     companion object {
         /*
@@ -72,6 +73,7 @@ data class Exam(
             timer = null,
             requirementQuestion = null,
             requirementPlaceholder = null,
+            problemCount = null,
         )
     }
 }

@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.profile.R
-import team.duckie.app.android.common.compose.ui.DefaultProfile
+import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
 import team.duckie.app.android.common.compose.ui.Divider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.skeleton

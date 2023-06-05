@@ -25,7 +25,7 @@ import team.duckie.app.android.domain.quiz.model.QuizInfo
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.common.DetailContentLayout
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.app.android.common.compose.ui.Crown
+import team.duckie.app.android.common.compose.ui.icon.v1.Crown
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.quackquack.ui.color.QuackColor

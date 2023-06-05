@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.common.compose.ui
+package team.duckie.app.android.common.compose.ui.icon.v1
 
 import team.duckie.app.android.common.compose.R
 import team.duckie.quackquack.ui.icon.QuackIcon

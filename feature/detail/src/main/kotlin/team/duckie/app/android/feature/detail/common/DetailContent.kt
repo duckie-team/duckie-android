@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.app.android.common.compose.ui.DefaultProfile
+import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
@@ -132,9 +132,6 @@ internal fun DetailContentLayout(
         // 구분선
         QuackDivider()
         additionalInfo()
-        // 점수 분포도 Layout
-        // TODO(riflockle7): 기획 정해질 시 활성화
-        // DetailScoreDistributionLayout(state)
     }
 }
 

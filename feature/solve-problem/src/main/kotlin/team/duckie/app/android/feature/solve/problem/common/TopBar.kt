@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.common.compose.ui.Clock
+import team.duckie.app.android.common.compose.ui.icon.v1.Clock
 import team.duckie.app.android.common.compose.ui.LinearProgressBar
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
