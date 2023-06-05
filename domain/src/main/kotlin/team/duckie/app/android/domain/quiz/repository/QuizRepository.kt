@@ -23,5 +23,6 @@ interface QuizRepository {
         time: Int?,
         requirementAnswer: String?,
         problemId: Int?,
+        wrongAnswer: String?,
     ): Boolean
 }

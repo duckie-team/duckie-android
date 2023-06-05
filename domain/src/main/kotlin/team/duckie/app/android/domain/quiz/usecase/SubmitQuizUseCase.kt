@@ -27,6 +27,7 @@ class SubmitQuizUseCase @Inject constructor(
             time = param.time,
             problemId = param.problemId,
             requirementAnswer = param.requirementAnswer,
+            wrongAnswer = param.wrongAnswer,
         )
     }
 
@@ -36,5 +37,6 @@ class SubmitQuizUseCase @Inject constructor(
         val time: Int?,
         val problemId: Int?,
         val requirementAnswer: String?,
+        val wrongAnswer: String?,
     ) : Parcelable
 }
