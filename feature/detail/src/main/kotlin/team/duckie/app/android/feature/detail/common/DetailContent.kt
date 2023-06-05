@@ -9,7 +9,6 @@
 
 package team.duckie.app.android.feature.detail.common
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,26 +31,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
-import team.duckie.app.android.common.compose.ui.DefaultProfile
+import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
-import team.duckie.app.android.common.compose.GetHeightRatioW328H240
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.shape.SquircleShape
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackTag
+import team.duckie.quackquack.ui.QuackTagStyle
+import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /** 상세 화면 컨텐츠 Layout */
@@ -96,12 +92,20 @@ internal fun DetailContentLayout(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             // 제목
-            QuackHeadLine2(text = state.exam.title)
+            QuackText(
+                text = state.exam.title,
+                typography = QuackTypography.HeadLine2,
+            )
+
             // 더보기 아이콘
             QuackImage(
-                src = QuackIcon.More,
-                size = DpSize(width = 24.dp, height = 24.dp),
-                onClick = moreButtonClick,
+                src = QuackIcon.More.drawableId,
+                modifier = Modifier
+                    .width(24.dp)
+                    .height(24.dp)
+                    .quackClickable {
+                        moreButtonClick()
+                    },
             )
         }
 
@@ -109,9 +113,10 @@ internal fun DetailContentLayout(
         Spacer(modifier = Modifier.height(8.dp))
         // 내용
         state.exam.description?.run {
-            QuackBody2(
+            QuackText(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = this,
+                typography = QuackTypography.Body2,
             )
         }
         // 공백
@@ -129,23 +134,27 @@ internal fun DetailContentLayout(
                 QuackTag(
                     text = tagName,
                     style = QuackTagStyle.GrayscaleFlat,
-                    onClick = { tagItemClick(tagName) }
+                    onClick = { tagItemClick(tagName) },
                 )
             }
         }
 
         // 공백
         Spacer(modifier = Modifier.height(24.dp))
+
         // 구분선
-        QuackDivider()
+        QuackMaxWidthDivider()
+
         // 프로필 Layout
         DetailProfileLayout(
             state = state,
             followButtonClick = followButtonClick,
             profileClick = profileClick,
         )
+
         // 구분선
-        QuackDivider()
+        QuackMaxWidthDivider()
+
         additionalInfo()
     }
 }
@@ -177,17 +186,17 @@ private fun DetailProfileLayout(
         // 작성자 프로필 이미지
         if (state.profileImageUrl.isNotEmpty()) {
             QuackImage(
-                src = state.profileImageUrl,
-                shape = SquircleShape,
-                size = DpSize(32.dp, 32.dp),
-            )
-        } else {
-            Image(
                 modifier = Modifier
                     .size(DpSize(32.dp, 32.dp))
                     .clip(SquircleShape),
-                painter = painterResource(id = QuackIcon.DefaultProfile),
-                contentDescription = null,
+                src = state.profileImageUrl,
+            )
+        } else {
+            QuackImage(
+                modifier = Modifier
+                    .size(DpSize(32.dp, 32.dp))
+                    .clip(SquircleShape),
+                src = QuackIcon.Profile.drawableId,
             )
         }
 
@@ -197,9 +206,9 @@ private fun DetailProfileLayout(
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 댓글 작성자 닉네임
-                QuackBody3(
+                QuackText(
                     text = state.nickname,
-                    color = QuackColor.Black,
+                    typography = QuackTypography.Body3,
                 )
 
                 // 공백
@@ -210,24 +219,30 @@ private fun DetailProfileLayout(
             Spacer(modifier = Modifier.height(2.dp))
 
             // 덕티어 + 퍼센트, 태그
-            QuackBody3(
+            QuackText(
                 text = stringResource(
                     R.string.detail_tier_tag,
                     state.exam.user?.duckPower?.tier ?: "",
                     state.exam.user?.duckPower?.tag?.name ?: "",
                 ),
-                color = QuackColor.Gray2,
+                typography = QuackTypography.Body3.change(color = QuackColor.Gray2),
             )
         }
         // 공백
         Spacer(modifier = Modifier.weight(1f))
 
         // 팔로우 버튼
-        QuackBody2(
-            padding = PaddingValues(
-                top = 8.dp,
-                bottom = 8.dp,
-            ),
+        QuackText(
+            modifier = Modifier
+                .padding(
+                    PaddingValues(
+                        top = 8.dp,
+                        bottom = 8.dp,
+                    ),
+                )
+                .quackClickable(
+                    onClick = followButtonClick,
+                ),
             text = stringResource(
                 if (isFollowed) {
                     R.string.detail_following
@@ -235,8 +250,13 @@ private fun DetailProfileLayout(
                     R.string.detail_follow
                 },
             ),
-            color = if (isFollowed) QuackColor.Gray2 else QuackColor.DuckieOrange,
-            onClick = followButtonClick,
+            typography = QuackTypography.Body2.change(
+                color = if (isFollowed) {
+                    QuackColor.Gray2
+                } else {
+                    QuackColor.DuckieOrange
+                },
+            ),
         )
     }
 }

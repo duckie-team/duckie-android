@@ -5,11 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalMaterialApi::class)
-
 package team.duckie.app.android.feature.detail.viewmodel.state
 
-import androidx.compose.material.ExperimentalMaterialApi
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.tag.model.Tag
