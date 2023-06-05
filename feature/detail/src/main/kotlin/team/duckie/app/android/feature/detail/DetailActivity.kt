@@ -25,6 +25,7 @@ import team.duckie.app.android.common.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.feature.detail.screen.DetailScreen
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEffect
+import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.startexam.StartExamNavigator
@@ -45,6 +46,9 @@ class DetailActivity : BaseActivity() {
 
     @Inject
     lateinit var startExamNavigator: StartExamNavigator
+
+    @Inject
+    lateinit var examResultNavigator: ExamResultNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,6 +119,17 @@ class DetailActivity : BaseActivity() {
                     putExtra(Extras.IsQuiz, sideEffect.isQuiz)
                 },
             )
+
+            is DetailSideEffect.NavigateToExamResult -> {
+                examResultNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                        putExtra(Extras.IsQuiz, false)
+                        putExtra(Extras.IsPassed, true)
+                    },
+                )
+            }
         }
     }
 }

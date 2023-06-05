@@ -24,6 +24,7 @@ import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceUseCase
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
@@ -172,13 +173,24 @@ class DetailViewModel @Inject constructor(
 
                     false -> {
                         makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
-                            postSideEffect(
-                                DetailSideEffect.StartExam(
-                                    examId = result.id,
-                                    certifyingStatement = certifyingStatement,
-                                    isQuiz = isQuiz,
-                                ),
-                            )
+                            when (result.status) {
+                                ExamStatus.Ready -> {
+                                    postSideEffect(
+                                        DetailSideEffect.StartExam(
+                                            examId = result.id,
+                                            certifyingStatement = certifyingStatement,
+                                            isQuiz = isQuiz,
+                                        ),
+                                    )
+                                }
+
+                                ExamStatus.Submitted -> {
+                                    postSideEffect(
+                                        DetailSideEffect.NavigateToExamResult(result.id),
+                                    )
+                                }
+                            }
+
                         }.onFailure {
                             postSideEffect(DetailSideEffect.ReportError(it))
                         }

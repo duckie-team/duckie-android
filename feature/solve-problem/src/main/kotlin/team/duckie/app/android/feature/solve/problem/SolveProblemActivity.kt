@@ -134,6 +134,7 @@ class SolveProblemActivity : BaseActivity() {
                         putExtra(Extras.ExamId, sideEffect.examId)
                         putExtra(Extras.Submitted, sideEffect.answers.toTypedArray())
                         putExtra(Extras.IsQuiz, false)
+                        putExtra(Extras.IsPassed, false)
                     },
                     withFinish = true,
                 )
