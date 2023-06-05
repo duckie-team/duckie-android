@@ -154,7 +154,7 @@ private fun RankingContent(
                                 DpSize(44.dp, 44.dp),
                             )
                             .clip(SquircleShape),
-                        contentScale = ContentScale.FillBounds
+                        contentScale = ContentScale.FillBounds,
                     )
                 } ?: QuackImage(
                     src = QuackIcon.Profile.drawableId,
@@ -163,7 +163,7 @@ private fun RankingContent(
                             DpSize(44.dp, 44.dp),
                         )
                         .clip(SquircleShape),
-                    contentScale = ContentScale.FillBounds
+                    contentScale = ContentScale.FillBounds,
                 )
 
                 Spacer(space = 8.dp)
