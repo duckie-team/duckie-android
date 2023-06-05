@@ -9,8 +9,10 @@ package team.duckie.app.android.feature.exam.result.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -120,42 +122,46 @@ class ExamResultViewModel @Inject constructor(
         reduce {
             ExamResultState.Loading
         }
-        submitQuizUseCase(examId, updateQuizParam).onFailure {
-            it.printStackTrace()
-            reduce {
-                ExamResultState.Error(exception = it)
-            }
-            postSideEffect(ExamResultSideEffect.ReportError(it))
-        }
-        getQuizUseCase(examId).onSuccess { quizResult ->
-            val isPerfectScore = quizResult.wrongProblem == null
-            reduce {
-                with(quizResult) {
-                    ExamResultState.Success(
-                        examId = id,
-                        reportUrl = if (isPerfectScore) {
-                            exam.perfectScoreImageUrl ?: ""
-                        } else {
-                            wrongProblem?.solution?.solutionImageUrl ?: ""
-                        },
-                        isQuiz = true,
-                        correctProblemCount = correctProblemCount,
-                        time = time,
-                        mainTag = exam.mainTag?.name ?: "",
-                        ranking = ranking ?: 0,
-                        wrongAnswerMessage = wrongProblem?.solution?.wrongAnswerMessage ?: "",
-                        requirementPlaceholder = exam.requirementPlaceholder ?: "",
-                        requirementQuestion = exam.requirementQuestion ?: "",
-                        timer = exam.timer ?: 0,
-                    )
+        viewModelScope.launch {
+            submitQuizUseCase(examId, updateQuizParam).onFailure {
+                it.printStackTrace()
+                reduce {
+                    ExamResultState.Error(exception = it)
                 }
+                postSideEffect(ExamResultSideEffect.ReportError(it))
             }
-        }.onFailure {
-            it.printStackTrace()
-            reduce {
-                ExamResultState.Error(exception = it)
+        }.join()
+        viewModelScope.launch {
+            getQuizUseCase(examId).onSuccess { quizResult ->
+                val isPerfectScore = quizResult.wrongProblem == null
+                reduce {
+                    with(quizResult) {
+                        ExamResultState.Success(
+                            examId = id,
+                            reportUrl = if (isPerfectScore) {
+                                exam.perfectScoreImageUrl ?: ""
+                            } else {
+                                wrongProblem?.solution?.solutionImageUrl ?: ""
+                            },
+                            isQuiz = true,
+                            correctProblemCount = correctProblemCount,
+                            time = time,
+                            mainTag = exam.mainTag?.name ?: "",
+                            ranking = ranking ?: 0,
+                            wrongAnswerMessage = wrongProblem?.solution?.wrongAnswerMessage ?: "",
+                            requirementPlaceholder = exam.requirementPlaceholder ?: "",
+                            requirementQuestion = exam.requirementQuestion ?: "",
+                            timer = exam.timer ?: 0,
+                        )
+                    }
+                }
+            }.onFailure {
+                it.printStackTrace()
+                reduce {
+                    ExamResultState.Error(exception = it)
+                }
+                postSideEffect(ExamResultSideEffect.ReportError(it))
             }
-            postSideEffect(ExamResultSideEffect.ReportError(it))
         }
     }
 
@@ -174,5 +180,5 @@ class ExamResultViewModel @Inject constructor(
     fun exitExam() = intent {
         postSideEffect(ExamResultSideEffect.FinishExamResult)
     }
-    
+
 }
