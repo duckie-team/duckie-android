@@ -43,6 +43,7 @@ include(
     ":navigator",
     ":core:datastore",
     ":core:sync",
+    ":feature:skeleton",
     ":feature:search",
     ":feature:setting",
     ":feature:onboard",
