@@ -204,7 +204,7 @@ class ProfileEditViewModel @Inject constructor(
 
         getUploadableFileUrl(
             state.profile.toString(),
-            applicationContext
+            applicationContext,
         ).onSuccess { uploadableUrl ->
             if (state.nicknameState.isInValid()) return@intent
 
