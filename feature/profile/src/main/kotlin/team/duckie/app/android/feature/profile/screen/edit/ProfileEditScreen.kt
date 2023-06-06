@@ -30,6 +30,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -59,7 +60,9 @@ private const val MaxIntroductionLength = 60
 internal fun ProfileEditScreen(
     vm: ProfileEditViewModel,
 ) {
+    val context = LocalContext.current.applicationContext
     val state by vm.container.stateFlow.collectAsStateWithLifecycle()
+
     val galleryState = remember(state) { state.galleryState }
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
@@ -117,7 +120,9 @@ internal fun ProfileEditScreen(
         EditTopAppBar(
             title = stringResource(id = R.string.edit_profile),
             onBackPressed = vm::clickBackPress,
-            onClickEditComplete = vm::clickEditComplete,
+            onClickEditComplete = {
+                vm.clickEditComplete(applicationContext = context.applicationContext)
+            },
         )
         Column(
             modifier = Modifier

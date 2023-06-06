@@ -198,27 +198,33 @@ class ProfileEditViewModel @Inject constructor(
         postSideEffect(ProfileEditSideEffect.NavigateBack)
     }
 
-    fun clickEditComplete() = intent {
-        state.run {
-            val profileUrl = if (profile is SharedIcon) {
-                ""
-            } else {
-                profile.toString()
-            }
+    fun clickEditComplete(applicationContext: Context?) = intent {
+        updateLoading(true)
+
+        getUploadableFileUrl(
+            state.profile.toString(),
+            applicationContext
+        ).onSuccess { uploadableUrl ->
             if (state.nicknameState.isInValid()) return@intent
+
             userUpdateUseCase(
-                id = userId,
-                profileImageUrl = profileUrl,
+                id = state.userId,
+                profileImageUrl = uploadableUrl,
                 categories = null,
                 tags = null,
                 status = null,
-                nickname = nickname,
-                introduction = introduce,
+                nickname = state.nickname,
+                introduction = state.introduce,
             ).onSuccess {
+                updateLoading(false)
                 postSideEffect(ProfileEditSideEffect.NavigateBack)
             }.onFailure {
+                updateLoading(false)
                 postSideEffect(ProfileEditSideEffect.ReportError(it))
             }
+        }.onFailure {
+            updateLoading(false)
+            postSideEffect(ProfileEditSideEffect.ReportError(it))
         }
     }
 
