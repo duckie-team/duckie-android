@@ -118,15 +118,16 @@ class ProfileEditViewModel @Inject constructor(
     private fun initUser() = intent {
         updateLoading(true)
         getUserUseCase(state.userId).onSuccess { user ->
+            originNickname = user.nickname
+            originProfileImageUrl = user.profileImageUrl ?: SharedIcon.ic_default_profile
+
             reduce {
                 state.copy(
-                    profile = user.profileImageUrl,
+                    profile = originProfileImageUrl,
                     nickname = user.nickname,
                     introduce = user.introduction ?: "",
                 )
             }
-            originNickname = user.nickname
-            originProfileImageUrl = user.profileImageUrl ?: SharedIcon.ic_default_profile
         }.onFailure {
             postSideEffect(ProfileEditSideEffect.ReportError(it))
         }.also {
@@ -148,7 +149,7 @@ class ProfileEditViewModel @Inject constructor(
         }
     }
 
-    fun changeProfile(profile: Any?) = intent {
+    fun changeProfile(profile: Any) = intent {
         reduce {
             state.copy(profile = profile)
         }
