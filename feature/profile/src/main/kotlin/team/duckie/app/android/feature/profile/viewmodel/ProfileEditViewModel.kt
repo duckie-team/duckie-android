@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.feature.profile.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +22,17 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.image.MediaUtil
+import team.duckie.app.android.common.android.ui.const.Debounce
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.compose.ui.constant.SharedIcon
+import team.duckie.app.android.common.kotlin.ImmutableList
+import team.duckie.app.android.common.kotlin.MutableDebounceFlow
+import team.duckie.app.android.common.kotlin.debounceAction
+import team.duckie.app.android.common.kotlin.fastAll
+import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.domain.file.constant.FileType
+import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
 import team.duckie.app.android.domain.user.usecase.GetUserUseCase
 import team.duckie.app.android.domain.user.usecase.NicknameDuplicateCheckUseCase
@@ -29,14 +42,6 @@ import team.duckie.app.android.feature.profile.viewmodel.sideeffect.ProfileEditS
 import team.duckie.app.android.feature.profile.viewmodel.state.GalleryState
 import team.duckie.app.android.feature.profile.viewmodel.state.NicknameState
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileEditState
-import team.duckie.app.android.common.compose.ui.constant.SharedIcon
-import team.duckie.app.android.common.kotlin.ImmutableList
-import team.duckie.app.android.common.kotlin.MutableDebounceFlow
-import team.duckie.app.android.common.kotlin.debounceAction
-import team.duckie.app.android.common.kotlin.fastAll
-import team.duckie.app.android.common.kotlin.fastMap
-import team.duckie.app.android.common.android.ui.const.Debounce
-import team.duckie.app.android.common.android.ui.const.Extras
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,6 +52,7 @@ class ProfileEditViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val nicknameDuplicateCheckUseCase: NicknameDuplicateCheckUseCase,
     private val nicknameValidationUseCase: NicknameValidationUseCase,
+    private val fileUploadUseCase: FileUploadUseCase,
 ) : ViewModel(), ContainerHost<ProfileEditState, ProfileEditSideEffect> {
     override val container: Container<ProfileEditState, ProfileEditSideEffect> =
         container(ProfileEditState())
@@ -219,6 +225,38 @@ class ProfileEditViewModel @Inject constructor(
     private fun updateLoading(isLoading: Boolean) = intent {
         reduce {
             state.copy(isLoading = isLoading)
+        }
+    }
+
+    /**
+     * 업로드 가능한 파일 URL 을 가져온다.
+     *
+     * @param profile 프로필 URL
+     * @param applicationContext 프로필 업로드 로직을 위한 ApplicationContext
+     */
+    // TODO(riflockle7): 추후 공통화하기
+    private suspend fun getUploadableFileUrl(
+        profile: Any?,
+        applicationContext: Context?,
+    ): Result<String> {
+        // SharedIcon 이거나 profile 자체가 null 인 경우
+        if (profile is SharedIcon || profile == null) {
+            return Result.success("")
+        }
+        require(profile is String)
+
+        val startsWithHttp = profile.startsWith("http://") || profile.startsWith("https://")
+        val profileNotChanged = originProfileImageUrl == profile
+
+        // http 로 시작하는 데 기존값과 차이가 없는 경우 별도 업로드 진행하지 않음
+        return if (startsWithHttp && profileNotChanged) {
+            Result.success(profile)
+        }
+        // 그 외에는 무조건 서버 업로드 후 진행
+        else {
+            requireNotNull(applicationContext)
+            val tempFile = MediaUtil.getOptimizedBitmapFile(applicationContext, Uri.parse(profile))
+            return fileUploadUseCase(tempFile, FileType.Profile)
         }
     }
 }
