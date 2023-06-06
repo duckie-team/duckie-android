@@ -52,6 +52,7 @@ class ProfileEditViewModel @Inject constructor(
         container(ProfileEditState())
 
     private lateinit var originNickname: String
+    private var originProfileImageUrl: Any = SharedIcon.ic_default_profile
 
     private val nickNameChangeEvent = MutableDebounceFlow<String>().apply {
         debounceAction(
@@ -100,7 +101,7 @@ class ProfileEditViewModel @Inject constructor(
             reduce {
                 state.copy(userId = userId)
             }
-            getUser()
+            initUser()
         }
     }
 
@@ -108,7 +109,7 @@ class ProfileEditViewModel @Inject constructor(
         loadGalleryImages()
     }
 
-    private fun getUser() = intent {
+    private fun initUser() = intent {
         updateLoading(true)
         getUserUseCase(state.userId).onSuccess { user ->
             reduce {
@@ -119,6 +120,7 @@ class ProfileEditViewModel @Inject constructor(
                 )
             }
             originNickname = user.nickname
+            originProfileImageUrl = user.profileImageUrl ?: SharedIcon.ic_default_profile
         }.onFailure {
             postSideEffect(ProfileEditSideEffect.ReportError(it))
         }.also {
