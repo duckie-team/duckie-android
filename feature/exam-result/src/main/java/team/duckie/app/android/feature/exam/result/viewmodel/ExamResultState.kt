@@ -23,6 +23,7 @@ sealed class ExamResultState {
         val requirementQuestion: String = "",
         val requirementPlaceholder: String = "",
         val timer: Int = 0,
+        val originalExamId: Int = 0,
     ) : ExamResultState()
 
     data class Error(
