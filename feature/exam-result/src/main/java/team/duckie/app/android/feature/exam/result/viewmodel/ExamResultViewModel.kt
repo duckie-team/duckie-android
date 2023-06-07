@@ -173,7 +173,7 @@ class ExamResultViewModel @Inject constructor(
         makeQuizUseCase(examId = state.originalExamId).onSuccess { result ->
             postSideEffect(
                 ExamResultSideEffect.NavigateToStartExam(
-                    examId = result.exam.id,
+                    examId = result.id,
                     requirementQuestion = state.requirementQuestion,
                     requirementPlaceholder = state.requirementPlaceholder,
                     timer = state.timer,
