@@ -27,6 +27,7 @@ import team.duckie.app.android.domain.examInstance.model.ExamInstance
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
+import team.duckie.app.android.domain.quiz.usecase.MakeQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
 import javax.inject.Inject
 
@@ -37,6 +38,7 @@ class ExamResultViewModel @Inject constructor(
     private val getExamInstanceUseCase: GetExamInstanceUseCase,
     private val submitQuizUseCase: SubmitQuizUseCase,
     private val getQuizUseCase: GetQuizUseCase,
+    private val makeQuizUseCase: MakeQuizUseCase,
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
 
@@ -152,6 +154,7 @@ class ExamResultViewModel @Inject constructor(
                             requirementPlaceholder = exam.requirementPlaceholder ?: "",
                             requirementQuestion = exam.requirementQuestion ?: "",
                             timer = exam.timer ?: 0,
+                            originalExamId = exam.id,
                         )
                     }
                 }
@@ -167,14 +170,18 @@ class ExamResultViewModel @Inject constructor(
 
     fun clickRetry() = intent {
         val state = state as ExamResultState.Success
-        postSideEffect(
-            ExamResultSideEffect.NavigateToStartExam(
-                examId = state.examId,
-                requirementQuestion = state.requirementQuestion,
-                requirementPlaceholder = state.requirementPlaceholder,
-                timer = state.timer,
-            ),
-        )
+        makeQuizUseCase(examId = state.originalExamId).onSuccess { result ->
+            postSideEffect(
+                ExamResultSideEffect.NavigateToStartExam(
+                    examId = result.exam.id,
+                    requirementQuestion = state.requirementQuestion,
+                    requirementPlaceholder = state.requirementPlaceholder,
+                    timer = state.timer,
+                ),
+            )
+        }.onFailure {
+            postSideEffect(ExamResultSideEffect.ReportError(it))
+        }
     }
 
     fun exitExam() = intent {
