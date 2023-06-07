@@ -13,7 +13,7 @@ import team.duckie.app.android.common.compose.ui.constant.SharedIcon
 
 data class ProfileEditState(
     val isLoading: Boolean = true,
-    val profile: Any? = SharedIcon.ic_default_profile,
+    val profile: Any = SharedIcon.ic_default_profile,
     val nickname: String = "",
     val editEnabled: Boolean = false,
     val nicknameState: NicknameState = NicknameState.Checking,
