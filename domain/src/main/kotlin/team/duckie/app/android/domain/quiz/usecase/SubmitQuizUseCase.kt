@@ -7,10 +7,9 @@
 
 package team.duckie.app.android.domain.quiz.usecase
 
-import android.os.Parcelable
 import androidx.compose.runtime.Immutable
-import kotlinx.parcelize.Parcelize
 import team.duckie.app.android.domain.quiz.repository.QuizRepository
+import java.io.Serializable
 import javax.inject.Inject
 
 @Immutable
@@ -31,12 +30,11 @@ class SubmitQuizUseCase @Inject constructor(
         )
     }
 
-    @Parcelize
     data class Param(
         val correctProblemCount: Int,
         val time: Int?,
         val problemId: Int?,
         val requirementAnswer: String?,
         val wrongAnswer: String?,
-    ) : Parcelable
+    ) : Serializable
 }

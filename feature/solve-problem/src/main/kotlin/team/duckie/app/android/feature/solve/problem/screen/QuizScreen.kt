@@ -92,7 +92,11 @@ internal fun QuizScreen(
 
     LaunchedEffect(timeOver) {
         if (timeOver) {
-            finishQuiz(pagerState.currentPage, false, inputAnswers[pagerState.currentPage].answer)
+            onNextPage(
+                pagerState.currentPage,
+                inputAnswers[pagerState.currentPage],
+                totalPage - 1,
+            )
         }
     }
 
