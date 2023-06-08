@@ -155,6 +155,7 @@ class ExamResultViewModel @Inject constructor(
                             requirementQuestion = exam.requirementQuestion ?: "",
                             timer = exam.timer ?: 0,
                             originalExamId = exam.id,
+                            isPerfectScore = isPerfectScore,
                         )
                     }
                 }
