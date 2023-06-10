@@ -15,7 +15,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.data.auth.repository.AuthRepositoryImpl
 import team.duckie.app.android.data.category.repository.CategoryRepositoryImpl
-import team.duckie.app.android.data.quiz.repository.QuizRepositoryImpl
 import team.duckie.app.android.data.device.repository.DeviceRepositoryImpl
 import team.duckie.app.android.data.exam.repository.ExamRepositoryImpl
 import team.duckie.app.android.data.examInstance.repository.ExamInstanceRepositoryImpl
@@ -26,6 +25,7 @@ import team.duckie.app.android.data.heart.repository.HeartRepositoryImpl
 import team.duckie.app.android.data.ignore.repository.IgnoreRepositoryImpl
 import team.duckie.app.android.data.me.repository.MeRepositoryImpl
 import team.duckie.app.android.data.notification.repository.NotificationRepositoryImpl
+import team.duckie.app.android.data.quiz.repository.QuizRepositoryImpl
 import team.duckie.app.android.data.ranking.repository.RankingRepositoryImpl
 import team.duckie.app.android.data.recommendation.repository.RecommendationRepositoryImpl
 import team.duckie.app.android.data.report.repository.ReportRepositoryImpl
@@ -35,7 +35,6 @@ import team.duckie.app.android.data.terms.repository.TermsRepositoryImpl
 import team.duckie.app.android.data.user.repository.UserRepositoryImpl
 import team.duckie.app.android.domain.auth.repository.AuthRepository
 import team.duckie.app.android.domain.category.repository.CategoryRepository
-import team.duckie.app.android.domain.quiz.repository.QuizRepository
 import team.duckie.app.android.domain.device.repository.DeviceRepository
 import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.examInstance.repository.ExamInstanceRepository
@@ -46,6 +45,7 @@ import team.duckie.app.android.domain.heart.repository.HeartRepository
 import team.duckie.app.android.domain.ignore.repository.IgnoreRepository
 import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.notification.repository.NotificationRepository
+import team.duckie.app.android.domain.quiz.repository.QuizRepository
 import team.duckie.app.android.domain.ranking.repository.RankingRepository
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
 import team.duckie.app.android.domain.report.repository.ReportRepository
