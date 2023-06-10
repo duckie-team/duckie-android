@@ -58,57 +58,58 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class BindsModule {
+    @Singleton
     @Binds
     abstract fun provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository
-
+    @Singleton
     @Binds
     abstract fun provideCategoryRepository(impl: CategoryRepositoryImpl): CategoryRepository
-
+    @Singleton
     @Binds
     abstract fun provdeDeviceRepository(impl: DeviceRepositoryImpl): DeviceRepository
-
+    @Singleton
     @Binds
     abstract fun provideExamRepository(impl: ExamRepositoryImpl): ExamRepository
-
+    @Singleton
     @Binds
     abstract fun provideExamInstanceRepository(impl: ExamInstanceRepositoryImpl): ExamInstanceRepository
-
+    @Singleton
     @Binds
     abstract fun provideRecommendationRepository(impl: RecommendationRepositoryImpl): RecommendationRepository
-
+    @Singleton
     @Binds
     abstract fun provideFileRepository(impl: FileRepositoryImpl): FileRepository
-
+    @Singleton
     @Binds
     abstract fun provideFollowsRepository(impl: FollowRepositoryImpl): FollowRepository
-
+    @Singleton
     @Binds
     abstract fun provideHeartRepository(impl: HeartRepositoryImpl): HeartRepository
-
+    @Singleton
     @Binds
     abstract fun provideMeRepository(impl: MeRepositoryImpl): MeRepository
-
+    @Singleton
     @Binds
     abstract fun provideGalleryRepository(impl: GalleryRepositoryImpl): GalleryRepository
-
+    @Singleton
     @Binds
     abstract fun provideTagRepository(impl: TagRepositoryImpl): TagRepository
-
+    @Singleton
     @Binds
     abstract fun provideTermsRepository(impl: TermsRepositoryImpl): TermsRepository
-
+    @Singleton
     @Binds
     abstract fun provideUserRepository(impl: UserRepositoryImpl): UserRepository
-
+    @Singleton
     @Binds
     abstract fun provideSearchRepository(impl: SearchRepositoryImpl): SearchRepository
-
+    @Singleton
     @Binds
     abstract fun provideRankingRepository(impl: RankingRepositoryImpl): RankingRepository
-
+    @Singleton
     @Binds
     abstract fun provideNotificationRepository(impl: NotificationRepositoryImpl): NotificationRepository
-
+    @Singleton
     @Binds
     abstract fun provideReportRepository(impl: ReportRepositoryImpl): ReportRepository
 
