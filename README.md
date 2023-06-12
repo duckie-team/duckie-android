@@ -34,14 +34,6 @@ You can download it from the [Google PlayStore](https://play.google.com/store/ap
 
 <a href="https://play.google.com/store/apps/details?team.duckie.app.android"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="70"></a>
 
-## Contribute
-
-> We love your contribution!
-
-Duckie's team is all Korean, so we're not good at English. So, most of the documentation was done in Korean. If you are familiar with Korean and English, perhaps the easiest and first contribution you can make is the English translation of documents. It will take some time, but it's a worthwhile incredible contribution for all of us, and we love English grammar improvements too, not just translations!
-
-Anyway, *any* contribution is welcome, just make sure you follow the [contribution guide](.github/CONTRIBUTING.md).
-
 ### How to Launch Activity?
 
 Edit Configurations -> Set `Launch Options` like this:
@@ -54,7 +46,8 @@ Edit Configurations -> Set `Launch Options` like this:
 
 ## Project Dependencies Graph
 
-![dependencies](assets/dependency-graph/project.dot.png)
+![dependencies](https://github.com/duckie-team/duckie-android/assets/80076029/39e60250-cebd-424c-bc32-b1a272a6d879)
+
 
 <p align="center" >
   <img src="https://img.shields.io/badge/Module-AndroidApplication-%23B4BD9B" />
