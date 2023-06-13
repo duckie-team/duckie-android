@@ -19,7 +19,6 @@ import team.duckie.app.android.common.kotlin.ExperimentalApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
 ) : UserRepository {

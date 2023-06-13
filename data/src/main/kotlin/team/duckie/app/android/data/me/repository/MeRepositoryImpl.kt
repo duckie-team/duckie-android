@@ -23,7 +23,6 @@ import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemE
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class MeRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val userDataSource: UserDataSource,
