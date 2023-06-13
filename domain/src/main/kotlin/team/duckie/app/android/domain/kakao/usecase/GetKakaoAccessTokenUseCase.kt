@@ -21,7 +21,7 @@ import javax.inject.Inject
  */
 @Immutable
 class GetKakaoAccessTokenUseCase @Inject constructor(
-    private val repository: KakaoRepository
+    private val repository: KakaoRepository,
 ) {
     suspend operator fun invoke(): Result<String> {
         return runCatching {
