@@ -59,10 +59,7 @@ internal fun DetailScreen(
             onRetryClick = viewModel::refresh,
         )
 
-        state is DetailState.Loading -> LoadingScreen(
-            viewModel::initState,
-            modifier,
-        )
+        state is DetailState.Loading -> LoadingScreen(modifier)
 
         state is DetailState.Success -> {
             ReportDialog(
@@ -99,7 +96,7 @@ internal fun DetailScreen(
         else -> ErrorScreen(
             modifier,
             false,
-            onRetryClick = viewModel::initState,
+            onRetryClick = viewModel::refresh,
         )
     }
 }

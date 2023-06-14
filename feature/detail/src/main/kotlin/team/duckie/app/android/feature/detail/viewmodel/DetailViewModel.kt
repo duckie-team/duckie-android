@@ -24,6 +24,7 @@ import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.domain.exam.usecase.GetExamUseCase
 import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceUseCase
 import team.duckie.app.android.domain.follow.model.FollowBody
@@ -39,7 +40,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val examRepository: ExamRepository,
+    private val getExamUseCase: GetExamUseCase,
     private val getMeUseCase: GetMeUseCase,
     private val followUseCase: FollowUseCase,
     private val postHeartUseCase: PostHeartUseCase,
@@ -51,28 +52,33 @@ class DetailViewModel @Inject constructor(
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
-    suspend fun initState() {
+    init {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-
-        val exam = runCatching { examRepository.getExam(examId) }.getOrNull()
-        intent {
-            getMeUseCase()
-                .onSuccess { me ->
-                    reduce {
-                        if (exam != null) {
-                            DetailState.Success(exam, me, exam.user?.follow != null)
-                        } else {
-                            DetailState.Error(DuckieResponseFieldNPE("exam or me is Null"))
-                        }
-                    }
-                }.onFailure {
-                    postSideEffect(DetailSideEffect.ReportError(it))
-                }
-        }
+        initState(examId)
     }
 
-    suspend fun refresh() {
-        initState()
+    private fun initState(examId: Int) = intent {
+        val exam = getExamUseCase(examId).getOrNull()
+        getMeUseCase()
+            .onSuccess { me ->
+                reduce {
+                    if (exam != null) {
+                        DetailState.Success(exam, me, exam.user?.follow != null)
+                    } else {
+                        DetailState.Error(DuckieResponseFieldNPE("exam or me is Null"))
+                    }
+                }
+            }.onFailure {
+                postSideEffect(DetailSideEffect.ReportError(it))
+            }
+    }
+
+    fun refresh() {
+        container.stateFlow.value.let { state ->
+            if (state is DetailState.Success) {
+                initState(state.exam.id)
+            }
+        }
     }
 
     /** [examId] 게시글을 신고한다. */
