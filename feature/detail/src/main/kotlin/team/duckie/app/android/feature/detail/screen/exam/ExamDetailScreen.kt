@@ -39,8 +39,8 @@ internal fun ExamDetailContentLayout(
     followButtonClick: () -> Unit,
     profileClick: (Int) -> Unit,
 ) {
-    val totalExamCount = remember { state.exam.problemCount ?: 0 }
-    val solvedCount = remember { state.exam.solvedCount ?: 0 }
+    val totalExamCount = remember(state.exam.problemCount) { state.exam.problemCount ?: 0 }
+    val solvedCount = remember(state.exam.solvedCount) { state.exam.solvedCount ?: 0 }
 
     DetailContentLayout(
         modifier = modifier,
