@@ -50,6 +50,11 @@ class FriendsActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.initState()
+    }
+
     private fun handleSideEffect(sideEffect: FriendsSideEffect) {
         when (sideEffect) {
             is FriendsSideEffect.ReportError -> {
