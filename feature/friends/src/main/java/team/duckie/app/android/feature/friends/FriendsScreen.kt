@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
+import team.duckie.app.android.common.compose.LaunchOnLifecycle
 import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
@@ -61,6 +63,10 @@ internal fun FriendScreen(
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val pagerState = rememberPagerState(initialPage = state.friendType.index)
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchOnLifecycle {
+        viewModel.initState()
+    }
 
     Column(
         modifier = Modifier
