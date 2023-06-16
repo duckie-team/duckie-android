@@ -10,9 +10,13 @@
 package team.duckie.app.android.feature.detail.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
@@ -109,52 +114,66 @@ internal fun ExamDetailScreen(
     openBottomSheet: () -> Unit,
     state: DetailState.Success,
 ) {
-    Layout(
-        modifier = modifier.navigationBarsPadding(),
-        content = {
-            // 상단 탭바 Layout
-            TopAppCustomBar(
-                modifier = Modifier.layoutId(DetailScreenTopAppBarLayoutId),
-                state = state,
-                onTagClick = viewModel::goToSearch,
-            )
-            when (state.isQuiz) {
-                true -> {
-                    QuizDetailContentLayout(
-                        modifier = Modifier.layoutId(DetailScreenContentLayoutId),
-                        state = state,
-                        tagItemClick = viewModel::goToSearch,
-                        moreButtonClick = openBottomSheet,
-                        followButtonClick = viewModel::followUser,
-                        profileClick = viewModel::goToProfile,
-                    )
-                }
-
-                false -> {
-                    ExamDetailContentLayout(
-                        modifier = Modifier.layoutId(DetailScreenContentLayoutId),
-                        state = state,
-                        tagItemClick = viewModel::goToSearch,
-                        moreButtonClick = openBottomSheet,
-                        followButtonClick = viewModel::followUser,
-                        profileClick = viewModel::goToProfile,
-                    )
-                }
-            }
-            // 최하단 Layout
-            DetailBottomLayout(
-                modifier = Modifier
-                    .layoutId(DetailScreenBottomBarLayoutId)
-                    .background(color = QuackColor.White.value),
-                state = state,
-                onHeartClick = viewModel::heartExam,
-                onChallengeClick = viewModel::startExam,
-            )
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isRefreshing,
+        onRefresh = {
+            viewModel.pullToRefresh()
         },
-        measurePolicy = screenMeasurePolicy(
-            topLayoutId = DetailScreenTopAppBarLayoutId,
-            contentLayoutId = DetailScreenContentLayoutId,
-            bottomLayoutId = DetailScreenBottomBarLayoutId,
-        ),
     )
+
+    Box(modifier = Modifier.pullRefresh(pullRefreshState)){
+        Layout(
+            modifier = modifier.navigationBarsPadding(),
+            content = {
+                // 상단 탭바 Layout
+                TopAppCustomBar(
+                    modifier = Modifier.layoutId(DetailScreenTopAppBarLayoutId),
+                    state = state,
+                    onTagClick = viewModel::goToSearch,
+                )
+                when (state.isQuiz) {
+                    true -> {
+                        QuizDetailContentLayout(
+                            modifier = Modifier.layoutId(DetailScreenContentLayoutId),
+                            state = state,
+                            tagItemClick = viewModel::goToSearch,
+                            moreButtonClick = openBottomSheet,
+                            followButtonClick = viewModel::followUser,
+                            profileClick = viewModel::goToProfile,
+                        )
+                    }
+
+                    false -> {
+                        ExamDetailContentLayout(
+                            modifier = Modifier.layoutId(DetailScreenContentLayoutId),
+                            state = state,
+                            tagItemClick = viewModel::goToSearch,
+                            moreButtonClick = openBottomSheet,
+                            followButtonClick = viewModel::followUser,
+                            profileClick = viewModel::goToProfile,
+                        )
+                    }
+                }
+                // 최하단 Layout
+                DetailBottomLayout(
+                    modifier = Modifier
+                        .layoutId(DetailScreenBottomBarLayoutId)
+                        .background(color = QuackColor.White.value),
+                    state = state,
+                    onHeartClick = viewModel::heartExam,
+                    onChallengeClick = viewModel::startExam,
+                )
+            },
+            measurePolicy = screenMeasurePolicy(
+                topLayoutId = DetailScreenTopAppBarLayoutId,
+                contentLayoutId = DetailScreenContentLayoutId,
+                bottomLayoutId = DetailScreenBottomBarLayoutId,
+            ),
+        )
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = state.isRefreshing,
+            state = pullRefreshState,
+        )
+    }
 }

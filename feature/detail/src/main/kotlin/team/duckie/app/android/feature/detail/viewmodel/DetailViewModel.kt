@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -23,7 +24,6 @@ import team.duckie.app.android.common.kotlin.exception.DuckieResponseFieldNPE
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
-import team.duckie.app.android.domain.exam.repository.ExamRepository
 import team.duckie.app.android.domain.exam.usecase.GetExamUseCase
 import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceUseCase
@@ -79,6 +79,12 @@ class DetailViewModel @Inject constructor(
                 initState(state.exam.id)
             }
         }
+    }
+
+    fun pullToRefresh() = intent {
+        updateIsRefreshing(true)
+        refresh()
+        updateIsRefreshing(false)
     }
 
     /** [examId] 게시글을 신고한다. */
@@ -221,4 +227,12 @@ class DetailViewModel @Inject constructor(
             }
         }
     }
+
+    private suspend fun SimpleSyntax<DetailState, *>.updateIsRefreshing(isRefreshing: Boolean) =
+        reduce {
+            require(state is DetailState.Success)
+            (state as DetailState.Success).run {
+                copy(isRefreshing = isRefreshing)
+            }
+        }
 }
