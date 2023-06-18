@@ -103,9 +103,9 @@ internal fun DetailContentLayout(
                 modifier = Modifier
                     .width(24.dp)
                     .height(24.dp)
-                    .quackClickable {
-                        moreButtonClick()
-                    },
+                    .quackClickable(
+                        onClick = moreButtonClick,
+                    ),
             )
         }
 
