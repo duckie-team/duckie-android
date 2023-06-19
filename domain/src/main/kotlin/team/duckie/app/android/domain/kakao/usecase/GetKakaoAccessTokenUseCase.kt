@@ -8,8 +8,9 @@
 package team.duckie.app.android.domain.kakao.usecase
 
 import androidx.compose.runtime.Immutable
-import team.duckie.app.android.domain.kakao.repository.KakaoRepository
 import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotSupportAccount
+import team.duckie.app.android.domain.kakao.repository.KakaoRepository
+import javax.inject.Inject
 
 /**
  * 카카오 AccessToken 을 가져오는 유즈케이스
@@ -19,7 +20,9 @@ import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotSupportAcco
  * WebView 를 통해 로그인을 시도합니다.
  */
 @Immutable
-class GetKakaoAccessTokenUseCase(private val repository: KakaoRepository) {
+class GetKakaoAccessTokenUseCase @Inject constructor(
+    private val repository: KakaoRepository,
+) {
     suspend operator fun invoke(): Result<String> {
         return runCatching {
             repository.getAccessToken()
