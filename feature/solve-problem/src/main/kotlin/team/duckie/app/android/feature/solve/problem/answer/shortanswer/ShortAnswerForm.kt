@@ -70,11 +70,11 @@ internal fun ShortAnswerForm(
     Box {
         TextField(
             modifier = modifier
-                .focusRequester(focusRequester)
-                .onFocusChanged {
-                    hasFocus.value = it.hasFocus
-                }
-                .background(Color.Transparent),
+                    .focusRequester(focusRequester)
+                    .onFocusChanged {
+                        hasFocus.value = it.hasFocus
+                    }
+                    .background(Color.Transparent),
             value = myAnswer.value,
             onValueChange = {
                 if (it.length <= answer.length) {
@@ -94,18 +94,18 @@ internal fun ShortAnswerForm(
 
         FlowRow(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(horizontal = 16.dp)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = {
-                        focusRequester.requestFocus()
-                        keyboardController?.show()
-                    }
-                ),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(horizontal = 16.dp)
+                    .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = {
+                                focusRequester.requestFocus()
+                                keyboardController?.show()
+                            }
+                    ),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             ExamOneText.toData(answer = answer).forEachIndexed { index, data ->
                 if (getBlankIndexes(answer).contains(data.id)) {
@@ -127,21 +127,24 @@ private fun ShortAnswerOneTextForm(
     myAnswer: String,
     isFocused: Boolean,
 ) {
-    Box(
-        modifier = Modifier
-            .width(30.dp)
-            .height(40.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .quackBorder(
-                border = QuackBorder(color = if (isFocused) QuackColor.DuckieOrange else QuackColor.Gray3),
-                shape = RoundedCornerShape(4.dp)
+    Column {
+        Box(
+                modifier = Modifier
+                        .width(30.dp)
+                        .height(40.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .quackBorder(
+                                border = QuackBorder(color = if (isFocused) QuackColor.DuckieOrange else QuackColor.Gray3),
+                                shape = RoundedCornerShape(4.dp)
+                        )
+                        .background(QuackColor.Gray4.value),
+                contentAlignment = Alignment.Center,
+        ) {
+            QuackBody1(
+                    text = if (myAnswer.length > index) myAnswer[index].toString() else ""
             )
-            .background(QuackColor.Gray4.value),
-        contentAlignment = Alignment.Center,
-    ) {
-        QuackBody1(
-            text = if (myAnswer.length > index) myAnswer[index].toString() else ""
-        )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
