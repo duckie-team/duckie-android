@@ -58,7 +58,10 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun initState(examId: Int) = intent {
-        val exam = getExamUseCase(examId).getOrNull()
+        val exam = getExamUseCase(examId).getOrElse {
+            postSideEffect(DetailSideEffect.ReportError(it))
+            null
+        }
         getMeUseCase()
             .onSuccess { me ->
                 reduce {
