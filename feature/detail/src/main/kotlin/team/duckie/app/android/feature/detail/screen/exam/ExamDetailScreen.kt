@@ -39,9 +39,6 @@ internal fun ExamDetailContentLayout(
     followButtonClick: () -> Unit,
     profileClick: (Int) -> Unit,
 ) {
-    val totalExamCount = remember(state.exam.problemCount) { state.exam.problemCount ?: 0 }
-    val solvedCount = remember(state.exam.solvedCount) { state.exam.solvedCount ?: 0 }
-
     DetailContentLayout(
         modifier = modifier,
         state = state,
@@ -51,8 +48,8 @@ internal fun ExamDetailContentLayout(
         profileClick = profileClick,
         additionalInfo = {
             MetadataSection(
-                totalExamCount = totalExamCount,
-                totalExaminee = solvedCount,
+                totalExamCount = state.exam.problemCount ?: 0,
+                totalExaminee = state.exam.solvedCount ?: 0,
             )
         },
     )
