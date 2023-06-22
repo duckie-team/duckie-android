@@ -71,7 +71,7 @@ private fun RankingSection(
     state: DetailState.Success,
     userContentClick: (Int) -> Unit,
 ) {
-    val quizRankings = remember { checkNotNull(state.exam.quizs) }
+    val quizRankings = remember(state.exam.quizs) { checkNotNull(state.exam.quizs) }
     Column(
         modifier = Modifier
             .fillMaxSize()
