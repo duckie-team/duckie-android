@@ -5,6 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 @file:OptIn(ExperimentalComposeUiApi::class)
+@file:Suppress("unused")
 
 package team.duckie.app.android.feature.solve.problem.answer.shortanswer
 
@@ -22,7 +23,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import team.duckie.quackquack.material.QuackBorder
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.quackBorder
-import team.duckie.quackquack.ui.component.QuackBasicTextField
 import team.duckie.quackquack.ui.component.QuackBody1
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -70,11 +69,11 @@ internal fun ShortAnswerForm(
     Box {
         TextField(
             modifier = modifier
-                    .focusRequester(focusRequester)
-                    .onFocusChanged {
-                        hasFocus.value = it.hasFocus
-                    }
-                    .background(Color.Transparent),
+                .focusRequester(focusRequester)
+                .onFocusChanged {
+                    hasFocus.value = it.hasFocus
+                }
+                .background(Color.Transparent),
             value = myAnswer.value,
             onValueChange = {
                 if (it.length <= answer.length) {
@@ -88,23 +87,23 @@ internal fun ShortAnswerForm(
                 backgroundColor = Color.White,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            )
+                disabledIndicatorColor = Color.Transparent,
+            ),
         )
 
         FlowRow(
             modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(horizontal = 16.dp)
-                    .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = {
-                                focusRequester.requestFocus()
-                                keyboardController?.show()
-                            }
-                    ),
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(horizontal = 16.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = {
+                        focusRequester.requestFocus()
+                        keyboardController?.show()
+                    },
+                ),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             ExamOneText.toData(answer = answer).forEachIndexed { index, data ->
@@ -114,7 +113,7 @@ internal fun ShortAnswerForm(
                 ShortAnswerOneTextForm(
                     index = index,
                     myAnswer = myAnswer.value,
-                    isFocused = hasFocus.value && (myAnswer.value.length - 1 == data.id || (myAnswer.value.isEmpty() && data.id == 0))
+                    isFocused = hasFocus.value && (myAnswer.value.length - 1 == data.id || (myAnswer.value.isEmpty() && data.id == 0)),
                 )
             }
         }
@@ -129,19 +128,19 @@ private fun ShortAnswerOneTextForm(
 ) {
     Column {
         Box(
-                modifier = Modifier
-                        .width(30.dp)
-                        .height(40.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .quackBorder(
-                                border = QuackBorder(color = if (isFocused) QuackColor.DuckieOrange else QuackColor.Gray3),
-                                shape = RoundedCornerShape(4.dp)
-                        )
-                        .background(QuackColor.Gray4.value),
-                contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .width(30.dp)
+                .height(40.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .quackBorder(
+                    border = QuackBorder(color = if (isFocused) QuackColor.DuckieOrange else QuackColor.Gray3),
+                    shape = RoundedCornerShape(4.dp),
+                )
+                .background(QuackColor.Gray4.value),
+            contentAlignment = Alignment.Center,
         ) {
             QuackBody1(
-                    text = if (myAnswer.length > index) myAnswer[index].toString() else ""
+                text = if (myAnswer.length > index) myAnswer[index].toString() else "",
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
@@ -164,7 +163,8 @@ private data class ExamOneText(
 ) {
     companion object {
         fun toData(answer: String): List<ExamOneText> {
-            return answer.replace(" ", "").mapIndexed { index, c -> ExamOneText(index, c.toString()) }
+            return answer.replace(" ", "")
+                .mapIndexed { index, c -> ExamOneText(index, c.toString()) }
         }
     }
 }

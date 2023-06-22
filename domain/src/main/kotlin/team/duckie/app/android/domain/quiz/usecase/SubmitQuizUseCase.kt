@@ -36,5 +36,9 @@ class SubmitQuizUseCase @Inject constructor(
         val problemId: Int?,
         val requirementAnswer: String?,
         val wrongAnswer: String?,
-    ) : Serializable
+    ) : Serializable {
+        companion object {
+            private const val serialVersionUID: Long = 1L
+        }
+    }
 }
