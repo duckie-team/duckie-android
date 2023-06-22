@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.feature.solve.problem.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -77,6 +78,10 @@ internal fun SolveProblemScreen(
                 init = { InputAnswer() },
             ),
         )
+    }
+
+    BackHandler {
+        examExitDialogVisible = true
     }
 
     // 시험 종료 다이얼로그
