@@ -6,7 +6,12 @@ env:
 on:
   push:
     tags:
+      # 플레이스토어 앱 배포 시
       - v*
+      # 테스트 앱 배포 시
+      # naming rule
+      # test_ : stage 환경 test 배포 시
+      # test_real_ : real 환경 test 배포 시
       - test_*
 
 jobs:
