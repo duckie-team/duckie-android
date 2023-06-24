@@ -58,6 +58,14 @@ jobs:
       - name: Check deploy Type
         run: echo "isStage=${{ !startsWith(github.ref_name, 'test_real') && !startsWith(github.ref_name, 'v') }}" >> "$GITHUB_ENV"
 
+      - name: Test env.isStage == 'true'
+        if: ${{ env.isStage == 'true' }}
+        run: echo ${{ env.isStage == 'true' }}
+
+      - name: Test env.isStage == 'false'
+        if: ${{ env.isStage == 'false' }}
+        run: echo ${{ env.isStage == 'false' }}
+
       - name: Unarchive keystore signing files
         run: |
           gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.DUCKIE_GPG_PASSWORD }} --output secrets.tar secrets.tar.gpg
@@ -88,11 +96,11 @@ jobs:
       #   run: ./gradlew assembleStandardRelease
 
       - name: build and sign App (Stage)
-        if: ${{ env.isStage }}
+        if: ${{ env.isStage == 'true' }}
         run: ./gradlew bundleStandardStageRelease
 
       - name: build and sign App (Real)
-        if: ${{ !env.isStage }}
+        if: ${{ env.isStage == 'false' }}
         run: ./gradlew bundleStandardRelease
 
       #      # TODO(riflockle7): Sign 과정이 필요해질 때 활성화
@@ -109,7 +117,7 @@ jobs:
 
       - name: Upload artifact to Firebase App Distribution (Stage)
         uses: wzieba/Firebase-Distribution-Github-Action@v1
-        if: ${{ env.isStage }}
+        if: ${{ env.isStage == 'true' }}
         with:
           appId: ${{ secrets.DUCKIE_FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.DUCKIE_FIREBASE_CREDENTIAL_FILE_CONTENT }}
@@ -119,7 +127,7 @@ jobs:
 
       - name: Upload artifact to Firebase App Distribution (Real)
         uses: wzieba/Firebase-Distribution-Github-Action@v1
-        if: ${{ !env.isStage }}
+        if: ${{ env.isStage == 'false' }}
         with:
           appId: ${{ secrets.DUCKIE_FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.DUCKIE_FIREBASE_CREDENTIAL_FILE_CONTENT }}
