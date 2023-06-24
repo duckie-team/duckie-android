@@ -62,7 +62,7 @@ internal object DuckieHttpHeaders {
 private object AuthorizationHeaderClient {
     private val MaxTimeoutMillis = 3.seconds
     private const val MaxRetryCount = 3
-    private const val BaseUrl = BuildConfig.API_BASE_URL
+    private const val BaseUrl = "https://api.goose-duckie.com:3000"
     private const val ClientName = "android"
 
     operator fun invoke(authorizationCheck: Boolean = true) = HttpClient(engineFactory = CIO) {

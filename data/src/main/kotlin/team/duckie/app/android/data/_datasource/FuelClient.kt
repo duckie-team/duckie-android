@@ -31,13 +31,14 @@ private object ContentTypeValues {
 @InstallIn(SingletonComponent::class)
 internal object FuelClient {
     private val MaxTimeoutMillis = 3.seconds
+    private const val BaseUrl = "https://api.goose-duckie.com:3000"
 
     private var DeviceName = Build.MODEL
     private const val ClientName = "android"
 
     private operator fun invoke(): Fuel {
         with(FuelManager.instance) {
-            basePath = BuildConfig.API_BASE_URL
+            basePath = BaseUrl
             timeoutInMillisecond = MaxTimeoutMillis.toInt()
             timeoutReadInMillisecond = MaxTimeoutMillis.toInt()
             baseHeaders = mutableMapOf(
