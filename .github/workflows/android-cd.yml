@@ -21,42 +21,50 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: refs/heads/develop
-          create-branch: true
-          token: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
-
-      # 버전 코드 올리기
-      - name: Set Config
-        run: |
-          git config --local user.email "${{ secrets.DUCKIE_ADMINISTRATOR_EMAIL }}"
-          git config --local user.name "${{ secrets.DUCKIE_ADMINISTRATOR_USER_NAME }}"
-
-      - name: Increase versionCode
-        run: |
-          # 특정 경로의 파일 내에서 특정 패턴이 포함된 라인의 숫자값을 가져옴
-          versionCode=$(grep 'const val versionCode =' ${{ secrets.DUCKIE_VERSION_CODE_RELATIVE_PATH }} | sed 's/[^0-9]*//g')
-
-          # 숫자로 바꾸고 1을 더한 값으로 업데이트
-          versionCode=$((versionCode + 1))
-
-          # sed를 사용하여 파일 내 해당 라인 업데이트
-          sed -i "s/const val versionCode = .*/const val versionCode = $versionCode/" ./${{ secrets.DUCKIE_VERSION_CODE_RELATIVE_PATH }}
-
-      - name: Commit changes
-        run: |
-          # 특정 경로의 파일 내에서 특정 패턴이 포함된 라인의 숫자값을 가져옴
-          versionCode=$(grep 'const val versionCode =' ${{ secrets.DUCKIE_VERSION_CODE_RELATIVE_PATH }} | sed 's/[^0-9]*//g')
-          git add .
-          git commit -m "veresionCode $versionCode 으로 올리기"
-
-      - name: Push changes
-        run: |
-          git push
+#        with:
+#          ref: refs/heads/develop
+#          create-branch: true
+#          token: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
+#
+#      # 버전 코드 올리기
+#      - name: Set Config
+#        run: |
+#          git config --local user.email "${{ secrets.DUCKIE_ADMINISTRATOR_EMAIL }}"
+#          git config --local user.name "${{ secrets.DUCKIE_ADMINISTRATOR_USER_NAME }}"
+#
+#      - name: Increase versionCode
+#        run: |
+#          # 특정 경로의 파일 내에서 특정 패턴이 포함된 라인의 숫자값을 가져옴
+#          versionCode=$(grep 'const val versionCode =' ${{ secrets.DUCKIE_VERSION_CODE_RELATIVE_PATH }} | sed 's/[^0-9]*//g')
+#
+#          # 숫자로 바꾸고 1을 더한 값으로 업데이트
+#          versionCode=$((versionCode + 1))
+#
+#          # sed를 사용하여 파일 내 해당 라인 업데이트
+#          sed -i "s/const val versionCode = .*/const val versionCode = $versionCode/" ./${{ secrets.DUCKIE_VERSION_CODE_RELATIVE_PATH }}
+#
+#      - name: Commit changes
+#        run: |
+#          # 특정 경로의 파일 내에서 특정 패턴이 포함된 라인의 숫자값을 가져옴
+#          versionCode=$(grep 'const val versionCode =' ${{ secrets.DUCKIE_VERSION_CODE_RELATIVE_PATH }} | sed 's/[^0-9]*//g')
+#          git add .
+#          git commit -m "veresionCode $versionCode 으로 올리기"
+#
+#      - name: Push changes
+#        run: |
+#          git push
 
       # android apk (추후 aab) 배포
       - name: Check deploy Type
         run: echo "isStage=${{ !startsWith(github.ref_name, 'test_real') && !startsWith(github.ref_name, 'v') }}" >> "$GITHUB_ENV"
+
+      - name: Test env.isStage == 'true'
+        if: ${{ env.isStage == 'true' }}
+        run: echo ${{ env.isStage == 'true' }}
+
+      - name: Test env.isStage == 'false'
+        if: ${{ env.isStage == 'false' }}
+        run: echo ${{ env.isStage == 'false' }}
 
       - name: Unarchive keystore signing files
         run: |
@@ -88,11 +96,11 @@ jobs:
       #   run: ./gradlew assembleStandardRelease
 
       - name: build and sign App (Stage)
-        if: ${{ env.isStage }}
+        if: ${{ env.isStage == 'true' }}
         run: ./gradlew bundleStandardStageRelease
 
       - name: build and sign App (Real)
-        if: ${{ !env.isStage }}
+        if: ${{ env.isStage == 'false' }}
         run: ./gradlew bundleStandardRelease
 
       #      # TODO(riflockle7): Sign 과정이 필요해질 때 활성화
@@ -109,7 +117,7 @@ jobs:
 
       - name: Upload artifact to Firebase App Distribution (Stage)
         uses: wzieba/Firebase-Distribution-Github-Action@v1
-        if: ${{ env.isStage }}
+        if: ${{ env.isStage == 'true' }}
         with:
           appId: ${{ secrets.DUCKIE_FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.DUCKIE_FIREBASE_CREDENTIAL_FILE_CONTENT }}
@@ -119,7 +127,7 @@ jobs:
 
       - name: Upload artifact to Firebase App Distribution (Real)
         uses: wzieba/Firebase-Distribution-Github-Action@v1
-        if: ${{ !env.isStage }}
+        if: ${{ env.isStage == 'false' }}
         with:
           appId: ${{ secrets.DUCKIE_FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.DUCKIE_FIREBASE_CREDENTIAL_FILE_CONTENT }}
