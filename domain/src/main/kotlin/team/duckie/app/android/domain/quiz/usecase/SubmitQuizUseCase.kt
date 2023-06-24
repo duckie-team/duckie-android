@@ -30,6 +30,7 @@ class SubmitQuizUseCase @Inject constructor(
         )
     }
 
+    @Suppress("SerialVersionUIDInSerializableClass")
     data class Param(
         val correctProblemCount: Int,
         val time: Int?,

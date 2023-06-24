@@ -69,6 +69,11 @@ class DetailActivity : BaseActivity() {
         )
     }
 
+    override fun onStart() {
+        super.onStart()
+        vm.refresh()
+    }
+
     private fun handleSideEffect(sideEffect: DetailSideEffect) {
         when (sideEffect) {
             is DetailSideEffect.ReportError -> {
