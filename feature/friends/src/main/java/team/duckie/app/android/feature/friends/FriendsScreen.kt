@@ -32,7 +32,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
-import team.duckie.app.android.common.compose.LaunchOnLifecycle
 import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar

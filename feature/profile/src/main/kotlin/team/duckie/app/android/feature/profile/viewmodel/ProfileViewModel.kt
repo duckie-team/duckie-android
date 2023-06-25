@@ -132,7 +132,12 @@ internal class ProfileViewModel @Inject constructor(
     fun ignore(targetId: Int) = intent {
         ignoreUseCase(targetId)
             .onSuccess {
-                postSideEffect(ProfileSideEffect.NavigateToBack)
+                postSideEffect(
+                    ProfileSideEffect.NavigateToBack(
+                        isFollow = state.follow,
+                        userId = state.userId,
+                    ),
+                )
             }
             .onFailure { exception ->
                 postSideEffect(ProfileSideEffect.ReportError(exception))
@@ -193,7 +198,12 @@ internal class ProfileViewModel @Inject constructor(
     }
 
     override fun clickBackPress() = intent {
-        postSideEffect(ProfileSideEffect.NavigateToBack)
+        postSideEffect(
+            ProfileSideEffect.NavigateToBack(
+                isFollow = state.follow,
+                userId = state.userId,
+            ),
+        )
     }
 
     override fun clickFollow() = intent {

@@ -7,6 +7,15 @@
 
 package team.duckie.app.android.navigator.feature.profile
 
+import android.app.Activity
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import team.duckie.app.android.navigator.base.Navigator
 
-interface ProfileNavigator : Navigator
+interface ProfileNavigator : Navigator {
+    fun activityResultLaunch(
+        launcher: ActivityResultLauncher<Intent>,
+        activity: Activity,
+        intentBuilder: Intent.() -> Intent,
+    )
+}

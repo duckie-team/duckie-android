@@ -13,7 +13,7 @@ sealed class ProfileSideEffect {
 
     class ReportError(val exception: Throwable) : ProfileSideEffect()
 
-    object NavigateToBack : ProfileSideEffect()
+    class NavigateToBack(val isFollow: Boolean, val userId: Int) : ProfileSideEffect()
 
     object NavigateToFollowPage : ProfileSideEffect()
 
