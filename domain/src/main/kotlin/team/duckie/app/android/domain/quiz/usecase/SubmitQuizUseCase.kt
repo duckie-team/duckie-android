@@ -30,11 +30,16 @@ class SubmitQuizUseCase @Inject constructor(
         )
     }
 
+    @Suppress("SerialVersionUIDInSerializableClass")
     data class Param(
         val correctProblemCount: Int,
         val time: Int?,
         val problemId: Int?,
         val requirementAnswer: String?,
         val wrongAnswer: String?,
-    ) : Serializable
+    ) : Serializable {
+        companion object {
+            private const val serialVersionUID: Long = 1L
+        }
+    }
 }

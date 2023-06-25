@@ -7,14 +7,16 @@
 
 package team.duckie.app.android.data.kakao.repository
 
-import android.app.Activity
+import android.content.Context
 import com.kakao.sdk.common.model.AuthError
 import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.suspendCancellableCoroutine
-import team.duckie.app.android.domain.kakao.repository.KakaoRepository
 import team.duckie.app.android.common.kotlin.exception.DuckieThirdPartyException
 import team.duckie.app.android.common.kotlin.exception.ExceptionCode
+import team.duckie.app.android.domain.kakao.repository.KakaoRepository
 import java.lang.ref.WeakReference
+import javax.inject.Inject
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 import kotlin.coroutines.resume
@@ -34,7 +36,9 @@ private const val KakaoNotSupportStatusCode: Int = 302
 
 // Calling startActivity() from outside of an Activity.
 // Activity Context 필요.
-class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
+class KakaoRepositoryImpl @Inject constructor(
+    @ActivityContext private val activityContext: Context,
+) : KakaoRepository {
     private val _activity = WeakReference(activityContext)
     private val activity get() = _activity.get()!!
 
@@ -60,6 +64,7 @@ class KakaoRepositoryImpl(activityContext: Activity) : KakaoRepository {
                                         failure(KakaoTalkNotConnectedAccountException)
                                     }
                                 }
+
                                 else -> failure(error)
                             }
                         }

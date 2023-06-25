@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -23,7 +24,7 @@ import team.duckie.app.android.common.kotlin.exception.DuckieResponseFieldNPE
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
-import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.domain.exam.usecase.GetExamUseCase
 import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceUseCase
 import team.duckie.app.android.domain.follow.model.FollowBody
@@ -39,7 +40,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val examRepository: ExamRepository,
+    private val getExamUseCase: GetExamUseCase,
     private val getMeUseCase: GetMeUseCase,
     private val followUseCase: FollowUseCase,
     private val postHeartUseCase: PostHeartUseCase,
@@ -51,28 +52,42 @@ class DetailViewModel @Inject constructor(
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
-    suspend fun initState() {
+    init {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
+        initState(examId)
+    }
 
-        val exam = runCatching { examRepository.getExam(examId) }.getOrNull()
-        intent {
-            getMeUseCase()
-                .onSuccess { me ->
-                    reduce {
-                        if (exam != null) {
-                            DetailState.Success(exam, me, exam.user?.follow != null)
-                        } else {
-                            DetailState.Error(DuckieResponseFieldNPE("exam or me is Null"))
-                        }
+    private fun initState(examId: Int) = intent {
+        val exam = getExamUseCase(examId).getOrElse {
+            postSideEffect(DetailSideEffect.ReportError(it))
+            null
+        }
+        getMeUseCase()
+            .onSuccess { me ->
+                reduce {
+                    if (exam != null) {
+                        DetailState.Success(exam, me, exam.user?.follow != null)
+                    } else {
+                        DetailState.Error(DuckieResponseFieldNPE("exam or me is Null"))
                     }
-                }.onFailure {
-                    postSideEffect(DetailSideEffect.ReportError(it))
                 }
+            }.onFailure {
+                postSideEffect(DetailSideEffect.ReportError(it))
+            }
+    }
+
+    fun refresh() {
+        container.stateFlow.value.let { state ->
+            if (state is DetailState.Success) {
+                initState(state.exam.id)
+            }
         }
     }
 
-    suspend fun refresh() {
-        initState()
+    fun pullToRefresh() = intent {
+        updateIsRefreshing(true)
+        refresh()
+        updateIsRefreshing(false)
     }
 
     /** [examId] 게시글을 신고한다. */
@@ -215,4 +230,12 @@ class DetailViewModel @Inject constructor(
             }
         }
     }
+
+    private suspend fun SimpleSyntax<DetailState, *>.updateIsRefreshing(isRefreshing: Boolean) =
+        reduce {
+            require(state is DetailState.Success)
+            (state as DetailState.Success).run {
+                copy(isRefreshing = isRefreshing)
+            }
+        }
 }

@@ -11,19 +11,17 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.first
-import team.duckie.app.android.data.auth.datasource.AuthDataSource
-import team.duckie.app.android.data.user.datasource.UserDataSource
-import team.duckie.app.android.domain.me.MeRepository
-import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.core.datastore.PreferenceKey
 import team.duckie.app.android.common.kotlin.exception.ExceptionCode.ClientMeIdNull
 import team.duckie.app.android.common.kotlin.exception.ExceptionCode.ClientMeTokenNull
 import team.duckie.app.android.common.kotlin.exception.ExceptionCode.ServerUserIdStrange
 import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemException
+import team.duckie.app.android.core.datastore.PreferenceKey
+import team.duckie.app.android.data.auth.datasource.AuthDataSource
+import team.duckie.app.android.data.user.datasource.UserDataSource
+import team.duckie.app.android.domain.me.MeRepository
+import team.duckie.app.android.domain.user.model.User
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class MeRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val userDataSource: UserDataSource,

@@ -25,10 +25,20 @@ import androidx.datastore.preferences.core.edit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
-import team.duckie.app.android.di.repository.ProvidesModule
-import team.duckie.app.android.di.usecase.kakao.KakaoUseCaseModule
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
+import team.duckie.app.android.common.android.lifecycle.repeatOnCreated
+import team.duckie.app.android.common.android.network.NetworkUtil
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
+import team.duckie.app.android.common.android.ui.collectWithLifecycle
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.compose.ToastWrapper
+import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotConnectedAccount
 import team.duckie.app.android.core.datastore.PreferenceKey
 import team.duckie.app.android.core.datastore.dataStore
+import team.duckie.app.android.domain.kakao.usecase.GetKakaoAccessTokenUseCase
 import team.duckie.app.android.feature.home.screen.MainActivity
 import team.duckie.app.android.feature.onboard.constant.CollectInStep
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
@@ -39,17 +49,6 @@ import team.duckie.app.android.feature.onboard.screen.TagScreen
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
-import team.duckie.app.android.common.android.lifecycle.repeatOnCreated
-import team.duckie.app.android.common.android.network.NetworkUtil
-import team.duckie.app.android.common.compose.ToastWrapper
-import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
-import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotConnectedAccount
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
-import team.duckie.app.android.common.android.ui.collectWithLifecycle
-import team.duckie.app.android.common.android.ui.const.Extras
-import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
@@ -68,12 +67,8 @@ class OnboardActivity : BaseActivity() {
         )
     }
 
-    private val kakaoRepository by lazy {
-        ProvidesModule.provideKakaoRepository(activityContext = this)
-    }
-    private val getKakaoAccessTokenUseCase by lazy {
-        KakaoUseCaseModule.provideGetKakaoAccessTokenUseCase(repository = kakaoRepository)
-    }
+    @Inject
+    lateinit var getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase
 
     private val toast by lazy { ToastWrapper(applicationContext) }
     private var onboardStepState by mutableStateOf<OnboardStep?>(null)
