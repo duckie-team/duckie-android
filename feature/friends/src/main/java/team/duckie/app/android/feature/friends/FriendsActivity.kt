@@ -7,8 +7,10 @@
 
 package team.duckie.app.android.feature.friends
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
@@ -29,6 +31,23 @@ class FriendsActivity : BaseActivity() {
 
     @Inject
     lateinit var profileNavigator: ProfileNavigator
+
+    private val profileActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val followStatus = result.data?.getBooleanExtra(Extras.FollowChangedStatus, true)
+                val followUserId = result.data?.getIntExtra(Extras.FollowChangedUserId, -1)
+                if (isValid(followStatus, followUserId)) {
+                    require(followStatus != null) // for lint
+                    require(followUserId != null)
+                    viewModel.toggleFollowingStatus(followStatus, followUserId)
+                }
+            }
+        }
+
+    private fun isValid(followStatus: Boolean?, followUserId: Int?): Boolean {
+        return !(followUserId == null || followUserId == -1) && followStatus != null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +79,8 @@ class FriendsActivity : BaseActivity() {
             }
 
             is FriendsSideEffect.NavigateToUserProfile -> {
-                profileNavigator.navigateFrom(
+                profileNavigator.activityResultLaunch(
+                    launcher = profileActivityResultLauncher,
                     activity = this,
                     intentBuilder = {
                         putExtra(Extras.UserId, sideEffect.userId)
