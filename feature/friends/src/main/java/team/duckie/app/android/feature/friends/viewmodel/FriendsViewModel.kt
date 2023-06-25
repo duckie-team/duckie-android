@@ -152,12 +152,31 @@ internal class FriendsViewModel @Inject constructor(
         postSideEffect(FriendsSideEffect.NavigateToUserProfile(userId))
     }
 
+    fun toggleFollowingStatus(followStatus: Boolean, followUserId: Int) = intent {
+        reduce { state.copy(followings = state.followings.toggleFollowingStatus(followUserId, followStatus)) }
+    }
+
+    private fun List<FriendsState.Friend>.toggleFollowingStatus(
+        userId: Int,
+        followStatus: Boolean,
+    ): ImmutableList<FriendsState.Friend> {
+        val updatedFollowings = map { friend ->
+            if (friend.userId == userId) {
+                friend.copy(isFollowing = followStatus)
+            } else {
+                friend
+            }
+        }.toImmutableList()
+
+        return updatedFollowings
+    }
+
     private fun List<FriendsState.Friend>.changeFollowingState(
-        filiterUserId: Int,
+        filterUserId: Int,
         isFollowing: Boolean,
     ): ImmutableList<FriendsState.Friend> {
         return map { user ->
-            if (user.userId == filiterUserId) {
+            if (user.userId == filterUserId) {
                 user.copy(isFollowing = isFollowing)
             } else {
                 user

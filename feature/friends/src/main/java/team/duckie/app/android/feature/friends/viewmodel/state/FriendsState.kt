@@ -14,7 +14,7 @@ import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.common.kotlin.randomString
 
 internal data class FriendsState(
-    val me: User ? = null,
+    val me: User? = null,
 
     val friendType: FriendsType = FriendsType.Follower,
     val targetName: String = "",
