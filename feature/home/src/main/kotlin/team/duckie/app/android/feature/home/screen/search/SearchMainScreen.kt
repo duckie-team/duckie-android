@@ -43,12 +43,14 @@ import team.duckie.app.android.feature.home.viewmodel.MainViewModel
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.home.constants.MainScreenType
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackText
+
+import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
 import team.duckie.quackquack.ui.component.QuackTagType
-import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
@@ -69,8 +71,7 @@ internal fun SearchMainScreen(
         initState(MainScreenType.Search) { vm.fetchPopularTags() }
     }
 
-    @AllowMagicNumber
-    val pullRefreshState = rememberPullRefreshState(
+    @AllowMagicNumber val pullRefreshState = rememberPullRefreshState(
         refreshing = isPullRefresh,
         onRefresh = {
             isPullRefresh = true
@@ -87,7 +88,7 @@ internal fun SearchMainScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(
-                    color = QuackColor.White.composeColor,
+                    color = QuackColor.White.value,
                 ),
         ) {
             Row(
@@ -110,7 +111,7 @@ internal fun SearchMainScreen(
                         .fillMaxWidth()
                         .height(36.dp)
                         .background(
-                            color = QuackColor.Gray4.composeColor,
+                            color = QuackColor.Gray4.value,
                             shape = RoundedCornerShape(
                                 size = 8.dp,
                             ),
@@ -123,13 +124,15 @@ internal fun SearchMainScreen(
                         .padding(start = 12.dp),
                     contentAlignment = Alignment.CenterStart,
                 ) {
-                    QuackBody1(
+                    QuackText(
                         text = stringResource(id = R.string.try_search),
-                        color = QuackColor.Gray2,
+                        typography = QuackTypography.Body1.change(
+                            color = QuackColor.Gray2,
+                        ),
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(22.dp))
             QuackTitle2(
                 modifier = Modifier.padding(start = SearchScreenHorizontalPaddingDp),
                 text = stringResource(id = R.string.popular_tag),
