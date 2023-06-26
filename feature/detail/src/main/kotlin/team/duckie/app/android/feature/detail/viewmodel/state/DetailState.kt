@@ -27,6 +27,7 @@ sealed class DetailState {
         val appUser: User,
         val isFollowing: Boolean = false,
         val reportDialogVisible: Boolean = false,
+        val isRefreshing: Boolean = false,
     ) : DetailState() {
         private val tags: List<Tag>
             get() = mutableListOf<Tag>().apply {

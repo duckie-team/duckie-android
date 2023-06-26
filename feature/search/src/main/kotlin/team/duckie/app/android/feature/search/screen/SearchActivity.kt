@@ -35,6 +35,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.constants.SearchStep
@@ -60,7 +62,7 @@ import javax.inject.Inject
 internal val SearchHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
 @AndroidEntryPoint
-class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
+class SearchActivity : BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
@@ -73,7 +75,7 @@ class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        intent.popStringExtra(team.duckie.app.android.common.android.ui.const.Extras.SearchTag)?.let { str ->
+        intent.popStringExtra(Extras.SearchTag)?.let { str ->
             vm.updateSearchKeyword(
                 keyword = str,
                 debounce = false,
@@ -174,7 +176,7 @@ class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() 
                 detailNavigator.navigateFrom(
                     activity = this@SearchActivity,
                     intentBuilder = {
-                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.ExamId, sideEffect.examId)
+                        putExtra(Extras.ExamId, sideEffect.examId)
                     },
                 )
             }
@@ -183,7 +185,7 @@ class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() 
                 profileNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
-                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.UserId, sideEffect.userId)
+                        putExtra(Extras.UserId, sideEffect.userId)
                     },
                 )
             }

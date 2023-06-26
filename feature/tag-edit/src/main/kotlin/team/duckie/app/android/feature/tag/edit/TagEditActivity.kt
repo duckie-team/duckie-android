@@ -25,7 +25,7 @@ import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 
 @AndroidEntryPoint
-class TagEditActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
+class TagEditActivity : BaseActivity() {
     private val viewModel: TagEditViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

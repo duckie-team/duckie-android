@@ -76,7 +76,7 @@ internal fun ShortAnswerForm(
                 .background(Color.Transparent),
             value = myAnswer.value,
             onValueChange = {
-                if (it.length <= answer.length) {
+                if (it.length <= answer.replace(" ", "").length) {
                     myAnswer.value = it
                     onTextChanged(it)
                 }
