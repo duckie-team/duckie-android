@@ -3,7 +3,9 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false"
 on:
   pull_request:
-    branches: [ develop ]
+    branches: 
+      - develop
+      - qa/*
 
 jobs:
   ci-build:
