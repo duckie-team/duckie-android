@@ -103,7 +103,7 @@ class ProfileActivity : BaseActivity() {
                         .fillMaxSize()
                         .background(color = QuackColor.White.composeColor)
                         .systemBarsPadding(),
-                    targetState = state.step
+                    targetState = state.step,
                 ) { step ->
                     when (step) {
                         ProfileStep.Error -> {
@@ -137,9 +137,7 @@ class ProfileActivity : BaseActivity() {
                                 }
 
                                 false -> {
-                                    OtherProfileScreen(
-                                        viewModel = viewModel,
-                                    )
+                                    OtherProfileScreen(viewModel = viewModel)
                                 }
                             }
                         }
@@ -174,7 +172,7 @@ class ProfileActivity : BaseActivity() {
                 else -> {
                     ::finishWithAnimation
                 }
-            }
+            },
         )
     }
 

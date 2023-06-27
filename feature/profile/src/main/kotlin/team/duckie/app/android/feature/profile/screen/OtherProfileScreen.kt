@@ -154,9 +154,9 @@ internal fun OtherProfileScreen(
                             viewAll = ProfileStep.ViewAll(
                                 examType = ExamType.Created,
                                 createdExams = state.userProfile.toImmutableCreatedExams(),
-                            )
+                            ),
                         )
-                    }
+                    },
                 )
             },
             onClickExam = viewModel::clickExam,

@@ -111,9 +111,9 @@ fun ProfileScreen(
                         ProfileStep.ViewAll(
                             examType = ExamType.Solved,
                             solvedExamInstances = userProfile.toImmutableSolvedExamInstances(),
-                        )
+                        ),
                     )
-                }
+                },
             )
             Spacer(space = 40.dp)
             ExamSection(
@@ -131,9 +131,9 @@ fun ProfileScreen(
                         ProfileStep.ViewAll(
                             examType = ExamType.Heart,
                             heartExams = userProfile.toImmutableHeartedExams(),
-                        )
+                        ),
                     )
-                }
+                },
             )
         }
     }

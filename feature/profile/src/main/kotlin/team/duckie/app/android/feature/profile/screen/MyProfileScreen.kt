@@ -155,9 +155,9 @@ fun MyProfileScreen(
                         ProfileStep.ViewAll(
                             examType = ExamType.Created,
                             createdExams = userProfile.toImmutableCreatedExams(),
-                        )
+                        ),
                     )
-                }
+                },
             )
         },
         onClickExam = onClickExam,

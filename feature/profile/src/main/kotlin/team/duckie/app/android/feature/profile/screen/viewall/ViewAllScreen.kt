@@ -31,9 +31,7 @@ fun ViewAllScreen(
     onItemClick: (DuckTestCoverItem) -> Unit,
     onMoreClick: (() -> Unit)? = null,
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         BackPressedHeadLine2TopAppBar(
             title = title,
             onBackPressed = onBackPressed,

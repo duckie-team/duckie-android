@@ -42,9 +42,7 @@ fun ExamSection(
     onClickShowAll: () -> Unit,
     emptySection: @Composable () -> Unit,
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -64,7 +62,7 @@ fun ExamSection(
                     text = title,
                 )
             }
-            if(exams.isNotEmpty()){
+            if (exams.isNotEmpty()) {
                 QuackBody2(
                     text = stringResource(id = R.string.profile_view_all),
                     color = QuackColor.Gray1,
