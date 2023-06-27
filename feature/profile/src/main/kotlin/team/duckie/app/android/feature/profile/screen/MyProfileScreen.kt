@@ -18,9 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.icon.v1.Create
+import team.duckie.app.android.common.compose.ui.icon.v1.Notice
+import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.profile.R
@@ -29,11 +34,9 @@ import team.duckie.app.android.feature.profile.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.profile.screen.section.EditSection
 import team.duckie.app.android.feature.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
+import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
+import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.app.android.common.compose.ui.icon.v1.Create
-import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.icon.v1.Notice
-import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
@@ -55,6 +58,7 @@ fun MyProfileScreen(
     onClickMakeExam: () -> Unit,
     onClickTag: (String) -> Unit,
     onClickFriend: (FriendsType, Int, String) -> Unit,
+    onClickShowAll: (ProfileStep.ViewAll) -> Unit,
 ) {
     @Composable
     fun BackPressedHeadLineTopBarInternal() {
@@ -146,9 +150,22 @@ fun MyProfileScreen(
                         )
                     }
                 },
+                onClickShowAll = {
+                    onClickShowAll(
+                        ProfileStep.ViewAll(
+                            examType = ExamType.Created,
+                            createdExams = userProfile.toImmutableCreatedExams(),
+                        )
+                    )
+                }
             )
         },
         onClickExam = onClickExam,
         onClickFriend = onClickFriend,
+        onClickShowAll = onClickShowAll,
     )
+}
+
+internal fun UserProfile.toImmutableCreatedExams(): ImmutableList<ProfileExam> {
+    return createdExams?.toImmutableList() ?: persistentListOf()
 }
