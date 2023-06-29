@@ -121,7 +121,7 @@ internal fun ExamDetailScreen(
         },
     )
 
-    Box(modifier = Modifier.pullRefresh(pullRefreshState)){
+    Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
         Layout(
             modifier = modifier.navigationBarsPadding(),
             content = {
