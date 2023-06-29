@@ -104,6 +104,7 @@ private fun RecentSearchNotFoundScreen() {
         Spacer(modifier = Modifier.height(8.dp))
         QuackBody1(
             text = stringResource(id = R.string.search_another_keyword),
+            text = stringResource(id = R.string.search_favorite_exam),
             color = QuackColor.Gray1,
         )
     }

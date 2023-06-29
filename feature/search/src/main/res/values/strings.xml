@@ -7,11 +7,11 @@
 
 <resources>
     <string name="recent_search">최근 검색</string>
-    <string name="no_recent_search">최근 검색어가 없어요.</string>
+    <string name="no_recent_search">최근 검색어가 없어요</string>
     <string name="no_search_exam">검색된 시험이 없어요 :(</string>
     <string name="no_search_user">검색된 사용자가 없어요 :(</string>
     <string name="search_another_keyword">다른 키워드로 검색해보세요.</string>
-
+    <string name="search_favorite_exam">검색해서 재밌는 덕력고사를 찾아보세요!</string>
     <string name="clear_all">모두삭제</string>
 
     <string name="try_search">관심있는 키워드를 검색해보세요!</string>
