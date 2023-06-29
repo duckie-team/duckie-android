@@ -17,4 +17,5 @@ data class QuizInfo(
     val score: Int,
     val user: User,
     val time: Int,
+    val reaction: String?,
 )

@@ -37,6 +37,7 @@ data class Exam(
     val heart: Heart?,
     val heartCount: Int?,
     val problems: ImmutableList<Problem>?,
+    val myRecord: QuizInfo?,
     val quizs: ImmutableList<QuizInfo>?,
     val perfectScoreImageUrl: String?,
     val timer: Int?,
