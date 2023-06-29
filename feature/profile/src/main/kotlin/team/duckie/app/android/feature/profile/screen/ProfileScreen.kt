@@ -97,7 +97,7 @@ fun ProfileScreen(
                 onClickExam = onClickExam,
                 onClickMore = onClickMore,
                 emptySection = {
-                    EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
+                    EmptyText(message = stringResource(id = R.string.not_yet_solved_exam))
                 },
                 isLoading = isLoading,
             )
