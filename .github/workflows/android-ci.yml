@@ -44,4 +44,4 @@ jobs:
         run: ./gradlew detekt
 
       - name: Run test
-        run: ./gradlew testStandardDebug
+        run: ./gradlew testStandardDebugUnitTest
