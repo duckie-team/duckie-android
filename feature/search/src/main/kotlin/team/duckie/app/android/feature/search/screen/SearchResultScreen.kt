@@ -111,7 +111,7 @@ private fun SearchResultForUser(
                 text = stringResource(id = R.string.no_search_user),
                 color = QuackColor.Gray1,
             )
-            Spacer(space = 8.dp)
+            Spacer(space = 12.dp)
             QuackBody1(
                 text = stringResource(id = R.string.search_another_keyword),
                 color = QuackColor.Gray1,
@@ -156,7 +156,7 @@ private fun SearchResultForExam(
                 text = stringResource(id = R.string.no_search_exam),
                 color = QuackColor.Gray1,
             )
-            Spacer(space = 8.dp)
+            Spacer(space = 12.dp)
             QuackBody1(
                 text = stringResource(id = R.string.search_another_keyword),
                 color = QuackColor.Gray1,
