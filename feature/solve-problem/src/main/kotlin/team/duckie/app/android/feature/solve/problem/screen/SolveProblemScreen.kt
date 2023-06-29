@@ -50,6 +50,7 @@ import team.duckie.app.android.feature.solve.problem.answer.AnswerSection
 import team.duckie.app.android.feature.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.solve.problem.common.DoubleButtonBottomBar
 import team.duckie.app.android.feature.solve.problem.common.FlexibleSubjectiveQuestionSection
+import team.duckie.app.android.feature.solve.problem.common.verticalScrollModifierAsCondition
 import team.duckie.app.android.feature.solve.problem.question.QuestionSection
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
@@ -191,6 +192,11 @@ private fun ContentSection(
             }
         }
 
+        val isImageChoice = problem.answer?.isImageChoice == true
+        val columnModifier = Modifier
+            .verticalScrollModifierAsCondition(problem.answer?.isImageChoice == true)
+            .fillMaxSize()
+
         when {
             // for keyboard flexible image height
             problem.isSubjective() && problem.question.isImage() -> FlexibleSubjectiveQuestionSection(
@@ -203,14 +209,15 @@ private fun ContentSection(
             )
 
             else -> Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(space = 24.dp),
+                modifier = columnModifier,
             ) {
                 Spacer(space = 16.dp)
                 QuestionSection(
                     page = pageIndex,
                     question = problem.question,
+                    isImageChoice = isImageChoice,
                 )
+                Spacer(space = 24.dp)
                 val answer = problem.answer
                 AnswerSection(
                     pageIndex = pageIndex,

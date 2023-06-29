@@ -65,20 +65,18 @@ internal fun ImageAnswerBox(
     onClick: () -> Unit,
 ) {
     GraySurface(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         selected = selected,
         onClick = onClick,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(all = 12.dp),
+            modifier = Modifier.padding(all = 12.dp),
             verticalArrangement = Arrangement.spacedBy(space = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             QuackImage(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .aspectRatio(ratio = 1f),
                 src = imageSrc,
             )
