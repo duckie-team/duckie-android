@@ -32,7 +32,7 @@ import team.duckie.quackquack.ui.QuackText
 @Composable
 fun LeftChatBubble(
     message: String,
-    backgroundColor: QuackColor,
+    backgroundColor: Color,
     textColor: QuackColor = QuackColor.Black,
 ) {
     Row(
@@ -42,13 +42,13 @@ fun LeftChatBubble(
             modifier = Modifier.offset(x = 6.dp),
             painter = painterResource(id = R.drawable.ic_chat_tail),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(color = backgroundColor.value)
+            colorFilter = ColorFilter.tint(color = backgroundColor),
         )
         Box(
             modifier = Modifier
                 .background(
-                    color = backgroundColor.value,
-                    shape = RoundedCornerShape(8.dp)
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(8.dp),
                 )
                 .padding(
                     horizontal = 8.dp,
@@ -58,22 +58,9 @@ fun LeftChatBubble(
             QuackText(
                 text = message,
                 typography = QuackTypography.Body2.change(
-                    color = textColor
+                    color = textColor,
                 ),
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewChat() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(all = 16.dp)
-    ) {
-        LeftChatBubble(message = "테스트세트스", backgroundColor = QuackColor(Color(0xFFFFEFCF)))
     }
 }
