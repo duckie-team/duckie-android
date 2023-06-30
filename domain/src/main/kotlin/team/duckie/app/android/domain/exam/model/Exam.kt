@@ -75,6 +75,7 @@ data class Exam(
             requirementQuestion = null,
             requirementPlaceholder = null,
             problemCount = null,
+            myRecord = null,
         )
     }
 }
