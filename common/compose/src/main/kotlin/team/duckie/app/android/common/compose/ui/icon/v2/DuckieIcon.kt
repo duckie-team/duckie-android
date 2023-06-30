@@ -12,7 +12,4 @@ import team.duckie.quackquack.material.QuackIcon
 
 val QuackIcon.Companion.Paper get() = QuackIcon(R.drawable.ic_paper_20)
 
-val QuackIcon.Companion.GoldMedal get() = QuackIcon(R.drawable.ic_medal_gold)
-val QuackIcon.Companion.SilverMedal get() = QuackIcon(R.drawable.ic_medal_silver)
-val QuackIcon.Companion.BronzeMedal get() = QuackIcon(R.drawable.ic_medal_bronze)
-
+val QuackIcon.Companion.Crown get() = QuackIcon(R.drawable.ic_crown_12)

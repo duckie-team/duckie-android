@@ -20,12 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import team.duckie.app.android.common.compose.R
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
@@ -50,20 +50,21 @@ private fun MedalInternal(
                 color = innerColor,
                 shape = CircleShape,
             ),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         QuackText(
             text = "$number",
             typography = QuackTypography.Title2.change(
-                color = QuackColor(numberColor)
+                color = QuackColor(numberColor),
             ),
         )
     }
 }
 
+@AllowMagicNumber("set GoldMedalLine offset")
 @Composable
 fun DuckieMedal(
-    score: Int
+    score: Int,
 ) {
     when (score) {
         1 -> Column(
@@ -108,7 +109,7 @@ fun DuckieMedal(
                 QuackText(
                     text = score.toString(),
                     typography = QuackTypography.Title2.change(
-                        color = QuackColor.Gray1
+                        color = QuackColor.Gray1,
                     ),
                 )
             }
@@ -120,7 +121,7 @@ fun DuckieMedal(
 @Composable
 fun PreviewMedal() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         DuckieMedal(score = 1)
         DuckieMedal(score = 2)
