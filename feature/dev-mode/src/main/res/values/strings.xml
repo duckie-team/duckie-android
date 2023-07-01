@@ -8,4 +8,8 @@
 <resources>
     <string name="app_name">skeleton</string>
     <string name="dev_mode_input_password_title">Input Password</string>
+    <string name="dev_mode_success_title">개발자 모드</string>
+    <string name="dev_mode_success_api_env_title">API 환경</string>
+    <string name="dev_mode_success_api_env_item_stage">Stage</string>
+    <string name="dev_mode_success_api_env_item_real">Real</string>
 </resources>

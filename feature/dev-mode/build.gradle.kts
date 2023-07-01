@@ -32,6 +32,7 @@ android {
 
     defaultConfig {
         buildConfigField("String", "DEV_MODE_PASSWORD", "\"$devModePassword\"")
+        buildConfigField("boolean", "IS_STAGE", "${AppVersionNameProvider.App.isStage}")
     }
 }
 
@@ -40,6 +41,7 @@ dependencies {
         projects.di,
         projects.domain,
         projects.navigator,
+        projects.core.datastore,
         projects.common.android,
         projects.common.kotlin,
         projects.common.compose,

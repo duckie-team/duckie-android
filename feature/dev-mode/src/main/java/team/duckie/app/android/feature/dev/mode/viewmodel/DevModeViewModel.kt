@@ -9,6 +9,8 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.feature.dev.mode.BuildConfig
 import team.duckie.app.android.feature.dev.mode.viewmodel.sideeffect.DevModeSideEffect
 import team.duckie.app.android.feature.dev.mode.viewmodel.state.DevModeState
+import team.duckie.app.android.feature.dev.mode.viewmodel.state.DuckieApi
+import team.duckie.app.android.feature.dev.mode.viewmodel.state.toDuckieApi
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,14 +25,28 @@ class DevModeViewModel @Inject constructor(
     }
 
     /** 개발자 모드로 진입한다. */
-    fun gotoDevMode() {
+    fun gotoDevMode(duckieApi: DuckieApi? = null) {
         val password = (container.stateFlow.value as? DevModeState.InputPassword)?.inputted
 
         if (password == BuildConfig.DEV_MODE_PASSWORD) {
-            intent { reduce { DevModeState.Success } }
+            intent {
+                reduce {
+                    DevModeState.Success(
+                        duckieApi = duckieApi ?: BuildConfig.IS_STAGE.toDuckieApi()!!,
+                    )
+                }
+            }
         } else {
             intent { reduce { DevModeState.InputPassword() } }
         }
+    }
+
+    /** 현재 선택된 API 설정을 [duckieApi] 로 변경한다. */
+    fun changeApi(duckieApi: DuckieApi) {
+        val state = container.stateFlow.value
+        require(state is DevModeState.Success)
+
+        intent { reduce { state.copy(duckieApi = duckieApi) } }
     }
 
     /**

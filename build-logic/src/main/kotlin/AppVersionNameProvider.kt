@@ -52,7 +52,7 @@ class AppVersionNameProvider : Plugin<Project> {
         const val VersionName = ApplicationConstants.versionName
         const val VersionCode = ApplicationConstants.versionCode
 
-        private var isStage = false
+        var isStage = false
         var baseUrl = ""
         var devModePassword = ""
     }
