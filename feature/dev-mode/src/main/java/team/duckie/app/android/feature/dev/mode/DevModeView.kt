@@ -159,7 +159,7 @@ fun DevModeScreen(
 ) {
     QuackHeadLine2(
         modifier = Modifier.padding(all = 28.dp),
-        text = stringResource(id = R.string.dev_mode_input_password_title),
+        text = stringResource(id = R.string.dev_mode_success_title),
     )
 
     Column {
