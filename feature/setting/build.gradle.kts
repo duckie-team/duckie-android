@@ -37,6 +37,7 @@ dependencies {
         projects.common.android,
         projects.common.kotlin,
         projects.common.compose,
+        projects.feature.devMode,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.quack.ui.components,

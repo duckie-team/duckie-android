@@ -60,6 +60,10 @@ internal class SettingViewModel @Inject constructor(
         reduce { state.copy(withdrawUserInputReason = reason) }
     }
 
+    fun changeDevModeDialogVisible(visible: Boolean) = intent {
+        reduce { state.copy(devModeDialogVisible = visible) }
+    }
+
     fun changeLogoutDialogVisible(visible: Boolean) = intent {
         reduce { state.copy(logoutDialogVisible = visible) }
     }

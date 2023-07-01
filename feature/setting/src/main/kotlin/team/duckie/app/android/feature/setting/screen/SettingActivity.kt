@@ -36,6 +36,7 @@ import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.DuckieTodoScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.feature.dev.mode.DevModeDialog
 import team.duckie.app.android.feature.setting.BuildConfig
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.constans.SettingType
@@ -174,6 +175,14 @@ class SettingActivity : BaseActivity() {
             visible = state.withdrawDialogVisible,
             onDismissRequest = {
                 vm.changeWithdrawDialogVisible(false)
+            },
+        )
+
+        // 개발자 모드 Dialog
+        DevModeDialog(
+            visible = state.devModeDialogVisible,
+            onDismiss = {
+                vm.changeDevModeDialogVisible(false)
             },
         )
     }
