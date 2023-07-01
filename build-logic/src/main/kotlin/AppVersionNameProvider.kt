@@ -30,6 +30,9 @@ class AppVersionNameProvider : Plugin<Project> {
                     val properties = Properties()
                     properties.load(FileInputStream(configFile))
 
+                    // local.properties 공통 작업
+                    devModePassword = properties["DEV_MODE_PASSWORD"] as String
+
                     // flavor 이름에 stage 가 없을 경우 동작하지 않음
                     if (flavor.name.lowercase().contains("stage")) {
                         isStage = true
@@ -51,5 +54,6 @@ class AppVersionNameProvider : Plugin<Project> {
 
         private var isStage = false
         var baseUrl = ""
+        var devModePassword = ""
     }
 }
