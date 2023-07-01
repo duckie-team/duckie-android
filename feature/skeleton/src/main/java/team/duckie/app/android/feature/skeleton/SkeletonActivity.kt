@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.feature.skeleton.viewmodel.viewmodel.sideeffect.SkeletonSideEffect
+import team.duckie.app.android.feature.skeleton.viewmodel.sideeffect.SkeletonSideEffect
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.theme.QuackTheme
 import team.duckie.quackquack.ui.QuackText

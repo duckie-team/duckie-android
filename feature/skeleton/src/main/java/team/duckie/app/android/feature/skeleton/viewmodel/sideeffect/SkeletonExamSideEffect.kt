@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.skeleton.viewmodel.viewmodel.state
+package team.duckie.app.android.feature.skeleton.viewmodel.sideeffect
 
-sealed class SkeletonState {
-    object Loading : SkeletonState()
-}
+internal sealed class SkeletonSideEffect
