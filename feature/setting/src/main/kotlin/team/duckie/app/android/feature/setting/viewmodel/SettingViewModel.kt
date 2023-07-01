@@ -25,6 +25,7 @@ import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
 import javax.inject.Inject
 
 private const val WithdrawCommingSoonMessage: String = "회원탈퇴는 아직 준비중인 기능입니다."
+private const val ClickCount: Int = 4
 
 @HiltViewModel
 internal class SettingViewModel @Inject constructor(
@@ -69,7 +70,7 @@ internal class SettingViewModel @Inject constructor(
             val currentTime = System.currentTimeMillis()
             if (currentTime - lastClickTime < 2.seconds) {
                 clickCount++
-                if (clickCount >= 4) {
+                if (clickCount >= ClickCount) {
                     clickCount = 0
                     intent { reduce { state.copy(devModeDialogVisible = true) } }
                 }

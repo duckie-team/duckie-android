@@ -148,7 +148,7 @@ fun InputPasswordScreen(
                     checkIsStage(applicationContext, gotoDevMode)
                 }
             },
-        )
+        ),
     )
 }
 

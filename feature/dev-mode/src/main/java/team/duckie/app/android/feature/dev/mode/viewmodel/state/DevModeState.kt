@@ -12,7 +12,6 @@ open class DevModeState {
         val inputted: String = "",
     ) : DevModeState()
 
-
     data class Success(
         val duckieApi: DuckieApi = DuckieApi.Real,
     ) : DevModeState()

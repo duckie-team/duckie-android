@@ -14,8 +14,8 @@ import team.duckie.app.android.feature.dev.mode.viewmodel.state.toDuckieApi
 import javax.inject.Inject
 
 @HiltViewModel
-class DevModeViewModel @Inject constructor(
-) : ContainerHost<DevModeState, DevModeSideEffect>, ViewModel() {
+class DevModeViewModel @Inject constructor() : ContainerHost<DevModeState, DevModeSideEffect>,
+    ViewModel() {
     override val container =
         container<DevModeState, DevModeSideEffect>(DevModeState.InputPassword())
 
