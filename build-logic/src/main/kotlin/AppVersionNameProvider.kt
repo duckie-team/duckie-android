@@ -31,16 +31,12 @@ class AppVersionNameProvider : Plugin<Project> {
                     properties.load(FileInputStream(configFile))
 
                     // local.properties 공통 작업
+                    stageUrl = properties["BASE_URL"] as String
+                    realUrl = properties["STAGE_BASE_URL"] as String
                     devModePassword = properties["DEV_MODE_PASSWORD"] as String
 
                     // flavor 이름에 stage 가 없을 경우 동작하지 않음
-                    if (flavor.name.lowercase().contains("stage")) {
-                        isStage = true
-                        baseUrl = properties["STAGE_BASE_URL"] as String
-                    } else {
-                        isStage = false
-                        baseUrl = properties["BASE_URL"] as String
-                    }
+                    isStage = flavor.name.lowercase().contains("stage")
                     // true 여야 정상 동작하며, 일치하지 않는 flavor 가 있을 때 false 를 리턴하는듯함
                     return@all true
                 }
@@ -53,7 +49,8 @@ class AppVersionNameProvider : Plugin<Project> {
         const val VersionCode = ApplicationConstants.versionCode
 
         var isStage = false
-        var baseUrl = ""
+        var stageUrl = ""
+        var realUrl = ""
         var devModePassword = ""
     }
 }
