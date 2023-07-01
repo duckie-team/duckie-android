@@ -24,7 +24,9 @@ android {
     }
 
     defaultConfig {
-        buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName.$VersionCode\"")
+        buildConfigField("boolean", "IS_STAGE", "${AppVersionNameProvider.App.isStage}")
+        buildConfigField("String", "APP_VERSION_CODE", "\"$VersionCode\"")
+        buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName\"")
     }
 }
 

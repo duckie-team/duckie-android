@@ -103,7 +103,11 @@ class SettingActivity : BaseActivity() {
                             when (step) {
                                 SettingType.Main -> SettingMainScreen(
                                     vm = vm,
-                                    version = BuildConfig.APP_VERSION_NAME,
+                                    version = if (BuildConfig.IS_STAGE) {
+                                        "${BuildConfig.APP_VERSION_NAME}.${BuildConfig.APP_VERSION_CODE}"
+                                    } else {
+                                        BuildConfig.APP_VERSION_NAME
+                                    },
                                 )
 
                                 SettingType.AccountInfo -> SettingAccountInfoScreen(
