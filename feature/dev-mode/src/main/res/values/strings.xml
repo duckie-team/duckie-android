@@ -7,4 +7,5 @@
 
 <resources>
     <string name="app_name">skeleton</string>
+    <string name="dev_mode_input_password_title">Input Password</string>
 </resources>

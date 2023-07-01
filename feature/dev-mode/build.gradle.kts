@@ -1,3 +1,4 @@
+import AppVersionNameProvider.App.devModePassword
 import DependencyHandler.Extensions.implementations
 
 /*
@@ -24,6 +25,14 @@ android {
      * 6. gradle sync
      */
     namespace = "team.duckie.app.android.feature.dev.mode"
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    defaultConfig {
+        buildConfigField("String", "DEV_MODE_PASSWORD", "\"$devModePassword\"")
+    }
 }
 
 dependencies {

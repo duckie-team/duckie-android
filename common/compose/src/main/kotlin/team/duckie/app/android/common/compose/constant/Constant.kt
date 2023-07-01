@@ -5,6 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.dev.mode.viewmodel.sideeffect
+package team.duckie.app.android.common.compose.constant
 
-sealed class DevModeSideEffect
+typealias sharedComposeRString = team.duckie.app.android.common.compose.R.string

@@ -14,6 +14,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.auth.usecase.ClearTokenUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.setting.constans.SettingType
@@ -32,6 +33,9 @@ internal class SettingViewModel @Inject constructor(
 ) : ContainerHost<SettingState, SettingSideEffect>, ViewModel() {
 
     override val container = container<SettingState, SettingSideEffect>(SettingState())
+
+    private var clickCount = 0
+    private var lastClickTime = 0L
 
     init {
         initState()
@@ -60,8 +64,22 @@ internal class SettingViewModel @Inject constructor(
         reduce { state.copy(withdrawUserInputReason = reason) }
     }
 
-    fun changeDevModeDialogVisible(visible: Boolean) = intent {
-        reduce { state.copy(devModeDialogVisible = visible) }
+    fun changeDevModeDialogVisible(visible: Boolean) {
+        if (visible) {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime < 2.seconds) {
+                clickCount++
+                if (clickCount >= 4) {
+                    clickCount = 0
+                    intent { reduce { state.copy(devModeDialogVisible = true) } }
+                }
+            } else {
+                clickCount = 0
+            }
+            lastClickTime = currentTime
+        } else {
+            intent { reduce { state.copy(devModeDialogVisible = false) } }
+        }
     }
 
     fun changeLogoutDialogVisible(visible: Boolean) = intent {

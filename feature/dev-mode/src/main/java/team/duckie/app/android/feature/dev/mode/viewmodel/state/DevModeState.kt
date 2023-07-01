@@ -7,9 +7,11 @@
 
 package team.duckie.app.android.feature.dev.mode.viewmodel.state
 
-open class SkeletonState {
-    object InputPassword : SkeletonState()
+open class DevModeState {
+    data class InputPassword(
+        val inputted: String = "",
+    ) : DevModeState()
 
 
-    object Success : SkeletonState()
+    object Success : DevModeState()
 }
