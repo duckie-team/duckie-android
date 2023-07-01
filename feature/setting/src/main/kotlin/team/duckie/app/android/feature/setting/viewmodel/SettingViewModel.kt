@@ -115,6 +115,13 @@ internal class SettingViewModel @Inject constructor(
     }
 
     /**
+     * 덕키 마켓 페이지로 이동합니다.
+     */
+    fun goToMarket() = intent {
+        postSideEffect(SettingSideEffect.NavigatePlayStoreMarket)
+    }
+
+    /**
      * 오픈소스 라이센스 페이지로 이동합니다.
      */
     fun navigateOssLicense() = intent {

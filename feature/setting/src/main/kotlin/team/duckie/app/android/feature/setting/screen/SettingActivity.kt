@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.intent.goToMarket
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.startActivityWithAnimation
@@ -208,6 +209,10 @@ class SettingActivity : BaseActivity() {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     },
                 )
+            }
+
+            is SettingSideEffect.NavigatePlayStoreMarket -> {
+                goToMarket()
             }
 
             is SettingSideEffect.ShowToast -> {

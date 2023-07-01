@@ -35,8 +35,14 @@ internal fun SettingMainScreen(
                     null
                 },
                 onClick = {
-                    if (item !in SettingType.nonClickablePages) {
-                        vm.navigateStep(item)
+                    when (item) {
+                        SettingType.Version -> {
+                            vm.goToMarket()
+                        }
+
+                        else -> {
+                            vm.navigateStep(item)
+                        }
                     }
                 },
                 isBold = true,
