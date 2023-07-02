@@ -28,16 +28,16 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.UserFollowingLayout
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.search.viewmodel.state.SearchState
-import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
-import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.UserFollowingLayout
-import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackHeadLine1
@@ -120,7 +120,7 @@ private fun SearchResultForUser(
             )
         }
     } else {
-        LazyColumn{
+        LazyColumn {
             items(searchUsers) { item ->
                 UserFollowingLayout(
                     userId = item?.userId ?: 0,
