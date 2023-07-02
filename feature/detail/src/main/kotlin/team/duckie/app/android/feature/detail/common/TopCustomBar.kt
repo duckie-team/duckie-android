@@ -24,7 +24,10 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
+import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowRight
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackTag
@@ -58,12 +61,12 @@ internal fun TopAppCustomBar(
                 .quackClickable(
                     onClick = { activity.finish() },
                 ),
-            src = QuackIcon.ArrowBack.drawableId,
+            src = QuackIcon.Outlined.ArrowBack
         )
 
         QuackTag(
             modifier = Modifier.trailingIcon(
-                icon = QuackIcon.ArrowRight,
+                icon = QuackIcon.Outlined.ArrowRight,
                 onClick = { onTagClick(state.mainTagNames) },
             ),
             text = state.mainTagNames,
