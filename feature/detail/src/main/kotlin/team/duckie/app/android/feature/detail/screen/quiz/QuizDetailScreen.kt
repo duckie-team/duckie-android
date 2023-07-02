@@ -37,8 +37,10 @@ import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.common.DetailContentLayout
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.material.QuackIcon
 import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Profile
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackImage
@@ -231,6 +233,35 @@ private fun RankingContent(
                         ),
                     )
                 }
+
+                Spacer(space = 12.dp)
+
+                user.profileImageUrl?.let {
+                    QuackImage(
+                        src = it,
+                        modifier = Modifier
+                            .size(
+                                DpSize(44.dp, 44.dp),
+                            )
+                            .clip(SquircleShape),
+                        contentScale = ContentScale.FillBounds,
+                    )
+                } ?: QuackImage(
+                    src = QuackIcon.Outlined.Profile,
+                    modifier = Modifier
+                        .size(
+                            DpSize(44.dp, 44.dp),
+                        )
+                        .clip(SquircleShape),
+                    contentScale = ContentScale.FillBounds,
+                )
+
+                Spacer(space = 8.dp)
+
+                QuackText(
+                    text = user.nickname,
+                    typography = QuackTypography.Title2.change(textColor),
+                )
             }
         }
 
