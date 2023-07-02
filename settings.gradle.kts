@@ -57,6 +57,7 @@ include(
     ":feature:profile",
     ":feature:friends",
     ":feature:tag-edit",
+    ":feature:dev-mode",
     ":common:kotlin",
     ":common:android",
     ":common:compose",

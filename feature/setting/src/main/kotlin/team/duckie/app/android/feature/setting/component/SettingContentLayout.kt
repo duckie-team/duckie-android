@@ -27,6 +27,7 @@ internal fun SettingContentLayout(
     title: String,
     content: String? = null,
     trailingText: String? = null,
+    onTrailingTextClick: (() -> Unit)? = null,
     isBold: Boolean,
     onClick: (() -> Unit)? = null,
 ) = with(SettingDesignToken) {
@@ -62,6 +63,9 @@ internal fun SettingContentLayout(
         }
         if (trailingText != null) {
             QuackText(
+                modifier = Modifier
+                    .quackClickable(rippleEnabled = false, onClick = onTrailingTextClick)
+                    .padding(start = 12.dp, top = 4.dp, bottom = 4.dp),
                 text = trailingText,
                 typography = SettingHorizontalResultTypography,
             )

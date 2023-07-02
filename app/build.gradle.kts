@@ -99,6 +99,7 @@ dependencies {
         projects.feature.setting,
         projects.feature.friends,
         projects.feature.tagEdit,
+        projects.feature.devMode,
         projects.core.sync,
         projects.common.kotlin,
         projects.navigator,

@@ -10,6 +10,12 @@ package team.duckie.app.android.feature.setting.constans
 import androidx.annotation.StringRes
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.setting.R
+import team.duckie.app.android.feature.setting.constans.SettingType.AccountInfo
+import team.duckie.app.android.feature.setting.constans.SettingType.Inquiry
+import team.duckie.app.android.feature.setting.constans.SettingType.Main
+import team.duckie.app.android.feature.setting.constans.SettingType.MainPolicy
+import team.duckie.app.android.feature.setting.constans.SettingType.Notification
+import team.duckie.app.android.feature.setting.constans.SettingType.Version
 
 /**
  * 설정 페이지의 종류를 정의합니다.
@@ -72,10 +78,5 @@ enum class SettingType(
             .filter { it !in listOf(Main) }
             .filter { it !in policyPages }
             .filter { it !in accountInfoPages }
-
-        /** 클릭이 불가능한 설정 */
-        val nonClickablePages = persistentListOf(
-            Version,
-        )
     }
 }

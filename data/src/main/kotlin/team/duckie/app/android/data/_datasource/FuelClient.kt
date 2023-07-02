@@ -37,7 +37,7 @@ internal object FuelClient {
 
     private operator fun invoke(): Fuel {
         with(FuelManager.instance) {
-            basePath = BuildConfig.API_BASE_URL
+            basePath = getApiBaseUrl()
             timeoutInMillisecond = MaxTimeoutMillis.toInt()
             timeoutReadInMillisecond = MaxTimeoutMillis.toInt()
             baseHeaders = mutableMapOf(

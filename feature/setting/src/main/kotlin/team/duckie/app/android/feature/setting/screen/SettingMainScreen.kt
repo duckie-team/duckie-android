@@ -27,9 +27,22 @@ internal fun SettingMainScreen(
             SettingContentLayout(
                 title = stringResource(id = item.titleRes),
                 trailingText = if (item == SettingType.Version) version else null,
+                onTrailingTextClick = if (item == SettingType.Version) {
+                    {
+                        vm.changeDevModeDialogVisible(true)
+                    }
+                } else {
+                    null
+                },
                 onClick = {
-                    if (item !in SettingType.nonClickablePages) {
-                        vm.navigateStep(item)
+                    when (item) {
+                        SettingType.Version -> {
+                            vm.goToMarket()
+                        }
+
+                        else -> {
+                            vm.navigateStep(item)
+                        }
                     }
                 },
                 isBold = true,
