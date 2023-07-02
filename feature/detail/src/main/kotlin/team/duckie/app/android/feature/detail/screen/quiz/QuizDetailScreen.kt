@@ -32,8 +32,10 @@ import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.common.DetailContentLayout
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.material.QuackIcon
 import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Profile
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackImage
@@ -157,7 +159,7 @@ private fun RankingContent(
                         contentScale = ContentScale.FillBounds,
                     )
                 } ?: QuackImage(
-                    src = QuackIcon.Profile.drawableId,
+                    src = QuackIcon.Outlined.Profile,
                     modifier = Modifier
                         .size(
                             DpSize(44.dp, 44.dp),
