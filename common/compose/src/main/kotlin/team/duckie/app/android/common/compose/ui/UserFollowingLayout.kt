@@ -10,6 +10,7 @@ package team.duckie.app.android.common.compose.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -77,16 +78,15 @@ fun UserFollowingLayout(
 ) {
     Layout(
         modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .padding(vertical = 12.dp)
-            .quackClickable(
-                rippleEnabled = false,
-            ) {
+            .quackClickable {
                 if (onClickUserProfile != null) {
                     onClickUserProfile(userId)
                 }
-            },
+            }
+            .fillMaxWidth()
+            .height(56.dp)
+            .padding(vertical = 12.dp)
+            .padding(horizontal = 16.dp),
         content = {
             if (profileImgUrl.isEmpty()) {
                 Image(
@@ -106,11 +106,6 @@ fun UserFollowingLayout(
                     src = profileImgUrl,
                     size = HomeProfileSize,
                     shape = SquircleShape,
-                    onClick = {
-                        if (onClickUserProfile != null) {
-                            onClickUserProfile(userId)
-                        }
-                    },
                 )
             }
             QuackSubtitle2(

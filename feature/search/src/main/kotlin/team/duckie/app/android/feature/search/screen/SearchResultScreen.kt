@@ -70,12 +70,14 @@ internal fun SearchResultScreen(
                 vm.updateSearchResultTab(SearchResultStep.toStep(index))
             },
         )
-        Spacer(space = 20.dp)
         when (state.tagSelectedTab) {
-            SearchResultStep.DuckExam -> SearchResultForExam(
-                searchExams = searchExams,
-                navigateDetail = navigateDetail,
-            )
+            SearchResultStep.DuckExam -> {
+                Spacer(space = 20.dp)
+                SearchResultForExam(
+                    searchExams = searchExams,
+                    navigateDetail = navigateDetail,
+                )
+            }
 
             SearchResultStep.User -> SearchResultForUser(
                 searchUsers = searchUsers,
@@ -118,9 +120,7 @@ private fun SearchResultForUser(
             )
         }
     } else {
-        LazyColumn(
-            contentPadding = SearchHorizontalPadding,
-        ) {
+        LazyColumn{
             items(searchUsers) { item ->
                 UserFollowingLayout(
                     userId = item?.userId ?: 0,
