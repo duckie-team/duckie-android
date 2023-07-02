@@ -9,6 +9,7 @@ package team.duckie.app.android
 
 import android.app.Application
 import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.util.Utility
 import dagger.hilt.android.HiltAndroidApp
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.quackquack.ui.animation.QuackAnimationMillis
@@ -29,5 +30,8 @@ class App : Application() {
             Timber.plant(Timber.DebugTree())
         }
         KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
+
+        val keyHash = Utility.getKeyHash(this)
+        Timber.d("Hash", keyHash)
     }
 }

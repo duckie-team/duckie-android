@@ -56,12 +56,14 @@ class KakaoRepositoryImpl @Inject constructor(
                 continuation.resume(
                     when {
                         error != null -> {
+                            error.printStackTrace()
                             when (error) {
                                 is AuthError -> {
+                                    println("$error ${error.statusCode} ${error.reason} ${error.response}")
                                     if (error.statusCode == KakaoNotSupportStatusCode) {
                                         failure(KakaoTalkNotSupportException)
                                     } else {
-                                        failure(KakaoTalkNotConnectedAccountException)
+                                        failure(error)
                                     }
                                 }
 
