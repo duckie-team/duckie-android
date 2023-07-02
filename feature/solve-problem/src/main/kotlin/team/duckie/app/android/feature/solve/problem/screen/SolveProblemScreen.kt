@@ -192,9 +192,6 @@ private fun ContentSection(
         }
 
         val isImageChoice = problem.answer?.isImageChoice == true
-        val columnModifier = Modifier
-            .verticalScrollModifierAsCondition(problem.answer?.isImageChoice == true)
-            .fillMaxSize()
 
         when {
             // for keyboard flexible image height
@@ -208,7 +205,9 @@ private fun ContentSection(
             )
 
             else -> Column(
-                modifier = columnModifier,
+                modifier = Modifier
+                    .verticalScrollModifierAsCondition(isImageChoice)
+                    .fillMaxSize(),
             ) {
                 Spacer(space = 16.dp)
                 QuestionSection(
