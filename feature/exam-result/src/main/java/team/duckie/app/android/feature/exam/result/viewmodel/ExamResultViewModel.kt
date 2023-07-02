@@ -156,6 +156,7 @@ class ExamResultViewModel @Inject constructor(
                             timer = exam.timer ?: 0,
                             originalExamId = exam.id,
                             isPerfectScore = isPerfectScore,
+                            nickname = user.nickname
                         )
                     }
                 }
@@ -166,6 +167,15 @@ class ExamResultViewModel @Inject constructor(
                 }
                 postSideEffect(ExamResultSideEffect.ReportError(it))
             }
+        }
+    }
+
+    fun updateReaction(reaction: String) = intent {
+        require(state is ExamResultState.Success)
+        reduce {
+            (state as ExamResultState.Success).copy(
+                reaction = reaction,
+            )
         }
     }
 
