@@ -33,6 +33,7 @@ dependencies {
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.quack.ui.components,
+        libs.quack.v2.ui,
         libs.compose.lifecycle.runtime,
         libs.compose.ui.navigation,
         libs.compose.ui.coil,
