@@ -61,7 +61,7 @@ internal fun TopAppCustomBar(
                 .quackClickable(
                     onClick = { activity.finish() },
                 ),
-            src = QuackIcon.Outlined.ArrowBack
+            src = QuackIcon.Outlined.ArrowBack,
         )
 
         QuackTag(

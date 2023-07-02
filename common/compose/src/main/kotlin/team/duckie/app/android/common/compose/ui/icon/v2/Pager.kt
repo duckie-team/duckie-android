@@ -23,11 +23,22 @@ public val QuackIcon.Pager: ImageVector
         if (_icPaper20 != null) {
             return _icPaper20!!
         }
-        _icPaper20 = Builder(name = "IcPaper20", defaultWidth = 20.0.dp, defaultHeight = 20.0.dp,
-                viewportWidth = 20.0f, viewportHeight = 20.0f).apply {
-            path(fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF222222)),
-                    strokeLineWidth = 1.0f, strokeLineCap = Butt, strokeLineJoin = Round,
-                    strokeLineMiter = 4.0f, pathFillType = NonZero) {
+        _icPaper20 = Builder(
+            name = "IcPaper20",
+            defaultWidth = 20.0.dp,
+            defaultHeight = 20.0.dp,
+                viewportWidth = 20.0f,
+            viewportHeight = 20.0f,
+        ).apply {
+            path(
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF222222)),
+                    strokeLineWidth = 1.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Round,
+                    strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
+            ) {
                 moveTo(5.2f, 16.0f)
                 verticalLineTo(4.0f)
                 horizontalLineTo(11.371f)
@@ -36,9 +47,15 @@ public val QuackIcon.Pager: ImageVector
                 horizontalLineTo(5.2f)
                 close()
             }
-            path(fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF222222)),
-                    strokeLineWidth = 1.0f, strokeLineCap = Butt, strokeLineJoin = Round,
-                    strokeLineMiter = 4.0f, pathFillType = NonZero) {
+            path(
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFF222222)),
+                    strokeLineWidth = 1.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Round,
+                    strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
+            ) {
                 moveTo(10.686f, 4.0f)
                 verticalLineTo(8.0f)
                 horizontalLineTo(14.8f)
