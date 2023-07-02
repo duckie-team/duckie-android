@@ -39,10 +39,12 @@ import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Filled
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Profile
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
+import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody2
@@ -162,7 +164,7 @@ fun UserProfileOrDefault(
             contentScale = ContentScale.FillBounds,
         )
     } ?: QuackImage(
-        src = QuackIcon.Profile.drawableId,
+        src = QuackIcon.Outlined.Profile,
         modifier = Modifier
             .size(size)
             .clip(SquircleShape),
@@ -196,7 +198,7 @@ private fun RankingContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (rank == 1) {
-                        QuackImage(src = QuackIcon.Crown)
+                        QuackIcon(icon = QuackIcon.Crown)
                     }
                     Spacer(space = 2.dp)
                     QuackTitle2(text = user.nickname)
@@ -233,38 +235,8 @@ private fun RankingContent(
                         ),
                     )
                 }
-
-                Spacer(space = 12.dp)
-
-                user.profileImageUrl?.let {
-                    QuackImage(
-                        src = it,
-                        modifier = Modifier
-                            .size(
-                                DpSize(44.dp, 44.dp),
-                            )
-                            .clip(SquircleShape),
-                        contentScale = ContentScale.FillBounds,
-                    )
-                } ?: QuackImage(
-                    src = QuackIcon.Outlined.Profile,
-                    modifier = Modifier
-                        .size(
-                            DpSize(44.dp, 44.dp),
-                        )
-                        .clip(SquircleShape),
-                    contentScale = ContentScale.FillBounds,
-                )
-
-                Spacer(space = 8.dp)
-
-                QuackText(
-                    text = user.nickname,
-                    typography = QuackTypography.Title2.change(textColor),
-                )
             }
         }
-
         Divider(color = QuackColor.Gray4.value)
     }
 }
