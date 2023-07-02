@@ -22,5 +22,7 @@ sealed class SettingSideEffect {
 
     object NavigateIntro : SettingSideEffect()
 
+    object NavigatePlayStoreMarket : SettingSideEffect()
+
     class ShowToast(val message: String) : SettingSideEffect()
 }

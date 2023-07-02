@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.skeleton.viewmodel.viewmodel.state
+package team.duckie.app.android.feature.skeleton.viewmodel.state
 
 sealed class SkeletonState {
     object Loading : SkeletonState()

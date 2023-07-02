@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.intent.goToMarket
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.startActivityWithAnimation
@@ -36,6 +37,7 @@ import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.DuckieTodoScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.feature.dev.mode.DevModeDialog
 import team.duckie.app.android.feature.setting.BuildConfig
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.constans.SettingType
@@ -101,7 +103,11 @@ class SettingActivity : BaseActivity() {
                             when (step) {
                                 SettingType.Main -> SettingMainScreen(
                                     vm = vm,
-                                    version = BuildConfig.APP_VERSION_NAME,
+                                    version = if (BuildConfig.IS_STAGE) {
+                                        "${BuildConfig.APP_VERSION_NAME}.${BuildConfig.APP_VERSION_CODE}"
+                                    } else {
+                                        BuildConfig.APP_VERSION_NAME
+                                    },
                                 )
 
                                 SettingType.AccountInfo -> SettingAccountInfoScreen(
@@ -176,6 +182,14 @@ class SettingActivity : BaseActivity() {
                 vm.changeWithdrawDialogVisible(false)
             },
         )
+
+        // 개발자 모드 Dialog
+        DevModeDialog(
+            visible = state.devModeDialogVisible,
+            onDismiss = {
+                vm.changeDevModeDialogVisible(false)
+            },
+        )
     }
 
     private fun handleSideEffect(sideEffect: SettingSideEffect) {
@@ -199,6 +213,10 @@ class SettingActivity : BaseActivity() {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     },
                 )
+            }
+
+            is SettingSideEffect.NavigatePlayStoreMarket -> {
+                goToMarket()
             }
 
             is SettingSideEffect.ShowToast -> {

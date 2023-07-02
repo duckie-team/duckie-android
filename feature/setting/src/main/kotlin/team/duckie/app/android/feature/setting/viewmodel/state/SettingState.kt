@@ -15,6 +15,7 @@ internal data class SettingState(
     val me: User? = null,
     val settingType: SettingType = SettingType.Main,
 
+    val devModeDialogVisible: Boolean = false,
     val logoutDialogVisible: Boolean = false,
     val withdrawDialogVisible: Boolean = false,
 

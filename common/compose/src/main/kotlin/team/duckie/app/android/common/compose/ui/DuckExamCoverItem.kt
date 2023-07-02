@@ -66,7 +66,7 @@ fun DuckExamSmallCoverForColumn(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: () -> Unit,
-    onMoreClick: () -> Unit,
+    onMoreClick: (() -> Unit)? = null,
     isLoading: Boolean? = null,
 ) {
     DuckSmallCoverInternal(
@@ -88,6 +88,7 @@ internal fun DuckSmallCoverInternal(
 ) {
     Column(
         modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
             .quackClickable(rippleEnabled = true) {
                 onItemClick()
             },

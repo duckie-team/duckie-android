@@ -16,11 +16,12 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.domain.user.usecase.FetchUserProfileUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.profile.viewmodel.intent.MyPageIntent
-import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
+import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +39,7 @@ internal class MyPageViewModel @Inject constructor(
                 .onSuccess { me ->
                     reduce { state.copy(me = me) }
                 }.onFailure {
-                    reduce { state.copy(isLoading = false, isError = true) }
+                    reduce { state.copy(step = ProfileStep.Error) }
                     postSideEffect(MyPageSideEffect.ReportError(it))
                 }
         }.apply { join() }
@@ -49,12 +50,11 @@ internal class MyPageViewModel @Inject constructor(
                         reduce {
                             state.copy(
                                 isLoading = false,
-                                isError = false,
                                 userProfile = profile,
                             )
                         }
                     }.onFailure {
-                        reduce { state.copy(isLoading = false, isError = true) }
+                        reduce { state.copy(step = ProfileStep.Error) }
                         postSideEffect(MyPageSideEffect.ReportError(it))
                     }
                 }
@@ -68,12 +68,24 @@ internal class MyPageViewModel @Inject constructor(
 
     private fun startLoading() = intent {
         reduce {
-            state.copy(isLoading = true, isError = false)
+            state.copy(isLoading = true)
         }
     }
 
     fun clickExam(exam: DuckTestCoverItem) = intent {
         postSideEffect(MyPageSideEffect.NavigateToExamDetail(exam.testId))
+    }
+
+    fun clickViewAll(viewAll: ProfileStep.ViewAll) = intent {
+        reduce {
+            state.copy(step = viewAll)
+        }
+    }
+
+    fun clickViewAllBackPress() = intent {
+        reduce {
+            state.copy(step = ProfileStep.Profile)
+        }
     }
 
     override fun clickNotification() = intent {

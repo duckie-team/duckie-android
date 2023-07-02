@@ -3,7 +3,7 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false"
 on:
   pull_request:
-    branches: [ develop, 'qa*' ]
+    branches: [ develop, 'qa/*' ]
 
 jobs:
   ci-build:
@@ -44,4 +44,4 @@ jobs:
         run: ./gradlew detekt
 
       - name: Run test
-        run: ./gradlew testStandardDebug
+        run: ./gradlew testStandardDebugUnitTest

@@ -36,6 +36,10 @@ object PreferenceKey {
     object User {
         val Id = stringPreferencesKey(buildPreferenceKey(type = "user", token = "id"))
     }
+
+    object DevMode {
+        val IsStage = booleanPreferencesKey(buildPreferenceKey(type = "devMode", token = "isStage"))
+    }
 }
 
 val Context.dataStore by preferencesDataStore(
