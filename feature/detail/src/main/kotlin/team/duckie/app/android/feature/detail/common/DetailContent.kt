@@ -40,8 +40,11 @@ import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.material.QuackIcon
 import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.More
+import team.duckie.quackquack.material.icon.quackicon.outlined.Profile
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackImage
@@ -99,13 +102,13 @@ internal fun DetailContentLayout(
 
             // 더보기 아이콘
             QuackImage(
-                src = QuackIcon.More.drawableId,
                 modifier = Modifier
                     .width(24.dp)
                     .height(24.dp)
                     .quackClickable(
                         onClick = moreButtonClick,
                     ),
+                src = QuackIcon.Outlined.More,
             )
         }
 
@@ -196,7 +199,7 @@ private fun DetailProfileLayout(
                 modifier = Modifier
                     .size(DpSize(32.dp, 32.dp))
                     .clip(SquircleShape),
-                src = QuackIcon.Profile.drawableId,
+                src = QuackIcon.Outlined.Profile,
             )
         }
 
