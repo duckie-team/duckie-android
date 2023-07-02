@@ -77,16 +77,15 @@ fun UserFollowingLayout(
 ) {
     Layout(
         modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .padding(vertical = 12.dp)
-            .quackClickable(
-                rippleEnabled = false,
-            ) {
+            .quackClickable {
                 if (onClickUserProfile != null) {
                     onClickUserProfile(userId)
                 }
-            },
+            }
+            .fillMaxWidth()
+            .height(56.dp)
+            .padding(vertical = 12.dp)
+            .padding(horizontal = 16.dp),
         content = {
             if (profileImgUrl.isEmpty()) {
                 Image(
@@ -106,11 +105,6 @@ fun UserFollowingLayout(
                     src = profileImgUrl,
                     size = HomeProfileSize,
                     shape = SquircleShape,
-                    onClick = {
-                        if (onClickUserProfile != null) {
-                            onClickUserProfile(userId)
-                        }
-                    },
                 )
             }
             QuackSubtitle2(

@@ -7,22 +7,44 @@
 
 package team.duckie.app.android.feature.profile
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.compose.LaunchOnLifecycle
+import team.duckie.app.android.common.compose.ToastWrapper
+import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
+import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
+import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
+import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.feature.profile.screen.MyProfileScreen
 import team.duckie.app.android.feature.profile.screen.OtherProfileScreen
+import team.duckie.app.android.feature.profile.screen.viewall.ViewAllScreen
 import team.duckie.app.android.feature.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.profile.viewmodel.sideeffect.ProfileSideEffect
+import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
+import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
+import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.friend.FriendNavigator
@@ -31,17 +53,6 @@ import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
-import team.duckie.app.android.common.compose.ui.ErrorScreen
-import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
-import team.duckie.app.android.common.compose.LaunchOnLifecycle
-import team.duckie.app.android.common.compose.ToastWrapper
-import team.duckie.app.android.common.compose.systemBarPaddings
-import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.const.Extras
-import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
@@ -77,56 +88,68 @@ class ProfileActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            BackHandler {
+                viewModel.clickBackPress()
+            }
             // TODO(riflockle7): 왜 이걸 직접 명시해 주어야 시스템 패딩이 정상적으로 적용되는지 모르겠음... 추후 확인 필요
             systemBarPaddings
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
+
+            InitBackHandler(step = state.step)
+
             QuackTheme {
-                when {
-                    state.isError -> {
-                        ErrorScreen(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = QuackColor.White.composeColor)
-                                .statusBarsPadding(),
-                            onRetryClick = { viewModel.init() },
-                        )
-                    }
+                QuackCrossfade(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = QuackColor.White.composeColor)
+                        .systemBarsPadding(),
+                    targetState = state.step,
+                ) { step ->
+                    when (step) {
+                        ProfileStep.Error -> {
+                            ErrorScreen(
+                                Modifier.fillMaxSize(),
+                                onRetryClick = viewModel::init,
+                            )
+                        }
 
-                    else -> {
-                        when (state.isMe) {
-                            true -> {
-                                LaunchOnLifecycle {
-                                    viewModel.getUserProfile()
+                        ProfileStep.Profile -> {
+                            when (state.isMe) {
+                                true -> {
+                                    LaunchOnLifecycle {
+                                        viewModel.getUserProfile()
+                                    }
+                                    MyProfileScreen(
+                                        userProfile = state.userProfile,
+                                        isLoading = state.isLoading,
+                                        onClickSetting = viewModel::clickSetting,
+                                        onClickNotification = viewModel::clickNotification,
+                                        onClickEditProfile = viewModel::clickEditProfile,
+                                        onClickEditTag = viewModel::clickEditTag,
+                                        onClickExam = viewModel::clickExam,
+                                        onClickMakeExam = viewModel::clickMakeExam,
+                                        onClickTag = viewModel::onClickTag,
+                                        onClickFriend = viewModel::navigateFriends,
+                                        isAccessedProfile = true,
+                                        navigateBack = viewModel::clickBackPress,
+                                        onClickShowAll = viewModel::clickViewAll,
+                                    )
                                 }
-                                MyProfileScreen(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(color = QuackColor.White.composeColor)
-                                        .systemBarsPadding(),
-                                    userProfile = state.userProfile,
-                                    isLoading = state.isLoading,
-                                    onClickSetting = viewModel::clickSetting,
-                                    onClickNotification = viewModel::clickNotification,
-                                    onClickEditProfile = viewModel::clickEditProfile,
-                                    onClickEditTag = viewModel::clickEditTag,
-                                    onClickExam = viewModel::clickExam,
-                                    onClickMakeExam = viewModel::clickMakeExam,
-                                    onClickTag = viewModel::onClickTag,
-                                    onClickFriend = viewModel::navigateFriends,
-                                    isAccessedProfile = true,
-                                    navigateBack = viewModel::clickBackPress,
-                                )
-                            }
 
-                            false -> {
-                                OtherProfileScreen(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(color = QuackColor.White.composeColor)
-                                        .systemBarsPadding(),
-                                    viewModel = viewModel,
-                                )
+                                false -> {
+                                    OtherProfileScreen(viewModel = viewModel)
+                                }
                             }
+                        }
+
+                        is ProfileStep.ViewAll -> {
+                            ViewAllScreen(
+                                title = getViewAllTitle(examType = step.examType),
+                                onBackPressed = viewModel::clickViewAllBackPress,
+                                duckTestCoverItems = step.getExamList()
+                                    .map(ProfileExam::toUiModel).toImmutableList(),
+                                onItemClick = viewModel::clickExam,
+                            )
                         }
                     }
                 }
@@ -138,10 +161,30 @@ class ProfileActivity : BaseActivity() {
         )
     }
 
+    @Composable
+    private fun InitBackHandler(step: ProfileStep) {
+        BackHandler(
+            onBack = when (step) {
+                is ProfileStep.ViewAll -> {
+                    viewModel::clickViewAllBackPress
+                }
+
+                else -> {
+                    ::finishWithAnimation
+                }
+            },
+        )
+    }
+
     @AllowCyclomaticComplexMethod
     private fun handleSideEffect(sideEffect: ProfileSideEffect) {
         when (sideEffect) {
-            ProfileSideEffect.NavigateToBack -> {
+            is ProfileSideEffect.NavigateToBack -> {
+                val resultIntent = Intent().apply {
+                    putExtra(Extras.FollowChangedStatus, sideEffect.isFollow.not())
+                    putExtra(Extras.FollowChangedUserId, sideEffect.userId)
+                }
+                setResult(Activity.RESULT_OK, resultIntent)
                 finishWithAnimation()
             }
 
@@ -217,4 +260,11 @@ class ProfileActivity : BaseActivity() {
             }
         }
     }
+}
+
+@Composable
+fun getViewAllTitle(examType: ExamType) = when (examType) {
+    ExamType.Heart -> stringResource(id = R.string.hearted_exam)
+    ExamType.Created -> stringResource(id = R.string.submitted_exam)
+    ExamType.Solved -> stringResource(id = R.string.solved_exam)
 }

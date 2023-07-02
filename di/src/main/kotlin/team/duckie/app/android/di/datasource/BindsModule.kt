@@ -13,6 +13,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.data.auth.datasource.AuthDataSource
 import team.duckie.app.android.data.auth.datasource.AuthRemoteDataSourceImpl
+import team.duckie.app.android.data.devMode.datasource.DevModeDataSource
+import team.duckie.app.android.data.devMode.datasource.DevModeDataSourceImpl
 import team.duckie.app.android.data.exam.datasource.ExamInfoDataSource
 import team.duckie.app.android.data.exam.datasource.ExamInfoLocalDataSourceImpl
 import team.duckie.app.android.data.ignore.datasource.IgnoreRemoteDataSource
@@ -36,6 +38,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class BindsModule {
+    @Singleton
+    @Binds
+    abstract fun provideDevModeDataSource(impl: DevModeDataSourceImpl): DevModeDataSource
+
     @Singleton
     @Binds
     abstract fun provideAuthRemoteDataSource(impl: AuthRemoteDataSourceImpl): AuthDataSource

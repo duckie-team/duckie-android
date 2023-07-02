@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.presentation.R
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
-import team.duckie.app.android.common.compose.ui.constant.getAppPackageName
 import team.duckie.app.android.common.android.intent.goToMarket
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.systemBarPaddings
@@ -40,7 +39,6 @@ internal fun IntroScreen(
     viewModel: IntroViewModel = activityViewModel(),
 ) {
     val activity = LocalContext.current as Activity
-    val appPackageName = getAppPackageName()
 
     Column(
         modifier = Modifier
@@ -91,7 +89,7 @@ internal fun IntroScreen(
             rightButtonText = activity.getString(introDialogType.rightBtnTitleRes),
             rightButtonOnClick = {
                 if (introDialogType != IntroDialogType.Error) {
-                    activity.goToMarket(appPackageName)
+                    activity.goToMarket()
                     activity.finish()
                 } else {
                     viewModel.checkUpdateRequire()

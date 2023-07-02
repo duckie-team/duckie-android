@@ -28,16 +28,16 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.UserFollowingLayout
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.search.viewmodel.state.SearchState
-import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
-import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.UserFollowingLayout
-import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackHeadLine1
@@ -70,12 +70,14 @@ internal fun SearchResultScreen(
                 vm.updateSearchResultTab(SearchResultStep.toStep(index))
             },
         )
-        Spacer(space = 20.dp)
         when (state.tagSelectedTab) {
-            SearchResultStep.DuckExam -> SearchResultForExam(
-                searchExams = searchExams,
-                navigateDetail = navigateDetail,
-            )
+            SearchResultStep.DuckExam -> {
+                Spacer(space = 20.dp)
+                SearchResultForExam(
+                    searchExams = searchExams,
+                    navigateDetail = navigateDetail,
+                )
+            }
 
             SearchResultStep.User -> SearchResultForUser(
                 searchUsers = searchUsers,
@@ -111,16 +113,14 @@ private fun SearchResultForUser(
                 text = stringResource(id = R.string.no_search_user),
                 color = QuackColor.Gray1,
             )
-            Spacer(space = 8.dp)
+            Spacer(space = 12.dp)
             QuackBody1(
                 text = stringResource(id = R.string.search_another_keyword),
                 color = QuackColor.Gray1,
             )
         }
     } else {
-        LazyColumn(
-            contentPadding = SearchHorizontalPadding,
-        ) {
+        LazyColumn {
             items(searchUsers) { item ->
                 UserFollowingLayout(
                     userId = item?.userId ?: 0,
@@ -156,7 +156,7 @@ private fun SearchResultForExam(
                 text = stringResource(id = R.string.no_search_exam),
                 color = QuackColor.Gray1,
             )
-            Spacer(space = 8.dp)
+            Spacer(space = 12.dp)
             QuackBody1(
                 text = stringResource(id = R.string.search_another_keyword),
                 color = QuackColor.Gray1,

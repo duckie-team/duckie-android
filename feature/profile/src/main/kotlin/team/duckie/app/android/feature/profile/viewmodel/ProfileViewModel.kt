@@ -25,6 +25,11 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.ui.const.Debounce
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
+import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.ignore.usecase.UserIgnoreUseCase
@@ -35,11 +40,7 @@ import team.duckie.app.android.feature.profile.viewmodel.intent.MyPageIntent
 import team.duckie.app.android.feature.profile.viewmodel.intent.OtherPageIntent
 import team.duckie.app.android.feature.profile.viewmodel.sideeffect.ProfileSideEffect
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileState
-import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
-import team.duckie.app.android.common.android.ui.const.Debounce
-import team.duckie.app.android.common.kotlin.FriendsType
-import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import javax.inject.Inject
 
 @HiltViewModel
@@ -92,7 +93,7 @@ internal class ProfileViewModel @Inject constructor(
                 .onSuccess { me ->
                     reduce { state.copy(me = me) }
                 }.onFailure {
-                    reduce { state.copy(isError = true) }
+                    reduce { state.copy(step = ProfileStep.Error) }
                     postSideEffect(ProfileSideEffect.ReportError(it))
                 }.also {
                     stopLoading()
@@ -105,7 +106,7 @@ internal class ProfileViewModel @Inject constructor(
                     fetchUserProfileUseCase(userId).onSuccess { profile ->
                         reduce {
                             state.copy(
-                                isError = false,
+                                step = ProfileStep.Profile,
                                 userProfile = profile,
                                 isMe = it.id == userId,
                                 follow = profile.user?.follow == null,
@@ -113,7 +114,7 @@ internal class ProfileViewModel @Inject constructor(
                             )
                         }
                     }.onFailure {
-                        reduce { state.copy(isError = true) }
+                        reduce { state.copy(step = ProfileStep.Error) }
                         postSideEffect(ProfileSideEffect.ReportError(it))
                     }.also {
                         stopLoading()
@@ -132,7 +133,12 @@ internal class ProfileViewModel @Inject constructor(
     fun ignore(targetId: Int) = intent {
         ignoreUseCase(targetId)
             .onSuccess {
-                postSideEffect(ProfileSideEffect.NavigateToBack)
+                postSideEffect(
+                    ProfileSideEffect.NavigateToBack(
+                        isFollow = state.follow,
+                        userId = state.userId,
+                    ),
+                )
             }
             .onFailure { exception ->
                 postSideEffect(ProfileSideEffect.ReportError(exception))
@@ -161,10 +167,23 @@ internal class ProfileViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
+                    reduce { state.copy(step = ProfileStep.Error) }
                     postSideEffect(ProfileSideEffect.ReportError(it))
                 }.also {
                     stopLoading()
                 }
+        }
+    }
+
+    fun clickViewAll(viewAll: ProfileStep.ViewAll) = intent {
+        reduce {
+            state.copy(step = viewAll)
+        }
+    }
+
+    fun clickViewAllBackPress() = intent {
+        reduce {
+            state.copy(step = ProfileStep.Profile)
         }
     }
 
@@ -193,7 +212,12 @@ internal class ProfileViewModel @Inject constructor(
     }
 
     override fun clickBackPress() = intent {
-        postSideEffect(ProfileSideEffect.NavigateToBack)
+        postSideEffect(
+            ProfileSideEffect.NavigateToBack(
+                isFollow = state.follow,
+                userId = state.userId,
+            ),
+        )
     }
 
     override fun clickFollow() = intent {
@@ -226,7 +250,7 @@ internal class ProfileViewModel @Inject constructor(
 
     private fun startLoading() = intent {
         reduce {
-            state.copy(isLoading = true, isError = false)
+            state.copy(isLoading = true)
         }
     }
 

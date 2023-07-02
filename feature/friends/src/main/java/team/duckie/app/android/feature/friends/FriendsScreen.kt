@@ -246,10 +246,7 @@ private fun FriendListScreen(
     onClickUserProfile: (Int) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .padding(top = 20.dp),
+        modifier = Modifier.fillMaxSize(),
     ) {
         items(friends) { item ->
             UserFollowingLayout(
