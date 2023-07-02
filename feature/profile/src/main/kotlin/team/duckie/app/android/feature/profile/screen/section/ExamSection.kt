@@ -17,12 +17,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.skeleton
+import team.duckie.app.android.feature.profile.R
+import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.ui.util.DpSize
@@ -35,11 +39,10 @@ fun ExamSection(
     exams: ImmutableList<DuckTestCoverItem>,
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMore: (() -> Unit)? = null,
+    onClickShowAll: () -> Unit,
     emptySection: @Composable () -> Unit,
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -59,12 +62,13 @@ fun ExamSection(
                     text = title,
                 )
             }
-            /* TODO (EvergreenTree97) 전체 보기 추후 구현
-            QuackBody2(
-                text = "전체보기",
-                color = QuackColor.Gray1,
-                onClick = onClickShowAll,
-            )*/
+            if (exams.isNotEmpty()) {
+                QuackBody2(
+                    text = stringResource(id = R.string.profile_view_all),
+                    color = QuackColor.Gray1,
+                    onClick = onClickShowAll,
+                )
+            }
         }
         Spacer(space = 16.dp)
         if (exams.isEmpty()) {

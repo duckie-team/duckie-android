@@ -27,6 +27,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
+import team.duckie.app.android.common.compose.ui.dialog.IgnoreCheckDialog
+import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
+import team.duckie.app.android.common.compose.ui.icon.v1.Create
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.user.model.UserProfile.Companion.username
 import team.duckie.app.android.feature.profile.R
@@ -35,13 +41,9 @@ import team.duckie.app.android.feature.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.profile.screen.section.FollowSection
 import team.duckie.app.android.feature.profile.viewmodel.ProfileViewModel
+import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
+import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
-import team.duckie.app.android.common.compose.ui.icon.v1.Create
-import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
-import team.duckie.app.android.common.compose.ui.dialog.IgnoreCheckDialog
-import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
-import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.icon.QuackIcon
 
@@ -147,6 +149,14 @@ internal fun OtherProfileScreen(
                             EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
                         }
                     },
+                    onClickShowAll = {
+                        viewModel.clickViewAll(
+                            viewAll = ProfileStep.ViewAll(
+                                examType = ExamType.Created,
+                                createdExams = state.userProfile.toImmutableCreatedExams(),
+                            ),
+                        )
+                    },
                 )
             },
             onClickExam = viewModel::clickExam,
@@ -157,6 +167,7 @@ internal fun OtherProfileScreen(
                 }
             },
             onClickFriend = viewModel::navigateFriends,
+            onClickShowAll = viewModel::clickViewAll,
         )
     }
 }
