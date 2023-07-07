@@ -50,6 +50,8 @@ import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 
+private val PaleOrange: Color = Color(0xFFFFEFCF)
+
 @Composable
 internal fun QuizDetailContentLayout(
     modifier: Modifier = Modifier,
@@ -83,7 +85,7 @@ private fun ColumnScope.MyRankingSection(
 ) {
     val user = quizInfo?.user
 
-    QuackBody2(text = "내 기록")
+    QuackBody2(text = stringResource(id = R.string.my_record))
     Spacer(space = 4.dp)
     Row(
         modifier = Modifier.height(68.dp),
@@ -208,7 +210,7 @@ private fun RankingContent(
                     if (rank == 1) {
                         LeftChatBubble(
                             message = quizInfo.reaction ?: "",
-                            backgroundColor = Color(0xFFFFEFCF),
+                            backgroundColor = PaleOrange,
                         )
                     } else {
                         QuackText(
