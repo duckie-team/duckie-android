@@ -17,3 +17,11 @@ data class ProfileExamInstanceData(
     @field:JsonProperty("exam")
     val exam: ProfileExamData? = null,
 )
+
+data class ProfileExamInstanceDatas(
+    @field:JsonProperty("examInstances")
+    val examInstances: List<ProfileExamInstanceData>? = null,
+
+    @field:JsonProperty("page")
+    val page: Int? = null,
+)

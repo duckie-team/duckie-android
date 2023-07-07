@@ -12,6 +12,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.github.kittinunf.fuel.Fuel
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
@@ -19,6 +20,8 @@ import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._exception.util.responseCatchingFuel
@@ -29,14 +32,15 @@ import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
+import team.duckie.app.android.data.exam.model.ProfileExamDatas
 import team.duckie.app.android.data.exam.paging.ExamMeFollowingPagingSource
+import team.duckie.app.android.data.exam.paging.ProfileExamPagingSource
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
+import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.repository.ExamRepository
-import team.duckie.app.android.common.kotlin.AllowMagicNumber
-import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import javax.inject.Inject
 
 class ExamRepositoryImpl @Inject constructor(
@@ -105,8 +109,71 @@ class ExamRepositoryImpl @Inject constructor(
         return@withContext examMeFollowingResponse.exams
     }
 
+    private suspend fun getHeartExams(
+        userId: Int,
+        page: Int,
+    ): List<ProfileExam> {
+        val response = client.get {
+            url("/exams/$userId/hearts")
+            parameter("page", page)
+        }
+        return responseCatching(
+            response = response,
+            parse = ProfileExamDatas::toDomain,
+        )
+    }
+
+    private suspend fun getExamsMe(userId: Int, page: Int): List<ProfileExam> {
+        val response = client.get {
+            url("/exams/$userId/me")
+            parameter("page", page)
+        }
+        return responseCatching(
+            response = response,
+            parse = ProfileExamDatas::toDomain,
+        )
+    }
+
     override suspend fun getRecentExam(): List<ExamInfo> {
         return examInfoDataSource.getRecentExams().map(ExamInfoEntity::toDomain)
+    }
+
+    override suspend fun getHeartExam(userId: Int): Flow<PagingData<ProfileExam>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = ExamMePagingPage,
+                enablePlaceholders = true,
+            ),
+            pagingSourceFactory = {
+                ProfileExamPagingSource(
+                    getProfileExam = { page ->
+                        getHeartExams(
+                            userId = userId,
+                            page = page,
+                        )
+                    },
+                )
+            },
+        ).flow
+    }
+
+    override suspend fun getSubmittedExam(userId: Int): Flow<PagingData<ProfileExam>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = ExamMePagingPage,
+                enablePlaceholders = true,
+            ),
+            pagingSourceFactory = {
+                ProfileExamPagingSource(
+                    getProfileExam = { page ->
+                        getExamsMe(
+                            userId = userId,
+                            page = page,
+                        )
+                    },
+                )
+            },
+        ).flow
     }
 
     override suspend fun getMadeExams(): List<ExamInfo> {
