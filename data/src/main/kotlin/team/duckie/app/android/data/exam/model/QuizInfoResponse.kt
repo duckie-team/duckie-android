@@ -11,14 +11,16 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.user.model.UserResponse
 
 data class QuizInfoResponse(
-    @JsonProperty("id")
+    @field:JsonProperty("id")
     val id: Int? = null,
-    @JsonProperty("correctProblemCount")
+    @field:JsonProperty("correctProblemCount")
     val correctProblemCount: Int? = null,
-    @JsonProperty("score")
+    @field:JsonProperty("score")
     val score: Int? = null,
-    @JsonProperty("time")
+    @field:JsonProperty("time")
     val time: Int? = null,
-    @JsonProperty("user")
+    @field:JsonProperty("user")
     val user: UserResponse? = null,
+    @field:JsonProperty("reaction")
+    val reaction: String? = null,
 )

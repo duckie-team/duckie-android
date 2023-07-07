@@ -15,6 +15,4 @@ val QuackIcon.Companion.Notice get() = R.drawable.ic_notice_24
 
 val QuackIcon.Companion.Create get() = R.drawable.ic_create_24
 
-val QuackIcon.Companion.Crown get() = R.drawable.ic_crown_12
-
 val QuackIcon.Companion.Clock get() = R.drawable.ic_clock_12

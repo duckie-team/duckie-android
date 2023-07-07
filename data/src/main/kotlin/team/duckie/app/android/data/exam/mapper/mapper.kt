@@ -11,6 +11,7 @@ import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.randomString
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
@@ -77,6 +78,7 @@ internal fun ExamData.toDomain() = Exam(
     requirementPlaceholder = requirementPlaceholder,
     requirementQuestion = requirementQuestion,
     problemCount = problemCount,
+    myRecord = QuizInfo.dummy(), // FIXME(limsaehyun) for real!
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
@@ -263,6 +265,7 @@ internal fun QuizInfoResponse.toDomain() = QuizInfo(
     score = score ?: duckieResponseFieldNpe("${this::class.java.simpleName}.score"),
     user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
     time = time ?: duckieResponseFieldNpe("${this::class.java.simpleName}.time"),
+    reaction = randomString(20), // FIXME(limsaehyun) for real!
 )
 
 internal fun SolutionData.toDomain() = Solution(
