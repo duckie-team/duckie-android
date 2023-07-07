@@ -16,14 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.FriendsType
-import team.duckie.app.android.domain.exam.model.ProfileExam
-import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.profile.R
 import team.duckie.app.android.feature.profile.component.EmptyText
@@ -110,7 +107,6 @@ fun ProfileScreen(
                     onClickShowAll(
                         ProfileStep.ViewAll(
                             examType = ExamType.Solved,
-                            solvedExamInstances = userProfile.toImmutableSolvedExamInstances(),
                         ),
                     )
                 },
@@ -130,19 +126,10 @@ fun ProfileScreen(
                     onClickShowAll(
                         ProfileStep.ViewAll(
                             examType = ExamType.Heart,
-                            heartExams = userProfile.toImmutableHeartedExams(),
                         ),
                     )
                 },
             )
         }
     }
-}
-
-internal fun UserProfile.toImmutableSolvedExamInstances(): ImmutableList<ProfileExamInstance> {
-    return solvedExamInstances?.toImmutableList() ?: persistentListOf()
-}
-
-internal fun UserProfile.toImmutableHeartedExams(): ImmutableList<ProfileExam> {
-    return heartExams?.toImmutableList() ?: persistentListOf()
 }

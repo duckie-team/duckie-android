@@ -153,7 +153,6 @@ internal fun OtherProfileScreen(
                         viewModel.clickViewAll(
                             viewAll = ProfileStep.ViewAll(
                                 examType = ExamType.Created,
-                                createdExams = state.userProfile.toImmutableCreatedExams(),
                             ),
                         )
                     },

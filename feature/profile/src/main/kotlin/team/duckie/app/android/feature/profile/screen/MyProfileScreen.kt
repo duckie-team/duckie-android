@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
@@ -154,7 +153,6 @@ fun MyProfileScreen(
                     onClickShowAll(
                         ProfileStep.ViewAll(
                             examType = ExamType.Created,
-                            createdExams = userProfile.toImmutableCreatedExams(),
                         ),
                     )
                 },
@@ -164,8 +162,4 @@ fun MyProfileScreen(
         onClickFriend = onClickFriend,
         onClickShowAll = onClickShowAll,
     )
-}
-
-internal fun UserProfile.toImmutableCreatedExams(): ImmutableList<ProfileExam> {
-    return createdExams?.toImmutableList() ?: persistentListOf()
 }
