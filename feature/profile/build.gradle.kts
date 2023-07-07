@@ -32,5 +32,7 @@ dependencies {
         libs.compose.ui.material, // needs for Scaffold
         libs.compose.lifecycle.runtime,
         libs.quack.ui.components,
+        libs.paging.runtime,
+        libs.paging.compose,
     )
 }
