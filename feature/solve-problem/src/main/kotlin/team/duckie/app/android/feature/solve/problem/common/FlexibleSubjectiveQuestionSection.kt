@@ -20,33 +20,34 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.SoftwareKeyboardController
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.solve.problem.answer.shortanswer.ShortAnswerForm
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
+@AllowMagicNumber("to get flexible image height")
 @NonRestartableComposable
 @Composable
 private fun getFlexibleImageHeight(): Dp {
@@ -88,7 +89,12 @@ fun FlexibleSubjectiveQuestionSection(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .imePadding(),
+            .imePadding()
+            .quackClickable(
+                rippleEnabled = false,
+            ) {
+                keyboardController?.hide()
+            },
     ) {
         Spacer(space = 16.dp)
         QuackHeadLine2(
@@ -107,13 +113,17 @@ fun FlexibleSubjectiveQuestionSection(
                     .fillMaxWidth()
                     .heightIn(max = actualWidth.value)
                     .padding(horizontal = 16.dp)
+                    .background(
+                        color = QuackColor.Gray4.value,
+                        shape = RoundedCornerShape(16.dp),
+                    ),
 
             ) {
                 Image(
                     modifier = Modifier
                         .fillMaxSize(),
                     painter = imagePainter,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -134,5 +144,4 @@ fun FlexibleSubjectiveQuestionSection(
         )
         Spacer(space = 16.dp)
     }
-
 }
