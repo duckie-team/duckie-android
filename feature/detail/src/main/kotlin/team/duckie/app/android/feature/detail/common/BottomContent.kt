@@ -21,8 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
+import team.duckie.app.android.common.compose.ui.icon.v2.FilledHeart
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
@@ -56,9 +59,9 @@ internal fun DetailBottomLayout(
                     .size(DpSize(24.dp, 24.dp))
                     .quackClickable(onClick = onHeartClick),
                 src = if (state.isHeart) {
-                    QuackIcon.FilledHeart.drawableId
+                    QuackIcon.FilledHeart
                 } else {
-                    QuackIcon.Heart.drawableId
+                    QuackIcon.Outlined.Heart
                 },
             )
 
