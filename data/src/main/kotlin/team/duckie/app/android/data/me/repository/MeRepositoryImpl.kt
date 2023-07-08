@@ -90,9 +90,9 @@ class MeRepositoryImpl @Inject constructor(
         return dataStore.data.first()[PreferenceKey.Account.AccessToken]
     }
 
-    private suspend fun getIsStageByDevMode(): Boolean? {
+    private suspend fun getIsStageByDevMode(): Boolean {
         // TODO(riflockle7): 더 좋은 구현 방법이 있을까?
         // ref: https://medium.com/androiddevelopers/datastore-and-synchronous-work-576f3869ec4c
-        return dataStore.data.first()[PreferenceKey.DevMode.IsStage]
+        return dataStore.data.first()[PreferenceKey.DevMode.IsStage] ?: false
     }
 }

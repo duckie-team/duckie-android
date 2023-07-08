@@ -11,7 +11,7 @@ import team.duckie.app.android.data._datasource.devModeIsStage
 import javax.inject.Inject
 
 class DevModeDataSourceImpl @Inject constructor() : DevModeDataSource {
-    override suspend fun setApiEnvironment(isStage: Boolean?) {
+    override suspend fun setApiEnvironment(isStage: Boolean) {
         devModeIsStage = isStage
     }
 }

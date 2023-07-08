@@ -8,5 +8,5 @@
 package team.duckie.app.android.data.devMode.datasource
 
 interface DevModeDataSource {
-    suspend fun setApiEnvironment(isStage: Boolean?)
+    suspend fun setApiEnvironment(isStage: Boolean)
 }
