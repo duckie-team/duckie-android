@@ -31,4 +31,7 @@ object Extras {
     const val RequirementPlaceholder = "ExtraRequirementPlaceholder"
     const val Timer = "ExtraTimer"
     const val RequirementAnswer = "ExtraRequirementAnswer"
+
+    /** using for DynamicLink */
+    const val DynamicLinkExamId = "DynamicLinkExamId"
 }

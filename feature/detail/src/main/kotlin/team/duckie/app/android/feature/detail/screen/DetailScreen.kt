@@ -30,12 +30,14 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.launch
+import okhttp3.internal.immutableListOf
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.android.network.NetworkUtil
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.LoadingScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.app.android.feature.detail.common.DetailBottomLayout
 import team.duckie.app.android.feature.detail.common.TopAppCustomBar
@@ -77,6 +79,7 @@ internal fun DetailScreen(
                 },
             )
             DuckieSelectableBottomSheetDialog(
+                types = immutableListOf(DuckieSelectableType.Share, DuckieSelectableType.Report),
                 bottomSheetState = bottomSheetState,
                 closeSheet = {
                     coroutineScope.launch {
@@ -84,6 +87,7 @@ internal fun DetailScreen(
                     }
                 },
                 onReport = { viewModel.report(state.exam.id) },
+                onShare = { viewModel.copyExamDynamicLink(state.exam.id) },
             ) {
                 ExamDetailScreen(
                     modifier = modifier,

@@ -43,4 +43,6 @@ sealed class DetailSideEffect {
     class NavigateToMyPage(val userId: Int) : DetailSideEffect()
 
     class NavigateToExamResult(val examId: Int) : DetailSideEffect()
+
+    data class CopyExamIdDynamicLink(val examId: Int) : DetailSideEffect()
 }
