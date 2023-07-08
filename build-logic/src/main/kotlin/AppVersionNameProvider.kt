@@ -31,8 +31,8 @@ class AppVersionNameProvider : Plugin<Project> {
                     properties.load(FileInputStream(configFile))
 
                     // local.properties 공통 작업
-                    stageUrl = properties["BASE_URL"] as String
-                    realUrl = properties["STAGE_BASE_URL"] as String
+                    stageUrl = properties["STAGE_BASE_URL"] as String
+                    realUrl = properties["BASE_URL"] as String
                     devModePassword = properties["DEV_MODE_PASSWORD"] as String
 
                     // flavor 이름에 stage 가 없을 경우 동작하지 않음
