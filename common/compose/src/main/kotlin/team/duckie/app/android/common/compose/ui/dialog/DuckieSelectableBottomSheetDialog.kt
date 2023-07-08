@@ -24,7 +24,7 @@ const val ReportAlreadyExists = "이미 신고한 게시물 입니다!"
 enum class DuckieSelectableType {
     Ignore,
     Report,
-    Share,
+    CopyLink,
 }
 
 /**
@@ -39,12 +39,12 @@ fun DuckieSelectableBottomSheetDialog(
     closeSheet: () -> Unit,
     onReport: (() -> Unit)? = null,
     onIgnore: (() -> Unit)? = null,
-    onShare: (() -> Unit)? = null,
+    onCopyLink: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     val items = remember(key1 = types) {
         types
-            .fastMap { it.toBottomSheetItem(onReport, onIgnore, onShare) }
+            .fastMap { it.toBottomSheetItem(onReport, onIgnore, onCopyLink) }
             .toImmutableList()
     }
 
@@ -62,7 +62,7 @@ fun DuckieSelectableBottomSheetDialog(
 private fun DuckieSelectableType.toBottomSheetItem(
     onReport: (() -> Unit)? = null,
     onIgnore: (() -> Unit)? = null,
-    onShare: (() -> Unit)? = null,
+    onCopyLink: (() -> Unit)? = null,
 ): BottomSheetItem {
     return when (this) {
         DuckieSelectableType.Ignore -> BottomSheetItem(
@@ -81,11 +81,11 @@ private fun DuckieSelectableType.toBottomSheetItem(
             },
         )
 
-        DuckieSelectableType.Share -> BottomSheetItem(
-            icon = R.drawable.ic_share_24,
-            text = R.string.share,
+        DuckieSelectableType.CopyLink -> BottomSheetItem(
+            icon = R.drawable.ic_link_24,
+            text = R.string.copy_link,
             onClick = {
-                onShare?.invoke()
+                onCopyLink?.invoke()
             },
         )
     }

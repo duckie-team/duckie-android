@@ -76,8 +76,8 @@ internal fun HomeScreen(
             }
         },
         onReport = onReport,
-        onShare = onShare,
-        types = immutableListOf(DuckieSelectableType.Share, DuckieSelectableType.Report),
+        onCopyLink = onShare,
+        types = immutableListOf(DuckieSelectableType.CopyLink, DuckieSelectableType.Report),
     ) {
         Box(
             modifier = Modifier,

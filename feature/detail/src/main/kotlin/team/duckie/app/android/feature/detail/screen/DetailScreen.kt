@@ -79,7 +79,7 @@ internal fun DetailScreen(
                 },
             )
             DuckieSelectableBottomSheetDialog(
-                types = immutableListOf(DuckieSelectableType.Share, DuckieSelectableType.Report),
+                types = immutableListOf(DuckieSelectableType.CopyLink, DuckieSelectableType.Report),
                 bottomSheetState = bottomSheetState,
                 closeSheet = {
                     coroutineScope.launch {
@@ -87,7 +87,7 @@ internal fun DetailScreen(
                     }
                 },
                 onReport = { viewModel.report(state.exam.id) },
-                onShare = { viewModel.copyExamDynamicLink(state.exam.id) },
+                onCopyLink = { viewModel.copyExamDynamicLink(state.exam.id) },
             ) {
                 ExamDetailScreen(
                     modifier = modifier,
