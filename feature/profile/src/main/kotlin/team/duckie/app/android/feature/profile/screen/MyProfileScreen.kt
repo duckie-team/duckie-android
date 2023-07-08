@@ -4,6 +4,8 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+@file:OptIn(ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.feature.profile.screen
 
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,11 +40,12 @@ import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 @Composable
 fun MyProfileScreen(
@@ -64,14 +68,16 @@ fun MyProfileScreen(
     fun BackPressedHeadLineTopBarInternal() {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             QuackImage(
-                src = QuackIcon.Notice,
-                size = DpSize(all = 24.dp),
-                onClick = onClickNotification,
+                modifier = Modifier
+                    .size(24.dp, 24.dp)
+                    .quackClickable(onClick = onClickNotification),
+                src = team.duckie.quackquack.ui.icon.QuackIcon.Companion.Notice,
             )
             QuackImage(
-                src = QuackIcon.Setting,
-                size = DpSize(all = 24.dp),
-                onClick = onClickSetting,
+                modifier = Modifier
+                    .size(24.dp, 24.dp)
+                    .quackClickable(onClick = onClickSetting),
+                src = QuackIcon.Setting.drawableId,
             )
         }
     }
@@ -119,8 +125,8 @@ fun MyProfileScreen(
                 title = stringResource(id = R.string.my_favorite_tag),
                 tags = tags,
                 emptySection = {
-                    QuackLargeButton(
-                        type = QuackLargeButtonType.Compact,
+                    QuackButton(
+                        style = QuackButtonStyle.SecondaryLarge,
                         text = stringResource(id = R.string.add_favorite_tag),
                         onClick = onClickEditTag,
                     )
@@ -131,7 +137,7 @@ fun MyProfileScreen(
         submittedExamSection = {
             ExamSection(
                 isLoading = isLoading,
-                icon = QuackIcon.Create,
+                icon = team.duckie.quackquack.ui.icon.QuackIcon.Companion.Create,
                 title = stringResource(id = R.string.submitted_exam),
                 exams = submittedExams,
                 onClickExam = onClickExam,
@@ -143,8 +149,8 @@ fun MyProfileScreen(
                     ) {
                         EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
                         Spacer(modifier = Modifier.padding(8.dp))
-                        QuackLargeButton(
-                            type = QuackLargeButtonType.Compact,
+                        QuackButton(
+                            style = QuackButtonStyle.SecondaryLarge,
                             text = stringResource(id = R.string.make_exam),
                             onClick = onClickMakeExam,
                         )

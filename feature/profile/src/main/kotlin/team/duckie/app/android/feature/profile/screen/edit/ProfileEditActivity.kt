@@ -12,12 +12,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
-import team.duckie.app.android.feature.profile.viewmodel.ProfileEditViewModel
-import team.duckie.app.android.feature.profile.viewmodel.sideeffect.ProfileEditSideEffect
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.finishWithAnimation
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.app.android.feature.profile.viewmodel.ProfileEditViewModel
+import team.duckie.app.android.feature.profile.viewmodel.sideeffect.ProfileEditSideEffect
+import team.duckie.quackquack.material.theme.QuackTheme
 
 @AndroidEntryPoint
 class ProfileEditActivity : BaseActivity() {

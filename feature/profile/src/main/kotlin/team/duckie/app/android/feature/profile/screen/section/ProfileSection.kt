@@ -11,25 +11,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.feature.profile.R
-import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
 import team.duckie.app.android.common.compose.ui.Divider
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.FriendsType
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSubtitle2
+import team.duckie.app.android.feature.profile.R
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.shape.SquircleShape
+import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackBody3
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 @Composable
 internal fun ProfileSection(
@@ -48,12 +51,26 @@ internal fun ProfileSection(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackImage(
-                modifier = Modifier.skeleton(isLoading),
-                src = profile.ifEmpty { QuackIcon.DefaultProfile },
-                size = DpSize(all = 44.dp),
-                shape = SquircleShape,
-            )
+            if (profile.isNotEmpty()) {
+                QuackImage(
+                    modifier = Modifier
+                        .clip(SquircleShape)
+                        .size(DpSize(44.dp, 44.dp))
+                        .skeleton(isLoading),
+                    src = profile,
+                    contentScale = ContentScale.Crop,
+                )
+            } else {
+                QuackImage(
+                    modifier = Modifier
+                        .clip(SquircleShape)
+                        .size(DpSize(44.dp, 44.dp))
+                        .skeleton(isLoading),
+                    src = QuackIcon.Companion.DefaultProfile,
+                    contentScale = ContentScale.Crop,
+                )
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -102,9 +119,8 @@ private fun EachInformation(
     Column(
         modifier = Modifier.quackClickable(
             rippleEnabled = false,
-        ) {
-            onClick?.invoke()
-        },
+            onClick = onClick,
+        ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
