@@ -20,6 +20,7 @@ android {
 
 dependencies {
     implementations(
+        platform(libs.firebase.bom),
         projects.di,
         projects.navigator,
         projects.common.compose,
@@ -29,6 +30,7 @@ dependencies {
         projects.feature.home,
         projects.feature.onboard,
         projects.domain,
+        libs.firebase.dynamic.links,
         libs.orbit.viewmodel,
         libs.androidx.splash,
         libs.quack.ui.components,
