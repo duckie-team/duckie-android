@@ -9,10 +9,7 @@
 
 package team.duckie.app.android.feature.exam.result.screen
 
-import android.Manifest
 import android.app.Activity
-import android.content.Context
-import android.content.pm.PackageManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,13 +40,12 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import coil.ImageLoader
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.android.image.saveBitmapToGallery
+import team.duckie.app.android.common.android.permission.PermissionCompat
 import team.duckie.app.android.common.compose.util.ComposeToBitmap
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.rememberToast
@@ -77,23 +73,6 @@ import kotlin.math.round
 
 private val PaleOrange = Color(0xFFFFF8E5)
 
-private const val PERMISSION_REQUEST_CODE: Int = 1
-
-private fun requestPermission(activity: Activity) {
-    val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-    if (ContextCompat.checkSelfPermission(activity, permission) !=
-        PackageManager.PERMISSION_GRANTED
-    ) {
-        ActivityCompat.requestPermissions(activity, arrayOf(permission), PERMISSION_REQUEST_CODE)
-    }
-}
-
-private fun checkPermission(context: Context): Boolean {
-    val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-    return ContextCompat.checkSelfPermission(context, permission) ==
-            PackageManager.PERMISSION_GRANTED
-}
-
 @Composable
 internal fun ExamResultShareScreen(
     state: ExamResultState.Success,
@@ -102,8 +81,8 @@ internal fun ExamResultShareScreen(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
-        if (checkPermission(context)) {
-            requestPermission(context as Activity)
+        if (PermissionCompat.checkWriteExternalStoragePermission(context)) {
+            PermissionCompat.requestWriteExternalStoragePermission(context as Activity)
         }
     }
 
