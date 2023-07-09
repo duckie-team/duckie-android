@@ -40,7 +40,6 @@ import team.duckie.app.android.feature.solve.problem.common.LoadingIndicator
 import team.duckie.app.android.feature.solve.problem.screen.QuizScreen
 import team.duckie.app.android.feature.solve.problem.screen.SolveProblemScreen
 import team.duckie.app.android.feature.solve.problem.viewmodel.SolveProblemViewModel
-import team.duckie.app.android.feature.solve.problem.viewmodel.SolveProblemViewModel.Companion.TimerCount
 import team.duckie.app.android.feature.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.quackquack.ui.color.QuackColor
@@ -101,7 +100,7 @@ class SolveProblemActivity : BaseActivity() {
                                 true -> QuizScreen(
                                     state = state,
                                     pagerState = pagerState,
-                                    progress = { (progress.toFloat() / TimerCount) },
+                                    progress = { (progress / state.time) },
                                     stopExam = viewModel::stopExam,
                                     finishQuiz = viewModel::finishQuiz,
                                     startTimer = viewModel::startTimer,
