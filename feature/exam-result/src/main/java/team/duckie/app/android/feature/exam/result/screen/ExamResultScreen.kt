@@ -58,7 +58,7 @@ internal fun ExamResultScreen(
                 LoadingScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.White)
+                        .background(Color.White),
                 )
             }
 
@@ -89,7 +89,7 @@ internal fun ExamResultScreen(
 @Composable
 private fun ExamResultSuccessScreen(
     state: ExamResultState.Success,
-    viewModel: ExamResultViewModel
+    viewModel: ExamResultViewModel,
 ) {
     Scaffold(
         topBar = {
@@ -102,7 +102,7 @@ private fun ExamResultSuccessScreen(
                 trailingIcon = QuackIcon.Share,
                 onTrailingIconClick = {
                     viewModel.updateExamResultScreen(ExamResultScreen.SHARE_EXAM_RESULT)
-                }
+                },
             )
         },
         bottomBar = {
@@ -118,7 +118,7 @@ private fun ExamResultSuccessScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding),
         ) {
             with(state) {
                 if (isQuiz) {

@@ -27,7 +27,6 @@ import androidx.core.view.drawToBitmap
 fun ComposeToBitmap(
     content: @Composable () -> Unit,
 ): () -> Bitmap {
-
     val context = LocalContext.current
 
     /**
@@ -56,7 +55,7 @@ fun ComposeToBitmap(
                     content.invoke()
                 }
             }
-        }
+        },
     )
 
     /** returning callback to bitmap **/
