@@ -14,7 +14,12 @@ import android.net.Uri
 import android.provider.MediaStore
 import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemException
 
-fun saveBitmapToGallery(context: Context, bitmap: Bitmap, imageName: String) {
+fun saveBitmapToGallery(
+    context: Context,
+    bitmap: Bitmap,
+    imageName: String,
+    imageQuality: Int = 100,
+) {
     val imageCollection =
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
@@ -31,7 +36,7 @@ fun saveBitmapToGallery(context: Context, bitmap: Bitmap, imageName: String) {
     val imageUri: Uri? = context.contentResolver.insert(imageCollection, contentValues)
 
     context.contentResolver.openOutputStream(imageUri!!)?.use { outputStream ->
-        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
+        if (!bitmap.compress(Bitmap.CompressFormat.PNG, imageQuality, outputStream)) {
             duckieClientLogicProblemException("Failed to save bitmap.")
         }
     }
