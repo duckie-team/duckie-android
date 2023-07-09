@@ -12,6 +12,7 @@ package team.duckie.app.android.common.compose.ui.dialog
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -23,6 +24,7 @@ const val ReportAlreadyExists = "이미 신고한 게시물 입니다!"
 enum class DuckieSelectableType {
     Ignore,
     Report,
+    CopyLink,
 }
 
 /**
@@ -37,11 +39,14 @@ fun DuckieSelectableBottomSheetDialog(
     closeSheet: () -> Unit,
     onReport: (() -> Unit)? = null,
     onIgnore: (() -> Unit)? = null,
+    onCopyLink: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
-    val items = types
-        .fastMap { it.toBottomSheetItem(onReport, onIgnore) }
-        .toImmutableList()
+    val items = remember(key1 = types) {
+        types
+            .fastMap { it.toBottomSheetItem(onReport, onIgnore, onCopyLink) }
+            .toImmutableList()
+    }
 
     SelectableItemBottomSheetDialog(
         modifier = modifier,
@@ -57,6 +62,7 @@ fun DuckieSelectableBottomSheetDialog(
 private fun DuckieSelectableType.toBottomSheetItem(
     onReport: (() -> Unit)? = null,
     onIgnore: (() -> Unit)? = null,
+    onCopyLink: (() -> Unit)? = null,
 ): BottomSheetItem {
     return when (this) {
         DuckieSelectableType.Ignore -> BottomSheetItem(
@@ -72,6 +78,14 @@ private fun DuckieSelectableType.toBottomSheetItem(
             text = R.string.report,
             onClick = {
                 onReport?.invoke()
+            },
+        )
+
+        DuckieSelectableType.CopyLink -> BottomSheetItem(
+            icon = R.drawable.ic_link_24,
+            text = R.string.copy_link,
+            onClick = {
+                onCopyLink?.invoke()
             },
         )
     }
