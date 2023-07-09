@@ -50,7 +50,6 @@ import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.Download
 import team.duckie.app.android.common.compose.ui.icon.v2.DuckieTextLogo
-import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
@@ -67,6 +66,7 @@ import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 import team.duckie.quackquack.ui.sugar.QuackSecondaryLargeButton
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
+import kotlin.math.round
 
 private val PaleOrange = Color(0xFFFFF8E5)
 
@@ -131,7 +131,7 @@ internal fun ExamResultShareScreen(
                     rememberToast.invoke(context.getString(R.string.exam_success_save_image_message))
                 }
             }
-        }
+        },
     ) { padding ->
         Column(
             modifier = Modifier
@@ -216,7 +216,7 @@ private fun ExamResultImage(
             Box(
                 modifier = Modifier
                     .size(1.dp, 12.dp)
-                    .background(color = QuackColor.Gray3.value)
+                    .background(color = QuackColor.Gray3.value),
             )
             Box(
                 modifier = Modifier.weight(1f),
@@ -243,11 +243,11 @@ private fun ExamResultImage(
                 size = 26.sp,
                 weight = FontWeight.Bold,
                 letterSpacing = 0.sp,
-                lineHeight = 36.sp
+                lineHeight = 36.sp,
             ),
         )
         Spacer(space = 4.dp)
-        QuackBody1(text = "500명 중 상위 1%!")
+        QuackBody1(text = "${state.solvedCount}명 중 ${round(state.percent)}%!")
         Spacer(space = 24.dp)
         QuackImage(
             modifier = Modifier.size(48.dp, 16.dp),
@@ -259,7 +259,7 @@ private fun ExamResultImage(
 @Composable
 private fun TitleAndBody(
     title: String,
-    body: String
+    body: String,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -268,7 +268,7 @@ private fun TitleAndBody(
         QuackText(
             text = body,
             typography = QuackTypography.Body3.change(
-                color = QuackColor.Gray1
+                color = QuackColor.Gray1,
             ),
         )
     }

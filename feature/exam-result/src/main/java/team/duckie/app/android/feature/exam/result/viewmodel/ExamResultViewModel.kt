@@ -158,6 +158,7 @@ class ExamResultViewModel @Inject constructor(
                             isPerfectScore = isPerfectScore,
                             nickname = user.nickname,
                             thumbnailUrl = exam.thumbnailUrl,
+                            solvedCount = exam.solvedCount ?: 0,
                         )
                     }
                 }
@@ -191,7 +192,7 @@ class ExamResultViewModel @Inject constructor(
         require(state is ExamResultState.Success)
         reduce {
             (state as ExamResultState.Success).copy(
-                currentScreen = screen
+                currentScreen = screen,
             )
         }
     }

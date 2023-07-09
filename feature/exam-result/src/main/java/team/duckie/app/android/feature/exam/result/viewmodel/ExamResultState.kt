@@ -33,7 +33,11 @@ sealed class ExamResultState {
         val originalExamId: Int = 0,
         val nickname: String = "",
         val thumbnailUrl: String = "",
-    ) : ExamResultState()
+        val solvedCount: Int = 0,
+    ) : ExamResultState() {
+
+        val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
+    }
 
     data class Error(
         val exception: Throwable,
