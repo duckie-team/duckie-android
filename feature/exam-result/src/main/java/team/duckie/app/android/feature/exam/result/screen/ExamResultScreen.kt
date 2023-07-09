@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.feature.exam.result.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -16,17 +18,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.LoadingScreen
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.feature.exam.result.R
-import team.duckie.app.android.feature.exam.result.common.LoadingIndicator
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
 import team.duckie.app.android.feature.exam.result.screen.exam.ExamResultContent
 import team.duckie.app.android.feature.exam.result.screen.quiz.QuizResultContent
+import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.quackquack.ui.component.QuackTopAppBar
@@ -42,10 +46,52 @@ internal fun ExamResultScreen(
         viewModel.initState()
     }
 
-    Scaffold(
+    QuackCrossfade(
         modifier = Modifier
+            .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding(),
+        targetState = state,
+    ) { currentState ->
+        when (currentState) {
+            is ExamResultState.Loading -> {
+                LoadingScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White)
+                )
+            }
+
+            is ExamResultState.Success -> {
+                when (currentState.currentScreen) {
+                    ExamResultScreen.EXAM_RESULT -> ExamResultSuccessScreen(
+                        state = currentState,
+                        viewModel = viewModel,
+                    )
+
+                    ExamResultScreen.SHARE_EXAM_RESULT -> ExamResultShareScreen(state = currentState) {
+                        viewModel.updateExamResultScreen(ExamResultScreen.EXAM_RESULT)
+                    }
+                }
+            }
+
+            is ExamResultState.Error -> {
+                ErrorScreen(
+                    Modifier.fillMaxSize(),
+                    false,
+                    onRetryClick = viewModel::initState,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExamResultSuccessScreen(
+    state: ExamResultState.Success,
+    viewModel: ExamResultViewModel
+) {
+    Scaffold(
         topBar = {
             QuackTopAppBar(
                 modifier = Modifier
@@ -53,62 +99,47 @@ internal fun ExamResultScreen(
                     .padding(horizontal = 16.dp),
                 leadingIcon = QuackIcon.ArrowBack,
                 onLeadingIconClick = viewModel::exitExam,
+                trailingIcon = QuackIcon.Share,
+                onTrailingIconClick = {
+                    viewModel.updateExamResultScreen(ExamResultScreen.SHARE_EXAM_RESULT)
+                }
             )
         },
         bottomBar = {
-            if ((state is ExamResultState.Loading).not()) {
-                ResultBottomBar(
-                    isQuiz = state.isQuiz(),
-                    onClickRetryButton = {
-                        viewModel.clickRetry()
-                    },
-                    onClickExitButton = viewModel::exitExam,
-                )
-            }
+            ResultBottomBar(
+                isQuiz = state.isQuiz(),
+                onClickRetryButton = {
+                    viewModel.clickRetry()
+                },
+                onClickExitButton = viewModel::exitExam,
+            )
         },
     ) { padding ->
-        QuackCrossfade(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            targetState = state,
+                .padding(padding)
         ) {
-            when (it) {
-                is ExamResultState.Loading -> {
-                    LoadingIndicator()
-                }
-
-                is ExamResultState.Success -> {
-                    with(it) {
-                        if (isQuiz) {
-                            QuizResultContent(
-                                resultImageUrl = reportUrl,
-                                correctProblemCount = correctProblemCount,
-                                time = time,
-                                mainTag = mainTag,
-                                ranking = ranking,
-                                message = if (isPerfectScore) {
-                                    stringResource(
-                                        id = R.string.exam_result_correct_problem_all,
-                                        mainTag,
-                                    )
-                                } else {
-                                    wrongAnswerMessage
-                                },
+            with(state) {
+                if (isQuiz) {
+                    QuizResultContent(
+                        resultImageUrl = reportUrl,
+                        correctProblemCount = correctProblemCount,
+                        time = time,
+                        mainTag = mainTag,
+                        ranking = ranking,
+                        message = if (isPerfectScore) {
+                            stringResource(
+                                id = R.string.exam_result_correct_problem_all,
+                                mainTag,
                             )
                         } else {
-                            ExamResultContent(
-                                resultImageUrl = reportUrl,
-                            )
-                        }
-                    }
-                }
-
-                is ExamResultState.Error -> {
-                    ErrorScreen(
-                        Modifier.fillMaxSize(),
-                        false,
-                        onRetryClick = viewModel::initState,
+                            wrongAnswerMessage
+                        },
+                    )
+                } else {
+                    ExamResultContent(
+                        resultImageUrl = reportUrl,
                     )
                 }
             }

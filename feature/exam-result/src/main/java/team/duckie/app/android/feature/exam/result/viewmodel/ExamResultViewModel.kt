@@ -156,6 +156,8 @@ class ExamResultViewModel @Inject constructor(
                             timer = exam.timer ?: 0,
                             originalExamId = exam.id,
                             isPerfectScore = isPerfectScore,
+                            nickname = user.nickname,
+                            thumbnailUrl = exam.thumbnailUrl,
                         )
                     }
                 }
@@ -182,6 +184,15 @@ class ExamResultViewModel @Inject constructor(
             )
         }.onFailure {
             postSideEffect(ExamResultSideEffect.ReportError(it))
+        }
+    }
+
+    fun updateExamResultScreen(screen: ExamResultScreen) = intent {
+        require(state is ExamResultState.Success)
+        reduce {
+            (state as ExamResultState.Success).copy(
+                currentScreen = screen
+            )
         }
     }
 
