@@ -244,7 +244,7 @@ private fun RankingContent(
 }
 
 @Composable
-private fun getUserPerformanceString(correctProblemCount: Int, time: Int) =
+private fun getUserPerformanceString(correctProblemCount: Int, time: Double) =
     buildString {
         append(stringResource(id = R.string.score, correctProblemCount))
         append(" / ")

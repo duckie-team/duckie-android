@@ -17,10 +17,10 @@ data class QuizInfoResponse(
     val correctProblemCount: Int? = null,
     @field:JsonProperty("score")
     val score: Int? = null,
-    @field:JsonProperty("time")
-    val time: Int? = null,
     @field:JsonProperty("user")
     val user: UserResponse? = null,
+    @field:JsonProperty("time")
+    val time: Double? = null,
     @field:JsonProperty("reaction")
     val reaction: String? = null,
 )

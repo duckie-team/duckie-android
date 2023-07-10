@@ -20,7 +20,7 @@ interface QuizRepository {
     suspend fun submitQuiz(
         examId: Int,
         correctProblemCount: Int,
-        time: Int?,
+        time: Double?,
         requirementAnswer: String?,
         problemId: Int?,
         wrongAnswer: String?,

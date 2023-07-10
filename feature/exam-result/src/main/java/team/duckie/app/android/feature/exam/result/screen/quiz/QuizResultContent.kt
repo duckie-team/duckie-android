@@ -59,7 +59,7 @@ internal fun QuizResultContent(
     modifier: Modifier = Modifier,
     nickname: String,
     resultImageUrl: String,
-    time: Int,
+    time: Double,
     correctProblemCount: Int,
     mainTag: String,
     message: String,

@@ -17,7 +17,7 @@ sealed class ExamResultState {
         val examId: Int = 0,
         val isQuiz: Boolean = true,
         val correctProblemCount: Int = 0,
-        val time: Int = 0,
+        val time: Double = 0.0,
         val mainTag: String = "",
         val ranking: Int = 0,
         val wrongAnswerMessage: String = "",
