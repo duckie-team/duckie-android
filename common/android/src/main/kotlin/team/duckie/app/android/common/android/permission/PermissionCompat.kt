@@ -9,7 +9,6 @@ package team.duckie.app.android.common.android.permission
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
@@ -40,11 +39,5 @@ object PermissionCompat {
         ) {
             ActivityCompat.requestPermissions(activity, arrayOf(permission), PERMISSION_REQUEST_CODE)
         }
-    }
-
-    fun checkWriteExternalStoragePermission(context: Context): Boolean {
-        val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-        return ContextCompat.checkSelfPermission(context, permission) ==
-                PackageManager.PERMISSION_GRANTED
     }
 }

@@ -9,7 +9,6 @@
 
 package team.duckie.app.android.feature.exam.result.screen
 
-import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,7 +25,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,8 +42,7 @@ import coil.ImageLoader
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
-import team.duckie.app.android.common.android.image.saveBitmapToGallery
-import team.duckie.app.android.common.android.permission.PermissionCompat
+import team.duckie.app.android.common.android.image.saveImageInGallery
 import team.duckie.app.android.common.compose.util.ComposeToBitmap
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.rememberToast
@@ -80,15 +77,9 @@ internal fun ExamResultShareScreen(
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = Unit) {
-        if (PermissionCompat.checkWriteExternalStoragePermission(context)) {
-            PermissionCompat.requestWriteExternalStoragePermission(context as Activity)
-        }
-    }
-
-    val imageLoader = ImageLoader.Builder(context)
-        .allowHardware(false) // Disallow hardware bitmaps.
-        .build()
+    val imageLoader =
+        ImageLoader.Builder(context).allowHardware(false) // Disallow hardware bitmaps.
+            .build()
     val imagePainter = rememberAsyncImagePainter(
         model = state.thumbnailUrl,
         imageLoader = imageLoader,
@@ -125,16 +116,18 @@ internal fun ExamResultShareScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 QuackSecondaryLargeButton(
-                    modifier = Modifier
-                        .icons(leadingIcon = QuackIcon.Download),
+                    modifier = Modifier.icons(leadingIcon = QuackIcon.Download),
                     text = stringResource(id = R.string.exam_result_save_image),
                 ) {
                     coroutineScope.launch {
                         val bitmap = snapShot.invoke()
-                        saveBitmapToGallery(
-                            context = context,
+                        saveImageInGallery(
                             bitmap = bitmap,
-                            imageName = context.getString(R.string.exam_result_name, state.mainTag),
+                            context = context,
+                            folderName = context.getString(
+                                R.string.exam_result_name,
+                                state.mainTag,
+                            ),
                         )
                     }
                     rememberToast.invoke(context.getString(R.string.exam_success_save_image_message))

@@ -13,13 +13,15 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemException
 import java.io.File
 import java.io.File.separator
 import java.io.FileOutputStream
 import java.io.OutputStream
 
 fun saveImageInGallery(bitmap: Bitmap, context: Context, folderName: String) {
-    if (android.os.Build.VERSION.SDK_INT >= 29) {
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
         val values = contentValues()
         values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/$folderName")
         values.put(MediaStore.Images.Media.IS_PENDING, true)
@@ -52,6 +54,7 @@ fun saveImageInGallery(bitmap: Bitmap, context: Context, folderName: String) {
     }
 }
 
+@AllowMagicNumber("for Media Date Added")
 private fun contentValues(): ContentValues {
     val values = ContentValues()
     values.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
@@ -60,13 +63,17 @@ private fun contentValues(): ContentValues {
     return values
 }
 
-private fun saveImageToStream(bitmap: Bitmap, outputStream: OutputStream?) {
+@Suppress(
+    "TooGenericExceptionCaught",
+    "SwallowedException",
+) // for error handling save image to stream
+private fun saveImageToStream(bitmap: Bitmap, outputStream: OutputStream?, quality: Int = 100) {
     if (outputStream != null) {
         try {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream)
             outputStream.close()
         } catch (e: Exception) {
-            e.printStackTrace()
+            duckieClientLogicProblemException("failed to save image")
         }
     }
 }
