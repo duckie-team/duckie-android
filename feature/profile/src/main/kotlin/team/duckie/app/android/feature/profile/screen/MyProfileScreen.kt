@@ -46,6 +46,7 @@ import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
+import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
 @Composable
 fun MyProfileScreen(
@@ -71,7 +72,7 @@ fun MyProfileScreen(
                 modifier = Modifier
                     .size(24.dp, 24.dp)
                     .quackClickable(onClick = onClickNotification),
-                src = team.duckie.quackquack.ui.icon.QuackIcon.Companion.Notice,
+                src = QuackV1Icon.Companion.Notice,
             )
             QuackImage(
                 modifier = Modifier

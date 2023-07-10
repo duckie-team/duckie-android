@@ -29,10 +29,10 @@ import team.duckie.app.android.feature.profile.R
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackImage
-import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackBody3
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
+import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
 @Composable
 internal fun ProfileSection(
@@ -66,7 +66,7 @@ internal fun ProfileSection(
                         .clip(SquircleShape)
                         .size(DpSize(44.dp, 44.dp))
                         .skeleton(isLoading),
-                    src = QuackIcon.Companion.DefaultProfile,
+                    src = QuackV1Icon.Companion.DefaultProfile,
                     contentScale = ContentScale.Crop,
                 )
             }
