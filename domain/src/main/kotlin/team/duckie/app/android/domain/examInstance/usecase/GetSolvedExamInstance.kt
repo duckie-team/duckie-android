@@ -12,7 +12,7 @@ import team.duckie.app.android.domain.examInstance.repository.ExamInstanceReposi
 import javax.inject.Inject
 
 @Immutable
-class GetSolvedExamInstance @Inject constructor(
+class GetSolvedExamInstanceUseCase @Inject constructor(
     private val examInstanceRepository: ExamInstanceRepository,
 ) {
     suspend operator fun invoke(id: Int) = examInstanceRepository.getSolvedExamInstance(id)
