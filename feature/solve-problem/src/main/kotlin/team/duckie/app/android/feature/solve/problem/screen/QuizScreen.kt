@@ -68,14 +68,14 @@ internal fun QuizScreen(
     stopExam: () -> Unit,
     finishQuiz: (Int, Boolean, String) -> Unit,
     onNextPage: (Int, InputAnswer, Int) -> Unit,
-    startTimer: () -> Unit,
+    startTimer: (Float) -> Unit,
 ) {
     val totalPage = remember { state.totalPage }
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
 
     val timeOver by remember {
-        derivedStateOf { progress() == 0f }
+        derivedStateOf { progress() < 0f }
     }
 
     val inputAnswers = remember {
@@ -88,7 +88,7 @@ internal fun QuizScreen(
     }
 
     LaunchedEffect(pagerState.targetPage) {
-        startTimer()
+        startTimer(state.time.toFloat())
     }
 
     LaunchedEffect(timeOver) {
