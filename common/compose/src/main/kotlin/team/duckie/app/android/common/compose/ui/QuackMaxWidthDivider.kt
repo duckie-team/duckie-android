@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 
 /**
  * 스크린의 크기만큼 QuackDivider를 그립니다.
+ * // TODO(riflockle7): 추후 사용처 확인해서 DuckieDivider 과 합칠 것
  */
 @Composable
 fun QuackMaxWidthDivider(
@@ -27,7 +28,7 @@ fun QuackMaxWidthDivider(
 
     val screenWidthPx = remember { configuration.screenWidthDp * density.density }
 
-    QuackDivider(
+    DuckieDivider(
         modifier = modifier
             .layout { measurable, constraints ->
                 val placeable = measurable.measure(

@@ -184,7 +184,7 @@ private fun DuckieDialogBottomLayout(
     rightButtonText: String?,
     rightButtonOnClick: (() -> Unit)?,
 ) {
-    QuackDivider(modifier = Modifier.fillMaxWidth())
+    DuckieDivider(modifier = Modifier.fillMaxWidth())
 
     Row(
         modifier = Modifier

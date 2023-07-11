@@ -36,3 +36,18 @@ fun RowScope.Divider(
             .background(QuackColor.Gray3.value),
     )
 }
+
+/**
+ * 덕키에서 사용되는 구분선(divider)을 그립니다.
+ *
+ * @param modifier 이 컴포넌트에 사용할 [Modifier]
+ */
+@Composable
+fun DuckieDivider(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(color = QuackColor.Gray3.value)
+    )
+}
