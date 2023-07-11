@@ -22,7 +22,11 @@ fun <T> QuackCrossfade(
     Crossfade(
         modifier = modifier,
         targetState = targetState,
-        animationSpec = QuackAnimationSpec(),
+        animationSpec = tween(
+            durationMillis = 250,
+            easing = LinearEasing,
+        ),
         content = content,
+        label = "Crossfade",
     )
 }
