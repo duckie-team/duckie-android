@@ -42,6 +42,8 @@ fun QuackNoUnderlineTextField(
     text: String,
     onTextChanged: (text: String) -> Unit,
     placeholderText: String? = null,
+    startPadding: Dp = 0.dp,
+    @DrawableRes leadingIcon: Int? = null,
     trailingEndPadding: Dp = 0.dp,
     @DrawableRes trailingIcon: Int? = null,
     trailingIconOnClick: (() -> Unit)? = null,
@@ -90,7 +92,9 @@ fun QuackNoUnderlineTextField(
                 textField = textField,
                 isPlaceholder = isPlaceholder,
                 placeholderText = placeholderText,
+                leadingIcon = leadingIcon,
                 trailingIcon = trailingIcon,
+                startPadding = startPadding,
                 trailingEndPadding = trailingEndPadding,
                 trailingIconOnClick = trailingIconOnClick,
             )
@@ -104,7 +108,9 @@ private fun TextFieldDecoration(
     isPlaceholder: Boolean,
     placeholderText: String?,
     @DrawableRes
+    leadingIcon: Int?,
     trailingIcon: Int?,
+    startPadding: Dp = 0.dp,
     trailingEndPadding: Dp = 0.dp,
     trailingIconOnClick: (() -> Unit)?,
 ) {
@@ -116,11 +122,25 @@ private fun TextFieldDecoration(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            if (leadingIcon != null) {
+                QuackImage(
+                    modifier = Modifier
+                        .size(DpSize(16.dp, 16.dp))
+                        .padding(end = trailingEndPadding)
+                        .quackClickable(
+                            onClick = trailingIconOnClick,
+                            rippleEnabled = false,
+                        ),
+                    src = leadingIcon,
+                )
+            }
+
             if (isPlaceholder && placeholderText != null) {
                 Box(
                     propagateMinConstraints = true,
                 ) {
                     Text(
+                        modifier = Modifier.padding(start = startPadding),
                         text = placeholderText,
                         style = QuackTypography.Body1.asComposeStyle().copy(
                             color = QuackColor.Gray2.value,

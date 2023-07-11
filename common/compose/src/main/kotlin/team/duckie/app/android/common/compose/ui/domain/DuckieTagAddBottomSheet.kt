@@ -203,13 +203,15 @@ private fun DuckieTagAddBottomSheetContent(
                 }
             }
         }
-        QuackBasic2TextField(
+
+        // TODO(riflockle7): 사용해도 괜찮을지 검토 필요
+        QuackNoUnderlineTextField(
             text = tagInput,
             onTextChanged = { tagInput = it },
             placeholderText = stringResource(R.string.tag_add_manual_placeholder),
-            leadingStartPadding = 16.dp,
+            startPadding = 16.dp,
             trailingEndPadding = 10.dp,
-            trailingIcon = QuackIcon.ArrowSend,
+            trailingIcon = QuackIcon.ArrowSendId,
             trailingIconOnClick = ::updateTagInput,
             keyboardActions = KeyboardActions { updateTagInput() },
         )

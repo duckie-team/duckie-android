@@ -106,11 +106,12 @@ fun SearchTagScreen(
             )
         }
 
-        QuackBasicTextField(
+        // TODO(riflockle7): 사용해도 괜찮을지 검토 필요
+        QuackNoUnderlineTextField(
             modifier = Modifier
                 .padding(top = 16.dp)
                 .focusRequester(focusRequester),
-            leadingIcon = QuackIcon.Search,
+            leadingIcon = QuackIcon.SearchId,
             text = searchTextFieldValue.value,
             onTextChanged = { textFieldValue ->
                 searchTextFieldValue.value = textFieldValue
