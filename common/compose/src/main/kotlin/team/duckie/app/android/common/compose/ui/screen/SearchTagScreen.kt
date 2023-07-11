@@ -86,7 +86,7 @@ fun SearchTagScreen(
     ) {
         QuackTopAppBar(
             leadingText = title,
-            trailingIcon = QuackIcon.CloseId,
+            trailingIconResId = QuackIcon.CloseId,
             onTrailingIconClick = onCloseClick,
         )
 

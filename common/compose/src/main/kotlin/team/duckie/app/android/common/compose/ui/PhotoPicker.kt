@@ -116,7 +116,7 @@ fun PhotoPicker(
 
     Column(modifier = modifier.zIndex(zIndex)) {
         QuackTopAppBar(
-            leadingIcon = QuackIcon.CloseId,
+            leadingIconResId = QuackIcon.CloseId,
             onLeadingIconClick = onCloseClick,
             centerText = stringResource(R.string.topappbar_filter_full),
             trailingContent = {
