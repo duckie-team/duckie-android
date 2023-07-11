@@ -195,7 +195,7 @@ private fun DuckieTagAddBottomSheetContent(
                         QuackCircleTag(
                             text = tag.name,
                             isSelected = false,
-                            trailingIcon = QuackIcon.Close,
+                            trailingIconResId = QuackIcon.CloseId,
                         ) {
                             inputtedTags.remove(inputtedTags[index])
                         }

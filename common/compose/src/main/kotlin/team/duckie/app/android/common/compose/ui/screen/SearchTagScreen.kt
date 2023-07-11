@@ -86,7 +86,7 @@ fun SearchTagScreen(
     ) {
         QuackTopAppBar(
             leadingText = title,
-            trailingIcon = QuackIcon.Close,
+            trailingIcon = QuackIcon.CloseId,
             onTrailingIconClick = onCloseClick,
         )
 
@@ -100,7 +100,7 @@ fun SearchTagScreen(
                 ),
                 horizontalSpace = 4.dp,
                 items = tags,
-                tagType = QuackTagType.Circle(QuackIcon.Close),
+                tagTypeResId = QuackIcon.CloseId,
                 onClick = { onTagClick(it) },
                 itemChunkedSize = 3,
             )

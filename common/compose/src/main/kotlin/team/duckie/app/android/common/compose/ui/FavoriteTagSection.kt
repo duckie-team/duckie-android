@@ -78,7 +78,7 @@ fun FavoriteTagSection(
                 QuackSingeLazyRowTag(
                     items = tagList,
                     contentPadding = horizontalPadding,
-                    tagType = QuackTagType.Circle(trailingIcon),
+                    tagTypeResId = trailingIcon?.drawableId,
                     onClick = { index -> onTagClick(index) },
                 )
             } else {
@@ -87,7 +87,7 @@ fun FavoriteTagSection(
                     contentPadding = horizontalPadding,
                     horizontalSpace = 4.dp,
                     items = tagList,
-                    tagType = QuackTagType.Circle(trailingIcon),
+                    tagTypeResId = trailingIcon?.drawableId,
                     onClick = { index -> onTagClick(index) },
                     itemChunkedSize = 4,
                 )

@@ -38,7 +38,7 @@ fun DuckieTodoScreen() {
         verticalArrangement = Arrangement.Center,
     ) {
         QuackImage(
-            src = team.duckie.quackquack.ui.R.drawable.quack_duckie_text_logo,
+            src = QuackIcon.TextLogoId,
             modifier = Modifier.size(72.dp, 24.dp),
         )
 
