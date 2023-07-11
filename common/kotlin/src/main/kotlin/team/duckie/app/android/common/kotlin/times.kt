@@ -32,3 +32,14 @@ fun Int.toHourMinuteSecond(): String {
     val seconds = this % 60
     return "%02d:%02d:%02d".format(hours, minutes, seconds)
 }
+
+/**
+ * 주어진 초를 HH:MM:SS.ss 형식으로 변환합니다.
+ * (ss.ss는 소수점 아래 두 자리까지의 초)
+ */
+fun Double.toHourMinuteSecond(): String {
+    val hours = this.toInt() / 3600
+    val minutes = (this.toInt() % 3600) / 60
+    val seconds = this % 60
+    return "%02d:%02d:%.2f".format(hours, minutes, seconds)
+}

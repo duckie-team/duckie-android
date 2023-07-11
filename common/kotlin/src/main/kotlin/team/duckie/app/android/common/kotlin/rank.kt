@@ -10,5 +10,7 @@ package team.duckie.app.android.common.kotlin
 fun Int.isFirstRanked() =
     this == 1
 
+private const val TOP_RANK_CUT_LINE = 10
+
 fun Int.isTopRanked() =
-    this <= 10
+    this <= TOP_RANK_CUT_LINE

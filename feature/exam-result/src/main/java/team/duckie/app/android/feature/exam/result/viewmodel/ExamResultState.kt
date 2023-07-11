@@ -7,8 +7,6 @@
 
 package team.duckie.app.android.feature.exam.result.viewmodel
 
-import team.duckie.app.android.domain.user.model.User
-
 sealed class ExamResultState {
     object Loading : ExamResultState()
 

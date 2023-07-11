@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
-import team.duckie.app.android.common.compose.ui.UserFollowingLayout
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor

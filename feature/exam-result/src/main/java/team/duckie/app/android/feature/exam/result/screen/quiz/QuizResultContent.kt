@@ -11,7 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,20 +20,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.duckie.app.android.common.compose.DuckieFitImage
@@ -46,13 +38,21 @@ import team.duckie.app.android.feature.exam.result.R
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+
+private val QuackResultTitleTypography = QuackTypography(
+    size = 20.sp,
+    weight = FontWeight.Normal,
+    letterSpacing = (-0.01).sp,
+    lineHeight = 26.sp,
+)
+
+private const val WINNER_REACTION_MAX_LENGTH: Int = 40
+private const val TOP_RANK_REACTION_MAX_LENGTH: Int = 15
 
 @Composable
 internal fun QuizResultContent(
@@ -117,7 +117,7 @@ internal fun QuizResultContent(
             Box(
                 modifier = Modifier
                     .size(1.dp, 18.dp)
-                    .background(color = QuackColor.Gray3.value)
+                    .background(color = QuackColor.Gray3.value),
             )
             Box(
                 modifier = Modifier.weight(1f),
@@ -147,21 +147,16 @@ internal fun QuizResultContent(
                 id = R.string.exam_result_finish_title,
                 nickname,
                 mainTag,
-                ranking
+                ranking,
             ),
-            typography = QuackTypography(
-                size = 20.sp,
-                weight = FontWeight.Normal,
-                letterSpacing = (-0.01).sp,
-                lineHeight = 26.sp,
-            )
+            typography = QuackResultTitleTypography,
         )
         Spacer(space = 12.dp)
         if (ranking.isTopRanked()) {
             QuizResultReactionTextArea(
                 reaction = reaction,
                 onReactionChanged = onReactionChanged,
-                maxLength = if (ranking.isFirstRanked()) 40 else 15,
+                maxLength = if (ranking.isFirstRanked()) WINNER_REACTION_MAX_LENGTH else TOP_RANK_REACTION_MAX_LENGTH,
             )
             Spacer(space = 22.dp)
         }
@@ -176,7 +171,7 @@ private fun QuizResultReactionTextArea(
 ) {
     Box(
         modifier = Modifier,
-        contentAlignment = Alignment.BottomEnd
+        contentAlignment = Alignment.BottomEnd,
     ) {
         QuackReviewTextArea(
             modifier = Modifier.height(100.dp),
@@ -196,7 +191,7 @@ private fun QuizResultReactionTextArea(
             ),
             text = "${reaction.length} / $maxLength",
             typography = QuackTypography.Body1.change(
-                color = QuackColor.Gray2
+                color = QuackColor.Gray2,
             ),
         )
     }
@@ -208,7 +203,7 @@ private fun QuizResultTitleAndDescription(
     description: String,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         QuackHeadLine2(text = title)
         Spacer(space = 2.dp)

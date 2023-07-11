@@ -24,13 +24,20 @@ public val QuackIcon.Crown: ImageVector
             return _icCrown12!!
         }
         _icCrown12 = Builder(
-            name = "IcCrown12", defaultWidth = 12.0.dp, defaultHeight = 12.0.dp,
-            viewportWidth = 12.0f, viewportHeight = 12.0f
+            name = "IcCrown12",
+            defaultWidth = 12.0.dp,
+            defaultHeight = 12.0.dp,
+            viewportWidth = 12.0f,
+            viewportHeight = 12.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFFFF8300)), stroke = SolidColor(Color(0xFFFF8300)),
-                strokeLineWidth = 1.0f, strokeLineCap = Butt, strokeLineJoin = Round,
-                strokeLineMiter = 4.0f, pathFillType = NonZero
+                fill = SolidColor(Color(0xFFFF8300)),
+                stroke = SolidColor(Color(0xFFFF8300)),
+                strokeLineWidth = 1.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Round,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(3.344f, 9.0f)
                 lineTo(2.0f, 5.118f)
