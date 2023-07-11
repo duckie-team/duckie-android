@@ -36,20 +36,21 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import team.duckie.app.android.feature.home.R
-import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
+import team.duckie.app.android.common.compose.itemsPagingKey
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCoverForColumn
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.TextTabLayout
 import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.itemsPagingKey
 import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.feature.home.R
+import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
+import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
 import team.duckie.quackquack.ui.component.QuackTagType
 import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.material.QuackColor as QuackV2Color
 
 @Composable
 internal fun ExamSection(
@@ -150,8 +151,8 @@ private fun RankingHeader(
         QuackTitle2(text = stringResource(id = R.string.popular_tag_ranking))
         TextTabLayout(
             titles = titles,
-            tabStyle = QuackTextStyle.Body2.change(color = QuackColor.Gray1),
-            selectedTabStyle = QuackTextStyle.Body2.change(color = QuackColor.DuckieOrange),
+            tabStyle = QuackTypography.Body2.change(color = QuackV2Color.Gray1),
+            selectedTabStyle = QuackTypography.Body2.change(color = QuackV2Color.DuckieOrange),
             selectedTabIndex = selectedTabIndex,
             onTabSelected = onTabSelected,
             space = 16.dp,
