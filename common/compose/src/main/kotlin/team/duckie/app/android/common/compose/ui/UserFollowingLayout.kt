@@ -75,11 +75,13 @@ fun UserFollowingLayout(
 ) {
     Layout(
         modifier = modifier
-            .quackClickable {
-                if (onClickUserProfile != null) {
-                    onClickUserProfile(userId)
+            .quackClickable(
+                onClick = {
+                    if (onClickUserProfile != null) {
+                        onClickUserProfile(userId)
+                    }
                 }
-            }
+            )
             .fillMaxWidth()
             .height(56.dp)
             .padding(vertical = 12.dp)
@@ -119,16 +121,21 @@ fun UserFollowingLayout(
                     .skeleton(isLoading),
                 text = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
             )
-            QuackBody2(
+            QuackText(
                 modifier = Modifier
                     .layoutId(UserInfoBlockFollowingButtonLayoutId)
-                    .skeleton(isLoading),
+                    .skeleton(isLoading)
+                    .quackClickable(
+                        onClick = {
+                            onClickFollow(!isFollowing)
+                        },
+                        rippleEnabled = false,
+                    )
+                ,
                 text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
-                color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
-                onClick = {
-                    onClickFollow(!isFollowing)
-                },
-                rippleEnabled = false,
+                typography = QuackTypography.Body2.change(
+                    color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
+                ),
             )
         },
         measurePolicy = getUserFollowingLayoutMeasurePolicy(
