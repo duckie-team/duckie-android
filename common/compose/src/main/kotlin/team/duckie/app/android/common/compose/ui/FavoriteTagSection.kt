@@ -98,11 +98,12 @@ fun FavoriteTagSection(
         onAddTagClick?.let { onAddClick ->
             require(!addButtonTitle.isNullOrEmpty())
 
-            QuackHeadLine2(
+            QuackText(
+                modifier = Modifier
+                    .padding(horizontalPadding)
+                    .quackClickable(onClick = onAddClick),
                 text = addButtonTitle,
-                padding = horizontalPadding,
-                color = QuackColor.DuckieOrange,
-                onClick = onAddClick,
+                typography = QuackTypography.HeadLine2.change(color = QuackColor.DuckieOrange),
             )
         }
     }

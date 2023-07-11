@@ -120,7 +120,7 @@ fun PhotoPicker(
             onLeadingIconClick = onCloseClick,
             centerText = stringResource(R.string.topappbar_filter_full),
             trailingContent = {
-                QuackSubtitle(
+                QuackText(
                     modifier = Modifier
                         .then(Modifier) // prevent Modifier.Companion
                         .runIf(isAddable) {
@@ -134,7 +134,13 @@ fun PhotoPicker(
                             vertical = 15.dp,
                         ),
                     text = stringResource(R.string.topappbar_add),
-                    color = if (isAddable) QuackColor.Black else QuackColor.Gray2,
+                    typography = QuackTypography.Subtitle.change(
+                        color = if (isAddable) {
+                            QuackColor.Black
+                        } else {
+                            QuackColor.Gray2
+                        },
+                    ),
                     singleLine = true,
                 )
             },

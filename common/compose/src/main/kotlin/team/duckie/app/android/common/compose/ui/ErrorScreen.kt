@@ -43,21 +43,21 @@ fun ErrorScreen(
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            QuackHeadLine2(
-                padding = PaddingValues(top = 164.dp),
+            QuackText(
+                modifier = Modifier.padding(PaddingValues(top = 164.dp)),
                 text = if (isNetworkError) {
                     stringResource(id = R.string.default_network_error_title)
                 } else {
                     title ?: stringResource(id = R.string.default_error)
                 },
-                color = QuackColor.Gray1,
+                typography = QuackTypography.HeadLine2.change(color = QuackColor.Gray1),
             )
 
             if (isNetworkError) {
-                QuackBody2(
-                    padding = PaddingValues(top = 8.dp),
+                QuackText(
+                    modifier = Modifier.padding(PaddingValues(top = 8.dp)),
                     text = stringResource(id = R.string.default_network_error_message),
-                    color = QuackColor.Gray1,
+                    typography = QuackTypography.Body2.change(color = QuackColor.Gray1),
                 )
             }
         }

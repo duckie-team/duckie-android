@@ -137,14 +137,17 @@ internal fun DuckSmallCoverInternal(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            QuackBody2(
+            QuackText(
                 text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.solvedCount}",
-                color = QuackColor.Gray2,
+                typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
             )
-            QuackBody2(text = "·")
-            QuackBody2(
+            QuackText(
+                text = "·",
+                typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
+            )
+            QuackText(
                 text = "${stringResource(id = R.string.heart)} ${duckTestCoverItem.heartCount}",
-                color = QuackColor.Gray2,
+                typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
             )
         }
     }

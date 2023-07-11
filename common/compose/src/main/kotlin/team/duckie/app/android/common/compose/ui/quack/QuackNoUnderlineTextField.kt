@@ -54,7 +54,7 @@ fun QuackNoUnderlineTextField(
     val inputTypography = remember(
         key1 = isPlaceholder,
     ) {
-        QuackTextStyle.Subtitle.runIf(
+        QuackTypography.Subtitle.runIf(
             condition = isPlaceholder,
         ) {
             change(

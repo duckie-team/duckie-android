@@ -182,10 +182,12 @@ private fun SearchTagItemScreen(
     text: String,
     onClick: () -> Unit,
 ) {
-    QuackBody1(
-        modifier = Modifier.fillMaxWidth(),
-        padding = PaddingValues(vertical = 12.dp),
+    QuackText(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(PaddingValues(vertical = 12.dp))
+            .quackClickable(onClick = onClick),
+        typography = QuackTypography.Body1,
         text = text,
-        onClick = onClick,
     )
 }

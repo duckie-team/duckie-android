@@ -200,14 +200,15 @@ private fun DuckieDialogBottomLayout(
                     ),
                 contentAlignment = Alignment.Center,
             ) {
-                QuackSubtitle(
+                QuackText(
                     modifier = Modifier
                         .padding(
                             vertical = 12.dp,
                             horizontal = 16.dp,
                         ),
                     text = leftButtonText,
-                    color = QuackColor.Black,
+                    typography = QuackTypography.Subtitle.change(color = QuackColor.Black),
+                    singleLine = true,
                 )
             }
         }
@@ -221,14 +222,15 @@ private fun DuckieDialogBottomLayout(
                     ),
                 contentAlignment = Alignment.Center,
             ) {
-                QuackSubtitle(
+                QuackText(
                     modifier = Modifier
                         .padding(
                             vertical = 12.dp,
                             horizontal = 16.dp,
                         ),
                     text = rightButtonText,
-                    color = QuackColor.White,
+                    typography = QuackTypography.Subtitle.change(color = QuackColor.White),
+                    singleLine = true,
                 )
             }
         }

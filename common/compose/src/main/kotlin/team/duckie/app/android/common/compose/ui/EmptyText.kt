@@ -29,15 +29,16 @@ fun NoItemScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        QuackHeadLine2(
+        QuackText(
             modifier = Modifier.skeleton(isLoading),
+            typography = QuackTypography.HeadLine1.change(color = QuackColor.Gray1),
             text = title,
-            color = QuackColor.Gray1,
         )
-        QuackBody2(
+
+        QuackText(
             modifier = Modifier.skeleton(isLoading),
+            typography = QuackTypography.Body2.change(color = QuackColor.Gray1),
             text = description,
-            color = QuackColor.Gray1,
         )
     }
 }

@@ -155,16 +155,19 @@ private fun DuckieTagAddBottomSheetContent(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             QuackTitle2(text = stringResource(R.string.tag_added_tag))
-            QuackSubtitle(
+            QuackText(
+                modifier = Modifier
+                    .padding(PaddingValues(vertical = 4.dp))
+                    .quackClickable(
+                        onClick = {
+                            onDismissRequest(inputtedTags) {
+                                inputtedTags.clear()
+                                keyboard?.hide()
+                            }
+                        },
+                    ),
                 text = stringResource(R.string.tag_edit_button_done),
-                color = QuackColor.DuckieOrange,
-                padding = PaddingValues(vertical = 4.dp),
-                onClick = {
-                    onDismissRequest(inputtedTags) {
-                        inputtedTags.clear()
-                        keyboard?.hide()
-                    }
-                },
+                typography = QuackTypography.Subtitle.change(color = QuackColor.DuckieOrange),
             )
         }
         if (inputtedTags.isNotEmpty()) {

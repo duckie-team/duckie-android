@@ -42,10 +42,10 @@ fun DuckieTodoScreen() {
             size = DpSize(width = 72.dp, height = 24.dp),
         )
 
-        QuackTitle1(
+        QuackText(
             modifier = Modifier.padding(top = 16.dp),
+            typography = QuackTypography.Title1.change(textAlign = TextAlign.Center),
             text = stringResource(id = R.string.todo_title),
-            align = TextAlign.Center,
         )
     }
 }
