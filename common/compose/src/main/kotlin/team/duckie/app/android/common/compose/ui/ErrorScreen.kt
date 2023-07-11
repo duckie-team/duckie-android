@@ -63,16 +63,18 @@ fun ErrorScreen(
         }
 
         // TODO(riflockle7): 꽥꽥에서 하얀 배경 버튼 제공 필요
-        QuackSmallButton(
-            modifier = Modifier.padding(bottom = 40.dp),
-            type = QuackSmallButtonType.Fill,
-            text = stringResource(id = R.string.default_error_retry),
+        // TODO(riflockle7): 이전에 QuackSmallButton Fill 이었음
+        QuackButton(
+            modifier = Modifier
+                .padding(bottom = 40.dp),
             enabled = false,
+            style = QuackButtonStyle.SecondarySmall,
+            text = stringResource(id = R.string.default_error_retry),
             onClick = {
                 coroutineScope.launch {
                     onRetryClick()
                 }
-            },
+            }
         )
     }
 }

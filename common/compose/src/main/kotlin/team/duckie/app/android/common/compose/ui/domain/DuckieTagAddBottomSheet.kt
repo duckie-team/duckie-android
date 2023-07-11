@@ -106,6 +106,7 @@ fun DuckieTagAddBottomSheet(
  * @param onDismissRequest 해당 바텀 시트 content 종료 시 실행되는 함수
  * @param requestAddTag 태그 추가 요청하는 로직. 대체로 API 로직이다.
  */
+@OptIn(ExperimentalQuackQuackApi::class)
 @Composable
 private fun DuckieTagAddBottomSheetContent(
     prevTags: List<Tag>,
@@ -172,12 +173,14 @@ private fun DuckieTagAddBottomSheetContent(
         }
         if (inputtedTags.isNotEmpty()) {
             Box(modifier = Modifier.padding()) {
-                QuackCircleTag(
+                QuackTag(
                     modifier = Modifier
                         .zIndex(0f)
                         .invisible(),
                     text = "",
-                    isSelected = false,
+                    style = QuackTagStyle.Outlined,
+                    selected = false,
+                    onClick = {},
                 )
 
                 // TODO(sungbin): 애니메이션 출처 밝히기
@@ -199,6 +202,15 @@ private fun DuckieTagAddBottomSheetContent(
                         ) {
                             inputtedTags.remove(inputtedTags[index])
                         }
+                        // TODO(riflockle7): 추후 대응
+                        // QuackTag(
+                        //     modifier = Modifier.trailingIcon(icon = team.duckie.quackquack.ui.icon.QuackIcon.Close) {
+                        //         inputtedTags.remove(inputtedTags[index])
+                        //     },
+                        //     text = tag.name,
+                        //     style = QuackTagStyle.Outlined,
+                        //     onClick = {},
+                        // )
                     }
                 }
             }
