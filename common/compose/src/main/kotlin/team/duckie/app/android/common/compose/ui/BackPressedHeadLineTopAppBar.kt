@@ -38,8 +38,8 @@ fun BackPressedTopAppBar(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         QuackImage(
-            src = QuackIcon.ArrowBack,
-            onClick = onBackPressed,
+            modifier = Modifier.quackClickable(onClick = onBackPressed),
+            src = QuackIcon.ArrowBackId,
         )
         if (trailingSlot != null) trailingSlot()
     }

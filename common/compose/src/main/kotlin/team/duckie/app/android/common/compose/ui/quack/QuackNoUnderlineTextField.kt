@@ -156,11 +156,14 @@ private fun TextFieldDecoration(
             Spacer(modifier = Modifier.weight(1f))
             if (trailingIcon != null) {
                 QuackImage(
+                    modifier = Modifier
+                        .quackClickable(
+                            onClick = trailingIconOnClick,
+                            rippleEnabled = false,
+                        )
+                        .size(DpSize(16.dp, 16.dp))
+                        .padding(end = trailingEndPadding),
                     src = trailingIcon,
-                    modifier = Modifier.padding(end = trailingEndPadding),
-                    onClick = trailingIconOnClick,
-                    size = DpSize(16.dp, 16.dp),
-                    rippleEnabled = false,
                 )
             }
         }

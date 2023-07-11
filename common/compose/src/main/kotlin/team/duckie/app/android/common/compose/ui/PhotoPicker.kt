@@ -168,8 +168,8 @@ fun PhotoPicker(
                         contentAlignment = Alignment.Center,
                     ) {
                         QuackImage(
-                            src = QuackIcon.Camera,
-                            size = DpSize(all = 36.dp),
+                            modifier = Modifier.size(DpSize(36.dp, 36.dp)),
+                            src = QuackIcon.CameraId,
                             tint = QuackColor.Gray2,
                         )
                     }

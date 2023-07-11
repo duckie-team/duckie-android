@@ -39,7 +39,7 @@ fun DuckieTodoScreen() {
     ) {
         QuackImage(
             src = team.duckie.quackquack.ui.R.drawable.quack_duckie_text_logo,
-            size = DpSize(width = 72.dp, height = 24.dp),
+            modifier = Modifier.size(72.dp, 24.dp),
         )
 
         QuackText(

@@ -92,10 +92,11 @@ internal fun DuckSmallCoverInternal(
 ) {
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .quackClickable(rippleEnabled = true) {
-                onItemClick()
-            },
+            .quackClickable(
+                onClick = onItemClick,
+                rippleEnabled = true,
+            )
+            .clip(RoundedCornerShape(8.dp)),
         horizontalAlignment = Alignment.Start,
     ) {
         AsyncImage(
@@ -118,9 +119,10 @@ internal fun DuckSmallCoverInternal(
             QuackBody2(text = duckTestCoverItem.nickname)
             if (onMoreClick != null) {
                 QuackImage(
-                    src = QuackIcon.More,
-                    size = DpSize(all = 16.dp),
-                    onClick = onMoreClick,
+                    src = QuackIcon.MoreId,
+                    modifier = Modifier
+                        .quackClickable(onClick = onMoreClick)
+                        .size(DpSize(16.dp, 16.dp)),
                 )
             }
         }

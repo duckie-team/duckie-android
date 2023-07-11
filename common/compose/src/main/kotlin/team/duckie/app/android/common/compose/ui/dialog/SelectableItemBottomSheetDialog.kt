@@ -69,8 +69,8 @@ fun SelectableItemBottomSheetDialog(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         QuackImage(
+                            modifier = Modifier.size(DpSize(width = 24.dp, height = 24.dp)),
                             src = item.icon,
-                            size = DpSize(width = 24.dp, height = 24.dp),
                         )
                         QuackSubtitle2(
                             modifier = Modifier.padding(start = 8.dp),

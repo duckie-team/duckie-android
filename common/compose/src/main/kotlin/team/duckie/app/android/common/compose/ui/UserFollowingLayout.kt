@@ -38,9 +38,7 @@ import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody3
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
-private val HomeProfileSize: DpSize = DpSize(
-    all = 32.dp,
-)
+private val HomeProfileSize: DpSize = DpSize(32.dp, 32.dp)
 
 private const val UserInfoBlockUserProfileLayoutId = "UserInfoContentUserProfile"
 private const val UserInfoBlockUserNameLayoutId = "UserInfoBlockUserName"
@@ -94,17 +92,17 @@ fun UserFollowingLayout(
                         .size(HomeProfileSize)
                         .clip(SquircleShape)
                         .skeleton(isLoading),
-                    painter = painterResource(id = QuackIcon.DefaultProfile),
+                    painter = painterResource(id = QuackIcon.DefaultProfileId),
                     contentDescription = null,
                 )
             } else {
                 QuackImage(
                     modifier = Modifier
                         .layoutId(UserInfoBlockUserProfileLayoutId)
+                        .size(HomeProfileSize)
+                        .clip(SquircleShape)
                         .skeleton(isLoading),
                     src = profileImgUrl,
-                    size = HomeProfileSize,
-                    shape = SquircleShape,
                 )
             }
             QuackSubtitle2(
