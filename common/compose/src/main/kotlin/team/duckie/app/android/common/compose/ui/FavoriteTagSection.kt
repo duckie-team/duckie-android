@@ -48,7 +48,8 @@ fun FavoriteTagSection(
     title: String,
     horizontalPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(0.dp),
-    trailingIcon: QuackIcon? = null,
+    // TODO(riflockle7): 다음 작업에서 QuackV2 로 대응하기
+    trailingIcon: QuackV1Icon? = null,
     onTrailingClick: ((Int) -> Unit)? = null,
     singleLine: Boolean = true,
     emptySection: @Composable () -> Unit,
