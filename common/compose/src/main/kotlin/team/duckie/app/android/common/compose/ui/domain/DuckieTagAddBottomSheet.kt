@@ -81,8 +81,8 @@ fun DuckieTagAddBottomSheet(
     ModalBottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetState = sheetState,
-        sheetBackgroundColor = QuackColor.White.composeColor,
-        scrimColor = QuackColor.Dimmed.composeColor,
+        sheetBackgroundColor = QuackColor.White.value,
+        scrimColor = QuackColor.Dimmed.value,
         sheetShape = RoundedCornerShape(
             topStart = 16.dp,
             topEnd = 16.dp,

@@ -33,7 +33,7 @@ fun DuckieTodoScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(QuackColor.White.composeColor),
+            .background(QuackColor.White.value),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

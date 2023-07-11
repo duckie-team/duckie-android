@@ -24,7 +24,6 @@ fun RowScope.Divider(
     modifier: Modifier = Modifier,
     height: Dp = 0.dp,
     width: Dp = 1.dp,
-    color: QuackColor = QuackColor.Gray3,
 ) {
     val heightModifier = if (height == 0.dp) {
         modifier
@@ -34,6 +33,6 @@ fun RowScope.Divider(
     Box(
         modifier = heightModifier
             .width(width)
-            .background(color.composeColor),
+            .background(QuackColor.Gray3.value),
     )
 }

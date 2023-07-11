@@ -84,7 +84,7 @@ fun DuckieDialog(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
                         .background(
-                            color = QuackColor.White.composeColor,
+                            color = QuackColor.White.value,
                         ),
                 ) {
                     QuackHeadLine2(
@@ -156,7 +156,7 @@ fun DuckieDialog(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
                         .background(
-                            color = QuackColor.White.composeColor,
+                            color = QuackColor.White.value,
                         ),
                 ) {
                     container()
@@ -215,7 +215,7 @@ private fun DuckieDialogBottomLayout(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .background(color = QuackColor.DuckieOrange.composeColor)
+                    .background(color = QuackColor.DuckieOrange.value)
                     .quackClickable(
                         onClick = rightButtonOnClick,
                     ),

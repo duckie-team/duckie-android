@@ -23,10 +23,10 @@ fun Modifier.skeleton(
 ) = then(
     Modifier.placeholder(
         visible = visible,
-        color = QuackColor.Gray3.composeColor,
+        color = QuackColor.Gray3.value,
         shape = shape,
         highlight = PlaceholderHighlight.shimmer(
-            highlightColor = QuackColor.Gray4.composeColor,
+            highlightColor = QuackColor.Gray4.value,
             animationSpec = PlaceholderDefaults.shimmerAnimationSpec,
         ),
     ),

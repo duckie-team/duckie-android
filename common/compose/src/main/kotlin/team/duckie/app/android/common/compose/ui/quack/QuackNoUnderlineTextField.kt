@@ -48,7 +48,7 @@ fun QuackNoUnderlineTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
     keyboardActions: KeyboardActions = KeyboardActions(),
 ) {
-    val quackTextFieldColors = QuackColor.DuckieOrange.composeColor
+    val quackTextFieldColors = QuackColor.DuckieOrange.value
     val isPlaceholder = text.isEmpty()
 
     val inputTypography = remember(
@@ -67,7 +67,7 @@ fun QuackNoUnderlineTextField(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = QuackColor.White.composeColor,
+                color = QuackColor.White.value,
             )
             .padding(
                 paddingValues = PaddingValues(
@@ -122,8 +122,8 @@ private fun TextFieldDecoration(
                 ) {
                     Text(
                         text = placeholderText,
-                        style = QuackTextStyle.Body1.asComposeStyle().copy(
-                            color = QuackColor.Gray2.composeColor,
+                        style = QuackTypography.Body1.asComposeStyle().copy(
+                            color = QuackColor.Gray2.value,
                         ),
                         maxLines = 1,
                         softWrap = false,

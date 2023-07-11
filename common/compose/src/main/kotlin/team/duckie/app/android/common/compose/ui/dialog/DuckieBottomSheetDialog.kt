@@ -76,7 +76,7 @@ private fun DuckieBottomSheetContent(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = QuackColor.White.composeColor,
+                color = QuackColor.White.value,
             ),
     ) {
         DuckieBottomSheetHandle(
@@ -115,7 +115,7 @@ private fun DuckieBottomSheetHandle(
                     .size(BottomSheetHandleSize)
                     .clip(BottomSheetHandleShape)
                     .background(
-                        color = QuackColor.Gray3.composeColor,
+                        color = QuackColor.Gray3.value,
                     ),
             )
         }

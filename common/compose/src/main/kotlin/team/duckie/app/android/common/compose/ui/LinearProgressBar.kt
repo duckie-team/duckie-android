@@ -75,7 +75,7 @@ private fun DrawScope.drawLinearIndicator(
     val barEnd = (if (isLtr) endFraction else 1f - startFraction) * width
 
     drawLine(
-        color = color.composeColor,
+        color = color.value,
         start = Offset(barStart, yOffset),
         end = Offset(barEnd, yOffset),
         strokeWidth = strokeWidth,

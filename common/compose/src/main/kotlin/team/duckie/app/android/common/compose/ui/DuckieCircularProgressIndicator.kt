@@ -19,6 +19,6 @@ import team.duckie.quackquack.material.QuackColor
 @Composable
 fun DuckieCircularProgressIndicator() {
     CircularProgressIndicator(
-        color = QuackColor.DuckieOrange.composeColor,
+        color = QuackColor.DuckieOrange.value,
     )
 }
