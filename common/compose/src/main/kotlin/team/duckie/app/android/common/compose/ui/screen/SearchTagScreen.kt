@@ -32,13 +32,16 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.ImeSpacer
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.component.QuackBasicTextField
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
-import team.duckie.quackquack.ui.component.QuackTagType
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
+import team.duckie.app.android.common.compose.ui.icon.v1.SearchId
+import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
+import team.duckie.quackquack.animation.QuackAnimatedVisibility
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 fun SearchTagScreen(

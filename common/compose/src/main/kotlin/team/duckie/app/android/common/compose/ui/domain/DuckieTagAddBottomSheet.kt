@@ -48,14 +48,21 @@ import team.duckie.app.android.common.compose.invisible
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.ImeSpacer
+import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
+import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
+import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackCircleTag
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBasic2TextField
-import team.duckie.quackquack.ui.component.QuackCircleTag
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackTag
+import team.duckie.quackquack.ui.QuackTagStyle
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackTitle2
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /**
  * 태그를 추가할 수 있는 [ModalBottomSheetLayout]

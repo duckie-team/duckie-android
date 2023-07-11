@@ -14,7 +14,6 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.component.QuackDivider
 
 /**
  * 스크린의 크기만큼 QuackDivider를 그립니다.

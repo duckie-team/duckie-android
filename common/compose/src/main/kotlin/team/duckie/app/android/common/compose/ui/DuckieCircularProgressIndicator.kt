@@ -9,7 +9,7 @@ package team.duckie.app.android.common.compose.ui
 
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 
 /**
  * 로딩 상태를 표현하는 [CircularProgressIndicator]

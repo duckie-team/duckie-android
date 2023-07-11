@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.app.android.common.compose.ui.icon.v1.ArrowBackId
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.sugar.QuackHeadLine1
+import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
 @Composable
 fun BackPressedTopAppBar(
