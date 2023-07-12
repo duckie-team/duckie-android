@@ -25,4 +25,9 @@ interface QuizRepository {
         problemId: Int?,
         wrongAnswer: String?,
     ): Boolean
+
+    suspend fun postQuizReaction(
+        examId: Int,
+        reaction: String,
+    ): Boolean
 }

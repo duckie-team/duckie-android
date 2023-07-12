@@ -8,6 +8,7 @@
 package team.duckie.app.android.data.quiz.datasource
 
 import team.duckie.app.android.data.quiz.model.PatchQuizBody
+import team.duckie.app.android.data.quiz.model.PostQuizReactionBody
 import team.duckie.app.android.domain.quiz.model.Quiz
 import team.duckie.app.android.domain.quiz.model.QuizResult
 
@@ -17,5 +18,10 @@ interface QuizDataSource {
     suspend fun patchQuiz(
         examId: Int,
         body: PatchQuizBody,
+    ): Boolean
+
+    suspend fun postQuizReaction(
+        examId: Int,
+        body: PostQuizReactionBody,
     ): Boolean
 }

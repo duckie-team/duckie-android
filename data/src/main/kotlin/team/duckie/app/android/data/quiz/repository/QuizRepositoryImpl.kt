@@ -9,6 +9,7 @@ package team.duckie.app.android.data.quiz.repository
 
 import team.duckie.app.android.data.quiz.datasource.QuizDataSource
 import team.duckie.app.android.data.quiz.model.PatchQuizBody
+import team.duckie.app.android.data.quiz.model.PostQuizReactionBody
 import team.duckie.app.android.domain.quiz.model.Quiz
 import team.duckie.app.android.domain.quiz.model.QuizResult
 import team.duckie.app.android.domain.quiz.repository.QuizRepository
@@ -41,6 +42,15 @@ class QuizRepositoryImpl @Inject constructor(
                 problemId = problemId,
                 requirementAnswer = requirementAnswer,
                 wrongAnswer = wrongAnswer,
+            ),
+        )
+    }
+
+    override suspend fun postQuizReaction(examId: Int, reaction: String): Boolean {
+        return quizDataSource.postQuizReaction(
+            examId = examId,
+            body = PostQuizReactionBody(
+                reaction = reaction,
             ),
         )
     }

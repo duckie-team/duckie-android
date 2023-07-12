@@ -24,6 +24,7 @@ import team.duckie.app.android.data.quiz.model.PostQuizResponse
 import team.duckie.app.android.domain.quiz.model.Quiz
 import team.duckie.app.android.domain.quiz.model.QuizResult
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.data.quiz.model.PostQuizReactionBody
 import javax.inject.Inject
 
 class QuizRemoteDataSourceImpl @Inject constructor() : QuizDataSource {
@@ -54,6 +55,20 @@ class QuizRemoteDataSourceImpl @Inject constructor() : QuizDataSource {
     ): Boolean {
         val response = client.patch {
             url("/challenges/$examId")
+            setBody(body)
+        }
+        return responseCatching(response.status.value, response.bodyAsText()) { responseBody ->
+            val json = responseBody.toStringJsonMap()
+            json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
+        }
+    }
+
+    override suspend fun postQuizReaction(
+        examId: Int,
+        body: PostQuizReactionBody,
+    ): Boolean {
+        val response = client.post {
+            url(" /challenges/$examId/reaction")
             setBody(body)
         }
         return responseCatching(response.status.value, response.bodyAsText()) { responseBody ->

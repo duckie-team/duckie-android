@@ -28,6 +28,7 @@ import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCas
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.MakeQuizUseCase
+import team.duckie.app.android.domain.quiz.usecase.PostQuizReactionUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
 import javax.inject.Inject
 
@@ -39,12 +40,22 @@ class ExamResultViewModel @Inject constructor(
     private val submitQuizUseCase: SubmitQuizUseCase,
     private val getQuizUseCase: GetQuizUseCase,
     private val makeQuizUseCase: MakeQuizUseCase,
+    private val postQuizReactionUseCase: PostQuizReactionUseCase,
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
 
     override val container: Container<ExamResultState, ExamResultSideEffect> = container(
         ExamResultState.Loading,
     )
+
+    private fun postQuizReaction() = intent {
+        (state as? ExamResultState.Success)?.let { currentState ->
+            postQuizReactionUseCase(
+                examId = currentState.originalExamId,
+                reaction = currentState.reaction,
+            )
+        }
+    }
 
     fun initState() {
         val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
@@ -196,6 +207,7 @@ class ExamResultViewModel @Inject constructor(
     }
 
     fun exitExam() = intent {
+        postQuizReaction()
         postSideEffect(ExamResultSideEffect.FinishExamResult)
     }
 }
