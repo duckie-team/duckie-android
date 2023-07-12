@@ -40,5 +40,4 @@ fun <T> QuackGridLayout(
         contentType = contentType,
         itemContent = itemContent,
     )
-
 }

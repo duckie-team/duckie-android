@@ -37,7 +37,7 @@ fun TextTabLayout(
             if (index == selectedTabIndex) {
                 QuackText(
                     modifier = Modifier.quackClickable(
-                        onClick = { onTabSelected(index) }
+                        onClick = { onTabSelected(index) },
                     ),
                     text = text,
                     typography = selectedTabStyle,
@@ -45,7 +45,7 @@ fun TextTabLayout(
             } else {
                 QuackText(
                     modifier = Modifier.quackClickable(
-                        onClick = { onTabSelected(index) }
+                        onClick = { onTabSelected(index) },
                     ),
                     text = text,
                     typography = tabStyle,

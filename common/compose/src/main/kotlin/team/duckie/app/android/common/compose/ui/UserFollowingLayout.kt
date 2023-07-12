@@ -80,7 +80,7 @@ fun UserFollowingLayout(
                     if (onClickUserProfile != null) {
                         onClickUserProfile(userId)
                     }
-                }
+                },
             )
             .fillMaxWidth()
             .height(56.dp)
@@ -130,8 +130,7 @@ fun UserFollowingLayout(
                             onClickFollow(!isFollowing)
                         },
                         rippleEnabled = false,
-                    )
-                ,
+                    ),
                 text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
                 typography = QuackTypography.Body2.change(
                     color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,

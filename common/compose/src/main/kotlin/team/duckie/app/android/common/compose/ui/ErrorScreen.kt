@@ -74,7 +74,7 @@ fun ErrorScreen(
                 coroutineScope.launch {
                     onRetryClick()
                 }
-            }
+            },
         )
     }
 }

@@ -48,6 +48,6 @@ fun DuckieDivider(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .height(1.dp)
-            .background(color = QuackColor.Gray3.value)
+            .background(color = QuackColor.Gray3.value),
     )
 }
