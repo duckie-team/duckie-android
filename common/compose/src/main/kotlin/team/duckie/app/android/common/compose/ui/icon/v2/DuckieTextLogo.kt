@@ -28,8 +28,8 @@ public val QuackIcon.DuckieTextLogo: ImageVector
             name = "IcDuckieTextLogo",
             defaultWidth = 48.0.dp,
             defaultHeight =
-                16.0.dp,
-                    viewportWidth = 48.0f,
+            16.0.dp,
+            viewportWidth = 48.0f,
             viewportHeight = 16.0f,
         ).apply {
             group {
@@ -37,10 +37,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(35.2292f, 13.2969f)
                     horizontalLineTo(36.197f)
@@ -53,10 +53,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(37.6044f, 2.2857f)
                     lineTo(37.2749f, 3.8552f)
@@ -69,10 +69,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(8.16f, 12.2963f)
                     lineTo(8.1695f, 12.2438f)
@@ -83,10 +83,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(8.1756f, 12.2133f)
                     lineTo(8.1696f, 12.2446f)
@@ -97,10 +97,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(10.2375f, 2.2857f)
                     lineTo(9.2663f, 6.8224f)
@@ -156,10 +156,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(18.0259f, 5.3934f)
                     lineTo(16.9738f, 10.3162f)
@@ -196,10 +196,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(25.3265f, 11.2059f)
                     curveTo(25.2319f, 11.3829f, 25.0951f, 11.5556f, 24.9188f, 11.7189f)
@@ -247,10 +247,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(44.3579f, 11.1297f)
                     lineTo(44.3502f, 11.1424f)
@@ -312,10 +312,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(44.838f, 7.7333f)
                     curveTo(44.8113f, 7.8375f, 44.7717f, 7.9365f, 44.7184f, 8.0288f)
@@ -326,10 +326,10 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                     fill = SolidColor(Color(0xFF222222)),
                     stroke = null,
                     strokeLineWidth = 0.0f,
-                        strokeLineCap = Butt,
+                    strokeLineCap = Butt,
                     strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f,
-                        pathFillType = NonZero,
+                    pathFillType = NonZero,
                 ) {
                     moveTo(34.7304f, 6.6557f)
                     curveTo(34.7304f, 6.1452f, 34.5704f, 5.7363f, 34.2538f, 5.4408f)
@@ -368,7 +368,7 @@ public val QuackIcon.DuckieTextLogo: ImageVector
                 }
             }
         }
-        .build()
+            .build()
         return _icDuckieTextLogo!!
     }
 

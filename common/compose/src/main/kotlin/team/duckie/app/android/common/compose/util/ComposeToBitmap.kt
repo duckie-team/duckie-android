@@ -33,12 +33,11 @@ fun ComposeToBitmap(
      * ComposeView that would take composable as its content
      * Kept in remember so recomposition doesn't re-initialize it
      **/
-    val composeView =
-        remember {
-            ComposeView(context).apply {
-                setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-            }
+    val composeView = remember {
+        ComposeView(context).apply {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
         }
+    }
 
     /**
      * Callback function which could get latest image bitmap

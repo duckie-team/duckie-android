@@ -27,18 +27,18 @@ public val QuackIcon.Download: ImageVector
             name = "IcDownload24",
             defaultWidth = 25.0.dp,
             defaultHeight =
-                24.0.dp,
-                    viewportWidth = 25.0f,
+            24.0.dp,
+            viewportWidth = 25.0f,
             viewportHeight = 24.0f,
         ).apply {
             path(
                 fill = SolidColor(Color(0x00000000)),
                 stroke = SolidColor(Color(0xFF222222)),
-                    strokeLineWidth = 1.0f,
+                strokeLineWidth = 1.0f,
                 strokeLineCap = Round,
-                        strokeLineJoin =
-                    StrokeJoin.Companion.Round,
-                        strokeLineMiter = 4.0f,
+                strokeLineJoin =
+                StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
                 moveTo(4.5f, 11.0f)
@@ -49,11 +49,11 @@ public val QuackIcon.Download: ImageVector
             path(
                 fill = SolidColor(Color(0x00000000)),
                 stroke = SolidColor(Color(0xFF222222)),
-                    strokeLineWidth = 1.0f,
+                strokeLineWidth = 1.0f,
                 strokeLineCap = Round,
-                        strokeLineJoin =
-                    StrokeJoin.Companion.Round,
-                        strokeLineMiter = 4.0f,
+                strokeLineJoin =
+                StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
                 moveTo(9.0f, 11.1988f)
@@ -63,18 +63,18 @@ public val QuackIcon.Download: ImageVector
             path(
                 fill = SolidColor(Color(0x00000000)),
                 stroke = SolidColor(Color(0xFF222222)),
-                    strokeLineWidth = 1.0f,
+                strokeLineWidth = 1.0f,
                 strokeLineCap = Round,
-                        strokeLineJoin =
-                    StrokeJoin.Companion.Round,
-                        strokeLineMiter = 4.0f,
+                strokeLineJoin =
+                StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
                 moveTo(12.5f, 5.0f)
                 lineTo(12.5f, 15.0f)
             }
         }
-        .build()
+            .build()
         return _icDownload24!!
     }
 

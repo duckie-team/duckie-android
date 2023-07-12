@@ -10,7 +10,6 @@ package team.duckie.app.android.common.android.image
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
@@ -25,19 +24,16 @@ fun saveImageInGallery(bitmap: Bitmap, context: Context, folderName: String) {
         val values = contentValues()
         values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/$folderName")
         values.put(MediaStore.Images.Media.IS_PENDING, true)
-        // RELATIVE_PATH and IS_PENDING are introduced in API 29.
 
-        val uri: Uri? =
-            context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-        if (uri != null) {
-            saveImageToStream(bitmap, context.contentResolver.openOutputStream(uri))
-            values.put(MediaStore.Images.Media.IS_PENDING, false)
-            context.contentResolver.update(uri, values, null, null)
-        }
+        context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            ?.let { uri ->
+                saveImageToStream(bitmap, context.contentResolver.openOutputStream(uri))
+                values.put(MediaStore.Images.Media.IS_PENDING, false)
+                context.contentResolver.update(uri, values, null, null)
+            }
     } else {
         val directory =
             File(Environment.getExternalStorageDirectory().toString() + separator + folderName)
-        // getExternalStorageDirectory is deprecated in API 29
 
         if (!directory.exists()) {
             directory.mkdirs()
@@ -48,7 +44,6 @@ fun saveImageInGallery(bitmap: Bitmap, context: Context, folderName: String) {
         if (file.absolutePath != null) {
             val values = contentValues()
             values.put(MediaStore.Images.Media.DATA, file.absolutePath)
-            // .DATA is deprecated in API 29
             context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         }
     }
