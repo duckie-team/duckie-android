@@ -108,7 +108,7 @@ private object AuthorizationHeaderClient {
         install(plugin = Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
-                    Timber.e(message)
+                    Timber.i(message)
                 }
             }
             level = LogLevel.ALL
