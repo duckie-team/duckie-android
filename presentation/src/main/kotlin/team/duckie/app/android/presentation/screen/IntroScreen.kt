@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,16 +24,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.presentation.R
-import team.duckie.app.android.presentation.viewmodel.IntroViewModel
+import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.android.intent.goToMarket
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.presentation.R
+import team.duckie.app.android.presentation.viewmodel.IntroViewModel
+import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackImage
-import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 
 @Composable
 internal fun IntroScreen(
@@ -60,21 +61,26 @@ internal fun IntroScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             QuackImage(
-                src = team.duckie.quackquack.ui.R.drawable.quack_duckie_text_logo,
-                size = DpSize(
-                    width = 110.dp,
-                    height = 32.dp,
+                modifier = Modifier.size(
+                    size = DpSize(
+                        width = 110.dp,
+                        height = 32.dp,
+                    )
                 ),
+                src = R.drawable.duckie_text_logo,
             )
             QuackHeadLine1(text = stringResource(R.string.intro_slogan))
         }
         QuackImage(
-            modifier = Modifier.offset(x = 125.dp),
+            modifier = Modifier
+                .size(
+                    size = DpSize(
+                        width = 276.dp,
+                        height = 255.dp,
+                    )
+                )
+                .offset(x = 125.dp),
             src = R.drawable.img_duckie_intro,
-            size = DpSize(
-                width = 276.dp,
-                height = 255.dp,
-            ),
         )
     }
 
