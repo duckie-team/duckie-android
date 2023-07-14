@@ -9,6 +9,8 @@ package team.duckie.app.android.feature.home.viewmodel.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -144,6 +146,25 @@ internal class MyPageViewModel @Inject constructor(
 
     override fun clickMakeExam() = intent {
         postSideEffect(MyPageSideEffect.NavigateToMakeExam)
+    }
+
+    fun handleLoadState(loadStates: LoadStates) = intent {
+        val errorLoadState = arrayOf(
+            loadStates.append,
+            loadStates.prepend,
+            loadStates.refresh,
+        ).filterIsInstance(LoadState.Error::class.java).firstOrNull()
+
+        val exception = errorLoadState?.error
+
+        if (exception != null) {
+            reduce {
+                state.copy(
+                    step = ProfileStep.Error,
+                )
+            }
+            postSideEffect(MyPageSideEffect.ReportError(exception))
+        }
     }
 
     private fun fetchHeartExams() {

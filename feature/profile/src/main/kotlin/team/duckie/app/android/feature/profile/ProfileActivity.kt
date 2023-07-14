@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.collectAsLazyPagingItems
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
@@ -29,11 +28,13 @@ import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.compose.LaunchOnLifecycle
 import team.duckie.app.android.common.compose.ToastWrapper
+import team.duckie.app.android.common.compose.collectAndHandleState
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
+import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemException
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.feature.profile.screen.MyProfileScreen
 import team.duckie.app.android.feature.profile.screen.OtherProfileScreen
@@ -144,13 +145,21 @@ class ProfileActivity : BaseActivity() {
                                 examType = step.examType,
                                 onBackPressed = viewModel::clickViewAllBackPress,
                                 profileExams = when (step.examType) {
-                                    ExamType.Heart -> viewModel.heartExams.collectAsLazyPagingItems()
-                                    ExamType.Created -> viewModel.submittedExams.collectAsLazyPagingItems()
-                                    ExamType.Solved -> throw IllegalStateException(
-                                        CreateExamIsNotSupported,
+                                    ExamType.Heart -> viewModel.heartExams.collectAndHandleState(
+                                        handleLoadStates = viewModel::handleLoadState,
+                                    )
+
+                                    ExamType.Created -> viewModel.submittedExams.collectAndHandleState(
+                                        handleLoadStates = viewModel::handleLoadState,
+                                    )
+
+                                    ExamType.Solved -> duckieClientLogicProblemException(
+                                        message = CreateExamIsNotSupported,
                                     )
                                 },
-                                profileExamInstances = viewModel.solvedExams.collectAsLazyPagingItems(),
+                                profileExamInstances = viewModel.solvedExams.collectAndHandleState(
+                                    handleLoadStates = viewModel::handleLoadState,
+                                ),
                                 onItemClick = viewModel::clickExam,
                             )
                         }

@@ -12,6 +12,8 @@ package team.duckie.app.android.feature.profile.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -295,6 +297,25 @@ internal class ProfileViewModel @Inject constructor(
                 .collect {
                     _heartExams.value = it
                 }
+        }
+    }
+
+    fun handleLoadState(loadStates: LoadStates) = intent {
+        val errorLoadState = arrayOf(
+            loadStates.append,
+            loadStates.prepend,
+            loadStates.refresh,
+        ).filterIsInstance(LoadState.Error::class.java).firstOrNull()
+
+        val exception = errorLoadState?.error
+
+        if (exception != null) {
+            reduce {
+                state.copy(
+                    step = ProfileStep.Error,
+                )
+            }
+            postSideEffect(ProfileSideEffect.ReportError(exception))
         }
     }
 
