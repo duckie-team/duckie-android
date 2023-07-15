@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 
 /**
  * An horizontal laid out indicator for a [HorizontalPager] or [VeritcalPager]
@@ -45,8 +45,8 @@ fun DuckieHorizontalPagerIndicator(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
     pageCount: Int,
-    activeColor: Color = QuackColor.Gray1.composeColor,
-    inactiveColor: Color = QuackColor.Gray3.composeColor,
+    activeColor: Color = QuackColor.Gray1.value,
+    inactiveColor: Color = QuackColor.Gray3.value,
     indicatorWidth: Dp = 4.dp,
     indicatorHeight: Dp = indicatorWidth,
     spacing: Dp = 4.dp,

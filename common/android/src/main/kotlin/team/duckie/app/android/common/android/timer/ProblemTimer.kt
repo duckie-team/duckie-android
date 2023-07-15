@@ -15,27 +15,28 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ProblemTimer(
-    private val count: Int,
-    private val coroutineScope: CoroutineScope,
-    private val duringMillis: Long,
-) {
-    private val _remainingTime = MutableStateFlow(count)
-    val remainingTime: StateFlow<Int> = _remainingTime
+private const val DURING_MILLIS = 10L
+private const val TIMER_VELOCITY = 0.01f
 
-    var totalTime = 0
+class ProblemTimer(
+    private val coroutineScope: CoroutineScope,
+) {
+    private val _remainingTime = MutableStateFlow(0f)
+    val remainingTime: StateFlow<Float> = _remainingTime
+
+    var totalTime = 0f
         private set
 
     private var timerJob: Job? = null
 
-    fun start() {
+    fun start(count: Float) {
         timerJob?.cancel()
         timerJob = coroutineScope.launch(Dispatchers.IO) {
             _remainingTime.value = count
-            while (_remainingTime.value > 0) {
-                delay(duringMillis)
-                _remainingTime.value--
-                totalTime++
+            while (_remainingTime.value > 0f) {
+                delay(DURING_MILLIS)
+                _remainingTime.value -= TIMER_VELOCITY
+                totalTime += TIMER_VELOCITY
             }
         }
     }

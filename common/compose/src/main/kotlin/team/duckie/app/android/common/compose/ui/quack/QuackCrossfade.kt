@@ -8,9 +8,10 @@
 package team.duckie.app.android.common.compose.ui.quack
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import team.duckie.quackquack.ui.animation.QuackAnimationSpec
 
 @Composable
 fun <T> QuackCrossfade(
@@ -21,7 +22,11 @@ fun <T> QuackCrossfade(
     Crossfade(
         modifier = modifier,
         targetState = targetState,
-        animationSpec = QuackAnimationSpec(),
+        animationSpec = tween(
+            durationMillis = 250,
+            easing = LinearEasing,
+        ),
         content = content,
+        label = "Crossfade",
     )
 }

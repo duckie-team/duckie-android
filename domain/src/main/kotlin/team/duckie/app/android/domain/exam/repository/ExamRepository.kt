@@ -14,6 +14,7 @@ import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
+import team.duckie.app.android.domain.exam.model.ProfileExam
 
 @Immutable
 interface ExamRepository {
@@ -32,4 +33,8 @@ interface ExamRepository {
     suspend fun getFavoriteExams(): List<ExamInfo>
 
     suspend fun getRecentExam(): List<ExamInfo>
+
+    suspend fun getHeartExam(userId: Int): Flow<PagingData<ProfileExam>>
+
+    suspend fun getSubmittedExam(userId: Int): Flow<PagingData<ProfileExam>>
 }

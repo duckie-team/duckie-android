@@ -29,3 +29,10 @@ data class ProfileExamData(
     @field:JsonProperty("user")
     val user: UserResponse? = null,
 )
+
+data class ProfileExamDatas(
+    @field:JsonProperty("exams")
+    val exams: List<ProfileExamData>? = null,
+    @field:JsonProperty("page")
+    val page: Int? = null,
+)

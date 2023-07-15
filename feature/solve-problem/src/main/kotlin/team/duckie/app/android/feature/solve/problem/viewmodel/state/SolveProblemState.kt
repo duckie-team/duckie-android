@@ -23,6 +23,7 @@ data class SolveProblemState(
     val inputAnswers: ImmutableList<InputAnswer> = persistentListOf(),
     val requirementAnswer: String = "",
     val totalPage: Int = 0,
+    val time: Int = 0,
 )
 
 data class InputAnswer(

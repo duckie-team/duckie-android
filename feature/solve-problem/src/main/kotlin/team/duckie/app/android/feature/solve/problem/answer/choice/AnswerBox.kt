@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -47,10 +47,8 @@ internal fun TextAnswerBox(
         TextAndCheck(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = 12.dp,
-                    vertical = 16.dp,
-                ),
+                .heightIn(min = 52.dp)
+                .padding(horizontal = 12.dp),
             text = text,
             selected = selected,
         )
@@ -66,20 +64,18 @@ internal fun ImageAnswerBox(
     onClick: () -> Unit,
 ) {
     GraySurface(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         selected = selected,
         onClick = onClick,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(all = 12.dp),
+            modifier = Modifier.padding(all = 12.dp),
             verticalArrangement = Arrangement.spacedBy(space = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             QuackImage(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .aspectRatio(ratio = 1f),
                 src = imageSrc,
             )
@@ -112,9 +108,8 @@ private fun TextAndCheck(
                     true -> QuackColor.DuckieOrange
                     else -> QuackColor.Black
                 },
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Start,
             ),
-            singleLine = true,
         )
         QuackAnimatedVisibility(visible = selected) {
             QuackImage(
@@ -137,7 +132,7 @@ private fun GraySurface(
         modifier = modifier.fillMaxWidth(),
         backgroundColor = QuackColor.Gray4,
         border = setBoxBorder(selected = selected),
-        shape = RoundedCornerShape(size = 4.dp),
+        shape = RoundedCornerShape(size = 8.dp),
         onClick = onClick,
         content = content,
     )
@@ -148,6 +143,6 @@ private fun setBoxBorder(selected: Boolean): QuackBorder? {
     return if (selected) {
         QuackBorder(color = QuackColor.DuckieOrange)
     } else {
-        null
+        QuackBorder(color = QuackColor.Gray3)
     }
 }

@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.common.compose.ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -20,11 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.R
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackSmallButton
-import team.duckie.quackquack.ui.component.QuackSmallButtonType
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 @Composable
 fun ErrorScreen(
@@ -40,31 +43,33 @@ fun ErrorScreen(
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            QuackHeadLine2(
-                padding = PaddingValues(top = 164.dp),
+            QuackText(
+                modifier = Modifier.padding(PaddingValues(top = 164.dp)),
                 text = if (isNetworkError) {
                     stringResource(id = R.string.default_network_error_title)
                 } else {
                     title ?: stringResource(id = R.string.default_error)
                 },
-                color = QuackColor.Gray1,
+                typography = QuackTypography.HeadLine2.change(color = QuackColor.Gray1),
             )
 
             if (isNetworkError) {
-                QuackBody2(
-                    padding = PaddingValues(top = 8.dp),
+                QuackText(
+                    modifier = Modifier.padding(PaddingValues(top = 8.dp)),
                     text = stringResource(id = R.string.default_network_error_message),
-                    color = QuackColor.Gray1,
+                    typography = QuackTypography.Body2.change(color = QuackColor.Gray1),
                 )
             }
         }
 
         // TODO(riflockle7): 꽥꽥에서 하얀 배경 버튼 제공 필요
-        QuackSmallButton(
-            modifier = Modifier.padding(bottom = 40.dp),
-            type = QuackSmallButtonType.Fill,
-            text = stringResource(id = R.string.default_error_retry),
+        // TODO(riflockle7): 이전에 QuackSmallButton Fill 이었음
+        QuackButton(
+            modifier = Modifier
+                .padding(bottom = 40.dp),
             enabled = false,
+            style = QuackButtonStyle.SecondarySmall,
+            text = stringResource(id = R.string.default_error_retry),
             onClick = {
                 coroutineScope.launch {
                     onRetryClick()
