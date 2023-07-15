@@ -18,8 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.profile.R
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.material.QuackIcon
 import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
@@ -47,7 +49,7 @@ internal fun EditTopAppBar(
         ) {
             QuackImage(
                 modifier = Modifier.quackClickable(onClick = onBackPressed),
-                src = QuackIcon.ArrowBack.drawableId,
+                src = QuackIcon.Outlined.ArrowBack,
             )
 
             QuackHeadLine2(text = title)

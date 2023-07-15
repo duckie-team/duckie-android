@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.profile.screen.section
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -37,7 +37,7 @@ import team.duckie.quackquack.ui.sugar.QuackTitle2
 @Composable
 fun ExamSection(
     isLoading: Boolean,
-    @DrawableRes icon: Int,
+    icon: ImageVector,
     title: String,
     exams: ImmutableList<DuckTestCoverItem>,
     onClickExam: (DuckTestCoverItem) -> Unit,

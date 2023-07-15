@@ -39,7 +39,10 @@ import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Create
+import team.duckie.quackquack.material.icon.quackicon.outlined.Setting
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
@@ -77,7 +80,7 @@ fun MyProfileScreen(
                 modifier = Modifier
                     .size(24.dp, 24.dp)
                     .quackClickable(onClick = onClickSetting),
-                src = QuackIcon.Setting.drawableId,
+                src = QuackIcon.Outlined.Setting,
             )
         }
     }
@@ -137,7 +140,7 @@ fun MyProfileScreen(
         submittedExamSection = {
             ExamSection(
                 isLoading = isLoading,
-                icon = team.duckie.quackquack.ui.icon.QuackIcon.Companion.Create,
+                icon = QuackIcon.Outlined.Create,
                 title = stringResource(id = R.string.submitted_exam),
                 exams = submittedExams,
                 onClickExam = onClickExam,

@@ -45,7 +45,10 @@ import team.duckie.app.android.feature.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Create
+import team.duckie.quackquack.material.icon.quackicon.outlined.More
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
 
@@ -122,7 +125,7 @@ internal fun OtherProfileScreen(
                                         }
                                     },
                                 ),
-                            src = QuackIcon.More.drawableId,
+                            src = QuackIcon.Outlined.More,
                         )
                     },
                 )
@@ -141,7 +144,7 @@ internal fun OtherProfileScreen(
             submittedExamSection = {
                 ExamSection(
                     isLoading = state.isLoading,
-                    icon = team.duckie.quackquack.ui.icon.QuackIcon.Companion.Create,
+                    icon = QuackIcon.Outlined.Create,
                     title = stringResource(id = R.string.submitted_exam),
                     exams = submittedExams,
                     onClickExam = viewModel::clickExam,

@@ -29,7 +29,10 @@ import team.duckie.app.android.feature.profile.screen.section.ProfileSection
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Badge
+import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
 
 @Composable
 fun ProfileScreen(
@@ -94,7 +97,7 @@ fun ProfileScreen(
             submittedExamSection()
             Spacer(space = 44.dp)
             ExamSection(
-                icon = QuackIcon.Badge.drawableId,
+                icon = QuackIcon.Outlined.Badge,
                 title = stringResource(id = R.string.solved_exam),
                 exams = solvedExams,
                 onClickExam = onClickExam,
@@ -113,7 +116,7 @@ fun ProfileScreen(
             )
             Spacer(space = 40.dp)
             ExamSection(
-                icon = QuackIcon.Heart.drawableId,
+                icon = QuackIcon.Outlined.Heart,
                 title = stringResource(id = R.string.hearted_exam),
                 exams = heartedExams,
                 onClickExam = onClickExam,
