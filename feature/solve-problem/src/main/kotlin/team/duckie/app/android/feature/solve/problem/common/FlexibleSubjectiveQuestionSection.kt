@@ -10,7 +10,6 @@
 package team.duckie.app.android.feature.solve.problem.common
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -23,19 +22,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil.transform.RoundedCornersTransformation
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
@@ -44,6 +37,7 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.solve.problem.answer.shortanswer.ShortAnswerForm
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
@@ -71,20 +65,6 @@ fun FlexibleSubjectiveQuestionSection(
 ) {
     val question = problem.question as Question.Image
     val flexibleImageHeight = getFlexibleImageHeight()
-    val context = LocalContext.current
-
-    val cornerSizePx = with(LocalDensity.current) { 8.dp.toPx() }
-
-    val request = remember(key1 = question.imageUrl) {
-        ImageRequest.Builder(context)
-            .data(question.imageUrl)
-            .transformations(RoundedCornersTransformation(cornerSizePx))
-    }
-
-    val imagePainter = rememberAsyncImagePainter(
-        model = request.build(),
-        contentScale = ContentScale.Fit,
-    )
 
     Column(
         modifier = Modifier
@@ -114,16 +94,14 @@ fun FlexibleSubjectiveQuestionSection(
                     .heightIn(max = actualWidth.value)
                     .padding(horizontal = 16.dp)
                     .background(
-                        color = QuackColor.Gray4.value,
+                        color = QuackColor.Black.value,
                         shape = RoundedCornerShape(16.dp),
                     ),
-
             ) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    painter = imagePainter,
-                    contentDescription = null,
+                QuackImage(
+                    modifier = Modifier.fillMaxSize(),
+                    src = question.imageUrl,
+                    contentScale = ContentScale.Fit,
                 )
             }
         }
