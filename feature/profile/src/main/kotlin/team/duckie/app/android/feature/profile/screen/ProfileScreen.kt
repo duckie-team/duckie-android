@@ -16,14 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.FriendsType
-import team.duckie.app.android.domain.exam.model.ProfileExam
-import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.profile.R
 import team.duckie.app.android.feature.profile.component.EmptyText
@@ -32,7 +29,10 @@ import team.duckie.app.android.feature.profile.screen.section.ProfileSection
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Badge
+import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
 
 @Composable
 fun ProfileScreen(
@@ -97,7 +97,7 @@ fun ProfileScreen(
             submittedExamSection()
             Spacer(space = 44.dp)
             ExamSection(
-                icon = QuackIcon.Badge.drawableId,
+                icon = QuackIcon.Outlined.Badge,
                 title = stringResource(id = R.string.solved_exam),
                 exams = solvedExams,
                 onClickExam = onClickExam,
@@ -110,14 +110,13 @@ fun ProfileScreen(
                     onClickShowAll(
                         ProfileStep.ViewAll(
                             examType = ExamType.Solved,
-                            solvedExamInstances = userProfile.toImmutableSolvedExamInstances(),
                         ),
                     )
                 },
             )
             Spacer(space = 40.dp)
             ExamSection(
-                icon = QuackIcon.Heart.drawableId,
+                icon = QuackIcon.Outlined.Heart,
                 title = stringResource(id = R.string.hearted_exam),
                 exams = heartedExams,
                 onClickExam = onClickExam,
@@ -130,19 +129,10 @@ fun ProfileScreen(
                     onClickShowAll(
                         ProfileStep.ViewAll(
                             examType = ExamType.Heart,
-                            heartExams = userProfile.toImmutableHeartedExams(),
                         ),
                     )
                 },
             )
         }
     }
-}
-
-internal fun UserProfile.toImmutableSolvedExamInstances(): ImmutableList<ProfileExamInstance> {
-    return solvedExamInstances?.toImmutableList() ?: persistentListOf()
-}
-
-internal fun UserProfile.toImmutableHeartedExams(): ImmutableList<ProfileExam> {
-    return heartExams?.toImmutableList() ?: persistentListOf()
 }

@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
@@ -40,7 +39,10 @@ import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Create
+import team.duckie.quackquack.material.icon.quackicon.outlined.Setting
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
@@ -78,7 +80,7 @@ fun MyProfileScreen(
                 modifier = Modifier
                     .size(24.dp, 24.dp)
                     .quackClickable(onClick = onClickSetting),
-                src = QuackIcon.Setting.drawableId,
+                src = QuackIcon.Outlined.Setting,
             )
         }
     }
@@ -138,7 +140,7 @@ fun MyProfileScreen(
         submittedExamSection = {
             ExamSection(
                 isLoading = isLoading,
-                icon = team.duckie.quackquack.ui.icon.QuackIcon.Companion.Create,
+                icon = QuackIcon.Outlined.Create,
                 title = stringResource(id = R.string.submitted_exam),
                 exams = submittedExams,
                 onClickExam = onClickExam,
@@ -161,7 +163,6 @@ fun MyProfileScreen(
                     onClickShowAll(
                         ProfileStep.ViewAll(
                             examType = ExamType.Created,
-                            createdExams = userProfile.toImmutableCreatedExams(),
                         ),
                     )
                 },
@@ -171,8 +172,4 @@ fun MyProfileScreen(
         onClickFriend = onClickFriend,
         onClickShowAll = onClickShowAll,
     )
-}
-
-internal fun UserProfile.toImmutableCreatedExams(): ImmutableList<ProfileExam> {
-    return createdExams?.toImmutableList() ?: persistentListOf()
 }
