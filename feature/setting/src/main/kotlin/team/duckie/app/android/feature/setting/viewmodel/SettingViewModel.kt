@@ -16,6 +16,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.auth.usecase.ClearTokenUseCase
+import team.duckie.app.android.domain.me.usecase.GetIsStageUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.setting.constans.SettingType
 import team.duckie.app.android.feature.setting.constans.SettingType.Companion.policyPages
@@ -30,6 +31,7 @@ private const val ClickCount: Int = 4
 @HiltViewModel
 internal class SettingViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
+    private val getIsStageUseCase: GetIsStageUseCase,
     private val clearTokenUseCase: ClearTokenUseCase,
 ) : ContainerHost<SettingState, SettingSideEffect>, ViewModel() {
 
@@ -37,6 +39,7 @@ internal class SettingViewModel @Inject constructor(
 
     private var clickCount = 0
     private var lastClickTime = 0L
+    private var isStage = false
 
     init {
         initState()
@@ -44,9 +47,11 @@ internal class SettingViewModel @Inject constructor(
 
     /** [SettingViewModel]의 초기 상태를 설정한다. */
     private fun initState() = intent {
+        isStage = getIsStageUseCase().getOrDefault(false)
+
         getMeUseCase()
             .onSuccess {
-                reduce { state.copy(me = it) }
+                reduce { state.copy(me = it, isStage = isStage) }
             }
             .onFailure {
                 postSideEffect(SettingSideEffect.ReportError(it))
