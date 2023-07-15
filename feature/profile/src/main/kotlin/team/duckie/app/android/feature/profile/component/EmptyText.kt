@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.component.QuackBody1
+import team.duckie.quackquack.ui.sugar.QuackBody1
 
 @Composable
 internal fun EmptyText(message: String) {

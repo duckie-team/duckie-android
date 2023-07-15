@@ -8,9 +8,13 @@
 package team.duckie.app.android
 
 import android.app.Application
+import androidx.datastore.preferences.core.edit
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.runBlocking
 import team.duckie.app.android.common.kotlin.seconds
+import team.duckie.app.android.core.datastore.PreferenceKey
+import team.duckie.app.android.core.datastore.dataStore
 import team.duckie.quackquack.ui.animation.QuackAnimationMillis
 import team.duckie.quackquack.ui.modifier.QuackAlwaysShowRipple
 import timber.log.Timber
@@ -29,5 +33,16 @@ class App : Application() {
             Timber.plant(Timber.DebugTree())
         }
         KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
+
+        // DataStore 에서 가져와 stage 여부를 확인하는 로직
+        // 값이 없을 경우, BuildFlavor 내 기본 값으로 설정한다.
+        // TODO(riflockle7): 동기적으로 처리할 수 있는 방법이 있을까?
+        runBlocking {
+            applicationContext.dataStore.edit { preference ->
+                if (preference[PreferenceKey.DevMode.IsStage] == null) {
+                    preference[PreferenceKey.DevMode.IsStage] = BuildConfig.IS_STAGE
+                }
+            }
+        }
     }
 }

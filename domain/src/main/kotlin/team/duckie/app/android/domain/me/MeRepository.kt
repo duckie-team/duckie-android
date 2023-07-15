@@ -16,4 +16,6 @@ interface MeRepository {
     suspend fun setMe(newMe: User)
 
     suspend fun clearMeToken()
+
+    suspend fun getIsStage(): Boolean
 }

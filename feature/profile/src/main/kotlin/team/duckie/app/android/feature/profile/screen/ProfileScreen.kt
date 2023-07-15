@@ -29,7 +29,7 @@ import team.duckie.app.android.feature.profile.screen.section.ProfileSection
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.QuackIcon
 
 @Composable
 fun ProfileScreen(

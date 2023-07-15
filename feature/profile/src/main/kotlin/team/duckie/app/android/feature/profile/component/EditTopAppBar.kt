@@ -17,11 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.profile.R
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSubtitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
 @Composable
 internal fun EditTopAppBar(
@@ -44,15 +46,16 @@ internal fun EditTopAppBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             QuackImage(
-                src = QuackIcon.ArrowBack,
-                onClick = onBackPressed,
+                modifier = Modifier.quackClickable(onClick = onBackPressed),
+                src = QuackIcon.ArrowBack.drawableId,
             )
+
             QuackHeadLine2(text = title)
         }
-        QuackSubtitle2(
+        QuackText(
+            modifier = Modifier.quackClickable(onClick = onClickEditComplete),
             text = stringResource(id = R.string.edit_complete),
-            onClick = onClickEditComplete,
-            color = QuackColor.DuckieOrange,
+            typography = QuackTypography.Subtitle2.change(color = QuackColor.DuckieOrange),
         )
     }
 }

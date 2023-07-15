@@ -29,7 +29,7 @@ import team.duckie.app.ktor.client.plugin.DuckieAuthorizationHeaderOrNothingPlug
 import timber.log.Timber
 
 /** 개발자 모드 모듈에서 설정한 isStage 값 */
-internal var devModeIsStage: Boolean? = null
+internal var devModeIsStage: Boolean = false
 
 /** token 이 필요한 HttpClient */
 internal var client = AuthorizationHeaderClient()
@@ -47,7 +47,7 @@ private var DeviceName = Build.MODEL
 /** API 호출 시 활용할 BaseUrl 을 가져온다. */
 fun getApiBaseUrl(): String {
     // DevMode 에서 설정한 IsStage 를 처음에 참조하고, 없으면 buildFlavor 에 근거한 플래그 값을 활용한다.
-    return if (devModeIsStage ?: BuildConfig.IS_STAGE) {
+    return if (devModeIsStage) {
         BuildConfig.STAGE_API_URL
     } else {
         BuildConfig.REAL_API_URL
@@ -75,7 +75,7 @@ internal object DuckieHttpHeaders {
 private object AuthorizationHeaderClient {
     private val MaxTimeoutMillis = 3.seconds
     private const val MaxRetryCount = 3
-    private val BaseUrl = getApiBaseUrl()
+    private val BaseUrl by lazy { getApiBaseUrl() }
     private const val ClientName = "android"
 
     operator fun invoke(authorizationCheck: Boolean = true) = HttpClient(engineFactory = CIO) {

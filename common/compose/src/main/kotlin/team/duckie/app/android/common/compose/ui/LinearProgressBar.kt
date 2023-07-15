@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 
 @Composable
 fun LinearProgressBar(
@@ -75,7 +75,7 @@ private fun DrawScope.drawLinearIndicator(
     val barEnd = (if (isLtr) endFraction else 1f - startFraction) * width
 
     drawLine(
-        color = color.composeColor,
+        color = color.value,
         start = Offset(barStart, yOffset),
         end = Offset(barEnd, yOffset),
         strokeWidth = strokeWidth,
