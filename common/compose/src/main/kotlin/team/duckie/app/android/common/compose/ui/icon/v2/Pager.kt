@@ -27,16 +27,16 @@ public val QuackIcon.Pager: ImageVector
             name = "IcPaper20",
             defaultWidth = 20.0.dp,
             defaultHeight = 20.0.dp,
-                viewportWidth = 20.0f,
+            viewportWidth = 20.0f,
             viewportHeight = 20.0f,
         ).apply {
             path(
                 fill = SolidColor(Color(0x00000000)),
                 stroke = SolidColor(Color(0xFF222222)),
-                    strokeLineWidth = 1.0f,
+                strokeLineWidth = 1.0f,
                 strokeLineCap = Butt,
                 strokeLineJoin = Round,
-                    strokeLineMiter = 4.0f,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
                 moveTo(5.2f, 16.0f)
@@ -50,18 +50,17 @@ public val QuackIcon.Pager: ImageVector
             path(
                 fill = SolidColor(Color(0x00000000)),
                 stroke = SolidColor(Color(0xFF222222)),
-                    strokeLineWidth = 1.0f,
+                strokeLineWidth = 1.0f,
                 strokeLineCap = Butt,
                 strokeLineJoin = Round,
-                    strokeLineMiter = 4.0f,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
                 moveTo(10.686f, 4.0f)
                 verticalLineTo(8.0f)
                 horizontalLineTo(14.8f)
             }
-        }
-        .build()
+        }.build()
         return _icPaper20!!
     }
 
