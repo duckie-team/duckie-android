@@ -40,7 +40,7 @@ import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.usecase.GetHeartExamUseCase
 import team.duckie.app.android.domain.exam.usecase.GetSubmittedExamUseCase
 import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
-import team.duckie.app.android.domain.examInstance.usecase.GetSolvedExamInstance
+import team.duckie.app.android.domain.examInstance.usecase.GetSolvedExamInstanceUseCase
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.ignore.usecase.UserIgnoreUseCase
@@ -65,7 +65,7 @@ internal class ProfileViewModel @Inject constructor(
     private val ignoreUseCase: UserIgnoreUseCase,
     private val getHeartExamUseCase: GetHeartExamUseCase,
     private val getSubmittedExamUseCase: GetSubmittedExamUseCase,
-    private val getSolvedExamInstance: GetSolvedExamInstance,
+    private val getSolvedExamInstance: GetSolvedExamInstanceUseCase,
 ) : ContainerHost<ProfileState, ProfileSideEffect>, ViewModel(), MyPageIntent, OtherPageIntent {
 
     override val container = container<ProfileState, ProfileSideEffect>(ProfileState())

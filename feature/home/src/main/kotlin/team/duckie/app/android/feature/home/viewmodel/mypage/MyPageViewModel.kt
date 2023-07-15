@@ -28,7 +28,7 @@ import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.usecase.GetHeartExamUseCase
 import team.duckie.app.android.domain.exam.usecase.GetSubmittedExamUseCase
 import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
-import team.duckie.app.android.domain.examInstance.usecase.GetSolvedExamInstance
+import team.duckie.app.android.domain.examInstance.usecase.GetSolvedExamInstanceUseCase
 import team.duckie.app.android.domain.user.usecase.FetchUserProfileUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.profile.viewmodel.intent.MyPageIntent
@@ -42,7 +42,7 @@ internal class MyPageViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
     private val getHeartExamUseCase: GetHeartExamUseCase,
     private val getSubmittedExamUseCase: GetSubmittedExamUseCase,
-    private val getSolvedExamInstance: GetSolvedExamInstance,
+    private val getSolvedExamInstance: GetSolvedExamInstanceUseCase,
 ) : ContainerHost<MyPageState, MyPageSideEffect>, ViewModel(), MyPageIntent {
 
     override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
