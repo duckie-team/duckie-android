@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -26,9 +27,9 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.kotlin.runIf
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSubtitle2
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 /** 여러 아이템 중 하나를 선택하는 형태의 [DuckieBottomSheetDialog] */
 @Composable
@@ -68,8 +69,8 @@ fun SelectableItemBottomSheetDialog(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         QuackImage(
+                            modifier = Modifier.size(DpSize(width = 24.dp, height = 24.dp)),
                             src = item.icon,
-                            size = DpSize(width = 24.dp, height = 24.dp),
                         )
                         QuackSubtitle2(
                             modifier = Modifier.padding(start = 8.dp),

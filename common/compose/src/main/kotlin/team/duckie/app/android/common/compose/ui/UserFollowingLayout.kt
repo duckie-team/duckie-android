@@ -25,22 +25,20 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.centerVertical
-import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
+import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfileId
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.npe
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSubtitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.shape.SquircleShape
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackBody3
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
-private val HomeProfileSize: DpSize = DpSize(
-    all = 32.dp,
-)
+private val HomeProfileSize: DpSize = DpSize(32.dp, 32.dp)
 
 private const val UserInfoBlockUserProfileLayoutId = "UserInfoContentUserProfile"
 private const val UserInfoBlockUserNameLayoutId = "UserInfoBlockUserName"
@@ -77,11 +75,13 @@ fun UserFollowingLayout(
 ) {
     Layout(
         modifier = modifier
-            .quackClickable {
-                if (onClickUserProfile != null) {
-                    onClickUserProfile(userId)
-                }
-            }
+            .quackClickable(
+                onClick = {
+                    if (onClickUserProfile != null) {
+                        onClickUserProfile(userId)
+                    }
+                },
+            )
             .fillMaxWidth()
             .height(56.dp)
             .padding(vertical = 12.dp)
@@ -94,17 +94,17 @@ fun UserFollowingLayout(
                         .size(HomeProfileSize)
                         .clip(SquircleShape)
                         .skeleton(isLoading),
-                    painter = painterResource(id = QuackIcon.DefaultProfile),
+                    painter = painterResource(id = QuackIcon.DefaultProfileId),
                     contentDescription = null,
                 )
             } else {
                 QuackImage(
                     modifier = Modifier
                         .layoutId(UserInfoBlockUserProfileLayoutId)
+                        .size(HomeProfileSize)
+                        .clip(SquircleShape)
                         .skeleton(isLoading),
                     src = profileImgUrl,
-                    size = HomeProfileSize,
-                    shape = SquircleShape,
                 )
             }
             QuackSubtitle2(
@@ -121,16 +121,20 @@ fun UserFollowingLayout(
                     .skeleton(isLoading),
                 text = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
             )
-            QuackBody2(
+            QuackText(
                 modifier = Modifier
                     .layoutId(UserInfoBlockFollowingButtonLayoutId)
-                    .skeleton(isLoading),
+                    .skeleton(isLoading)
+                    .quackClickable(
+                        onClick = {
+                            onClickFollow(!isFollowing)
+                        },
+                        rippleEnabled = false,
+                    ),
                 text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
-                color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
-                onClick = {
-                    onClickFollow(!isFollowing)
-                },
-                rippleEnabled = false,
+                typography = QuackTypography.Body2.change(
+                    color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
+                ),
             )
         },
         measurePolicy = getUserFollowingLayoutMeasurePolicy(
