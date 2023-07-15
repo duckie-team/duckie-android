@@ -14,6 +14,7 @@ import java.io.FileInputStream
 plugins {
     id(ConventionEnum.AndroidApplication)
     id(ConventionEnum.AndroidHilt)
+    id(ConventionEnum.AppVersionNameProvider)
     id(libs.plugins.gms.google.service.get().pluginId)
     id(libs.plugins.firebase.crashlytics.get().pluginId)
     id(libs.plugins.firebase.performance.get().pluginId)
@@ -48,12 +49,23 @@ android {
         create("alwaysRipple") {
             versionNameSuffix = "-AlwaysRipple"
             buildConfigField("boolean", "ALWAYS_RIPPLE", "true")
+            buildConfigField("boolean", "IS_STAGE", "false")
         }
 
         create("standard") {
             buildConfigField("boolean", "ALWAYS_RIPPLE", "false")
+            buildConfigField("boolean", "IS_STAGE", "false")
+        }
+
+        create("standardStage") {
+            buildConfigField("boolean", "ALWAYS_RIPPLE", "false")
+            buildConfigField("boolean", "IS_STAGE", "true")
+            // TODO(riflockle7): push 나 통계 등을 생각하면 스테이지 환경, 리얼 환경은 applicationId 로 분리 되는 게 좋음
+            //   추후 논의 반드시 하기
+            // applicationIdSuffix = ".stage"
         }
     }
+
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
@@ -90,6 +102,8 @@ dependencies {
         projects.feature.setting,
         projects.feature.friends,
         projects.feature.tagEdit,
+        projects.feature.devMode,
+        projects.core.datastore,
         projects.core.sync,
         projects.common.kotlin,
         projects.navigator,

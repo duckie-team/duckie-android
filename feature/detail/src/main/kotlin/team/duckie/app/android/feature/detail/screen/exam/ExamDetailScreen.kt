@@ -15,17 +15,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.common.compose.ui.icon.v2.Paper
+import team.duckie.app.android.common.compose.ui.icon.v2.Pager
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.common.DetailContentLayout
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
-import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Profile
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackTitle2
@@ -69,11 +71,11 @@ private fun MetadataSection(
     ) {
         QuackTitle2(text = stringResource(id = R.string.detail_exam_info))
         IconText(
-            icon = QuackIcon.Paper,
+            icon = QuackIcon.Pager,
             text = stringResource(id = R.string.detail_total_exam_count, totalExamCount),
         )
         IconText(
-            icon = QuackIcon.Profile,
+            icon = QuackIcon.Outlined.Profile,
             text = stringResource(id = R.string.detail_total_examinee, totalExaminee),
         )
     }
@@ -82,7 +84,7 @@ private fun MetadataSection(
 @Composable
 private fun IconText(
     modifier: Modifier = Modifier,
-    icon: QuackIcon,
+    icon: ImageVector,
     text: String,
 ) {
     Row(

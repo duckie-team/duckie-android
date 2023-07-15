@@ -15,11 +15,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
@@ -30,6 +32,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -38,20 +42,20 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.ui.PhotoPicker
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.feature.profile.R
 import team.duckie.app.android.feature.profile.component.EditTopAppBar
 import team.duckie.app.android.feature.profile.component.GrayBorderButton
 import team.duckie.app.android.feature.profile.viewmodel.ProfileEditViewModel
 import team.duckie.app.android.feature.profile.viewmodel.state.NicknameState
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.shape.SquircleShape
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.component.QuackErrorableTextField
-import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackReviewTextArea
-import team.duckie.quackquack.ui.shape.SquircleShape
-import team.duckie.quackquack.ui.util.DpSize
 
 private const val MaxNicknameLength = 12
 private const val MaxIntroductionLength = 60
@@ -90,7 +94,7 @@ internal fun ProfileEditScreen(
         PhotoPicker(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = QuackColor.White.composeColor)
+                .background(color = QuackColor.White.value)
                 .navigationBarsPadding()
                 .systemBarsPadding(),
             imageUris = galleryState.images,
@@ -113,7 +117,7 @@ internal fun ProfileEditScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(QuackColor.White.composeColor)
+            .background(QuackColor.White.value)
             .navigationBarsPadding()
             .systemBarsPadding(),
     ) {
@@ -135,10 +139,11 @@ internal fun ProfileEditScreen(
                 onClickEditProfile = vm::clickEditProfile,
             )
             Spacer(space = 40.dp)
-            QuackBody1(
+            QuackText(
                 text = stringResource(R.string.nickname),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.Body1.change(color = QuackColor.Gray1),
             )
+            // TODO(riflockle7): quack v1 -> quack v2
             QuackErrorableTextField(
                 modifier = Modifier.skeleton(state.isLoading),
                 text = state.nickname,
@@ -160,11 +165,12 @@ internal fun ProfileEditScreen(
                 },
             )
             Spacer(space = 36.dp)
-            QuackBody1(
+            QuackText(
                 text = stringResource(R.string.introduce),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.Body1.change(color = QuackColor.Gray1),
             )
             Spacer(space = 8.dp)
+            // TODO(riflockle7): quack v1 -> quack v2
             QuackReviewTextArea(
                 // TODO(evergreenTree97) 배포 후 글자 수 제한있는 텍스트필드 구현
                 modifier = Modifier.skeleton(state.isLoading),
@@ -191,11 +197,21 @@ internal fun ProfileEditSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        QuackImage(
-            src = profile,
-            shape = SquircleShape,
-            size = DpSize(80.dp),
-        )
+        if (profile?.toString().isNullOrEmpty()) {
+            Box(
+                modifier = Modifier
+                    .size(80.dp, 80.dp)
+                    .background(QuackColor.Gray3.value, SquircleShape),
+            )
+        } else {
+            QuackImage(
+                src = "$profile",
+                modifier = Modifier
+                    .size(80.dp, 80.dp)
+                    .clip(SquircleShape),
+                contentScale = ContentScale.Crop,
+            )
+        }
         GrayBorderButton(
             text = stringResource(id = R.string.edit_profile_picture),
             onClick = onClickEditProfile,

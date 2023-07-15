@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -21,17 +22,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import team.duckie.app.android.common.compose.R
+import team.duckie.app.android.common.compose.ui.icon.v1.MoreId
 import team.duckie.app.android.common.kotlin.runIf
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackTitle2
 
 data class DuckTestCoverItem(
     val testId: Int,
@@ -66,7 +70,7 @@ fun DuckExamSmallCoverForColumn(
     modifier: Modifier = Modifier,
     duckTestCoverItem: DuckTestCoverItem,
     onItemClick: () -> Unit,
-    onMoreClick: () -> Unit,
+    onMoreClick: (() -> Unit)? = null,
     isLoading: Boolean? = null,
 ) {
     DuckSmallCoverInternal(
@@ -88,9 +92,11 @@ internal fun DuckSmallCoverInternal(
 ) {
     Column(
         modifier = modifier
-            .quackClickable(rippleEnabled = true) {
-                onItemClick()
-            },
+            .quackClickable(
+                onClick = onItemClick,
+                rippleEnabled = true,
+            )
+            .clip(RoundedCornerShape(8.dp)),
         horizontalAlignment = Alignment.Start,
     ) {
         AsyncImage(
@@ -113,9 +119,10 @@ internal fun DuckSmallCoverInternal(
             QuackBody2(text = duckTestCoverItem.nickname)
             if (onMoreClick != null) {
                 QuackImage(
-                    src = QuackIcon.More,
-                    size = DpSize(all = 16.dp),
-                    onClick = onMoreClick,
+                    src = QuackIcon.MoreId,
+                    modifier = Modifier
+                        .quackClickable(onClick = onMoreClick)
+                        .size(DpSize(16.dp, 16.dp)),
                 )
             }
         }
@@ -132,14 +139,17 @@ internal fun DuckSmallCoverInternal(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            QuackBody2(
+            QuackText(
                 text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.solvedCount}",
-                color = QuackColor.Gray2,
+                typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
             )
-            QuackBody2(text = "·")
-            QuackBody2(
+            QuackText(
+                text = "·",
+                typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
+            )
+            QuackText(
                 text = "${stringResource(id = R.string.heart)} ${duckTestCoverItem.heartCount}",
-                color = QuackColor.Gray2,
+                typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
             )
         }
     }

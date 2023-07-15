@@ -13,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackHeadLine2
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 fun NoItemScreen(
@@ -29,15 +29,16 @@ fun NoItemScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        QuackHeadLine2(
+        QuackText(
             modifier = Modifier.skeleton(isLoading),
+            typography = QuackTypography.HeadLine1.change(color = QuackColor.Gray1),
             text = title,
-            color = QuackColor.Gray1,
         )
-        QuackBody2(
+
+        QuackText(
             modifier = Modifier.skeleton(isLoading),
+            typography = QuackTypography.Body2.change(color = QuackColor.Gray1),
             text = description,
-            color = QuackColor.Gray1,
         )
     }
 }

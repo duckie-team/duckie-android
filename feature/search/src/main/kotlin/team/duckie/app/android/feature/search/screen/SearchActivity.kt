@@ -11,7 +11,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,10 +18,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -35,6 +34,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.constants.SearchStep
@@ -49,6 +50,7 @@ import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.collectAndHandleState
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.popStringExtra
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
@@ -60,7 +62,7 @@ import javax.inject.Inject
 internal val SearchHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
 @AndroidEntryPoint
-class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
+class SearchActivity : BaseActivity() {
 
     @Inject
     lateinit var detailNavigator: DetailNavigator
@@ -73,7 +75,7 @@ class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        intent.popStringExtra(team.duckie.app.android.common.android.ui.const.Extras.SearchTag)?.let { str ->
+        intent.popStringExtra(Extras.SearchTag)?.let { str ->
             vm.updateSearchKeyword(
                 keyword = str,
                 debounce = false,
@@ -103,7 +105,6 @@ class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() 
                         modifier = Modifier.background(QuackColor.White.composeColor),
                     ) {
                         SearchTextFieldTopBar(
-                            modifier = Modifier.padding(SearchHorizontalPadding),
                             searchKeyword = state.searchKeyword,
                             onSearchKeywordChanged = { keyword ->
                                 vm.updateSearchKeyword(keyword = keyword)
@@ -174,7 +175,7 @@ class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() 
                 detailNavigator.navigateFrom(
                     activity = this@SearchActivity,
                     intentBuilder = {
-                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.ExamId, sideEffect.examId)
+                        putExtra(Extras.ExamId, sideEffect.examId)
                     },
                 )
             }
@@ -183,7 +184,7 @@ class SearchActivity : team.duckie.app.android.common.android.ui.BaseActivity() 
                 profileNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
-                        putExtra(team.duckie.app.android.common.android.ui.const.Extras.UserId, sideEffect.userId)
+                        putExtra(Extras.UserId, sideEffect.userId)
                     },
                 )
             }
@@ -202,16 +203,19 @@ private fun SearchTextFieldTopBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
+            .height(48.dp)
+            .padding(
+                horizontal = 16.dp,
+                vertical = 6.dp,
+            ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
     ) {
         QuackImage(
             src = QuackIcon.ArrowBack,
             size = DpSize(all = 24.dp),
             onClick = onPrevious,
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(space = 8.dp)
         QuackNoUnderlineTextField(
             text = searchKeyword,
             onTextChanged = { keyword ->
@@ -220,7 +224,7 @@ private fun SearchTextFieldTopBar(
             placeholderText = stringResource(id = R.string.try_search),
             trailingIcon = SharedIcon.ic_textfield_delete_16,
             trailingIconOnClick = clearSearchKeyword,
-            trailingEndPadding = 13.dp,
+            trailingEndPadding = 12.dp,
         )
     }
 }

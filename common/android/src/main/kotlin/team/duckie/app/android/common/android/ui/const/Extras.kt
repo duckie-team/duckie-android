@@ -23,6 +23,8 @@ object Extras {
     /** using for FriendsActivity */
     const val FriendType = "ExtraFriendType"
     const val ProfileNickName = "ProfileNickName"
+    const val FollowChangedStatus = "FollowChangedFriend"
+    const val FollowChangedUserId = "FollowChangedUserId"
 
     /** using for StartActivity */
     const val RequirementQuestion = "ExtraRequirementQuestion"

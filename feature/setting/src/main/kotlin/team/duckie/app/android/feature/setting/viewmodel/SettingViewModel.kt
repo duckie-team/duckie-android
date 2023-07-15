@@ -14,7 +14,9 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.auth.usecase.ClearTokenUseCase
+import team.duckie.app.android.domain.me.usecase.GetIsStageUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.setting.constans.SettingType
 import team.duckie.app.android.feature.setting.constans.SettingType.Companion.policyPages
@@ -24,14 +26,20 @@ import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
 import javax.inject.Inject
 
 private const val WithdrawCommingSoonMessage: String = "회원탈퇴는 아직 준비중인 기능입니다."
+private const val ClickCount: Int = 4
 
 @HiltViewModel
 internal class SettingViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
+    private val getIsStageUseCase: GetIsStageUseCase,
     private val clearTokenUseCase: ClearTokenUseCase,
 ) : ContainerHost<SettingState, SettingSideEffect>, ViewModel() {
 
     override val container = container<SettingState, SettingSideEffect>(SettingState())
+
+    private var clickCount = 0
+    private var lastClickTime = 0L
+    private var isStage = false
 
     init {
         initState()
@@ -39,9 +47,11 @@ internal class SettingViewModel @Inject constructor(
 
     /** [SettingViewModel]의 초기 상태를 설정한다. */
     private fun initState() = intent {
+        isStage = getIsStageUseCase().getOrDefault(false)
+
         getMeUseCase()
             .onSuccess {
-                reduce { state.copy(me = it) }
+                reduce { state.copy(me = it, isStage = isStage) }
             }
             .onFailure {
                 postSideEffect(SettingSideEffect.ReportError(it))
@@ -58,6 +68,24 @@ internal class SettingViewModel @Inject constructor(
 
     fun updateWithdrawUserInputReason(reason: String) = intent {
         reduce { state.copy(withdrawUserInputReason = reason) }
+    }
+
+    fun changeDevModeDialogVisible(visible: Boolean) {
+        if (visible) {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastClickTime < 2.seconds) {
+                clickCount++
+                if (clickCount >= ClickCount) {
+                    clickCount = 0
+                    intent { reduce { state.copy(devModeDialogVisible = true) } }
+                }
+            } else {
+                clickCount = 0
+            }
+            lastClickTime = currentTime
+        } else {
+            intent { reduce { state.copy(devModeDialogVisible = false) } }
+        }
     }
 
     fun changeLogoutDialogVisible(visible: Boolean) = intent {
@@ -108,6 +136,13 @@ internal class SettingViewModel @Inject constructor(
      */
     fun navigateStep(step: SettingType) = intent {
         reduce { state.copy(settingType = step) }
+    }
+
+    /**
+     * 덕키 마켓 페이지로 이동합니다.
+     */
+    fun goToMarket() = intent {
+        postSideEffect(SettingSideEffect.NavigatePlayStoreMarket)
     }
 
     /**

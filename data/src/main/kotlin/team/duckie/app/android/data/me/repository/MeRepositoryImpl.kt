@@ -17,19 +17,28 @@ import team.duckie.app.android.common.kotlin.exception.ExceptionCode.ServerUserI
 import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemException
 import team.duckie.app.android.core.datastore.PreferenceKey
 import team.duckie.app.android.data.auth.datasource.AuthDataSource
+import team.duckie.app.android.data.devMode.datasource.DevModeDataSource
 import team.duckie.app.android.data.user.datasource.UserDataSource
 import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.user.model.User
 import javax.inject.Inject
 
+// TODO(riflockle7): 추후 앱 크래시 데이터 복구용으로 네이밍 변경 필요
 class MeRepositoryImpl @Inject constructor(
+    private val devModeDataSource: DevModeDataSource,
     private val authDataSource: AuthDataSource,
     private val userDataSource: UserDataSource,
     private val dataStore: DataStore<Preferences>,
 ) : MeRepository {
+    private var isStageChecked: Boolean = false
     private var me: User? = null
-
     override suspend fun getMe(): User {
+        // 0. DevMode 에서 API
+        if (!isStageChecked) {
+            isStageChecked = true
+            devModeDataSource.setApiEnvironment(getIsStage())
+        }
+
         // 1. DataStore 에 토큰 값이 있는지 체크
         val meToken = getMeToken() ?: duckieClientLogicProblemException(code = ClientMeTokenNull)
 
@@ -78,5 +87,11 @@ class MeRepositoryImpl @Inject constructor(
         // TODO(riflockle7): 더 좋은 구현 방법이 있을까?
         // ref: https://medium.com/androiddevelopers/datastore-and-synchronous-work-576f3869ec4c
         return dataStore.data.first()[PreferenceKey.Account.AccessToken]
+    }
+
+    override suspend fun getIsStage(): Boolean {
+        // TODO(riflockle7): 더 좋은 구현 방법이 있을까?
+        // ref: https://medium.com/androiddevelopers/datastore-and-synchronous-work-576f3869ec4c
+        return dataStore.data.first()[PreferenceKey.DevMode.IsStage] ?: false
     }
 }

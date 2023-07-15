@@ -83,7 +83,6 @@ private fun ExamineeContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .quackClickable(
-                    rippleEnabled = false,
                     onClick = { onClick(user.id) },
                 ),
             horizontalArrangement = Arrangement.SpaceBetween,

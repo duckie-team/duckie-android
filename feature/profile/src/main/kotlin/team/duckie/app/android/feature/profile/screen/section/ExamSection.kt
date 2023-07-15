@@ -7,39 +7,45 @@
 
 package team.duckie.app.android.feature.profile.screen.section
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.app.android.feature.profile.R
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackTitle2
 
 @Composable
 fun ExamSection(
     isLoading: Boolean,
-    @DrawableRes icon: Int,
+    icon: ImageVector,
     title: String,
     exams: ImmutableList<DuckTestCoverItem>,
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMore: (() -> Unit)? = null,
+    onClickShowAll: () -> Unit,
     emptySection: @Composable () -> Unit,
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -50,21 +56,23 @@ fun ExamSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 QuackImage(
-                    modifier = Modifier.skeleton(isLoading),
+                    modifier = Modifier
+                        .size(DpSize(24.dp, 24.dp))
+                        .skeleton(isLoading),
                     src = icon,
-                    size = DpSize(all = 24.dp),
                 )
                 QuackTitle2(
                     modifier = Modifier.skeleton(isLoading),
                     text = title,
                 )
             }
-            /* TODO (EvergreenTree97) 전체 보기 추후 구현
-            QuackBody2(
-                text = "전체보기",
-                color = QuackColor.Gray1,
-                onClick = onClickShowAll,
-            )*/
+            if (exams.isNotEmpty()) {
+                QuackText(
+                    modifier = Modifier.quackClickable(onClick = onClickShowAll),
+                    text = stringResource(id = R.string.profile_view_all),
+                    typography = QuackTypography.Body2.change(color = QuackColor.Gray1),
+                )
+            }
         }
         Spacer(space = 16.dp)
         if (exams.isEmpty()) {

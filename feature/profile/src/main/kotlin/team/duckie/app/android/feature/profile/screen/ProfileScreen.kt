@@ -18,16 +18,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.profile.R
 import team.duckie.app.android.feature.profile.component.EmptyText
 import team.duckie.app.android.feature.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.profile.screen.section.ProfileSection
+import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
+import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.kotlin.FriendsType
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Badge
+import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
 
 @Composable
 fun ProfileScreen(
@@ -41,6 +46,7 @@ fun ProfileScreen(
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMore: (() -> Unit)? = null,
     onClickFriend: (FriendsType, Int, String) -> Unit,
+    onClickShowAll: (ProfileStep.ViewAll) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val solvedExams = remember(userProfile.solvedExamInstances) {
@@ -91,19 +97,26 @@ fun ProfileScreen(
             submittedExamSection()
             Spacer(space = 44.dp)
             ExamSection(
-                icon = QuackIcon.Badge.drawableId,
+                icon = QuackIcon.Outlined.Badge,
                 title = stringResource(id = R.string.solved_exam),
                 exams = solvedExams,
                 onClickExam = onClickExam,
                 onClickMore = onClickMore,
                 emptySection = {
-                    EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
+                    EmptyText(message = stringResource(id = R.string.not_yet_solved_exam))
                 },
                 isLoading = isLoading,
+                onClickShowAll = {
+                    onClickShowAll(
+                        ProfileStep.ViewAll(
+                            examType = ExamType.Solved,
+                        ),
+                    )
+                },
             )
             Spacer(space = 40.dp)
             ExamSection(
-                icon = QuackIcon.Heart.drawableId,
+                icon = QuackIcon.Outlined.Heart,
                 title = stringResource(id = R.string.hearted_exam),
                 exams = heartedExams,
                 onClickExam = onClickExam,
@@ -112,6 +125,13 @@ fun ProfileScreen(
                     EmptyText(message = stringResource(id = R.string.not_yet_heart_exam))
                 },
                 isLoading = isLoading,
+                onClickShowAll = {
+                    onClickShowAll(
+                        ProfileStep.ViewAll(
+                            examType = ExamType.Heart,
+                        ),
+                    )
+                },
             )
         }
     }

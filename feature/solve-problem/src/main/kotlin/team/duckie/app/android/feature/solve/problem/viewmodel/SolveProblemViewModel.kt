@@ -24,7 +24,6 @@ import team.duckie.app.android.common.android.timer.ProblemTimer
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.kotlin.ImmutableList
 import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
-import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.feature.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
@@ -47,22 +46,14 @@ internal class SolveProblemViewModel @Inject constructor(
         initState()
     }
 
-    companion object {
-        internal const val TimerCount = 10
-        internal val DuringMillis = 1.seconds
-        private const val CORRECT_ANSWER_IS_NULL = "correct_answer_is_null"
-    }
-
     private val problemTimer = ProblemTimer(
-        count = TimerCount,
         coroutineScope = viewModelScope,
-        duringMillis = DuringMillis,
     )
 
-    val timerCount: StateFlow<Int> = problemTimer.remainingTime
+    val timerCount: StateFlow<Float> = problemTimer.remainingTime
 
-    fun startTimer() {
-        problemTimer.start()
+    fun startTimer(time: Float) {
+        problemTimer.start(time)
     }
 
     fun stopTimer() {
@@ -129,6 +120,7 @@ internal class SolveProblemViewModel @Inject constructor(
                         quizProblems = quizProblems.toImmutableList(),
                         inputAnswers = ImmutableList(quizProblems.size) { InputAnswer() },
                         totalPage = quizProblems.size,
+                        time = quizResult.exam.timer ?: 0,
                     )
                 }
             }
@@ -149,7 +141,9 @@ internal class SolveProblemViewModel @Inject constructor(
         val correctAnswer = state.quizProblems[pageIndex].correctAnswer
             ?: throw DuckieClientLogicProblemException(code = CORRECT_ANSWER_IS_NULL)
         state.quizProblems[pageIndex].answer
-        if (correctAnswer.replace(" ", "").lowercase() != inputAnswer.answer.replace(" ", "").lowercase()) {
+        if (correctAnswer.replace(" ", "").lowercase() != inputAnswer.answer.replace(" ", "")
+                .lowercase()
+        ) {
             finishQuiz(pageIndex, false, inputAnswer.answer)
         } else {
             postSideEffect(SolveProblemSideEffect.MoveNextPage(maxPage))
@@ -176,7 +170,7 @@ internal class SolveProblemViewModel @Inject constructor(
         postSideEffect(
             SolveProblemSideEffect.FinishQuiz(
                 examId = state.examId,
-                time = problemTimer.totalTime,
+                time = problemTimer.totalTime.toInt(),
                 correctProblemCount = if (isSuccess) { // 현재 페이지 인덱스 == 맞은 개수
                     index + 1
                 } else {
@@ -198,4 +192,8 @@ internal class SolveProblemViewModel @Inject constructor(
     }
 
     fun stopExam() = intent { postSideEffect(SolveProblemSideEffect.NavigatePreviousScreen) }
+
+    companion object {
+        private const val CORRECT_ANSWER_IS_NULL = "correct_answer_is_null"
+    }
 }

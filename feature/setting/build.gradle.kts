@@ -24,7 +24,8 @@ android {
     }
 
     defaultConfig {
-        buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName.$VersionCode\"")
+        buildConfigField("String", "APP_VERSION_CODE", "\"$VersionCode\"")
+        buildConfigField("String", "APP_VERSION_NAME", "\"$VersionName\"")
     }
 }
 
@@ -37,6 +38,7 @@ dependencies {
         projects.common.android,
         projects.common.kotlin,
         projects.common.compose,
+        projects.feature.devMode,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.quack.ui.components,

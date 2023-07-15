@@ -32,13 +32,16 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.ImeSpacer
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.component.QuackBasicTextField
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
-import team.duckie.quackquack.ui.component.QuackTagType
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
+import team.duckie.app.android.common.compose.ui.icon.v1.SearchId
+import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
+import team.duckie.quackquack.animation.QuackAnimatedVisibility
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 fun SearchTagScreen(
@@ -83,7 +86,7 @@ fun SearchTagScreen(
     ) {
         QuackTopAppBar(
             leadingText = title,
-            trailingIcon = QuackIcon.Close,
+            trailingIconResId = QuackIcon.CloseId,
             onTrailingIconClick = onCloseClick,
         )
 
@@ -97,17 +100,18 @@ fun SearchTagScreen(
                 ),
                 horizontalSpace = 4.dp,
                 items = tags,
-                tagType = QuackTagType.Circle(QuackIcon.Close),
+                tagTypeResId = QuackIcon.CloseId,
                 onClick = { onTagClick(it) },
                 itemChunkedSize = 3,
             )
         }
 
-        QuackBasicTextField(
+        // TODO(riflockle7): 사용해도 괜찮을지 검토 필요
+        QuackNoUnderlineTextField(
             modifier = Modifier
                 .padding(top = 16.dp)
                 .focusRequester(focusRequester),
-            leadingIcon = QuackIcon.Search,
+            leadingIcon = QuackIcon.SearchId,
             text = searchTextFieldValue.value,
             onTextChanged = { textFieldValue ->
                 searchTextFieldValue.value = textFieldValue
@@ -179,10 +183,12 @@ private fun SearchTagItemScreen(
     text: String,
     onClick: () -> Unit,
 ) {
-    QuackBody1(
-        modifier = Modifier.fillMaxWidth(),
-        padding = PaddingValues(vertical = 12.dp),
+    QuackText(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(PaddingValues(vertical = 12.dp))
+            .quackClickable(onClick = onClick),
+        typography = QuackTypography.Body1,
         text = text,
-        onClick = onClick,
     )
 }

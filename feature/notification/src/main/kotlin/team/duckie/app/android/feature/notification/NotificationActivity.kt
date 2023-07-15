@@ -32,7 +32,7 @@ import team.duckie.quackquack.ui.color.QuackColor
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NotificationActivity : team.duckie.app.android.common.android.ui.BaseActivity() {
+class NotificationActivity : BaseActivity() {
 
     private val viewModel: NotificationViewModel by viewModels()
 

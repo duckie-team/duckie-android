@@ -13,8 +13,10 @@ import team.duckie.app.android.feature.setting.constans.Withdraweason
 
 internal data class SettingState(
     val me: User? = null,
+    val isStage: Boolean = false,
     val settingType: SettingType = SettingType.Main,
 
+    val devModeDialogVisible: Boolean = false,
     val logoutDialogVisible: Boolean = false,
     val withdrawDialogVisible: Boolean = false,
 

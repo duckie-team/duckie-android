@@ -27,13 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import team.duckie.app.android.common.compose.ui.DuckieDivider
 import team.duckie.app.android.common.kotlin.runIf
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
 enum class DuckieDialogPosition {
     BOTTOM, CENTER, TOP
@@ -83,7 +84,7 @@ fun DuckieDialog(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
                         .background(
-                            color = QuackColor.White.composeColor,
+                            color = QuackColor.White.value,
                         ),
                 ) {
                     QuackHeadLine2(
@@ -109,55 +110,128 @@ fun DuckieDialog(
                             text = message,
                         )
                     }
-                    QuackDivider(modifier = Modifier.fillMaxWidth())
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        if (leftButtonText != null) {
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .quackClickable(
-                                        onClick = leftButtonOnClick,
-                                    ),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                QuackSubtitle(
-                                    modifier = Modifier
-                                        .padding(
-                                            vertical = 12.dp,
-                                            horizontal = 16.dp,
-                                        ),
-                                    text = leftButtonText,
-                                    color = QuackColor.Black,
-                                )
-                            }
-                        }
-                        if (rightButtonText != null) {
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .background(color = QuackColor.DuckieOrange.composeColor)
-                                    .quackClickable(
-                                        onClick = rightButtonOnClick,
-                                    ),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                QuackSubtitle(
-                                    modifier = Modifier
-                                        .padding(
-                                            vertical = 12.dp,
-                                            horizontal = 16.dp,
-                                        ),
-                                    text = rightButtonText,
-                                    color = QuackColor.White,
-                                )
-                            }
-                        }
-                    }
+                    DuckieDialogBottomLayout(
+                        leftButtonText = leftButtonText,
+                        leftButtonOnClick = leftButtonOnClick,
+                        rightButtonText = rightButtonText,
+                        rightButtonOnClick = rightButtonOnClick,
+                    )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun DuckieDialog(
+    modifier: Modifier = Modifier,
+    container: @Composable () -> Unit,
+    leftButtonText: String? = null,
+    leftButtonOnClick: (() -> Unit)? = null,
+    rightButtonText: String? = null,
+    rightButtonOnClick: (() -> Unit)? = null,
+    visible: Boolean,
+    onDismissRequest: () -> Unit,
+    dialogPosition: DuckieDialogPosition = DuckieDialogPosition.CENTER,
+    properties: DialogProperties = DialogProperties(
+        usePlatformDefaultWidth = false,
+    ),
+) {
+    if (visible) {
+        Dialog(
+            properties = properties,
+            onDismissRequest = onDismissRequest,
+        ) {
+            val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
+            dialogWindowProvider.setGravity(position = dialogPosition)
+
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 30.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(
+                            color = QuackColor.White.value,
+                        ),
+                ) {
+                    container()
+
+                    DuckieDialogBottomLayout(
+                        leftButtonText = leftButtonText,
+                        leftButtonOnClick = leftButtonOnClick,
+                        rightButtonText = rightButtonText,
+                        rightButtonOnClick = rightButtonOnClick,
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * [DuckieDialog] 내 최하단 Layout
+ * 보통 0~2개의 버튼이 존재한다
+ */
+@Composable
+private fun DuckieDialogBottomLayout(
+    leftButtonText: String?,
+    leftButtonOnClick: (() -> Unit)?,
+    rightButtonText: String?,
+    rightButtonOnClick: (() -> Unit)?,
+) {
+    DuckieDivider(modifier = Modifier.fillMaxWidth())
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (leftButtonText != null) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .quackClickable(
+                        onClick = leftButtonOnClick,
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                QuackText(
+                    modifier = Modifier
+                        .padding(
+                            vertical = 12.dp,
+                            horizontal = 16.dp,
+                        ),
+                    text = leftButtonText,
+                    typography = QuackTypography.Subtitle.change(color = QuackColor.Black),
+                    singleLine = true,
+                )
+            }
+        }
+        if (rightButtonText != null) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(color = QuackColor.DuckieOrange.value)
+                    .quackClickable(
+                        onClick = rightButtonOnClick,
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                QuackText(
+                    modifier = Modifier
+                        .padding(
+                            vertical = 12.dp,
+                            horizontal = 16.dp,
+                        ),
+                    text = rightButtonText,
+                    typography = QuackTypography.Subtitle.change(color = QuackColor.White),
+                    singleLine = true,
+                )
             }
         }
     }

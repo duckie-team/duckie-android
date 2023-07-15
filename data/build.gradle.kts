@@ -36,6 +36,8 @@ android {
         // 정규식 패턴에 맞게 검색하여 결과 출력
         val versionNameNumber = pattern.findAll(VersionName).map { it.value }.first()
         buildConfigField("String", "APP_VERSION_NAME_NUMBER", "\"$versionNameNumber\"")
+        buildConfigField("String", "REAL_API_URL", "\"${AppVersionNameProvider.App.realUrl}\"")
+        buildConfigField("String", "STAGE_API_URL", "\"${AppVersionNameProvider.App.stageUrl}\"")
         manifestPlaceholders["KAKAO_MANIFEST_SCHEME"] =
             gradleLocalProperties(rootDir).getProperty("KAKAO_MANIFEST_SCHEME")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

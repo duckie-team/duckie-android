@@ -32,6 +32,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import kotlinx.collections.immutable.ImmutableList
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
@@ -60,7 +61,7 @@ internal fun SearchScreen(
             .fillMaxSize()
             .imePadding(),
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(22.dp))
         if (state.recentSearch.isEmpty()) {
             RecentSearchNotFoundScreen()
         } else {
@@ -101,9 +102,9 @@ private fun RecentSearchNotFoundScreen() {
             text = stringResource(id = R.string.no_recent_search),
             color = QuackColor.Gray1,
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(space = 12.dp)
         QuackBody1(
-            text = stringResource(id = R.string.search_another_keyword),
+            text = stringResource(id = R.string.search_favorite_exam),
             color = QuackColor.Gray1,
         )
     }
