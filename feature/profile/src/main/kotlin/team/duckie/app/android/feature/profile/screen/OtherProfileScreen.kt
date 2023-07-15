@@ -11,6 +11,7 @@ package team.duckie.app.android.feature.profile.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -44,8 +45,9 @@ import team.duckie.app.android.feature.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
 
 @Composable
 internal fun OtherProfileScreen(
@@ -110,14 +112,17 @@ internal fun OtherProfileScreen(
                     onBackPressed = viewModel::clickBackPress,
                     trailingContent = {
                         QuackImage(
-                            size = DpSize(24.dp, 24.dp),
-                            src = QuackIcon.More,
-                            onClick = {
-                                viewModel.updateBottomSheetDialogType(DuckieSelectableType.Ignore)
-                                coroutineScope.launch {
-                                    bottomSheetState.show()
-                                }
-                            },
+                            modifier = Modifier
+                                .size(DpSize(24.dp, 24.dp))
+                                .quackClickable(
+                                    onClick = {
+                                        viewModel.updateBottomSheetDialogType(DuckieSelectableType.Ignore)
+                                        coroutineScope.launch {
+                                            bottomSheetState.show()
+                                        }
+                                    },
+                                ),
+                            src = QuackIcon.More.drawableId,
                         )
                     },
                 )
@@ -136,7 +141,7 @@ internal fun OtherProfileScreen(
             submittedExamSection = {
                 ExamSection(
                     isLoading = state.isLoading,
-                    icon = QuackIcon.Create,
+                    icon = team.duckie.quackquack.ui.icon.QuackIcon.Companion.Create,
                     title = stringResource(id = R.string.submitted_exam),
                     exams = submittedExams,
                     onClickExam = viewModel::clickExam,
