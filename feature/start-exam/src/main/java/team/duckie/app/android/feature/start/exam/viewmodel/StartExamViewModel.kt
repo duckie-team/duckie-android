@@ -52,6 +52,7 @@ internal class StartExamViewModel @Inject constructor(
                         )
                     }
                 }.onFailure {
+                    reduce { StartExamState.Error(it) }
                     postSideEffect(StartExamSideEffect.ReportError(it))
                 }
             } else {
