@@ -88,6 +88,10 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    fun copyExamDynamicLink(examId: Int) = intent {
+        postSideEffect(DetailSideEffect.CopyExamIdDynamicLink(examId))
+    }
+
     fun pullToRefresh() = intent {
         updateIsRefreshing(true)
         refresh()

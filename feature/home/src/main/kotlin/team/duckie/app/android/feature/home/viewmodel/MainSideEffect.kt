@@ -43,7 +43,10 @@ internal sealed class MainSideEffect {
 
     object ClickRankingRetry : MainSideEffect()
 
-    class NavigateToFriends(val friendType: FriendsType, val myUserId: Int, val nickname: String) : MainSideEffect()
+    class NavigateToFriends(val friendType: FriendsType, val myUserId: Int, val nickname: String) :
+        MainSideEffect()
 
     class SendToast(val message: String) : MainSideEffect()
+
+    data class CopyExamIdDynamicLink(val examId: Int) : MainSideEffect()
 }

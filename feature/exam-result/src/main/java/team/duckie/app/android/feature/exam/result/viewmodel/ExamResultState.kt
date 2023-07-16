@@ -7,10 +7,17 @@
 
 package team.duckie.app.android.feature.exam.result.viewmodel
 
+enum class ExamResultScreen {
+    EXAM_RESULT,
+    SHARE_EXAM_RESULT,
+}
+
 sealed class ExamResultState {
     object Loading : ExamResultState()
 
     data class Success(
+        val currentScreen: ExamResultScreen = ExamResultScreen.EXAM_RESULT,
+
         val reportUrl: String = "",
         val examId: Int = 0,
         val isQuiz: Boolean = true,
@@ -25,11 +32,15 @@ sealed class ExamResultState {
         val timer: Int = 0,
         val originalExamId: Int = 0,
         val nickname: String = "",
+        val thumbnailUrl: String = "",
+        val solvedCount: Int = 0,
 
         // user input state
         val reaction: String = "",
         val isBestRecord: Boolean = false,
-    ) : ExamResultState()
+    ) : ExamResultState() {
+        val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
+    }
 
     data class Error(
         val exception: Throwable,

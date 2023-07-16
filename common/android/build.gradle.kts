@@ -24,9 +24,10 @@ android {
 dependencies {
     implementations(
         platform(libs.firebase.bom),
-        libs.androidx.annotation,
-        libs.firebase.crashlytics,
         projects.common.kotlin,
+        libs.androidx.annotation,
+        libs.firebase.dynamic.links,
+        libs.firebase.crashlytics,
         libs.androidx.lifecycle.savedstate,
         libs.ktx.lifecycle.runtime,
         libs.ktx.lifecycle.viewmodel,
