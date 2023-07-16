@@ -14,6 +14,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -21,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.home.viewmodel.MainSideEffect
@@ -89,7 +91,7 @@ class MainActivity : BaseActivity() {
         startedGuide(intent)
 
         setContent {
-            val state by mainViewModel.collectAsState()
+            val state = mainViewModel.container.stateFlow.collectAsState().value
 
             LaunchedEffect(key1 = mainViewModel) {
                 mainViewModel.container.sideEffectFlow
@@ -215,6 +217,10 @@ class MainActivity : BaseActivity() {
 
             is MainSideEffect.SendToast -> {
                 Toast.makeText(this, sideEffect.message, Toast.LENGTH_SHORT).show()
+            }
+
+            is MainSideEffect.CopyExamIdDynamicLink -> {
+                DynamicLinkHelper.createAndShareLink(this, sideEffect.examId)
             }
         }
     }

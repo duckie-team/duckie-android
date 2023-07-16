@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.android.ui.BaseActivity
@@ -134,6 +135,10 @@ class DetailActivity : BaseActivity() {
                         putExtra(Extras.IsPassed, true)
                     },
                 )
+            }
+
+            is DetailSideEffect.CopyExamIdDynamicLink -> {
+                DynamicLinkHelper.createAndShareLink(this, sideEffect.examId)
             }
         }
     }

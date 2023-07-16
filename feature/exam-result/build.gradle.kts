@@ -29,6 +29,7 @@ dependencies {
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,
+        libs.compose.ui.coil,
         libs.compose.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
         libs.quack.ui.components,

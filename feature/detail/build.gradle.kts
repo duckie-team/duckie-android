@@ -27,6 +27,7 @@ dependencies {
         projects.common.android,
         projects.common.kotlin,
         projects.common.compose,
+        libs.firebase.dynamic.links,
         libs.kotlin.collections.immutable,
         libs.orbit.viewmodel,
         libs.orbit.compose,

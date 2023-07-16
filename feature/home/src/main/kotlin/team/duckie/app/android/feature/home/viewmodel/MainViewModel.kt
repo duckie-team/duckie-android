@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.home.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
@@ -14,6 +15,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.feature.home.constants.BottomNavigationStep
@@ -27,6 +29,7 @@ import javax.inject.Inject
 internal class MainViewModel @Inject constructor(
     private val fetchPopularTagsUseCase: FetchPopularTagsUseCase,
     private val reportUseCase: ReportUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<MainState, MainSideEffect>, ViewModel() {
 
     override val container = container<MainState, MainSideEffect>(MainState())
@@ -34,6 +37,10 @@ internal class MainViewModel @Inject constructor(
     // 각 화면 초기화 여부를 관리하는 Map
     private val initStateMap: MutableMap<MainScreenType, Boolean> =
         MainScreenType.values().associateWith { false }.toMutableMap()
+
+    init {
+        processDeepLink()
+    }
 
     /** MainScreen 에 띄워지는 화면을 초기화한다. 이미 된 경우에는 하지 않는다. */
     fun initState(
@@ -46,12 +53,20 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
+    private fun processDeepLink() {
+        val examId = savedStateHandle.getStateFlow(Extras.DynamicLinkExamId, -1).value
+
+        if (examId != -1) {
+            navigateToHomeDetail(examId = examId)
+        }
+    }
+
     /**
      * 신고할 게시물의 [examId] 를 업데이트합니다.
      */
-    fun setReportExamId(examId: Int) = intent {
+    fun setTargetExamId(examId: Int) = intent {
         reduce {
-            state.copy(reportExamId = examId)
+            state.copy(targetExamId = examId)
         }
     }
 
@@ -59,7 +74,7 @@ internal class MainViewModel @Inject constructor(
      * [state.reportExamId]에 해당하는 게시물을 신고합니다.
      */
     fun report() = intent {
-        reportUseCase(state.reportExamId)
+        reportUseCase(state.targetExamId)
             .onSuccess {
                 updateReportDialogVisible(true)
             }
@@ -72,6 +87,12 @@ internal class MainViewModel @Inject constructor(
                     else -> postSideEffect(MainSideEffect.ReportError(exception))
                 }
             }
+    }
+
+    fun copyExamDynamicLink() = intent {
+        val examId = state.targetExamId
+
+        postSideEffect(MainSideEffect.CopyExamIdDynamicLink(examId))
     }
 
     fun updateReportDialogVisible(visible: Boolean) = intent {

@@ -34,6 +34,7 @@ class ExamResultActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         viewModel.observe(
             lifecycleOwner = this,
             sideEffect = ::handleSideEffect,

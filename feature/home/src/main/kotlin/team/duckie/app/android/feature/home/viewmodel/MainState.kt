@@ -13,7 +13,7 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.home.constants.BottomNavigationStep
 
 internal data class MainState(
-    val reportExamId: Int = 0,
+    val targetExamId: Int = 0,
     val reportDialogVisible: Boolean = false,
 
     val bottomNavigationStep: BottomNavigationStep = BottomNavigationStep.HomeScreen,
