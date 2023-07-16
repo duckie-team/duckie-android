@@ -32,7 +32,6 @@ android {
 
     defaultConfig {
         buildConfigField("String", "DEV_MODE_PASSWORD", "\"$devModePassword\"")
-        buildConfigField("boolean", "IS_STAGE", "${AppVersionNameProvider.App.isStage}")
     }
 }
 

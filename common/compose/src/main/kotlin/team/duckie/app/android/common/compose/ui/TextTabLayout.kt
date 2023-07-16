@@ -16,15 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 fun TextTabLayout(
     titles: ImmutableList<String>,
-    selectedTabStyle: QuackTextStyle = QuackTextStyle.HeadLine2,
-    tabStyle: QuackTextStyle = QuackTextStyle.Title2,
+    selectedTabStyle: QuackTypography = QuackTypography.HeadLine2,
+    tabStyle: QuackTypography = QuackTypography.Title2,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
     space: Dp = 12.dp,
@@ -36,19 +36,19 @@ fun TextTabLayout(
         itemsIndexed(titles) { index, text ->
             if (index == selectedTabIndex) {
                 QuackText(
-                    modifier = Modifier.quackClickable {
-                        onTabSelected(index)
-                    },
+                    modifier = Modifier.quackClickable(
+                        onClick = { onTabSelected(index) },
+                    ),
                     text = text,
-                    style = selectedTabStyle,
+                    typography = selectedTabStyle,
                 )
             } else {
                 QuackText(
-                    modifier = Modifier.quackClickable {
-                        onTabSelected(index)
-                    },
+                    modifier = Modifier.quackClickable(
+                        onClick = { onTabSelected(index) },
+                    ),
                     text = text,
-                    style = tabStyle,
+                    typography = tabStyle,
                 )
             }
         }

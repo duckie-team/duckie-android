@@ -7,45 +7,44 @@
 
 package team.duckie.app.android.feature.profile.component
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackSurface
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun GrayBorderButton(
-    modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
 ) {
-    QuackSurface(
-        modifier = modifier,
-        backgroundColor = QuackColor.White,
-        border = QuackBorder(
-            width = 1.dp,
-            color = QuackColor.Gray3,
-        ),
-        shape = RoundedCornerShape(size = 100.dp),
-        onClick = onClick,
-    ) {
-        QuackText(
-            modifier = Modifier.padding(
+    QuackText(
+        modifier = Modifier
+            .clip(RoundedCornerShape(size = 100.dp))
+            .quackClickable(onClick = onClick)
+            .background(QuackColor.White.value)
+            .border(
+                width = 1.dp,
+                brush = QuackColor.Gray3.toBrush(),
+                shape = RoundedCornerShape(size = 100.dp),
+            )
+            .padding(
                 vertical = 4.dp,
                 horizontal = 8.dp,
             ),
-            text = text,
-            style = QuackTextStyle.Body2.change(
-                color = QuackColor.Gray1,
-                textAlign = TextAlign.Center,
-            ),
-            singleLine = true,
-        )
-    }
+        text = text,
+        typography = QuackTypography.Body2.change(
+            color = QuackColor.Gray1,
+            textAlign = TextAlign.Center,
+        ),
+        singleLine = true,
+    )
 }

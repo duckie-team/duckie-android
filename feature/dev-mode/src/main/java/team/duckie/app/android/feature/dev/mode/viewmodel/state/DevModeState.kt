@@ -7,14 +7,16 @@
 
 package team.duckie.app.android.feature.dev.mode.viewmodel.state
 
-open class DevModeState {
+open class DevModeState(open val isStage: Boolean) {
     data class InputPassword(
         val inputted: String = "",
-    ) : DevModeState()
+        override val isStage: Boolean,
+    ) : DevModeState(isStage)
 
     data class Success(
         val duckieApi: DuckieApi = DuckieApi.Real,
-    ) : DevModeState()
+        override val isStage: Boolean,
+    ) : DevModeState(isStage)
 }
 
 enum class DuckieApi {

@@ -139,6 +139,8 @@ sealed class Answer(val type: Type) {
         return type.hashCode()
     }
 
+    val isImageChoice get() = this.type == Type.ImageChoice
+
     fun isShortAnswer(): Boolean = this.type == Type.ShortAnswer
 
     fun validate(): Boolean = when (this) {

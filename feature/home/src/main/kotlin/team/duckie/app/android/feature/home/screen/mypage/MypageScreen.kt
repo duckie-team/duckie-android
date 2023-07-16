@@ -29,27 +29,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.compose.ToastWrapper
+import team.duckie.app.android.common.compose.collectAndHandleState
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.FriendsType
+import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemException
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
-import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageSideEffect
 import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
-import team.duckie.app.android.feature.profile.getViewAllTitle
 import team.duckie.app.android.feature.profile.screen.MyProfileScreen
 import team.duckie.app.android.feature.profile.screen.viewall.ViewAllScreen
+import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
-import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.quackquack.ui.color.QuackColor
+
+const val CreateExamIsNotSupported = "Created exam is not supported"
 
 @Composable
 internal fun MyPageScreen(
@@ -176,10 +177,24 @@ internal fun MyPageScreen(
 
             is ProfileStep.ViewAll -> {
                 ViewAllScreen(
-                    title = getViewAllTitle(examType = step.examType),
+                    examType = step.examType,
                     onBackPressed = viewModel::clickViewAllBackPress,
-                    duckTestCoverItems = step.getExamList()
-                        .map(ProfileExam::toUiModel).toImmutableList(),
+                    profileExams = when (step.examType) {
+                        ExamType.Heart -> viewModel.heartExams.collectAndHandleState(
+                            handleLoadStates = viewModel::handleLoadState,
+                        )
+
+                        ExamType.Created -> viewModel.submittedExams.collectAndHandleState(
+                            handleLoadStates = viewModel::handleLoadState,
+                        )
+
+                        ExamType.Solved -> duckieClientLogicProblemException(
+                            message = CreateExamIsNotSupported,
+                        )
+                    },
+                    profileExamInstances = viewModel.solvedExams.collectAndHandleState(
+                        handleLoadStates = viewModel::handleLoadState,
+                    ),
                     onItemClick = viewModel::clickExam,
                 )
             }

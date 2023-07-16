@@ -11,10 +11,9 @@ package team.duckie.app.android.feature.solve.problem.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
@@ -40,16 +39,18 @@ import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.isCurrentPage
 import team.duckie.app.android.common.compose.moveNextPage
 import team.duckie.app.android.common.compose.movePrevPage
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
 import team.duckie.app.android.feature.solve.problem.R
-import team.duckie.app.android.feature.solve.problem.answer.answerSection
+import team.duckie.app.android.feature.solve.problem.answer.AnswerSection
 import team.duckie.app.android.feature.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.solve.problem.common.DoubleButtonBottomBar
 import team.duckie.app.android.feature.solve.problem.common.FlexibleSubjectiveQuestionSection
-import team.duckie.app.android.feature.solve.problem.question.questionSection
+import team.duckie.app.android.feature.solve.problem.common.verticalScrollModifierAsCondition
+import team.duckie.app.android.feature.solve.problem.question.QuestionSection
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
 
@@ -115,7 +116,6 @@ internal fun SolveProblemScreen(
             CloseAndPageTopBar(
                 modifier = Modifier
                     .layoutId(SolveProblemTopAppBarLayoutId)
-                    .padding(vertical = 12.dp)
                     .padding(start = 12.dp)
                     .padding(end = 16.dp),
                 onCloseClick = {
@@ -191,6 +191,8 @@ private fun ContentSection(
             }
         }
 
+        val isImageChoice = problem.answer?.isImageChoice == true
+
         when {
             // for keyboard flexible image height
             problem.isSubjective() && problem.question.isImage() -> FlexibleSubjectiveQuestionSection(
@@ -202,16 +204,20 @@ private fun ContentSection(
                 keyboardController = keyboardController,
             )
 
-            else -> LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(space = 24.dp),
+            else -> Column(
+                modifier = Modifier
+                    .verticalScrollModifierAsCondition(isImageChoice)
+                    .fillMaxSize(),
             ) {
-                questionSection(
+                Spacer(space = 16.dp)
+                QuestionSection(
                     page = pageIndex,
                     question = problem.question,
+                    isImageChoice = isImageChoice,
                 )
+                Spacer(space = 24.dp)
                 val answer = problem.answer
-                answerSection(
+                AnswerSection(
                     pageIndex = pageIndex,
                     answer = when (answer) {
                         is Answer.Short -> Answer.Short(
@@ -227,6 +233,7 @@ private fun ContentSection(
                     requestFocus = requestFocus,
                     keyboardController = keyboardController,
                 )
+                Spacer(space = 16.dp)
             }
         }
     }

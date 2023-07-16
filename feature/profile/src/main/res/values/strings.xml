@@ -27,7 +27,7 @@
     <string name="my_favorite_tag">내 관심 태그</string>
     <string name="not_yet_add_favorite_tag">추가한 관심태그가 없어요 :(</string>
     <string name="favorite_tag">관심 태그</string>
-    <string name="add_favorite_tag">관심 태그 추가하기</string>
+    <string name="add_favorite_tag">관심태그 추가하기</string>
 
     <string name="please_input_introduce">자기소개를 입력해주세요 :)</string>
     <string name="provide_after">추후 제공되는 기능입니다.</string>

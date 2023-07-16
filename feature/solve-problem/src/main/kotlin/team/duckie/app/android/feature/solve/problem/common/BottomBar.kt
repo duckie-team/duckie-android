@@ -99,14 +99,14 @@ internal fun DoubleButtonBottomBar(
             QuackAnimatedContent(targetState = isFirstPage) {
                 when (it) {
                     true -> {
+                        Spacer(modifier = Modifier)
+                    }
+
+                    false -> {
                         MediumButton(
                             text = stringResource(id = R.string.previous),
                             onClick = onLeftButtonClick,
                         )
-                    }
-
-                    false -> {
-                        Spacer(modifier = Modifier)
                     }
                 }
             }

@@ -12,6 +12,8 @@ import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.examInstance.model.ExamInstanceData
 import team.duckie.app.android.data.examInstance.model.ProblemInstanceData
+import team.duckie.app.android.data.examInstance.model.ProfileExamInstanceDatas
+import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.domain.examInstance.model.ExamInstance
 import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.domain.examInstance.model.ProblemInstance
@@ -32,3 +34,6 @@ internal fun ProblemInstanceData.toDomain() = ProblemInstance(
     status = status ?: duckieResponseFieldNpe("${this::class.java.simpleName}.status"),
     submittedAnswer = submittedAnswer,
 )
+
+internal fun ProfileExamInstanceDatas.toDomain() = examInstances?.fastMap { it.toDomain() }
+    ?: duckieResponseFieldNpe("${this::class.java.simpleName}.examInstances")

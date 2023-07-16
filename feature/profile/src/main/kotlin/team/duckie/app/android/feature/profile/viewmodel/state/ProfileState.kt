@@ -10,8 +10,6 @@ package team.duckie.app.android.feature.profile.viewmodel.state
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
-import team.duckie.app.android.domain.exam.model.ProfileExam
-import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.feature.profile.dummy.skeletonUserProfile
@@ -36,18 +34,7 @@ sealed class ProfileStep {
 
     data class ViewAll(
         val examType: ExamType,
-        val createdExams: ImmutableList<ProfileExam> = persistentListOf(),
-        val solvedExamInstances: ImmutableList<ProfileExamInstance> = persistentListOf(),
-        val heartExams: ImmutableList<ProfileExam> = persistentListOf(),
-    ) : ProfileStep() {
-        fun getExamList(): List<ProfileExam> {
-            return when (examType) {
-                ExamType.Created -> createdExams
-                ExamType.Solved -> solvedExamInstances.map { it.exam ?: ProfileExam.empty() }
-                ExamType.Heart -> heartExams
-            }
-        }
-    }
+    ) : ProfileStep()
 }
 
 enum class ExamType {

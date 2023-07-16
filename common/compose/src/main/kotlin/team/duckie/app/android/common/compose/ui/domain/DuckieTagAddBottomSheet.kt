@@ -48,14 +48,21 @@ import team.duckie.app.android.common.compose.invisible
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.ImeSpacer
+import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
+import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
+import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackCircleTag
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.domain.tag.model.Tag
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBasic2TextField
-import team.duckie.quackquack.ui.component.QuackCircleTag
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackTag
+import team.duckie.quackquack.ui.QuackTagStyle
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackTitle2
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /**
  * 태그를 추가할 수 있는 [ModalBottomSheetLayout]
@@ -74,8 +81,8 @@ fun DuckieTagAddBottomSheet(
     ModalBottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetState = sheetState,
-        sheetBackgroundColor = QuackColor.White.composeColor,
-        scrimColor = QuackColor.Dimmed.composeColor,
+        sheetBackgroundColor = QuackColor.White.value,
+        scrimColor = QuackColor.Dimmed.value,
         sheetShape = RoundedCornerShape(
             topStart = 16.dp,
             topEnd = 16.dp,
@@ -99,6 +106,7 @@ fun DuckieTagAddBottomSheet(
  * @param onDismissRequest 해당 바텀 시트 content 종료 시 실행되는 함수
  * @param requestAddTag 태그 추가 요청하는 로직. 대체로 API 로직이다.
  */
+@OptIn(ExperimentalQuackQuackApi::class)
 @Composable
 private fun DuckieTagAddBottomSheetContent(
     prevTags: List<Tag>,
@@ -148,26 +156,31 @@ private fun DuckieTagAddBottomSheetContent(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             QuackTitle2(text = stringResource(R.string.tag_added_tag))
-            QuackSubtitle(
+            QuackText(
+                modifier = Modifier
+                    .padding(PaddingValues(vertical = 4.dp))
+                    .quackClickable(
+                        onClick = {
+                            onDismissRequest(inputtedTags) {
+                                inputtedTags.clear()
+                                keyboard?.hide()
+                            }
+                        },
+                    ),
                 text = stringResource(R.string.tag_edit_button_done),
-                color = QuackColor.DuckieOrange,
-                padding = PaddingValues(vertical = 4.dp),
-                onClick = {
-                    onDismissRequest(inputtedTags) {
-                        inputtedTags.clear()
-                        keyboard?.hide()
-                    }
-                },
+                typography = QuackTypography.Subtitle.change(color = QuackColor.DuckieOrange),
             )
         }
         if (inputtedTags.isNotEmpty()) {
             Box(modifier = Modifier.padding()) {
-                QuackCircleTag(
+                QuackTag(
                     modifier = Modifier
                         .zIndex(0f)
                         .invisible(),
                     text = "",
-                    isSelected = false,
+                    style = QuackTagStyle.Outlined,
+                    selected = false,
+                    onClick = {},
                 )
 
                 // TODO(sungbin): 애니메이션 출처 밝히기
@@ -185,21 +198,32 @@ private fun DuckieTagAddBottomSheetContent(
                         QuackCircleTag(
                             text = tag.name,
                             isSelected = false,
-                            trailingIcon = QuackIcon.Close,
+                            trailingIconResId = QuackIcon.CloseId,
                         ) {
                             inputtedTags.remove(inputtedTags[index])
                         }
+                        // TODO(riflockle7): 추후 대응
+                        // QuackTag(
+                        //     modifier = Modifier.trailingIcon(icon = team.duckie.quackquack.ui.icon.QuackIcon.Close) {
+                        //         inputtedTags.remove(inputtedTags[index])
+                        //     },
+                        //     text = tag.name,
+                        //     style = QuackTagStyle.Outlined,
+                        //     onClick = {},
+                        // )
                     }
                 }
             }
         }
-        QuackBasic2TextField(
+
+        // TODO(riflockle7): 사용해도 괜찮을지 검토 필요
+        QuackNoUnderlineTextField(
             text = tagInput,
             onTextChanged = { tagInput = it },
             placeholderText = stringResource(R.string.tag_add_manual_placeholder),
-            leadingStartPadding = 16.dp,
+            startPadding = 16.dp,
             trailingEndPadding = 10.dp,
-            trailingIcon = QuackIcon.ArrowSend,
+            trailingIcon = QuackIcon.ArrowSendId,
             trailingIconOnClick = ::updateTagInput,
             keyboardActions = KeyboardActions { updateTagInput() },
         )
