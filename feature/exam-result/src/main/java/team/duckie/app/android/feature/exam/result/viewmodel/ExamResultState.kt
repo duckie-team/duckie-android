@@ -28,6 +28,7 @@ sealed class ExamResultState {
 
         // user input state
         val reaction: String = "",
+        val isBestRecord: Boolean = false,
     ) : ExamResultState()
 
     data class Error(

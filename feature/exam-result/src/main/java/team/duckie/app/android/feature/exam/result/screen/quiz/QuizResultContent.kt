@@ -22,7 +22,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -65,6 +64,7 @@ internal fun QuizResultContent(
     message: String,
     ranking: Int,
     reaction: String,
+    isBestRecord: Boolean,
     onReactionChanged: (String) -> Unit,
 ) {
     Column(
@@ -152,11 +152,12 @@ internal fun QuizResultContent(
             typography = QuackResultTitleTypography,
         )
         Spacer(space = 12.dp)
-        if (ranking.isTopRanked()) {
+        if (ranking.isTopRanked() && isBestRecord) {
             QuizResultReactionTextArea(
                 reaction = reaction,
                 onReactionChanged = onReactionChanged,
                 maxLength = if (ranking.isFirstRanked()) WINNER_REACTION_MAX_LENGTH else TOP_RANK_REACTION_MAX_LENGTH,
+                ranking = ranking,
             )
             Spacer(space = 22.dp)
         }
@@ -167,6 +168,7 @@ internal fun QuizResultContent(
 private fun QuizResultReactionTextArea(
     maxLength: Int,
     reaction: String,
+    ranking: Int,
     onReactionChanged: (String) -> Unit,
 ) {
     Box(
@@ -182,7 +184,10 @@ private fun QuizResultReactionTextArea(
                 }
             },
             focused = false,
-            placeholderText = stringResource(id = R.string.exam_result_first_ranked_text_area_hint),
+            placeholderText = stringResource(
+                id = R.string.exam_result_ranked_text_area_hint,
+                ranking
+            ),
         )
         QuackText(
             modifier = Modifier.padding(

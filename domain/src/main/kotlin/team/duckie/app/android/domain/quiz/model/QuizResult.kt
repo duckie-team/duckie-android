@@ -23,4 +23,5 @@ data class QuizResult(
     val wrongProblem: Problem?,
     val ranking: Int?,
     val requirementAnswer: String?,
+    val isBestRecord: Boolean,
 )

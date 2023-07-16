@@ -38,6 +38,7 @@ internal fun GetQuizResponse.toDomain() = QuizResult(
     wrongProblem = wrongProblem?.toDomain(),
     ranking = ranking,
     requirementAnswer = requirementAnswer,
+    isBestRecord = isBestRecord ?: duckieResponseFieldNpe("${this::class.java.simpleName}.isBestRecord"),
 )
 
 internal fun QuizExamData.toDomain() = QuizExam(

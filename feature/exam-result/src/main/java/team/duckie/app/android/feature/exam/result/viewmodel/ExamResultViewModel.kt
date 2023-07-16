@@ -49,12 +49,11 @@ class ExamResultViewModel @Inject constructor(
     )
 
     private fun postQuizReaction() = intent {
-        (state as? ExamResultState.Success)?.let { currentState ->
-            postQuizReactionUseCase(
-                examId = currentState.originalExamId,
-                reaction = currentState.reaction,
-            )
-        }
+        val state = state as ExamResultState.Success
+        postQuizReactionUseCase(
+            examId = state.examId,
+            reaction = state.reaction,
+        )
     }
 
     fun initState() {
@@ -168,7 +167,9 @@ class ExamResultViewModel @Inject constructor(
                             originalExamId = exam.id,
                             isPerfectScore = isPerfectScore,
                             nickname = user.nickname,
-                        )
+                            isBestRecord = isBestRecord,
+
+                            )
                     }
                 }
             }.onFailure {
@@ -182,9 +183,10 @@ class ExamResultViewModel @Inject constructor(
     }
 
     fun updateReaction(reaction: String) = intent {
-        require(state is ExamResultState.Success)
+        val state = state as ExamResultState.Success
+
         reduce {
-            (state as ExamResultState.Success).copy(
+            state.copy(
                 reaction = reaction,
             )
         }
@@ -207,7 +209,10 @@ class ExamResultViewModel @Inject constructor(
     }
 
     fun exitExam() = intent {
-        postQuizReaction()
+        val state = state as ExamResultState.Success
+        if (state.isBestRecord && state.reaction.isNotEmpty()) {
+            postQuizReaction()
+        }
         postSideEffect(ExamResultSideEffect.FinishExamResult)
     }
 }
