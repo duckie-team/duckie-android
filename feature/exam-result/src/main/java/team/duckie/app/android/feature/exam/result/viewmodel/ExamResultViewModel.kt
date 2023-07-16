@@ -194,6 +194,7 @@ class ExamResultViewModel @Inject constructor(
 
     fun clickRetry() = intent {
         val state = state as ExamResultState.Success
+        postReaction()
         makeQuizUseCase(examId = state.originalExamId).onSuccess { result ->
             postSideEffect(
                 ExamResultSideEffect.NavigateToStartExam(
@@ -208,11 +209,15 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
-    fun exitExam() = intent {
+    private fun postReaction() = intent {
         val state = state as ExamResultState.Success
         if (state.isBestRecord && state.reaction.isNotEmpty()) {
             postQuizReaction()
         }
+    }
+
+    fun exitExam() = intent {
+        postReaction()
         postSideEffect(ExamResultSideEffect.FinishExamResult)
     }
 }

@@ -18,13 +18,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.DuckieMedal
@@ -41,8 +42,6 @@ import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
-import team.duckie.quackquack.material.icon.quackicon.Outlined
-import team.duckie.quackquack.material.icon.quackicon.outlined.Profile
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackIcon
@@ -109,8 +108,8 @@ private fun ColumnScope.MyRankingSection(
                     append(
                         stringResource(
                             id = R.string.score,
-                            quizInfo?.correctProblemCount ?: "-"
-                        )
+                            quizInfo?.correctProblemCount ?: "-",
+                        ),
                     )
                     append(" / ")
                     append(stringResource(id = R.string.time, quizInfo?.time ?: "-"))
@@ -126,40 +125,58 @@ private fun RankingSection(
     state: DetailState.Success,
     userContentClick: (Int) -> Unit,
 ) {
-    val quizRankings = remember(state.exam.quizs) { checkNotNull(state.exam.quizs) }
+    val quizRankings = state.exam.quizs
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 28.dp)
-            .padding(horizontal = 16.dp),
+            .padding(top = 28.dp),
     ) {
-        QuackHeadLine2(
-            text = stringResource(id = R.string.quiz_ranking_title, state.mainTagNames),
-        )
-        Spacer(space = 12.dp)
-        MyRankingSection(
-            nickname = state.appUser.nickname,
-            quizInfo = state.exam.myRecord,
-        )
-        QuackMaxWidthDivider()
-        Spacer(space = 24.dp)
-        QuackText(
-            text = stringResource(id = R.string.all_rank),
-            typography = QuackTypography.Body2.change(
-                color = QuackColor.Gray1,
-            ),
-        )
-        Spacer(space = 4.dp)
-        quizRankings.fastForEachIndexed { index, item ->
-            key(item.id) {
-                RankingContent(
-                    rank = index + 1,
-                    quizInfo = item,
-                    onClick = userContentClick,
-                )
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
+            QuackHeadLine2(
+                text = stringResource(id = R.string.quiz_ranking_title, state.mainTagNames),
+            )
+            Spacer(space = 12.dp)
+            MyRankingSection(
+                nickname = state.appUser.nickname,
+                quizInfo = state.exam.myRecord,
+            )
+            QuackMaxWidthDivider()
+            Spacer(space = 24.dp)
+            QuackText(
+                text = stringResource(id = R.string.all_rank),
+                typography = QuackTypography.Body2.change(
+                    color = QuackColor.Gray1,
+                ),
+            )
+            Spacer(space = 4.dp)
+        }
+        if (quizRankings.isNullOrEmpty()) {
+            QuackText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp)
+                    .align(CenterHorizontally),
+                text = stringResource(id = R.string.detail_ranker_not_found),
+                typography = QuackTypography.Title2.change(
+                    color = QuackColor.Gray1,
+                    textAlign = TextAlign.Center,
+                ),
+            )
+        } else {
+            quizRankings.fastForEachIndexed { index, item ->
+                key(item.id) {
+                    RankingContent(
+                        rank = index + 1,
+                        quizInfo = item,
+                        onClick = userContentClick,
+                    )
+                }
             }
         }
+        Spacer(space = 26.dp)
     }
 }
 
@@ -198,11 +215,11 @@ private fun RankingContent(
     Column {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp)
+                .fillMaxSize()
                 .quackClickable(
                     onClick = { onClick(user.id) },
-                ),
+                )
+                .padding(vertical = 12.dp, horizontal = 16.dp),
         ) {
             DuckieMedal(score = rank)
             Spacer(space = 12.dp)

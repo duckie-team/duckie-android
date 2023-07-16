@@ -8,6 +8,7 @@
 <resources>
     <string name="detail_loading_mypage_toast">마이페이지 화면은 추후 제공되는 기능입니다.</string>
     <string name="detail_report_success">"신고가 정상 접수되었어요!"</string>
+    <string name="detail_ranker_not_found">아직 아무도 풀지 않았네요\n이 덕퀴즈의 첫 응시자가 되어보세요!</string>
 
     <string name="detail_tier_tag">%s | %s</string>
     <string name="detail_follow">팔로우</string>

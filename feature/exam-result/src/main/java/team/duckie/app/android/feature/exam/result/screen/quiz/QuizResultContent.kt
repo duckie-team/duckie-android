@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.kotlin.isFirstRanked
 import team.duckie.app.android.common.kotlin.isTopRanked
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.quackquack.material.QuackColor
@@ -42,8 +41,7 @@ import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 import java.util.Locale
 
-private const val WINNER_REACTION_MAX_LENGTH: Int = 40
-private const val TOP_RANK_REACTION_MAX_LENGTH: Int = 15
+private const val RANKER_REACTION_MAX_LENGTH: Int = 40
 
 @Composable
 internal fun QuizResultContent(
@@ -147,10 +145,9 @@ internal fun QuizResultContent(
         Spacer(space = 12.dp)
         if (ranking.isTopRanked() && isBestRecord) {
             QuizResultReactionTextArea(
+                ranking = ranking,
                 reaction = reaction,
                 onReactionChanged = onReactionChanged,
-                maxLength = if (ranking.isFirstRanked()) WINNER_REACTION_MAX_LENGTH else TOP_RANK_REACTION_MAX_LENGTH,
-                ranking = ranking,
             )
             Spacer(space = 22.dp)
         }
@@ -159,7 +156,6 @@ internal fun QuizResultContent(
 
 @Composable
 private fun QuizResultReactionTextArea(
-    maxLength: Int,
     reaction: String,
     ranking: Int,
     onReactionChanged: (String) -> Unit,
@@ -172,7 +168,7 @@ private fun QuizResultReactionTextArea(
             modifier = Modifier.height(100.dp),
             text = reaction,
             onTextChanged = { str ->
-                if (str.length <= maxLength) {
+                if (str.length <= RANKER_REACTION_MAX_LENGTH) {
                     onReactionChanged(str)
                 }
             },
@@ -187,7 +183,7 @@ private fun QuizResultReactionTextArea(
                 bottom = 12.dp,
                 end = 12.dp,
             ),
-            text = "${reaction.length} / $maxLength",
+            text = "${reaction.length} / $RANKER_REACTION_MAX_LENGTH",
             typography = QuackTypography.Body1.change(
                 color = QuackColor.Gray2,
             ),
