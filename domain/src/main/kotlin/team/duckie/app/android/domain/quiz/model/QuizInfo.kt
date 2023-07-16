@@ -16,8 +16,9 @@ data class QuizInfo(
     val correctProblemCount: Int,
     val score: Int,
     val user: User,
-    val time: Int,
+    val time: Double,
     val reaction: String?,
+    val ranking: Int?,
 ) {
     companion object {
         fun dummy() = QuizInfo(
@@ -37,7 +38,8 @@ data class QuizInfo(
                 favoriteTags = null,
                 introduction = null,
             ),
-            time = 227,
+            time = 227.22,
+            ranking = 1,
         )
     }
 }

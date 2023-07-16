@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +40,6 @@ import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
-import team.duckie.quackquack.material.icon.quackicon.Filled
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Profile
 import team.duckie.quackquack.material.quackClickable
@@ -48,6 +48,7 @@ import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 
 private val PaleOrange: Color = Color(0xFFFFEFCF)
@@ -94,7 +95,7 @@ private fun ColumnScope.MyRankingSection(
         if (quizInfo == null) {
             QuackTitle2(text = "-")
         } else {
-            DuckieMedal(score = quizInfo.score.plus(1))
+            DuckieMedal(score = quizInfo.ranking ?: 0)
         }
         Spacer(space = 12.dp)
         UserProfileOrDefault(profileImageUrl = user?.profileImageUrl ?: "")
@@ -126,9 +127,8 @@ private fun RankingSection(
             .padding(top = 28.dp)
             .padding(horizontal = 16.dp),
     ) {
-        QuackText(
+        QuackHeadLine2(
             text = stringResource(id = R.string.quiz_ranking_title, state.mainTagNames),
-            typography = QuackTypography.Title2,
         )
         Spacer(space = 12.dp)
         MyRankingSection(quizInfo = state.exam.myRecord)
@@ -142,11 +142,13 @@ private fun RankingSection(
         )
         Spacer(space = 4.dp)
         quizRankings.fastForEachIndexed { index, item ->
-            RankingContent(
-                rank = index + 1,
-                quizInfo = item,
-                onClick = userContentClick,
-            )
+            key(item.id) {
+                RankingContent(
+                    rank = index + 1,
+                    quizInfo = item,
+                    onClick = userContentClick,
+                )
+            }
         }
     }
 }
@@ -201,12 +203,12 @@ private fun RankingContent(
                 ) {
                     if (rank == 1) {
                         QuackIcon(icon = QuackIcon.Crown)
+                        Spacer(space = 2.dp)
                     }
-                    Spacer(space = 2.dp)
                     QuackTitle2(text = user.nickname)
                 }
-                Spacer(space = 4.dp)
                 if (quizInfo.reaction != null) {
+                    Spacer(space = 4.dp)
                     if (rank == 1) {
                         LeftChatBubble(
                             message = quizInfo.reaction ?: "",
@@ -224,6 +226,7 @@ private fun RankingContent(
                 Spacer(space = 6.dp)
                 if (rank == 1) {
                     QuackText(
+                        modifier = Modifier.padding(start = 4.dp),
                         text = getUserPerformanceString(correctProblemCount, time),
                         typography = QuackTypography.Subtitle2.change(
                             color = QuackColor.DuckieOrange,
@@ -244,7 +247,7 @@ private fun RankingContent(
 }
 
 @Composable
-private fun getUserPerformanceString(correctProblemCount: Int, time: Int) =
+private fun getUserPerformanceString(correctProblemCount: Int, time: Double) =
     buildString {
         append(stringResource(id = R.string.score, correctProblemCount))
         append(" / ")

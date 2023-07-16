@@ -7,8 +7,6 @@
 
 package team.duckie.app.android.feature.exam.result.viewmodel
 
-import team.duckie.app.android.domain.user.model.User
-
 sealed class ExamResultState {
     object Loading : ExamResultState()
 
@@ -17,7 +15,7 @@ sealed class ExamResultState {
         val examId: Int = 0,
         val isQuiz: Boolean = true,
         val correctProblemCount: Int = 0,
-        val time: Int = 0,
+        val time: Double = 0.0,
         val mainTag: String = "",
         val ranking: Int = 0,
         val wrongAnswerMessage: String = "",
@@ -30,6 +28,7 @@ sealed class ExamResultState {
 
         // user input state
         val reaction: String = "",
+        val isBestRecord: Boolean = false,
     ) : ExamResultState()
 
     data class Error(
