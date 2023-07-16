@@ -7,12 +7,12 @@ on:
   push:
     tags:
       # 플레이스토어 앱 배포 시
-      - v*
+      - 'v*'
       # 테스트 앱 배포 시
       # naming rule
       # test_ : stage 환경 test 배포 시
       # test_real_ : real 환경 test 배포 시
-      - test_*
+      - 'test_*'
 
 jobs:
   cd-deploy:
@@ -28,10 +28,17 @@ jobs:
 #          token: ${{ secrets.DUCKIE_ADMINISTRATOR_GITHUB_TOKEN }}
 
       # 버전 코드 올리기
+      - name: Get branch name
+        run: |
+          echo "codeUpBranch="${${{ github.ref }}#refs/tags/}"
+
       - name: Set Config
         run: |
           git config --local user.email "${{ secrets.DUCKIE_ADMINISTRATOR_EMAIL }}"
           git config --local user.name "${{ secrets.DUCKIE_ADMINISTRATOR_USER_NAME }}"
+
+      - name: Git Checkout Specific branch name
+        run: git checkout ${{ env.codeUpBranch }}
 
       - name: Increase versionCode
         run: |
@@ -53,7 +60,7 @@ jobs:
 
       - name: Push changes
         run: |
-          git push
+          git push origin ${{ env.codeUpBranch }}
 
 #      # TODO(riflockle7) 잘 되는지 확인
 #      # android apk (추후 aab) 배포
