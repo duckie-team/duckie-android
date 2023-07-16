@@ -51,6 +51,7 @@ internal fun ExamResultScreen(
     QuackCrossfade(
         modifier = Modifier
             .fillMaxSize()
+            .imePadding()
             .statusBarsPadding()
             .navigationBarsPadding(),
         targetState = state,

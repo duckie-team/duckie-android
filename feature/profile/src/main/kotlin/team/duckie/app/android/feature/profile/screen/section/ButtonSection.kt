@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.profile.screen.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ internal fun FollowSection(
     onClick: () -> Unit,
 ) {
     EditButton(
+        modifier = Modifier.fillMaxWidth(),
         text = if (enabled) {
             stringResource(id = R.string.follow)
         } else {
