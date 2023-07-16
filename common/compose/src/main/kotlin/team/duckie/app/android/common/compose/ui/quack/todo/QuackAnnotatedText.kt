@@ -5,7 +5,14 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.common.compose.ui
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
+package team.duckie.app.android.common.compose.ui.quack.todo
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.kotlin.fastForEach
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.ui.component.QuackHighlightTextInfo
 import team.duckie.quackquack.ui.component.internal.QuackClickableText
 import team.duckie.quackquack.ui.modifier.quackClickable
@@ -32,7 +39,7 @@ fun QuackAnnotatedText(
     text: String,
     highlightTextPairs: ImmutableList<Pair<String, (() -> Unit)?>>,
     underlineEnabled: Boolean = true,
-    style: QuackTextStyle = QuackTextStyle.HeadLine2,
+    // style: QuackTypography = QuackTypography.HeadLine2,
     rippleEnabled: Boolean = false,
     singleLine: Boolean = false,
     overflow: TextOverflow = TextOverflow.Ellipsis,
@@ -98,7 +105,7 @@ fun QuackAnnotatedText(
                 }
                 addStyle(
                     style = SpanStyle(
-                        color = QuackColor.DuckieOrange.composeColor,
+                        color = QuackColor.DuckieOrange.value,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.sp,
                         textDecoration = textDecoration,
@@ -108,7 +115,7 @@ fun QuackAnnotatedText(
                 )
             }
         },
-        style = style,
+        style = QuackTextStyle.HeadLine2,
         singleLine = singleLine,
         overflow = overflow,
         defaultOnClick = onClick,

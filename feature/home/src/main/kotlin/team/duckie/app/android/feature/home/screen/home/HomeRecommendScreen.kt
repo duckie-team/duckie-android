@@ -47,6 +47,13 @@ import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackAnnotatedText
+import team.duckie.app.android.common.compose.ui.skeleton
+import team.duckie.app.android.common.kotlin.addHashTag
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.home.R
@@ -54,13 +61,6 @@ import team.duckie.app.android.feature.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
-import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
-import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
-import team.duckie.app.android.common.compose.ui.QuackAnnotatedText
-import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.kotlin.addHashTag
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackLarge1

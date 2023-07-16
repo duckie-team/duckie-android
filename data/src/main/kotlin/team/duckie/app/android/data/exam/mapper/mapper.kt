@@ -26,6 +26,7 @@ import team.duckie.app.android.data.exam.model.ExamsData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.ProfileExamData
+import team.duckie.app.android.data.exam.model.ProfileExamDatas
 import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.data.exam.model.QuizInfoResponse
 import team.duckie.app.android.data.exam.model.SolutionData
@@ -256,6 +257,10 @@ internal fun ProfileExamData.toDomain() = ProfileExam(
     heartCount = heartCount,
     user = user?.toDomain(),
 )
+
+internal fun ProfileExamDatas.toDomain() =
+    exams?.fastMap(ProfileExamData::toDomain)?.toImmutableList()
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams")
 
 internal fun QuizInfoResponse.toDomain() = QuizInfo(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),

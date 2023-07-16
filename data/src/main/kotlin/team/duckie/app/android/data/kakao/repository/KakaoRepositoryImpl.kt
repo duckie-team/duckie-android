@@ -23,11 +23,6 @@ import kotlin.coroutines.resume
 
 private val KakaoLoginException = IllegalStateException("Kakao API response is nothing.")
 
-private val KakaoTalkNotConnectedAccountException = DuckieThirdPartyException(
-    message = "카카오톡이 이미 설치되어 있어요!\n카카오톡에서 로그인 후 다시 이용해 주세요.",
-    code = ExceptionCode.KAKAOTALK_IS_INSTALLED_BUT_NOT_CONNECTED_ACCOUNT,
-)
-
 private val KakaoTalkNotSupportException = DuckieThirdPartyException(
     code = ExceptionCode.KAKAOTALK_NOT_SUPPORT_EXCEPTION,
 )
@@ -61,7 +56,7 @@ class KakaoRepositoryImpl @Inject constructor(
                                     if (error.statusCode == KakaoNotSupportStatusCode) {
                                         failure(KakaoTalkNotSupportException)
                                     } else {
-                                        failure(KakaoTalkNotConnectedAccountException)
+                                        failure(error)
                                     }
                                 }
 

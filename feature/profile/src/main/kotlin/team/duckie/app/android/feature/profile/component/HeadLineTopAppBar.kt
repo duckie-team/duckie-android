@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.component.QuackHeadLine1
+import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 
 @Composable
 internal fun HeadLineTopAppBar(

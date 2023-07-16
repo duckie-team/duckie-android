@@ -72,7 +72,6 @@ internal fun SearchResultScreen(
         )
         when (state.tagSelectedTab) {
             SearchResultStep.DuckExam -> {
-                Spacer(space = 20.dp)
                 SearchResultForExam(
                     searchExams = searchExams,
                     navigateDetail = navigateDetail,
@@ -106,7 +105,7 @@ private fun SearchResultForUser(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 68.dp),
+                .padding(top = 60.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             QuackHeadLine1(
@@ -149,7 +148,7 @@ private fun SearchResultForExam(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 68.dp),
+                .padding(top = 60.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             QuackHeadLine1(
