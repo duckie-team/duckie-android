@@ -13,13 +13,19 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.feature.profile.navigator.impl.ProfileEditNavigatorImpl
 import team.duckie.app.android.feature.profile.navigator.impl.ProfileNavigatorImpl
+import team.duckie.app.android.feature.profile.navigator.impl.ViewAllNavigatorImpl
 import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
+import team.duckie.app.android.navigator.feature.profile.ViewAllNavigator
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class ProfileNavigatorModule {
+
+    @Singleton
+    @Binds
+    abstract fun bindViewAllNavigator(navigator: ViewAllNavigatorImpl): ViewAllNavigator
 
     @Singleton
     @Binds

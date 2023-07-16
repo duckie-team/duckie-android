@@ -12,17 +12,11 @@ package team.duckie.app.android.feature.profile.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
@@ -36,11 +30,6 @@ import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.kotlin.FriendsType
-import team.duckie.app.android.domain.exam.model.ProfileExam
-import team.duckie.app.android.domain.exam.usecase.GetHeartExamUseCase
-import team.duckie.app.android.domain.exam.usecase.GetSubmittedExamUseCase
-import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
-import team.duckie.app.android.domain.examInstance.usecase.GetSolvedExamInstanceUseCase
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.ignore.usecase.UserIgnoreUseCase
@@ -63,21 +52,9 @@ internal class ProfileViewModel @Inject constructor(
     private val followUseCase: FollowUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val ignoreUseCase: UserIgnoreUseCase,
-    private val getHeartExamUseCase: GetHeartExamUseCase,
-    private val getSubmittedExamUseCase: GetSubmittedExamUseCase,
-    private val getSolvedExamInstance: GetSolvedExamInstanceUseCase,
 ) : ContainerHost<ProfileState, ProfileSideEffect>, ViewModel(), MyPageIntent, OtherPageIntent {
 
     override val container = container<ProfileState, ProfileSideEffect>(ProfileState())
-
-    private val _heartExams = MutableStateFlow<PagingData<ProfileExam>>(PagingData.empty())
-    val heartExams: Flow<PagingData<ProfileExam>> = _heartExams
-
-    private val _submittedExams = MutableStateFlow<PagingData<ProfileExam>>(PagingData.empty())
-    val submittedExams: Flow<PagingData<ProfileExam>> = _submittedExams
-
-    private val _solvedExams = MutableStateFlow<PagingData<ProfileExamInstance>>(PagingData.empty())
-    val solvedExams: Flow<PagingData<ProfileExamInstance>> = _solvedExams
 
     private val followEvent = MutableSharedFlow<Unit>(
         replay = 0,
@@ -199,21 +176,8 @@ internal class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun clickViewAll(viewAll: ProfileStep.ViewAll) = intent {
-        when (viewAll.examType) {
-            ExamType.Heart -> fetchHeartExams()
-            ExamType.Created -> fetchSubmittedExams()
-            ExamType.Solved -> fetchSolvedExams()
-        }
-        reduce {
-            state.copy(step = viewAll)
-        }
-    }
-
-    fun clickViewAllBackPress() = intent {
-        reduce {
-            state.copy(step = ProfileStep.Profile)
-        }
+    fun clickViewAll(examType: ExamType) = intent {
+        postSideEffect(ProfileSideEffect.NavigateToViewAll(state.userId, examType))
     }
 
     fun report() = intent {
@@ -286,58 +250,6 @@ internal class ProfileViewModel @Inject constructor(
     private fun stopLoading() = intent {
         reduce {
             state.copy(isLoading = false)
-        }
-    }
-
-    private fun fetchHeartExams() {
-        val state = container.stateFlow.value
-        viewModelScope.launch {
-            getHeartExamUseCase(state.userId)
-                .cachedIn(viewModelScope)
-                .collect {
-                    _heartExams.value = it
-                }
-        }
-    }
-
-    fun handleLoadState(loadStates: LoadStates) = intent {
-        val errorLoadState = arrayOf(
-            loadStates.append,
-            loadStates.prepend,
-            loadStates.refresh,
-        ).filterIsInstance(LoadState.Error::class.java).firstOrNull()
-
-        val exception = errorLoadState?.error
-
-        if (exception != null) {
-            reduce {
-                state.copy(
-                    step = ProfileStep.Error,
-                )
-            }
-            postSideEffect(ProfileSideEffect.ReportError(exception))
-        }
-    }
-
-    private fun fetchSubmittedExams() {
-        val state = container.stateFlow.value
-        viewModelScope.launch {
-            getSubmittedExamUseCase(state.userId)
-                .cachedIn(viewModelScope)
-                .collect {
-                    _submittedExams.value = it
-                }
-        }
-    }
-
-    private fun fetchSolvedExams() {
-        val state = container.stateFlow.value
-        viewModelScope.launch {
-            getSolvedExamInstance(state.userId)
-                .cachedIn(viewModelScope)
-                .collect {
-                    _solvedExams.value = it
-                }
         }
     }
 }

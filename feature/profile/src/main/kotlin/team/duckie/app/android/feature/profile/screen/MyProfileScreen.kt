@@ -25,7 +25,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.icon.v1.Create
 import team.duckie.app.android.common.compose.ui.icon.v1.Notice
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.domain.exam.model.ProfileExam
@@ -37,7 +36,6 @@ import team.duckie.app.android.feature.profile.screen.section.EditSection
 import team.duckie.app.android.feature.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
-import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
@@ -65,7 +63,7 @@ fun MyProfileScreen(
     onClickMakeExam: () -> Unit,
     onClickTag: (String) -> Unit,
     onClickFriend: (FriendsType, Int, String) -> Unit,
-    onClickShowAll: (ProfileStep.ViewAll) -> Unit,
+    onClickShowAll: (ExamType) -> Unit,
 ) {
     @Composable
     fun BackPressedHeadLineTopBarInternal() {
@@ -160,11 +158,7 @@ fun MyProfileScreen(
                     }
                 },
                 onClickShowAll = {
-                    onClickShowAll(
-                        ProfileStep.ViewAll(
-                            examType = ExamType.Created,
-                        ),
-                    )
+                    onClickShowAll(ExamType.Created)
                 },
             )
         },

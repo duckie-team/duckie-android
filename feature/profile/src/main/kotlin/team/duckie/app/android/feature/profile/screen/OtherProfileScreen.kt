@@ -33,7 +33,6 @@ import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSh
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.compose.ui.dialog.IgnoreCheckDialog
 import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
-import team.duckie.app.android.common.compose.ui.icon.v1.Create
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.user.model.UserProfile.Companion.username
 import team.duckie.app.android.feature.profile.R
@@ -43,7 +42,6 @@ import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.profile.screen.section.FollowSection
 import team.duckie.app.android.feature.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
-import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
@@ -159,9 +157,7 @@ internal fun OtherProfileScreen(
                     },
                     onClickShowAll = {
                         viewModel.clickViewAll(
-                            viewAll = ProfileStep.ViewAll(
-                                examType = ExamType.Created,
-                            ),
+                            examType = ExamType.Created,
                         )
                     },
                 )
