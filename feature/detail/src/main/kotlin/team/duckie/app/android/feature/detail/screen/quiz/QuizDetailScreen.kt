@@ -31,6 +31,7 @@ import team.duckie.app.android.common.compose.ui.DuckieMedal
 import team.duckie.app.android.common.compose.ui.LeftChatBubble
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfileId
 import team.duckie.app.android.common.compose.ui.icon.v2.Crown
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.domain.quiz.model.QuizInfo
@@ -82,6 +83,7 @@ internal fun QuizDetailContentLayout(
 
 @Composable
 private fun ColumnScope.MyRankingSection(
+    nickname: String,
     quizInfo: QuizInfo?,
 ) {
     val user = quizInfo?.user
@@ -101,10 +103,15 @@ private fun ColumnScope.MyRankingSection(
         UserProfileOrDefault(profileImageUrl = user?.profileImageUrl ?: "")
         Spacer(space = 8.dp)
         Column {
-            QuackTitle2(text = user?.nickname ?: "")
+            QuackTitle2(text = nickname)
             QuackText(
                 text = buildString {
-                    append(stringResource(id = R.string.score, quizInfo?.score ?: "-"))
+                    append(
+                        stringResource(
+                            id = R.string.score,
+                            quizInfo?.correctProblemCount ?: "-"
+                        )
+                    )
                     append(" / ")
                     append(stringResource(id = R.string.time, quizInfo?.time ?: "-"))
                 },
@@ -131,7 +138,10 @@ private fun RankingSection(
             text = stringResource(id = R.string.quiz_ranking_title, state.mainTagNames),
         )
         Spacer(space = 12.dp)
-        MyRankingSection(quizInfo = state.exam.myRecord)
+        MyRankingSection(
+            nickname = state.appUser.nickname,
+            quizInfo = state.exam.myRecord,
+        )
         QuackMaxWidthDivider()
         Spacer(space = 24.dp)
         QuackText(
@@ -157,23 +167,24 @@ private fun RankingSection(
 fun UserProfileOrDefault(
     size: DpSize = DpSize(44.dp, 44.dp),
     profileImageUrl: String?,
-
-    ) {
-    profileImageUrl?.let {
+) {
+    if (profileImageUrl.isNullOrEmpty()) {
         QuackImage(
-            src = it,
+            src = QuackIcon.DefaultProfileId,
             modifier = Modifier
                 .size(size)
                 .clip(SquircleShape),
             contentScale = ContentScale.FillBounds,
         )
-    } ?: QuackImage(
-        src = QuackIcon.Outlined.Profile,
-        modifier = Modifier
-            .size(size)
-            .clip(SquircleShape),
-        contentScale = ContentScale.FillBounds,
-    )
+    } else {
+        QuackImage(
+            src = profileImageUrl,
+            modifier = Modifier
+                .size(size)
+                .clip(SquircleShape),
+            contentScale = ContentScale.FillBounds,
+        )
+    }
 }
 
 @Composable

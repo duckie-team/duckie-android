@@ -52,7 +52,7 @@ internal fun ExamResultScreen(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .padding(horizontal = 16.dp),
-                leadingIcon = QuackIcon.ArrowBack,
+                leadingIcon = QuackIcon.Close,
                 onLeadingIconClick = viewModel::exitExam,
             )
         },
@@ -94,6 +94,7 @@ internal fun ExamResultScreen(
                             },
                             reaction = reaction,
                             onReactionChanged = viewModel::updateReaction,
+                            isBestRecord = isBestRecord,
                         )
                     } else {
                         ExamResultContent(

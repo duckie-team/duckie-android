@@ -27,12 +27,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.kotlin.isFirstRanked
 import team.duckie.app.android.common.kotlin.isTopRanked
-import team.duckie.app.android.common.kotlin.toHourMinuteSecond
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -42,13 +40,7 @@ import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
-
-private val QuackResultTitleTypography = QuackTypography(
-    size = 20.sp,
-    weight = FontWeight.Normal,
-    letterSpacing = (-0.01).sp,
-    lineHeight = 26.sp,
-)
+import java.util.Locale
 
 private const val WINNER_REACTION_MAX_LENGTH: Int = 40
 private const val TOP_RANK_REACTION_MAX_LENGTH: Int = 15
@@ -110,7 +102,10 @@ internal fun QuizResultContent(
                 contentAlignment = Alignment.Center,
             ) {
                 QuizResultTitleAndDescription(
-                    title = time.toHourMinuteSecond(),
+                    title = stringResource(
+                        id = R.string.exam_result_time,
+                        String.format(Locale.US, "%.2f", time),
+                    ),
                     description = stringResource(id = R.string.exam_result_total_time),
                 )
             }
@@ -134,8 +129,7 @@ internal fun QuizResultContent(
         }
         QuackDivider()
         Spacer(space = 24.dp)
-
-        QuackText(
+        QuackHeadLine1(
             modifier = Modifier.span(
                 texts = listOf("${nickname}님", mainTag, "${ranking}위"),
                 style = SpanStyle(
@@ -149,7 +143,6 @@ internal fun QuizResultContent(
                 mainTag,
                 ranking,
             ),
-            typography = QuackResultTitleTypography,
         )
         Spacer(space = 12.dp)
         if (ranking.isTopRanked() && isBestRecord) {
@@ -186,7 +179,7 @@ private fun QuizResultReactionTextArea(
             focused = false,
             placeholderText = stringResource(
                 id = R.string.exam_result_ranked_text_area_hint,
-                ranking
+                ranking,
             ),
         )
         QuackText(
