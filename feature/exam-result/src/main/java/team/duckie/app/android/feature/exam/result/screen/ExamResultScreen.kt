@@ -1,4 +1,3 @@
-
 /*
  * Designed and developed by Duckie Team, 2022
  *
@@ -9,12 +8,12 @@
 package team.duckie.app.android.feature.exam.result.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,7 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.LoadingScreen
-import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
 import team.duckie.app.android.feature.exam.result.screen.exam.ExamResultContent
@@ -48,15 +46,12 @@ internal fun ExamResultScreen(
         viewModel.initState()
     }
 
-    QuackCrossfade(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .imePadding()
-            .statusBarsPadding()
-            .navigationBarsPadding(),
-        targetState = state,
-    ) { currentState ->
-        when (currentState) {
+            .systemBarsPadding(),
+    ) {
+        when (state) {
             is ExamResultState.Loading -> {
                 LoadingScreen(
                     modifier = Modifier
@@ -66,8 +61,11 @@ internal fun ExamResultScreen(
             }
 
             is ExamResultState.Success -> {
+                val currentState = state as ExamResultState.Success
+
                 when (currentState.currentScreen) {
                     ExamResultScreen.EXAM_RESULT -> ExamResultSuccessScreen(
+                        modifier = Modifier.imePadding(),
                         state = currentState,
                         viewModel = viewModel,
                     )
@@ -91,10 +89,12 @@ internal fun ExamResultScreen(
 
 @Composable
 private fun ExamResultSuccessScreen(
+    modifier: Modifier = Modifier,
     state: ExamResultState.Success,
     viewModel: ExamResultViewModel,
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             QuackTopAppBar(
                 modifier = Modifier
