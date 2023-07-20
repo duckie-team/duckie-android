@@ -198,7 +198,6 @@ private fun ContentSection(
             problem.isSubjective() && problem.question.isImage() -> FlexibleSubjectiveQuestionSection(
                 problem = problem,
                 pageIndex = pageIndex,
-                inputAnswers = inputAnswers,
                 updateInputAnswers = updateInputAnswers,
                 requestFocus = requestFocus,
                 keyboardController = keyboardController,
