@@ -7,12 +7,14 @@
 
 package team.duckie.app.android.feature.detail.screen.quiz
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
@@ -20,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -52,6 +55,7 @@ import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 
 private val PaleOrange: Color = Color(0xFFFFEFCF)
+private val ProfileImageSize: DpSize = DpSize(44.dp, 44.dp)
 
 @Composable
 internal fun QuizDetailContentLayout(
@@ -182,7 +186,7 @@ private fun RankingSection(
 
 @Composable
 fun UserProfileOrDefault(
-    size: DpSize = DpSize(44.dp, 44.dp),
+    size: DpSize = ProfileImageSize,
     profileImageUrl: String?,
 ) {
     if (profileImageUrl.isNullOrEmpty()) {
@@ -225,9 +229,12 @@ private fun RankingContent(
             Spacer(space = 12.dp)
             UserProfileOrDefault(profileImageUrl = user.profileImageUrl)
             Spacer(space = 8.dp)
-            Column {
+            Column(
+                modifier = Modifier.heightIn(min = ProfileImageSize.height),
+                verticalArrangement = if (quizInfo.reaction == null) Arrangement.Center else Arrangement.Top,
+            ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = CenterVertically,
                 ) {
                     if (rank == 1) {
                         QuackIcon(icon = QuackIcon.Crown)
