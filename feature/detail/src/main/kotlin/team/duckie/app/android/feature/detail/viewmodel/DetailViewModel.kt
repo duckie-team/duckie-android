@@ -179,19 +179,20 @@ class DetailViewModel @Inject constructor(
             successState.run {
                 when (isQuiz) {
                     true -> {
-                        makeQuizUseCase(examId = exam.id).onSuccess { result ->
-                            postSideEffect(
-                                DetailSideEffect.StartQuiz(
-                                    examId = result.id,
-                                    requirementQuestion = exam.requirementQuestion ?: "",
-                                    requirementPlaceholder = exam.requirementPlaceholder ?: "",
-                                    timer = exam.timer ?: 0,
-                                    isQuiz = isQuiz,
-                                ),
-                            )
-                        }.onFailure {
-                            postSideEffect(DetailSideEffect.ReportError(it))
-                        }
+                        makeQuizUseCase(examId = exam.id)
+                            .onSuccess { result ->
+                                postSideEffect(
+                                    DetailSideEffect.StartQuiz(
+                                        examId = result.id,
+                                        requirementQuestion = exam.requirementQuestion ?: "",
+                                        requirementPlaceholder = exam.requirementPlaceholder ?: "",
+                                        timer = exam.timer ?: 0,
+                                        isQuiz = isQuiz,
+                                    ),
+                                )
+                            }.onFailure {
+                                postSideEffect(DetailSideEffect.ReportError(it))
+                            }
                     }
 
                     false -> {

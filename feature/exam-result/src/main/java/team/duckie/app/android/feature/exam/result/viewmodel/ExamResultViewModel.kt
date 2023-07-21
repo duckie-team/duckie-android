@@ -194,9 +194,18 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
+    fun updateReactionDialogVisible(visible: Boolean) = intent {
+        val state = state as ExamResultState.Success
+
+        reduce {
+            state.copy(
+                isReactionValid = visible,
+            )
+        }
+    }
+
     fun clickRetry() = intent {
         val state = state as ExamResultState.Success
-        postReaction()
         makeQuizUseCase(examId = state.originalExamId).onSuccess { result ->
             postSideEffect(
                 ExamResultSideEffect.NavigateToStartExam(
@@ -220,15 +229,14 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
-    private fun postReaction() = intent {
+    fun postReaction() = intent {
         val state = state as ExamResultState.Success
-        if (state.isBestRecord && state.reaction.isNotEmpty()) {
+        if (state.isReactionValid) {
             postQuizReaction()
         }
     }
 
     fun exitExam() = intent {
-        postReaction()
         postSideEffect(ExamResultSideEffect.FinishExamResult)
     }
 }

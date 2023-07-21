@@ -29,19 +29,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.kotlin.isTopRanked
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackReviewTextArea
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 import java.util.Locale
-
-private const val RANKER_REACTION_MAX_LENGTH: Int = 40
 
 @Composable
 internal fun QuizResultContent(
@@ -53,9 +49,6 @@ internal fun QuizResultContent(
     mainTag: String,
     message: String,
     ranking: Int,
-    reaction: String,
-    isBestRecord: Boolean,
-    onReactionChanged: (String) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -140,52 +133,6 @@ internal fun QuizResultContent(
                 nickname,
                 mainTag,
                 ranking,
-            ),
-        )
-        Spacer(space = 12.dp)
-        if (ranking.isTopRanked() && isBestRecord) {
-            QuizResultReactionTextArea(
-                ranking = ranking,
-                reaction = reaction,
-                onReactionChanged = onReactionChanged,
-            )
-            Spacer(space = 22.dp)
-        }
-    }
-}
-
-@Composable
-private fun QuizResultReactionTextArea(
-    reaction: String,
-    ranking: Int,
-    onReactionChanged: (String) -> Unit,
-) {
-    Box(
-        modifier = Modifier,
-        contentAlignment = Alignment.BottomEnd,
-    ) {
-        QuackReviewTextArea(
-            modifier = Modifier.height(100.dp),
-            text = reaction,
-            onTextChanged = { str ->
-                if (str.length <= RANKER_REACTION_MAX_LENGTH) {
-                    onReactionChanged(str)
-                }
-            },
-            focused = false,
-            placeholderText = stringResource(
-                id = R.string.exam_result_ranked_text_area_hint,
-                ranking,
-            ),
-        )
-        QuackText(
-            modifier = Modifier.padding(
-                bottom = 12.dp,
-                end = 12.dp,
-            ),
-            text = "${reaction.length} / $RANKER_REACTION_MAX_LENGTH",
-            typography = QuackTypography.Body1.change(
-                color = QuackColor.Gray2,
             ),
         )
     }
