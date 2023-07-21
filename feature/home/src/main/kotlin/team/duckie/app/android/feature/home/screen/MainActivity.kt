@@ -21,11 +21,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
+import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.home.R
-import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.home.viewmodel.MainSideEffect
 import team.duckie.app.android.feature.home.viewmodel.MainViewModel
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.feature.search.screen.SearchActivity
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
@@ -34,14 +39,10 @@ import team.duckie.app.android.navigator.feature.friend.FriendNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
+import team.duckie.app.android.navigator.feature.profile.ViewAllNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
-import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
-import team.duckie.app.android.common.kotlin.AllowMagicNumber
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.const.Extras
-import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.quackquack.ui.theme.QuackTheme
 import javax.inject.Inject
 
@@ -81,6 +82,9 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var profileEditNavigator: ProfileEditNavigator
+
+    @Inject
+    lateinit var viewAllNavigator: ViewAllNavigator
 
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -141,6 +145,15 @@ class MainActivity : BaseActivity() {
                             activity = this,
                             intentBuilder = {
                                 putExtra(Extras.UserId, it)
+                            },
+                        )
+                    },
+                    navigateToViewAll = { userId, examType ->
+                        viewAllNavigator.navigateFrom(
+                            activity = this,
+                            intentBuilder = {
+                                putExtra(Extras.UserId, userId)
+                                putExtra(Extras.ExamType, examType)
                             },
                         )
                     },

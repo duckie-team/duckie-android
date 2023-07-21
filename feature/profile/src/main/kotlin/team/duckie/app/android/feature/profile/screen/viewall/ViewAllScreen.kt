@@ -7,10 +7,12 @@
 
 package team.duckie.app.android.feature.profile.screen.viewall
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
@@ -29,6 +31,7 @@ import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
 import team.duckie.app.android.feature.profile.R
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
+import team.duckie.quackquack.material.QuackColor
 
 @Composable
 fun ViewAllScreen(
@@ -39,7 +42,12 @@ fun ViewAllScreen(
     onItemClick: (DuckTestCoverItem) -> Unit,
     onMoreClick: (() -> Unit)? = null,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding()
+            .background(QuackColor.White.value),
+    ) {
         BackPressedHeadLine2TopAppBar(
             title = getViewAllTitle(examType = examType),
             onBackPressed = onBackPressed,

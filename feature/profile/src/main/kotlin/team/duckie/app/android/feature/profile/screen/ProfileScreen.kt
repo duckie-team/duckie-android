@@ -27,7 +27,6 @@ import team.duckie.app.android.feature.profile.component.EmptyText
 import team.duckie.app.android.feature.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.profile.screen.section.ProfileSection
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
-import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
@@ -46,7 +45,7 @@ fun ProfileScreen(
     onClickExam: (DuckTestCoverItem) -> Unit,
     onClickMore: (() -> Unit)? = null,
     onClickFriend: (FriendsType, Int, String) -> Unit,
-    onClickShowAll: (ProfileStep.ViewAll) -> Unit,
+    onClickShowAll: (ExamType) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val solvedExams = remember(userProfile.solvedExamInstances) {
@@ -107,11 +106,7 @@ fun ProfileScreen(
                 },
                 isLoading = isLoading,
                 onClickShowAll = {
-                    onClickShowAll(
-                        ProfileStep.ViewAll(
-                            examType = ExamType.Solved,
-                        ),
-                    )
+                    onClickShowAll(ExamType.Solved)
                 },
             )
             Spacer(space = 40.dp)
@@ -126,11 +121,7 @@ fun ProfileScreen(
                 },
                 isLoading = isLoading,
                 onClickShowAll = {
-                    onClickShowAll(
-                        ProfileStep.ViewAll(
-                            examType = ExamType.Heart,
-                        ),
-                    )
+                    onClickShowAll(ExamType.Heart)
                 },
             )
         }
