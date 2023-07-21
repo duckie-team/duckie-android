@@ -45,6 +45,9 @@ import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackSecondaryLargeButtonDefaults
+import team.duckie.quackquack.ui.component.QuackLargeButton
+import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
@@ -126,8 +129,8 @@ fun MyProfileScreen(
                 title = stringResource(id = R.string.my_favorite_tag),
                 tags = tags,
                 emptySection = {
-                    QuackButton(
-                        style = QuackButtonStyle.SecondaryLarge,
+                    QuackLargeButton(
+                        type = QuackLargeButtonType.Compact,
                         text = stringResource(id = R.string.add_favorite_tag),
                         onClick = onClickEditTag,
                     )
@@ -150,8 +153,8 @@ fun MyProfileScreen(
                     ) {
                         EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
                         Spacer(modifier = Modifier.padding(8.dp))
-                        QuackButton(
-                            style = QuackButtonStyle.SecondaryLarge,
+                        QuackLargeButton(
+                            type = QuackLargeButtonType.Compact,
                             text = stringResource(id = R.string.make_exam),
                             onClick = onClickMakeExam,
                         )
