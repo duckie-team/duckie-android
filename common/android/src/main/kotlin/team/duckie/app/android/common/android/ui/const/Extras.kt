@@ -16,6 +16,7 @@ object Extras {
     const val IsQuiz = "ExtraIsQuiz"
     const val UpdateQuizParam = "ExtraUpdateQuizParameter"
     const val IsPassed = "ExtraIsPassed"
+    const val ExamType = "ExtraExamType"
 
     const val SearchTag = "ExtraSearchTag"
     const val StartGuide = "StartGuide"

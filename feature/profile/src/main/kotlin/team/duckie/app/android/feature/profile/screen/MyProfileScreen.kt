@@ -25,7 +25,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.icon.v1.Create
 import team.duckie.app.android.common.compose.ui.icon.v1.Notice
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.domain.exam.model.ProfileExam
@@ -37,7 +36,6 @@ import team.duckie.app.android.feature.profile.screen.section.EditSection
 import team.duckie.app.android.feature.profile.screen.section.ExamSection
 import team.duckie.app.android.feature.profile.screen.section.FavoriteTagSection
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
-import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
@@ -47,6 +45,9 @@ import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackSecondaryLargeButtonDefaults
+import team.duckie.quackquack.ui.component.QuackLargeButton
+import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
@@ -65,7 +66,7 @@ fun MyProfileScreen(
     onClickMakeExam: () -> Unit,
     onClickTag: (String) -> Unit,
     onClickFriend: (FriendsType, Int, String) -> Unit,
-    onClickShowAll: (ProfileStep.ViewAll) -> Unit,
+    onClickShowAll: (ExamType) -> Unit,
 ) {
     @Composable
     fun BackPressedHeadLineTopBarInternal() {
@@ -128,8 +129,8 @@ fun MyProfileScreen(
                 title = stringResource(id = R.string.my_favorite_tag),
                 tags = tags,
                 emptySection = {
-                    QuackButton(
-                        style = QuackButtonStyle.SecondaryLarge,
+                    QuackLargeButton(
+                        type = QuackLargeButtonType.Compact,
                         text = stringResource(id = R.string.add_favorite_tag),
                         onClick = onClickEditTag,
                     )
@@ -152,19 +153,15 @@ fun MyProfileScreen(
                     ) {
                         EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
                         Spacer(modifier = Modifier.padding(8.dp))
-                        QuackButton(
-                            style = QuackButtonStyle.SecondaryLarge,
+                        QuackLargeButton(
+                            type = QuackLargeButtonType.Compact,
                             text = stringResource(id = R.string.make_exam),
                             onClick = onClickMakeExam,
                         )
                     }
                 },
                 onClickShowAll = {
-                    onClickShowAll(
-                        ProfileStep.ViewAll(
-                            examType = ExamType.Created,
-                        ),
-                    )
+                    onClickShowAll(ExamType.Created)
                 },
             )
         },

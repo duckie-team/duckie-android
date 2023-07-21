@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.profile
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
@@ -16,7 +15,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,26 +26,23 @@ import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.compose.LaunchOnLifecycle
 import team.duckie.app.android.common.compose.ToastWrapper
-import team.duckie.app.android.common.compose.collectAndHandleState
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
-import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemException
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.feature.profile.screen.MyProfileScreen
 import team.duckie.app.android.feature.profile.screen.OtherProfileScreen
-import team.duckie.app.android.feature.profile.screen.viewall.ViewAllScreen
 import team.duckie.app.android.feature.profile.viewmodel.ProfileViewModel
 import team.duckie.app.android.feature.profile.viewmodel.sideeffect.ProfileSideEffect
-import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.friend.FriendNavigator
 import team.duckie.app.android.navigator.feature.notification.NotificationNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileEditNavigator
+import team.duckie.app.android.navigator.feature.profile.ViewAllNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
@@ -83,6 +78,9 @@ class ProfileActivity : BaseActivity() {
     @Inject
     lateinit var friendsNavigator: FriendNavigator
 
+    @Inject
+    lateinit var viewAllNavigator: ViewAllNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -93,7 +91,9 @@ class ProfileActivity : BaseActivity() {
             systemBarPaddings
             val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
-            InitBackHandler(step = state.step)
+            BackHandler(
+                onBack = ::finishWithAnimation,
+            )
 
             QuackTheme {
                 QuackCrossfade(
@@ -139,30 +139,6 @@ class ProfileActivity : BaseActivity() {
                                 }
                             }
                         }
-
-                        is ProfileStep.ViewAll -> {
-                            ViewAllScreen(
-                                examType = step.examType,
-                                onBackPressed = viewModel::clickViewAllBackPress,
-                                profileExams = when (step.examType) {
-                                    ExamType.Heart -> viewModel.heartExams.collectAndHandleState(
-                                        handleLoadStates = viewModel::handleLoadState,
-                                    )
-
-                                    ExamType.Created -> viewModel.submittedExams.collectAndHandleState(
-                                        handleLoadStates = viewModel::handleLoadState,
-                                    )
-
-                                    ExamType.Solved -> duckieClientLogicProblemException(
-                                        message = CreateExamIsNotSupported,
-                                    )
-                                },
-                                profileExamInstances = viewModel.solvedExams.collectAndHandleState(
-                                    handleLoadStates = viewModel::handleLoadState,
-                                ),
-                                onItemClick = viewModel::clickExam,
-                            )
-                        }
                     }
                 }
             }
@@ -170,21 +146,6 @@ class ProfileActivity : BaseActivity() {
         viewModel.observe(
             lifecycleOwner = this,
             sideEffect = ::handleSideEffect,
-        )
-    }
-
-    @Composable
-    private fun InitBackHandler(step: ProfileStep) {
-        BackHandler(
-            onBack = when (step) {
-                is ProfileStep.ViewAll -> {
-                    viewModel::clickViewAllBackPress
-                }
-
-                else -> {
-                    ::finishWithAnimation
-                }
-            },
         )
     }
 
@@ -196,7 +157,7 @@ class ProfileActivity : BaseActivity() {
                     putExtra(Extras.FollowChangedStatus, sideEffect.isFollow.not())
                     putExtra(Extras.FollowChangedUserId, sideEffect.userId)
                 }
-                setResult(Activity.RESULT_OK, resultIntent)
+                setResult(RESULT_OK, resultIntent)
                 finishWithAnimation()
             }
 
@@ -270,10 +231,16 @@ class ProfileActivity : BaseActivity() {
                     intentBuilder = { putExtra(Extras.UserId, sideEffect.userId) },
                 )
             }
-        }
-    }
 
-    companion object {
-        private const val CreateExamIsNotSupported = "Created exam is not supported"
+            is ProfileSideEffect.NavigateToViewAll -> {
+                viewAllNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.ExamType, sideEffect.examType)
+                        putExtra(Extras.UserId, sideEffect.userId)
+                    },
+                )
+            }
+        }
     }
 }
