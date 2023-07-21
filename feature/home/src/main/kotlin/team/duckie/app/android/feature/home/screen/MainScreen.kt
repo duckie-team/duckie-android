@@ -141,11 +141,14 @@ internal fun MainScreen(
                             navigateToCreateProblem = {
                                 mainViewModel.navigateToCreateProblem()
                             },
-                            setReportExamId = { examId ->
-                                mainViewModel.setReportExamId(examId)
+                            setTargetExamId = { examId ->
+                                mainViewModel.setTargetExamId(examId)
                             },
                             onReport = {
                                 mainViewModel.report()
+                            },
+                            onShare = {
+                                mainViewModel.copyExamDynamicLink()
                             },
                         )
                     }
@@ -167,7 +170,7 @@ internal fun MainScreen(
                             navigateToUserProfile = { userId ->
                                 navigateToUserProfile(userId)
                             },
-                            setReportExamId = mainViewModel::setReportExamId,
+                            setReportExamId = mainViewModel::setTargetExamId,
                             onReport = mainViewModel::report,
                         )
                     }

@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import okhttp3.internal.immutableListOf
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.viewmodel.home.HomeSideEffect
@@ -31,6 +32,7 @@ import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.feature.home.constants.MainScreenType
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
@@ -39,8 +41,9 @@ private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 internal fun HomeScreen(
     initState: (MainScreenType, () -> Unit) -> Unit,
     vm: HomeViewModel,
-    setReportExamId: (Int) -> Unit,
+    setTargetExamId: (Int) -> Unit,
     onReport: () -> Unit,
+    onShare: () -> Unit,
     navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
@@ -73,6 +76,8 @@ internal fun HomeScreen(
             }
         },
         onReport = onReport,
+        onCopyLink = onShare,
+        types = immutableListOf(DuckieSelectableType.CopyLink, DuckieSelectableType.Report),
     ) {
         Box(
             modifier = Modifier,
@@ -94,7 +99,7 @@ internal fun HomeScreen(
                         navigateToHomeDetail = navigateToHomeDetail,
                         navigateToSearch = navigateToSearch,
                         openExamBottomSheet = { exam ->
-                            setReportExamId(exam)
+                            setTargetExamId(exam)
                             coroutineScope.launch {
                                 bottomSheetDialogState.show()
                             }

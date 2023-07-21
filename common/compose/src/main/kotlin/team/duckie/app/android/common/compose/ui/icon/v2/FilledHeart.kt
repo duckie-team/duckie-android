@@ -27,18 +27,18 @@ public val QuackIcon.FilledHeart: ImageVector
             name = "IcFilledHeart",
             defaultWidth = 24.0.dp,
             defaultHeight =
-                24.0.dp,
-                    viewportWidth = 24.0f,
+            24.0.dp,
+            viewportWidth = 24.0f,
             viewportHeight = 24.0f,
         ).apply {
             path(
                 fill = SolidColor(Color(0xFFFF8300)),
                 stroke = SolidColor(Color(0xFFFF8300)),
-                    strokeLineWidth = 1.5f,
+                strokeLineWidth = 1.5f,
                 strokeLineCap = Round,
-                        strokeLineJoin =
-                    StrokeJoin.Companion.Round,
-                        strokeLineMiter = 4.0f,
+                strokeLineJoin =
+                StrokeJoin.Companion.Round,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
                 moveTo(19.9996f, 9.3436f)
@@ -71,7 +71,7 @@ public val QuackIcon.FilledHeart: ImageVector
                 close()
             }
         }
-        .build()
+            .build()
         return _icFilledHeart!!
     }
 
