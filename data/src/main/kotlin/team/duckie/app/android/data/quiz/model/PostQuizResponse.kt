@@ -20,7 +20,7 @@ internal data class PostQuizResponse(
     @JsonProperty("score")
     val score: Int? = null,
     @JsonProperty("time")
-    val time: Int? = null,
+    val time: Double? = null,
     @JsonProperty("user")
     val user: UserResponse? = null,
 )
