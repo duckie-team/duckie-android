@@ -149,14 +149,18 @@ private fun ExamResultReactionDialogInternal(
     ) {
         QuackHeadLine1(
             modifier = Modifier.span(
-                texts = listOf("${nickname}님", mainTag, "${ranking}위"),
+                texts = listOf(nickname, mainTag, "${ranking}위"),
                 style = SpanStyle(
                     color = QuackColor.DuckieOrange.value,
                     fontWeight = FontWeight.Bold,
                 ),
             ),
             text = stringResource(
-                id = R.string.exam_result_finish_title,
+                id = if (ranking <= 10) {
+                    R.string.exam_result_finish_title_ranker
+                } else {
+                    R.string.exam_result_finish_title_etc
+                },
                 nickname,
                 mainTag,
                 ranking,

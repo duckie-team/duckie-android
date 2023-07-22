@@ -225,9 +225,13 @@ private fun RankingContent(
                 )
                 .padding(vertical = 12.dp, horizontal = 16.dp),
         ) {
-            DuckieMedal(score = rank)
-            Spacer(space = 12.dp)
-            UserProfileOrDefault(profileImageUrl = user.profileImageUrl)
+            Row(
+                verticalAlignment = CenterVertically,
+            ){
+                DuckieMedal(score = rank)
+                Spacer(space = 12.dp)
+                UserProfileOrDefault(profileImageUrl = user.profileImageUrl)
+            }
             Spacer(space = 8.dp)
             Column(
                 modifier = Modifier.heightIn(min = ProfileImageSize.height),
@@ -267,7 +271,7 @@ private fun RankingContent(
                             color = QuackColor.DuckieOrange,
                         ),
                     )
-                } else {
+                } else if(rank in 2 .. 10) {
                     QuackText(
                         text = getUserPerformanceString(correctProblemCount, time),
                         typography = QuackTypography.Body2.change(
