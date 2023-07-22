@@ -54,6 +54,7 @@ import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 
 private const val RANKER_REACTION_MAX_LENGTH: Int = 40
+internal const val RANKER_THRESHOLD = 10
 
 @Composable
 internal fun ExamResultScreen(
@@ -156,7 +157,7 @@ private fun ExamResultReactionDialogInternal(
                 ),
             ),
             text = stringResource(
-                id = if (ranking <= 10) {
+                id = if (ranking <= RANKER_THRESHOLD) {
                     R.string.exam_result_finish_title_ranker
                 } else {
                     R.string.exam_result_finish_title_etc

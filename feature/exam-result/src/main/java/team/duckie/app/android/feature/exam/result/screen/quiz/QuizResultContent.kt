@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.exam.result.R
+import team.duckie.app.android.feature.exam.result.screen.RANKER_THRESHOLD
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
@@ -129,7 +130,7 @@ internal fun QuizResultContent(
                 ),
             ),
             text = stringResource(
-                id = if (ranking <= 10) {
+                id = if (ranking <= RANKER_THRESHOLD) {
                     R.string.exam_result_finish_title_ranker
                 } else {
                     R.string.exam_result_finish_title_etc
