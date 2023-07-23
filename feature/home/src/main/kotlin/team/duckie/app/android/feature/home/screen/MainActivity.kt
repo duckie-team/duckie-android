@@ -222,6 +222,15 @@ class MainActivity : BaseActivity() {
             is MainSideEffect.CopyExamIdDynamicLink -> {
                 DynamicLinkHelper.createAndShareLink(this, sideEffect.examId)
             }
+
+            is MainSideEffect.NavigateToProfile -> {
+                profileNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.UserId, sideEffect.userId)
+                    },
+                )
+            }
         }
     }
 }
