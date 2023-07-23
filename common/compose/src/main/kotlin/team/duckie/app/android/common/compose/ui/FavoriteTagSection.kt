@@ -23,7 +23,6 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackTitle2
-import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
 /**
  * 관심태그 섹션
@@ -48,8 +47,7 @@ fun FavoriteTagSection(
     title: String,
     horizontalPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(0.dp),
-    // TODO(riflockle7): 다음 작업에서 QuackV2 로 대응하기
-    trailingIcon: QuackV1Icon? = null,
+    trailingIconResId: Int? = null,
     onTrailingClick: ((Int) -> Unit)? = null,
     singleLine: Boolean = true,
     emptySection: @Composable () -> Unit,
@@ -79,7 +77,7 @@ fun FavoriteTagSection(
                 QuackSingeLazyRowTag(
                     items = tagList,
                     contentPadding = horizontalPadding,
-                    tagTypeResId = trailingIcon?.drawableId,
+                    tagTypeResId = trailingIconResId,
                     onClick = { index -> onTagClick(index) },
                 )
             } else {
@@ -88,7 +86,7 @@ fun FavoriteTagSection(
                     contentPadding = horizontalPadding,
                     horizontalSpace = 4.dp,
                     items = tagList,
-                    tagTypeResId = trailingIcon?.drawableId,
+                    tagTypeResId = trailingIconResId,
                     onClick = { index -> onTagClick(index) },
                     itemChunkedSize = 4,
                 )

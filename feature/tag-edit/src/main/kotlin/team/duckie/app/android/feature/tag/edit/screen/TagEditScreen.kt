@@ -31,15 +31,18 @@ import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.FavoriteTagSection
 import team.duckie.app.android.common.compose.ui.LoadingScreen
 import team.duckie.app.android.common.compose.ui.domain.DuckieTagAddBottomSheet
+import team.duckie.app.android.common.compose.ui.icon.v1.ArrowBackId
+import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.tag.edit.R
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditState
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun TagEditScreen(
@@ -100,11 +103,11 @@ fun TagEditSuccessScreen(
             Column(modifier = modifier) {
                 // 상단 탭바
                 QuackTopAppBar(
-                    leadingIcon = QuackIcon.ArrowBack,
+                    leadingIconResId = QuackIcon.ArrowBackId,
                     leadingText = stringResource(R.string.title),
                     onLeadingIconClick = activity::finish,
                     trailingContent = {
-                        QuackSubtitle(
+                        QuackText(
                             modifier = Modifier
                                 .then(Modifier) // prevent Modifier.Companion
                                 .quackClickable(
@@ -116,7 +119,9 @@ fun TagEditSuccessScreen(
                                     horizontal = 16.dp,
                                 ),
                             text = stringResource(R.string.edit_finish),
-                            color = QuackColor.DuckieOrange,
+                            typography = QuackTypography.Subtitle.change(
+                                color = QuackColor.DuckieOrange,
+                            ),
                             singleLine = true,
                         )
                     },
@@ -128,7 +133,7 @@ fun TagEditSuccessScreen(
                     title = stringResource(id = R.string.my_favorite_tag),
                     horizontalPadding = PaddingValues(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    trailingIcon = QuackIcon.Close,
+                    trailingIconResId = QuackIcon.CloseId,
                     onTrailingClick = onTrailingClick,
                     tags = state.myTags.map { it.name }.toPersistentList(),
                     emptySection = {},
