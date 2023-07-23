@@ -18,4 +18,6 @@ sealed class ExamResultSideEffect {
     ) : ExamResultSideEffect()
 
     class ReportError(val exception: Throwable) : ExamResultSideEffect()
+
+    object SendReactionSuccessToast : ExamResultSideEffect()
 }

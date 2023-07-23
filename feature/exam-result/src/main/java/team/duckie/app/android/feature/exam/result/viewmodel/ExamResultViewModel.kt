@@ -53,7 +53,13 @@ class ExamResultViewModel @Inject constructor(
         postQuizReactionUseCase(
             examId = state.examId,
             reaction = state.reaction,
-        )
+        ).onSuccess { success ->
+            if (success) {
+                postSideEffect(ExamResultSideEffect.SendReactionSuccessToast)
+            }
+        }.onFailure { exception ->
+            postSideEffect(ExamResultSideEffect.ReportError(exception))
+        }
     }
 
     fun initState() {
