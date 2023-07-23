@@ -49,15 +49,14 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.collectAndHandleState
+import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackSubtitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
 internal const val ThumbnailRatio = 4f / 3f
@@ -199,7 +198,7 @@ private fun TestCoverWithMaker(
         )
         TestMakerLayout(
             modifier = Modifier.padding(top = 12.dp),
-            profile = profile,
+            profileImageUrl = profile,
             title = title,
             name = name,
             tier = tier,
@@ -213,7 +212,7 @@ private fun TestCoverWithMaker(
 @Composable
 private fun TestMakerLayout(
     modifier: Modifier = Modifier,
-    profile: String,
+    profileImageUrl: String,
     title: String,
     name: String,
     tier: String,
@@ -225,16 +224,11 @@ private fun TestMakerLayout(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        QuackImage(
+        QuackProfileImage(
             modifier = Modifier.skeleton(isLoading),
-            src = profile,
+            profileUrl = profileImageUrl,
             size = HomeProfileSize,
-            shape = SquircleShape,
-            onClick = {
-                if (onClickUserProfile != null) {
-                    onClickUserProfile()
-                }
-            },
+            onClick = onClickUserProfile,
         )
         Column(modifier = Modifier.padding(start = 8.dp)) {
             QuackSubtitle2(
