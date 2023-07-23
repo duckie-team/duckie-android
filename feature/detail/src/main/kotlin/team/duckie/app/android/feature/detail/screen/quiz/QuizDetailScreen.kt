@@ -39,6 +39,8 @@ import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfileId
 import team.duckie.app.android.common.compose.ui.icon.v2.Crown
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
+import team.duckie.app.android.common.kotlin.isFirstRanked
+import team.duckie.app.android.common.kotlin.isTopRanked
 import team.duckie.app.android.domain.quiz.model.QuizInfo
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.common.DetailContentLayout
@@ -242,7 +244,7 @@ private fun RankingContent(
                 Row(
                     verticalAlignment = CenterVertically,
                 ) {
-                    if (rank == 1) {
+                    if (rank.isFirstRanked()) {
                         QuackIcon(icon = QuackIcon.Crown)
                         Spacer(space = 2.dp)
                     }
@@ -250,7 +252,7 @@ private fun RankingContent(
                 }
                 if (quizInfo.reaction != null) {
                     Spacer(space = 4.dp)
-                    if (rank == 1) {
+                    if (rank.isFirstRanked()) {
                         LeftChatBubble(
                             message = quizInfo.reaction ?: "",
                             backgroundColor = PaleOrange,
@@ -265,7 +267,7 @@ private fun RankingContent(
                     }
                 }
                 Spacer(space = 6.dp)
-                if (rank == 1) {
+                if (rank.isFirstRanked()) {
                     QuackText(
                         modifier = Modifier.padding(start = 4.dp),
                         text = getUserPerformanceString(correctProblemCount, time),
@@ -273,7 +275,7 @@ private fun RankingContent(
                             color = QuackColor.DuckieOrange,
                         ),
                     )
-                } else if (rank in 2..10) {
+                } else if (rank.isTopRanked()) {
                     QuackText(
                         text = getUserPerformanceString(correctProblemCount, time),
                         typography = QuackTypography.Body2.change(
