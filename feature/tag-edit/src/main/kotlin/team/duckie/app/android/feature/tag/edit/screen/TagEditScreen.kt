@@ -10,6 +10,7 @@
 package team.duckie.app.android.feature.tag.edit.screen
 
 import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -88,6 +89,14 @@ fun TagEditSuccessScreen(
         ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true,
     )
+
+    BackHandler {
+        if (sheetState.isVisible) {
+            coroutineScope.launch { sheetState.hide() }
+        } else {
+            activity.finish()
+        }
+    }
 
     DuckieTagAddBottomSheet(
         sheetState = sheetState,
