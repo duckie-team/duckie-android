@@ -31,14 +31,4 @@ data class ProfileState(
 sealed class ProfileStep {
     object Error : ProfileStep()
     object Profile : ProfileStep()
-
-    data class ViewAll(
-        val examType: ExamType,
-    ) : ProfileStep()
-}
-
-enum class ExamType {
-    Heart,
-    Created,
-    Solved,
 }

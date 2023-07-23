@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.feature.home.viewmodel.mypage
 
+import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
+
 sealed class MyPageSideEffect {
     class ReportError(val exception: Throwable) : MyPageSideEffect()
 
@@ -25,4 +27,9 @@ sealed class MyPageSideEffect {
     class SendToast(val message: String) : MyPageSideEffect()
 
     class NavigateToSearch(val tagName: String) : MyPageSideEffect()
+
+    class NavigateToViewAll(
+        val userId: Int,
+        val examType: ExamType,
+    ) : MyPageSideEffect()
 }

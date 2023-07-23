@@ -92,13 +92,8 @@ internal fun ColumnScope.AnswerSection(
 
         is Answer.Short -> {
             ShortAnswerForm(
-                modifier = Modifier.padding(paddingValues = HorizontalPadding),
                 answer = answer.correctAnswer,
-                text = inputAnswers[pageIndex].answer,
                 onTextChanged = { inputText ->
-                    updateInputAnswers(pageIndex, InputAnswer(0, inputText))
-                },
-                onDone = { inputText ->
                     updateInputAnswers(pageIndex, InputAnswer(0, inputText))
                 },
                 requestFocus = requestFocus,

@@ -5,7 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 @file:OptIn(ExperimentalComposeUiApi::class)
-@file:Suppress("unused")
 
 package team.duckie.app.android.feature.solve.problem.answer.shortanswer
 
@@ -20,8 +19,10 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -48,10 +49,8 @@ import team.duckie.quackquack.ui.component.QuackBody1
 @Composable
 internal fun ShortAnswerForm(
     modifier: Modifier = Modifier,
-    text: String,
     onTextChanged: (String) -> Unit,
     answer: String,
-    onDone: (String) -> Unit,
     keyboardController: SoftwareKeyboardController?,
     requestFocus: Boolean,
 ) {
@@ -66,9 +65,9 @@ internal fun ShortAnswerForm(
         }
     }
 
-    Box {
+    Box(modifier) {
         TextField(
-            modifier = modifier
+            modifier = Modifier
                 .focusRequester(focusRequester)
                 .onFocusChanged {
                     hasFocus.value = it.hasFocus
@@ -129,8 +128,8 @@ private fun ShortAnswerOneTextForm(
     Column {
         Box(
             modifier = Modifier
-                .width(30.dp)
-                .height(40.dp)
+                .widthIn(30.dp)
+                .heightIn(40.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .quackBorder(
                     border = QuackBorder(color = if (isFocused) QuackColor.DuckieOrange else QuackColor.Gray3),

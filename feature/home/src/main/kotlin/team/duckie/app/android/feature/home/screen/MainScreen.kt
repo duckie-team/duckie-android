@@ -20,22 +20,23 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import team.duckie.app.android.common.compose.asLoose
+import team.duckie.app.android.common.compose.getPlaceable
+import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.feature.home.component.DuckTestBottomNavigation
 import team.duckie.app.android.feature.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.home.screen.guide.HomeGuideScreen
 import team.duckie.app.android.feature.home.screen.home.HomeScreen
 import team.duckie.app.android.feature.home.screen.mypage.MyPageScreen
-import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.home.screen.ranking.RankingScreen
 import team.duckie.app.android.feature.home.screen.search.SearchMainScreen
 import team.duckie.app.android.feature.home.viewmodel.MainState
 import team.duckie.app.android.feature.home.viewmodel.MainViewModel
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
-import team.duckie.app.android.common.compose.asLoose
-import team.duckie.app.android.common.compose.getPlaceable
-import team.duckie.app.android.common.compose.systemBarPaddings
-import team.duckie.app.android.common.kotlin.FriendsType
+import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackDivider
 
@@ -106,6 +107,7 @@ internal fun MainScreen(
     navigateToUserProfile: (Int) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
     navigateToTagEdit: (Int) -> Unit,
+    navigateToViewAll: (Int, ExamType) -> Unit,
 ) {
     val navController = rememberNavController()
 
@@ -201,6 +203,7 @@ internal fun MainScreen(
                             navigateToTagEdit = { userId ->
                                 navigateToTagEdit(userId)
                             },
+                            navigateToViewAll = navigateToViewAll,
                         )
                     }
                 }

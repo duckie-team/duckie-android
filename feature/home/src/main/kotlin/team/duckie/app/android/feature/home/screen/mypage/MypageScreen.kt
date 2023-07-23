@@ -9,7 +9,6 @@
 
 package team.duckie.app.android.feature.home.screen.mypage
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,24 +32,19 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.compose.ToastWrapper
-import team.duckie.app.android.common.compose.collectAndHandleState
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.FriendsType
-import team.duckie.app.android.common.kotlin.exception.duckieClientLogicProblemException
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageSideEffect
 import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.profile.screen.MyProfileScreen
-import team.duckie.app.android.feature.profile.screen.viewall.ViewAllScreen
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
 import team.duckie.quackquack.ui.color.QuackColor
-
-const val CreateExamIsNotSupported = "Created exam is not supported"
 
 @Composable
 internal fun MyPageScreen(
@@ -63,18 +57,13 @@ internal fun MyPageScreen(
     navigateToFriend: (FriendsType, Int, String) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
     navigateToTagEdit: (Int) -> Unit,
+    navigateToViewAll: (Int, ExamType) -> Unit,
     viewModel: MyPageViewModel,
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var isPullRefresh by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-
-    BackHandler {
-        if (state.step is ProfileStep.ViewAll) {
-            viewModel.clickViewAllBackPress()
-        }
-    }
 
     @AllowMagicNumber
     val pullRefreshState = rememberPullRefreshState(
@@ -137,6 +126,10 @@ internal fun MyPageScreen(
                 is MyPageSideEffect.NavigateToTagEdit -> {
                     navigateToTagEdit(sideEffect.userId)
                 }
+
+                is MyPageSideEffect.NavigateToViewAll -> {
+                    navigateToViewAll(sideEffect.userId, sideEffect.examType)
+                }
             }
         }
     }
@@ -172,30 +165,6 @@ internal fun MyPageScreen(
                     modifier = Modifier.align(Alignment.TopCenter),
                     refreshing = isPullRefresh,
                     state = pullRefreshState,
-                )
-            }
-
-            is ProfileStep.ViewAll -> {
-                ViewAllScreen(
-                    examType = step.examType,
-                    onBackPressed = viewModel::clickViewAllBackPress,
-                    profileExams = when (step.examType) {
-                        ExamType.Heart -> viewModel.heartExams.collectAndHandleState(
-                            handleLoadStates = viewModel::handleLoadState,
-                        )
-
-                        ExamType.Created -> viewModel.submittedExams.collectAndHandleState(
-                            handleLoadStates = viewModel::handleLoadState,
-                        )
-
-                        ExamType.Solved -> duckieClientLogicProblemException(
-                            message = CreateExamIsNotSupported,
-                        )
-                    },
-                    profileExamInstances = viewModel.solvedExams.collectAndHandleState(
-                        handleLoadStates = viewModel::handleLoadState,
-                    ),
-                    onItemClick = viewModel::clickExam,
                 )
             }
         }
