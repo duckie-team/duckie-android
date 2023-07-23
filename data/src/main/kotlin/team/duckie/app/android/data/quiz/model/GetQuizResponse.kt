@@ -13,22 +13,24 @@ import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.user.model.UserResponse
 
 internal data class GetQuizResponse(
-    @JsonProperty("id")
+    @field:JsonProperty("id")
     val id: Int? = null,
-    @JsonProperty("correctProblemCount")
+    @field:JsonProperty("correctProblemCount")
     val correctProblemCount: Int? = null,
-    @JsonProperty("exam")
+    @field:JsonProperty("exam")
     val exam: ExamData? = null,
-    @JsonProperty("score")
+    @field:JsonProperty("score")
     val score: Int? = null,
-    @JsonProperty("time")
-    val time: Int? = null,
-    @JsonProperty("user")
+    @field:JsonProperty("time")
+    val time: Double? = null,
+    @field:JsonProperty("user")
     val user: UserResponse? = null,
-    @JsonProperty("wrongProblem")
+    @field:JsonProperty("wrongProblem")
     val wrongProblem: ProblemData? = null,
-    @JsonProperty("ranking")
+    @field:JsonProperty("ranking")
     val ranking: Int? = null,
-    @JsonProperty("requirementAnswer")
+    @field:JsonProperty("requirementAnswer")
     val requirementAnswer: String? = null,
+    @field:JsonProperty("isBestRecord")
+    val isBestRecord: Boolean? = null,
 )

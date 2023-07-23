@@ -10,15 +10,22 @@ package team.duckie.app.android.data.exam.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.user.model.UserResponse
 
+/**
+ * API 명세서 상에서 challenge entity를 의미합니다.
+ */
 data class QuizInfoResponse(
-    @JsonProperty("id")
+    @field:JsonProperty("id")
     val id: Int? = null,
-    @JsonProperty("correctProblemCount")
+    @field:JsonProperty("correctProblemCount")
     val correctProblemCount: Int? = null,
-    @JsonProperty("score")
+    @field:JsonProperty("score")
     val score: Int? = null,
-    @JsonProperty("time")
-    val time: Int? = null,
-    @JsonProperty("user")
+    @field:JsonProperty("user")
     val user: UserResponse? = null,
+    @field:JsonProperty("time")
+    val time: Double? = null,
+    @field:JsonProperty("reaction")
+    val reaction: String? = null,
+    @field:JsonProperty("ranking")
+    val ranking: Int? = null,
 )

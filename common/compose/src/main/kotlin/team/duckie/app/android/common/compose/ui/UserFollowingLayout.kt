@@ -7,33 +7,27 @@
 
 package team.duckie.app.android.common.compose.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.centerVertical
-import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfileId
+import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.npe
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.material.shape.SquircleShape
-import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody3
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
@@ -87,26 +81,13 @@ fun UserFollowingLayout(
             .padding(vertical = 12.dp)
             .padding(horizontal = 16.dp),
         content = {
-            if (profileImgUrl.isEmpty()) {
-                Image(
-                    modifier = Modifier
-                        .layoutId(UserInfoBlockUserProfileLayoutId)
-                        .size(HomeProfileSize)
-                        .clip(SquircleShape)
-                        .skeleton(isLoading),
-                    painter = painterResource(id = QuackIcon.DefaultProfileId),
-                    contentDescription = null,
-                )
-            } else {
-                QuackImage(
-                    modifier = Modifier
-                        .layoutId(UserInfoBlockUserProfileLayoutId)
-                        .size(HomeProfileSize)
-                        .clip(SquircleShape)
-                        .skeleton(isLoading),
-                    src = profileImgUrl,
-                )
-            }
+            QuackProfileImage(
+                modifier = Modifier
+                    .layoutId(UserInfoBlockUserProfileLayoutId)
+                    .skeleton(isLoading),
+                profileUrl = profileImgUrl,
+                size = HomeProfileSize,
+            )
             QuackSubtitle2(
                 modifier = Modifier
                     .layoutId(UserInfoBlockUserNameLayoutId)

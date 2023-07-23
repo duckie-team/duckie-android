@@ -38,6 +38,7 @@ internal fun GetQuizResponse.toDomain() = QuizResult(
     wrongProblem = wrongProblem?.toDomain(),
     ranking = ranking,
     requirementAnswer = requirementAnswer,
+    isBestRecord = isBestRecord ?: false, // for start-exam
 )
 
 internal fun QuizExamData.toDomain() = QuizExam(

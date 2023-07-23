@@ -8,17 +8,23 @@
 <resources>
     <string name="detail_loading_mypage_toast">마이페이지 화면은 추후 제공되는 기능입니다.</string>
     <string name="detail_report_success">"신고가 정상 접수되었어요!"</string>
+    <string name="detail_ranker_not_found">아직 아무도 풀지 않았네요\n이 덕퀴즈의 첫 응시자가 되어보세요!</string>
 
-    <string name="detail_tier_tag">%s · %s</string>
+    <string name="detail_tier_tag">%s | %s</string>
     <string name="detail_follow">팔로우</string>
     <string name="detail_following">팔로잉</string>
     <string name="detail_right_percent">정답률 : %s</string>
     <string name="exam_already">이미 응시한 시험입니다.</string>
 
+    <string name="all_rank">전체 랭킹</string>
+
+    <string name="score">%s점</string>
+    <string name="time">%s초</string>
     <string name="report">신고하기</string>
     <string name="check">확인</string>
-    <string name="quiz_ranking_title">%s 덕퀴즈 랭킹</string>
+    <string name="quiz_ranking_title">%s 덕퀴즈 TOP10</string>
     <string name="detail_exam_info">시험정보</string>
     <string name="detail_total_exam_count">총 문제 수 : %d개</string>
     <string name="detail_total_examinee">응시자 : %d명</string>
+    <string name="my_record">내 기록</string>
 </resources>

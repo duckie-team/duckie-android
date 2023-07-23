@@ -170,7 +170,7 @@ internal class SolveProblemViewModel @Inject constructor(
         postSideEffect(
             SolveProblemSideEffect.FinishQuiz(
                 examId = state.examId,
-                time = problemTimer.totalTime.toInt(),
+                time = problemTimer.totalTime.toDouble(),
                 correctProblemCount = if (isSuccess) { // 현재 페이지 인덱스 == 맞은 개수
                     index + 1
                 } else {

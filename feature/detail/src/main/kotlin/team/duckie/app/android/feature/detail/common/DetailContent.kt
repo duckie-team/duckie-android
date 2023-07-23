@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
+import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
@@ -44,13 +45,12 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.More
-import team.duckie.quackquack.material.icon.quackicon.outlined.Profile
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackTag
 import team.duckie.quackquack.ui.QuackTagStyle
 import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /** 상세 화면 컨텐츠 Layout */
@@ -187,40 +187,17 @@ private fun DetailProfileLayout(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // 작성자 프로필 이미지
-        if (state.profileImageUrl.isNotEmpty()) {
-            QuackImage(
-                modifier = Modifier
-                    .size(DpSize(32.dp, 32.dp))
-                    .clip(SquircleShape),
-                src = state.profileImageUrl,
-            )
-        } else {
-            QuackImage(
-                modifier = Modifier
-                    .size(DpSize(32.dp, 32.dp))
-                    .clip(SquircleShape),
-                src = QuackIcon.Outlined.Profile,
-            )
-        }
+        QuackProfileImage(
+            profileUrl = state.profileImageUrl,
+            size = DpSize(36.dp, 36.dp),
+        )
 
         // 공백
         Spacer(modifier = Modifier.width(8.dp))
         // 닉네임, 응시자, 일자 Layout
         Column {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                // 댓글 작성자 닉네임
-                QuackText(
-                    text = state.nickname,
-                    typography = QuackTypography.Body3,
-                )
-
-                // 공백
-                Spacer(modifier = Modifier.width(4.dp))
-            }
-
-            // 공백
-            Spacer(modifier = Modifier.height(2.dp))
-
+            // 유저 닉네임
+            QuackTitle2(text = state.nickname)
             // 덕티어 + 퍼센트, 태그
             QuackText(
                 text = stringResource(
@@ -228,12 +205,11 @@ private fun DetailProfileLayout(
                     state.exam.user?.duckPower?.tier ?: "",
                     state.exam.user?.duckPower?.tag?.name ?: "",
                 ),
-                typography = QuackTypography.Body3.change(color = QuackColor.Gray2),
+                typography = QuackTypography.Body2.change(color = QuackColor.Gray1),
             )
         }
         // 공백
         Spacer(modifier = Modifier.weight(1f))
-
         // 팔로우 버튼
         QuackText(
             modifier = Modifier

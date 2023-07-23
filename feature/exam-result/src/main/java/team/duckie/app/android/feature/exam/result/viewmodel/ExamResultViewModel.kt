@@ -28,6 +28,7 @@ import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCas
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.MakeQuizUseCase
+import team.duckie.app.android.domain.quiz.usecase.PostQuizReactionUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
 import javax.inject.Inject
 
@@ -39,12 +40,27 @@ class ExamResultViewModel @Inject constructor(
     private val submitQuizUseCase: SubmitQuizUseCase,
     private val getQuizUseCase: GetQuizUseCase,
     private val makeQuizUseCase: MakeQuizUseCase,
+    private val postQuizReactionUseCase: PostQuizReactionUseCase,
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
 
     override val container: Container<ExamResultState, ExamResultSideEffect> = container(
         ExamResultState.Loading,
     )
+
+    private fun postQuizReaction() = intent {
+        val state = state as ExamResultState.Success
+        postQuizReactionUseCase(
+            examId = state.examId,
+            reaction = state.reaction,
+        ).onSuccess { success ->
+            if (success) {
+                postSideEffect(ExamResultSideEffect.SendReactionSuccessToast)
+            }
+        }.onFailure { exception ->
+            postSideEffect(ExamResultSideEffect.ReportError(exception))
+        }
+    }
 
     fun initState() {
         val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
@@ -159,7 +175,9 @@ class ExamResultViewModel @Inject constructor(
                             nickname = user.nickname,
                             thumbnailUrl = exam.thumbnailUrl,
                             solvedCount = exam.solvedCount ?: 0,
-                        )
+                            isBestRecord = isBestRecord,
+
+                            )
                     }
                 }
             }.onFailure {
@@ -169,6 +187,26 @@ class ExamResultViewModel @Inject constructor(
                 }
                 postSideEffect(ExamResultSideEffect.ReportError(it))
             }
+        }
+    }
+
+    fun updateReaction(reaction: String) = intent {
+        val state = state as ExamResultState.Success
+
+        reduce {
+            state.copy(
+                reaction = reaction,
+            )
+        }
+    }
+
+    fun updateReactionDialogVisible(visible: Boolean) = intent {
+        val state = state as ExamResultState.Success
+
+        reduce {
+            state.copy(
+                isReactionValid = visible,
+            )
         }
     }
 
@@ -194,6 +232,13 @@ class ExamResultViewModel @Inject constructor(
             (state as ExamResultState.Success).copy(
                 currentScreen = screen,
             )
+        }
+    }
+
+    fun postReaction() = intent {
+        val state = state as ExamResultState.Success
+        if (state.isReactionValid) {
+            postQuizReaction()
         }
     }
 

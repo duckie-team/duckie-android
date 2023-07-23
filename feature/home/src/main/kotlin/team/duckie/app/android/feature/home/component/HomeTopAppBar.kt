@@ -20,16 +20,14 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
 import okhttp3.internal.immutableListOf
 import team.duckie.app.android.common.compose.ui.TextTabLayout
-import team.duckie.app.android.common.compose.ui.icon.v1.Create
 import team.duckie.app.android.feature.home.R
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.util.DpSize
 import team.duckie.quackquack.material.QuackColor as QuackV2Color
 
 internal val HomeIconSize = DpSize(24.dp)
 
+@Suppress("UnusedPrivateMember") // 시험 생성하기를 추후에 다시 활용하기 위함
 @Composable
 internal fun HomeTopAppBar(
     modifier: Modifier = Modifier,
@@ -59,10 +57,11 @@ internal fun HomeTopAppBar(
             onTabSelected = onTabSelected,
             tabStyle = QuackTypography.Title2.change(color = QuackV2Color.Gray2),
         )
-        QuackImage(
-            src = QuackIcon.Create,
-            onClick = onClickedCreate,
-            size = HomeIconSize,
-        )
+//      TODO(limsaehyun): 시험 생성하기가 가능한 스펙에서 활용
+//      QuackImage(
+//          src = QuackIcon.Create,
+//          onClick = onClickedCreate,
+//          size = HomeIconSize,
+//      )
     }
 }

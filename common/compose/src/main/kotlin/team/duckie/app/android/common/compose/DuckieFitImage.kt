@@ -25,7 +25,7 @@ import team.duckie.quackquack.ui.QuackImage
 
 private object DuckieFitImageStyle {
     val HorizontalPadding = PaddingValues(horizontal = 16.dp)
-    val BackgroundColor = QuackColor.Black.value
+    val BackgroundColor = QuackColor.Gray4.value
     val BackgroundShape = RoundedCornerShape(8.dp)
     val ContentScaleType = ContentScale.Fit
 }

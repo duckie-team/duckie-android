@@ -65,6 +65,9 @@ internal data class ExamData(
     @field:JsonProperty("heartCount")
     val heartCount: Int? = null,
 
+    @field:JsonProperty("myRecord")
+    val myRecord: QuizInfoResponse? = null,
+
     @field:JsonProperty("challenges")
     val quizs: List<QuizInfoResponse>? = null,
 

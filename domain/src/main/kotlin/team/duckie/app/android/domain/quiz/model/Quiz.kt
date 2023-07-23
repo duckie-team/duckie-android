@@ -16,6 +16,6 @@ data class Quiz(
     val correctProblemCount: Int,
     val exam: QuizExam,
     val score: Int,
-    val time: Int,
+    val time: Double,
     val user: User,
 )

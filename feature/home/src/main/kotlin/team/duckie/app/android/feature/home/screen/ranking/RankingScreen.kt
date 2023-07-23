@@ -46,18 +46,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.HeadLineTopAppBar
-import team.duckie.app.android.feature.home.component.HomeIconSize
 import team.duckie.app.android.feature.home.constants.RankingPage
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingSideEffect
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
-import team.duckie.app.android.common.compose.ui.icon.v1.Create
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.home.constants.MainScreenType
-import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackMainTab
-import team.duckie.quackquack.ui.icon.QuackIcon
 
 @Composable
 internal fun RankingScreen(
@@ -157,13 +153,14 @@ internal fun RankingScreen(
             ) {
                 HeadLineTopAppBar(
                     title = stringResource(id = R.string.ranking),
-                    rightIcons = {
-                        QuackImage(
-                            src = QuackIcon.Create,
-                            onClick = viewModel::clickAppBarRightIcon,
-                            size = HomeIconSize,
-                        )
-                    },
+//                  TODO(limsaehyun): 시험 생성하기가 가능한 스펙에서 활용
+//                  rightIcons = {
+//                      QuackImage(
+//                          src = QuackIcon.Create,
+//                          onClick = viewModel::clickAppBarRightIcon,
+//                          size = HomeIconSize,
+//                      )
+//                  },
                 )
 
                 if (state.isError) {

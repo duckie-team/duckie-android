@@ -155,6 +155,7 @@ internal class RankingViewModel @Inject constructor(
         getExams()
     }
 
+    @Suppress("NoConsecutiveBlankLines") // 시험 생성하기가 가능한 스펙에서 활용
     fun clickAppBarRightIcon() = intent {
         postSideEffect(RankingSideEffect.NavigateToCreateProblem)
     }

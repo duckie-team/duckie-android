@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Designed and developed by Duckie Team, 2022
   ~
   ~ Licensed under the MIT.
@@ -11,7 +10,7 @@
     <application>
         <activity
             android:name="team.duckie.app.android.feature.exam.result.ExamResultActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 </manifest>

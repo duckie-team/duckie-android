@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.feature.exam.result.viewmodel
 
+import team.duckie.app.android.common.kotlin.isTopRanked
+
 enum class ExamResultScreen {
     EXAM_RESULT,
     SHARE_EXAM_RESULT,
@@ -22,7 +24,7 @@ sealed class ExamResultState {
         val examId: Int = 0,
         val isQuiz: Boolean = true,
         val correctProblemCount: Int = 0,
-        val time: Int = 0,
+        val time: Double = 0.0,
         val mainTag: String = "",
         val ranking: Int = 0,
         val wrongAnswerMessage: String = "",
@@ -34,8 +36,14 @@ sealed class ExamResultState {
         val nickname: String = "",
         val thumbnailUrl: String = "",
         val solvedCount: Int = 0,
-    ) : ExamResultState() {
 
+        // user input state
+        val reaction: String = "",
+        val isBestRecord: Boolean = false,
+
+        // dialog visible
+        val isReactionValid: Boolean = ranking.isTopRanked() && isBestRecord,
+    ) : ExamResultState() {
         val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
     }
 

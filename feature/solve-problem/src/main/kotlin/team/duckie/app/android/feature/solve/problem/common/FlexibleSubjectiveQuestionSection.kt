@@ -59,7 +59,6 @@ private object TextFieldMargin {
     val Vertical get() = Top + Bottom
 }
 
-
 /**
  * 키보드 상태에 따라서 이미지의 높이가 유동적으로 변하는 주관식 문제를 위한 섹션
  */
