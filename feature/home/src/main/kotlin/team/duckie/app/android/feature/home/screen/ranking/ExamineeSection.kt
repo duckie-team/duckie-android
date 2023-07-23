@@ -28,18 +28,15 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import team.duckie.app.android.common.compose.itemsIndexedPagingKey
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
+import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.component.QuackSubtitle
 import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
 import team.duckie.quackquack.ui.util.DpSize
 
 @Composable
@@ -104,10 +101,9 @@ private fun ExamineeContent(
                     text = "${rank}등",
                 )
                 Spacer(space = 12.dp)
-                QuackImage(
+                QuackProfileImage(
                     modifier = Modifier.skeleton(isLoading),
-                    src = profileImageUrl.takeIf { it != null } ?: QuackIcon.DefaultProfile,
-                    shape = SquircleShape,
+                    profileUrl = profileImageUrl,
                     size = DpSize(all = 44.dp),
                 )
                 Spacer(space = 8.dp)

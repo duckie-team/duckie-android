@@ -15,24 +15,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.Divider
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
+import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.feature.profile.R
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.material.shape.SquircleShape
-import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackBody3
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
-import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
 @Composable
 internal fun ProfileSection(
@@ -51,26 +46,11 @@ internal fun ProfileSection(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            if (profile.isNotEmpty()) {
-                QuackImage(
-                    modifier = Modifier
-                        .clip(SquircleShape)
-                        .size(DpSize(44.dp, 44.dp))
-                        .skeleton(isLoading),
-                    src = profile,
-                    contentScale = ContentScale.Crop,
-                )
-            } else {
-                QuackImage(
-                    modifier = Modifier
-                        .clip(SquircleShape)
-                        .size(DpSize(44.dp, 44.dp))
-                        .skeleton(isLoading),
-                    src = QuackV1Icon.Companion.DefaultProfile,
-                    contentScale = ContentScale.Crop,
-                )
-            }
-
+            QuackProfileImage(
+                modifier = Modifier.skeleton(isLoading),
+                profileUrl = profile,
+                size = DpSize(44.dp, 44.dp),
+            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,

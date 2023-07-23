@@ -24,9 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
@@ -35,8 +33,8 @@ import team.duckie.app.android.common.compose.ui.DuckieMedal
 import team.duckie.app.android.common.compose.ui.LeftChatBubble
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfileId
 import team.duckie.app.android.common.compose.ui.icon.v2.Crown
+import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.common.kotlin.isFirstRanked
@@ -49,9 +47,7 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackIcon
-import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
@@ -106,7 +102,10 @@ private fun ColumnScope.MyRankingSection(
             DuckieMedal(score = quizInfo.ranking ?: 0)
         }
         Spacer(space = 12.dp)
-        UserProfileOrDefault(profileImageUrl = user?.profileImageUrl ?: "")
+        QuackProfileImage(
+            profileUrl = user?.profileImageUrl ?: "",
+            size = DpSize(width = 44.dp, height = 44.dp),
+        )
         Spacer(space = 8.dp)
         Column {
             QuackTitle2(text = nickname)
@@ -187,30 +186,6 @@ private fun RankingSection(
     }
 }
 
-@Composable
-fun UserProfileOrDefault(
-    size: DpSize = ProfileImageSize,
-    profileImageUrl: String?,
-) {
-    if (profileImageUrl.isNullOrEmpty()) {
-        QuackImage(
-            src = QuackIcon.DefaultProfileId,
-            modifier = Modifier
-                .size(size)
-                .clip(SquircleShape),
-            contentScale = ContentScale.FillBounds,
-        )
-    } else {
-        QuackImage(
-            src = profileImageUrl,
-            modifier = Modifier
-                .size(size)
-                .clip(SquircleShape),
-            contentScale = ContentScale.FillBounds,
-        )
-    }
-}
-
 @AllowMagicNumber
 @Composable
 private fun RankingContent(
@@ -234,7 +209,10 @@ private fun RankingContent(
             ) {
                 DuckieMedal(score = rank)
                 Spacer(space = 12.dp)
-                UserProfileOrDefault(profileImageUrl = user.profileImageUrl)
+                QuackProfileImage(
+                    profileUrl = user.profileImageUrl,
+                    size = ProfileImageSize,
+                )
             }
             Spacer(space = 8.dp)
             Column(
