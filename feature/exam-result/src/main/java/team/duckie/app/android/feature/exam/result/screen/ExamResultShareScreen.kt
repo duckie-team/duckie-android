@@ -229,7 +229,7 @@ private fun ExamResultImage(
                         id = R.string.exam_result_correct_problem_unit,
                         state.correctProblemCount,
                     ),
-                    body = stringResource(id = R.string.exam_result_correct_problem),
+                    body = stringResource(id = R.string.exam_result_score),
                 )
             }
         }

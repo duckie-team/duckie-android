@@ -20,7 +20,7 @@ import team.duckie.quackquack.ui.component.QuackHeadLine1
 @Composable
 internal fun HeadLineTopAppBar(
     title: String,
-    rightIcons: @Composable () -> Unit,
+    rightIcons: (@Composable () -> Unit)? = null,
 ) {
     Row(
         modifier = Modifier
@@ -33,6 +33,6 @@ internal fun HeadLineTopAppBar(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         QuackHeadLine1(text = title)
-        rightIcons()
+        rightIcons?.invoke()
     }
 }

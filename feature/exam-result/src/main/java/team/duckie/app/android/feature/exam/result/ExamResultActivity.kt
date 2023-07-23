@@ -18,6 +18,7 @@ import team.duckie.app.android.common.android.exception.handling.reporter.report
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.feature.exam.result.screen.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultSideEffect
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
@@ -76,6 +77,9 @@ class ExamResultActivity : BaseActivity() {
                     },
                     withFinish = true,
                 )
+            }
+            is ExamResultSideEffect.SendReactionSuccessToast -> {
+                ToastWrapper(this).invoke(getString(R.string.exam_result_post_reaction_success))
             }
         }
     }

@@ -16,7 +16,7 @@ internal sealed class SolveProblemSideEffect {
     class FinishQuiz(
         val examId: Int,
         val correctProblemCount: Int,
-        val time: Int,
+        val time: Double,
         val problemId: Int?,
         val requirementAnswer: String,
         val inputCurrentAnswer: String?,

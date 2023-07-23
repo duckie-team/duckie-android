@@ -16,5 +16,30 @@ data class QuizInfo(
     val correctProblemCount: Int,
     val score: Int,
     val user: User,
-    val time: Int,
-)
+    val time: Double,
+    val reaction: String?,
+    val ranking: Int?,
+) {
+    companion object {
+        fun dummy() = QuizInfo(
+            id = 4214,
+            correctProblemCount = 49,
+            score = 0,
+            reaction = "이거 쉽네요 ㅋㅋ",
+            user = User(
+                id = 23,
+                nickname = "킹도로",
+                profileImageUrl = "http://k.kakaocdn.net/dn/biMfAm/btrVzyBqsTy/1xPkCTgSUk1Vnh1KGIcW81/img_640x640.jpg",
+                duckPower = null,
+                permissions = null,
+                status = null,
+                follow = null,
+                favoriteCategories = null,
+                favoriteTags = null,
+                introduction = null,
+            ),
+            time = 227.22,
+            ranking = 1,
+        )
+    }
+}

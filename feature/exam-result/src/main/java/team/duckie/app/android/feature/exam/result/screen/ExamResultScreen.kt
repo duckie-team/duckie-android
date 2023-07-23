@@ -8,11 +8,12 @@
 package team.duckie.app.android.feature.exam.result.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,12 +21,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.LoadingScreen
-import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextArea
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
 import team.duckie.app.android.feature.exam.result.screen.exam.ExamResultContent
@@ -33,8 +38,13 @@ import team.duckie.app.android.feature.exam.result.screen.quiz.QuizResultContent
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
+import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.ui.span
+import team.duckie.quackquack.ui.sugar.QuackHeadLine1
+
+internal const val RANKER_THRESHOLD = 10
 
 @Composable
 internal fun ExamResultScreen(
@@ -46,14 +56,12 @@ internal fun ExamResultScreen(
         viewModel.initState()
     }
 
-    QuackCrossfade(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding(),
-        targetState = state,
-    ) { currentState ->
-        when (currentState) {
+            .systemBarsPadding(),
+    ) {
+        when (state) {
             is ExamResultState.Loading -> {
                 LoadingScreen(
                     modifier = Modifier
@@ -63,8 +71,38 @@ internal fun ExamResultScreen(
             }
 
             is ExamResultState.Success -> {
+                val currentState = state as ExamResultState.Success
+
+                DuckieDialog(
+                    container = {
+                        ExamResultReactionDialogInternal(
+                            nickname = currentState.nickname,
+                            mainTag = currentState.mainTag,
+                            ranking = currentState.ranking,
+                            reaction = currentState.reaction,
+                            onReactionChanged = viewModel::updateReaction,
+                        )
+                    },
+                    visible = currentState.isReactionValid,
+                    onDismissRequest = {
+                        viewModel.updateReactionDialogVisible(false)
+                    },
+                    leftButtonText = stringResource(id = R.string.cancel),
+                    leftButtonOnClick = {
+                        viewModel.updateReactionDialogVisible(false)
+                    },
+                    rightButtonText = stringResource(id = R.string.submit),
+                    rightButtonOnClick = {
+                        viewModel.postReaction()
+                        viewModel.updateReactionDialogVisible(false)
+                    },
+                )
+
                 when (currentState.currentScreen) {
                     ExamResultScreen.EXAM_RESULT -> ExamResultSuccessScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .imePadding(),
                         state = currentState,
                         viewModel = viewModel,
                     )
@@ -87,17 +125,60 @@ internal fun ExamResultScreen(
 }
 
 @Composable
+private fun ExamResultReactionDialogInternal(
+    nickname: String,
+    mainTag: String,
+    ranking: Int,
+    reaction: String,
+    onReactionChanged: (String) -> Unit,
+) {
+    Column(
+        modifier = Modifier.padding(
+            horizontal = 16.dp,
+            vertical = 12.dp,
+        ),
+    ) {
+        QuackHeadLine1(
+            modifier = Modifier.span(
+                texts = listOf(nickname, mainTag, "${ranking}위"),
+                style = SpanStyle(
+                    color = QuackColor.DuckieOrange.value,
+                    fontWeight = FontWeight.Bold,
+                ),
+            ),
+            text = stringResource(
+                id = if (ranking <= RANKER_THRESHOLD) {
+                    R.string.exam_result_finish_title_ranker
+                } else {
+                    R.string.exam_result_finish_title_etc
+                },
+                nickname,
+                mainTag,
+                ranking,
+            ),
+        )
+        Spacer(space = 12.dp)
+        QuackReactionTextArea(
+            reaction = reaction,
+            onReactionChanged = onReactionChanged,
+        )
+    }
+}
+
+@Composable
 private fun ExamResultSuccessScreen(
+    modifier: Modifier = Modifier,
     state: ExamResultState.Success,
     viewModel: ExamResultViewModel,
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             QuackTopAppBar(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .padding(horizontal = 16.dp),
-                leadingIcon = QuackIcon.ArrowBack,
+                leadingIcon = QuackIcon.Close,
                 onLeadingIconClick = viewModel::exitExam,
                 trailingIcon = QuackIcon.Share,
                 onTrailingIconClick = {
@@ -136,6 +217,7 @@ private fun ExamResultSuccessScreen(
                         } else {
                             wrongAnswerMessage
                         },
+                        nickname = nickname,
                     )
                 } else {
                     ExamResultContent(

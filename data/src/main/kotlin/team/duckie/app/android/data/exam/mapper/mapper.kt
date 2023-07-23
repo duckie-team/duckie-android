@@ -78,6 +78,7 @@ internal fun ExamData.toDomain() = Exam(
     requirementPlaceholder = requirementPlaceholder,
     requirementQuestion = requirementQuestion,
     problemCount = problemCount,
+    myRecord = myRecord?.toDomain(),
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
@@ -268,6 +269,8 @@ internal fun QuizInfoResponse.toDomain() = QuizInfo(
     score = score ?: duckieResponseFieldNpe("${this::class.java.simpleName}.score"),
     user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
     time = time ?: duckieResponseFieldNpe("${this::class.java.simpleName}.time"),
+    reaction = reaction,
+    ranking = ranking,
 )
 
 internal fun SolutionData.toDomain() = Solution(

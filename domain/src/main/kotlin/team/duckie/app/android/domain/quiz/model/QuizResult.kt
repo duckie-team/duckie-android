@@ -18,9 +18,10 @@ data class QuizResult(
     val correctProblemCount: Int,
     val exam: Exam,
     val score: Int,
-    val time: Int,
+    val time: Double,
     val user: User,
     val wrongProblem: Problem?,
     val ranking: Int?,
     val requirementAnswer: String?,
+    val isBestRecord: Boolean,
 )

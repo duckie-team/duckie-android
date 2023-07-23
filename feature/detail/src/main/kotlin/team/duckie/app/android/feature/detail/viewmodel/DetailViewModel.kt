@@ -66,7 +66,11 @@ class DetailViewModel @Inject constructor(
             .onSuccess { me ->
                 reduce {
                     if (exam != null) {
-                        DetailState.Success(exam, me, exam.user?.follow != null)
+                        DetailState.Success(
+                            exam = exam,
+                            appUser = me,
+                            isFollowing = exam.user?.follow != null,
+                        )
                     } else {
                         DetailState.Error(DuckieResponseFieldNPE("exam or me is Null"))
                     }
@@ -175,19 +179,20 @@ class DetailViewModel @Inject constructor(
             successState.run {
                 when (isQuiz) {
                     true -> {
-                        makeQuizUseCase(examId = exam.id).onSuccess { result ->
-                            postSideEffect(
-                                DetailSideEffect.StartQuiz(
-                                    examId = result.id,
-                                    requirementQuestion = exam.requirementQuestion ?: "",
-                                    requirementPlaceholder = exam.requirementPlaceholder ?: "",
-                                    timer = exam.timer ?: 0,
-                                    isQuiz = isQuiz,
-                                ),
-                            )
-                        }.onFailure {
-                            postSideEffect(DetailSideEffect.ReportError(it))
-                        }
+                        makeQuizUseCase(examId = exam.id)
+                            .onSuccess { result ->
+                                postSideEffect(
+                                    DetailSideEffect.StartQuiz(
+                                        examId = result.id,
+                                        requirementQuestion = exam.requirementQuestion ?: "",
+                                        requirementPlaceholder = exam.requirementPlaceholder ?: "",
+                                        timer = exam.timer ?: 0,
+                                        isQuiz = isQuiz,
+                                    ),
+                                )
+                            }.onFailure {
+                                postSideEffect(DetailSideEffect.ReportError(it))
+                            }
                     }
 
                     false -> {
