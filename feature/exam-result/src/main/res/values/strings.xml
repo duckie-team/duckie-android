@@ -22,7 +22,6 @@
     <string name="exam_result_correct_problem_all">모든 문제를 맞혔습니다. 당신은 %s 영역 씹덕입니다.</string>
     <string name="exam_result_finish_title_ranker">축하드립니다! %s님은\n%s 덕퀴즈 %s위 입니다.</string>
     <string name="exam_result_finish_title_etc">%s님은\n%s 덕퀴즈 %s위 입니다.</string>
-    <string name="exam_result_ranked_text_area_hint">소감을 적어주세요! 랭킹에 소감을 띄워드려요 :)</string>
     <string name="exam_result_post_reaction_success">성공적으로 소감을 제출했습니다.</string>
 
     <string name="cancel">취소하기</string>
