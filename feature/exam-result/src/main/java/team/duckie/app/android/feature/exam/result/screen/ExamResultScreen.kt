@@ -54,6 +54,7 @@ import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 
 private const val RANKER_REACTION_MAX_LENGTH: Int = 40
+internal const val RANKER_THRESHOLD = 10
 
 @Composable
 internal fun ExamResultScreen(
@@ -149,14 +150,18 @@ private fun ExamResultReactionDialogInternal(
     ) {
         QuackHeadLine1(
             modifier = Modifier.span(
-                texts = listOf("${nickname}님", mainTag, "${ranking}위"),
+                texts = listOf(nickname, mainTag, "${ranking}위"),
                 style = SpanStyle(
                     color = QuackColor.DuckieOrange.value,
                     fontWeight = FontWeight.Bold,
                 ),
             ),
             text = stringResource(
-                id = R.string.exam_result_finish_title,
+                id = if (ranking <= RANKER_THRESHOLD) {
+                    R.string.exam_result_finish_title_ranker
+                } else {
+                    R.string.exam_result_finish_title_etc
+                },
                 nickname,
                 mainTag,
                 ranking,

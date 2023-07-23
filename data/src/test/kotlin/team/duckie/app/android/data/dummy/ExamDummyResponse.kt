@@ -114,5 +114,6 @@ object ExamDummyResponse {
         requirementQuestion = "",
         requirementPlaceholder = "",
         problemCount = null,
+        myRecord = null,
     )
 }

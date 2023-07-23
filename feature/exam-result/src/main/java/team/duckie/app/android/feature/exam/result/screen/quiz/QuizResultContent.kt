@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.exam.result.R
+import team.duckie.app.android.feature.exam.result.screen.RANKER_THRESHOLD
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
@@ -114,7 +115,7 @@ internal fun QuizResultContent(
                         id = R.string.exam_result_correct_problem_unit,
                         correctProblemCount,
                     ),
-                    description = stringResource(id = R.string.exam_result_correct_problem),
+                    description = stringResource(id = R.string.exam_result_score),
                 )
             }
         }
@@ -122,14 +123,18 @@ internal fun QuizResultContent(
         Spacer(space = 24.dp)
         QuackHeadLine1(
             modifier = Modifier.span(
-                texts = listOf("${nickname}님", mainTag, "${ranking}위"),
+                texts = listOf(nickname, mainTag, "${ranking}위"),
                 style = SpanStyle(
                     color = QuackColor.DuckieOrange.value,
                     fontWeight = FontWeight.Bold,
                 ),
             ),
             text = stringResource(
-                id = R.string.exam_result_finish_title,
+                id = if (ranking <= RANKER_THRESHOLD) {
+                    R.string.exam_result_finish_title_ranker
+                } else {
+                    R.string.exam_result_finish_title_etc
+                },
                 nickname,
                 mainTag,
                 ranking,

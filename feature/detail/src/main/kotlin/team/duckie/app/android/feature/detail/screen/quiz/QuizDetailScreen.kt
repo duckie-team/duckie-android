@@ -37,6 +37,7 @@ import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfileId
 import team.duckie.app.android.common.compose.ui.icon.v2.Crown
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.domain.quiz.model.QuizInfo
 import team.duckie.app.android.feature.detail.R
@@ -208,6 +209,7 @@ fun UserProfileOrDefault(
     }
 }
 
+@AllowMagicNumber
 @Composable
 private fun RankingContent(
     rank: Int,
@@ -225,9 +227,13 @@ private fun RankingContent(
                 )
                 .padding(vertical = 12.dp, horizontal = 16.dp),
         ) {
-            DuckieMedal(score = rank)
-            Spacer(space = 12.dp)
-            UserProfileOrDefault(profileImageUrl = user.profileImageUrl)
+            Row(
+                verticalAlignment = CenterVertically,
+            ) {
+                DuckieMedal(score = rank)
+                Spacer(space = 12.dp)
+                UserProfileOrDefault(profileImageUrl = user.profileImageUrl)
+            }
             Spacer(space = 8.dp)
             Column(
                 modifier = Modifier.heightIn(min = ProfileImageSize.height),
@@ -267,7 +273,7 @@ private fun RankingContent(
                             color = QuackColor.DuckieOrange,
                         ),
                     )
-                } else {
+                } else if (rank in 2..10) {
                     QuackText(
                         text = getUserPerformanceString(correctProblemCount, time),
                         typography = QuackTypography.Body2.change(
