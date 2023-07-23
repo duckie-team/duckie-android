@@ -11,9 +11,7 @@ package team.duckie.app.android.feature.profile.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -48,6 +46,7 @@ import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
+@Suppress("UnusedPrivateMember") // 시험 생성하기를 추후에 다시 활용하기 위함
 @Composable
 fun MyProfileScreen(
     modifier: Modifier = Modifier,
@@ -149,12 +148,13 @@ fun MyProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
-                        Spacer(modifier = Modifier.padding(8.dp))
-                        QuackLargeButton(
-                            type = QuackLargeButtonType.Compact,
-                            text = stringResource(id = R.string.make_exam),
-                            onClick = onClickMakeExam,
-                        )
+//                      TODO(limsaehyun): 시험 생성하기가 가능한 스펙에서 활용
+//                      Spacer(modifier = Modifier.padding(8.dp))
+//                      QuackLargeButton(
+//                          type = QuackLargeButtonType.Compact,
+//                          text = stringResource(id = R.string.make_exam),
+//                          onClick = onClickMakeExam,
+//                      )
                     }
                 },
                 onClickShowAll = {
