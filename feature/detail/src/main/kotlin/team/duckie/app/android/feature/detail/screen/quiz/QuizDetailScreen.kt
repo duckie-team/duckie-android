@@ -275,7 +275,7 @@ private fun RankingContent(
                             color = QuackColor.DuckieOrange,
                         ),
                     )
-                } else if (rank.isTopRanked()) {
+                } else if (rank.isTopRanked() && !rank.isFirstRanked()) {
                     QuackText(
                         text = getUserPerformanceString(correctProblemCount, time),
                         typography = QuackTypography.Body2.change(
