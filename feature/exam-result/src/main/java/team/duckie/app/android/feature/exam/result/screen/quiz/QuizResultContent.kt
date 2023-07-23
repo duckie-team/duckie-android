@@ -28,13 +28,13 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.DuckieFitImage
+import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.screen.RANKER_THRESHOLD
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
@@ -82,7 +82,7 @@ internal fun QuizResultContent(
             QuackHeadLine1(text = "\"")
         }
         Spacer(space = 24.dp)
-        QuackDivider()
+        QuackMaxWidthDivider()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -119,7 +119,7 @@ internal fun QuizResultContent(
                 )
             }
         }
-        QuackDivider()
+        QuackMaxWidthDivider()
         Spacer(space = 24.dp)
         QuackHeadLine1(
             modifier = Modifier.span(
