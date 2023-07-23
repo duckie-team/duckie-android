@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.common.compose.ui.quack
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -19,13 +20,12 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
-import team.duckie.app.android.common.compose.ui.icon.v1.DefaultProfile
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.app.android.common.compose.R
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.shape.SquircleShape
 
-private val DefaultProfileImage =
-    team.duckie.quackquack.ui.icon.QuackIcon.Companion.DefaultProfile
+@DrawableRes
+private val DefaultProfileImage: Int = R.drawable.ic_default_profile
 
 /**
  * [QuackProfileImage] 다음과 같은 특징을 같습니다.
@@ -38,7 +38,7 @@ private val DefaultProfileImage =
 fun QuackProfileImage(
     modifier: Modifier = Modifier,
     profileUrl: String?,
-    size: DpSize = DpSize(all = 44.dp),
+    size: DpSize = DpSize(width = 44.dp, height = 44.dp),
     shape: Shape = SquircleShape,
     contentScale: ContentScale = ContentScale.Crop,
     contentDescription: String? = null,
