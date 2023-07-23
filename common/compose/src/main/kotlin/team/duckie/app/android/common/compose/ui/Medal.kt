@@ -33,11 +33,9 @@ import team.duckie.quackquack.ui.QuackText
 @Composable
 private fun MedalInternal(
     modifier: Modifier = Modifier,
-    outlineColor: Color,
-    innerColor: Color,
+    medalColor: MedalColor,
     number: Int,
-    numberColor: Color,
-) {
+) = with(medalColor) {
     Box(
         modifier = modifier
             .size(28.dp)
@@ -61,6 +59,29 @@ private fun MedalInternal(
     }
 }
 
+@AllowMagicNumber("메달 고유 색을 활용하기 위함")
+private enum class MedalColor(
+    val outlineColor: Color,
+    val innerColor: Color,
+    val numberColor: Color,
+) {
+    GOLD(
+        outlineColor = Color(0xFFFFE777),
+        innerColor = Color(0xFFFFD200),
+        numberColor = Color(0xFFA65B00),
+    ),
+    SILVER(
+        outlineColor = Color(0xFFE8E8EA),
+        innerColor = Color(0xFFCFCFD0),
+        numberColor = Color(0xFF47474E),
+    ),
+    BRONZE(
+        outlineColor = Color(0xFFE7C2A6),
+        innerColor = Color(0xFFD1AB8F),
+        numberColor = Color(0xFF453128),
+    ),
+}
+
 @AllowMagicNumber("set GoldMedalLine offset")
 @Composable
 fun DuckieMedal(
@@ -73,10 +94,8 @@ fun DuckieMedal(
             MedalInternal(
                 modifier = Modifier
                     .zIndex(2f),
-                outlineColor = Color(0xFFFFE777),
-                innerColor = Color(0xFFFFD200),
                 number = score,
-                numberColor = Color(0xFFA65B00),
+                medalColor = MedalColor.GOLD,
             )
             Image(
                 modifier = Modifier
@@ -88,17 +107,13 @@ fun DuckieMedal(
         }
 
         2 -> MedalInternal(
-            outlineColor = Color(0xFFE8E8EA),
-            innerColor = Color(0xFFCFCFD0),
             number = score,
-            numberColor = Color(0xFF47474E),
+            medalColor = MedalColor.SILVER,
         )
 
         3 -> MedalInternal(
-            outlineColor = Color(0xFFE7C2A6),
-            innerColor = Color(0xFFD1AB8F),
             number = score,
-            numberColor = Color(0xFF453128),
+            medalColor = MedalColor.BRONZE,
         )
 
         else -> {
