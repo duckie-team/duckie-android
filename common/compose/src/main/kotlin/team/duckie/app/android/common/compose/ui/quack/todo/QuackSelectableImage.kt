@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.DpSize
-import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackSelectableImageType
 
 @Composable
@@ -22,8 +21,8 @@ fun QuackSelectableImage(
     isSelected: Boolean,
     src: Any?,
     size: DpSize? = null,
-    tint: QuackColor? = null,
     shape: Shape = RectangleShape,
+    isCheckOverlay: Boolean = false,
     rippleEnabled: Boolean = true,
     onClick: (() -> Unit)? = null,
     contentScale: ContentScale = ContentScale.FillBounds,
@@ -34,9 +33,9 @@ fun QuackSelectableImage(
         isSelected = isSelected,
         src = src,
         size = size,
-        tint = tint,
+        tint = null,
         shape = shape,
-        selectableType = QuackSelectableImageType.TopEndCheckBox,
+        selectableType = if (isCheckOverlay) QuackSelectableImageType.CheckOverlay else QuackSelectableImageType.TopEndCheckBox,
         rippleEnabled = rippleEnabled,
         onClick = onClick,
         contentScale = contentScale,

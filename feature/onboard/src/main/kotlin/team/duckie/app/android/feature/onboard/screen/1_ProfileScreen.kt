@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(FlowPreview::class, ExperimentalComposeUiApi::class)
+@file:OptIn(FlowPreview::class, ExperimentalComposeUiApi::class, ExperimentalQuackQuackApi::class)
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.onboard.screen
@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.net.toUri
@@ -53,33 +54,32 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.ui.const.Debounce
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.asLoose
+import team.duckie.app.android.common.compose.rememberToast
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.common.compose.ui.PhotoPickerConstants
+import team.duckie.app.android.common.compose.ui.constant.SharedIcon
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextField
+import team.duckie.app.android.common.kotlin.fastFirstOrNull
+import team.duckie.app.android.common.kotlin.npe
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.feature.onboard.R
 import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.onboard.viewmodel.state.ProfileScreenState
-import team.duckie.app.android.common.compose.ui.constant.SharedIcon
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.compose.asLoose
-import team.duckie.app.android.common.compose.rememberToast
-import team.duckie.app.android.common.compose.systemBarPaddings
-import team.duckie.app.android.common.kotlin.fastFirstOrNull
-import team.duckie.app.android.common.kotlin.npe
-import team.duckie.app.android.common.kotlin.runIf
-import team.duckie.app.android.common.android.ui.const.Debounce
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackErrorableTextField
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.animation.QuackAnimatedContent
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.shape.SquircleShape
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val currentStep = OnboardStep.Profile
 
@@ -253,7 +253,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                         ),
                     profilePhoto = profilePhoto,
                     resetProfilePhoto = {
-                        profilePhoto = QuackIcon.Profile
+                        profilePhoto = ""
                         profilePhotoLastSelectionIndex?.let { lastSelectionIndex ->
                             profilePhotoSelections[lastSelectionIndex] = false
                         }
@@ -262,7 +262,6 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                         photoPickerVisible = true
                     }.takeIf { vm.isImagePermissionGranted == true },
                 )
-                // TODO(sungbin): https://github.com/duckie-team/quack-quack-android/issues/438
                 QuackErrorableTextField(
                     modifier = Modifier
                         .layoutId(ProfileScreenNicknameTextFieldLayoutId)
@@ -289,13 +288,14 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                         keyboard?.hide()
                     },
                 )
-                QuackLargeButton(
-                    modifier = Modifier
-                        .layoutId(ProfileScreenNextButtonLayoutId)
-                        .padding(horizontal = 20.dp),
+
+                // TODO(riflockle7): 문제 있으므로 꽥꽥 이슈 해결할 때까지 주석 제거하지 않음
+                // type = QuackLargeButtonType.Fill,
+                // imeAnimation = true,
+                QuackButton(
+                    modifier = Modifier.layoutId(ProfileScreenNextButtonLayoutId),
+                    style = QuackButtonStyle.PrimaryLarge,
                     text = stringResource(R.string.button_next),
-                    type = QuackLargeButtonType.Fill,
-                    imeAnimation = true,
                     enabled = profileScreenState == ProfileScreenState.Valid && nickname.isNotEmpty(),
                 ) {
                     navigateNextStep(
@@ -318,7 +318,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                 modifier = Modifier
                     .padding(top = systemBarPaddings.calculateTopPadding())
                     .fillMaxSize()
-                    .background(color = QuackColor.White.composeColor),
+                    .background(color = QuackColor.White.value),
                 imageUris = galleryImages,
                 imageSelections = profilePhotoSelections,
                 onCameraClick = {
@@ -350,9 +350,6 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     }
 }
 
-private val ProfilePhotoShape = SquircleShape
-private val ProfilePhotoSize = DpSize(all = 80.dp)
-
 @Composable
 private fun ProfilePhoto(
     modifier: Modifier = Modifier,
@@ -362,18 +359,34 @@ private fun ProfilePhoto(
 ) {
     QuackAnimatedContent(
         modifier = modifier
-            .size(ProfilePhotoSize)
-            .clip(ProfilePhotoShape)
-            .quackClickable(onClick = openPhotoPicker),
+            .quackClickable(onClick = openPhotoPicker)
+            .size(DpSize(width = 80.dp, height = 80.dp))
+            .clip(SquircleShape),
         targetState = profilePhoto,
     ) { photo ->
-        QuackImage(
-            src = if (photo == "") SharedIcon.ic_default_profile else photo,
-            size = ProfilePhotoSize,
-            contentScale = ContentScale.Crop,
-            onClick = openPhotoPicker ?: {}, // required when onLongClick is used
-            onLongClick = resetProfilePhoto,
-        )
+        if ("$photo".isEmpty()) {
+            QuackImage(
+                modifier = Modifier
+                    .quackClickable(
+                        onClick = openPhotoPicker ?: {}, // required when onLongClick is used
+                        onLongClick = resetProfilePhoto,
+                    )
+                    .size(DpSize(width = 80.dp, height = 80.dp)),
+                src = SharedIcon.ic_default_profile,
+                contentScale = ContentScale.Crop,
+            )
+        } else {
+            QuackImage(
+                modifier = Modifier
+                    .quackClickable(
+                        onClick = openPhotoPicker ?: {}, // required when onLongClick is used
+                        onLongClick = resetProfilePhoto,
+                    )
+                    .size(DpSize(width = 80.dp, height = 80.dp)),
+                src = photo,
+                contentScale = ContentScale.Crop,
+            )
+        }
     }
 }
 

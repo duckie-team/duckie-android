@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -34,24 +33,22 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.launch
-import team.duckie.app.android.feature.onboard.R
-import team.duckie.app.android.feature.onboard.constant.OnboardStep
-import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.npe
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.app.android.feature.onboard.R
+import team.duckie.app.android.feature.onboard.constant.OnboardStep
+import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
 @Suppress("UnusedPrivateMember", "unused")
 private val currentStep = OnboardStep.Login
@@ -125,21 +122,22 @@ private fun LoginScreenWelcome() {
         ),
     ) {
         QuackImage(
-            src = R.drawable.img_duckie_talk,
-            size = DpSize(
+            modifier = Modifier.size(
                 width = 180.dp,
                 height = 248.dp,
             ),
+            src = R.drawable.img_duckie_talk,
         )
         QuackHeadLine2(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(R.string.kakaologin_welcome_message),
-            align = TextAlign.Center,
         )
     }
 }
 
 private const val LoginScreenLoginAreaKakaoSymbolLayoutId = "LoginScreenLoginAreaKakaoSymbol"
-private const val LoginScreenLoginAreaKakaoLoginLabelLayoutId = "LoginScreenLoginAreaKakaoLoginLabel"
+private const val LoginScreenLoginAreaKakaoLoginLabelLayoutId =
+    "LoginScreenLoginAreaKakaoLoginLabel"
 
 private val LoginScreenLoginAreaMeasurePolicy = MeasurePolicy { measurables, constraints ->
     val extraLooseConstraints = constraints.asLoose(width = true)
@@ -224,25 +222,22 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                     contentDescription = null,
                 )
                 // QuackColor 생성자가 internal 이라 BasicText 사용
-                BasicText(
+                QuackText(
                     modifier = Modifier.layoutId(LoginScreenLoginAreaKakaoLoginLabelLayoutId),
                     text = stringResource(R.string.kakaologin_button_label),
-                    style = QuackTextStyle.HeadLine2.asComposeStyle().copy(
-                        color = Color(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.kakao_login_button_label,
-                            ),
+                    typography = QuackTypography.HeadLine2.change(
+                        color = QuackColor(
+                            Color(ContextCompat.getColor(context, R.color.kakao_login_button_label))
                         ),
                     ),
                 )
             },
             measurePolicy = LoginScreenLoginAreaMeasurePolicy,
         )
-        QuackBody3(
+        QuackText(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(R.string.kakaologin_login_terms),
-            color = QuackColor.Gray2,
-            align = TextAlign.Center,
+            typography = QuackTypography.Body3.change(color = QuackColor.Gray2),
         )
     }
 }
