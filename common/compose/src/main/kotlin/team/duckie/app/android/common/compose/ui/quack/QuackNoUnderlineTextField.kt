@@ -161,8 +161,8 @@ private fun TextFieldDecoration(
                             onClick = trailingIconOnClick,
                             rippleEnabled = false,
                         )
-                        .size(DpSize(16.dp, 16.dp))
-                        .padding(end = trailingEndPadding),
+                        .padding(end = trailingEndPadding)
+                        .size(DpSize(16.dp, 16.dp)),
                     src = trailingIcon,
                 )
             }
