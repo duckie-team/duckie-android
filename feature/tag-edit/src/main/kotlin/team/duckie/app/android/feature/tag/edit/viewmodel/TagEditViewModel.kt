@@ -56,7 +56,10 @@ internal class TagEditViewModel @Inject constructor(
 
     /** 각 태그 항목의 x 버튼 클릭 시 동작 */
     fun onTrailingClick(index: Int) = intent {
-        val newTags = myTags.toMutableList().apply { removeAt(index) }.toPersistentList()
+        require(state is TagEditState.Success)
+        val newTags = (state as TagEditState.Success).myTags.toMutableList()
+            .apply { removeAt(index) }
+            .toPersistentList()
         reduce { TagEditState.Success(myTags = newTags) }
     }
 
