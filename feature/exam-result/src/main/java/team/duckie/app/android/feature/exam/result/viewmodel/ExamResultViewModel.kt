@@ -89,6 +89,19 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
+    fun updateWrongComment(comment: String) = intent {
+        val state = state as ExamResultState.Success
+        reduce {
+            state.copy(
+                wrongComment = comment,
+            )
+        }
+    }
+
+    fun heartWrongComment(commentId: Int) = intent {
+        // TODO(limsaehyun) HEART 로직 작업
+    }
+
     private fun getReport(
         examId: Int,
         submitted: ExamInstanceSubmitBody,
@@ -137,9 +150,7 @@ class ExamResultViewModel @Inject constructor(
         examId: Int,
         updateQuizParam: SubmitQuizUseCase.Param,
     ) = intent {
-        reduce {
-            ExamResultState.Loading
-        }
+        reduce { ExamResultState.Loading }
         viewModelScope.launch {
             submitQuizUseCase(examId, updateQuizParam).onFailure {
                 it.printStackTrace()
@@ -176,8 +187,9 @@ class ExamResultViewModel @Inject constructor(
                             thumbnailUrl = exam.thumbnailUrl,
                             solvedCount = exam.solvedCount ?: 0,
                             isBestRecord = isBestRecord,
-
-                            )
+                            myAnswer = updateQuizParam.wrongAnswer ?: "",
+                            profileImg = user.profileImageUrl ?: "",
+                        )
                     }
                 }
             }.onFailure {
