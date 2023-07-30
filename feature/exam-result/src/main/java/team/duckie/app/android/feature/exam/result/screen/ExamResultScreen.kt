@@ -218,6 +218,15 @@ private fun ExamResultSuccessScreen(
                             wrongAnswerMessage
                         },
                         nickname = nickname,
+                        myAnswer = myAnswer,
+                        equalAnswerCount = equalAnswerCount,
+                        profileImg = profileImg,
+                        wrongComments = otherComments,
+                        myComment = wrongComment,
+                        myCommentChanged = viewModel::updateWrongComment,
+                        onHeartComment = { isLike ->
+                            viewModel.heartWrongComment(isLike)
+                        },
                     )
                 } else {
                     ExamResultContent(
