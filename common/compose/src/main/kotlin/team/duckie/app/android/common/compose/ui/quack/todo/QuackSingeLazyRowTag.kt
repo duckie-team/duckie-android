@@ -35,7 +35,9 @@ fun QuackSingeLazyRowTag(
         items = items,
         itemSelections = itemSelections,
         horizontalSpace = horizontalSpace,
-        tagType = QuackTagType.Circle(tagTypeResId?.toQuackV1Icon),
+        tagType = tagTypeResId?.toQuackV1Icon
+            ?.let { quackIcon -> QuackTagType.Circle(quackIcon) }
+            ?: QuackTagType.Circle(),
         key = key,
         contentType = contentType,
         onClick = onClick,

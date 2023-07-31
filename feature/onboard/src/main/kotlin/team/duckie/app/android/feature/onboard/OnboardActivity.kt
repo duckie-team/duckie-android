@@ -49,9 +49,9 @@ import team.duckie.app.android.feature.onboard.screen.TagScreen
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.animation.QuackAnimatedContent
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -132,7 +132,7 @@ class OnboardActivity : BaseActivity() {
                 QuackAnimatedContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor),
+                        .background(color = QuackColor.White.value),
                     targetState = onboardStepState,
                 ) { onboardStep ->
                     when (onboardStep) {

@@ -15,8 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackHeadLine1
+import team.duckie.quackquack.ui.sugar.QuackBody1
+import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 
 @Composable
 internal fun TitleAndDescription(
