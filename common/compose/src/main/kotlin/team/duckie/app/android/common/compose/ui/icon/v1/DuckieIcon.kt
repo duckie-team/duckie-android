@@ -8,8 +8,8 @@
 package team.duckie.app.android.common.compose.ui.icon.v1
 
 import team.duckie.app.android.common.compose.R
-import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 import team.duckie.quackquack.material.icon.QuackIcon as QuackV2Icon
+import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
 val QuackV1Icon.Companion.DefaultProfile get() = R.drawable.ic_default_profile
 val QuackV1Icon.Companion.Notice get() = R.drawable.ic_notice_24
@@ -35,6 +35,8 @@ val QuackV2Icon.MoreId: Int get() = QuackV1Icon.More.drawableId
 val QuackV2Icon.CameraId: Int get() = QuackV1Icon.Camera.drawableId
 
 val QuackV2Icon.TextLogoId: Int get() = QuackV1Icon.TextLogo.drawableId
+
+val QuackV2Icon.ProfileId: Int get() = QuackV1Icon.Profile.drawableId
 
 val QuackV2Icon.DefaultProfileId: Int get() = QuackV1Icon.DefaultProfile
 

@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(FlowPreview::class, ExperimentalComposeUiApi::class)
+@file:OptIn(FlowPreview::class, ExperimentalComposeUiApi::class, ExperimentalQuackQuackApi::class)
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.onboard.screen
@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,13 +36,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.MeasurePolicy
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.net.toUri
@@ -53,101 +52,33 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.ui.const.Debounce
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.rememberToast
+import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.common.compose.ui.PhotoPickerConstants
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.constant.SharedIcon
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextField
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.feature.onboard.R
 import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.onboard.viewmodel.state.ProfileScreenState
-import team.duckie.app.android.common.compose.ui.constant.SharedIcon
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.compose.asLoose
-import team.duckie.app.android.common.compose.rememberToast
-import team.duckie.app.android.common.compose.systemBarPaddings
-import team.duckie.app.android.common.kotlin.fastFirstOrNull
-import team.duckie.app.android.common.kotlin.npe
-import team.duckie.app.android.common.kotlin.runIf
-import team.duckie.app.android.common.android.ui.const.Debounce
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackErrorableTextField
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.animation.QuackAnimatedContent
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.shape.SquircleShape
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val currentStep = OnboardStep.Profile
-
-private const val ProfileScreenTopAppBarLayoutId = "ProfileScreenTopAppBar"
-private const val ProfileScreenTitleAndDescriptionLayoutId = "ProfileScreenTitleAndDescription"
-private const val ProfileScreenProfileImageLayoutId = "ProfileScreenProfileImage"
-private const val ProfileScreenNicknameTextFieldLayoutId = "ProfileScreenNicknameTextField"
-private const val ProfileScreenNextButtonLayoutId = "ProfileScreenNextButton"
-
-private val ProfileScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
-    val looseConstraints = constraints.asLoose()
-    val extraLooseConstraints = constraints.asLoose(width = true)
-
-    val topAppBarPlaceable = measurables.fastFirstOrNull { measurable ->
-        measurable.layoutId == ProfileScreenTopAppBarLayoutId
-    }?.measure(looseConstraints) ?: npe()
-
-    val titileAndDescriptionPlaceable = measurables.fastFirstOrNull { measurable ->
-        measurable.layoutId == ProfileScreenTitleAndDescriptionLayoutId
-    }?.measure(looseConstraints) ?: npe()
-
-    val profileImagePlaceable = measurables.fastFirstOrNull { measurable ->
-        measurable.layoutId == ProfileScreenProfileImageLayoutId
-    }?.measure(extraLooseConstraints) ?: npe()
-
-    val nicknameTextFieldPlaceable = measurables.fastFirstOrNull { measurable ->
-        measurable.layoutId == ProfileScreenNicknameTextFieldLayoutId
-    }?.measure(looseConstraints) ?: npe()
-
-    val nextButtonPlaceable = measurables.fastFirstOrNull { measurable ->
-        measurable.layoutId == ProfileScreenNextButtonLayoutId
-    }?.measure(looseConstraints) ?: npe()
-
-    val topAppBarHeight = topAppBarPlaceable.height
-    val titleAndDescriptionHeight = titileAndDescriptionPlaceable.height
-    val profileImageHeight = profileImagePlaceable.height
-    val nextButtonHeight = nextButtonPlaceable.height
-
-    layout(
-        width = constraints.maxWidth,
-        height = constraints.maxHeight,
-    ) {
-        topAppBarPlaceable.place(
-            x = 0,
-            y = 0,
-        )
-        titileAndDescriptionPlaceable.place(
-            x = 0,
-            y = topAppBarHeight,
-        )
-        profileImagePlaceable.place(
-            x = Alignment.CenterHorizontally.align(
-                size = profileImagePlaceable.width,
-                space = constraints.maxWidth,
-                layoutDirection = layoutDirection,
-            ),
-            y = topAppBarHeight + titleAndDescriptionHeight,
-        )
-        nicknameTextFieldPlaceable.place(
-            x = 0,
-            y = topAppBarHeight + titleAndDescriptionHeight + profileImageHeight,
-        )
-        nextButtonPlaceable.place(
-            x = 0,
-            y = constraints.maxHeight - nextButtonHeight,
-        )
-    }
-}
 
 private const val MaxNicknameLength = 10
 
@@ -221,31 +152,27 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Layout(
+        Column(
             modifier = Modifier
                 .zIndex(1f)
                 .fillMaxSize()
                 .padding(bottom = systemBarPaddings.calculateBottomPadding() + 16.dp),
-            content = {
-                val profileScreenState = vm.collectAsState().value.profileState
-                OnboardTopAppBar(
-                    modifier = Modifier.layoutId(ProfileScreenTopAppBarLayoutId),
-                    currentStep = currentStep,
-                )
-                TitleAndDescription(
-                    modifier = Modifier
-                        .layoutId(ProfileScreenTitleAndDescriptionLayoutId)
-                        .padding(
-                            top = 12.dp,
-                            start = 20.dp,
-                            end = 20.dp,
-                        ),
-                    titleRes = R.string.profile_title,
-                    descriptionRes = R.string.profile_description,
-                )
+        ) {
+            val profileScreenState = vm.collectAsState().value.profileState
+            OnboardTopAppBar(currentStep = currentStep)
+            TitleAndDescription(
+                modifier = Modifier
+                    .padding(
+                        top = 12.dp,
+                        start = 20.dp,
+                        end = 20.dp,
+                    ),
+                titleRes = R.string.profile_title,
+                descriptionRes = R.string.profile_description,
+            )
+            Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 ProfilePhoto(
                     modifier = Modifier
-                        .layoutId(ProfileScreenProfileImageLayoutId)
                         .padding(
                             // 항상 center 에 배치돼서 horizontal padding 불필요
                             top = 32.dp,
@@ -253,7 +180,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                         ),
                     profilePhoto = profilePhoto,
                     resetProfilePhoto = {
-                        profilePhoto = QuackIcon.Profile
+                        profilePhoto = ""
                         profilePhotoLastSelectionIndex?.let { lastSelectionIndex ->
                             profilePhotoSelections[lastSelectionIndex] = false
                         }
@@ -262,50 +189,54 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                         photoPickerVisible = true
                     }.takeIf { vm.isImagePermissionGranted == true },
                 )
-                // TODO(sungbin): https://github.com/duckie-team/quack-quack-android/issues/438
-                QuackErrorableTextField(
-                    modifier = Modifier
-                        .layoutId(ProfileScreenNicknameTextFieldLayoutId)
-                        // 패딩이 왜 2배로 들어가지??
-                        .padding(horizontal = 10.dp),
-                    text = nickname,
-                    onTextChanged = { text ->
-                        if (text.length <= MaxNicknameLength) {
-                            nickname = text
-                        }
-                    },
-                    placeholderText = stringResource(R.string.profile_nickname_placeholder),
-                    isError = ProfileScreenState.errorState.contains(profileScreenState),
-                    maxLength = MaxNicknameLength,
-                    errorText = when (profileScreenState) {
-                        ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
-                        ProfileScreenState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
-                        ProfileScreenState.NicknameEmpty -> stringResource(R.string.profile_nickname_empty)
-                        else -> lastErrorText // 안하면 invisible 될 때 갑자기 텍스트가 사라짐 (애니메이션 X)
-                    }.also { errorText ->
-                        lastErrorText = errorText
-                    },
-                    keyboardActions = KeyboardActions {
-                        keyboard?.hide()
-                    },
-                )
-                QuackLargeButton(
-                    modifier = Modifier
-                        .layoutId(ProfileScreenNextButtonLayoutId)
-                        .padding(horizontal = 20.dp),
+            }
+            QuackErrorableTextField(
+                modifier = Modifier
+                    // 패딩이 왜 2배로 들어가지??
+                    .padding(horizontal = 10.dp),
+                text = nickname,
+                onTextChanged = { text ->
+                    if (text.length <= MaxNicknameLength) {
+                        nickname = text
+                    }
+                },
+                placeholderText = stringResource(R.string.profile_nickname_placeholder),
+                isError = ProfileScreenState.errorState.contains(profileScreenState),
+                maxLength = MaxNicknameLength,
+                errorText = when (profileScreenState) {
+                    ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
+                    ProfileScreenState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
+                    ProfileScreenState.NicknameEmpty -> stringResource(R.string.profile_nickname_empty)
+                    else -> lastErrorText // 안하면 invisible 될 때 갑자기 텍스트가 사라짐 (애니메이션 X)
+                }.also { errorText ->
+                    lastErrorText = errorText
+                },
+                keyboardActions = KeyboardActions {
+                    keyboard?.hide()
+                },
+            )
+
+            Spacer(weight = 1f)
+
+            // TODO(riflockle7): 문제 있으므로 꽥꽥 이슈 해결할 때까지 주석 제거하지 않음
+            // type = QuackLargeButtonType.Fill,
+            // imeAnimation = true,
+            Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                QuackButton(
+                    style = QuackButtonStyle.PrimaryLarge,
                     text = stringResource(R.string.button_next),
-                    type = QuackLargeButtonType.Fill,
-                    imeAnimation = true,
-                    enabled = profileScreenState == ProfileScreenState.Valid && nickname.isNotEmpty(),
+                    enabled = profileScreenState == ProfileScreenState.Valid
+                            && nickname.isNotEmpty(),
                 ) {
                     navigateNextStep(
                         vm = vm,
                         nickname = nickname,
                     )
                 }
-            },
-            measurePolicy = ProfileScreenMeasurePolicy,
-        )
+            }
+
+            ImeSpacer()
+        }
 
         // TODO(sungbin): 효율적인 애니메이션 (카메라가 로드되면서 생기는 프라임드랍 때문에 애니메이션 제거)
         if (photoPickerVisible) {
@@ -318,7 +249,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                 modifier = Modifier
                     .padding(top = systemBarPaddings.calculateTopPadding())
                     .fillMaxSize()
-                    .background(color = QuackColor.White.composeColor),
+                    .background(color = QuackColor.White.value),
                 imageUris = galleryImages,
                 imageSelections = profilePhotoSelections,
                 onCameraClick = {
@@ -350,9 +281,6 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
     }
 }
 
-private val ProfilePhotoShape = SquircleShape
-private val ProfilePhotoSize = DpSize(all = 80.dp)
-
 @Composable
 private fun ProfilePhoto(
     modifier: Modifier = Modifier,
@@ -362,18 +290,34 @@ private fun ProfilePhoto(
 ) {
     QuackAnimatedContent(
         modifier = modifier
-            .size(ProfilePhotoSize)
-            .clip(ProfilePhotoShape)
-            .quackClickable(onClick = openPhotoPicker),
+            .quackClickable(onClick = openPhotoPicker)
+            .size(DpSize(width = 80.dp, height = 80.dp))
+            .clip(SquircleShape),
         targetState = profilePhoto,
     ) { photo ->
-        QuackImage(
-            src = if (photo == "") SharedIcon.ic_default_profile else photo,
-            size = ProfilePhotoSize,
-            contentScale = ContentScale.Crop,
-            onClick = openPhotoPicker ?: {}, // required when onLongClick is used
-            onLongClick = resetProfilePhoto,
-        )
+        if ("$photo".isEmpty()) {
+            QuackImage(
+                modifier = Modifier
+                    .quackClickable(
+                        onClick = openPhotoPicker ?: {}, // required when onLongClick is used
+                        onLongClick = resetProfilePhoto,
+                    )
+                    .size(DpSize(width = 80.dp, height = 80.dp)),
+                src = SharedIcon.ic_default_profile,
+                contentScale = ContentScale.Crop,
+            )
+        } else {
+            QuackImage(
+                modifier = Modifier
+                    .quackClickable(
+                        onClick = openPhotoPicker ?: {}, // required when onLongClick is used
+                        onLongClick = resetProfilePhoto,
+                    )
+                    .size(DpSize(width = 80.dp, height = 80.dp)),
+                src = photo,
+                contentScale = ContentScale.Crop,
+            )
+        }
     }
 }
 
