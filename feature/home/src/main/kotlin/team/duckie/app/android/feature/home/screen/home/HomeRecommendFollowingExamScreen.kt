@@ -62,7 +62,7 @@ import team.duckie.quackquack.ui.util.DpSize
 internal const val ThumbnailRatio = 4f / 3f
 
 private val HomeProfileSize: DpSize = DpSize(
-    all = 24.dp,
+    all = 32.dp,
 )
 
 @Composable
@@ -73,6 +73,7 @@ internal fun HomeRecommendFollowingExamScreen(
     state: HomeState,
     navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
+    navigateToProfile: (Int) -> Unit,
 ) {
     val followingExam =
         vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
@@ -105,6 +106,7 @@ internal fun HomeRecommendFollowingExamScreen(
             followingExam = followingExam,
             navigateToCreateProblem = navigateToCreateProblem,
             navigateToHomeDetail = navigateToHomeDetail,
+            navigateToProfile = navigateToProfile,
         )
     }
 }
@@ -118,6 +120,7 @@ private fun HomeRecommendFollowingSuccessScreen(
     followingExam: LazyPagingItems<HomeState.RecommendExam>,
     navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
+    navigateToProfile: (Int) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -148,10 +151,10 @@ private fun HomeRecommendFollowingSuccessScreen(
                     title = maker?.title ?: "",
                     tier = maker?.owner?.tier ?: "",
                     favoriteTag = maker?.owner?.favoriteTag ?: "",
-                    onClickUserProfile = {
-                        // TODO(limsaehyun): 마이페이지로 이동
+                    onUserProfileClick = {
+                        navigateToProfile(maker?.owner?.userId ?: 0)
                     },
-                    onClickTestCover = {
+                    onTestClick = {
                         navigateToHomeDetail(maker?.examId ?: 0)
                     },
                     cover = maker?.coverUrl ?: "",
@@ -176,9 +179,9 @@ private fun TestCoverWithMaker(
     name: String,
     tier: String,
     favoriteTag: String,
-    onClickTestCover: () -> Unit,
-    onClickUserProfile: () -> Unit,
+    onTestClick: () -> Unit,
     isLoading: Boolean,
+    onUserProfileClick: () -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -189,7 +192,7 @@ private fun TestCoverWithMaker(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
                 .quackClickable {
-                    onClickTestCover()
+                    onTestClick()
                 }
                 .skeleton(isLoading),
             model = cover,
@@ -203,8 +206,9 @@ private fun TestCoverWithMaker(
             name = name,
             tier = tier,
             favoriteTag = favoriteTag,
-            onClickUserProfile = onClickUserProfile,
             isLoading = isLoading,
+            onUserProfileClick = onUserProfileClick,
+            onLayoutClick = onTestClick,
         )
     }
 }
@@ -218,10 +222,15 @@ private fun TestMakerLayout(
     tier: String,
     favoriteTag: String,
     isLoading: Boolean,
-    onClickUserProfile: (() -> Unit)? = null,
+    onLayoutClick: () -> Unit,
+    onUserProfileClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.quackClickable(
+            rippleEnabled = false,
+        ) {
+            onLayoutClick()
+        },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         QuackProfileImage(

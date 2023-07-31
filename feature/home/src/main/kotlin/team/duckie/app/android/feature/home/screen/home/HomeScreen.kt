@@ -47,6 +47,7 @@ internal fun HomeScreen(
     navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
+    navigateToProfile: (Int) -> Unit,
 ) {
     val state = vm.collectAsState().value
     val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -113,6 +114,7 @@ internal fun HomeScreen(
                             state = state,
                             navigateToHomeDetail = navigateToHomeDetail,
                             navigateToCreateProblem = navigateToCreateProblem,
+                            navigateToProfile = navigateToProfile,
                         )
                     } else {
                         HomeRecommendFollowingScreen(
