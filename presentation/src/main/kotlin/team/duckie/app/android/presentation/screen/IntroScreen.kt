@@ -31,9 +31,9 @@ import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.presentation.R
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
+import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.ui.QuackImage
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackHeadLine1
+import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 
 @Composable
 internal fun IntroScreen(
@@ -44,7 +44,7 @@ internal fun IntroScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = QuackColor.White.composeColor)
+            .background(color = QuackColor.White.value)
             .padding(systemBarPaddings)
             .padding(
                 top = 78.dp,

@@ -33,7 +33,7 @@ dependencies {
         libs.firebase.dynamic.links,
         libs.orbit.viewmodel,
         libs.androidx.splash,
-        libs.quack.ui.components,
+        libs.quack.v2.ui,
         libs.orbit.compose,
     )
 }
