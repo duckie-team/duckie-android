@@ -114,7 +114,7 @@ quack-lint-compose = "1.0.2"
 # TODO(sungbin): quack-lint-writing
 
 # quack v2
-quack-v2-ui = "2.0.0-alpha10"
+quack-v2-ui = "2.0.0-alpha11"
 
 # test
 test-strikt = "0.34.1"
