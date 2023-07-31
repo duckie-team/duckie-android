@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,11 +35,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.constants.GuideStep
 import team.duckie.app.android.feature.home.viewmodel.guide.HomeGuideViewModel
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackHeadLine1
@@ -53,8 +54,10 @@ internal fun HomeGuideScreen(
     onClose: () -> Unit,
 ) {
     val state = vm.collectAsState().value
-    val pagerState = rememberPagerState()
-    val pageCount = GuideStep.values().size
+    val pageCount = remember { GuideStep.values().size }
+    val pagerState = rememberPagerState(
+        pageCount = { pageCount }
+    )
     val coroutineScope = rememberCoroutineScope()
 
     Box(
@@ -93,7 +96,6 @@ internal fun HomeGuideScreen(
                 )
                 HorizontalPager(
                     modifier = Modifier.fillMaxSize(),
-                    pageCount = pageCount,
                     state = pagerState,
                 ) { index ->
                     HomeGuideFeatureScreen(

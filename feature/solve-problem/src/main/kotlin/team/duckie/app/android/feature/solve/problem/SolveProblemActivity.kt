@@ -60,7 +60,9 @@ class SolveProblemActivity : BaseActivity() {
             QuackTheme {
                 val state by viewModel.collectAsState()
                 val progress by viewModel.timerCount.collectAsStateWithLifecycle()
-                val pagerState = rememberPagerState()
+                val pagerState = rememberPagerState(
+                    pageCount = { state.totalPage },
+                )
 
                 LaunchedEffect(viewModel.container.sideEffectFlow) {
                     viewModel.container.sideEffectFlow.collect { sideEffect ->

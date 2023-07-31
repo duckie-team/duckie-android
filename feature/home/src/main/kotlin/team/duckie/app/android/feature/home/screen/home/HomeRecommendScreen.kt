@@ -79,7 +79,9 @@ internal fun HomeRecommendScreen(
     navigateToSearch: (String) -> Unit,
     openExamBottomSheet: (Int) -> Unit,
 ) {
-    val pageState = rememberPagerState()
+    val pageState = rememberPagerState(
+        pageCount = { state.jumbotrons.size },
+    )
 
     val lazyRecommendations = homeViewModel.recommendations.collectAsLazyPagingItems()
 
@@ -115,7 +117,6 @@ internal fun HomeRecommendScreen(
 
             item {
                 HorizontalPager(
-                    pageCount = state.jumbotrons.size,
                     state = pageState,
                 ) { page ->
                     HomeRecommendJumbotronLayout(

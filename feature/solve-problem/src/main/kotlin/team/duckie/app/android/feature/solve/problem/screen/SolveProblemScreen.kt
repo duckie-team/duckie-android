@@ -66,8 +66,6 @@ internal fun SolveProblemScreen(
     finishExam: (List<String>) -> Unit,
     pagerState: PagerState,
 ) {
-    val totalPage = remember { state.totalPage }
-
     val coroutineScope = rememberCoroutineScope()
     var examExitDialogVisible by remember { mutableStateOf(false) }
     var examSubmitDialogVisible by remember { mutableStateOf(false) }
@@ -122,7 +120,7 @@ internal fun SolveProblemScreen(
                     examExitDialogVisible = true
                 },
                 currentPage = pagerState.currentPage + 1,
-                totalPage = totalPage,
+                totalPage = state.totalPage,
             )
             ContentSection(
                 modifier = Modifier.layoutId(SolveProblemContentLayoutId),
@@ -136,7 +134,7 @@ internal fun SolveProblemScreen(
             DoubleButtonBottomBar(
                 modifier = Modifier.layoutId(SolveProblemBottomBarLayoutId),
                 isFirstPage = pagerState.currentPage == 0,
-                isLastPage = pagerState.currentPage == totalPage - 1,
+                isLastPage = pagerState.currentPage == state.totalPage - 1,
                 onLeftButtonClick = {
                     coroutineScope.launch {
                         pagerState.movePrevPage()
@@ -144,7 +142,7 @@ internal fun SolveProblemScreen(
                 },
                 onRightButtonClick = {
                     coroutineScope.launch {
-                        val maximumPage = totalPage - 1
+                        val maximumPage = state.totalPage - 1
                         if (pagerState.currentPage == maximumPage) {
                             examSubmitDialogVisible = true
                         } else {
@@ -174,7 +172,6 @@ private fun ContentSection(
 
     HorizontalPager(
         modifier = modifier,
-        pageCount = state.totalPage,
         state = pagerState,
     ) { pageIndex ->
         val problem = state.problems[pageIndex].problem
