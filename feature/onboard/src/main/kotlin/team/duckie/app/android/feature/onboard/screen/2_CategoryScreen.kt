@@ -10,6 +10,7 @@
 
 package team.duckie.app.android.feature.onboard.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,7 +45,6 @@ import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
-import team.duckie.quackquack.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.sugar.QuackTitle2
@@ -160,7 +160,7 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
                     )
                 }
             }
-            QuackAnimatedVisibility(
+            AnimatedVisibility(
                 modifier = Modifier
                     .layoutId(CategoryScreenNextButtonLayoutId)
                     .padding(horizontal = 20.dp)

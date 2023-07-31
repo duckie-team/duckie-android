@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.solve.problem.common
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.solve.problem.R
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.border.QuackBorder
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackDivider
@@ -49,7 +49,10 @@ internal fun ButtonBottomBar(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Spacer(modifier = Modifier)
-            QuackAnimatedContent(targetState = isLastPage) {
+            AnimatedContent(
+                targetState = isLastPage,
+                label = "AnimatedContent",
+            ) {
                 when (it) {
                     false -> MediumButton(
                         text = stringResource(id = R.string.next),
@@ -96,7 +99,10 @@ internal fun DoubleButtonBottomBar(
                 ),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackAnimatedContent(targetState = isFirstPage) {
+            AnimatedContent(
+                targetState = isFirstPage,
+                label = "AnimatedContent",
+            ) {
                 when (it) {
                     true -> {
                         Spacer(modifier = Modifier)
@@ -111,7 +117,10 @@ internal fun DoubleButtonBottomBar(
                 }
             }
 
-            QuackAnimatedContent(targetState = isLastPage) {
+            AnimatedContent(
+                targetState = isLastPage,
+                label = "AnimatedContent",
+            ) {
                 when (it) {
                     false -> MediumButton(
                         text = stringResource(id = R.string.next),

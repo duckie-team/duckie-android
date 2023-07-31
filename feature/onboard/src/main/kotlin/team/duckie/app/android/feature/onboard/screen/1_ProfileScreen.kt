@@ -14,6 +14,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,7 +70,6 @@ import team.duckie.app.android.feature.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.onboard.viewmodel.state.ProfileScreenState
-import team.duckie.quackquack.animation.QuackAnimatedContent
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
@@ -288,12 +288,13 @@ private fun ProfilePhoto(
     resetProfilePhoto: () -> Unit,
     openPhotoPicker: (() -> Unit)?,
 ) {
-    QuackAnimatedContent(
+    AnimatedContent(
         modifier = modifier
             .quackClickable(onClick = openPhotoPicker)
             .size(DpSize(width = 80.dp, height = 80.dp))
             .clip(SquircleShape),
         targetState = profilePhoto,
+        label = "AnimatedContent",
     ) { photo ->
         if ("$photo".isEmpty()) {
             QuackImage(

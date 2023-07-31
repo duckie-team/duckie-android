@@ -10,12 +10,12 @@ package team.duckie.app.android.feature.search.screen
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,6 +36,14 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.popStringExtra
+import team.duckie.app.android.common.compose.collectAndHandleState
+import team.duckie.app.android.common.compose.ui.DuckieCircularProgressIndicator
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.constant.SharedIcon
+import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.constants.SearchStep
@@ -43,15 +51,6 @@ import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
-import team.duckie.app.android.common.compose.ui.DuckieCircularProgressIndicator
-import team.duckie.app.android.common.compose.ui.ErrorScreen
-import team.duckie.app.android.common.compose.ui.constant.SharedIcon
-import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
-import team.duckie.app.android.common.compose.collectAndHandleState
-import team.duckie.app.android.common.android.ui.finishWithAnimation
-import team.duckie.app.android.common.android.ui.popStringExtra
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackImage
 import team.duckie.quackquack.ui.icon.QuackIcon
@@ -116,8 +115,9 @@ class SearchActivity : BaseActivity() {
                                 vm.clearSearchKeyword()
                             },
                         )
-                        QuackAnimatedContent(
+                        AnimatedContent(
                             targetState = state.searchStep,
+                            label = "AnimatedContent",
                         ) { step ->
                             when (step) {
                                 SearchStep.Search -> SearchScreen(vm = vm)
