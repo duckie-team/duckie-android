@@ -48,7 +48,7 @@ import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Create
 import team.duckie.quackquack.material.icon.quackicon.outlined.More
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackIcon
 
 @Composable
 internal fun OtherProfileScreen(
@@ -112,7 +112,7 @@ internal fun OtherProfileScreen(
                     isLoading = state.isLoading,
                     onBackPressed = viewModel::clickBackPress,
                     trailingContent = {
-                        QuackImage(
+                        QuackIcon(
                             modifier = Modifier
                                 .size(DpSize(24.dp, 24.dp))
                                 .quackClickable(
@@ -123,7 +123,7 @@ internal fun OtherProfileScreen(
                                         }
                                     },
                                 ),
-                            src = QuackIcon.Outlined.More,
+                            icon = QuackIcon.Outlined.More,
                         )
                     },
                 )

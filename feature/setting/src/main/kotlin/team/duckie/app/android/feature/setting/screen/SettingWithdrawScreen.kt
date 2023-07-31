@@ -34,9 +34,9 @@ import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.constans.Withdraweason
 import team.duckie.app.android.feature.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
-import team.duckie.quackquack.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.component.QuackLargeButton
 import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.component.QuackReviewTextArea

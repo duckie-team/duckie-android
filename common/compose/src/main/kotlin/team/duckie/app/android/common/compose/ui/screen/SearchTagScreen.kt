@@ -37,11 +37,11 @@ import team.duckie.app.android.common.compose.ui.icon.v1.SearchId
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
-import team.duckie.quackquack.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
 
 @Composable
 fun SearchTagScreen(
