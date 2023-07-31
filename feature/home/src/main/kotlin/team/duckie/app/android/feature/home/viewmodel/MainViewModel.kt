@@ -171,6 +171,10 @@ internal class MainViewModel @Inject constructor(
         postSideEffect(MainSideEffect.NavigateToNotification)
     }
 
+    fun navigateToProfile(userId: Int) = intent {
+        postSideEffect(MainSideEffect.NavigateToProfile(userId))
+    }
+
     /** 온보딩(가이드) 활성화 여부를 업데이트한다 */
     fun updateGuideVisible(visible: Boolean) = intent {
         reduce { state.copy(guideVisible = visible) }

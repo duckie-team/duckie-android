@@ -141,6 +141,7 @@ internal fun MainScreen(
                             navigateToCreateProblem = {
                                 mainViewModel.navigateToCreateProblem()
                             },
+                            navigateToProfile = mainViewModel::navigateToProfile,
                             setTargetExamId = { examId ->
                                 mainViewModel.setTargetExamId(examId)
                             },
