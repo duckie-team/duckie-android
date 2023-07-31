@@ -37,7 +37,7 @@
     <string name="tag_description">태그 할수록 더키의 추천이 정확해져요!</string>
     <string name="tag_added_tag">추가한 태그</string> <!--추후 삭제-->
     <string name="tag_add_manual">+ 직접 태그 추가하기</string>
-    <string name="tag_add_manual_placeholder">태그 입력하기</string> <!--추후 삭제-->
+    <string name="tag_add_manual_placeholder">태그 입력하기 (최대 10자)</string> <!--추후 삭제-->
     <string name="tag_hottest_tag">%s 분야 인기 태그</string>
     <string name="tag_toast_already_added">이미 추가한 태그예요.</string> <!--추후 삭제-->
     <string name="tag_toast_create_failed">태그 생성에 실패했어요. 실패한 태그: %s</string>

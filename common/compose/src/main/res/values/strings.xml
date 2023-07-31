@@ -42,5 +42,5 @@
     <string name="tag_toast_network_error">네트워크 연결이 불안정해요\n잠시 후 다시 시도해 주세요.</string>
     <string name="tag_added_tag">추가한 태그</string>
     <string name="tag_edit_button_done">완료</string>
-    <string name="tag_add_manual_placeholder">태그 입력하기</string>
+    <string name="tag_add_manual_placeholder">태그 입력하기 (최대 10자)</string>
 </resources>
