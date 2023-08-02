@@ -36,6 +36,7 @@ import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackGridLayout
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImage
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImageType
 import team.duckie.app.android.common.kotlin.fastAny
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.fastMapIndexedNotNull
@@ -205,7 +206,7 @@ private fun CategoryItem(
             src = imageUrl,
             size = DpSize(width = 80.dp, height = 80.dp),
             shape = RoundedCornerShape(size = 12.dp),
-            isCheckOverlay = true,
+            selectableType = QuackSelectableImageType.CheckOverlay,
             isSelected = isSelected,
             onClick = onClick,
         )

@@ -316,7 +316,6 @@ private fun TagSelection(
                         QuackCircleTag(
                             text = tag.name,
                             isSelected = false,
-                            trailingIconResId = QuackIcon.CloseId,
                         ) {
                             requestRemoveAddedTag(index)
                         }
@@ -355,7 +354,7 @@ private fun TagSelection(
                     title = stringResource(R.string.tag_hottest_tag, category.name),
                     items = hottestTags[categoryIndex],
                     itemSelections = hottestTagSelections[categoryIndex],
-                    tagTypeResId = null,
+                    trailingIconResId = null,
                     contentPadding = PaddingValues(horizontal = 20.dp),
                     onClick = { tagIndex ->
                         hottestTagSelections[categoryIndex][tagIndex] =

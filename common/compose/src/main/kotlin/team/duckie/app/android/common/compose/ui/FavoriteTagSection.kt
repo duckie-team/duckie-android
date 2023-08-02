@@ -22,6 +22,7 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 
 /**
@@ -77,7 +78,7 @@ fun FavoriteTagSection(
                 QuackSingeLazyRowTag(
                     items = tagList,
                     contentPadding = horizontalPadding,
-                    tagTypeResId = trailingIconResId,
+                    trailingIconResId = trailingIconResId ?: QuackIcon.Close.drawableId,
                     onClick = { index -> onTagClick(index) },
                 )
             } else {

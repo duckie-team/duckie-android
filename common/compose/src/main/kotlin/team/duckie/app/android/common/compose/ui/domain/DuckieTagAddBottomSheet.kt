@@ -49,7 +49,6 @@ import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
-import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackCircleTag
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
@@ -201,7 +200,6 @@ private fun DuckieTagAddBottomSheetContent(
                         QuackCircleTag(
                             text = tag.name,
                             isSelected = false,
-                            trailingIconResId = QuackIcon.CloseId,
                         ) {
                             inputtedTags.remove(inputtedTags[index])
                         }
