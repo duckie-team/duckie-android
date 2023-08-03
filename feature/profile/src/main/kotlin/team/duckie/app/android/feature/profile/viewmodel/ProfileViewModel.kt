@@ -200,6 +200,7 @@ internal class ProfileViewModel @Inject constructor(
     }
 
     fun clickViewAll(viewAll: ProfileStep.ViewAll) = intent {
+        if(state.isLoading) return@intent
         when (viewAll.examType) {
             ExamType.Heart -> fetchHeartExams()
             ExamType.Created -> fetchSubmittedExams()
