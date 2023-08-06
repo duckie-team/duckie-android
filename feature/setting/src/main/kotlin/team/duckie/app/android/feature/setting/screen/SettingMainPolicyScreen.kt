@@ -20,6 +20,7 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
 import team.duckie.app.android.feature.setting.constans.SettingType
+import team.duckie.quackquack.material.QuackTypography
 
 @Composable
 fun SettingMainPolicyScreen(
@@ -36,7 +37,7 @@ fun SettingMainPolicyScreen(
             items(SettingType.policyPages) { page ->
                 SettingContentLayout(
                     title = stringResource(id = page.titleRes),
-                    isBold = false,
+                    typography = QuackTypography.Body2,
                 ) {
                     navigatePage(page)
                 }
@@ -46,7 +47,7 @@ fun SettingMainPolicyScreen(
                     title = stringResource(
                         id = R.string.open_source_license,
                     ),
-                    isBold = false,
+                    typography = QuackTypography.Body2,
                 ) {
                     navigateOssLicense()
                 }

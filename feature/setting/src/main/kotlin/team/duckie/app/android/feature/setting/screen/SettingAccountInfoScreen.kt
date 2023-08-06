@@ -34,6 +34,7 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
 import team.duckie.app.android.feature.setting.constans.SettingDesignToken
+import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody1
@@ -98,8 +99,8 @@ fun SettingAccountInfoScreen(
             items(rememberAccountInfoItems) { index ->
                 SettingContentLayout(
                     title = stringResource(id = index.first),
-                    isBold = false,
                     onClick = index.second,
+                    typography = QuackTypography.Body2,
                 )
             }
         }

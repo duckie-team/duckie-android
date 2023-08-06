@@ -12,10 +12,14 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.constans.SettingType.AccountInfo
 import team.duckie.app.android.feature.setting.constans.SettingType.Inquiry
+import team.duckie.app.android.feature.setting.constans.SettingType.ListOfIgnoreExam
+import team.duckie.app.android.feature.setting.constans.SettingType.ListOfIgnoreUser
 import team.duckie.app.android.feature.setting.constans.SettingType.Main
 import team.duckie.app.android.feature.setting.constans.SettingType.MainPolicy
 import team.duckie.app.android.feature.setting.constans.SettingType.Notification
+import team.duckie.app.android.feature.setting.constans.SettingType.PrivacyPolicy
 import team.duckie.app.android.feature.setting.constans.SettingType.Version
+import java.security.Policy
 
 /**
  * 설정 페이지의 종류를 정의합니다.
@@ -31,6 +35,12 @@ enum class SettingType(
     @StringRes
     val titleRes: Int,
 ) {
+    ListOfIgnoreUser(
+        titleRes = R.string.list_of_ignore_user,
+    ),
+    ListOfIgnoreExam(
+        titleRes = R.string.list_of_ignore_exam,
+    ),
     Main(
         titleRes = R.string.app_setting,
     ),
@@ -72,11 +82,16 @@ enum class SettingType(
             WithDraw,
         )
 
-        /** 메인 설정 페이지에 표시될 설정 */
-        val settingPages = SettingType
-            .values()
-            .filter { it !in listOf(Main) }
-            .filter { it !in policyPages }
-            .filter { it !in accountInfoPages }
+        val userSettings = persistentListOf(
+            AccountInfo,
+            ListOfIgnoreUser,
+            ListOfIgnoreExam,
+        )
+
+        val otherSettings = persistentListOf(
+            Inquiry,
+            PrivacyPolicy,
+            Version
+        )
     }
 }

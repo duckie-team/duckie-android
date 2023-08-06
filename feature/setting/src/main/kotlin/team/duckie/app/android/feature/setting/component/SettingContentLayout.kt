@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.setting.constans.SettingDesignToken
+import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.sugar.QuackBody1
@@ -24,17 +25,18 @@ import team.duckie.quackquack.ui.sugar.QuackTitle2
 
 @Composable
 internal fun SettingContentLayout(
+    modifier: Modifier = Modifier,
     title: String,
     content: String? = null,
     trailingText: String? = null,
     onTrailingTextClick: (() -> Unit)? = null,
-    isBold: Boolean,
+    typography: QuackTypography = QuackTypography.Title2,
     onClick: (() -> Unit)? = null,
 ) = with(SettingDesignToken) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(44.dp)
+            .padding(vertical = 12.dp)
             .quackClickable(
                 rippleEnabled = false,
             ) {
@@ -45,15 +47,10 @@ internal fun SettingContentLayout(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        if (isBold) {
-            QuackTitle2(
-                text = title,
-            )
-        } else {
-            QuackBody1(
-                text = title,
-            )
-        }
+        QuackText(
+            text = title,
+            typography = typography,
+        )
         if (content != null) {
             QuackText(
                 modifier = Modifier.padding(start = 12.dp),

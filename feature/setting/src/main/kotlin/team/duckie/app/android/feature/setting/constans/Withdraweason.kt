@@ -40,7 +40,7 @@ internal enum class Withdraweason(
 
     /** 기타 */
     OTHERS(
-        description = R.string.withdraw_others,
+        description = R.string.others,
     ),
     ;
 
