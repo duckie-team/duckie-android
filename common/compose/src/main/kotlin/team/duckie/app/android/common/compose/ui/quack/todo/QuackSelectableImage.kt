@@ -27,11 +27,11 @@ import androidx.compose.ui.zIndex
 import team.duckie.app.android.common.compose.ui.icon.v1.CheckId
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImageType.CheckOverlay
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImageType.TopEndCheckBox
+import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.ui.QuackImage
-import team.duckie.quackquack.ui.component.QuackRoundCheckBox
 
 /**
  * 오른쪽 상단에 체크박스와 함께 이미지 혹은 [QuackIcon] 을 표시합니다.
@@ -128,12 +128,12 @@ fun QuackSelectableImage(
  * @param size 만약 [CheckOverlay] 방식일 때 [QuackIcon.Check] 의 사이즈
  * @param tint 만약 [CheckOverlay] 방식일 때 [QuackIcon.Check] 의 틴트
  */
-public sealed class QuackSelectableImageType(
+sealed class QuackSelectableImageType(
     internal val size: DpSize? = null,
     internal val tint: QuackColor? = null,
 ) {
-    public object TopEndCheckBox : QuackSelectableImageType()
-    public object CheckOverlay : QuackSelectableImageType(
+    object TopEndCheckBox : QuackSelectableImageType()
+    object CheckOverlay : QuackSelectableImageType(
         size = DpSize(width = 28.dp, height = 28.dp),
         tint = QuackColor.White,
     )

@@ -7,9 +7,11 @@
 
 package team.duckie.app.android.common.compose.ui.quack.todo.animation
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,20 +38,17 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSurface
 import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackToggleIconSize.Compact
 import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackToggleIconSize.Normal
 import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackToggleIconSize.Small
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
-import team.duckie.quackquack.ui.animation.QuackAnimationSpec
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSurface
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackBorder
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
 import kotlin.math.floor
 
 /**
@@ -64,17 +63,20 @@ enum class QuackToggleIconSize(
 ) {
     Normal(
         size = DpSize(
-            all = 24.dp,
+            width = 24.dp,
+            height = 24.dp,
         ),
     ),
     Small(
         size = DpSize(
-            all = 18.dp,
+            width = 18.dp,
+            height = 18.dp,
         ),
     ),
     Compact(
         size = DpSize(
-            all = 14.dp,
+            width = 14.dp,
+            height = 14.dp,
         ),
     )
 }
@@ -109,10 +111,11 @@ private object QuackToggleDefaults {
         @Stable
         fun borderFor(
             isChecked: Boolean,
-        ) = QuackBorder(
+        ) = BorderStroke(
+            width = 1.dp,
             color = when (isChecked) {
-                true -> QuackColor.DuckieOrange
-                else -> QuackColor.White
+                true -> QuackColor.DuckieOrange.value
+                else -> QuackColor.White.value
             },
         )
 
@@ -134,13 +137,15 @@ private object QuackToggleDefaults {
         }
 
         val ContainerSize = DpSize(
-            all = 24.dp,
+            width = 24.dp,
+            height = 24.dp,
         )
         val ContainerShape = CircleShape
 
         val CheckColor = QuackColor.White
         val CheckSize = DpSize(
-            all = 18.dp,
+            width = 18.dp,
+            height = 18.dp,
         )
     }
 
@@ -161,7 +166,8 @@ private object QuackToggleDefaults {
         }
 
         val ContainerSize = DpSize(
-            all = 24.dp,
+            width = 24.dp,
+            height = 24.dp,
         )
         val ContainerShape = RoundedCornerShape(
             size = 4.dp,
@@ -169,13 +175,14 @@ private object QuackToggleDefaults {
 
         val CheckColor = QuackColor.White
         val CheckSize = DpSize(
-            all = 18.dp,
+            width = 18.dp,
+            height = 18.dp,
         )
     }
 
     object ToggleButton {
         val IconSize = Small
-        val Typography = QuackTextStyle.Body2.change(
+        val Typography = QuackTypography.Body2.change(
             color = QuackColor.Gray1
         )
 
@@ -198,7 +205,7 @@ private object QuackToggleDefaults {
  * @param onClick 체크시 호출되는 콜백
  */
 @Composable
-public fun QuackRoundCheckBox(
+fun QuackRoundCheckBox(
     modifier: Modifier = Modifier,
     checked: Boolean,
     onClick: (() -> Unit)? = null,
@@ -244,10 +251,13 @@ public fun QuackSmallRoundCheckBox(
     checkedText: String,
     onClick: (() -> Unit)? = null,
 ): Unit = with(QuackToggleDefaults.RoundCheck) {
-    QuackAnimatedContent(targetState = checked) { showUnderText ->
+    AnimatedContent(
+        targetState = checked,
+        label = "AnimatedContent",
+    ) { showUnderText ->
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             QuackSurface(
-                modifier = modifier.size(DpSize(18.dp)),
+                modifier = modifier.size(DpSize(width = 18.dp, height = 18.dp)),
                 shape = ContainerShape,
                 backgroundColor = backgroundColorFor(
                     isChecked = checked,
@@ -262,14 +272,14 @@ public fun QuackSmallRoundCheckBox(
                         value = checked,
                     ),
                     checkColor = CheckColor,
-                    size = DpSize(12.dp),
+                    size = DpSize(width = 12.dp, height = 12.dp),
                 )
             }
             if (showUnderText) {
-                QuackBody3(
+                QuackText(
                     modifier = Modifier.padding(top = 2.dp),
                     text = checkedText,
-                    color = QuackColor.DuckieOrange,
+                    typography = QuackTypography.Body3.change(color = QuackColor.DuckieOrange),
                 )
             }
         }
@@ -326,7 +336,7 @@ public fun QuackSquareCheckBox(
  * @param onClick 아이콘을 클릭했을 때 실행될 람다
  */
 @Composable
-public fun QuackToggleButton(
+fun QuackToggleButton(
     modifier: Modifier = Modifier,
     checkedIcon: QuackIcon,
     uncheckedIcon: QuackIcon,
@@ -349,14 +359,17 @@ public fun QuackToggleButton(
                 true -> checkedIcon
                 else -> uncheckedIcon
             },
-            size = (iconSize.takeIf { trailingText == null } ?: IconSize).size,
-            rippleEnabled = false,
-            onClick = onClick,
+            modifier = Modifier
+                .quackClickable(
+                    rippleEnabled = false,
+                    onClick = onClick,
+                )
+                .size((iconSize.takeIf { trailingText == null } ?: IconSize).size),
         )
         trailingText?.let {
             QuackText(
                 text = trailingText,
-                style = Typography,
+                typography = Typography,
                 singleLine = true,
             )
         }
@@ -403,6 +416,7 @@ private fun Check(
                 targetState == ToggleableState.Off -> snap(
                     delayMillis = BoxOutDuration,
                 )
+
                 else -> QuackAnimationSpec()
             }
         },
@@ -430,7 +444,7 @@ private fun Check(
             x = StrokeWidth.toPx(),
         )
         drawCheck(
-            checkColor = checkColor.composeColor,
+            checkColor = checkColor.value,
             checkFraction = checkDrawFraction,
             crossCenterGravitation = checkCenterGravitationShiftFraction,
             strokeWidthPx = strokeWidthPx,
