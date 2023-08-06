@@ -38,13 +38,13 @@ import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackMainTab
 
 @Composable
 internal fun FriendScreen(

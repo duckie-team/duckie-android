@@ -33,6 +33,7 @@ import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
@@ -41,7 +42,6 @@ import team.duckie.app.android.feature.search.viewmodel.state.SearchState
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackMainTab
 
 @Composable
 internal fun SearchResultScreen(
