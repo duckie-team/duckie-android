@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalQuackQuackApi::class)
 
 package team.duckie.app.android.feature.home.screen.guide
 
@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -40,12 +39,13 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.constants.GuideStep
 import team.duckie.app.android.feature.home.viewmodel.guide.HomeGuideViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackSmallButton
-import team.duckie.quackquack.ui.component.QuackSmallButtonType
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 @Composable
 internal fun HomeGuideScreen(
@@ -63,7 +63,7 @@ internal fun HomeGuideScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(color = QuackColor.Black.composeColor.copy(alpha = 0.9F)),
+            .background(color = QuackColor.Black.value.copy(alpha = 0.9F)),
         contentAlignment = Alignment.BottomCenter,
     ) {
         if (state.isGuideStarted) {
@@ -85,14 +85,14 @@ internal fun HomeGuideScreen(
                     .navigationBarsPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                QuackBody2(
+                QuackText(
                     modifier = Modifier
+                        .quackClickable(onClick = onClose)
                         .fillMaxWidth()
                         .wrapContentWidth(Alignment.End)
                         .padding(top = 40.dp, end = 16.dp),
                     text = stringResource(id = R.string.skip),
-                    color = QuackColor.Gray3,
-                    onClick = onClose,
+                    typography = QuackTypography.Body2.change(color = QuackColor.Gray3),
                 )
                 HorizontalPager(
                     modifier = Modifier.fillMaxSize(),
@@ -138,25 +138,24 @@ private fun HomeGuideStartScreen(
             contentScale = ContentScale.Fit,
         )
         Spacer(space = 12.dp)
-        QuackHeadLine1(
+        QuackText(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(id = R.string.guide_start_message),
-            color = QuackColor.White,
-            align = TextAlign.Center,
+            typography = QuackTypography.HeadLine1.change(color = QuackColor.White),
         )
         Spacer(space = 20.dp)
-        QuackSmallButton(
-            modifier = Modifier
-                .size(118.dp, 44.dp),
-            type = QuackSmallButtonType.Fill,
+        QuackButton(
             text = stringResource(id = R.string.guide_start_accept_message),
+            style = QuackButtonStyle.PrimaryFilledSmall,
+            modifier = Modifier.size(118.dp, 44.dp),
             enabled = true,
             onClick = onNext,
         )
         Spacer(space = 16.dp)
-        QuackBody2(
+        QuackText(
+            modifier = Modifier.quackClickable(onClick = onClosed),
             text = stringResource(id = R.string.guide_start_deny_message),
-            color = QuackColor.Gray2,
-            onClick = onClosed,
+            typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
         )
     }
 }

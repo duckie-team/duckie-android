@@ -20,8 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackDivider
+import team.duckie.app.android.common.compose.ui.DuckieDivider
+import team.duckie.quackquack.material.QuackColor
 
 @Composable
 internal fun BaseBottomLayout(
@@ -36,11 +36,11 @@ internal fun BaseBottomLayout(
             .fillMaxWidth()
             .height(48.dp),
     ) {
-        QuackDivider()
+        DuckieDivider()
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .background(QuackColor.White.composeColor)
+                .background(QuackColor.White.value)
                 .padding(contentPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {

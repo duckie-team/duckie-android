@@ -41,15 +41,15 @@ import team.duckie.app.android.common.compose.ui.DuckExamSmallCoverForColumn
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.TextTabLayout
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSingeLazyRowTag
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
+import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
-import team.duckie.quackquack.ui.component.QuackTagType
-import team.duckie.quackquack.ui.component.QuackTitle2
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.material.QuackColor as QuackV2Color
 
 @Composable
@@ -84,7 +84,7 @@ internal fun ExamSection(
                 .skeleton(state.isTagLoading),
             items = tagNames,
             itemSelections = state.tagSelections,
-            tagType = QuackTagType.Circle(),
+            trailingIconResId = null,
             onClick = viewModel::changeSelectedTags,
         )
         Spacer(space = 28.dp)
@@ -196,13 +196,13 @@ private fun RankingEdge(rank: Int) {
             ),
         contentAlignment = Alignment.Center,
     ) {
-        QuackTitle2(
+        QuackText(
             modifier = Modifier.padding(
                 horizontal = 9.dp,
                 vertical = 2.dp,
             ),
-            color = QuackColor.White,
             text = rank.toString(),
+            typography = QuackTypography.Title2.change(color = QuackColor.White),
         )
     }
 }

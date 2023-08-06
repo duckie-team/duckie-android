@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -34,26 +35,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.feature.home.R
-import team.duckie.app.android.feature.home.viewmodel.MainViewModel
 import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.icon.v1.SearchId
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.constants.MainScreenType
+import team.duckie.app.android.feature.home.viewmodel.MainViewModel
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
-
 import team.duckie.quackquack.ui.sugar.QuackTitle2
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
-import team.duckie.quackquack.ui.component.QuackTagType
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.util.DpSize
 
 private val SearchScreenHorizontalPaddingDp = 16.dp
 
@@ -102,12 +102,16 @@ internal fun SearchMainScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 QuackImage(
-                    src = QuackIcon.Search,
-                    size = DpSize(24.dp),
+                    modifier = Modifier.size(DpSize(width = 24.dp, height = 24.dp)),
+                    src = QuackIcon.SearchId,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Box(
                     modifier = Modifier
+                        .quackClickable(
+                            rippleEnabled = false,
+                            onClick = vm::navigateToSearch,
+                        )
                         .fillMaxWidth()
                         .height(36.dp)
                         .background(
@@ -116,11 +120,6 @@ internal fun SearchMainScreen(
                                 size = 8.dp,
                             ),
                         )
-                        .quackClickable(
-                            rippleEnabled = false,
-                        ) {
-                            vm.navigateToSearch()
-                        }
                         .padding(start = 12.dp),
                     contentAlignment = Alignment.CenterStart,
                 ) {
@@ -142,7 +141,7 @@ internal fun SearchMainScreen(
             QuackLazyVerticalGridTag(
                 modifier = Modifier.padding(horizontal = SearchScreenHorizontalPaddingDp),
                 items = state.popularTags.map { it.name },
-                tagType = QuackTagType.Round,
+                tagTypeResId = null,
                 onClick = { index ->
                     vm.navigateToSearch(searchTag = state.popularTags[index].name)
                 },

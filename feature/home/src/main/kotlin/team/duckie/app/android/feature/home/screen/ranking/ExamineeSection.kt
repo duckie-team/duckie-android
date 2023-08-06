@@ -21,21 +21,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import team.duckie.app.android.common.compose.itemsIndexedPagingKey
+import team.duckie.app.android.common.compose.ui.DuckieDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackTitle2
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackSubtitle
+import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.util.DpSize
 
@@ -127,6 +130,6 @@ private fun ExamineeContent(
                 }
             }
         }
-        Divider(color = QuackColor.Gray4.composeColor)
+        DuckieDivider(color = QuackColor.Gray4.value)
     }
 }

@@ -28,15 +28,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.BaseBottomLayout
 import team.duckie.app.android.feature.home.constants.GuideStep
-import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun HomeGuideFeatureScreen(
@@ -46,17 +45,21 @@ internal fun HomeGuideFeatureScreen(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
-            QuackHeadLine2(
+            QuackText(
                 modifier = Modifier
                     .padding(top = 41.dp),
                 text = stringResource(id = guideStep.subtitle),
-                color = QuackColor.White,
-                align = TextAlign.Center,
+                typography = QuackTypography.HeadLine2.change(
+                    color = QuackColor.White,
+                    textAlign = TextAlign.Center,
+                ),
             )
-            QuackHeadLine1(
+            QuackText(
                 text = stringResource(id = guideStep.title),
-                color = QuackColor.DuckieOrange,
-                align = TextAlign.Center,
+                typography = QuackTypography.HeadLine1.change(
+                    color = QuackColor.DuckieOrange,
+                    textAlign = TextAlign.Center,
+                )
             )
             Image(
                 modifier = Modifier
@@ -84,15 +87,13 @@ internal fun HomeGuideFeatureBottomLayout(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
-                .quackClickable {
-                    onNext()
-                }
-                .background(color = QuackColor.DuckieOrange.composeColor),
+                .quackClickable(onClick = onNext)
+                .background(color = QuackColor.DuckieOrange.value),
             contentAlignment = Alignment.Center,
         ) {
-            QuackHeadLine2(
+            QuackText(
                 text = stringResource(id = R.string.start_duckie),
-                color = QuackColor.White,
+                typography = QuackTypography.HeadLine2.change(color = QuackColor.White),
             )
         }
     } else {
@@ -105,10 +106,12 @@ internal fun HomeGuideFeatureBottomLayout(
                 )
             },
             trailingContent = {
-                QuackSubtitle(
+                QuackText(
+                    modifier = Modifier.quackClickable(onClick = onNext),
                     text = stringResource(id = R.string.next),
-                    color = QuackColor.DuckieOrange,
-                    onClick = onNext,
+                    typography = QuackTypography.Subtitle.change(
+                        color = QuackColor.DuckieOrange,
+                    ),
                 )
             },
         )
