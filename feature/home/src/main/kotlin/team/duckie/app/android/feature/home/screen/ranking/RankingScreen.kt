@@ -46,6 +46,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.HeadLineTopAppBar
@@ -53,7 +54,7 @@ import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.constants.RankingPage
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingSideEffect
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
-import team.duckie.quackquack.ui.component.QuackMainTab
+
 @Composable
 internal fun RankingScreen(
     initState: (MainScreenType, () -> Unit) -> Unit,

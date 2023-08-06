@@ -40,10 +40,10 @@ import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Create
 import team.duckie.quackquack.material.icon.quackicon.outlined.Setting
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackButton
-import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.component.QuackLargeButton
+import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 

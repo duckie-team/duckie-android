@@ -43,7 +43,7 @@ import team.duckie.app.android.navigator.feature.profile.ViewAllNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AllowMagicNumber("앱 종료 시간에 대해서 매직 넘버 처리")
