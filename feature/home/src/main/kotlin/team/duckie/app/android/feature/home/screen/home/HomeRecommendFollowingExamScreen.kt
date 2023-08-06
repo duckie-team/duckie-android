@@ -40,17 +40,17 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.collectAndHandleState
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.home.constants.HomeStep
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.compose.collectAndHandleState
-import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
-import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
@@ -237,7 +237,7 @@ private fun TestMakerLayout(
             modifier = Modifier.skeleton(isLoading),
             profileUrl = profileImageUrl,
             size = HomeProfileSize,
-            onClick = onClickUserProfile,
+            onClick = onUserProfileClick,
         )
         Column(modifier = Modifier.padding(start = 8.dp)) {
             QuackSubtitle2(
