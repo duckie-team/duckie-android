@@ -7,21 +7,21 @@
 
 package team.duckie.app.android.feature.profile.screen.section
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.profile.R
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackSurface
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun FollowSection(
@@ -29,7 +29,6 @@ internal fun FollowSection(
     onClick: () -> Unit,
 ) {
     EditButton(
-        modifier = Modifier.fillMaxWidth(),
         text = if (enabled) {
             stringResource(id = R.string.follow)
         } else {
@@ -48,39 +47,39 @@ fun EditButton(
     enabled: Boolean = false,
     plainTextColor: QuackColor = QuackColor.Gray1,
 ) {
-    QuackSurface(
-        modifier = modifier.fillMaxWidth(),
-        backgroundColor = if (enabled) {
-            QuackColor.White
-        } else {
-            QuackColor.Gray4
-        },
-        border = if (enabled) {
-            QuackBorder(
-                width = 1.dp,
-                color = QuackColor.DuckieOrange,
+    QuackText(
+        modifier = modifier
+            .clip(RoundedCornerShape(size = 8.dp))
+            .quackClickable(onClick = onClick)
+            .background(
+                if (enabled) {
+                    QuackColor.White.toBrush()
+                } else {
+                    QuackColor.Gray4.toBrush()
+                },
             )
-        } else {
-            null
-        },
-        shape = RoundedCornerShape(size = 8.dp),
-        onClick = onClick,
-    ) {
-        QuackText(
-            modifier = Modifier.padding(
+            .border(
+                width = 1.dp,
+                brush = if (enabled) {
+                    QuackColor.DuckieOrange.toBrush()
+                } else {
+                    QuackColor.Unspecified.toBrush()
+                },
+                shape = RoundedCornerShape(size = 8.dp),
+            )
+            .padding(
                 vertical = 8.dp,
                 horizontal = 12.dp,
             ),
-            text = text,
-            style = QuackTextStyle.Body1.change(
-                color = if (enabled) {
-                    QuackColor.DuckieOrange
-                } else {
-                    plainTextColor
-                },
-                textAlign = TextAlign.Center,
-            ),
-            singleLine = true,
-        )
-    }
+        text = text,
+        typography = QuackTypography.Body1.change(
+            color = if (enabled) {
+                QuackColor.DuckieOrange
+            } else {
+                plainTextColor
+            },
+            textAlign = TextAlign.Center,
+        ),
+        singleLine = true,
+    )
 }

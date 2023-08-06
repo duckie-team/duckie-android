@@ -40,10 +40,10 @@ import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Create
 import team.duckie.quackquack.material.icon.quackicon.outlined.Setting
 import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackImage
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
@@ -126,8 +126,11 @@ fun MyProfileScreen(
                 title = stringResource(id = R.string.my_favorite_tag),
                 tags = tags,
                 emptySection = {
-                    QuackLargeButton(
-                        type = QuackLargeButtonType.Compact,
+                    // TODO(riflockle7): 디자인 확인 필요
+                    // QuackLargeButton(
+                    //    type = QuackLargeButtonType.Compact,
+                    QuackButton(
+                        style = QuackButtonStyle.SecondaryLarge,
                         text = stringResource(id = R.string.add_favorite_tag),
                         onClick = onClickEditTag,
                     )
@@ -151,8 +154,8 @@ fun MyProfileScreen(
                         EmptyText(message = stringResource(id = R.string.not_yet_submit_exam))
 //                      TODO(limsaehyun): 시험 생성하기가 가능한 스펙에서 활용
 //                      Spacer(modifier = Modifier.padding(8.dp))
-//                      QuackLargeButton(
-//                          type = QuackLargeButtonType.Compact,
+//                      QuackButton(
+//                          style = QuackButtonStyle.SecondaryLarge,
 //                          text = stringResource(id = R.string.make_exam),
 //                          onClick = onClickMakeExam,
 //                      )

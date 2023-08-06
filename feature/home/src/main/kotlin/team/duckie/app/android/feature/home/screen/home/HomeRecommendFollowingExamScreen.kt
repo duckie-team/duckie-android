@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -56,7 +57,6 @@ import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackBody3
-import team.duckie.quackquack.ui.sugar.QuackSubtitle
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 internal const val ThumbnailRatio = 4f / 3f
@@ -192,9 +192,7 @@ private fun TestCoverWithMaker(
                 .aspectRatio(ThumbnailRatio)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .quackClickable {
-                    onTestClick()
-                }
+                .quackClickable(onClick = onTestClick)
                 .skeleton(isLoading),
             model = cover,
             contentDescription = null,
@@ -283,9 +281,9 @@ private fun HomeFollowingExamNotFoundScreen(
             },
         )
         Spacer(space = 60.dp)
-        QuackSubtitle(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+        QuackText(
             text = stringResource(id = R.string.home_following_exam_not_found_title),
+            typography = QuackTypography.Subtitle.change(textAlign = TextAlign.Center),
         )
         Spacer(space = 12.dp)
         QuackBody2(text = stringResource(id = R.string.home_following_exam_not_found_subtitle))
