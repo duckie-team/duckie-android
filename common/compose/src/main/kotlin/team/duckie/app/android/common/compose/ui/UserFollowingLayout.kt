@@ -30,6 +30,8 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.component.QuackSmallButton
+import team.duckie.quackquack.ui.component.QuackSmallButtonType
 import team.duckie.quackquack.ui.sugar.QuackBody3
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
@@ -43,6 +45,9 @@ private object UserContentWithButtonDefaults {
     const val TrailingButtonLayoutId = "TrailingButtonLayoutId"
 }
 
+/**
+ * 해당 버튼을 사용하기 위해선 [trailingButton] 에 modifier 를 넣어야 합니다.
+ */
 @Composable
 private fun DefaultUserContentLayout(
     modifier: Modifier = Modifier,
@@ -159,6 +164,45 @@ private fun getUserFollowingLayoutMeasurePolicy(
         }
     }
 }
+
+
+@Composable
+fun UserIgnoreLayout(
+    modifier: Modifier = Modifier,
+    userId: Int,
+    profileImgUrl: String,
+    nickname: String,
+    favoriteTag: String,
+    tier: String,
+    onClickUserProfile: ((Int) -> Unit)? = null,
+    visibleTrailingButton: Boolean = true,
+    onClickTrailingButton: (Int) -> Unit,
+    isLoading: Boolean = false,
+) {
+    DefaultUserContentLayout(
+        isLoading = isLoading,
+        modifier = modifier,
+        userId = userId,
+        profileImgUrl = profileImgUrl,
+        nickname = nickname,
+        favoriteTag = favoriteTag,
+        tier = tier,
+        onClickUserProfile = onClickUserProfile,
+        trailingButton = {
+            QuackSmallButton(
+                modifier = it,
+                text = stringResource(id = R.string.cancel_igonre),
+                type = QuackSmallButtonType.Border,
+                enabled = true,
+                onClick = {
+                    onClickTrailingButton(userId)
+                }
+            )
+        },
+        visibleTrailingButton = visibleTrailingButton,
+    )
+}
+
 
 @Composable
 fun UserFollowingLayout(

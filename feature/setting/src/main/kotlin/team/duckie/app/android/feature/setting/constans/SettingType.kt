@@ -19,7 +19,6 @@ import team.duckie.app.android.feature.setting.constans.SettingType.MainPolicy
 import team.duckie.app.android.feature.setting.constans.SettingType.Notification
 import team.duckie.app.android.feature.setting.constans.SettingType.PrivacyPolicy
 import team.duckie.app.android.feature.setting.constans.SettingType.Version
-import java.security.Policy
 
 /**
  * 설정 페이지의 종류를 정의합니다.

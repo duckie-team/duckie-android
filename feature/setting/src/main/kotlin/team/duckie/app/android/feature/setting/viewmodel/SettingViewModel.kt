@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.setting.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -16,7 +17,9 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.auth.usecase.ClearTokenUseCase
+import team.duckie.app.android.domain.ignore.usecase.CancelUserIgnoreUseCase
 import team.duckie.app.android.domain.me.usecase.GetIsStageUseCase
+import team.duckie.app.android.domain.user.usecase.FetchIgnoreUsersUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.setting.constans.SettingType
 import team.duckie.app.android.feature.setting.constans.SettingType.Companion.policyPages
@@ -33,6 +36,8 @@ internal class SettingViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
     private val getIsStageUseCase: GetIsStageUseCase,
     private val clearTokenUseCase: ClearTokenUseCase,
+    private val fetchIgnoreUsers: FetchIgnoreUsersUseCase,
+    private val cancelUserIgnoreUseCase: CancelUserIgnoreUseCase
 ) : ContainerHost<SettingState, SettingSideEffect>, ViewModel() {
 
     override val container = container<SettingState, SettingSideEffect>(SettingState())
@@ -52,6 +57,27 @@ internal class SettingViewModel @Inject constructor(
         getMeUseCase()
             .onSuccess {
                 reduce { state.copy(me = it, isStage = isStage) }
+            }
+            .onFailure {
+                postSideEffect(SettingSideEffect.ReportError(it))
+            }
+    }
+
+    fun cancelIgnoreUser(userId: Int) = intent {
+        cancelUserIgnoreUseCase(targetId = userId)
+            .onSuccess {
+                val ignoreUsers = state.ignoreUsers.filter { it.id != userId }.toImmutableList()
+                reduce { state.copy(ignoreUsers = ignoreUsers) }
+            }
+            .onFailure {
+                postSideEffect(SettingSideEffect.ReportError(it))
+            }
+    }
+
+    fun getIgnoreUsers() = intent {
+        fetchIgnoreUsers()
+            .onSuccess { users ->
+                reduce { state.copy(ignoreUsers = users) }
             }
             .onFailure {
                 postSideEffect(SettingSideEffect.ReportError(it))

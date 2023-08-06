@@ -138,6 +138,11 @@ class SettingActivity : BaseActivity() {
                                     state = state,
                                 )
 
+                                SettingType.ListOfIgnoreUser -> SettingIgnoreUserScreen(
+                                    state = state,
+                                    vm = vm,
+                                )
+
                                 else -> Unit
                             }
                         }
