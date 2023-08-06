@@ -21,7 +21,7 @@ dependencies {
         projects.domain,
         projects.common.kotlin,
         libs.compose.lifecycle.viewmodel,
-        // libs.quack.ui.components,
+        libs.quack.ui.components,
         libs.kotlin.collections.immutable,
         libs.quack.v2.ui,
         libs.compose.ui.activity,
