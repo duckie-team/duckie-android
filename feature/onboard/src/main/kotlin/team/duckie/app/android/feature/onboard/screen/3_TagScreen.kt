@@ -58,9 +58,8 @@ import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.domain.DuckieTagAddBottomSheet
-import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackCircleTag
-import team.duckie.app.android.common.compose.ui.quack.todo.QuackSingeLazyRowTag
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackOutLinedSingeLazyRowTag
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.fastAny
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
@@ -77,7 +76,6 @@ import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
@@ -350,11 +348,11 @@ private fun TagSelection(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             onboardState.selectedCategories.fastForEachIndexed { categoryIndex, category ->
-                QuackSingeLazyRowTag(
+                QuackOutLinedSingeLazyRowTag(
                     title = stringResource(R.string.tag_hottest_tag, category.name),
                     items = hottestTags[categoryIndex],
                     itemSelections = hottestTagSelections[categoryIndex],
-                    trailingIconResId = null,
+                    trailingIcon = null,
                     contentPadding = PaddingValues(horizontal = 20.dp),
                     onClick = { tagIndex ->
                         hottestTagSelections[categoryIndex][tagIndex] =

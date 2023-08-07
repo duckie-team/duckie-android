@@ -11,6 +11,7 @@ package team.duckie.app.android.feature.profile.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
@@ -102,6 +103,7 @@ internal fun OtherProfileScreen(
             isLoading = state.isLoading,
             editSection = {
                 FollowSection(
+                    modifier = Modifier.fillMaxWidth(),
                     enabled = state.follow,
                     onClick = viewModel::clickFollow,
                 )
@@ -114,7 +116,6 @@ internal fun OtherProfileScreen(
                     trailingContent = {
                         QuackIcon(
                             modifier = Modifier
-                                .size(DpSize(24.dp, 24.dp))
                                 .quackClickable(
                                     onClick = {
                                         viewModel.updateBottomSheetDialogType(DuckieSelectableType.Ignore)

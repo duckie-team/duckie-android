@@ -23,14 +23,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.common.kotlin.runtimeCheck
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
-import team.duckie.quackquack.material.icon.quackicon.outlined.Close
 import team.duckie.quackquack.ui.QuackTag
 import team.duckie.quackquack.ui.QuackTagStyle
 import team.duckie.quackquack.ui.QuackText
@@ -72,8 +71,8 @@ fun QuackLazyVerticalGridTag(
     itemChunkedSize: Int,
     horizontalSpace: Dp = 8.dp,
     verticalSpace: Dp = 8.dp,
-    trailingIconResId: Int? = null,
-    tagTypeResId: Int? = null,
+    trailingIcon: ImageVector? = null,
+    onTrailingClick: ((Int) -> Unit)? = null,
     onClick: (index: Int) -> Unit,
 ) {
     if (itemSelections != null) {
@@ -116,10 +115,10 @@ fun QuackLazyVerticalGridTag(
                         QuackTag(
                             text = item,
                             style = QuackTagStyle.Filled,
-                            modifier = if (trailingIconResId != null) {
+                            modifier = if (trailingIcon != null) {
                                 Modifier.trailingIcon(
-                                    OutlinedGroup.Close,
-                                    onClick = { onClick(index) },
+                                    trailingIcon,
+                                    onClick = { onTrailingClick?.invoke(index) },
                                 )
                             } else {
                                 Modifier

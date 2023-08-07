@@ -223,8 +223,7 @@ private fun DuckieTagAddBottomSheetContent(
                 tagInput = it.takeBy(TagTitleMaxLength, tagInput)
             },
             placeholderText = stringResource(R.string.tag_add_manual_placeholder),
-            startPadding = 16.dp,
-            trailingEndPadding = 10.dp,
+            trailingEndPadding = 16.dp,
             trailingIcon = QuackIcon.ArrowSendId,
             trailingIconOnClick = ::updateTagInput,
             keyboardActions = KeyboardActions { updateTagInput() },

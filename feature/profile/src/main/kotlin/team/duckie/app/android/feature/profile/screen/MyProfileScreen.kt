@@ -4,15 +4,17 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+
 @file:OptIn(ExperimentalQuackQuackApi::class)
 
 package team.duckie.app.android.feature.profile.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,7 +25,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.icon.v1.Notice
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.user.model.UserProfile
@@ -38,14 +39,13 @@ import team.duckie.app.android.feature.profile.viewmodel.state.mapper.toUiModel
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Create
+import team.duckie.quackquack.material.icon.quackicon.outlined.Notice
 import team.duckie.quackquack.material.icon.quackicon.outlined.Setting
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackIcon
-import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
-import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
 @Suppress("UnusedPrivateMember") // 시험 생성하기를 추후에 다시 활용하기 위함
 @Composable
@@ -68,17 +68,13 @@ fun MyProfileScreen(
     @Composable
     fun BackPressedHeadLineTopBarInternal() {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            QuackImage(
-                modifier = Modifier
-                    .size(24.dp, 24.dp)
-                    .quackClickable(onClick = onClickNotification),
-                src = QuackV1Icon.Companion.Notice,
+            QuackIcon(
+                modifier = Modifier.quackClickable(onClick = onClickNotification),
+                icon = QuackIcon.Outlined.Notice
             )
             QuackIcon(
-                modifier = Modifier
-                    .size(24.dp, 24.dp)
-                    .quackClickable(onClick = onClickSetting),
-                icon = QuackIcon.Outlined.Setting,
+                modifier = Modifier.quackClickable(onClick = onClickSetting),
+                icon = QuackIcon.Outlined.Setting
             )
         }
     }
@@ -130,6 +126,7 @@ fun MyProfileScreen(
                     // QuackLargeButton(
                     //    type = QuackLargeButtonType.Compact,
                     QuackButton(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
                         style = QuackButtonStyle.SecondaryLarge,
                         text = stringResource(id = R.string.add_favorite_tag),
                         onClick = onClickEditTag,

@@ -25,10 +25,12 @@ import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun FollowSection(
+    modifier: Modifier = Modifier,
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
     EditButton(
+        modifier = modifier,
         text = if (enabled) {
             stringResource(id = R.string.follow)
         } else {

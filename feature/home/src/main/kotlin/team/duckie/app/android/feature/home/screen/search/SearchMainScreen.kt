@@ -141,7 +141,6 @@ internal fun SearchMainScreen(
             QuackLazyVerticalGridTag(
                 modifier = Modifier.padding(horizontal = SearchScreenHorizontalPaddingDp),
                 items = state.popularTags.map { it.name },
-                tagTypeResId = null,
                 onClick = { index ->
                     vm.navigateToSearch(searchTag = state.popularTags[index].name)
                 },

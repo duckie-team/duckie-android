@@ -28,20 +28,19 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.FavoriteTagSection
 import team.duckie.app.android.common.compose.ui.LoadingScreen
 import team.duckie.app.android.common.compose.ui.domain.DuckieTagAddBottomSheet
-import team.duckie.app.android.common.compose.ui.icon.v1.ArrowBackId
-import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
-import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.tag.edit.R
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditState
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditViewModel
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
 
@@ -63,7 +62,6 @@ internal fun TagEditScreen(
             onTrailingClick = vm::onTrailingClick,
             addNewTags = vm::addNewTags,
             requestAddTag = vm::requestNewTag,
-            onTagClick = vm::onTrailingClick,
         )
 
         is TagEditState.Error -> ErrorScreen(
@@ -81,7 +79,6 @@ fun TagEditSuccessScreen(
     onTrailingClick: (Int) -> Unit,
     addNewTags: (List<Tag>) -> Unit,
     requestAddTag: suspend (String) -> Tag?,
-    onTagClick: (Int) -> Unit,
 ) {
     val activity = LocalContext.current as Activity
     val coroutineScope = rememberCoroutineScope()
@@ -111,29 +108,20 @@ fun TagEditSuccessScreen(
         content = {
             Column(modifier = modifier) {
                 // 상단 탭바
-                QuackTopAppBar(
-                    leadingIconResId = QuackIcon.ArrowBackId,
-                    leadingText = stringResource(R.string.title),
-                    onLeadingIconClick = activity::finish,
+                BackPressedHeadLine2TopAppBar(
+                    title = stringResource(R.string.title),
+                    onBackPressed = activity::finish,
                     trailingContent = {
                         QuackText(
                             modifier = Modifier
-                                .then(Modifier) // prevent Modifier.Companion
-                                .quackClickable(
-                                    rippleEnabled = false,
-                                    onClick = onEditFinishClick,
-                                )
-                                .padding(
-                                    vertical = 4.dp,
-                                    horizontal = 16.dp,
-                                ),
+                                .quackClickable(onClick = onEditFinishClick),
                             text = stringResource(R.string.edit_finish),
                             typography = QuackTypography.Subtitle.change(
                                 color = QuackColor.DuckieOrange,
                             ),
                             singleLine = true,
                         )
-                    },
+                    }
                 )
 
                 // 내 관심 태그 영역
@@ -142,12 +130,11 @@ fun TagEditSuccessScreen(
                     title = stringResource(id = R.string.my_favorite_tag),
                     horizontalPadding = PaddingValues(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    trailingIconResId = QuackIcon.CloseId,
+                    trailingIcon = OutlinedGroup.Close,
                     onTrailingClick = onTrailingClick,
                     tags = state.myTags.map { it.name }.toPersistentList(),
                     emptySection = {},
-                    singleLine = false,
-                    onTagClick = onTagClick,
+                    onTagClick = {},
                     addButtonTitle = stringResource(id = R.string.tag_edit_add_favorite_tag),
                     onAddTagClick = {
                         coroutineScope.launch { sheetState.show() }

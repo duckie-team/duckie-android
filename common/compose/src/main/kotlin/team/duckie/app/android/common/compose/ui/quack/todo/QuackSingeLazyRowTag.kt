@@ -20,14 +20,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.kotlin.runtimeCheck
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
-import team.duckie.quackquack.material.icon.quackicon.outlined.Close
 import team.duckie.quackquack.ui.QuackTag
 import team.duckie.quackquack.ui.QuackTagStyle
 import team.duckie.quackquack.ui.trailingIcon
@@ -61,16 +60,17 @@ import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
  * 람다식의 인자로는 선택된 태그의 index 가 들어옵니다.
  */
 @Composable
-fun QuackSingeLazyRowTag(
+fun QuackOutLinedSingeLazyRowTag(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(all = 0.dp),
     title: String? = null,
     items: List<String>,
     itemSelections: List<Boolean>? = null,
     horizontalSpace: Dp = 8.dp,
-    trailingIconResId: Int?,
+    trailingIcon: ImageVector? = null,
     key: ((index: Int, item: String) -> Any)? = null,
     contentType: (index: Int, item: String) -> Any? = { _, _ -> null },
+    onTrailingIconClick: ((index: Int) -> Unit)? = null,
     onClick: (index: Int) -> Unit,
 ) {
     if (itemSelections != null) {
@@ -110,17 +110,19 @@ fun QuackSingeLazyRowTag(
             ) { index, item ->
                 QuackTag(
                     text = item,
-                    style = QuackTagStyle.GrayscaleFlat,
-                    modifier = if (trailingIconResId != null) {
+                    style = QuackTagStyle.Outlined,
+                    modifier = if (trailingIcon != null) {
                         Modifier.trailingIcon(
-                            OutlinedGroup.Close,
-                            onClick = { onClick(index) },
+                            trailingIcon,
+                            onClick = { onTrailingIconClick?.invoke(index) },
                         )
                     } else {
                         Modifier
                     },
                     selected = itemSelections?.get(index) ?: false,
-                    onClick = {},
+                    onClick = {
+                        onClick(index)
+                    },
                 )
             }
         }
