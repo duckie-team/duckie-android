@@ -29,7 +29,6 @@ import team.duckie.quackquack.animation.animateQuackColorAsState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.quackClickable
 
-
 /**
  * 모든 Quack 컴포넌트에서 최하위로 사용되는 컴포넌트입니다.
  * 컴포넌트의 기본 모양을 정의합니다.

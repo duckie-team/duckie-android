@@ -56,7 +56,8 @@ internal fun HomeGuideScreen(
     val state = vm.collectAsState().value
     val pageCount = remember { GuideStep.values().size }
     val pagerState = rememberPagerState(
-        pageCount = { pageCount }
+
+        pageCount = { pageCount },
     )
     val coroutineScope = rememberCoroutineScope()
 

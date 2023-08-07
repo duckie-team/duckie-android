@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.common.compose.ui.quack.QuackSwitch
 import team.duckie.app.android.feature.setting.constans.SettingNotificationType
 import team.duckie.app.android.feature.setting.constans.SettingDesignToken
 import team.duckie.quackquack.ui.QuackText
@@ -75,9 +74,10 @@ private fun SettingNotificationLayout(
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        QuackSwitch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-        )
+//        QuackSwitch(
+//            checked = checked,
+//            onCheckedChange = onCheckedChange,
+//        )
+// TODO(limsaehyun) [QuackQuack] Switch 작업 필요!
     }
 }

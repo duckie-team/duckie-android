@@ -24,7 +24,6 @@ import team.duckie.app.android.feature.home.R
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.QuackColor as QuackV2Color
 
-
 @Suppress("UnusedPrivateMember") // 시험 생성하기를 추후에 다시 활용하기 위함
 @Composable
 internal fun HomeTopAppBar(

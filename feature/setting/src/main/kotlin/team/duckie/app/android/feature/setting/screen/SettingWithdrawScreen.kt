@@ -10,6 +10,7 @@
 package team.duckie.app.android.feature.setting.screen
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -33,32 +34,19 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.quack.QuackRoundCheckBox
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextArea
+import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.constans.Withdraweason
 import team.duckie.app.android.feature.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
-<<<<<<< HEAD
-=======
-import team.duckie.quackquack.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.animation.animateQuackColorAsState
->>>>>>> 45a2134... refactor: 설정 페이지 QuackV2로 마이그레이션
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
-<<<<<<< HEAD
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackReviewTextArea
-import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
-import team.duckie.quackquack.ui.modifier.quackClickable
-=======
 import team.duckie.quackquack.ui.QuackText
->>>>>>> 45a2134... refactor: 설정 페이지 QuackV2로 마이그레이션
 import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 import team.duckie.quackquack.ui.sugar.QuackSubtitle
@@ -111,7 +99,7 @@ internal fun SettingWithdrawScreen(
             )
         }
         item {
-            QuackAnimatedVisibility(visible = state.withdrawReasonSelected == Withdraweason.OTHERS) {
+            AnimatedVisibility(visible = state.withdrawReasonSelected == Withdraweason.OTHERS) {
                 QuackReactionTextArea(
                     modifier = Modifier
                         .padding(top = 4.dp)
@@ -124,7 +112,7 @@ internal fun SettingWithdrawScreen(
                     onReactionChanged = { text ->
                         vm.updateWithdrawUserInputReason(text)
                     },
-                    placeHolder = stringResource(
+                    placeHolderText = stringResource(
                         id = R.string.withdraw_others_text_field_hint,
                     ),
                     visibleCurrentLength = false,

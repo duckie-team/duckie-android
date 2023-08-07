@@ -6,8 +6,9 @@
  */
 
 @file:OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalDesignToken::class,
-    ExperimentalQuackQuackApi::class
+    ExperimentalComposeUiApi::class,
+    ExperimentalDesignToken::class,
+    ExperimentalQuackQuackApi::class,
 )
 
 package team.duckie.app.android.feature.profile.screen.edit
@@ -194,7 +195,7 @@ internal fun ProfileEditScreen(
                         } else {
                             QuackColor.Gray3.value
                         },
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     )
                     .textAreaCounter(maxLength = 60),
                 style = QuackTextAreaStyle.Default,

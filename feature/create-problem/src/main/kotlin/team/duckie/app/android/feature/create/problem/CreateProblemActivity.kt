@@ -82,7 +82,7 @@ class CreateProblemActivity : BaseActivity() {
                         .fillMaxSize()
                         .background(color = QuackColor.White.composeColor),
                     targetState = createProblemStep,
-                    label = "AnimatedContent"
+                    label = "AnimatedContent",
                 ) { step: CreateProblemStep ->
                     when (step) {
                         CreateProblemStep.Loading -> LoadingScreen(

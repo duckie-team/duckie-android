@@ -32,7 +32,6 @@ import team.duckie.quackquack.ui.QuackTagStyle
 import team.duckie.quackquack.ui.trailingIcon
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
-
 /**
  * [LazyRow] 형식으로 주어진 태그들을 **한 줄로** 배치합니다.
  * 이 컴포넌트는 항상 상위 컴포저블의 가로 길이만큼 width 가 지정됩니다.

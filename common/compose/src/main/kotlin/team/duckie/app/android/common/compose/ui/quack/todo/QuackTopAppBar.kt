@@ -32,7 +32,6 @@ import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
 
-
 /**
  * 덕키의 Top Navigation Bar 를 그립니다.
  * [QuackTopAppBar] 는 몇몇 중요한 특징이 있습니다.
@@ -102,7 +101,7 @@ fun QuackTopAppBar(
                 trailingText != null ||
                 onTrailingIconClick != null ||
                 onTrailingExtraIconClick != null ||
-                onTrailingTextClick != null
+                onTrailingTextClick != null,
     ) {
         "At least one param setting is required."
     }
@@ -111,7 +110,7 @@ fun QuackTopAppBar(
         runtimeCheck(
             trailingIcon == null && trailingExtraIcon == null && trailingText == null &&
                     onTrailingIconClick == null && onTrailingExtraIconClick == null &&
-                    onTrailingTextClick == null
+                    onTrailingTextClick == null,
         ) {
             "trailingContent 가 입력되었을 때는 다른 trailing content 인자들을 이용하실 수 없습니다."
         }
@@ -221,7 +220,6 @@ private object QuackTopAppBarDefaults {
         true -> ExtraIconPadding
         false -> IconPadding
     }
-
 
     /**
      * leading content 를 배치합니다.
@@ -370,7 +368,7 @@ private object QuackTopAppBarDefaults {
                             onClick = onTextClick,
                         )
                         .padding(
-                            paddingValues = TrailingTextPadding
+                            paddingValues = TrailingTextPadding,
                         ),
                     text = text,
                     typography = TrailingTypography,

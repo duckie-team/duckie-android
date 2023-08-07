@@ -10,11 +10,9 @@
 package team.duckie.app.android.feature.profile.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -70,11 +68,11 @@ fun MyProfileScreen(
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             QuackIcon(
                 modifier = Modifier.quackClickable(onClick = onClickNotification),
-                icon = QuackIcon.Outlined.Notice
+                icon = QuackIcon.Outlined.Notice,
             )
             QuackIcon(
                 modifier = Modifier.quackClickable(onClick = onClickSetting),
-                icon = QuackIcon.Outlined.Setting
+                icon = QuackIcon.Outlined.Setting,
             )
         }
     }

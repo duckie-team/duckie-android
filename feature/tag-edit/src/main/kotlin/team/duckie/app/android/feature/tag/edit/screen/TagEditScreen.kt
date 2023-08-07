@@ -121,7 +121,7 @@ fun TagEditSuccessScreen(
                             ),
                             singleLine = true,
                         )
-                    }
+                    },
                 )
 
                 // 내 관심 태그 영역

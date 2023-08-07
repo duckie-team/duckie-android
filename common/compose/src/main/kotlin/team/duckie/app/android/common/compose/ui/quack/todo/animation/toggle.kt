@@ -78,7 +78,7 @@ enum class QuackToggleIconSize(
             width = 14.dp,
             height = 14.dp,
         ),
-    )
+    ),
 }
 
 /**
@@ -183,7 +183,7 @@ private object QuackToggleDefaults {
     object ToggleButton {
         val IconSize = Small
         val Typography = QuackTypography.Body2.change(
-            color = QuackColor.Gray1
+            color = QuackColor.Gray1,
         )
 
         /**

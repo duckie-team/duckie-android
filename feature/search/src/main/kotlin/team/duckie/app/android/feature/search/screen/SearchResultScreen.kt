@@ -33,6 +33,7 @@ import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
