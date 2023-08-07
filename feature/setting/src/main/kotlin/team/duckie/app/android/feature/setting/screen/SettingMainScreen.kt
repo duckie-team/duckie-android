@@ -81,7 +81,7 @@ internal fun SettingMainScreen(
 }
 
 internal fun LazyListScope.titleSection(
-    @StringRes title: Int
+    @StringRes title: Int,
 ) {
     item {
         SettingContentLayout(

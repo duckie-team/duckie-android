@@ -10,6 +10,7 @@ package team.duckie.app.android.feature.setting.viewmodel.state
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.user.model.IgnoreUser
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.setting.constans.SettingType
@@ -30,5 +31,6 @@ internal data class SettingState(
     val withdrawUserInputReason: String = "",
     val withdrawIsFocused: Boolean = false,
 
-    val ignoreUsers: ImmutableList<IgnoreUser> = persistentListOf()
+    val ignoreUsers: ImmutableList<IgnoreUser> = persistentListOf(),
+    val ignoreExams: ImmutableList<IgnoreExam> = persistentListOf(),
 )

@@ -34,6 +34,13 @@ import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
+import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.kotlin.fastForEach
+import team.duckie.app.android.feature.home.constants.MainScreenType
+import team.duckie.quackquack.ui.component.QuackSubtitle
+import team.duckie.quackquack.ui.component.QuackTitle2
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackTitle2

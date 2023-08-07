@@ -8,5 +8,5 @@
 package team.duckie.app.android.domain.user.model
 
 data class UserBlock(
-    val id: Int
+    val id: Int,
 )

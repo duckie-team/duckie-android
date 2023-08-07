@@ -97,7 +97,7 @@ internal fun BasicContentWithButtonLayout(
             trailingButton.invoke(
                 modifier = modifier
                     .layoutId(TrailingButtonLayoutId)
-                    .skeleton(isLoading)
+                    .skeleton(isLoading),
             )
         },
         measurePolicy = getUserContentLayoutMeasurePolicy(
@@ -162,4 +162,3 @@ private fun getUserContentLayoutMeasurePolicy(
         }
     }
 }
-

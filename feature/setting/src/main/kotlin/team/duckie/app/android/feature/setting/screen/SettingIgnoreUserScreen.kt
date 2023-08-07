@@ -11,14 +11,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import team.duckie.app.android.common.compose.ui.UserIgnoreLayout
+import team.duckie.app.android.common.compose.ui.content.UserIgnoreLayout
 import team.duckie.app.android.feature.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
 
 @Composable
 internal fun SettingIgnoreUserScreen(
     vm: SettingViewModel,
-    state: SettingState
+    state: SettingState,
 ) {
     LaunchedEffect(key1 = Unit) {
         vm.getIgnoreUsers()
@@ -28,13 +28,13 @@ internal fun SettingIgnoreUserScreen(
         items(state.ignoreUsers) { item ->
             UserIgnoreLayout(
                 userId = item.id,
-                profileImgUrl = item.profileImageUrl,
+                profileImageIrl = item.profileImageUrl,
                 nickname = item.nickName,
                 favoriteTag = item.duckPower?.tag?.name ?: "",
                 tier = item.duckPower?.tier ?: "",
                 onClickTrailingButton = { userId ->
                     vm.cancelIgnoreUser(userId)
-                }
+                },
             )
         }
     }

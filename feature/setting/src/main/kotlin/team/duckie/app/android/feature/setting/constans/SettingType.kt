@@ -76,11 +76,6 @@ enum class SettingType(
             PrivacyPolicy,
         )
 
-        /** [AccountInfo] 안에 위치한 설정 */
-        private val accountInfoPages = persistentListOf(
-            WithDraw,
-        )
-
         val userSettings = persistentListOf(
             AccountInfo,
             ListOfIgnoreUser,
@@ -90,7 +85,7 @@ enum class SettingType(
         val otherSettings = persistentListOf(
             Inquiry,
             PrivacyPolicy,
-            Version
+            Version,
         )
     }
 }

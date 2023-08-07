@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @Immutable
 class CancelExamIgnoreUseCase @Inject constructor(
-    private val examRepository: ExamRepository
+    private val examRepository: ExamRepository,
 ) {
 
     suspend operator fun invoke(examId: Int) = runCatching {

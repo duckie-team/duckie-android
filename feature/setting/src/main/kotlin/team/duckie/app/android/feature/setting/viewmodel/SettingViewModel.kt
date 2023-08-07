@@ -17,6 +17,8 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.auth.usecase.ClearTokenUseCase
+import team.duckie.app.android.domain.exam.usecase.CancelExamIgnoreUseCase
+import team.duckie.app.android.domain.exam.usecase.GetExamIgnoresUseCase
 import team.duckie.app.android.domain.ignore.usecase.CancelUserIgnoreUseCase
 import team.duckie.app.android.domain.me.usecase.GetIsStageUseCase
 import team.duckie.app.android.domain.user.usecase.FetchIgnoreUsersUseCase
@@ -37,7 +39,9 @@ internal class SettingViewModel @Inject constructor(
     private val getIsStageUseCase: GetIsStageUseCase,
     private val clearTokenUseCase: ClearTokenUseCase,
     private val fetchIgnoreUsers: FetchIgnoreUsersUseCase,
-    private val cancelUserIgnoreUseCase: CancelUserIgnoreUseCase
+    private val cancelUserIgnoreUseCase: CancelUserIgnoreUseCase,
+    private val getIgnoreExamsUseCase: GetExamIgnoresUseCase,
+    private val cancelExamIgnoreUseCase: CancelExamIgnoreUseCase,
 ) : ContainerHost<SettingState, SettingSideEffect>, ViewModel() {
 
     override val container = container<SettingState, SettingSideEffect>(SettingState())
@@ -57,6 +61,27 @@ internal class SettingViewModel @Inject constructor(
         getMeUseCase()
             .onSuccess {
                 reduce { state.copy(me = it, isStage = isStage) }
+            }
+            .onFailure {
+                postSideEffect(SettingSideEffect.ReportError(it))
+            }
+    }
+
+    fun getIgnoreExams() = intent {
+        getIgnoreExamsUseCase()
+            .onSuccess { exams ->
+                reduce { state.copy(ignoreExams = exams.toImmutableList()) }
+            }
+            .onFailure {
+                postSideEffect(SettingSideEffect.ReportError(it))
+            }
+    }
+
+    fun cancelIgnoreExam(examId: Int) = intent {
+        cancelExamIgnoreUseCase(examId = examId)
+            .onSuccess {
+                val ignoreExams = state.ignoreExams.filter { it.id != examId }.toImmutableList()
+                reduce { state.copy(ignoreExams = ignoreExams) }
             }
             .onFailure {
                 postSideEffect(SettingSideEffect.ReportError(it))

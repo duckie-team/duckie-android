@@ -55,7 +55,7 @@ fun ExamIgnoreLayout(
                 enabled = true,
                 onClick = {
                     onClickTrailingButton(examId)
-                }
+                },
             )
         },
         visibleTrailingButton = visibleTrailingButton,
@@ -72,7 +72,6 @@ fun ExamIgnoreLayout(
         visibleHorizontalPadding = false,
     )
 }
-
 
 @Composable
 fun UserIgnoreLayout(
@@ -102,7 +101,7 @@ fun UserIgnoreLayout(
                 enabled = true,
                 onClick = {
                     onClickTrailingButton(userId)
-                }
+                },
             )
         },
         visibleTrailingButton = visibleTrailingButton,

@@ -37,8 +37,7 @@ import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.UserFollowingLayout
-import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
+import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel

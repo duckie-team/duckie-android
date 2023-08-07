@@ -143,6 +143,11 @@ class SettingActivity : BaseActivity() {
                                     vm = vm,
                                 )
 
+                                SettingType.ListOfIgnoreExam -> SettingIgnoreExamScreen(
+                                    vm = vm,
+                                    state = state,
+                                )
+
                                 else -> Unit
                             }
                         }
