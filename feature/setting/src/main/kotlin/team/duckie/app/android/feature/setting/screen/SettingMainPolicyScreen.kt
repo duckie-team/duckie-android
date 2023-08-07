@@ -37,7 +37,7 @@ fun SettingMainPolicyScreen(
             items(SettingType.policyPages) { page ->
                 SettingContentLayout(
                     title = stringResource(id = page.titleRes),
-                    typography = QuackTypography.Body2,
+                    typography = QuackTypography.Body1,
                 ) {
                     navigatePage(page)
                 }
@@ -47,7 +47,7 @@ fun SettingMainPolicyScreen(
                     title = stringResource(
                         id = R.string.open_source_license,
                     ),
-                    typography = QuackTypography.Body2,
+                    typography = QuackTypography.Body1,
                 ) {
                     navigateOssLicense()
                 }

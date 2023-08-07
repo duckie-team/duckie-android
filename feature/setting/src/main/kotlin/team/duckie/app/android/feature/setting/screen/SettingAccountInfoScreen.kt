@@ -100,7 +100,7 @@ fun SettingAccountInfoScreen(
                 SettingContentLayout(
                     title = stringResource(id = index.first),
                     onClick = index.second,
-                    typography = QuackTypography.Body2,
+                    typography = QuackTypography.Body1,
                 )
             }
         }

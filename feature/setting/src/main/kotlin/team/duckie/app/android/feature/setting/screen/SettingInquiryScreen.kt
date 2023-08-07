@@ -58,7 +58,7 @@ fun SettingInquiryScreen() {
                 SettingContentLayout(
                     title = stringResource(id = item.first),
                     content = item.second,
-                    typography = QuackTypography.Body2,
+                    typography = QuackTypography.Body1,
                 )
             }
         }

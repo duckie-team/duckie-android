@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.setting.constans.SettingDesignToken
 import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.modifier.quackClickable
 
 @Composable
 internal fun SettingContentLayout(
@@ -36,11 +36,12 @@ internal fun SettingContentLayout(
             .padding(vertical = 12.dp)
             .quackClickable(
                 rippleEnabled = false,
-            ) {
-                if (onClick != null) {
-                    onClick()
-                }
-            },
+                onClick = {
+                    if (onClick != null) {
+                        onClick()
+                    }
+                },
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
