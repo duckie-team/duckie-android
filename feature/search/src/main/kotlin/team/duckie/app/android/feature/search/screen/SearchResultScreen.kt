@@ -128,10 +128,10 @@ private fun SearchResultForUser(
                     favoriteTag = item?.favoriteTag ?: "",
                     tier = item?.tier ?: "",
                     isFollowing = item?.isFollowing ?: false,
-                    onClickFollow = { follow ->
+                    onClickTrailingButton = { follow ->
                         onClickFollow(item?.userId ?: 0, follow)
                     },
-                    isMine = myUserId == item?.userId,
+                    visibleTrailingButton = myUserId != item?.userId,
                     onClickUserProfile = onClickUserProfile,
                 )
             }

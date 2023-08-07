@@ -116,13 +116,13 @@ private fun HomeFollowingInitialRecommendUsers(
         recommendUser.fastForEach { user ->
             UserFollowingLayout(
                 userId = user.userId,
-                isMine = myUserId == user.userId,
+                visibleTrailingButton = myUserId != user.userId,
                 profileImgUrl = user.profileImgUrl,
                 nickname = user.nickname,
                 favoriteTag = user.favoriteTag,
                 tier = user.tier,
                 isFollowing = user.isFollowing,
-                onClickFollow = {
+                onClickTrailingButton = {
                     onClickFollowing(user.userId, it)
                 },
             )
