@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.common.compose.ui.content
 
 import androidx.compose.foundation.layout.aspectRatio
@@ -18,9 +20,10 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.CoverImageRatio
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSmallButton
-import team.duckie.quackquack.ui.component.QuackSmallButtonType
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val ProfileImageSize: DpSize = DpSize(32.dp, 32.dp)
 
@@ -48,14 +51,12 @@ fun ExamIgnoreLayout(
             append(if (likeNum != null) "· 좋아요 $likeNum" else "")
         },
         trailingButton = {
-            QuackSmallButton(
+            QuackButton(
                 modifier = it,
                 text = stringResource(id = R.string.cancel_igonre),
-                type = QuackSmallButtonType.Border,
+                style = QuackButtonStyle.PrimaryOutlinedSmall,
+                onClick = { onClickTrailingButton(examId) },
                 enabled = true,
-                onClick = {
-                    onClickTrailingButton(examId)
-                },
             )
         },
         visibleTrailingButton = visibleTrailingButton,
@@ -94,14 +95,12 @@ fun UserIgnoreLayout(
         description = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
         onClickLayout = onClickUserProfile,
         trailingButton = {
-            QuackSmallButton(
+            QuackButton(
                 modifier = it,
                 text = stringResource(id = R.string.cancel_igonre),
-                type = QuackSmallButtonType.Border,
+                style = QuackButtonStyle.SecondaryRoundSmall,
+                onClick = { onClickTrailingButton(userId) },
                 enabled = true,
-                onClick = {
-                    onClickTrailingButton(userId)
-                },
             )
         },
         visibleTrailingButton = visibleTrailingButton,
