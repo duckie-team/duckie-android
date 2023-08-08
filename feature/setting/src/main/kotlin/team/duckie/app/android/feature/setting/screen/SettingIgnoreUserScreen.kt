@@ -35,6 +35,7 @@ internal fun SettingIgnoreUserScreen(
                 onClickTrailingButton = { userId ->
                     vm.cancelIgnoreUser(userId)
                 },
+                rippleEnabled = false,
             )
         }
     }

@@ -59,6 +59,7 @@ fun SettingInquiryScreen() {
                     title = stringResource(id = item.first),
                     content = item.second,
                     typography = QuackTypography.Body1,
+                    horizontalArrangement = Arrangement.Start,
                 )
             }
         }

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.CoverImageRatio
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
+import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackImage
@@ -39,6 +40,7 @@ fun ExamIgnoreLayout(
     visibleTrailingButton: Boolean = true,
     onClickTrailingButton: (Int) -> Unit,
     isLoading: Boolean = false,
+    rippleEnabled: Boolean = false,
 ) {
     BasicContentWithButtonLayout(
         isLoading = isLoading,
@@ -51,12 +53,14 @@ fun ExamIgnoreLayout(
             append(if (likeNum != null) "· 좋아요 $likeNum" else "")
         },
         trailingButton = {
-            QuackButton(
-                modifier = it,
+            QuackButton( // FIXME(limsaehyun) enabled 버튼 모양이 disabled로 바뀌어버림
+                modifier = it.quackClickable {
+                    onClickTrailingButton(examId)
+                },
                 text = stringResource(id = R.string.cancel_igonre),
                 style = QuackButtonStyle.PrimaryOutlinedSmall,
-                onClick = { onClickTrailingButton(examId) },
-                enabled = true,
+                onClick = { },
+                enabled = false,
             )
         },
         visibleTrailingButton = visibleTrailingButton,
@@ -71,6 +75,7 @@ fun ExamIgnoreLayout(
         },
         isTitleCenter = likeNum == null && solverNum == null,
         visibleHorizontalPadding = false,
+        rippleEnabled = rippleEnabled,
     )
 }
 
@@ -81,6 +86,7 @@ fun UserIgnoreLayout(
     profileImageIrl: String,
     nickname: String,
     favoriteTag: String,
+    rippleEnabled: Boolean = true,
     tier: String,
     onClickUserProfile: ((Int) -> Unit)? = null,
     visibleTrailingButton: Boolean = true,
@@ -95,12 +101,14 @@ fun UserIgnoreLayout(
         description = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
         onClickLayout = onClickUserProfile,
         trailingButton = {
-            QuackButton(
-                modifier = it,
+            QuackButton( // FIXME(limsaehyun) enabled 버튼 모양이 disabled로 바뀌어버림
+                modifier = it.quackClickable {
+                    onClickTrailingButton(userId)
+                },
                 text = stringResource(id = R.string.cancel_igonre),
-                style = QuackButtonStyle.SecondaryRoundSmall,
-                onClick = { onClickTrailingButton(userId) },
-                enabled = true,
+                style = QuackButtonStyle.PrimaryOutlinedSmall,
+                onClick = { },
+                enabled = false,
             )
         },
         visibleTrailingButton = visibleTrailingButton,
@@ -113,5 +121,6 @@ fun UserIgnoreLayout(
         },
         isTitleCenter = tier.isEmpty() || favoriteTag.isEmpty(),
         visibleHorizontalPadding = false,
+        rippleEnabled = rippleEnabled,
     )
 }

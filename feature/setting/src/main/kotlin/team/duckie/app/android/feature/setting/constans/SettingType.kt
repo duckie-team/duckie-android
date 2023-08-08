@@ -84,7 +84,7 @@ enum class SettingType(
 
         val otherSettings = persistentListOf(
             Inquiry,
-            PrivacyPolicy,
+            MainPolicy,
             Version,
         )
     }

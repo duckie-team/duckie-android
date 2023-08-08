@@ -50,6 +50,7 @@ internal fun BasicContentWithButtonLayout(
     modifier: Modifier = Modifier,
     contentId: Int,
     nickname: String,
+    rippleEnabled: Boolean = true,
     description: String,
     onClickLayout: ((Int) -> Unit)? = null,
     visibleTrailingButton: Boolean = false,
@@ -62,6 +63,7 @@ internal fun BasicContentWithButtonLayout(
     Layout(
         modifier = modifier
             .quackClickable(
+                rippleEnabled = rippleEnabled,
                 onClick = {
                     if (onClickLayout != null) {
                         onClickLayout(contentId)

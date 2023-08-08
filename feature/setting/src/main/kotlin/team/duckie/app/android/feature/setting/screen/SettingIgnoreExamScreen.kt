@@ -33,6 +33,7 @@ internal fun SettingIgnoreExamScreen(
                 onClickTrailingButton = { examId ->
                     vm.cancelIgnoreExam(examId = examId)
                 },
+                rippleEnabled = false,
             )
         }
     }

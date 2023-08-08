@@ -28,6 +28,7 @@ internal fun SettingContentLayout(
     trailingText: String? = null,
     onTrailingTextClick: (() -> Unit)? = null,
     typography: QuackTypography = QuackTypography.Title2,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     onClick: (() -> Unit)? = null,
 ) = with(SettingDesignToken) {
     Row(
@@ -43,7 +44,7 @@ internal fun SettingContentLayout(
                 },
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = horizontalArrangement,
     ) {
         QuackText(
             text = title,
