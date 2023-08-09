@@ -11,6 +11,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.github.kittinunf.fuel.Fuel
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -25,17 +26,20 @@ import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.data._datasource.client
 import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._exception.util.responseCatchingFuel
+import team.duckie.app.android.data._util.jsonBody
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.exam.datasource.ExamInfoDataSource
 import team.duckie.app.android.data.exam.mapper.toData
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
+import team.duckie.app.android.data.exam.model.ExamMeBlocksResponse
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
 import team.duckie.app.android.data.exam.model.ProfileExamDatas
 import team.duckie.app.android.data.exam.paging.ExamMeFollowingPagingSource
 import team.duckie.app.android.data.exam.paging.ProfileExamPagingSource
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
@@ -174,6 +178,27 @@ class ExamRepositoryImpl @Inject constructor(
                 )
             },
         ).flow
+    }
+
+    override suspend fun getIgnoreExams(): List<IgnoreExam> {
+        val response = client.get("exams/me/blocks")
+        return responseCatching(
+            response = response,
+            parse = ExamMeBlocksResponse::toDomain,
+        )
+    }
+
+    override suspend fun cancelExamIgnore(examId: Int): Boolean {
+        val response = client.delete("exam-block") {
+            jsonBody {
+                "targetId" withInt examId
+            }
+        }
+
+        return responseCatching(response.status.value, response.bodyAsText()) { body ->
+            val json = body.toStringJsonMap()
+            json["success"]?.toBoolean() ?: duckieResponseFieldNpe("success")
+        }
     }
 
     override suspend fun getMadeExams(): List<ExamInfo> {

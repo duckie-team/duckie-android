@@ -179,7 +179,6 @@ private fun ContentSection(
 
     HorizontalPager(
         modifier = modifier,
-        pageCount = state.totalPage,
         state = pagerState,
         userScrollEnabled = false,
     ) { pageIndex ->

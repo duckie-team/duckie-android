@@ -43,20 +43,20 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.android.image.saveImageInGallery
-import team.duckie.app.android.common.compose.util.ComposeToBitmap
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.Download
 import team.duckie.app.android.common.compose.ui.icon.v2.DuckieTextLogo
+import team.duckie.app.android.common.compose.util.ComposeToBitmap
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
-import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.icons
@@ -251,9 +251,9 @@ private fun ExamResultImage(
         Spacer(space = 4.dp)
         QuackBody1(text = "${state.solvedCount}명 중 ${round(state.percent)}%!")
         Spacer(space = 24.dp)
-        QuackImage(
+        QuackIcon(
             modifier = Modifier.size(48.dp, 16.dp),
-            src = QuackIcon.DuckieTextLogo,
+            icon = QuackIcon.DuckieTextLogo,
         )
     }
 }

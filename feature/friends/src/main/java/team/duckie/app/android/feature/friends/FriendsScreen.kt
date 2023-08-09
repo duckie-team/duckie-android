@@ -32,19 +32,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
-import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
-import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
 import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.kotlin.FriendsType
+import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
+import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackMainTab
 
 @Composable
 internal fun FriendScreen(
@@ -59,7 +59,10 @@ internal fun FriendScreen(
         )
     }
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    val pagerState = rememberPagerState(initialPage = state.friendType.index)
+    val pagerState = rememberPagerState(
+        initialPage = state.friendType.index,
+        pageCount = { FriendsType.values().size },
+    )
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -83,7 +86,6 @@ internal fun FriendScreen(
         )
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),
-            pageCount = FriendsType.values().size,
             state = pagerState,
         ) { index ->
             if (state.isError) {
@@ -257,10 +259,10 @@ private fun FriendListScreen(
                 favoriteTag = item.favoriteTag,
                 tier = item.tier,
                 isFollowing = item.isFollowing,
-                onClickFollow = { follow ->
+                onClickTrailingButton = { follow ->
                     onClickFollow(item.userId, follow)
                 },
-                isMine = myUserId == item.userId,
+                visibleTrailingButton = myUserId != item.userId,
                 onClickUserProfile = onClickUserProfile,
             )
         }

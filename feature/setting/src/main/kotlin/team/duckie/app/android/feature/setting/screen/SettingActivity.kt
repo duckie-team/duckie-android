@@ -34,6 +34,7 @@ import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.common.compose.ui.DuckieTodoScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
@@ -47,8 +48,6 @@ import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
 import team.duckie.app.android.navigator.feature.intro.IntroNavigator
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.theme.QuackTheme
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -84,13 +83,9 @@ class SettingActivity : BaseActivity() {
                         .background(QuackColor.White.value)
                         .padding(systemBarPaddings),
                 ) {
-                    QuackTopAppBar(
-                        leadingIcon = QuackIcon.ArrowBack,
-                        leadingText = stringResource(id = state.settingType.titleRes),
-                        onLeadingIconClick = {
-                            vm.navigateBack()
-                        },
-                    )
+                    BackPressedHeadLine2TopAppBar(title = stringResource(id = state.settingType.titleRes)) {
+                        vm.navigateBack()
+                    }
                     Column(
                         modifier = Modifier
                             .padding(
@@ -134,6 +129,16 @@ class SettingActivity : BaseActivity() {
                                 SettingType.PrivacyPolicy -> SettingPrivacyPolicy()
                                 SettingType.TermsOfService -> SettingTermsOfServiceScreen()
                                 SettingType.WithDraw -> SettingWithdrawScreen(
+                                    vm = vm,
+                                    state = state,
+                                )
+
+                                SettingType.ListOfIgnoreUser -> SettingIgnoreUserScreen(
+                                    state = state,
+                                    vm = vm,
+                                )
+
+                                SettingType.ListOfIgnoreExam -> SettingIgnoreExamScreen(
                                     vm = vm,
                                     state = state,
                                 )

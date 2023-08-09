@@ -72,6 +72,7 @@ fun BackPressedHeadLineTopAppBar(
 fun BackPressedHeadLine2TopAppBar(
     title: String,
     isLoading: Boolean = false,
+    trailingContent: (@Composable () -> Unit)? = null,
     onBackPressed: () -> Unit,
 ) {
     BackPressedTopAppBar(onBackPressed = onBackPressed) {
@@ -79,5 +80,9 @@ fun BackPressedHeadLine2TopAppBar(
             modifier = Modifier.skeleton(isLoading),
             text = title,
         )
+        Spacer(weight = 1f)
+        if (trailingContent != null) {
+            trailingContent()
+        }
     }
 }

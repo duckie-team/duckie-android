@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import team.duckie.quackquack.material.QuackColor
@@ -43,11 +44,14 @@ fun RowScope.Divider(
  * @param modifier 이 컴포넌트에 사용할 [Modifier]
  */
 @Composable
-fun DuckieDivider(modifier: Modifier = Modifier) {
+fun DuckieDivider(
+    modifier: Modifier = Modifier,
+    color: Color = QuackColor.Gray3.value,
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(1.dp)
-            .background(color = QuackColor.Gray3.value),
+            .background(color = color),
     )
 }

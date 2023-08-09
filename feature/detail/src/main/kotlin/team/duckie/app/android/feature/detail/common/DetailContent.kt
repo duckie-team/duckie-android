@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -46,7 +45,7 @@ import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.More
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackTag
 import team.duckie.quackquack.ui.QuackTagStyle
 import team.duckie.quackquack.ui.QuackText
@@ -101,14 +100,14 @@ internal fun DetailContentLayout(
             )
 
             // 더보기 아이콘
-            QuackImage(
+            QuackIcon(
                 modifier = Modifier
                     .width(24.dp)
                     .height(24.dp)
                     .quackClickable(
                         onClick = moreButtonClick,
                     ),
-                src = QuackIcon.Outlined.More,
+                icon = QuackIcon.Outlined.More,
             )
         }
 

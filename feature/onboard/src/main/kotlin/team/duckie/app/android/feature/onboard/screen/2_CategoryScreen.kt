@@ -10,6 +10,7 @@
 
 package team.duckie.app.android.feature.onboard.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,6 +36,7 @@ import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackGridLayout
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImage
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImageType
 import team.duckie.app.android.common.kotlin.fastAny
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.fastMapIndexedNotNull
@@ -44,7 +46,6 @@ import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
-import team.duckie.quackquack.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.sugar.QuackTitle2
@@ -160,7 +161,7 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
                     )
                 }
             }
-            QuackAnimatedVisibility(
+            AnimatedVisibility(
                 modifier = Modifier
                     .layoutId(CategoryScreenNextButtonLayoutId)
                     .padding(horizontal = 20.dp)
@@ -205,7 +206,7 @@ private fun CategoryItem(
             src = imageUrl,
             size = DpSize(width = 80.dp, height = 80.dp),
             shape = RoundedCornerShape(size = 12.dp),
-            isCheckOverlay = true,
+            selectableType = QuackSelectableImageType.CheckOverlay,
             isSelected = isSelected,
             onClick = onClick,
         )

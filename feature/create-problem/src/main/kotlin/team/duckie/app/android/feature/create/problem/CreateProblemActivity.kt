@@ -11,6 +11,7 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.LoadingScreen
+import team.duckie.app.android.common.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.feature.create.problem.screen.AdditionalInformationScreen
 import team.duckie.app.android.feature.create.problem.screen.CreateProblemScreen
 import team.duckie.app.android.feature.create.problem.screen.ExamInformationScreen
@@ -37,13 +44,6 @@ import team.duckie.app.android.feature.create.problem.screen.SearchTagScreen
 import team.duckie.app.android.feature.create.problem.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.problem.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.create.problem.viewmodel.state.CreateProblemStep
-import team.duckie.app.android.common.compose.ui.ErrorScreen
-import team.duckie.app.android.common.compose.ui.LoadingScreen
-import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
-import team.duckie.app.android.common.kotlin.exception.DuckieResponseException
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.finishWithAnimation
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackTitle1
 import team.duckie.quackquack.ui.modifier.quackClickable
@@ -77,11 +77,12 @@ class CreateProblemActivity : BaseActivity() {
             }
 
             QuackTheme {
-                QuackAnimatedContent(
+                AnimatedContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = QuackColor.White.composeColor),
                     targetState = createProblemStep,
+                    label = "AnimatedContent",
                 ) { step: CreateProblemStep ->
                     when (step) {
                         CreateProblemStep.Loading -> LoadingScreen(

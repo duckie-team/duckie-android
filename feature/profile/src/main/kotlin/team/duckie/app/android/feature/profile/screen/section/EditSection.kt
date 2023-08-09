@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.profile.R
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 
 @Composable
 internal fun EditSection(
