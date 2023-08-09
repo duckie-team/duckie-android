@@ -32,7 +32,8 @@ import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
@@ -41,7 +42,6 @@ import team.duckie.app.android.feature.search.viewmodel.state.SearchState
 import team.duckie.quackquack.ui.color.QuackColor
 import team.duckie.quackquack.ui.component.QuackBody1
 import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackMainTab
 
 @Composable
 internal fun SearchResultScreen(
@@ -128,10 +128,10 @@ private fun SearchResultForUser(
                     favoriteTag = item?.favoriteTag ?: "",
                     tier = item?.tier ?: "",
                     isFollowing = item?.isFollowing ?: false,
-                    onClickFollow = { follow ->
+                    onClickTrailingButton = { follow ->
                         onClickFollow(item?.userId ?: 0, follow)
                     },
-                    isMine = myUserId == item?.userId,
+                    visibleTrailingButton = myUserId != item?.userId,
                     onClickUserProfile = onClickUserProfile,
                 )
             }

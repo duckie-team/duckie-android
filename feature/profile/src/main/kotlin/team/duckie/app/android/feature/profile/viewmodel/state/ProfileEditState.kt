@@ -19,7 +19,6 @@ data class ProfileEditState(
     val nicknameState: NicknameState = NicknameState.Checking,
     val galleryState: GalleryState = GalleryState(),
     val introduce: String = "",
-    val introduceFocused: Boolean = false,
     val userId: Int = 0,
 )
 

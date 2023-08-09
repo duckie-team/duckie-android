@@ -8,6 +8,7 @@
 package team.duckie.app.android.common.compose.ui.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -37,7 +38,6 @@ import team.duckie.app.android.common.compose.ui.icon.v1.SearchId
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
-import team.duckie.quackquack.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.quackClickable
@@ -100,7 +100,6 @@ fun SearchTagScreen(
                 ),
                 horizontalSpace = 4.dp,
                 items = tags,
-                tagTypeResId = QuackIcon.CloseId,
                 onClick = { onTagClick(it) },
                 itemChunkedSize = 3,
             )
@@ -129,7 +128,7 @@ fun SearchTagScreen(
             ),
         )
 
-        QuackAnimatedVisibility(
+        AnimatedVisibility(
             modifier = Modifier.padding(
                 top = 8.dp,
             ),

@@ -262,6 +262,7 @@ private fun RankingContent(
                 }
             }
         }
+
         Divider(color = QuackColor.Gray4.value)
     }
 }

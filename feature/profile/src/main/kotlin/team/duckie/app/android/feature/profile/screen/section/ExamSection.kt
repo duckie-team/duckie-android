@@ -30,7 +30,7 @@ import team.duckie.app.android.feature.profile.R
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 
@@ -55,11 +55,11 @@ fun ExamSection(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                QuackImage(
+                QuackIcon(
                     modifier = Modifier
                         .size(DpSize(24.dp, 24.dp))
                         .skeleton(isLoading),
-                    src = icon,
+                    icon = icon,
                 )
                 QuackTitle2(
                     modifier = Modifier.skeleton(isLoading),

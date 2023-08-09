@@ -22,10 +22,7 @@ import okhttp3.internal.immutableListOf
 import team.duckie.app.android.common.compose.ui.TextTabLayout
 import team.duckie.app.android.feature.home.R
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.ui.util.DpSize
 import team.duckie.quackquack.material.QuackColor as QuackV2Color
-
-internal val HomeIconSize = DpSize(24.dp)
 
 @Suppress("UnusedPrivateMember") // 시험 생성하기를 추후에 다시 활용하기 위함
 @Composable

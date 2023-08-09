@@ -29,7 +29,7 @@ import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
 import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowRight
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackTag
 import team.duckie.quackquack.ui.QuackTagStyle
 import team.duckie.quackquack.ui.trailingIcon
@@ -54,14 +54,14 @@ internal fun TopAppCustomBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        QuackImage(
+        QuackIcon(
             modifier = Modifier
                 .padding(6.dp)
                 .size(DpSize(24.dp, 24.dp))
                 .quackClickable(
                     onClick = { activity.finish() },
                 ),
-            src = QuackIcon.Outlined.ArrowBack,
+            icon = QuackIcon.Outlined.ArrowBack,
         )
 
         QuackTag(

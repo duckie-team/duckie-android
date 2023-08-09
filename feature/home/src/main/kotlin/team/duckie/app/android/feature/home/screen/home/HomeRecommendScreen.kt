@@ -8,6 +8,7 @@
 @file:OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalFoundationApi::class,
+    ExperimentalQuackQuackApi::class,
 )
 
 package team.duckie.app.android.feature.home.screen.home
@@ -61,11 +62,12 @@ import team.duckie.app.android.feature.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackLarge1
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackBody3
+import team.duckie.quackquack.ui.sugar.QuackLarge1
+import team.duckie.quackquack.ui.sugar.QuackPrimaryLargeButton
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
@@ -79,7 +81,9 @@ internal fun HomeRecommendScreen(
     navigateToSearch: (String) -> Unit,
     openExamBottomSheet: (Int) -> Unit,
 ) {
-    val pageState = rememberPagerState()
+    val pageState = rememberPagerState(
+        pageCount = { state.jumbotrons.size },
+    )
 
     val lazyRecommendations = homeViewModel.recommendations.collectAsLazyPagingItems()
 
@@ -115,7 +119,6 @@ internal fun HomeRecommendScreen(
 
             item {
                 HorizontalPager(
-                    pageCount = state.jumbotrons.size,
                     state = pageState,
                 ) { page ->
                     HomeRecommendJumbotronLayout(
@@ -194,18 +197,17 @@ private fun HomeRecommendJumbotronLayout(
             text = recommendItem.title,
         )
         Spacer(modifier = Modifier.height(12.dp))
-        QuackBody1(
+        QuackText(
             modifier = Modifier.skeleton(isLoading),
             text = recommendItem.content,
-            align = TextAlign.Center,
+            typography = QuackTypography.Body1.change(textAlign = TextAlign.Center),
         )
         Spacer(modifier = Modifier.height(24.dp))
-        QuackLargeButton(
-            modifier = Modifier.skeleton(isLoading),
-            type = QuackLargeButtonType.Fill,
+        QuackPrimaryLargeButton(
             text = recommendItem.buttonContent,
-            onClick = { onStartClicked(recommendItem.examId) },
+            modifier = Modifier.skeleton(isLoading),
             enabled = true,
+            onClick = { onStartClicked(recommendItem.examId) },
         )
         Spacer(modifier = Modifier.height(8.dp))
 

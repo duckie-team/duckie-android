@@ -51,18 +51,19 @@ import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackSubtitle2
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackBody3
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 internal const val ThumbnailRatio = 4f / 3f
 
 private val HomeProfileSize: DpSize = DpSize(
-    all = 32.dp,
+    width = 32.dp,
+    height = 32.dp,
 )
 
 @Composable
@@ -191,9 +192,7 @@ private fun TestCoverWithMaker(
                 .aspectRatio(ThumbnailRatio)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .quackClickable {
-                    onTestClick()
-                }
+                .quackClickable(onClick = onTestClick)
                 .skeleton(isLoading),
             model = cover,
             contentDescription = null,
@@ -250,10 +249,10 @@ private fun TestMakerLayout(
                     text = name,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                QuackBody3(
+                QuackText(
                     modifier = Modifier.skeleton(isLoading),
                     text = "$tier · $favoriteTag",
-                    color = QuackColor.Gray2,
+                    typography = QuackTypography.Body3.change(color = QuackColor.Gray2),
                 )
             }
         }
@@ -282,9 +281,9 @@ private fun HomeFollowingExamNotFoundScreen(
             },
         )
         Spacer(space = 60.dp)
-        QuackSubtitle(
+        QuackText(
             text = stringResource(id = R.string.home_following_exam_not_found_title),
-            align = TextAlign.Center,
+            typography = QuackTypography.Subtitle.change(textAlign = TextAlign.Center),
         )
         Spacer(space = 12.dp)
         QuackBody2(text = stringResource(id = R.string.home_following_exam_not_found_subtitle))

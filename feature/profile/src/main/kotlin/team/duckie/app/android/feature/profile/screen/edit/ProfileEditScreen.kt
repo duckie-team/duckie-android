@@ -5,7 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalComposeUiApi::class)
+@file:OptIn(
+    ExperimentalComposeUiApi::class,
+    ExperimentalDesignToken::class,
+    ExperimentalQuackQuackApi::class,
+)
 
 package team.duckie.app.android.feature.profile.screen.edit
 
@@ -14,6 +18,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +30,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -43,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextField
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.feature.profile.R
 import team.duckie.app.android.feature.profile.component.EditTopAppBar
@@ -54,8 +63,11 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.component.QuackErrorableTextField
-import team.duckie.quackquack.ui.component.QuackReviewTextArea
+import team.duckie.quackquack.ui.QuackTextArea
+import team.duckie.quackquack.ui.QuackTextAreaStyle
+import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
+import team.duckie.quackquack.ui.textAreaCounter
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private const val MaxNicknameLength = 12
 private const val MaxIntroductionLength = 60
@@ -66,6 +78,10 @@ internal fun ProfileEditScreen(
 ) {
     val context = LocalContext.current.applicationContext
     val state by vm.container.stateFlow.collectAsStateWithLifecycle()
+
+    // keyboard focused
+    val interactionSource = remember { MutableInteractionSource() }
+    val introduceTextFieldFocused = interactionSource.collectIsFocusedAsState().value
 
     val galleryState = remember(state) { state.galleryState }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -143,7 +159,6 @@ internal fun ProfileEditScreen(
                 text = stringResource(R.string.nickname),
                 typography = QuackTypography.Body1.change(color = QuackColor.Gray1),
             )
-            // TODO(riflockle7): quack v1 -> quack v2
             QuackErrorableTextField(
                 modifier = Modifier.skeleton(state.isLoading),
                 text = state.nickname,
@@ -170,18 +185,28 @@ internal fun ProfileEditScreen(
                 typography = QuackTypography.Body1.change(color = QuackColor.Gray1),
             )
             Spacer(space = 8.dp)
-            // TODO(riflockle7): quack v1 -> quack v2
-            QuackReviewTextArea(
-                // TODO(evergreenTree97) 배포 후 글자 수 제한있는 텍스트필드 구현
-                modifier = Modifier.skeleton(state.isLoading),
-                text = state.introduce,
-                onTextChanged = {
+            QuackTextArea(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.dp,
+                        color = if (introduceTextFieldFocused) {
+                            QuackColor.DuckieOrange.value
+                        } else {
+                            QuackColor.Gray3.value
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                    )
+                    .textAreaCounter(maxLength = 60),
+                style = QuackTextAreaStyle.Default,
+                value = state.introduce,
+                onValueChange = {
                     if (it.length <= MaxIntroductionLength) {
                         vm.inputIntroduce(it)
                     }
                 },
-                focused = state.introduceFocused,
                 placeholderText = stringResource(id = R.string.please_input_introduce),
+                interactionSource = interactionSource,
             )
         }
     }
