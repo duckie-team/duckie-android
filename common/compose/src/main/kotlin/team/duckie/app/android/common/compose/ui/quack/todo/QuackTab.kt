@@ -7,8 +7,6 @@
 
 package team.duckie.app.android.common.compose.ui.quack.todo
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,12 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackOptionalAnimationSpec
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -342,16 +338,6 @@ fun QuackMainTab(
 ): Unit = with(
     receiver = QuackTabDefaults.Main,
 ) {
-    // 최초 컴포지션시에는 0 -> tabUnderBarXOffsets[0] 으로 사이즈가 바뀌므로
-    // 이때도 애니메이션이 들어가는걸 방지하기 위해 사이즈 동적 계산이 끝난 후
-    // 배치될 때만 애니메이션이 적용될 수 있도록 합니다.
-    var isPlacedDone by remember(
-        key1 = titles,
-    ) {
-        mutableStateOf(
-            value = false,
-        )
-    }
     val titleSize = remember(
         key1 = titles,
     ) {
@@ -378,37 +364,6 @@ fun QuackMainTab(
             ),
         )
     }
-
-    // remember 보다 매번 연산이 더 저렴함
-    val selectedTabUnderlineStartXOffset = eachTabXOffsets[selectedTabIndex]
-    val selectedTabUnderlineWidth = eachTabWidths[selectedTabIndex]
-
-    /**
-     * [QuackOptionalAnimationSpec] 을 델리게이트 합니다.
-     * `SpecifyAnimationSpec` 린트를 억제하기 위한 함수입니다.
-     *
-     * @return [QuackOptionalAnimationSpec] 을 반환합니다.
-     */
-    @Suppress("FunctionName")
-    fun <T> QuackAnimationSpec() = QuackOptionalAnimationSpec<T>(
-        useAnimation = isPlacedDone,
-    )
-
-    val animatedSelectedTabUnderlineStartXOffset by animateFloatAsState(
-        targetValue = selectedTabUnderlineStartXOffset,
-        animationSpec = QuackAnimationSpec(),
-        finishedListener = {
-            if (selectedTabUnderlineStartXOffset > 0f) {
-                isPlacedDone = true
-            }
-        },
-        label = "FloatAnimation",
-    )
-    val animatedSelectedTabUnderlineWidth by animateIntAsState(
-        targetValue = selectedTabUnderlineWidth,
-        animationSpec = QuackAnimationSpec(),
-        label = "IntAnimation",
-    )
 
     TabTextLazyRow(
         modifier = modifier
@@ -451,8 +406,6 @@ public fun QuackSubTab(
 ): Unit = with(
     receiver = QuackTabDefaults.Sub,
 ) {
-    val density = LocalDensity.current
-
     // 최초 컴포지션시에는 0 -> tabUnderBarXOffsets[0] 으로 사이즈가 바뀌므로
     // 이때도 애니메이션이 들어가는걸 방지하기 위해 사이즈 동적 계산이 끝난 후
     // 배치될 때만 애니메이션이 적용될 수 있도록 합니다.
@@ -487,33 +440,6 @@ public fun QuackSubTab(
             value = 0,
         )
     }
-
-    // remember 보다 매번 연산이 더 저렴함
-    val selectedTabUnderlineStartXOffset = eachTabXOffsets[selectedTabIndex]
-        .plus(
-            other = with(
-                receiver = density,
-            ) {
-                TabStartPaddingValue.toPx()
-            },
-        )
-
-    /**
-     * [QuackOptionalAnimationSpec] 을 델리게이트 합니다.
-     * `SpecifyAnimationSpec` 린트를 억제하기 위한 함수입니다.
-     *
-     * @return [QuackOptionalAnimationSpec] 을 반환합니다.
-     */
-    @Suppress("FunctionName")
-    fun <T> QuackAnimationSpec() = QuackOptionalAnimationSpec<T>(
-        useAnimation = isPlacedDone,
-    )
-
-    val animatedSelectedTabUnderlineStartXOffset by animateFloatAsState(
-        targetValue = selectedTabUnderlineStartXOffset,
-        animationSpec = QuackAnimationSpec(),
-        label = "FloatAnimation",
-    )
 
     TabTextRow(
         modifier = modifier
