@@ -227,7 +227,7 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                     text = stringResource(R.string.kakaologin_button_label),
                     typography = QuackTypography.HeadLine2.change(
                         color = QuackColor(
-                            Color(ContextCompat.getColor(context, R.color.kakao_login_button_label))
+                            Color(ContextCompat.getColor(context, R.color.kakao_login_button_label)),
                         ),
                     ),
                 )

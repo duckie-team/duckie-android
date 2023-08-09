@@ -59,7 +59,7 @@ internal fun HomeGuideFeatureScreen(
                 typography = QuackTypography.HeadLine1.change(
                     color = QuackColor.DuckieOrange,
                     textAlign = TextAlign.Center,
-                )
+                ),
             )
             Image(
                 modifier = Modifier

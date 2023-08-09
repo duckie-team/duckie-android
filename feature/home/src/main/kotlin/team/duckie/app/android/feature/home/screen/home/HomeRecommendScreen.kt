@@ -7,7 +7,8 @@
 
 @file:OptIn(
     ExperimentalMaterialApi::class,
-    ExperimentalFoundationApi::class, ExperimentalQuackQuackApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalQuackQuackApi::class,
 )
 
 package team.duckie.app.android.feature.home.screen.home

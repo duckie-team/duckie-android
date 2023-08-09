@@ -16,7 +16,6 @@ import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Stable
 
-
 /**
  * 꽥꽥에서 사용할 [AnimationSpec] 에 대한 정보
  */

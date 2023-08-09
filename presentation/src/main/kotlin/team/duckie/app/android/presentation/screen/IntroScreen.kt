@@ -65,7 +65,7 @@ internal fun IntroScreen(
                     size = DpSize(
                         width = 110.dp,
                         height = 32.dp,
-                    )
+                    ),
                 ),
                 src = R.drawable.duckie_text_logo,
             )
@@ -77,7 +77,7 @@ internal fun IntroScreen(
                     size = DpSize(
                         width = 276.dp,
                         height = 255.dp,
-                    )
+                    ),
                 )
                 .offset(x = 125.dp),
             src = R.drawable.img_duckie_intro,

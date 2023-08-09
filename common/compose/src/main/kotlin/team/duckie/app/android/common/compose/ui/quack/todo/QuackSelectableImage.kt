@@ -117,7 +117,6 @@ fun QuackSelectableImage(
     }
 }
 
-
 /**
  * [QuackSelectableImage] 에서 selection 이 표시될 방식을 나타냅니다.
  *

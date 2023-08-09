@@ -225,8 +225,8 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                 QuackButton(
                     style = QuackButtonStyle.PrimaryLarge,
                     text = stringResource(R.string.button_next),
-                    enabled = profileScreenState == ProfileScreenState.Valid
-                            && nickname.isNotEmpty(),
+                    enabled = profileScreenState == ProfileScreenState.Valid &&
+                            nickname.isNotEmpty(),
                 ) {
                     navigateNextStep(
                         vm = vm,

@@ -37,7 +37,7 @@ import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.FriendsType
@@ -259,10 +259,10 @@ private fun FriendListScreen(
                 favoriteTag = item.favoriteTag,
                 tier = item.tier,
                 isFollowing = item.isFollowing,
-                onClickFollow = { follow ->
+                onClickTrailingButton = { follow ->
                     onClickFollow(item.userId, follow)
                 },
-                isMine = myUserId == item.userId,
+                visibleTrailingButton = myUserId != item.userId,
                 onClickUserProfile = onClickUserProfile,
             )
         }
