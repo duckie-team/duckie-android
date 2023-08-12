@@ -18,8 +18,6 @@ val QuackV1Icon.Companion.Create get() = R.drawable.ic_create_24
 
 val QuackV1Icon.Companion.Crown get() = R.drawable.ic_crown_12
 
-val QuackV1Icon.Companion.Clock get() = R.drawable.ic_clock_12
-
 // Quack V2 의 QuackIcon 을 통해 Quack V1 의 drawable Resource 를 가져오는 확장 변수
 
 val QuackV2Icon.ArrowBackId: Int get() = QuackV1Icon.ArrowBack.drawableId

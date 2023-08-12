@@ -13,6 +13,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -114,6 +115,7 @@ internal fun SolveProblemScreen(
             CloseAndPageTopBar(
                 modifier = Modifier
                     .layoutId(SolveProblemTopAppBarLayoutId)
+                    .fillMaxWidth()
                     .padding(start = 12.dp)
                     .padding(end = 16.dp),
                 onCloseClick = {

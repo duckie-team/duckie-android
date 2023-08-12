@@ -8,7 +8,6 @@
 package team.duckie.app.android.feature.solve.problem.question
 
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,9 +20,9 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.solve.problem.question.audio.AudioPlayer
 import team.duckie.app.android.feature.solve.problem.question.image.ImageBox
 import team.duckie.app.android.feature.solve.problem.question.video.VideoPlayer
-import team.duckie.quackquack.ui.component.QuackHeadLine2
+import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
-private val HorizontalPadding = PaddingValues(horizontal = 16.dp)
+private val HorizontalPadding = 16.dp
 
 @Composable
 internal fun ColumnScope.QuestionSection(
@@ -39,8 +38,8 @@ internal fun ColumnScope.QuestionSection(
         Modifier.weight(GetHeightRatioW328H240)
     }
     QuackHeadLine2(
+        modifier = Modifier.padding(horizontal = HorizontalPadding),
         text = "${page + 1}. ${question.text}",
-        padding = HorizontalPadding,
     )
     when (question) {
         is Question.Text -> {}
@@ -54,7 +53,7 @@ internal fun ColumnScope.QuestionSection(
 
         is Question.Audio -> {
             AudioPlayer(
-                modifier = Modifier.padding(paddingValues = HorizontalPadding),
+                modifier = Modifier.padding(horizontal = HorizontalPadding),
                 url = question.audioUrl,
             )
         }
