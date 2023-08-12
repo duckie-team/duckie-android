@@ -38,13 +38,15 @@ import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
-import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackHeadLine2
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackTab
+import team.duckie.quackquack.ui.QuackTabColors
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun FriendScreen(
@@ -68,22 +70,25 @@ internal fun FriendScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = QuackColor.White.composeColor)
+            .background(color = QuackColor.White.value)
             .padding(systemBarPaddings),
     ) {
         BackPressedHeadLine2TopAppBar(
             title = state.targetName,
             onBackPressed = onPrevious,
         )
-        QuackMainTab(
-            titles = tabs,
-            selectedTabIndex = pagerState.currentPage,
-            onTabSelected = { index ->
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(index)
+        QuackTab(
+            index = pagerState.currentPage,
+            colors = QuackTabColors.defaultTabColors(),
+        ) {
+            tabs.forEach { label ->
+                tab(label) { index ->
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
                 }
-            },
-        )
+            }
+        }
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),
             state = pagerState,
@@ -230,11 +235,13 @@ private fun MyPageFriendNotFoundScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(space = 74.5.dp)
-        QuackHeadLine2(
+        QuackText(
             modifier = Modifier.skeleton(isLoading),
             text = title,
-            color = QuackColor.Gray1,
-            align = TextAlign.Center,
+            typography = QuackTypography.HeadLine2.change(
+                color = QuackColor.Gray1,
+                textAlign = TextAlign.Center,
+            ),
         )
     }
 }
