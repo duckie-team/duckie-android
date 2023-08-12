@@ -26,12 +26,12 @@ dependencies {
         projects.common.kotlin,
         projects.common.compose,
         projects.common.android,
+        libs.kotlin.collections.immutable,
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,
         libs.compose.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
-        libs.quack.ui.components,
         libs.quack.v2.ui,
         libs.firebase.crashlytics,
         libs.exoplayer.core,

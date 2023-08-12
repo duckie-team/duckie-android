@@ -41,8 +41,8 @@ import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.solve.problem.answer.shortanswer.ShortAnswerForm
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
-import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
 @AllowMagicNumber("to get flexible image height")

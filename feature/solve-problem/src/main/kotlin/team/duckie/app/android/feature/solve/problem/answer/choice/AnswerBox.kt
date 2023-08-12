@@ -7,7 +7,10 @@
 
 package team.duckie.app.android.feature.solve.problem.answer.choice
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,17 +23,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSurface
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackBorder
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Check
+import team.duckie.quackquack.material.quackBorder
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun TextAnswerBox(
@@ -103,7 +109,7 @@ private fun TextAndCheck(
     ) {
         QuackText(
             text = text,
-            style = QuackTextStyle.Body1.change(
+            typography = QuackTypography.Body1.change(
                 color = when (selected) {
                     true -> QuackColor.DuckieOrange
                     else -> QuackColor.Black
@@ -111,11 +117,11 @@ private fun TextAndCheck(
                 textAlign = TextAlign.Start,
             ),
         )
-        QuackAnimatedVisibility(visible = selected) {
-            QuackImage(
-                src = QuackIcon.Check,
+        AnimatedVisibility(visible = selected) {
+            QuackIcon(
+                icon = QuackIcon.Outlined.Check,
                 tint = QuackColor.DuckieOrange,
-                size = DpSize(all = 18.dp),
+                size = 18.dp,
             )
         }
     }
@@ -128,12 +134,17 @@ private fun GraySurface(
     onClick: () -> Unit,
     content: @Composable (BoxScope.() -> Unit),
 ) {
-    QuackSurface(
-        modifier = modifier.fillMaxWidth(),
-        backgroundColor = QuackColor.Gray4,
-        border = setBoxBorder(selected = selected),
-        shape = RoundedCornerShape(size = 8.dp),
-        onClick = onClick,
+    val shape = RoundedCornerShape(size = 8.dp)
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(shape = shape)
+            .background(color = QuackColor.Gray4.value)
+            .quackClickable(onClick = onClick)
+            .quackBorder(
+                border = setBoxBorder(selected = selected),
+                shape = shape,
+            ),
         content = content,
     )
 }

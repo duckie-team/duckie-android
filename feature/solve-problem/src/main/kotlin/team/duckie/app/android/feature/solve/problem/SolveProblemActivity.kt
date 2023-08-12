@@ -42,8 +42,8 @@ import team.duckie.app.android.feature.solve.problem.screen.SolveProblemScreen
 import team.duckie.app.android.feature.solve.problem.viewmodel.SolveProblemViewModel
 import team.duckie.app.android.feature.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -76,7 +76,7 @@ class SolveProblemActivity : BaseActivity() {
                 QuackCrossfade(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor)
+                        .background(color = QuackColor.White.value)
                         .systemBarsPadding()
                         .navigationBarsPadding()
                         .imePadding(),

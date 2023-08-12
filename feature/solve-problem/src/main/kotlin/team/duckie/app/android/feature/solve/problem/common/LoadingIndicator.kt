@@ -13,15 +13,14 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 
-// TODO(EvergreenTree97): QuackLoadingIndicator로 통합 필요
 @Composable
 internal fun LoadingIndicator() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        CircularProgressIndicator(color = QuackColor.DuckieOrange.composeColor)
+        CircularProgressIndicator(color = QuackColor.DuckieOrange.value)
     }
 }
