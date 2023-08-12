@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.systemBarPaddings
-import team.duckie.app.android.common.compose.ui.icon.v1.ArrowBackId
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel

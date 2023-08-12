@@ -31,23 +31,24 @@ internal class NotificationViewModel @Inject constructor(
 
     fun getNotifications() = intent {
         startLoading()
-        getNotificationsUseCase().onSuccess { notifications ->
-            reduce {
-                state.copy(
-                    isLoading = false,
-                    isError = false,
-                    notifications = notifications.toImmutableList(),
-                )
+        getNotificationsUseCase()
+            .onSuccess { notifications ->
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        isError = false,
+                        notifications = notifications.toImmutableList(),
+                    )
+                }
+            }.onFailure {
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        isError = true,
+                        notifications = emptyList<Notification>().toImmutableList(),
+                    )
+                }
             }
-        }.onFailure {
-            reduce {
-                state.copy(
-                    isLoading = false,
-                    isError = true,
-                    notifications = emptyList<Notification>().toImmutableList(),
-                )
-            }
-        }
     }
 
     fun clickBackPress() = intent { postSideEffect(NotificationSideEffect.FinishActivity) }

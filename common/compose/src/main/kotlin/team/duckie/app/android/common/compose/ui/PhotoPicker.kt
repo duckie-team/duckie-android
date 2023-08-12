@@ -33,7 +33,6 @@ import com.ujizin.camposer.state.rememberCameraState
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.icon.v1.CameraId
-import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackGridLayout
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImage
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar

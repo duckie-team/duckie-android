@@ -184,6 +184,7 @@ private object QuackTopAppBarDefaults {
         width = 24.dp,
         height = 24.dp,
     )
+
     private val IconPadding = PaddingValues(
         all = 8.dp,
     )
@@ -233,16 +234,18 @@ private object QuackTopAppBarDefaults {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            QuackImage(
-                modifier = Modifier
-                    .size(IconSize)
-                    .padding(IconPadding)
-                    .quackClickable(
-                        rippleEnabled = false,
-                        onClick = onIconClick,
-                    ),
-                src = icon,
-            )
+            icon?.let {
+                QuackIcon(
+                    modifier = Modifier
+                        .padding(IconPadding)
+                        .quackClickable(
+                            rippleEnabled = false,
+                            onClick = onIconClick,
+                        ),
+                    icon = icon,
+                    size = 24.dp,
+                )
+            }
             text?.let {
                 // TODO: 최대 width 처리
                 // 아마 커스텀 레이아웃 필요할 듯
@@ -306,10 +309,12 @@ private object QuackTopAppBarDefaults {
                         typography = CenterTypography,
                         singleLine = true,
                     )
-                    QuackImage(
-                        modifier = Modifier.size(IconSize),
-                        src = textTrailingIcon,
+                }
+                textTrailingIcon?.let {
+                    QuackIcon(
+                        icon = textTrailingIcon,
                         tint = CenterIconTint,
+                        size = 24.dp,
                     )
                 }
             }

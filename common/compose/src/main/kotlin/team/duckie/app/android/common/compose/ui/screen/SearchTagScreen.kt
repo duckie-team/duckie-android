@@ -33,7 +33,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.ImeSpacer
-import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
 import team.duckie.app.android.common.compose.ui.icon.v1.SearchId
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
