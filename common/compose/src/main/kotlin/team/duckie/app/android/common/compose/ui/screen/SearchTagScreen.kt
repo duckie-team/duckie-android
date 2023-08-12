@@ -40,6 +40,8 @@ import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGri
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
 
@@ -86,7 +88,7 @@ fun SearchTagScreen(
     ) {
         QuackTopAppBar(
             leadingText = title,
-            trailingIconResId = QuackIcon.CloseId,
+            trailingIcon = QuackIcon.Outlined.Close,
             onTrailingIconClick = onCloseClick,
         )
 

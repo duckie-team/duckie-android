@@ -25,18 +25,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import team.duckie.app.android.feature.notification.R
-import team.duckie.app.android.feature.notification.viewmodel.NotificationViewModel
+import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.kotlin.getDiffDayFromToday
+import team.duckie.app.android.feature.notification.R
+import team.duckie.app.android.feature.notification.viewmodel.NotificationViewModel
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
 import team.duckie.quackquack.ui.component.QuackBody2
 import team.duckie.quackquack.ui.component.QuackBody3
 import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackTopAppBar
 import team.duckie.quackquack.ui.icon.QuackIcon
 import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.shape.SquircleShape
@@ -56,7 +59,7 @@ internal fun NotificationScreen(
 
     Column(modifier = modifier) {
         QuackTopAppBar(
-            leadingIcon = QuackIcon.ArrowBack,
+            leadingIcon = QuackIcon.Outlined.ArrowBack,
             leadingText = stringResource(id = R.string.notification),
             onLeadingIconClick = viewModel::clickBackPress,
         )

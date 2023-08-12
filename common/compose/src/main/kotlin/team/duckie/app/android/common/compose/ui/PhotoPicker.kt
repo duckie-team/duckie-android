@@ -42,6 +42,8 @@ import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
@@ -116,7 +118,7 @@ fun PhotoPicker(
 
     Column(modifier = modifier.zIndex(zIndex)) {
         QuackTopAppBar(
-            leadingIconResId = QuackIcon.CloseId,
+            leadingIcon = QuackIcon.Outlined.Close,
             onLeadingIconClick = onCloseClick,
             centerText = stringResource(R.string.topappbar_filter_full),
             trailingContent = {
