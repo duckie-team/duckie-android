@@ -32,7 +32,6 @@ import team.duckie.app.android.common.compose.ui.NoItemScreen
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.kotlin.getDiffDayFromToday
 import team.duckie.app.android.feature.notification.R
 import team.duckie.app.android.feature.notification.viewmodel.NotificationViewModel
 import team.duckie.quackquack.material.icon.QuackIcon
@@ -43,7 +42,6 @@ import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackBody3
-import java.util.Date
 
 @Composable
 internal fun NotificationScreen(

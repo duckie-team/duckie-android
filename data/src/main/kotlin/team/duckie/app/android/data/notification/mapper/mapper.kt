@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.notification.mapper
 
-import team.duckie.app.android.data._util.toDate
 import team.duckie.app.android.data.notification.model.NotificationResponse
 import team.duckie.app.android.data.notification.model.NotificationsResponse
 import team.duckie.app.android.domain.notification.model.Notification

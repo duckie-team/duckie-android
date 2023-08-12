@@ -8,7 +8,6 @@
 package team.duckie.app.android.domain.notification.model
 
 import androidx.compose.runtime.Immutable
-import java.util.Date
 
 @Immutable
 data class Notification(
