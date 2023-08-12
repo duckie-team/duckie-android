@@ -7,13 +7,13 @@
 
 package team.duckie.app.android.feature.solve.problem.question.video
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -31,11 +31,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.feature.solve.problem.R
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -51,7 +51,7 @@ internal fun VideoController(
     onTimeChanged: (Float) -> Unit,
 ) {
     var sliderHeight by remember { mutableStateOf(0) }
-    QuackAnimatedVisibility(
+    AnimatedVisibility(
         modifier = modifier,
         visible = isVisible(),
     ) {
@@ -63,22 +63,23 @@ internal fun VideoController(
             )
             Column(
                 modifier = Modifier
-                .align(alignment = Alignment.BottomCenter)
-                .offset {
-                    IntOffset(
-                        x = 0,
-                        y = sliderHeight / 2,
-                    )
-                },
+                    .align(alignment = Alignment.BottomCenter)
+                    .offset {
+                        IntOffset(
+                            x = 0,
+                            y = sliderHeight / 2,
+                        )
+                    },
             ) {
-                QuackBody3(
-                    modifier = Modifier.padding(start = 12.dp),
+                QuackText(
                     text = stringResource(
                         id = R.string.current_between_total,
                         currentTime().formatMinSec(),
                         totalTime().formatMinSec(),
                     ),
-                    color = QuackColor.Gray3,
+                    typography = QuackTypography.Body3.change(
+                        color = QuackColor.Gray3,
+                    ),
                 )
                 VideoSlider(
                     modifier = Modifier
@@ -112,7 +113,7 @@ internal fun InteractionButton(
             modifier = modifier
                 .fillMaxSize()
                 .alpha(alpha = 0.2f)
-                .background(color = QuackColor.Black.composeColor),
+                .background(color = QuackColor.Black.value),
         )
         QuackImage(
             modifier = modifier,
