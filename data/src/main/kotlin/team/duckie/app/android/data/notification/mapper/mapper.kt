@@ -20,10 +20,10 @@ internal fun NotificationsResponse.toDomain() =
 
 internal fun NotificationResponse.toDomain() = Notification(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
-    title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
+    title = title,
     body = body ?: duckieResponseFieldNpe("${this::class.java.simpleName}.body"),
     thumbnailUrl = thumbnailUrl
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
-    createdAt = createdAt?.toDate()
+    createdAt = createdAt
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.createdAt"),
 )
