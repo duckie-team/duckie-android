@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.icon.v1.TextLogoId
@@ -42,51 +43,46 @@ import team.duckie.quackquack.ui.icon.QuackIcon as QuackV1Icon
  *   로고 리소스로는 [QuackIcon.TextLogoId] 를 사용합니다.
  * - [centerText] 값이 있다면 [showLogoAtCenter] 값은 무시됩니다.
  *   또한 [centerText] 는 trailing content 로 아이콘을 배치할 수 있습니다.
- * - [trailingExtraIconResId] 과 [trailingIconResId] 이 하나라도 들어왔다면 [trailingText] 는 무시되며,
- *   `[trailingExtraIconResId] [trailingIconResId]` 순서로 배치됩니다.
- * - [trailingText] 값이 입력되면 [trailingExtraIconResId] 과 [trailingIconResId] 값은 무시됩니다.
- * - [trailingContent] 이 있다면 [trailingIconResId], [trailingExtraIconResId], [trailingText],
+ * - [trailingExtraIcon] 과 [trailingIcon] 이 하나라도 들어왔다면 [trailingText] 는 무시되며,
+ *   `[trailingExtraIcon] [trailingIcon]` 순서로 배치됩니다.
+ * - [trailingText] 값이 입력되면 [trailingExtraIcon] 과 [trailingIcon] 값은 무시됩니다.
+ * - [trailingContent] 이 있다면 [trailingIcon], [trailingExtraIcon], [trailingText],
  *   [onTrailingIconClick], [onTrailingExtraIconClick], [onTrailingTextClick] 값은 무시됩니다.
  *
  * @param modifier 이 컴포넌트에 적용할 [Modifier]
- * @param leadingIconResId leading content 로 배치할 아이콘 resId
+ * @param leadingIcon leading content 로 배치할 아이콘 resId
  * @param leadingText leading content 로 배치할 텍스트. 선택적으로 값을 받습니다.
- * @param onLeadingIconClick [leadingIconResId] 이 클릭됐을 때 실행될 람다
+ * @param onLeadingIconClick [leadingIcon] 이 클릭됐을 때 실행될 람다
  * @param showLogoAtCenter center content 로 덕키의 로고를 배치할지 여부
  * @param centerText center content 에 로고 대신에 표시할 텍스트
- * @param centerTextTrailingIconResId [centerText] 의 trailing content 로 배치할 아이콘 resId
+ * @param centerTextTrailingIcon [centerText] 의 trailing content 로 배치할 아이콘 resId
  * @param onCenterClick center content 가 클릭됐을 때 실행될 람다
  * @param trailingContent trailing content 로 배치할 컴포넌트
- * @param trailingIconResId trailing content 로 배치할 아이콘
- * @param trailingExtraIconResId trailing content 에 추가로 배치할 아이콘
+ * @param trailingIcon trailing content 로 배치할 아이콘
+ * @param trailingExtraIcon trailing content 에 추가로 배치할 아이콘
  * @param trailingText trailing content 에 배치할 텍스트
- * @param onTrailingIconClick [trailingIconResId] 이 클릭됐을 때 실행될 람다
- * @param onTrailingExtraIconClick [trailingExtraIconResId] 이 클릭됐을 때 실행될 람다
+ * @param onTrailingIconClick [trailingIcon] 이 클릭됐을 때 실행될 람다
+ * @param onTrailingExtraIconClick [trailingExtraIcon] 이 클릭됐을 때 실행될 람다
  * @param onTrailingTextClick [trailingText] 가 클릭됐을 때 실행될 람다
  */
 @Composable
 fun QuackTopAppBar(
     modifier: Modifier = Modifier,
-    leadingIconResId: Int? = null,
+    leadingIcon: ImageVector? = null,
     leadingText: String? = null,
     onLeadingIconClick: (() -> Unit)? = null,
     showLogoAtCenter: Boolean? = null,
     centerText: String? = null,
-    centerTextTrailingIconResId: Int? = null,
+    centerTextTrailingIcon: ImageVector? = null,
     onCenterClick: (() -> Unit)? = null,
     trailingContent: (@Composable () -> Unit)? = null,
-    trailingIconResId: Int? = null,
-    trailingExtraIconResId: Int? = null,
+    trailingIcon: ImageVector? = null,
+    trailingExtraIcon: ImageVector? = null,
     trailingText: String? = null,
     onTrailingIconClick: (() -> Unit)? = null,
     onTrailingExtraIconClick: (() -> Unit)? = null,
     onTrailingTextClick: (() -> Unit)? = null,
 ) {
-    val leadingIcon = leadingIconResId?.toQuackV1Icon
-    val centerTextTrailingIcon = centerTextTrailingIconResId?.toQuackV1Icon
-    val trailingIcon = trailingIconResId?.toQuackV1Icon
-    val trailingExtraIcon = trailingExtraIconResId?.toQuackV1Icon
-
     runtimeCheck(
         leadingIcon != null ||
                 leadingText != null ||
@@ -230,7 +226,7 @@ private object QuackTopAppBarDefaults {
      */
     @Composable
     fun LeadingContent(
-        icon: QuackV1Icon?,
+        icon: ImageVector?,
         text: String? = null,
         onIconClick: (() -> Unit)? = null,
     ) {
@@ -276,7 +272,7 @@ private object QuackTopAppBarDefaults {
     fun CenterContent(
         showLogo: Boolean? = null,
         text: String? = null,
-        textTrailingIcon: team.duckie.quackquack.ui.icon.QuackIcon? = null,
+        textTrailingIcon: ImageVector? = null,
         onClick: (() -> Unit)? = null,
     ) {
         if (showLogo == true) {
@@ -336,8 +332,8 @@ private object QuackTopAppBarDefaults {
      */
     @Composable
     fun TrailingContent(
-        icon: QuackV1Icon? = null,
-        extraIcon: QuackV1Icon? = null,
+        icon: ImageVector? = null,
+        extraIcon: ImageVector? = null,
         text: String? = null,
         onIconClick: (() -> Unit)? = null,
         onExtraIconClick: (() -> Unit)? = null,
@@ -376,8 +372,8 @@ private object QuackTopAppBarDefaults {
                 )
             }
             extraIcon?.let {
-                QuackImage(
-                    src = extraIcon,
+                QuackIcon(
+                    icon = extraIcon,
                     modifier = Modifier
                         .size(IconSize)
                         .padding(trailingIconPaddingFor(hasExtraIcon = true))
@@ -388,8 +384,8 @@ private object QuackTopAppBarDefaults {
                 )
             }
             icon?.let {
-                QuackImage(
-                    src = icon,
+                QuackIcon(
+                    icon = icon,
                     modifier = Modifier
                         .size(IconSize)
                         .padding(trailingIconPaddingFor(hasExtraIcon = extraIcon != null))
