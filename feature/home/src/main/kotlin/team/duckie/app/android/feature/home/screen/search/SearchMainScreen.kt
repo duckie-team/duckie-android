@@ -5,13 +5,20 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(
+    ExperimentalMaterialApi::class,
+    ExperimentalLayoutApi::class,
+    ExperimentalQuackQuackApi::class,
+)
 
 package team.duckie.app.android.feature.home.screen.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,7 +49,6 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.icon.v1.SearchId
-import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.constants.MainScreenType
@@ -52,8 +58,11 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackTag
+import team.duckie.quackquack.ui.QuackTagStyle
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackTitle2
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val SearchScreenHorizontalPaddingDp = 16.dp
 
@@ -136,16 +145,22 @@ internal fun SearchMainScreen(
                 modifier = Modifier.padding(start = SearchScreenHorizontalPaddingDp),
                 text = stringResource(id = R.string.popular_tag),
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            // TODO(limsaehyun): 추후 꽥꽥에서, 전체 너비만큼 태그 Composable 을 넣을 수 있는 Composable 적용 필요
-            QuackLazyVerticalGridTag(
+            Spacer(modifier = Modifier.height(12.dp))
+            FlowRow(
                 modifier = Modifier.padding(horizontal = SearchScreenHorizontalPaddingDp),
-                items = state.popularTags.map { it.name },
-                onClick = { index ->
-                    vm.navigateToSearch(searchTag = state.popularTags[index].name)
-                },
-                itemChunkedSize = 5,
-            )
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                state.popularTags.forEach { tag ->
+                    QuackTag(
+                        text = tag.name,
+                        style = QuackTagStyle.Filled,
+                        selected = false,
+                    ) {
+                        vm.navigateToSearch(searchTag = tag.name)
+                    }
+                }
+            }
         }
 
         PullRefreshIndicator(

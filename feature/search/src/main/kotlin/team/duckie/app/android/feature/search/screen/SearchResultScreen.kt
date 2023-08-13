@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -33,15 +34,16 @@ import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
-import team.duckie.app.android.common.compose.ui.quack.todo.QuackMainTab
+import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.search.viewmodel.state.SearchState
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackHeadLine1
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackTab
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun SearchResultScreen(
@@ -54,22 +56,24 @@ internal fun SearchResultScreen(
     val searchUsers = vm.searchUsers.collectAsLazyPagingItems()
     val searchExams = vm.searchExams.collectAsLazyPagingItems()
 
-    val tabTitles = SearchResultStep.values().map {
-        it.title
-    }.toPersistentList()
+    val tabTitles = remember {
+        SearchResultStep.values().map { step ->
+            step.title
+        }.toPersistentList()
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .nestedScroll(rememberNestedScrollInteropConnection()),
     ) {
-        QuackMainTab(
-            titles = tabTitles,
-            selectedTabIndex = state.tagSelectedTab.index,
-            onTabSelected = { index ->
-                vm.updateSearchResultTab(SearchResultStep.toStep(index))
-            },
-        )
+        QuackTab(index = state.tagSelectedTab.index) {
+            tabTitles.fastForEach { label ->
+                tab(label) { index ->
+                    vm.updateSearchResultTab(SearchResultStep.toStep(index))
+                }
+            }
+        }
         when (state.tagSelectedTab) {
             SearchResultStep.DuckExam -> {
                 SearchResultForExam(
@@ -108,14 +112,18 @@ private fun SearchResultForUser(
                 .padding(top = 60.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            QuackHeadLine1(
+            QuackText(
                 text = stringResource(id = R.string.no_search_user),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.HeadLine1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
             Spacer(space = 12.dp)
-            QuackBody1(
+            QuackText(
                 text = stringResource(id = R.string.search_another_keyword),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.Body1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
         }
     } else {
@@ -151,14 +159,18 @@ private fun SearchResultForExam(
                 .padding(top = 60.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            QuackHeadLine1(
+            QuackText(
                 text = stringResource(id = R.string.no_search_exam),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.HeadLine1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
             Spacer(space = 12.dp)
-            QuackBody1(
+            QuackText(
                 text = stringResource(id = R.string.search_another_keyword),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.Body1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
         }
     } else {
