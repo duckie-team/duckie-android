@@ -51,11 +51,13 @@ import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.theme.QuackTheme
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.theme.QuackTheme
+import team.duckie.quackquack.ui.QuackIcon
 import javax.inject.Inject
 
 internal val SearchHorizontalPadding = PaddingValues(horizontal = 16.dp)
@@ -101,7 +103,7 @@ class SearchActivity : BaseActivity() {
                     contentAlignment = Alignment.Center,
                 ) {
                     Column(
-                        modifier = Modifier.background(QuackColor.White.composeColor),
+                        modifier = Modifier.background(QuackColor.White.value),
                     ) {
                         SearchTextFieldTopBar(
                             searchKeyword = state.searchKeyword,
@@ -210,10 +212,9 @@ private fun SearchTextFieldTopBar(
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        QuackImage(
-            src = QuackIcon.ArrowBack,
-            size = DpSize(all = 24.dp),
-            onClick = onPrevious,
+        QuackIcon(
+            modifier = Modifier.quackClickable(onClick = onPrevious),
+            icon = QuackIcon.Outlined.ArrowBack,
         )
         Spacer(space = 8.dp)
         QuackNoUnderlineTextField(
