@@ -30,6 +30,7 @@ dependencies {
         libs.ktx.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
         libs.compose.lifecycle.runtime,
-        libs.quack.ui.components,
+        libs.quack.v2.ui,
+        libs.kotlin.collections.immutable,
     )
 }
