@@ -91,7 +91,11 @@ fun FlexibleSubjectiveQuestionSection(
             text = "${pageIndex + 1}. ${question.text}",
         )
         Spacer(space = 12.dp)
-        BoxWithConstraints {
+        BoxWithConstraints(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        ) {
             val actualHeight =
                 if (maxHeight - textFieldHeight - TextFieldMargin.Vertical >= flexibleImageHeight) {
                     flexibleImageHeight
@@ -103,7 +107,6 @@ fun FlexibleSubjectiveQuestionSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(max = actualHeight)
-                    .padding(horizontal = 16.dp)
                     .background(
                         color = QuackColor.Black.value,
                         shape = RoundedCornerShape(16.dp),

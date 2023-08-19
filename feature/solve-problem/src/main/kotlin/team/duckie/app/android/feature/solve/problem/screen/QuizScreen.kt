@@ -15,9 +15,11 @@ package team.duckie.app.android.feature.solve.problem.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
@@ -198,13 +200,19 @@ private fun ContentSection(
 
         when {
             // for keyboard flexible image height
-            problem.isSubjective() && problem.question.isImage() -> FlexibleSubjectiveQuestionSection(
-                problem = problem,
-                pageIndex = pageIndex,
-                updateInputAnswers = updateInputAnswers,
-                requestFocus = requestFocus,
-                keyboardController = keyboardController,
-            )
+            problem.isSubjective() && problem.question.isImage() -> Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                FlexibleSubjectiveQuestionSection(
+                    problem = problem,
+                    pageIndex = pageIndex,
+                    updateInputAnswers = updateInputAnswers,
+                    requestFocus = requestFocus,
+                    keyboardController = keyboardController,
+                )
+            }
 
             else -> Column(
                 modifier = Modifier
