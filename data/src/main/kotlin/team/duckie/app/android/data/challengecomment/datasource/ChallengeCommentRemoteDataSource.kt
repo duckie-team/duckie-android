@@ -27,4 +27,10 @@ interface ChallengeCommentRemoteDataSource {
     suspend fun postChallengeCommentHeart(commentId: Int): Int
 
     suspend fun deleteChallengeCommentHeart(commentId: Int): Boolean
+
+    suspend fun reportChallengeComment(challengeId: Int): Boolean
+
+    suspend fun writeChallengeComment(challengeId: Int, message: String): Boolean
+
+    suspend fun deleteChallengeComment(commentId: Int): Boolean
 }
