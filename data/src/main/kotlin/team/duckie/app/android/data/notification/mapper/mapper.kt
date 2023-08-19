@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.data.notification.mapper
 
-import team.duckie.app.android.data._util.toDate
 import team.duckie.app.android.data.notification.model.NotificationResponse
 import team.duckie.app.android.data.notification.model.NotificationsResponse
 import team.duckie.app.android.domain.notification.model.Notification
@@ -20,10 +19,10 @@ internal fun NotificationsResponse.toDomain() =
 
 internal fun NotificationResponse.toDomain() = Notification(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
-    title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
+    title = title,
     body = body ?: duckieResponseFieldNpe("${this::class.java.simpleName}.body"),
     thumbnailUrl = thumbnailUrl
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
-    createdAt = createdAt?.toDate()
+    createdAt = createdAt
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.createdAt"),
 )

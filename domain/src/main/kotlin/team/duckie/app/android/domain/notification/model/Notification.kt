@@ -8,15 +8,14 @@
 package team.duckie.app.android.domain.notification.model
 
 import androidx.compose.runtime.Immutable
-import java.util.Date
 
 @Immutable
 data class Notification(
     val id: Int,
-    val title: String,
+    val title: String?,
     val body: String,
     val thumbnailUrl: String,
-    val createdAt: Date,
+    val createdAt: String,
 ) {
     companion object {
         fun empty(id: Int = 0) = Notification(
@@ -24,7 +23,7 @@ data class Notification(
             title = "",
             body = "",
             thumbnailUrl = "",
-            createdAt = Date(0),
+            createdAt = "",
         )
     }
 }
