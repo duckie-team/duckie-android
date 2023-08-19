@@ -120,18 +120,18 @@ private fun InfoBox(
                     stringResource(
                         id = R.string.start_exam_information_before_quiz_line2_infix,
                         limitTime.toString(),
-                    ),
+                    )
                 ),
                 style = SpanStyle(
                     color = QuackColor.Black.value,
                     fontWeight = FontWeight.Bold,
-                ),
+                )
             ),
             typography = QuackTypography.Body2,
-            text = stringResource(id = R.string.start_exam_information_before_quiz_line2_prefix) +
-                    stringResource(
+            text = stringResource(id = R.string.start_exam_information_before_quiz_line2_prefix)
+                    + stringResource(
                 id = R.string.start_exam_information_before_quiz_line2_infix,
-                limitTime.toString(),
+                limitTime.toString()
             ) + stringResource(id = R.string.start_exam_information_before_quiz_line2_postfix),
         )
     }

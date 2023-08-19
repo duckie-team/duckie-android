@@ -17,20 +17,13 @@ public val QuackIcon.Clock: ImageVector
             return _vector!!
         }
         _vector = Builder(
-            name = "Vector",
-            defaultWidth = 12.0.dp,
-            defaultHeight = 12.0.dp,
-            viewportWidth = 12.0f,
-            viewportHeight = 12.0f,
+            name = "Vector", defaultWidth = 12.0.dp, defaultHeight = 12.0.dp,
+            viewportWidth = 12.0f, viewportHeight = 12.0f
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF222222)),
-                stroke = null,
-                strokeLineWidth = 0.0f,
-                strokeLineCap = Butt,
-                strokeLineJoin = Miter,
-                strokeLineMiter = 4.0f,
-                pathFillType = NonZero,
+                fill = SolidColor(Color(0xFF222222)), stroke = null, strokeLineWidth = 0.0f,
+                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                pathFillType = NonZero
             ) {
                 moveTo(6.0f, 1.2f)
                 curveTo(4.727f, 1.2f, 3.5061f, 1.7057f, 2.6059f, 2.6059f)
