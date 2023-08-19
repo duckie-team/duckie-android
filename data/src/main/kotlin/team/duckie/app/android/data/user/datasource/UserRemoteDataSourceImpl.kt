@@ -35,6 +35,8 @@ import team.duckie.app.android.common.kotlin.ExperimentalApi
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.common.kotlin.runtimeCheck
+import team.duckie.app.android.data.user.model.UserMeIgnoreResponse
+import team.duckie.app.android.domain.user.model.IgnoreUser
 import javax.inject.Inject
 
 class UserRemoteDataSourceImpl @Inject constructor(
@@ -153,6 +155,14 @@ class UserRemoteDataSourceImpl @Inject constructor(
         return responseCatching(
             response = response.body(),
             parse = UsersResponse::toDomain,
+        )
+    }
+
+    override suspend fun fetchIgnoreUsers(): List<IgnoreUser> {
+        val response = client.get("users/me/blocks")
+        return responseCatching(
+            response = response.body(),
+            parse = UserMeIgnoreResponse::toDomain,
         )
     }
 }

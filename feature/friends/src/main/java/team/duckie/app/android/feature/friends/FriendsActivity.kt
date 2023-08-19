@@ -14,14 +14,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
-import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
-import team.duckie.app.android.feature.friends.viewmodel.sideeffect.FriendsSideEffect
-import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
+import team.duckie.app.android.feature.friends.viewmodel.sideeffect.FriendsSideEffect
+import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint

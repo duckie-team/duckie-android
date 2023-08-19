@@ -22,13 +22,13 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.feature.notification.screen.NotificationScreen
 import team.duckie.app.android.feature.notification.viewmodel.NotificationSideEffect
 import team.duckie.app.android.feature.notification.viewmodel.NotificationViewModel
 import team.duckie.app.android.navigator.feature.home.HomeNavigator
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.finishWithAnimation
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -48,7 +48,7 @@ class NotificationActivity : BaseActivity() {
             NotificationScreen(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = QuackColor.White.composeColor)
+                    .background(color = QuackColor.White.value)
                     .systemBarsPadding()
                     .navigationBarsPadding()
                     .padding(top = 12.dp)

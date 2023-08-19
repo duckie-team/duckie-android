@@ -29,7 +29,7 @@ import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
 import team.duckie.quackquack.ui.QuackButtonStyle
-import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /** 상세 화면 최하단 Layout */
@@ -54,11 +54,11 @@ internal fun DetailBottomLayout(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             // 좋아요 버튼
-            QuackImage(
+            QuackIcon(
                 modifier = Modifier
                     .size(DpSize(24.dp, 24.dp))
                     .quackClickable(onClick = onHeartClick),
-                src = if (state.isHeart) {
+                icon = if (state.isHeart) {
                     QuackIcon.FilledHeart
                 } else {
                     QuackIcon.Outlined.Heart

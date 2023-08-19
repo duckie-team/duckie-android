@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -37,8 +38,7 @@ import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
 import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackDivider
+import team.duckie.quackquack.material.QuackColor
 
 private const val MainCrossFacadeLayoutId = "MainCrossFacade"
 private const val MainBottomNavigationDividerLayoutId = "MainBottomNavigationDivider"
@@ -114,7 +114,7 @@ internal fun MainScreen(
     Layout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = QuackColor.White.composeColor)
+            .background(color = QuackColor.White.value)
             .padding(systemBarPaddings),
         content = {
             HomeGuideScreen(
@@ -141,6 +141,7 @@ internal fun MainScreen(
                             navigateToCreateProblem = {
                                 mainViewModel.navigateToCreateProblem()
                             },
+                            navigateToProfile = mainViewModel::navigateToProfile,
                             setTargetExamId = { examId ->
                                 mainViewModel.setTargetExamId(examId)
                             },
@@ -209,7 +210,7 @@ internal fun MainScreen(
                 }
             }
 
-            QuackDivider(
+            Divider(
                 modifier = Modifier.layoutId(MainBottomNavigationDividerLayoutId),
             )
             DuckTestBottomNavigation(

@@ -11,7 +11,7 @@ package team.duckie.app.android.feature.profile.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -22,8 +22,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -48,7 +46,7 @@ import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Create
 import team.duckie.quackquack.material.icon.quackicon.outlined.More
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackIcon
 
 @Composable
 internal fun OtherProfileScreen(
@@ -102,6 +100,7 @@ internal fun OtherProfileScreen(
             isLoading = state.isLoading,
             editSection = {
                 FollowSection(
+                    modifier = Modifier.fillMaxWidth(),
                     enabled = state.follow,
                     onClick = viewModel::clickFollow,
                 )
@@ -112,9 +111,8 @@ internal fun OtherProfileScreen(
                     isLoading = state.isLoading,
                     onBackPressed = viewModel::clickBackPress,
                     trailingContent = {
-                        QuackImage(
+                        QuackIcon(
                             modifier = Modifier
-                                .size(DpSize(24.dp, 24.dp))
                                 .quackClickable(
                                     onClick = {
                                         viewModel.updateBottomSheetDialogType(DuckieSelectableType.Ignore)
@@ -123,7 +121,7 @@ internal fun OtherProfileScreen(
                                         }
                                     },
                                 ),
-                            src = QuackIcon.Outlined.More,
+                            icon = QuackIcon.Outlined.More,
                         )
                     },
                 )

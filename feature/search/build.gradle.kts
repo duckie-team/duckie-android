@@ -28,10 +28,11 @@ dependencies {
         projects.common.compose,
         libs.orbit.viewmodel,
         libs.orbit.compose,
-        libs.quack.ui.components,
         libs.compose.lifecycle.runtime,
         libs.firebase.crashlytics,
         libs.paging.runtime,
         libs.paging.compose,
+        libs.quack.v2.ui,
+        libs.kotlin.collections.immutable,
     )
 }

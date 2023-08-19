@@ -16,13 +16,13 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.feature.tag.edit.screen.TagEditScreen
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditSideEffect
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditViewModel
-import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.theme.QuackTheme
 
 @AndroidEntryPoint
 class TagEditActivity : BaseActivity() {
@@ -36,7 +36,7 @@ class TagEditActivity : BaseActivity() {
                 TagEditScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor)
+                        .background(color = QuackColor.White.value)
                         .systemBarsPadding(),
                 )
             }

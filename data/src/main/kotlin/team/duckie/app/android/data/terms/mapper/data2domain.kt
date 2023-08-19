@@ -7,10 +7,10 @@
 
 package team.duckie.app.android.data.terms.mapper
 
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.data._util.toDate
 import team.duckie.app.android.data.terms.model.TermsResponseData
 import team.duckie.app.android.domain.terms.model.Terms
-import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 internal fun TermsResponseData.toDomain() = Terms(
     id = id ?: duckieResponseFieldNpe("id"),

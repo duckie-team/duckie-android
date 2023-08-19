@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,23 +26,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import team.duckie.app.android.feature.notification.R
-import team.duckie.app.android.feature.notification.viewmodel.NotificationViewModel
+import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.kotlin.getDiffDayFromToday
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
-import team.duckie.quackquack.ui.util.DpSize
-import java.util.Date
+import team.duckie.app.android.feature.notification.R
+import team.duckie.app.android.feature.notification.viewmodel.NotificationViewModel
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.shape.SquircleShape
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackBody3
 
 @Composable
 internal fun NotificationScreen(
@@ -56,7 +56,7 @@ internal fun NotificationScreen(
 
     Column(modifier = modifier) {
         QuackTopAppBar(
-            leadingIcon = QuackIcon.ArrowBack,
+            leadingIcon = QuackIcon.Outlined.ArrowBack,
             leadingText = stringResource(id = R.string.notification),
             onLeadingIconClick = viewModel::clickBackPress,
         )
@@ -118,7 +118,7 @@ internal fun NotificationScreen(
 private fun NotificationItem(
     thumbnailUrl: String,
     body: String,
-    createdAt: Date,
+    createdAt: String,
     isLoading: Boolean,
     onClick: () -> Unit,
 ) {
@@ -129,12 +129,13 @@ private fun NotificationItem(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         QuackImage(
-            modifier = Modifier.skeleton(
-                visible = isLoading,
-                shape = SquircleShape,
-            ),
+            modifier = Modifier
+                .size(36.dp)
+                .skeleton(
+                    visible = isLoading,
+                    shape = SquircleShape,
+                ),
             src = thumbnailUrl,
-            size = DpSize(all = 36.dp),
         )
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -146,7 +147,7 @@ private fun NotificationItem(
             )
             QuackBody3(
                 modifier = Modifier.skeleton(visible = isLoading),
-                text = createdAt.getDiffDayFromToday(),
+                text = createdAt,
             )
         }
     }

@@ -32,19 +32,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
-import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
-import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
 import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.kotlin.FriendsType
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackMainTab
+import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
+import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackTab
+import team.duckie.quackquack.ui.QuackTabColors
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun FriendScreen(
@@ -59,31 +61,36 @@ internal fun FriendScreen(
         )
     }
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-    val pagerState = rememberPagerState(initialPage = state.friendType.index)
+    val pagerState = rememberPagerState(
+        initialPage = state.friendType.index,
+        pageCount = { FriendsType.values().size },
+    )
     val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = QuackColor.White.composeColor)
+            .background(color = QuackColor.White.value)
             .padding(systemBarPaddings),
     ) {
         BackPressedHeadLine2TopAppBar(
             title = state.targetName,
             onBackPressed = onPrevious,
         )
-        QuackMainTab(
-            titles = tabs,
-            selectedTabIndex = pagerState.currentPage,
-            onTabSelected = { index ->
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(index)
+        QuackTab(
+            index = pagerState.currentPage,
+            colors = QuackTabColors.defaultTabColors(),
+        ) {
+            tabs.forEach { label ->
+                tab(label) { index ->
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
                 }
-            },
-        )
+            }
+        }
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),
-            pageCount = FriendsType.values().size,
             state = pagerState,
         ) { index ->
             if (state.isError) {
@@ -228,11 +235,13 @@ private fun MyPageFriendNotFoundScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(space = 74.5.dp)
-        QuackHeadLine2(
+        QuackText(
             modifier = Modifier.skeleton(isLoading),
             text = title,
-            color = QuackColor.Gray1,
-            align = TextAlign.Center,
+            typography = QuackTypography.HeadLine2.change(
+                color = QuackColor.Gray1,
+                textAlign = TextAlign.Center,
+            ),
         )
     }
 }
@@ -257,10 +266,10 @@ private fun FriendListScreen(
                 favoriteTag = item.favoriteTag,
                 tier = item.tier,
                 isFollowing = item.isFollowing,
-                onClickFollow = { follow ->
+                onClickTrailingButton = { follow ->
                     onClickFollow(item.userId, follow)
                 },
-                isMine = myUserId == item.userId,
+                visibleTrailingButton = myUserId != item.userId,
                 onClickUserProfile = onClickUserProfile,
             )
         }

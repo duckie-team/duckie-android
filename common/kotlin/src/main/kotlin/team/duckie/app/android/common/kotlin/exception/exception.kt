@@ -109,8 +109,14 @@ class DuckieResponseFieldNPE(field: String) : DuckieException(code = "") {
     override val message = "필수 필드가 response 에 누락되었습니다. 누락된 필드명: $field"
 }
 
+inline fun <reified T> getFieldName(field: String): String = "${T::class.java.simpleName}.$field"
+
 fun duckieResponseFieldNpe(field: String): Nothing {
     throw DuckieResponseFieldNPE(field = field)
+}
+
+inline fun <reified T> duckieSimpleResponseFieldNpe(field: String): Nothing {
+    throw DuckieResponseFieldNPE(field = getFieldName<T>(field))
 }
 
 /**

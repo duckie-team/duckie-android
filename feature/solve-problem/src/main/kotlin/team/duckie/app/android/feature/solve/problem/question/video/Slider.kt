@@ -14,20 +14,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import team.duckie.app.android.common.compose.rememberNoRippleInteractionSource
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 
 @Composable
 internal fun primarySliderColors() = SliderDefaults.colors(
-    thumbColor = QuackColor.DuckieOrange.composeColor,
-    activeTrackColor = QuackColor.DuckieOrange.composeColor,
+    thumbColor = QuackColor.DuckieOrange.value,
+    activeTrackColor = QuackColor.DuckieOrange.value,
     inactiveTrackColor = Color.Transparent,
 )
 
 @Composable
 internal fun bufferSliderColors() = SliderDefaults.colors(
     disabledThumbColor = Color.Transparent,
-    disabledActiveTrackColor = QuackColor.Gray2.composeColor.copy(alpha = 0.5f),
-    disabledInactiveTrackColor = QuackColor.Gray3.composeColor,
+    disabledActiveTrackColor = QuackColor.Gray2.value.copy(alpha = 0.5f),
+    disabledInactiveTrackColor = QuackColor.Gray3.value,
 )
 
 @Composable

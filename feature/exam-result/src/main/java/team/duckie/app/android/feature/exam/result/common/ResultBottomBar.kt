@@ -5,8 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.feature.exam.result.common
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,13 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSurface
+import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.feature.exam.result.R
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackSmallButton
-import team.duckie.quackquack.ui.component.QuackSmallButtonType
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackSurface
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.ui.sugar.QuackSubtitle
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 @Composable
 internal fun ResultBottomBar(
@@ -51,13 +53,9 @@ internal fun ResultBottomBar(
                 onClick = onClickRetryButton,
             )
         }
-        QuackSmallButton(
-            modifier = Modifier
-                .heightIn(44.dp)
-                .weight(1f),
-            type = QuackSmallButtonType.Fill,
+        TempFlexiblePrimaryLargeButton(
+            modifier = Modifier.weight(1f),
             text = stringResource(id = R.string.exam_result_exit_exam),
-            enabled = true,
             onClick = onClickExitButton,
         )
     }
@@ -72,7 +70,7 @@ private fun GrayBorderSmallButton(
     QuackSurface(
         modifier = modifier,
         backgroundColor = QuackColor.White,
-        border = QuackBorder(color = QuackColor.Gray3),
+        border = BorderStroke(width = 1.dp, color = QuackColor.Gray3.value),
         shape = RoundedCornerShape(size = 8.dp),
         onClick = onClick,
     ) {

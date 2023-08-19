@@ -10,6 +10,7 @@
 package team.duckie.app.android.feature.tag.edit.screen
 
 import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +28,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.FavoriteTagSection
 import team.duckie.app.android.common.compose.ui.LoadingScreen
@@ -35,11 +37,12 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.tag.edit.R
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditState
 import team.duckie.app.android.feature.tag.edit.viewmodel.TagEditViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun TagEditScreen(
@@ -59,7 +62,6 @@ internal fun TagEditScreen(
             onTrailingClick = vm::onTrailingClick,
             addNewTags = vm::addNewTags,
             requestAddTag = vm::requestNewTag,
-            onTagClick = vm::onTrailingClick,
         )
 
         is TagEditState.Error -> ErrorScreen(
@@ -77,7 +79,6 @@ fun TagEditSuccessScreen(
     onTrailingClick: (Int) -> Unit,
     addNewTags: (List<Tag>) -> Unit,
     requestAddTag: suspend (String) -> Tag?,
-    onTagClick: (Int) -> Unit,
 ) {
     val activity = LocalContext.current as Activity
     val coroutineScope = rememberCoroutineScope()
@@ -85,6 +86,14 @@ fun TagEditSuccessScreen(
         ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true,
     )
+
+    BackHandler {
+        if (sheetState.isVisible) {
+            coroutineScope.launch { sheetState.hide() }
+        } else {
+            activity.finish()
+        }
+    }
 
     DuckieTagAddBottomSheet(
         sheetState = sheetState,
@@ -99,24 +108,17 @@ fun TagEditSuccessScreen(
         content = {
             Column(modifier = modifier) {
                 // 상단 탭바
-                QuackTopAppBar(
-                    leadingIcon = QuackIcon.ArrowBack,
-                    leadingText = stringResource(R.string.title),
-                    onLeadingIconClick = activity::finish,
+                BackPressedHeadLine2TopAppBar(
+                    title = stringResource(R.string.title),
+                    onBackPressed = activity::finish,
                     trailingContent = {
-                        QuackSubtitle(
+                        QuackText(
                             modifier = Modifier
-                                .then(Modifier) // prevent Modifier.Companion
-                                .quackClickable(
-                                    rippleEnabled = false,
-                                    onClick = onEditFinishClick,
-                                )
-                                .padding(
-                                    vertical = 4.dp,
-                                    horizontal = 16.dp,
-                                ),
+                                .quackClickable(onClick = onEditFinishClick),
                             text = stringResource(R.string.edit_finish),
-                            color = QuackColor.DuckieOrange,
+                            typography = QuackTypography.Subtitle.change(
+                                color = QuackColor.DuckieOrange,
+                            ),
                             singleLine = true,
                         )
                     },
@@ -128,12 +130,11 @@ fun TagEditSuccessScreen(
                     title = stringResource(id = R.string.my_favorite_tag),
                     horizontalPadding = PaddingValues(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    trailingIcon = QuackIcon.Close,
+                    trailingIcon = OutlinedGroup.Close,
                     onTrailingClick = onTrailingClick,
                     tags = state.myTags.map { it.name }.toPersistentList(),
                     emptySection = {},
-                    singleLine = false,
-                    onTagClick = onTagClick,
+                    onTagClick = {},
                     addButtonTitle = stringResource(id = R.string.tag_edit_add_favorite_tag),
                     onAddTagClick = {
                         coroutineScope.launch { sheetState.show() }

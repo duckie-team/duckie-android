@@ -32,7 +32,14 @@ import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.model.UserProfile
 import team.duckie.app.android.domain.user.model.toUserAuthStatus
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.duckieSimpleResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.getFieldName
 import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.data.user.model.IgnoreUserResponse
+import team.duckie.app.android.data.user.model.UserBlockResponse
+import team.duckie.app.android.data.user.model.UserMeIgnoreResponse
+import team.duckie.app.android.domain.user.model.IgnoreUser
+import team.duckie.app.android.domain.user.model.UserBlock
 import kotlin.random.Random
 
 private const val NicknameSuffixMaxLength = 10_000
@@ -96,3 +103,18 @@ internal fun UserProfileData.toDomain() = UserProfile(
     heartExams = heartExams?.map(ProfileExamData::toDomain),
     user = user?.toDomain(),
 )
+
+internal fun UserBlockResponse.toDomain() = UserBlock(
+    id = id ?: duckieResponseFieldNpe(getFieldName<UserBlockResponse>("id")),
+)
+
+internal fun IgnoreUserResponse.toDomain() = IgnoreUser(
+    id = id ?: duckieSimpleResponseFieldNpe<IgnoreUserResponse>("id"),
+    nickName = nickName ?: duckieSimpleResponseFieldNpe<IgnoreUserResponse>("nickName"),
+    profileImageUrl = profileImageUrl ?: duckieSimpleResponseFieldNpe<IgnoreUserResponse>("profileImageUrl"),
+    duckPower = duckPower?.toDomain(),
+    userBlock = userBlock?.toDomain() ?: duckieSimpleResponseFieldNpe<IgnoreUserResponse>("userBlock"),
+)
+
+internal fun UserMeIgnoreResponse.toDomain(): List<IgnoreUser> =
+    users?.fastMap { it.toDomain() } ?: duckieSimpleResponseFieldNpe<UserMeIgnoreResponse>("users")

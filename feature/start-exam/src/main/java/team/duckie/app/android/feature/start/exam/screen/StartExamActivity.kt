@@ -24,8 +24,8 @@ import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamSideEffect
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
 import team.duckie.app.android.navigator.feature.solveproblem.SolveProblemNavigator
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -43,7 +43,7 @@ class StartExamActivity : BaseActivity() {
                 StartExamScreen(
                     Modifier
                         .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor)
+                        .background(color = QuackColor.White.value)
                         .systemBarsPadding(),
                 )
             }

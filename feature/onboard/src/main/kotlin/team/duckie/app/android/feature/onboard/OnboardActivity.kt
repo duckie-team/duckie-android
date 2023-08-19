@@ -14,6 +14,7 @@ import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
@@ -49,9 +50,8 @@ import team.duckie.app.android.feature.onboard.screen.TagScreen
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.onboard.viewmodel.sideeffect.OnboardSideEffect
 import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -129,11 +129,12 @@ class OnboardActivity : BaseActivity() {
 
         setContent {
             QuackTheme {
-                QuackAnimatedContent(
+                AnimatedContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor),
+                        .background(color = QuackColor.White.value),
                     targetState = onboardStepState,
+                    label = "AnimatedContent",
                 ) { onboardStep ->
                     when (onboardStep) {
                         OnboardStep.Activity, OnboardStep.Login -> LoginScreen()

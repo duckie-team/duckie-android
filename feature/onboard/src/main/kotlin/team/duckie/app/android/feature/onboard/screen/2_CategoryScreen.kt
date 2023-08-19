@@ -6,9 +6,11 @@
  */
 
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
+@file:OptIn(ExperimentalQuackQuackApi::class)
 
 package team.duckie.app.android.feature.onboard.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,29 +27,29 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.asLoose
+import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackGridLayout
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImage
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImageType
+import team.duckie.app.android.common.kotlin.fastAny
+import team.duckie.app.android.common.kotlin.fastFirstOrNull
+import team.duckie.app.android.common.kotlin.fastMapIndexedNotNull
+import team.duckie.app.android.common.kotlin.npe
 import team.duckie.app.android.feature.onboard.R
 import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.compose.asLoose
-import team.duckie.app.android.common.compose.systemBarPaddings
-import team.duckie.app.android.common.kotlin.fastAny
-import team.duckie.app.android.common.kotlin.fastFirstOrNull
-import team.duckie.app.android.common.kotlin.fastMapIndexedNotNull
-import team.duckie.app.android.common.kotlin.npe
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.component.QuackGridLayout
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackSelectableImage
-import team.duckie.quackquack.ui.component.QuackSelectableImageType
-import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.sugar.QuackTitle2
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val currentStep = OnboardStep.Category
 
@@ -102,16 +104,17 @@ private val CategoryScreenMeasurePolicy = MeasurePolicy { measurables, constrain
 internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
     val onboardState by vm.collectAsState()
 
-    val categoriesSelectedIndex = remember(onboardState.categories, onboardState.selectedCategories) {
-        mutableStateListOf(
-            elements = Array(
-                size = onboardState.categories.size,
-                init = { index ->
-                    onboardState.selectedCategories.contains(onboardState.categories[index])
-                },
-            ),
-        )
-    }
+    val categoriesSelectedIndex =
+        remember(onboardState.categories, onboardState.selectedCategories) {
+            mutableStateListOf(
+                elements = Array(
+                    size = onboardState.categories.size,
+                    init = { index ->
+                        onboardState.selectedCategories.contains(onboardState.categories[index])
+                    },
+                ),
+            )
+        }
 
     Layout(
         modifier = Modifier
@@ -158,17 +161,19 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
                     )
                 }
             }
-            QuackAnimatedVisibility(
+            AnimatedVisibility(
                 modifier = Modifier
                     .layoutId(CategoryScreenNextButtonLayoutId)
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth(),
                 visible = categoriesSelectedIndex.fastAny { it },
             ) {
-                QuackLargeButton(
-                    type = QuackLargeButtonType.Fill,
-                    enabled = true,
+                // type = QuackLargeButtonType.Fill,
+                QuackButton(
+                    modifier = Modifier,
+                    style = QuackButtonStyle.PrimaryLarge,
                     text = stringResource(R.string.button_next),
+                    enabled = true,
                 ) {
                     vm.updateUserSelectCategories(
                         categories = categoriesSelectedIndex.fastMapIndexedNotNull { index, selected ->
@@ -182,10 +187,6 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
         measurePolicy = CategoryScreenMeasurePolicy,
     )
 }
-
-// FIXME(sungbin): 디자인상 100.dp 가 맞는데, 100 을 주면 디바이스 너비에 압축됨
-private val CategoryImageSize = DpSize(all = 80.dp)
-private val CategoryItemShape = RoundedCornerShape(size = 12.dp)
 
 @Composable
 private fun CategoryItem(
@@ -203,12 +204,13 @@ private fun CategoryItem(
     ) {
         QuackSelectableImage(
             src = imageUrl,
-            size = CategoryImageSize,
-            shape = CategoryItemShape,
+            size = DpSize(width = 80.dp, height = 80.dp),
+            shape = RoundedCornerShape(size = 12.dp),
             selectableType = QuackSelectableImageType.CheckOverlay,
             isSelected = isSelected,
             onClick = onClick,
         )
+
         QuackTitle2(text = name)
     }
 }
