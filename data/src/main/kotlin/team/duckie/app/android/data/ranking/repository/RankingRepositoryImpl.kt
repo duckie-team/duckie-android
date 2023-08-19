@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import team.duckie.app.android.data.ranking.datasource.RankingDataSource
-import team.duckie.app.android.data.ranking.model.OrderType
+import team.duckie.app.android.data.ranking.model.RankingOrderType
 import team.duckie.app.android.data.ranking.paging.ExamRankingsPagingSource
 import team.duckie.app.android.data.ranking.paging.UserRankingsPagingSource
 import team.duckie.app.android.domain.exam.model.Exam
@@ -44,20 +44,20 @@ class RankingRepositoryImpl @Inject constructor(
 
     override suspend fun getExamRankingsBySolvedCount(tagId: Int?): Flow<PagingData<Exam>> {
         return getExamRankings(
-            orderType = OrderType.SolvedCount,
+            rankingOrderType = RankingOrderType.SolvedCount,
             tagId = tagId,
         )
     }
 
     override suspend fun getExamRankingsByAnswerRate(tagId: Int?): Flow<PagingData<Exam>> {
         return getExamRankings(
-            orderType = OrderType.AnswerRate,
+            rankingOrderType = RankingOrderType.AnswerRate,
             tagId = tagId,
         )
     }
 
     private fun getExamRankings(
-        orderType: OrderType,
+        rankingOrderType: RankingOrderType,
         tagId: Int?,
     ): Flow<PagingData<Exam>> {
         return Pager(
@@ -71,7 +71,7 @@ class RankingRepositoryImpl @Inject constructor(
                     getExamRankings = {
                         rankingDataSource.getExamRankings(
                             page = it,
-                            order = orderType,
+                            order = rankingOrderType,
                             tagId = tagId,
                         )
                     },

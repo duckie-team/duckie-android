@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamsData
-import team.duckie.app.android.data.ranking.model.OrderType
+import team.duckie.app.android.data.ranking.model.RankingOrderType
 import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.data.user.model.UsersResponse
 import team.duckie.app.android.domain.exam.model.Exam
@@ -27,7 +27,7 @@ class RankingRemoteDataSourceImpl @Inject constructor(
 ) : RankingDataSource {
     override suspend fun getExamRankings(
         page: Int,
-        order: OrderType,
+        order: RankingOrderType,
         tagId: Int?,
     ): List<Exam> = withContext(Dispatchers.IO) {
         val (_, response) = fuel.get(

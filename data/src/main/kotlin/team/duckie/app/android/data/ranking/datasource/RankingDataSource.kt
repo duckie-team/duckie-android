@@ -7,7 +7,7 @@
 
 package team.duckie.app.android.data.ranking.datasource
 
-import team.duckie.app.android.data.ranking.model.OrderType
+import team.duckie.app.android.data.ranking.model.RankingOrderType
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.user.model.User
 
@@ -16,7 +16,7 @@ interface RankingDataSource {
 
     suspend fun getExamRankings(
         page: Int,
-        order: OrderType,
+        order: RankingOrderType,
         tagId: Int?,
     ): List<Exam>
 }
