@@ -14,9 +14,11 @@
 
 package team.duckie.app.android.data.challengecomment.datasource
 
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.data._datasource.client
@@ -64,6 +66,39 @@ class ChallengeCommentRemoteDataSourceImpl @Inject constructor() :
 
     override suspend fun deleteChallengeCommentHeart(commentId: Int): Boolean {
         val response = client.post("/challenge-comment-hearts/${commentId}")
+        return responseCatchingReturnSuccess(response)
+    }
+
+    override suspend fun reportChallengeComment(challengeId: Int): Boolean {
+        val response = client.post("/challenge-comment-reports") {
+            jsonBody {
+                "challengeCommentId" to challengeId
+            }
+        }
+        return responseCatchingReturnSuccess(response)
+    }
+
+    override suspend fun writeChallengeComment(challengeId: Int, message: String): Boolean {
+        val response = client.post("/challenge-comments") {
+            jsonBody {
+                "message" to message
+                "challengeId" to challengeId
+            }
+        }
+        return responseCatchingReturnSuccess(response)
+    }
+
+    override suspend fun deleteChallengeComment(commentId: Int): Boolean {
+        val response = client.delete("/challenge-comments/${commentId}")
+        return responseCatchingReturnSuccess(response)
+    }
+
+    /**
+     * @return success boolean
+     */
+    private suspend fun responseCatchingReturnSuccess(
+        response: HttpResponse
+    ): Boolean {
         return responseCatching(
             statusCode = response.status.value,
             response = response.bodyAsText(),
