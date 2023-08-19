@@ -46,6 +46,7 @@ import team.duckie.app.android.common.android.image.saveImageInGallery
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
+import team.duckie.app.android.common.compose.ui.QuackDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.Download
 import team.duckie.app.android.common.compose.ui.icon.v2.DuckieTextLogo
@@ -58,7 +59,6 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.icons
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackBody1

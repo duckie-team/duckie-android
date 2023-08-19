@@ -19,6 +19,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.icon.v1.TextLogoId
@@ -180,10 +181,7 @@ private object QuackTopAppBarDefaults {
     /**
      * 모든 영역에서 사용되는 공통 아이콘 사이즈
      */
-    private val IconSize = DpSize(
-        width = 24.dp,
-        height = 24.dp,
-    )
+    private val IconSize: Dp = 24.dp
 
     private val IconPadding = PaddingValues(
         all = 8.dp,
@@ -237,7 +235,7 @@ private object QuackTopAppBarDefaults {
             icon?.let {
                 QuackIcon(
                     modifier = Modifier
-                        .padding(IconPadding)
+//                        .padding(IconPadding)
                         .quackClickable(
                             rippleEnabled = false,
                             onClick = onIconClick,
@@ -364,12 +362,10 @@ private object QuackTopAppBarDefaults {
             text?.let {
                 QuackText(
                     modifier = Modifier
+//                        .padding(paddingValues = TrailingTextPadding,)
                         .quackClickable(
                             rippleEnabled = false,
                             onClick = onTextClick,
-                        )
-                        .padding(
-                            paddingValues = TrailingTextPadding,
                         ),
                     text = text,
                     typography = TrailingTypography,
@@ -380,24 +376,24 @@ private object QuackTopAppBarDefaults {
                 QuackIcon(
                     icon = extraIcon,
                     modifier = Modifier
-                        .size(IconSize)
-                        .padding(trailingIconPaddingFor(hasExtraIcon = true))
+//                        .padding(trailingIconPaddingFor(hasExtraIcon = true))
                         .quackClickable(
                             rippleEnabled = false,
                             onClick = onExtraIconClick,
                         ),
+                    size = IconSize,
                 )
             }
             icon?.let {
                 QuackIcon(
                     icon = icon,
                     modifier = Modifier
-                        .size(IconSize)
-                        .padding(trailingIconPaddingFor(hasExtraIcon = extraIcon != null))
+//                        .padding(trailingIconPaddingFor(hasExtraIcon = extraIcon != null))
                         .quackClickable(
                             rippleEnabled = false,
                             onClick = onIconClick,
                         ),
+                    size = IconSize,
                 )
             }
         }
