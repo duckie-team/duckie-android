@@ -15,4 +15,8 @@ interface ChallengeCommentRepository {
         problemId: Int,
         order: CommentOrderType,
     ): ChallengeCommentList
+
+    suspend fun postChallengeCommentHeart(commentId: Int): Int
+
+    suspend fun deleteChallengeCommentHeart(commentId: Int): Boolean
 }

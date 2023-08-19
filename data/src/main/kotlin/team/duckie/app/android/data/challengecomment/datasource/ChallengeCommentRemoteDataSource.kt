@@ -23,4 +23,8 @@ interface ChallengeCommentRemoteDataSource {
         order: CommentOrderTypeData,
         page: Int,
     ): ChallengeCommentList
+
+    suspend fun postChallengeCommentHeart(commentId: Int): Int
+
+    suspend fun deleteChallengeCommentHeart(commentId: Int): Boolean
 }

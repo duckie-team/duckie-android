@@ -27,4 +27,12 @@ class ChallengeCommentRepositoryImpl @Inject constructor(
             page = 1, // TODO(limsaehyun): 페이징 처리 필요함
         )
     }
+
+    override suspend fun postChallengeCommentHeart(commentId: Int): Int {
+        return challengeCommentRemoteDataSource.postChallengeCommentHeart(commentId = commentId)
+    }
+
+    override suspend fun deleteChallengeCommentHeart(commentId: Int): Boolean {
+        return challengeCommentRemoteDataSource.deleteChallengeCommentHeart(commentId = commentId)
+    }
 }
