@@ -15,11 +15,9 @@ package team.duckie.app.android.feature.solve.problem.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
@@ -35,8 +33,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -50,7 +50,7 @@ import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
 import team.duckie.app.android.feature.solve.problem.R
 import team.duckie.app.android.feature.solve.problem.answer.AnswerSection
 import team.duckie.app.android.feature.solve.problem.common.ButtonBottomBar
-import team.duckie.app.android.feature.solve.problem.common.FlexibleSubjectiveQuestionSection
+import team.duckie.app.android.feature.solve.problem.common.TextFieldMargin
 import team.duckie.app.android.feature.solve.problem.common.TimerTopBar
 import team.duckie.app.android.feature.solve.problem.common.verticalScrollModifierAsCondition
 import team.duckie.app.android.feature.solve.problem.question.QuestionSection
@@ -178,6 +178,8 @@ private fun ContentSection(
     updateInputAnswers: (page: Int, inputAnswer: InputAnswer) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    var textFieldHeight by remember { mutableStateOf(Dp.Unspecified) }
+    val density = LocalDensity.current
 
     HorizontalPager(
         modifier = modifier,
@@ -197,54 +199,44 @@ private fun ContentSection(
         }
 
         val isImageChoice = problem.answer?.isImageChoice == true
+        val isRequireFlexibleImage = problem.isSubjective() && problem.question.isImage()
 
-        when {
-            // for keyboard flexible image height
-            problem.isSubjective() && problem.question.isImage() -> Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) {
-                FlexibleSubjectiveQuestionSection(
-                    problem = problem,
-                    pageIndex = pageIndex,
-                    updateInputAnswers = updateInputAnswers,
-                    requestFocus = requestFocus,
-                    keyboardController = keyboardController,
-                )
-            }
+        Column(
+            modifier = Modifier
+                .verticalScrollModifierAsCondition(isImageChoice)
+                .fillMaxSize()
+        ) {
+            Spacer(space = 16.dp)
+            QuestionSection(
+                page = pageIndex,
+                question = problem.question,
+                isImageChoice = isImageChoice,
+                isRequireFlexibleImage = isRequireFlexibleImage,
+                spaceImageToKeyboard = textFieldHeight + TextFieldMargin.Vertical,
+            )
+            val answer = problem.answer
+            AnswerSection(
+                pageIndex = pageIndex,
+                answer = when (answer) {
+                    is Answer.Short -> Answer.Short(
+                        problem.correctAnswer
+                            ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
+                    )
 
-            else -> Column(
-                modifier = Modifier
-                    .verticalScrollModifierAsCondition(isImageChoice)
-                    .fillMaxSize(),
-            ) {
-                Spacer(space = 16.dp)
-                QuestionSection(
-                    page = pageIndex,
-                    question = problem.question,
-                    isImageChoice = isImageChoice,
-                )
-                Spacer(space = 24.dp)
-                val answer = problem.answer
-                AnswerSection(
-                    pageIndex = pageIndex,
-                    answer = when (answer) {
-                        is Answer.Short -> Answer.Short(
-                            problem.correctAnswer
-                                ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
-                        )
-
-                        is Answer.Choice, is Answer.ImageChoice -> answer
-                        else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
-                    },
-                    inputAnswers = inputAnswers,
-                    updateInputAnswers = updateInputAnswers,
-                    requestFocus = requestFocus,
-                    keyboardController = keyboardController,
-                )
-                Spacer(space = 16.dp)
-            }
+                    is Answer.Choice, is Answer.ImageChoice -> answer
+                    else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
+                },
+                inputAnswers = inputAnswers,
+                updateInputAnswers = updateInputAnswers,
+                requestFocus = requestFocus,
+                keyboardController = keyboardController,
+                onShortAnswerSizeChanged = {
+                    textFieldHeight = with(density) {
+                        it.height.toDp()
+                    }
+                },
+            )
+            Spacer(space = 16.dp)
         }
     }
 }

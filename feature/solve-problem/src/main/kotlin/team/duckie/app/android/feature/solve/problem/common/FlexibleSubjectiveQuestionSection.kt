@@ -53,7 +53,7 @@ private fun getFlexibleImageHeight(): Dp {
     return ((configuration.screenWidthDp / 4) * 3).dp
 }
 
-private object TextFieldMargin {
+internal object TextFieldMargin {
     val Top = 24.dp
     val Bottom = 16.dp
     val Vertical get() = Top + Bottom

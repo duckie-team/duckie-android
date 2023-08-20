@@ -13,11 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.solve.problem.question.audio.AudioPlayer
+import team.duckie.app.android.feature.solve.problem.question.image.FlexibleImageBox
 import team.duckie.app.android.feature.solve.problem.question.image.ImageBox
 import team.duckie.app.android.feature.solve.problem.question.video.VideoPlayer
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
@@ -29,6 +31,8 @@ internal fun ColumnScope.QuestionSection(
     page: Int,
     question: Question,
     isImageChoice: Boolean,
+    isRequireFlexibleImage: Boolean,
+    spaceImageToKeyboard: Dp,
 ) {
     val modifier = if (isImageChoice) {
         Modifier
@@ -44,11 +48,21 @@ internal fun ColumnScope.QuestionSection(
     when (question) {
         is Question.Text -> {}
         is Question.Image -> {
-            Spacer(space = 16.dp)
-            ImageBox(
-                modifier = modifier,
-                url = question.imageUrl,
-            )
+            Spacer(space = 12.dp)
+            if (isRequireFlexibleImage) {
+                FlexibleImageBox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    spaceImageToKeyboard = spaceImageToKeyboard,
+                    url = question.imageUrl,
+                )
+            } else {
+                ImageBox(
+                    modifier = modifier,
+                    url = question.imageUrl,
+                )
+            }
         }
 
         is Question.Audio -> {

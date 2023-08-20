@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.LinearProgressBar
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.myiconpack.Clock
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -68,6 +69,7 @@ internal fun TimerTopBar(
             modifier = Modifier.quackClickable(onClick = onCloseClick),
             icon = QuackIcon.Outlined.Close,
         )
+        Spacer(space = 12.dp)
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterStart,
