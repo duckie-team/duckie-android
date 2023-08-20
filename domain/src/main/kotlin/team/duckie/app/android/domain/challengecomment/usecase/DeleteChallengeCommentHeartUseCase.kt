@@ -14,7 +14,7 @@ class DeleteChallengeCommentHeartUseCase @Inject constructor(
     private val challengeCommentRepository: ChallengeCommentRepository,
 ) {
 
-    suspend operator fun invoke(commentId: Int) = runCatching {
-        challengeCommentRepository.deleteChallengeCommentHeart(commentId = commentId)
+    suspend operator fun invoke(heartId: Int) = runCatching {
+        challengeCommentRepository.deleteChallengeCommentHeart(heartId = heartId)
     }
 }

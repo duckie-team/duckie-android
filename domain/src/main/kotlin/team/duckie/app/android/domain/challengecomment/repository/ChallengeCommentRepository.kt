@@ -18,7 +18,7 @@ interface ChallengeCommentRepository {
 
     suspend fun postChallengeCommentHeart(commentId: Int): Int
 
-    suspend fun deleteChallengeCommentHeart(commentId: Int): Boolean
+    suspend fun deleteChallengeCommentHeart(heartId: Int): Boolean
 
     suspend fun reportChallengeComment(challengeId: Int): Boolean
 

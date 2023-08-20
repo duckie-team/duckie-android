@@ -52,7 +52,7 @@ class ChallengeCommentRemoteDataSourceImpl @Inject constructor() :
     override suspend fun postChallengeCommentHeart(commentId: Int): Int {
         val response = client.post("/challenge-comment-hearts") {
             jsonBody {
-                "challengeCommentId" to commentId
+                "challengeCommentId" withInt commentId
             }
         }
         return responseCatching(
@@ -64,15 +64,15 @@ class ChallengeCommentRemoteDataSourceImpl @Inject constructor() :
         }
     }
 
-    override suspend fun deleteChallengeCommentHeart(commentId: Int): Boolean {
-        val response = client.post("/challenge-comment-hearts/${commentId}")
+    override suspend fun deleteChallengeCommentHeart(heartId: Int): Boolean {
+        val response = client.delete("/challenge-comment-hearts/$heartId")
         return responseCatchingReturnSuccess(response)
     }
 
     override suspend fun reportChallengeComment(challengeId: Int): Boolean {
         val response = client.post("/challenge-comment-reports") {
             jsonBody {
-                "challengeCommentId" to challengeId
+                "challengeCommentId" withInt challengeId
             }
         }
         return responseCatchingReturnSuccess(response)
@@ -81,15 +81,15 @@ class ChallengeCommentRemoteDataSourceImpl @Inject constructor() :
     override suspend fun writeChallengeComment(challengeId: Int, message: String): Boolean {
         val response = client.post("/challenge-comments") {
             jsonBody {
-                "message" to message
-                "challengeId" to challengeId
+                "message" withString message
+                "challengeId" withInt challengeId
             }
         }
         return responseCatchingReturnSuccess(response)
     }
 
     override suspend fun deleteChallengeComment(commentId: Int): Boolean {
-        val response = client.delete("/challenge-comments/${commentId}")
+        val response = client.delete("/challenge-comments/$commentId")
         return responseCatchingReturnSuccess(response)
     }
 

@@ -7,10 +7,13 @@
 
 package team.duckie.app.android.feature.exam.result.viewmodel
 
-import android.annotation.SuppressLint
-import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.common.kotlin.getDiffDayFromToday
 import team.duckie.app.android.common.kotlin.isTopRanked
-import java.time.LocalDateTime
+import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
+import team.duckie.app.android.domain.heart.model.Heart
+import team.duckie.app.android.domain.user.model.User
 
 enum class ExamResultScreen {
     EXAM_RESULT,
@@ -40,6 +43,10 @@ sealed class ExamResultState {
         val thumbnailUrl: String = "",
         val solvedCount: Int = 0,
 
+        // 오답 댓글 쓰기
+        val comments: ImmutableList<ChallengeCommentUiModel> = persistentListOf(),
+        val commentsTotal: Int = 0,
+
         // user input state
         val reaction: String = "",
         val isBestRecord: Boolean = false,
@@ -52,41 +59,34 @@ sealed class ExamResultState {
         val profileImg: String = "",
         val equalAnswerCount: Int = 0,
         val wrongComment: String = "",
-        val otherComments: kotlinx.collections.immutable.ImmutableList<WrongAnswerComment> =
-            (0..3).map { // TODO(limsaehyun) for using UI test, delete it before deploy
-                WrongAnswerComment.dummy()
-            }.toImmutableList(),
 
     ) : ExamResultState() {
         val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
 
-        data class WrongAnswerComment(
+        data class ChallengeCommentUiModel(
             val id: Int,
-            val profileImg: String,
-            val nickname: String,
-            val createAt: LocalDateTime,
-            val answer: String,
-            val comment: String,
-            val isLike: Boolean = false,
-            val likeCnt: Int,
-        ) {
-            companion object {
-                @SuppressLint("NewApi")
-                fun dummy() = WrongAnswerComment(
-                    id = 0,
-                    profileImg = "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/profile/1676192267474",
-                    nickname = "세현",
-                    createAt = LocalDateTime.now(),
-                    answer = "맹구",
-                    comment = "아니 이건 아니지 ㅋㅋㅋ",
-                    isLike = true,
-                    likeCnt = 8,
-                )
-            }
-        }
+            val message: String,
+            val wrongAnswer: String,
+            val heartCount: Int,
+            val createdAt: String,
+            val user: User,
+            val heart: Heart?,
+            val isHeart: Boolean = false,
+        )
     }
 
     data class Error(
         val exception: Throwable,
     ) : ExamResultState()
 }
+
+internal fun ChallengeComment.toUiModel() = ExamResultState.Success.ChallengeCommentUiModel(
+    id = id,
+    message = message,
+    wrongAnswer = wrongAnswer,
+    heartCount = heartCount,
+    createdAt = createdAt.getDiffDayFromToday(),
+    user = user,
+    heart = heart,
+    isHeart = heart != null,
+)

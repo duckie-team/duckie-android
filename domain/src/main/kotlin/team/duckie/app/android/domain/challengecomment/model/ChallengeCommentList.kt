@@ -7,10 +7,9 @@
 
 package team.duckie.app.android.domain.challengecomment.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import kotlinx.collections.immutable.ImmutableList
 
 data class ChallengeCommentList(
-    val total: Int ?= null,
-    val data: ImmutableList<ChallengeComment> ?= null,
+    val total: Int ? = null,
+    val data: ImmutableList<ChallengeComment> ? = null,
 )

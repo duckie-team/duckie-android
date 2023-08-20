@@ -11,9 +11,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class GetChallengeCommentListResponse(
     @field:JsonProperty("total")
-    val total: Int ?= null,
+    val total: Int ? = null,
     @field:JsonProperty("data")
-    val data: List<ChallengeCommentResponse> ?= null,
+    val data: List<ChallengeCommentResponse> ? = null,
     @field:JsonProperty("page")
-    val page: Int ?= null,
+    val page: Int ? = null,
 )

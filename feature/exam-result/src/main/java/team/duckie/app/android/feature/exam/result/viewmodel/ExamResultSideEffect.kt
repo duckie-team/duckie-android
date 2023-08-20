@@ -20,4 +20,6 @@ sealed class ExamResultSideEffect {
     class ReportError(val exception: Throwable) : ExamResultSideEffect()
 
     object SendReactionSuccessToast : ExamResultSideEffect()
+
+    data class SendErrorToast(val message: String) : ExamResultSideEffect()
 }

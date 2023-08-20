@@ -82,6 +82,10 @@ class ExamResultActivity : BaseActivity() {
             is ExamResultSideEffect.SendReactionSuccessToast -> {
                 ToastWrapper(this).invoke(getString(R.string.exam_result_post_reaction_success))
             }
+
+            is ExamResultSideEffect.SendErrorToast -> {
+                ToastWrapper(this).invoke(sideEffect.message)
+            }
         }
     }
 }

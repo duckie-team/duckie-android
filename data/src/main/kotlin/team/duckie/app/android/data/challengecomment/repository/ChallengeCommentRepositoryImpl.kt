@@ -32,8 +32,8 @@ class ChallengeCommentRepositoryImpl @Inject constructor(
         return challengeCommentRemoteDataSource.postChallengeCommentHeart(commentId = commentId)
     }
 
-    override suspend fun deleteChallengeCommentHeart(commentId: Int): Boolean {
-        return challengeCommentRemoteDataSource.deleteChallengeCommentHeart(commentId = commentId)
+    override suspend fun deleteChallengeCommentHeart(heartId: Int): Boolean {
+        return challengeCommentRemoteDataSource.deleteChallengeCommentHeart(heartId = heartId)
     }
 
     override suspend fun reportChallengeComment(challengeId: Int): Boolean {

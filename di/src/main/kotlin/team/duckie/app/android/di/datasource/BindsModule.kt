@@ -87,5 +87,4 @@ abstract class BindsModule {
     @Singleton
     @Binds
     abstract fun bindChallengeCommentRemoteDataSource(impl: ChallengeCommentRemoteDataSourceImpl): ChallengeCommentRemoteDataSource
-
 }

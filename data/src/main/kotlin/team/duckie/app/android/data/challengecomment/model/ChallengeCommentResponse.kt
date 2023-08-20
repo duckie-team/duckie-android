@@ -14,7 +14,6 @@
 
 package team.duckie.app.android.data.challengecomment.model
 
-import android.service.autofill.UserData
 import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.heart.model.HeartData
 import team.duckie.app.android.data.user.model.UserResponse
