@@ -69,6 +69,15 @@ class ExamResultViewModel @Inject constructor(
     )
 
     // 오답 댓글쓰기 START
+    fun transferCommentOrderType() = intent {
+        val state = state as ExamResultState.Success
+        val orderType = when (state.commentOrderType) {
+            CommentOrderType.DATE -> CommentOrderType.LIKE
+            CommentOrderType.LIKE -> CommentOrderType.DATE
+        }
+        reduce { state.copy(commentOrderType = orderType) }
+    }
+
     fun getChallengeCommentList() = intent {
         val state = state as ExamResultState.Success
         getChallengeCommentListUseCase(
@@ -138,7 +147,12 @@ class ExamResultViewModel @Inject constructor(
                         }
                     }.onFailure { exception ->
                         when {
-                            exception.isHeartNotFound -> postSideEffect(ExamResultSideEffect.SendErrorToast(HEART_NOT_FOUND_MESSAGE))
+                            exception.isHeartNotFound -> postSideEffect(
+                                ExamResultSideEffect.SendErrorToast(
+                                    HEART_NOT_FOUND_MESSAGE
+                                )
+                            )
+
                             else -> postSideEffect(ExamResultSideEffect.ReportError(exception))
                         }
                     }
