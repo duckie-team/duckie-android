@@ -21,11 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.quackClickable
 
 @Preview
 @Composable
-fun PreviewExpandedCickable() {
+fun PreviewExpandedClickable() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,11 +66,10 @@ fun Modifier.expendedQuackClickable(
     verticalExpendedSize: Dp = 12.dp,
     horizontalExpendedSize: Dp = 12.dp,
     rippleEnabled: Boolean = true,
-    rippleColor: team.duckie.quackquack.ui.color.QuackColor? = null,
+    rippleColor: QuackColor? = null,
     onLongClick: (() -> Unit)? = null,
     onClick: (() -> Unit)?,
 ): Modifier {
-
     return this
         .layout { measurable, constraints ->
             val expansionVerticalPx = verticalExpendedSize.roundToPx()
@@ -80,7 +79,7 @@ fun Modifier.expendedQuackClickable(
                 minWidth = constraints.minWidth + expansionHorizontalPx,
                 maxWidth = constraints.maxWidth + expansionHorizontalPx,
                 minHeight = constraints.minHeight + expansionVerticalPx,
-                maxHeight = constraints.maxHeight + expansionVerticalPx
+                maxHeight = constraints.maxHeight + expansionVerticalPx,
             )
             val placeable = measurable.measure(expandedConstraints)
 
@@ -95,4 +94,3 @@ fun Modifier.expendedQuackClickable(
             onClick = onClick,
         )
 }
-
