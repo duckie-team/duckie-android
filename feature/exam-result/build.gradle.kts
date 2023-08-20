@@ -32,8 +32,8 @@ dependencies {
         libs.compose.ui.coil,
         libs.compose.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
-        libs.quack.ui.components,
         libs.quack.v2.ui,
+        libs.kotlin.collections.immutable,
         libs.firebase.crashlytics,
     )
 }
