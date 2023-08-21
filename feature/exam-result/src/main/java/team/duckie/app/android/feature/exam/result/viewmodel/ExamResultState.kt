@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.feature.exam.result.viewmodel
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.common.kotlin.getDiffDayFromToday
@@ -15,6 +17,8 @@ import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
 import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
 import team.duckie.app.android.domain.heart.model.Heart
 import team.duckie.app.android.domain.user.model.User
+import java.time.LocalDateTime
+import java.util.Date
 
 enum class ExamResultScreen {
     EXAM_RESULT,
@@ -48,6 +52,8 @@ sealed class ExamResultState {
         val comments: ImmutableList<ChallengeCommentUiModel> = persistentListOf(),
         val commentsTotal: Int = 0,
         val commentOrderType: CommentOrderType = CommentOrderType.LIKE,
+        val isWriteComment: Boolean = false,
+        val commentCreateAt: Date = Date(),
 
         // user input state
         val reaction: String = "",
@@ -63,7 +69,12 @@ sealed class ExamResultState {
         val wrongComment: String = "",
 
         ) : ExamResultState() {
+
         val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
+
+        private fun Date.difference(other: Date): Long {
+            return this.time - other.time
+        }
 
         data class ChallengeCommentUiModel(
             val id: Int,

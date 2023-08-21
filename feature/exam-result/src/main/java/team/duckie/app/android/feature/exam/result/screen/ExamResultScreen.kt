@@ -31,6 +31,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
@@ -39,6 +40,7 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.dialog.DuckieBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextArea
+import team.duckie.app.android.common.kotlin.getDiffDayFromToday
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
 import team.duckie.app.android.feature.exam.result.screen.exam.ExamResultContent
@@ -181,7 +183,10 @@ private fun ExamResultSuccessScreen(
     viewModel: ExamResultViewModel,
 ) {
     val sheetState =
-        rememberModalBottomSheetState(initialValue = if (state.comments.size > 2) ModalBottomSheetValue.Expanded else ModalBottomSheetValue.Hidden)
+        rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Expanded,
+            skipHalfExpanded = true,
+        )
     val coroutineScope = rememberCoroutineScope()
 
     DuckieBottomSheetDialog(
@@ -193,9 +198,14 @@ private fun ExamResultSuccessScreen(
                 onOrderTypeChanged = viewModel::transferCommentOrderType,
                 myComment = state.wrongComment,
                 onMyCommentChanged = viewModel::updateWrongComment,
-                comments = state.comments,
+                comments = persistentListOf(), // FIXME(delete) state.comments,
                 onHeartComment = { commentId ->
                     viewModel.heartWrongComment(commentId)
+                },
+                myCommentCreateAt = state.commentCreateAt.getDiffDayFromToday(isShowSecond = false),
+                isWriteComment = state.isWriteComment,
+                onSendComment = {
+                    viewModel.sendChallengeComment()
                 },
             )
         },

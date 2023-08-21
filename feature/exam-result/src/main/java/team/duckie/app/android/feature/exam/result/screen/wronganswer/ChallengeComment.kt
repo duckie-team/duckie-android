@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,9 +22,14 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.ui.QuackIconWrapper
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
@@ -52,55 +58,87 @@ internal fun ChallengeCommentBottomSheetContent(
     orderType: CommentOrderType,
     onOrderTypeChanged: () -> Unit,
     myComment: String,
+    myCommentCreateAt: String,
+    isWriteComment: Boolean,
     onMyCommentChanged: (String) -> Unit,
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     onHeartComment: (Int) -> Unit,
+    onSendComment: () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(24.dp)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                QuackText(
-                    text = "전체 댓글 ${commentsTotal}개",
-                    typography = QuackTypography.Body1.change(
-                        color = QuackColor.Gray1,
-                    ),
-                )
-                QuackIconWrapper(
-                    icon = QuackIcon.Order18,
-                    onClick = onOrderTypeChanged,
+            if(comments.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(all = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     QuackText(
-                        modifier = Modifier.padding(start = 2.dp),
-                        text = orderType.kor,
-                        typography = QuackTypography.Body2.change(
+                        text = "전체 댓글 ${commentsTotal}개",
+                        typography = QuackTypography.Title2.change(
                             color = QuackColor.Gray1,
                         ),
                     )
+                    QuackIconWrapper(
+                        icon = QuackIcon.Order18,
+                        onClick = onOrderTypeChanged,
+                        size = 18.dp,
+                    ) {
+                        QuackText(
+                            modifier = Modifier.padding(start = 2.dp),
+                            text = orderType.kor,
+                            typography = QuackTypography.Body2.change(
+                                color = QuackColor.Gray1,
+                            ),
+                        )
+                    }
                 }
             }
         },
         bottomBar = {
-            Column {
-                QuackDivider()
-                QuackNoUnderlineTextField(
+            if(isWriteComment) {
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp)
-                        .background(QuackColor.Gray4.value),
-                    text = myComment,
-                    onTextChanged = onMyCommentChanged,
-                    placeholderText = "댓글을 남겨보세요!",
-                    trailingEndPadding = 16.dp,
-                    trailingIcon = QuackIcon.ArrowSendId,
-                    trailingIconOnClick = { },
-                )
+                        .background(
+                            color = QuackColor.Gray4.value
+                        )
+                        .padding(all = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    QuackText(
+                        text = myComment,
+                        typography = QuackTypography.Body1.change(
+                            color = QuackColor.Gray1
+                        ),
+                    )
+                    QuackText(
+                        text = myCommentCreateAt,
+                        typography = QuackTypography.Body3.change(
+                            color = QuackColor.Gray2,
+                        ),
+                    )
+                }
+            } else {
+                Column {
+                    QuackDivider()
+                    QuackNoUnderlineTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp)
+                            .background(QuackColor.Gray4.value),
+                        text = myComment,
+                        onTextChanged = onMyCommentChanged,
+                        placeholderText = "댓글을 남겨보세요!",
+                        trailingEndPadding = 16.dp,
+                        trailingIcon = QuackIcon.ArrowSendId,
+                        trailingIconOnClick = onSendComment,
+                    )
+                }
             }
         },
         content = { padding ->
@@ -122,6 +160,7 @@ internal fun ChallengeCommentBottomSheetContent(
             }
         }
     )
+    ImeSpacer()
 }
 
 
@@ -188,6 +227,67 @@ internal fun ChallengeComment(
                     color = animateHeartColor.value,
                 ),
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewBottomSheet() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp)
+                .background(
+                    color = QuackColor.Gray4.value
+                )
+                .padding(all = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            QuackText(
+                text = "낚시 오지네ㅜㅋㅋ",
+                typography = QuackTypography.Body1.change(
+                    color = QuackColor.Gray1
+                ),
+            )
+            QuackText(
+                text = "방금 전",
+                typography = QuackTypography.Body3.change(
+                    color = QuackColor.Gray2,
+                ),
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            QuackText(
+                text = "전체 댓글 ${3}개",
+                typography = QuackTypography.Title2.change(
+                    color = QuackColor.Gray1,
+                ),
+            )
+            QuackIconWrapper(
+                icon = QuackIcon.Order18,
+                onClick = { },
+            ) {
+                QuackText(
+                    modifier = Modifier.padding(start = 2.dp),
+                    text = "최신훈",
+                    typography = QuackTypography.Body2.change(
+                        color = QuackColor.Gray1,
+                    ),
+                )
+            }
         }
     }
 }

@@ -98,6 +98,12 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
+    fun sendChallengeComment() = intent {
+        val state = state as ExamResultState.Success
+        reduce { state.copy(isWriteComment = true) }
+        // TODO 로직 구현
+    }
+
     fun heartWrongComment(commentId: Int) = intent {
         val state = state as ExamResultState.Success
         state.comments
