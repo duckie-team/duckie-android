@@ -7,16 +7,16 @@
 
 package team.duckie.app.android.domain.challengecomment.model
 
-import android.service.autofill.UserData
 import team.duckie.app.android.domain.heart.model.Heart
 import team.duckie.app.android.domain.user.model.User
+import java.util.Date
 
 data class ChallengeComment(
     val id: Int,
     val message: String,
     val wrongAnswer: String,
     val heartCount: Int,
-    val createdAt: String,
+    val createdAt: Date,
     val user: User,
     val heart: Heart?,
 )

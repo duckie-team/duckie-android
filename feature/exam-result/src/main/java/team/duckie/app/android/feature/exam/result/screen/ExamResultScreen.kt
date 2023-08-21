@@ -221,13 +221,18 @@ private fun ExamResultSuccessScreen(
                         myAnswer = myAnswer,
                         equalAnswerCount = equalAnswerCount,
                         profileImg = profileImg,
-                        wrongComments = otherComments,
                         myComment = wrongComment,
                         myCommentChanged = viewModel::updateWrongComment,
                         onHeartComment = { isLike ->
                             viewModel.heartWrongComment(isLike)
                         },
-                    )
+                        initState = {
+                            viewModel.getChallengeCommentList()
+                        },
+                        comments = state.comments,
+                        commentsTotal = state.commentsTotal,
+
+                        )
                 } else {
                     ExamResultContent(
                         resultImageUrl = reportUrl,

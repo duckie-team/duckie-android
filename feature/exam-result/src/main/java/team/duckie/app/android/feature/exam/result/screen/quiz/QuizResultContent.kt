@@ -29,6 +29,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +43,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.CoroutineScope
 import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
@@ -49,7 +52,7 @@ import team.duckie.app.android.common.compose.ui.icon.v2.FilledHeart
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.screen.RANKER_THRESHOLD
-import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
+import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState.Success.ChallengeCommentUiModel
 import team.duckie.quackquack.animation.animateQuackColorAsState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -60,7 +63,6 @@ import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackFilledTextField
 import team.duckie.quackquack.ui.QuackIcon
-import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.QuackTextFieldStyle
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
@@ -87,11 +89,17 @@ internal fun QuizResultContent(
     profileImg: String,
     myAnswer: String,
     equalAnswerCount: Int,
-    wrongComments: kotlinx.collections.immutable.ImmutableList<ExamResultState.Success.WrongAnswerComment>,
     myComment: String,
     myCommentChanged: (String) -> Unit,
     onHeartComment: (Int) -> Unit,
+    initState: suspend CoroutineScope.() -> Unit,
+    comments: ImmutableList<ChallengeCommentUiModel>,
+    commentsTotal: Int,
 ) {
+    LaunchedEffect(key1 = Unit) {
+        initState()
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -127,24 +135,7 @@ internal fun QuizResultContent(
             horizontalPadding = PaddingValues(horizontal = 0.dp),
         )
         Spacer(space = 16.dp)
-        // TODO(limsaehyun): QuackText Quote의 버그가 픽스된 후 아래 코드로 변경해야 함
-        // https://duckie-team.slack.com/archives/C054HU0CKMY/p1688278156256779
-        // QuackText(text = message, typography = QuackTypography.Quote)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            QuackHeadLine1(text = "\"")
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.Center,
-            ) {
-                QuackHeadLine1(text = message)
-            }
-            QuackHeadLine1(text = "\"")
-        }
+        QuackQuote(text = message)
         Spacer(space = 24.dp)
         QuackMaxWidthDivider()
         Row(
@@ -217,8 +208,9 @@ internal fun QuizResultContent(
             myAnswer = myAnswer,
             comment = myComment,
             onCommentChange = myCommentChanged,
-            wrongAnswerComments = wrongComments,
             onHeartComment = onHeartComment,
+            comments = comments,
+            commentsTotal = commentsTotal,
         )
     }
 }
@@ -230,7 +222,8 @@ private fun ColumnScope.WrongAnswerSection(
     comment: String,
     onCommentChange: (String) -> Unit,
     onHeartComment: (Int) -> Unit,
-    wrongAnswerComments: kotlinx.collections.immutable.ImmutableList<ExamResultState.Success.WrongAnswerComment>,
+    commentsTotal: Int,
+    comments: ImmutableList<ChallengeCommentUiModel>,
 ) {
     Spacer(space = 28.dp)
     QuackHeadLine2(text = "답도 없는 오답들")
@@ -273,7 +266,7 @@ private fun ColumnScope.WrongAnswerSection(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         QuackText(
-            text = "전체 댓글 ${wrongAnswerComments.size}개",
+            text = "전체 댓글 ${commentsTotal}개",
             typography = QuackTypography.Body1.change(
                 color = QuackColor.Gray1,
             ),
@@ -281,12 +274,12 @@ private fun ColumnScope.WrongAnswerSection(
         QuackIcon(icon = QuackIcon.Outlined.ArrowDown)
     }
     Spacer(space = 8.dp)
-    wrongAnswerComments.forEach { item ->
+    comments.forEach { item ->
         key(item.id) {
             WrongCommentInternal(
                 wrongComment = item,
-                onHeartClick = { likeId ->
-                    onHeartComment(likeId)
+                onHeartClick = { commentId ->
+                    onHeartComment(commentId)
                 },
             )
             Spacer(space = 8.dp)
@@ -296,11 +289,11 @@ private fun ColumnScope.WrongAnswerSection(
 
 @Composable
 private fun WrongCommentInternal(
-    wrongComment: ExamResultState.Success.WrongAnswerComment,
+    wrongComment: ChallengeCommentUiModel,
     onHeartClick: (Int) -> Unit,
 ) {
-    val hearTextColor =
-        animateQuackColorAsState(targetValue = if (wrongComment.isLike) QuackColor.Gray1 else QuackColor.Gray2)
+    val animateHeartColor =
+        animateQuackColorAsState(targetValue = if (wrongComment.isHeart) QuackColor.Gray1 else QuackColor.Gray2)
 
     Column(
         modifier = Modifier
@@ -309,51 +302,53 @@ private fun WrongCommentInternal(
     ) {
         Row {
             QuackProfileImage(
-                profileUrl = wrongComment.profileImg,
+                profileUrl = wrongComment.user.profileImageUrl,
                 size = DpSize(width = 40.dp, height = 40.dp),
             )
             Spacer(space = 8.dp)
             Column {
                 Row {
                     QuackText(
-                        text = "${wrongComment.nickname}님의 답",
+                        text = "${wrongComment.user.nickname}님의 답",
                         typography = QuackTypography.Body3.change(
                             color = QuackColor.Gray1,
                         ),
                     )
                     Spacer(space = 4.dp)
                     QuackText(
-                        text = wrongComment.createAt.toString(), // TODO(limasaehyun): 시간 계산 로직
+                        text = wrongComment.createdAt,
                         typography = QuackTypography.Body3.change(
                             color = QuackColor.Gray2,
                         ),
                     )
                 }
                 Spacer(space = 2.dp)
-                QuackTitle2(text = wrongComment.answer)
+                QuackTitle2(text = wrongComment.wrongAnswer)
                 Spacer(space = 4.dp)
-                QuackBody1(text = wrongComment.comment)
+                QuackBody1(text = wrongComment.message)
             }
             Spacer(weight = 1f)
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                QuackImage(
+                QuackIcon(
                     modifier = Modifier
-                        .size(DpSize(24.dp, 24.dp))
-                        .quackClickable(onClick = {
-                            onHeartClick(0)
-                        },),
-                    src = if (wrongComment.isLike) {
+                        .size(24.dp)
+                        .quackClickable(
+                            onClick = {
+                                onHeartClick(wrongComment.id)
+                            },
+                        ),
+                    icon = if (wrongComment.isHeart) {
                         QuackIcon.FilledHeart
                     } else {
                         QuackIcon.Outlined.Heart
                     },
                 )
                 QuackText(
-                    text = wrongComment.likeCnt.toString(),
+                    text = wrongComment.heartCount.toString(),
                     typography = QuackTypography.Body3.change(
-                        color = hearTextColor.value,
+                        color = animateHeartColor.value,
                     ),
                 )
             }

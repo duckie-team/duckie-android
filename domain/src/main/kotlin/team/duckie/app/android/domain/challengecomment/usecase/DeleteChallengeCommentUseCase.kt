@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class DeleteChallengeCommentUseCase @Inject constructor(
     private val challengeCommentRepository: ChallengeCommentRepository,
-){
+) {
 
     suspend operator fun invoke(commentId: Int) = runCatching {
         challengeCommentRepository.deleteChallengeComment(
