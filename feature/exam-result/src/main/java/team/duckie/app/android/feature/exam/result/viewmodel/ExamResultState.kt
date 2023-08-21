@@ -12,6 +12,7 @@ import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.common.kotlin.getDiffDayFromToday
 import team.duckie.app.android.common.kotlin.isTopRanked
 import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
+import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
 import team.duckie.app.android.domain.heart.model.Heart
 import team.duckie.app.android.domain.user.model.User
 
@@ -46,6 +47,7 @@ sealed class ExamResultState {
         // 오답 댓글 쓰기
         val comments: ImmutableList<ChallengeCommentUiModel> = persistentListOf(),
         val commentsTotal: Int = 0,
+        val commentOrderType: CommentOrderType = CommentOrderType.LIKE,
 
         // user input state
         val reaction: String = "",
@@ -60,7 +62,7 @@ sealed class ExamResultState {
         val equalAnswerCount: Int = 0,
         val wrongComment: String = "",
 
-    ) : ExamResultState() {
+        ) : ExamResultState() {
         val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
 
         data class ChallengeCommentUiModel(
