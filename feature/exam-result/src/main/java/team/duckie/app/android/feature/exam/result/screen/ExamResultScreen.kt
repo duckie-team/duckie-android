@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -43,7 +42,7 @@ import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextAre
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
 import team.duckie.app.android.feature.exam.result.screen.exam.ExamResultContent
-import team.duckie.app.android.feature.exam.result.screen.quiz.QuizResultScreen
+import team.duckie.app.android.feature.exam.result.screen.quiz.QuizResultContent
 import team.duckie.app.android.feature.exam.result.screen.wronganswer.ChallengeCommentBottomSheetContent
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
@@ -209,9 +208,9 @@ private fun ExamResultSuccessScreen(
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .padding(horizontal = 16.dp),
-                    leadingIcon = QuackIcon.Outlined.Close,
+                    leadingIcon = QuackIcon.Close,
                     onLeadingIconClick = viewModel::exitExam,
-                    trailingIcon = QuackIcon.Outlined.Share,
+                    trailingIcon = QuackIcon.Share,
                     onTrailingIconClick = {
                         viewModel.updateExamResultScreen(ExamResultScreen.SHARE_EXAM_RESULT)
                     },
@@ -234,7 +233,8 @@ private fun ExamResultSuccessScreen(
             ) {
                 with(state) {
                     if (isQuiz) {
-                        QuizResultScreen(resultImageUrl = reportUrl,
+                        QuizResultContent(
+                            resultImageUrl = reportUrl,
                             correctProblemCount = correctProblemCount,
                             time = time,
                             mainTag = mainTag,
@@ -256,7 +256,7 @@ private fun ExamResultSuccessScreen(
                             onHeartComment = { isLike ->
                                 viewModel.heartWrongComment(isLike)
                             },
-                            initState = {
+                            initialState = {
                                 viewModel.getChallengeCommentList()
                             },
                             comments = state.comments,
@@ -278,25 +278,3 @@ private fun ExamResultSuccessScreen(
 }
 
 private fun ExamResultState.isQuiz() = this is ExamResultState.Success && this.isQuiz
-
-@Preview
-@Composable
-fun Preview() {
-    Column(
-        Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        QuackIcon(
-            icon = QuackIcon.Outlined.Close, modifier = Modifier
-                .quackClickable(
-                    rippleEnabled = true,
-                    onClick = {},
-                )
-                .padding(8.dp)
-                .size(40.dp)
-
-        )
-    }
-}
