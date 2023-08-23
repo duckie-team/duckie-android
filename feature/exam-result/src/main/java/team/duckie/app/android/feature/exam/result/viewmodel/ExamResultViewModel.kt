@@ -79,6 +79,7 @@ class ExamResultViewModel @Inject constructor(
                     val comments = state.comments.filter { it.userId != userId }.toImmutableList()
                     state.copy(
                         comments = comments,
+                        commentsTotal = state.commentsTotal.minus(1),
                     )
                 }
                 postSideEffect(ExamResultSideEffect.SendIgnoreUserToast(nickname))
