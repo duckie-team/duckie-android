@@ -52,6 +52,7 @@ internal fun ColumnScope.ChallengeCommentSection(
     commentsTotal: Int,
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     showCommentSheet: () -> Unit,
+    onDeleteComment: (Int) -> Unit,
 ) {
     Spacer(space = 28.dp)
     QuackHeadLine2(text = "답도 없는 오답들")
@@ -128,6 +129,7 @@ internal fun ColumnScope.ChallengeCommentSection(
                 },
                 isMine = item.isMine,
                 innerPaddingValues = PaddingValues(horizontal = 16.dp),
+                onDeleteComment = { onDeleteComment(item.id) }
             )
             Spacer(space = 8.dp)
         }

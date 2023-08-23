@@ -206,6 +206,7 @@ private fun ExamResultSuccessScreen(
                 onSendComment = {
                     viewModel.writeChallengeComment()
                 },
+                onDeleteComment = viewModel::deleteChallengeComment
             )
         },
         useHandle = true,
@@ -260,8 +261,6 @@ private fun ExamResultSuccessScreen(
                             myAnswer = myAnswer,
                             equalAnswerCount = equalAnswerCount,
                             profileImg = profileImg,
-                            myComment = myWrongComment,
-                            onMyCommentChanged = viewModel::updateWrongComment,
                             onHeartComment = { isLike ->
                                 viewModel.heartWrongComment(isLike)
                             },
@@ -274,7 +273,9 @@ private fun ExamResultSuccessScreen(
                                 coroutineScope.launch {
                                     sheetState.show()
                                 }
-                            })
+                            },
+                            onDeleteComment = viewModel::deleteChallengeComment
+                        )
                     } else {
                         ExamResultContent(
                             resultImageUrl = reportUrl,

@@ -21,5 +21,7 @@ sealed class ExamResultSideEffect {
 
     object SendReactionSuccessToast : ExamResultSideEffect()
 
+    object SendDeleteCommentSuccessToast : ExamResultSideEffect()
+
     data class SendErrorToast(val message: String) : ExamResultSideEffect()
 }

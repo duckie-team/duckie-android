@@ -62,12 +62,11 @@ internal fun QuizResultContent(
     profileImg: String,
     myAnswer: String,
     equalAnswerCount: Int,
-    myComment: String,
-    onMyCommentChanged: (String) -> Unit,
     onHeartComment: (Int) -> Unit,
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     commentsTotal: Int,
     showCommentSheet: () -> Unit,
+    onDeleteComment: (Int) -> Unit,
 ) {
     LaunchedEffect(key1 = Unit) {
         initialState()
@@ -176,6 +175,7 @@ internal fun QuizResultContent(
             comments = comments,
             commentsTotal = commentsTotal,
             showCommentSheet = showCommentSheet,
+            onDeleteComment = onDeleteComment,
         )
     }
 }

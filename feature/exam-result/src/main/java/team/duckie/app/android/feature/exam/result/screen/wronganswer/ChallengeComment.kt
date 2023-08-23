@@ -23,14 +23,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -78,6 +76,7 @@ internal fun ChallengeCommentBottomSheetContent(
     onHeartComment: (Int) -> Unit,
     onSendComment: () -> Unit,
     fullScreen: Boolean,
+    onDeleteComment: (Int) -> Unit,
 ) {
     WrapScaffoldLayout(
         fullScreen = fullScreen,
@@ -123,12 +122,13 @@ internal fun ChallengeCommentBottomSheetContent(
                 items(comments) { item ->
                     DraggableChallengeComment(
                         modifier = Modifier.fillMaxScreenWidth(),
+                        innerPaddingValues = PaddingValues(horizontal = 16.dp),
                         wrongComment = item,
                         onHeartClick = { commentId ->
                             onHeartComment(commentId)
                         },
                         isMine = item.isMine,
-                        innerPaddingValues = PaddingValues(horizontal = 16.dp),
+                        onDeleteComment = { onDeleteComment(item.id) },
                     )
                 }
             }
@@ -191,6 +191,7 @@ internal fun DraggableChallengeComment(
     wrongComment: ExamResultState.Success.ChallengeCommentUiModel,
     onHeartClick: (Int) -> Unit,
     isMine: Boolean,
+    onDeleteComment: (() -> Unit)? = null,
 ) {
     val (isRevealed, onChange) = remember { mutableStateOf(false) }
     val toast = rememberToast()
@@ -205,7 +206,7 @@ internal fun DraggableChallengeComment(
                     PullToDeleteButton(
                         modifier = modifier,
                         icon = QuackIcon.Outlined.Delete,
-                        onClick = { toast.invoke(ComingSoon) },
+                        onClick = { onDeleteComment?.invoke() },
                     )
                 } else {
                     PullToDeleteButton(
@@ -213,7 +214,7 @@ internal fun DraggableChallengeComment(
                         icon = QuackIcon.Outlined.Flag,
                         onClick = { toast.invoke(ComingSoon) },
                     )
-                    // TODO(limsaehyun) 작업 중...
+                    // TODO(limsaehyun) 신고 및 차단 기능 이곳에 구현하기
                 }
             }
         },
