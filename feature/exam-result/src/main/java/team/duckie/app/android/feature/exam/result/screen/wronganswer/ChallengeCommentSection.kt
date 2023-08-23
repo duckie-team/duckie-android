@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -149,7 +150,12 @@ internal fun ColumnScope.PopularCommentSection(
     data: String,
 ) {
     Spacer(space = 28.dp)
-    QuackHeadLine2(text = stringResource(id = R.string.exam_result_popular_comment))
+    QuackText(
+        text = stringResource(id = R.string.exam_result_popular_comment),
+        typography = QuackTypography.HeadLine2.change(
+            textAlign = TextAlign.Center,
+        ),
+    )
     Spacer(space = 8.dp)
     Column(
         modifier = Modifier
