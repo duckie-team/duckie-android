@@ -119,7 +119,6 @@ inline fun <reified T> duckieSimpleResponseFieldNpe(field: String): Nothing {
     throw DuckieResponseFieldNPE(field = getFieldName<T>(field))
 }
 
-
 /**
  * 클라이언트 내부 오류를 표현하고 싶을 때 나타냅니다.
  *

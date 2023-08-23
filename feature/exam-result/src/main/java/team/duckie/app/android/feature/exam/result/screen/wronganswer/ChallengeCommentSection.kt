@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
+import team.duckie.app.android.common.compose.util.fillMaxScreenWidth
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -118,11 +120,14 @@ internal fun ColumnScope.ChallengeCommentSection(
     Spacer(space = 8.dp)
     comments.forEach { item ->
         key(item.id) {
-            ChallengeComment(
+            DraggableChallengeComment(
+                modifier = Modifier.fillMaxScreenWidth(),
                 wrongComment = item,
                 onHeartClick = { commentId ->
                     onHeartComment(commentId)
                 },
+                isMine = item.isMine,
+                innerPaddingValues = PaddingValues(horizontal = 16.dp),
             )
             Spacer(space = 8.dp)
         }

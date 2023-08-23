@@ -23,15 +23,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.common.compose.DraggableBox
+import team.duckie.app.android.common.compose.PullToDeleteButton
 import team.duckie.app.android.common.compose.WrapScaffoldLayout
+import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.ui.QuackIconWrapper
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
@@ -39,6 +46,7 @@ import team.duckie.app.android.common.compose.ui.icon.v2.FilledHeart
 import team.duckie.app.android.common.compose.ui.icon.v2.Order18
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
+import team.duckie.app.android.common.compose.util.fillMaxScreenWidth
 import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.animation.animateQuackColorAsState
@@ -46,6 +54,8 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Delete
+import team.duckie.quackquack.material.icon.quackicon.outlined.Flag
 import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackIcon
@@ -67,8 +77,10 @@ internal fun ChallengeCommentBottomSheetContent(
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     onHeartComment: (Int) -> Unit,
     onSendComment: () -> Unit,
+    fullScreen: Boolean,
 ) {
     WrapScaffoldLayout(
+        fullScreen = fullScreen,
         modifier = modifier
             .imePadding(),
         topBar = {
@@ -109,11 +121,14 @@ internal fun ChallengeCommentBottomSheetContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(comments) { item ->
-                    ChallengeComment(
+                    DraggableChallengeComment(
+                        modifier = Modifier.fillMaxScreenWidth(),
                         wrongComment = item,
                         onHeartClick = { commentId ->
                             onHeartComment(commentId)
                         },
+                        isMine = item.isMine,
+                        innerPaddingValues = PaddingValues(horizontal = 16.dp),
                     )
                 }
             }
@@ -167,44 +182,92 @@ internal fun ChallengeCommentBottomSheetContent(
     )
 }
 
+private const val ComingSoon = "Comming Soon!"
+
 @Composable
-internal fun ChallengeComment(
+internal fun DraggableChallengeComment(
+    modifier: Modifier = Modifier,
+    innerPaddingValues: PaddingValues,
     wrongComment: ExamResultState.Success.ChallengeCommentUiModel,
+    onHeartClick: (Int) -> Unit,
+    isMine: Boolean,
+) {
+    val (isRevealed, onChange) = remember { mutableStateOf(false) }
+    val toast = rememberToast()
+
+    DraggableBox(
+        modifier = modifier,
+        isRevealed = isRevealed,
+        onRevealedChanged = { onChange(it) },
+        backgroundContent = { modifier ->
+            Row {
+                if(isMine) {
+                    PullToDeleteButton(
+                        modifier = modifier,
+                        icon = QuackIcon.Outlined.Delete,
+                        onClick = { toast.invoke(ComingSoon) },
+                    )
+                } else {
+                    PullToDeleteButton(
+                        modifier = modifier,
+                        icon = QuackIcon.Outlined.Flag,
+                        onClick = { toast.invoke(ComingSoon) },
+                    )
+                    // TODO(limsaehyun) 작업 중...
+                }
+            }
+        },
+        content = { modifier ->
+            ChallengeComment(
+                modifier = modifier,
+                wrongComment = wrongComment,
+                onHeartClick = onHeartClick,
+                innerPaddingValues = innerPaddingValues,
+            )
+        },
+    )
+}
+
+@Composable
+private fun ChallengeComment(
+    modifier: Modifier = Modifier,
+    wrongComment: ExamResultState.Success.ChallengeCommentUiModel,
+    innerPaddingValues: PaddingValues = PaddingValues(),
     onHeartClick: (Int) -> Unit,
 ) {
     val animateHeartColor =
         animateQuackColorAsState(targetValue = if (wrongComment.isHeart) QuackColor.Gray1 else QuackColor.Gray2)
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
+            .background(QuackColor.White.value)
+            .padding(innerPaddingValues)
             .padding(vertical = 8.dp),
     ) {
         QuackProfileImage(
-            profileUrl = wrongComment.user.profileImageUrl,
+            profileUrl = wrongComment.userProfileImg,
             size = DpSize(width = 40.dp, height = 40.dp),
         )
         Spacer(space = 8.dp)
         Column {
-            Row {
-                QuackText(
-                    text = "${wrongComment.user.nickname}님의 답",
-                    typography = QuackTypography.Body3.change(
-                        color = QuackColor.Gray1,
-                    ),
-                )
-                Spacer(space = 4.dp)
-                QuackText(
-                    text = wrongComment.createdAt,
-                    typography = QuackTypography.Body3.change(
-                        color = QuackColor.Gray2,
-                    ),
-                )
-            }
+            QuackText(
+                text = "${wrongComment.userNickname}님의 답",
+                typography = QuackTypography.Body3.change(
+                    color = QuackColor.Gray1,
+                ),
+            )
             Spacer(space = 2.dp)
             QuackTitle2(text = wrongComment.wrongAnswer)
-            Spacer(space = 4.dp)
+            Spacer(space = 6.dp)
             QuackBody1(text = wrongComment.message)
+            Spacer(space = 6.dp)
+            QuackText(
+                text = wrongComment.createdAt,
+                typography = QuackTypography.Body3.change(
+                    color = QuackColor.Gray2,
+                ),
+            )
         }
         Spacer(weight = 1f)
         Column(

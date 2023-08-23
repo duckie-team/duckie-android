@@ -17,6 +17,7 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -79,7 +80,6 @@ fun DraggableContent(
     content(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
             .offset { IntOffset(offsetTransition.roundToInt(), 0) }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { _, dragAmount ->
@@ -98,12 +98,16 @@ fun DraggableBox(
     isRevealed: Boolean,
     onRevealedChanged: (Boolean) -> Unit,
     content: @Composable (modifier: Modifier) -> Unit,
-    backgroundContent: @Composable () -> Unit,
+    backgroundContent: @Composable (modifier: Modifier) -> Unit,
 ) {
     SubcomposeLayout(modifier = modifier) { constraints ->
+        val tempContentHeight =
+            subcompose("tempContent") { content(Modifier) } // for get content height fast
+                .fastMap { it.measure(constraints) }.fastMaxBy { it.height }?.height ?: 0
 
-        val backgroundPlaceable = subcompose("background", backgroundContent)
-            .fastMap { it.measure(constraints) }
+        val backgroundPlaceable = subcompose("background") {
+            backgroundContent(Modifier.height(tempContentHeight.toDp()))
+        }.fastMap { it.measure(constraints) }
 
         val backgroundWidth = backgroundPlaceable.fastMaxBy { it.width }?.width ?: 0
 
@@ -142,7 +146,6 @@ fun PullToDeleteButton(
     Box(
         modifier = modifier
             .width(52.dp)
-            .height(92.dp)
             .background(QuackColor.Gray4.value)
             .quackClickable {
                 onClick()
@@ -172,6 +175,7 @@ fun PreviewDraggableBox() {
             backgroundContent = {
                 Row {
                     PullToDeleteButton(
+                        modifier = Modifier.fillMaxHeight(),
                         icon = QuackIcon.Outlined.Flag,
                         onClick = { isRevealed = false },
                     )

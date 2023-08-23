@@ -43,6 +43,7 @@ import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.MakeQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.PostQuizReactionUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -78,10 +79,48 @@ class ExamResultViewModel @Inject constructor(
         reduce { state.copy(commentOrderType = orderType) }
     }
 
+    fun deleteChallengeComment(commentId: Int) = intent {
+        val state = state as ExamResultState.Success
+        deleteChallengeCommentUseCase(commentId = commentId)
+            .onSuccess { success ->
+                if (success) {
+                    reduce {
+                        val comments =
+                            state.comments.filter { it.id != commentId }.toImmutableList()
+                        state.copy(
+                            comments = comments,
+                            commentsTotal = state.commentsTotal.minus(1),
+                        )
+                    }
+                }
+            }.onFailure { exception ->
+                postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }
+    }
+
+    fun reportChallengeComment(commentId: Int) = intent {
+        val state = state as ExamResultState.Success
+        reportChallengeCommentUseCase(commentId = commentId)
+            .onSuccess { success ->
+                if (success) {
+                    reduce {
+                        val comments =
+                            state.comments.filter { it.id != commentId }.toImmutableList()
+                        state.copy(
+                            comments = comments,
+                            commentsTotal = state.commentsTotal.minus(1),
+                        )
+                    }
+                }
+            }.onFailure { exception ->
+                postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }
+    }
+
     fun getChallengeCommentList() = intent {
         val state = state as ExamResultState.Success
         getChallengeCommentListUseCase(
-            problemId = 500, // FIXME(limsaehyun) for test
+            problemId = state.examId,
             order = CommentOrderType.LIKE,
         ).onSuccess { result ->
             val commentsUiModel =
@@ -98,10 +137,26 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
-    fun sendChallengeComment() = intent {
+    fun writeChallengeComment() = intent {
         val state = state as ExamResultState.Success
-        reduce { state.copy(isWriteComment = true) }
-        // TODO 로직 구현
+        writeChallengeCommentUseCase(
+            challengeId = state.examId,
+            message = state.myWrongComment,
+        ).onSuccess { challenge ->
+            val comments = state.comments.toMutableList().apply {
+                add(challenge.toUiModel(isMine = true))
+            }.toImmutableList()
+            reduce {
+                state.copy(
+                    isWriteComment = true,
+                    comments = comments,
+                    commentCreateAt = Date(),
+                    commentsTotal = state.commentsTotal.plus(1),
+                )
+            }
+        }.onFailure { exception ->
+            postSideEffect(ExamResultSideEffect.ReportError(exception))
+        }
     }
 
     fun heartWrongComment(commentId: Int) = intent {
@@ -242,7 +297,7 @@ class ExamResultViewModel @Inject constructor(
         val state = state as ExamResultState.Success
         reduce {
             state.copy(
-                wrongComment = comment,
+                myWrongComment = comment,
             )
         }
     }

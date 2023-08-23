@@ -15,6 +15,7 @@
 package team.duckie.app.android.data.challengecomment.datasource
 
 import team.duckie.app.android.data.challengecomment.model.CommentOrderTypeData
+import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
 import team.duckie.app.android.domain.challengecomment.model.ChallengeCommentList
 
 interface ChallengeCommentRemoteDataSource {
@@ -28,9 +29,9 @@ interface ChallengeCommentRemoteDataSource {
 
     suspend fun deleteChallengeCommentHeart(heartId: Int): Boolean
 
-    suspend fun reportChallengeComment(challengeId: Int): Boolean
+    suspend fun reportChallengeComment(commentId: Int): Boolean
 
-    suspend fun writeChallengeComment(challengeId: Int, message: String): Boolean
+    suspend fun writeChallengeComment(challengeId: Int, message: String): ChallengeComment
 
     suspend fun deleteChallengeComment(commentId: Int): Boolean
 }

@@ -30,6 +30,7 @@ private object WrapScaffoldLayoutId {
 @UiComposable
 fun WrapScaffoldLayout(
     modifier: Modifier = Modifier,
+    fullScreen: Boolean = false,
     topBar: @Composable @UiComposable () -> Unit,
     content: @Composable @UiComposable () -> Unit,
     bottomBar: @Composable @UiComposable () -> Unit,
@@ -64,7 +65,7 @@ fun WrapScaffoldLayout(
 
         val totalHeight = topBarHeight + bodyContentHeight + bottomBarHeight
 
-        layout(layoutWidth, totalHeight) {
+        layout(layoutWidth, if(fullScreen) layoutHeight else totalHeight) {
             bodyContentPlaceables.fastForEach {
                 it.place(0, topBarHeight)
             }

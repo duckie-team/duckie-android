@@ -16,7 +16,7 @@ class ReportChallengeCommentUseCase @Inject constructor(
     private val challengeCommentRepository: ChallengeCommentRepository,
 ) {
 
-    suspend operator fun invoke(challengeId: Int) = runCatching {
-        challengeCommentRepository.reportChallengeComment(challengeId = challengeId)
+    suspend operator fun invoke(commentId: Int) = runCatching {
+        challengeCommentRepository.reportChallengeComment(commentId = commentId)
     }
 }

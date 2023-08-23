@@ -7,8 +7,6 @@
 
 package team.duckie.app.android.feature.exam.result.viewmodel
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.common.kotlin.getDiffDayFromToday
@@ -17,7 +15,6 @@ import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
 import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
 import team.duckie.app.android.domain.heart.model.Heart
 import team.duckie.app.android.domain.user.model.User
-import java.time.LocalDateTime
 import java.util.Date
 
 enum class ExamResultScreen {
@@ -66,15 +63,11 @@ sealed class ExamResultState {
         val myAnswer: String = "",
         val profileImg: String = "",
         val equalAnswerCount: Int = 0,
-        val wrongComment: String = "",
+        val myWrongComment: String = "",
 
         ) : ExamResultState() {
 
         val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
-
-        private fun Date.difference(other: Date): Long {
-            return this.time - other.time
-        }
 
         data class ChallengeCommentUiModel(
             val id: Int,
@@ -82,9 +75,11 @@ sealed class ExamResultState {
             val wrongAnswer: String,
             val heartCount: Int,
             val createdAt: String,
-            val user: User,
+            val userProfileImg: String = "",
+            val userNickname: String = "",
             val heart: Heart?,
             val isHeart: Boolean = false,
+            val isMine: Boolean = false,
         )
     }
 
@@ -93,13 +88,15 @@ sealed class ExamResultState {
     ) : ExamResultState()
 }
 
-internal fun ChallengeComment.toUiModel() = ExamResultState.Success.ChallengeCommentUiModel(
+internal fun ChallengeComment.toUiModel(isMine: Boolean = false) = ExamResultState.Success.ChallengeCommentUiModel(
     id = id,
     message = message,
     wrongAnswer = wrongAnswer,
     heartCount = heartCount,
-    createdAt = createdAt.getDiffDayFromToday(),
-    user = user,
+    createdAt = createdAt.getDiffDayFromToday(isShowSecond = false),
+    userProfileImg = user.profileImageUrl ?: "",
+    userNickname = user.nickname,
     heart = heart,
     isHeart = heart != null,
+    isMine = isMine,
 )

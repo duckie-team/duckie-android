@@ -9,6 +9,7 @@ package team.duckie.app.android.data.challengecomment.repository
 
 import team.duckie.app.android.data.challengecomment.datasource.ChallengeCommentRemoteDataSource
 import team.duckie.app.android.data.challengecomment.mapper.toData
+import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
 import team.duckie.app.android.domain.challengecomment.model.ChallengeCommentList
 import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
 import team.duckie.app.android.domain.challengecomment.repository.ChallengeCommentRepository
@@ -36,11 +37,11 @@ class ChallengeCommentRepositoryImpl @Inject constructor(
         return challengeCommentRemoteDataSource.deleteChallengeCommentHeart(heartId = heartId)
     }
 
-    override suspend fun reportChallengeComment(challengeId: Int): Boolean {
-        return challengeCommentRemoteDataSource.reportChallengeComment(challengeId = challengeId)
+    override suspend fun reportChallengeComment(commentId: Int): Boolean {
+        return challengeCommentRemoteDataSource.reportChallengeComment(commentId = commentId)
     }
 
-    override suspend fun writeChallengeComment(challengeId: Int, message: String): Boolean {
+    override suspend fun writeChallengeComment(challengeId: Int, message: String): ChallengeComment {
         return challengeCommentRemoteDataSource.writeChallengeComment(
             challengeId = challengeId,
             message = message,

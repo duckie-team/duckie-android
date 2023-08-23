@@ -26,8 +26,10 @@ import team.duckie.app.android.data._exception.util.responseCatching
 import team.duckie.app.android.data._util.jsonBody
 import team.duckie.app.android.data._util.toStringJsonMap
 import team.duckie.app.android.data.challengecomment.mapper.toDomain
+import team.duckie.app.android.data.challengecomment.model.ChallengeCommentResponse
 import team.duckie.app.android.data.challengecomment.model.CommentOrderTypeData
 import team.duckie.app.android.data.challengecomment.model.GetChallengeCommentListResponse
+import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
 import team.duckie.app.android.domain.challengecomment.model.ChallengeCommentList
 import javax.inject.Inject
 
@@ -69,23 +71,26 @@ class ChallengeCommentRemoteDataSourceImpl @Inject constructor() :
         return responseCatchingReturnSuccess(response)
     }
 
-    override suspend fun reportChallengeComment(challengeId: Int): Boolean {
+    override suspend fun reportChallengeComment(commetnId: Int): Boolean {
         val response = client.post("/challenge-comment-reports") {
             jsonBody {
-                "challengeCommentId" withInt challengeId
+                "challengeCommentId" withInt commetnId
             }
         }
         return responseCatchingReturnSuccess(response)
     }
 
-    override suspend fun writeChallengeComment(challengeId: Int, message: String): Boolean {
+    override suspend fun writeChallengeComment(challengeId: Int, message: String): ChallengeComment {
         val response = client.post("/challenge-comments") {
             jsonBody {
                 "message" withString message
                 "challengeId" withInt challengeId
             }
         }
-        return responseCatchingReturnSuccess(response)
+        return responseCatching(
+            response = response,
+            parse = ChallengeCommentResponse::toDomain,
+        )
     }
 
     override suspend fun deleteChallengeComment(commentId: Int): Boolean {

@@ -31,7 +31,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
@@ -182,30 +181,30 @@ private fun ExamResultSuccessScreen(
     state: ExamResultState.Success,
     viewModel: ExamResultViewModel,
 ) {
-    val sheetState =
-        rememberModalBottomSheetState(
-            initialValue = ModalBottomSheetValue.Expanded,
-            skipHalfExpanded = true,
-        )
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true, // TODO(limsaehyun) bottomContent가 보이지 않은 현상으로 인해 불가능
+    )
     val coroutineScope = rememberCoroutineScope()
 
     DuckieBottomSheetDialog(
         sheetState = sheetState,
         sheetContent = {
             ChallengeCommentBottomSheetContent(
+                fullScreen = false, // TODO(limsaehyun) sheetState 내부 swipeable에 접근이 불가능.. ModalBottomSheet을 직접 구현해야 함
                 commentsTotal = state.commentsTotal,
                 orderType = state.commentOrderType,
                 onOrderTypeChanged = viewModel::transferCommentOrderType,
-                myComment = state.wrongComment,
+                myComment = state.myWrongComment,
                 onMyCommentChanged = viewModel::updateWrongComment,
-                comments = persistentListOf(), // FIXME(delete) state.comments,
+                comments = state.comments,
                 onHeartComment = { commentId ->
                     viewModel.heartWrongComment(commentId)
                 },
                 myCommentCreateAt = state.commentCreateAt.getDiffDayFromToday(isShowSecond = false),
                 isWriteComment = state.isWriteComment,
                 onSendComment = {
-                    viewModel.sendChallengeComment()
+                    viewModel.writeChallengeComment()
                 },
             )
         },
@@ -261,7 +260,7 @@ private fun ExamResultSuccessScreen(
                             myAnswer = myAnswer,
                             equalAnswerCount = equalAnswerCount,
                             profileImg = profileImg,
-                            myComment = wrongComment,
+                            myComment = myWrongComment,
                             onMyCommentChanged = viewModel::updateWrongComment,
                             onHeartComment = { isLike ->
                                 viewModel.heartWrongComment(isLike)

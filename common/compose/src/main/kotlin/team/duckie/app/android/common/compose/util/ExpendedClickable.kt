@@ -41,26 +41,25 @@ fun PreviewExpandedCickable() {
                 .background(Color.Black)
                 .size(50.dp)
         )
-        Box(modifier = Modifier
+        Box(
+            modifier = Modifier
             .background(QuackColor.Gray4.value)
             .size(50.dp)
             .expendedQuackClickable {
-
             }
         )
-        Box(modifier = Modifier
+        Box(
+            modifier = Modifier
             .background(QuackColor.Gray4.value)
             .size(50.dp)
             .expendedQuackClickable(
                 verticalExpendedSize = 24.dp,
                 horizontalExpendedSize = 24.dp,
             ) {
-
             }
         )
     }
 }
-
 
 fun Modifier.expendedQuackClickable(
     verticalExpendedSize: Dp = 12.dp,
@@ -95,4 +94,3 @@ fun Modifier.expendedQuackClickable(
             onClick = onClick,
         )
 }
-
