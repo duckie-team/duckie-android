@@ -27,6 +27,7 @@
     <string name="exam_result_ignore_user_success">%s님이 차단됐어요</string>
     <string name="exam_result_report_comment_success">신고가 접수됐어요</string>
 
+    <string name="exam_result_same_answer_with_me">나와 같은 답을 제출한 유저는 %s명이에요</string>
     <string name="exam_result_wrong_comment_title">답도 없는 오답들</string>
     <string name="exam_result_total_comment">전체 댓글 %s개</string>
     <string name="exam_result_input_comment_hint">댓글을 남겨보세요!</string>

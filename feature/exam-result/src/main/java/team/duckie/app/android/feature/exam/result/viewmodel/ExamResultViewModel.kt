@@ -411,6 +411,8 @@ class ExamResultViewModel @Inject constructor(
                             isBestRecord = isBestRecord,
                             myAnswer = updateQuizParam.wrongAnswer ?: "",
                             me = user,
+                            mostWrongAnswerData = wrongAnswer?.mostData ?: "",
+                            mostWrongAnswerTotal = wrongAnswer?.mostTotal ?: 0,
                         )
                     }
                 }

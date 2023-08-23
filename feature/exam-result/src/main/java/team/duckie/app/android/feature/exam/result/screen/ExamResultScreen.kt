@@ -259,7 +259,6 @@ private fun ExamResultSuccessScreen(
                             },
                             nickname = nickname,
                             myAnswer = myAnswer,
-                            equalAnswerCount = equalAnswerCount,
                             profileImg = profileImg,
                             onHeartComment = { isLike ->
                                 viewModel.heartWrongComment(isLike)
@@ -277,6 +276,9 @@ private fun ExamResultSuccessScreen(
                             onDeleteComment = viewModel::deleteChallengeComment,
                             onIgnoreUser = viewModel::ignoreUser,
                             onReportComment = viewModel::reportChallengeComment,
+                            mostWrongTotal = mostWrongAnswerTotal,
+                            mostWrongData = mostWrongAnswerData,
+                            equalAnswerCount = equalAnswerCount
                         )
                     } else {
                         ExamResultContent(

@@ -57,6 +57,8 @@ sealed class ExamResultState {
         val myAnswer: String = "",
         val equalAnswerCount: Int = 0,
         val myWrongComment: String = "",
+        val mostWrongAnswerTotal: Int = 0,
+        val mostWrongAnswerData: String = "",
 
         // user input state
         val reaction: String = "",

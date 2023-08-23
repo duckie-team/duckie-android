@@ -62,7 +62,6 @@ internal fun QuizResultContent(
     // challenge comment
     profileImg: String,
     myAnswer: String,
-    equalAnswerCount: Int,
     onHeartComment: (Int) -> Unit,
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     commentsTotal: Int,
@@ -70,6 +69,9 @@ internal fun QuizResultContent(
     onDeleteComment: (Int) -> Unit,
     onIgnoreUser: (Int, String) -> Unit,
     onReportComment: (Int) -> Unit,
+    mostWrongTotal: Int,
+    mostWrongData: String,
+    equalAnswerCount: Int,
 ) {
     LaunchedEffect(key1 = Unit) {
         initialState()
@@ -102,6 +104,16 @@ internal fun QuizResultContent(
                 text = myAnswer,
                 typography = QuackTypography.HeadLine2.change(
                     color = QuackColor.Black
+                ),
+            )
+            Spacer(space = 8.dp)
+            QuackText(
+                text = stringResource(
+                    id = R.string.exam_result_same_answer_with_me,
+                    equalAnswerCount
+                ),
+                typography = QuackTypography.Body2.change(
+                    color = QuackColor.Gray1,
                 ),
             )
         }
@@ -192,8 +204,8 @@ internal fun QuizResultContent(
         Spacer(space = 28.dp)
         QuizResultLargeDivider()
         PopularCommentSection(
-            myAnswer = myAnswer,
-            equalAnswerCount = equalAnswerCount,
+            total = mostWrongTotal,
+            data = mostWrongData,
         )
         QuizResultLargeDivider()
         ChallengeCommentSection(

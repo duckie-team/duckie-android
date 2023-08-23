@@ -36,6 +36,7 @@ internal fun GetQuizResponse.toDomain() = QuizResult(
     score = score ?: duckieResponseFieldNpe("${this::class.java.simpleName}.score"),
     user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
     wrongProblem = wrongProblem?.toDomain(),
+    wrongAnswer = wrongAnswer?.toDomain(),
     ranking = ranking,
     requirementAnswer = requirementAnswer,
     isBestRecord = isBestRecord ?: false, // for start-exam
@@ -45,4 +46,11 @@ internal fun QuizExamData.toDomain() = QuizExam(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     answerRate = answerRate,
     heart = heart,
+)
+
+internal fun GetQuizResponse.MeAndMostWrongAnswer.toDomain() = QuizResult.WrongAnswer(
+    meTotal = me.total,
+    meData = me.data,
+    mostTotal = most.total,
+    mostData = most.data,
 )

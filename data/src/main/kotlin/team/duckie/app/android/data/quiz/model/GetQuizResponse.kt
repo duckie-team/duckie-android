@@ -27,10 +27,25 @@ internal data class GetQuizResponse(
     val user: UserResponse? = null,
     @field:JsonProperty("wrongProblem")
     val wrongProblem: ProblemData? = null,
+    @field:JsonProperty("wrongAnswer")
+    val wrongAnswer: MeAndMostWrongAnswer? = null,
     @field:JsonProperty("ranking")
     val ranking: Int? = null,
     @field:JsonProperty("requirementAnswer")
     val requirementAnswer: String? = null,
     @field:JsonProperty("isBestRecord")
     val isBestRecord: Boolean? = null,
-)
+) {
+    data class MeAndMostWrongAnswer(
+        @field:JsonProperty("me")
+        val me: SimpleWrongAnswer,
+        @field:JsonProperty("most")
+        val most: SimpleWrongAnswer,
+    )
+    data class SimpleWrongAnswer(
+        @field:JsonProperty("total")
+        val total: Int,
+        @field:JsonProperty("data")
+        val data: String,
+    )
+}

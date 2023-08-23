@@ -145,8 +145,8 @@ internal fun ColumnScope.ChallengeCommentSection(
 
 @Composable
 internal fun ColumnScope.PopularCommentSection(
-    myAnswer: String,
-    equalAnswerCount: Int,
+    total: Int,
+    data: String,
 ) {
     Spacer(space = 28.dp)
     QuackHeadLine2(text = stringResource(id = R.string.exam_result_popular_comment))
@@ -164,12 +164,12 @@ internal fun ColumnScope.PopularCommentSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        QuackHeadLine2(text = myAnswer)
+        QuackHeadLine2(text = data)
         Spacer(space = 4.dp)
         QuackBody2(
             text = stringResource(
                 id = R.string.exam_result_equal_comment_value,
-                equalAnswerCount
+                total
             )
         )
     }

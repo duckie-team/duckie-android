@@ -17,11 +17,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -33,22 +30,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.DraggableBox
 import team.duckie.app.android.common.compose.PullToDeleteButton
-import team.duckie.app.android.common.compose.WrapScaffoldLayout
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.ui.QuackIconWrapper
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
 import team.duckie.app.android.common.compose.ui.icon.v2.FilledHeart
 import team.duckie.app.android.common.compose.ui.icon.v2.IcBlock24
 import team.duckie.app.android.common.compose.ui.icon.v2.IcTrash24
 import team.duckie.app.android.common.compose.ui.icon.v2.Order18
-import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
-import team.duckie.app.android.common.compose.util.fillMaxScreenWidth
-import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.animation.animateQuackColorAsState
@@ -61,131 +52,8 @@ import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.sugar.QuackTitle2
-
-@Composable
-internal fun ChallengeCommentBottomSheetContent(
-    modifier: Modifier = Modifier,
-    totalComments: Int,
-    orderType: CommentOrderType,
-    onOrderTypeChanged: () -> Unit,
-    myComment: String,
-    myCommentCreateAt: String,
-    isWriteComment: Boolean,
-    onMyCommentChanged: (String) -> Unit,
-    comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
-    onHeartComment: (Int) -> Unit,
-    onSendComment: () -> Unit,
-    fullScreen: Boolean,
-    onDeleteComment: (Int) -> Unit,
-) {
-    WrapScaffoldLayout(
-        fullScreen = fullScreen,
-        modifier = modifier
-            .imePadding(),
-        topBar = {
-            if (comments.isNotEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(all = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    QuackText(
-                        text = stringResource(id = R.string.exam_result_total_comment, totalComments),
-                        typography = QuackTypography.Title2.change(
-                            color = QuackColor.Gray1,
-                        ),
-                    )
-                    QuackIconWrapper(
-                        icon = QuackIcon.Order18,
-                        onClick = onOrderTypeChanged,
-                        size = 18.dp,
-                    ) {
-                        QuackText(
-                            modifier = Modifier.padding(start = 2.dp),
-                            text = orderType.kor,
-                            typography = QuackTypography.Body2.change(
-                                color = QuackColor.Gray1,
-                            ),
-                        )
-                    }
-                }
-            }
-        },
-        content = {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(comments) { item ->
-                    DraggableChallengeComment(
-                        modifier = Modifier.fillMaxScreenWidth(),
-                        innerPaddingValues = PaddingValues(horizontal = 16.dp),
-                        wrongComment = item,
-                        onHeartClick = { commentId ->
-                            onHeartComment(commentId)
-                        },
-                        isMine = item.isMine,
-                        onDeleteComment = { onDeleteComment(item.id) },
-                        visibleHeart = false,
-                    )
-                }
-            }
-        },
-        bottomBar = {
-            if (isWriteComment) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp)
-                        .background(
-                            color = QuackColor.Gray4.value
-                        )
-                        .padding(all = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    QuackText(
-                        text = myComment,
-                        typography = QuackTypography.Body1.change(
-                            color = QuackColor.Gray1
-                        ),
-                    )
-                    QuackText(
-                        text = myCommentCreateAt,
-                        typography = QuackTypography.Body3.change(
-                            color = QuackColor.Gray2,
-                        ),
-                    )
-                }
-            } else {
-                Column {
-                    QuackDivider()
-                    QuackNoUnderlineTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(QuackColor.Gray4.value),
-                        text = myComment,
-                        onTextChanged = onMyCommentChanged,
-                        placeholderText = stringResource(id = R.string.exam_result_input_comment_hint),
-                        trailingIcon = QuackIcon.ArrowSendId,
-                        trailingIconOnClick = onSendComment,
-                        paddingValues = PaddingValues(
-                            vertical = 14.dp,
-                            horizontal = 16.dp,
-                        )
-                    )
-                }
-            }
-        },
-    )
-}
 
 @Composable
 internal fun DraggableChallengeComment(
@@ -200,7 +68,6 @@ internal fun DraggableChallengeComment(
     visibleHeart: Boolean = false,
 ) {
     val (isRevealed, onChange) = remember { mutableStateOf(false) }
-    val toast = rememberToast()
 
     DraggableBox(
         modifier = modifier,
