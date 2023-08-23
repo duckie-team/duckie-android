@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.DraggableBox
 import team.duckie.app.android.common.compose.PullToDeleteButton
-import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.ui.QuackIconWrapper
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.FilledHeart

@@ -65,7 +65,7 @@ fun WrapScaffoldLayout(
 
         val totalHeight = topBarHeight + bodyContentHeight + bottomBarHeight
 
-        layout(layoutWidth, if(fullScreen) layoutHeight else totalHeight) {
+        layout(layoutWidth, if (fullScreen) layoutHeight else totalHeight) {
             bodyContentPlaceables.fastForEach {
                 it.place(0, topBarHeight)
             }

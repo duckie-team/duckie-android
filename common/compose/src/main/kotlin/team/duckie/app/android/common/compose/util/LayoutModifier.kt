@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import kotlin.math.roundToInt
 
-
 @Composable
 fun Modifier.fillMaxScreenWidth(): Modifier {
 

@@ -137,7 +137,6 @@ class ExamResultViewModel @Inject constructor(
             }
     }
 
-
     fun getChallengeCommentList() = intent {
         val state = state as ExamResultState.Success
         getChallengeCommentListUseCase(
