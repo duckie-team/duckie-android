@@ -80,18 +80,27 @@ internal fun DraggableChallengeComment(
                     PullToDeleteButton(
                         modifier = modifier,
                         icon = QuackIcon.IcTrash24,
-                        onClick = { onDeleteComment?.invoke() },
+                        onClick = {
+                            onChange(false)
+                            onDeleteComment?.invoke()
+                        },
                     )
                 } else {
                     PullToDeleteButton(
                         modifier = modifier,
                         icon = QuackIcon.IcBlock24,
-                        onClick = { onReportComment?.invoke() },
+                        onClick = {
+                            onChange(false)
+                            onReportComment?.invoke()
+                        },
                     )
                     PullToDeleteButton(
                         modifier = modifier,
                         icon = QuackIcon.Outlined.Flag,
-                        onClick = { onIgnoreComment?.invoke() },
+                        onClick = {
+                            onChange(false)
+                            onIgnoreComment?.invoke()
+                        },
                     )
                 }
             }
