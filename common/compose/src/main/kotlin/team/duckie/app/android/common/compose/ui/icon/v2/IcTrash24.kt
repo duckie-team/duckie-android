@@ -24,25 +24,34 @@ val QuackIcon.IcTrash24: ImageVector
             return _icTrash24!!
         }
         _icTrash24 = Builder(
-            name = "IcTrash24", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
-                viewportWidth = 24.0f, viewportHeight = 24.0f
+            name = "IcTrash24",
+            defaultWidth = 24.0.dp,
+            defaultHeight = 24.0.dp,
+                viewportWidth = 24.0f,
+            viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFFFF2929)),
-                    strokeLineWidth = 1.5f, strokeLineCap = Round,
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFFFF2929)),
+                    strokeLineWidth = 1.5f,
+                strokeLineCap = Round,
                         strokeLineJoin =
                     StrokeJoin.Companion.Round,
-                        strokeLineMiter = 4.0f, pathFillType = NonZero
+                        strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(5.0f, 7.0f)
                 lineTo(19.0f, 7.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFFFF2929)),
-                    strokeLineWidth = 1.5f, strokeLineCap = Round,
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFFFF2929)),
+                    strokeLineWidth = 1.5f,
+                strokeLineCap = Round,
                         strokeLineJoin =
                     StrokeJoin.Companion.Round,
-                        strokeLineMiter = 4.0f, pathFillType = NonZero
+                        strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(6.0f, 10.0f)
                 verticalLineTo(20.0f)
@@ -50,11 +59,14 @@ val QuackIcon.IcTrash24: ImageVector
                 verticalLineTo(10.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFFFF2929)),
-                    strokeLineWidth = 1.5f, strokeLineCap = Round,
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFFFF2929)),
+                    strokeLineWidth = 1.5f,
+                strokeLineCap = Round,
                         strokeLineJoin =
                     StrokeJoin.Companion.Round,
-                        strokeLineMiter = 4.0f, pathFillType = NonZero
+                        strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(9.0f, 7.0f)
                 verticalLineTo(4.0f)
@@ -62,21 +74,27 @@ val QuackIcon.IcTrash24: ImageVector
                 verticalLineTo(7.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFFFF2929)),
-                    strokeLineWidth = 1.5f, strokeLineCap = Round,
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFFFF2929)),
+                    strokeLineWidth = 1.5f,
+                strokeLineCap = Round,
                         strokeLineJoin =
                     StrokeJoin.Companion.Round,
-                        strokeLineMiter = 4.0f, pathFillType = NonZero
+                        strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(10.0f, 12.0f)
                 verticalLineTo(16.0f)
             }
             path(
-                fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFFFF2929)),
-                    strokeLineWidth = 1.5f, strokeLineCap = Round,
+                fill = SolidColor(Color(0x00000000)),
+                stroke = SolidColor(Color(0xFFFF2929)),
+                    strokeLineWidth = 1.5f,
+                strokeLineCap = Round,
                         strokeLineJoin =
                     StrokeJoin.Companion.Round,
-                        strokeLineMiter = 4.0f, pathFillType = NonZero
+                        strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(14.0f, 12.0f)
                 verticalLineTo(16.0f)

@@ -97,7 +97,7 @@ internal fun QuizResultContent(
             QuackText(
                 text = stringResource(id = R.string.my_answer),
                 typography = QuackTypography.Body3.change(
-                    color = QuackColor.Gray1
+                    color = QuackColor.Gray1,
                 ),
             )
             Spacer(space = 2.dp)
@@ -112,7 +112,7 @@ internal fun QuizResultContent(
             QuackText(
                 text = stringResource(
                     id = R.string.exam_result_same_answer_with_me,
-                    equalAnswerCount
+                    equalAnswerCount,
                 ),
                 typography = QuackTypography.Body2.change(
                     color = QuackColor.Gray1,

@@ -17,7 +17,6 @@ import kotlin.math.roundToInt
 
 @Composable
 fun Modifier.fillMaxScreenWidth(): Modifier {
-
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
     val screenWidthPx = remember { configuration.screenWidthDp * density.density }
@@ -25,8 +24,8 @@ fun Modifier.fillMaxScreenWidth(): Modifier {
     return layout { measurables, constraints ->
         val placeable = measurables.measure(
             constraints.copy(
-                maxWidth = screenWidthPx.roundToInt()
-            )
+                maxWidth = screenWidthPx.roundToInt(),
+            ),
         )
 
         layout(screenWidthPx.roundToInt(), placeable.height) {

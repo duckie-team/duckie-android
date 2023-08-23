@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 class WriteChallengeCommentUseCase @Inject constructor(
-    private val challengeCommentRepository: ChallengeCommentRepository
+    private val challengeCommentRepository: ChallengeCommentRepository,
 ) {
 
     suspend operator fun invoke(challengeId: Int, message: String) = runCatching {

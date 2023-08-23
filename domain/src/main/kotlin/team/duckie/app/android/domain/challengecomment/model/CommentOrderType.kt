@@ -15,5 +15,5 @@ enum class CommentOrderType(val type: String, val kor: String) {
     LIKE(
         type = "like",
         kor = "인기순",
-    )
+    ),
 }

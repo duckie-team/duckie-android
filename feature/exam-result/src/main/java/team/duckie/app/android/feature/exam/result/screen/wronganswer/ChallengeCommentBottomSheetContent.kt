@@ -73,7 +73,7 @@ internal fun ChallengeCommentBottomSheetContent(
                     QuackText(
                         text = stringResource(
                             id = R.string.exam_result_total_comment,
-                            totalComments
+                            totalComments,
                         ),
                         typography = QuackTypography.Title2.change(
                             color = QuackColor.Gray1,
@@ -100,7 +100,7 @@ internal fun ChallengeCommentBottomSheetContent(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(comments) { item ->
                     DraggableChallengeComment(
@@ -126,7 +126,7 @@ internal fun ChallengeCommentBottomSheetContent(
                         .fillMaxWidth()
                         .height(52.dp)
                         .background(
-                            color = QuackColor.Gray4.value
+                            color = QuackColor.Gray4.value,
                         )
                         .padding(all = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -135,7 +135,7 @@ internal fun ChallengeCommentBottomSheetContent(
                     QuackText(
                         text = myComment,
                         typography = QuackTypography.Body1.change(
-                            color = QuackColor.Gray1
+                            color = QuackColor.Gray1,
                         ),
                     )
                     QuackText(
@@ -160,7 +160,7 @@ internal fun ChallengeCommentBottomSheetContent(
                         paddingValues = PaddingValues(
                             vertical = 14.dp,
                             horizontal = 16.dp,
-                        )
+                        ),
                     )
                 }
             }

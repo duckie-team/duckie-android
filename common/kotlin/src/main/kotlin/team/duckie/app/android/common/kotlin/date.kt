@@ -11,7 +11,7 @@ package team.duckie.app.android.common.kotlin
 import java.util.Date
 
 fun Date.getDiffDayFromToday(
-    isShowSecond: Boolean = true
+    isShowSecond: Boolean = true,
 ): String {
     val currentTime = Date()
     val differenceInMillis = currentTime.time - this.time

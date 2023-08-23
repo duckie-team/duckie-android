@@ -41,7 +41,7 @@ internal fun ChallengeCommentResponse.toDomain() = ChallengeComment(
     heartCount = heartCount ?: duckieSimpleResponseFieldNpe<ChallengeCommentResponse>("heartCount"),
     createdAt = createdAt?.toDate() ?: duckieSimpleResponseFieldNpe<ChallengeCommentResponse>("createdAt"),
     user = user?.toDomain() ?: duckieSimpleResponseFieldNpe<ChallengeCommentResponse>("user"),
-    heart = heart?.toDomain()
+    heart = heart?.toDomain(),
 )
 
 internal fun CommentOrderType.toData() = when (this) {

@@ -52,7 +52,7 @@ fun QuackNoUnderlineTextField(
     placeholderText: String? = null,
     paddingValues: PaddingValues = PaddingValues(
         vertical = 8.dp,
-        horizontal = 12.dp
+        horizontal = 12.dp,
     ),
     startPadding: Dp = 0.dp,
     @DrawableRes leadingIcon: Int? = null,
@@ -185,7 +185,7 @@ fun PreviewQuackNoUnderlineTextField() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color.White),
     ) {
         QuackNoUnderlineTextField(
             modifier = Modifier
@@ -198,8 +198,8 @@ fun PreviewQuackNoUnderlineTextField() {
         trailingIcon = QuackIcon.ArrowSendId,
             trailingIconOnClick = {},
             paddingValues = PaddingValues(
-                vertical = 16.dp
-            )
+                vertical = 16.dp,
+            ),
         )
         QuackNoUnderlineTextField(
             modifier = Modifier
@@ -213,7 +213,7 @@ fun PreviewQuackNoUnderlineTextField() {
             paddingValues = PaddingValues(
                 vertical = 14.dp,
                 horizontal = 16.dp,
-            )
+            ),
         )
     }
 }

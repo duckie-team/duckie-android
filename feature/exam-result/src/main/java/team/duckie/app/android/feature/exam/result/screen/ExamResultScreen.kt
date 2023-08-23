@@ -280,7 +280,7 @@ private fun ExamResultSuccessScreen(
                             onReportComment = viewModel::reportChallengeComment,
                             mostWrongTotal = mostWrongAnswerTotal,
                             mostWrongData = mostWrongAnswerData,
-                            equalAnswerCount = equalAnswerCount
+                            equalAnswerCount = equalAnswerCount,
                         )
                     } else {
                         ExamResultContent(

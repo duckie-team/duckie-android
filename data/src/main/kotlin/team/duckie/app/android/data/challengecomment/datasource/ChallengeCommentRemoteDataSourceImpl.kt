@@ -102,7 +102,7 @@ class ChallengeCommentRemoteDataSourceImpl @Inject constructor() :
      * @return success boolean
      */
     private suspend fun responseCatchingReturnSuccess(
-        response: HttpResponse
+        response: HttpResponse,
     ): Boolean {
         return responseCatching(
             statusCode = response.status.value,

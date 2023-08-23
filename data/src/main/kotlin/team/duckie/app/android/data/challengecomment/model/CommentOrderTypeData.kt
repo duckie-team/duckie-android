@@ -9,5 +9,5 @@ package team.duckie.app.android.data.challengecomment.model
 
 enum class CommentOrderTypeData(val type: String) {
     DATE("date"),
-    LIKE("like")
+    LIKE("like"),
 }

@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("AnnotationOnSeparateLine")
+
 package team.duckie.app.android.common.compose
 
 import androidx.compose.runtime.Composable
@@ -36,7 +38,7 @@ fun WrapScaffoldLayout(
     bottomBar: @Composable @UiComposable () -> Unit,
 ) = with(WrapScaffoldLayoutId) {
     SubcomposeLayout(
-        modifier = modifier
+        modifier = modifier,
     ) { constraints ->
         val layoutWidth = constraints.maxWidth
         val layoutHeight = constraints.maxHeight
@@ -51,7 +53,7 @@ fun WrapScaffoldLayout(
 
         val bottomBarPlaceables = subcompose(BottomBar) {
             CompositionLocalProvider(
-                content = bottomBar
+                content = bottomBar,
             )
         }.fastMap { it.measure(looseConstraints) }
 

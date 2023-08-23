@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("CyclomaticComplexMethod")
+
 package team.duckie.app.android.feature.exam.result.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
@@ -232,8 +234,8 @@ class ExamResultViewModel @Inject constructor(
                         when {
                             exception.isHeartNotFound -> postSideEffect(
                                 ExamResultSideEffect.SendErrorToast(
-                                    HEART_NOT_FOUND_MESSAGE
-                                )
+                                    HEART_NOT_FOUND_MESSAGE,
+                                ),
                             )
 
                             else -> postSideEffect(ExamResultSideEffect.ReportError(exception))
@@ -266,7 +268,7 @@ class ExamResultViewModel @Inject constructor(
             comment.copy(
                 heart = null,
                 isHeart = false,
-                heartCount = comment.heartCount.minus(1)
+                heartCount = comment.heartCount.minus(1),
             )
         } else {
             comment
@@ -483,7 +485,7 @@ class ExamResultViewModel @Inject constructor(
     }
 
     private companion object {
-        val COMMENT_NOT_FOUND_MESSAGE = "댓글을 찾을 수 없습니다."
-        val HEART_NOT_FOUND_MESSAGE = "좋아요를 찾을 수 없습니다."
+        const val COMMENT_NOT_FOUND_MESSAGE = "댓글을 찾을 수 없습니다."
+        const val HEART_NOT_FOUND_MESSAGE = "좋아요를 찾을 수 없습니다."
     }
 }

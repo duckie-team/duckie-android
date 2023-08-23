@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
@@ -25,19 +23,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.DraggableBox
 import team.duckie.app.android.common.compose.PullToDeleteButton
-import team.duckie.app.android.common.compose.ui.QuackIconWrapper
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.FilledHeart
 import team.duckie.app.android.common.compose.ui.icon.v2.IcBlock24
 import team.duckie.app.android.common.compose.ui.icon.v2.IcTrash24
-import team.duckie.app.android.common.compose.ui.icon.v2.Order18
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
@@ -74,7 +68,7 @@ internal fun DraggableChallengeComment(
         onRevealedChanged = { onChange(it) },
         backgroundContent = { modifier ->
             Row(
-                horizontalArrangement = Arrangement.spacedBy(1.dp)
+                horizontalArrangement = Arrangement.spacedBy(1.dp),
             ) {
                 if (isMine) {
                     PullToDeleteButton(
@@ -111,7 +105,7 @@ internal fun DraggableChallengeComment(
                 wrongComment = wrongComment,
                 onHeartClick = onHeartClick,
                 innerPaddingValues = innerPaddingValues,
-                visibleHeart = visibleHeart
+                visibleHeart = visibleHeart,
             )
         },
     )
@@ -182,67 +176,6 @@ private fun ChallengeComment(
                     text = wrongComment.heartCount.toString(),
                     typography = QuackTypography.Body3.change(
                         color = animateHeartColor.value,
-                    ),
-                )
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewBottomSheet() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp)
-                .background(
-                    color = QuackColor.Gray4.value
-                )
-                .padding(all = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            QuackText(
-                text = "낚시 오지네ㅜㅋㅋ",
-                typography = QuackTypography.Body1.change(
-                    color = QuackColor.Gray1
-                ),
-            )
-            QuackText(
-                text = "방금 전",
-                typography = QuackTypography.Body3.change(
-                    color = QuackColor.Gray2,
-                ),
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            QuackText(
-                text = "전체 댓글 ${3}개",
-                typography = QuackTypography.Title2.change(
-                    color = QuackColor.Gray1,
-                ),
-            )
-            QuackIconWrapper(
-                icon = QuackIcon.Order18,
-                onClick = { },
-            ) {
-                QuackText(
-                    modifier = Modifier.padding(start = 2.dp),
-                    text = "최신훈",
-                    typography = QuackTypography.Body2.change(
-                        color = QuackColor.Gray1,
                     ),
                 )
             }

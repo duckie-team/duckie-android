@@ -33,20 +33,20 @@ fun PreviewExpandedCickable() {
                 color = Color.White,
             )
             .padding(
-                horizontal = 16.dp
+                horizontal = 16.dp,
             ),
     ) {
         Box(
             modifier = Modifier
                 .background(Color.Black)
-                .size(50.dp)
+                .size(50.dp),
         )
         Box(
             modifier = Modifier
             .background(QuackColor.Gray4.value)
             .size(50.dp)
             .expendedQuackClickable {
-            }
+            },
         )
         Box(
             modifier = Modifier
@@ -56,7 +56,7 @@ fun PreviewExpandedCickable() {
                 verticalExpendedSize = 24.dp,
                 horizontalExpendedSize = 24.dp,
             ) {
-            }
+            },
         )
     }
 }
@@ -69,7 +69,6 @@ fun Modifier.expendedQuackClickable(
     onLongClick: (() -> Unit)? = null,
     onClick: (() -> Unit)?,
 ): Modifier {
-
     return this
         .layout { measurable, constraints ->
             val expansionVerticalPx = verticalExpendedSize.roundToPx()
@@ -79,7 +78,7 @@ fun Modifier.expendedQuackClickable(
                 minWidth = constraints.minWidth + expansionHorizontalPx,
                 maxWidth = constraints.maxWidth + expansionHorizontalPx,
                 minHeight = constraints.minHeight + expansionVerticalPx,
-                maxHeight = constraints.maxHeight + expansionVerticalPx
+                maxHeight = constraints.maxHeight + expansionVerticalPx,
             )
             val placeable = measurable.measure(expandedConstraints)
 

@@ -62,7 +62,6 @@ fun DraggableContent(
     onRevealedChanged: (Boolean) -> Unit,
     content: @Composable (modifier: Modifier) -> Unit,
 ) = with(DraggableSpec) {
-
     val transitionState = remember {
         MutableTransitionState(isRevealed).apply {
             targetState = !isRevealed
@@ -186,7 +185,7 @@ fun PreviewDraggableBox() {
             },
             content = { modifier ->
                 Row(
-                    modifier = modifier.fillMaxWidth()
+                    modifier = modifier.fillMaxWidth(),
                 ) {
                     Text(text = "hello")
                 }

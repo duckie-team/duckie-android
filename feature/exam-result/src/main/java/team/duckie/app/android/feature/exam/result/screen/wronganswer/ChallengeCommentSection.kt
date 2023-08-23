@@ -47,6 +47,8 @@ import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
+private val PaleOrange: Color = Color(0xFFFFEFCF)
+
 @Composable
 internal fun ColumnScope.ChallengeCommentSection(
     profileUrl: String,
@@ -161,7 +163,7 @@ internal fun ColumnScope.PopularCommentSection(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Color(0xFFFFEFCF),
+                color = PaleOrange,
                 shape = RoundedCornerShape(8.dp),
             )
             .padding(
@@ -175,8 +177,8 @@ internal fun ColumnScope.PopularCommentSection(
         QuackBody2(
             text = stringResource(
                 id = R.string.exam_result_equal_comment_value,
-                total
-            )
+                total,
+            ),
         )
     }
     Spacer(space = 28.dp)
