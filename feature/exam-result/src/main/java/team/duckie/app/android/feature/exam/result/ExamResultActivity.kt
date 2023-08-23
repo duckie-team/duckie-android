@@ -91,6 +91,15 @@ class ExamResultActivity : BaseActivity() {
             is ExamResultSideEffect.SendErrorToast -> {
                 ToastWrapper(this).invoke(sideEffect.message)
             }
+
+            is ExamResultSideEffect.SendIgnoreUserToast -> {
+                // TODO(limsaehyun): 취소 할 수 있게 구현해야 함
+                ToastWrapper(this).invoke(getString(R.string.exam_result_ignore_user_success, sideEffect.nickname))
+            }
+
+            is ExamResultSideEffect.SendReportCommentSuccessToast -> {
+                ToastWrapper(this).invoke(getString(R.string.exam_result_report_comment_success))
+            }
         }
     }
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -32,6 +33,7 @@ import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.compose.util.fillMaxScreenWidth
+import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -53,9 +55,11 @@ internal fun ColumnScope.ChallengeCommentSection(
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     showCommentSheet: () -> Unit,
     onDeleteComment: (Int) -> Unit,
+    onIgnoreComment: (Int, String) -> Unit,
+    onReportComment: (Int) -> Unit,
 ) {
     Spacer(space = 28.dp)
-    QuackHeadLine2(text = "답도 없는 오답들")
+    QuackHeadLine2(text = stringResource(id = R.string.exam_result_wrong_comment_title))
     Spacer(space = 20.dp)
     Row(
         modifier = Modifier
@@ -70,7 +74,7 @@ internal fun ColumnScope.ChallengeCommentSection(
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            QuackBody2(text = "나의 답")
+            QuackBody2(text = stringResource(id = R.string.my_answer))
             QuackHeadLine2(text = myAnswer)
         }
     }
@@ -94,7 +98,7 @@ internal fun ColumnScope.ChallengeCommentSection(
             ),
     ) {
         QuackText(
-            text = "댓글을 남겨보세요!",
+            text = stringResource(id = R.string.exam_result_input_comment_hint),
             typography = QuackTypography.Body2.change(
                 color = QuackColor.Gray2,
             ),
@@ -111,7 +115,7 @@ internal fun ColumnScope.ChallengeCommentSection(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         QuackText(
-            text = "전체 댓글 ${commentsTotal}개",
+            text = stringResource(id = R.string.exam_result_total_comment, commentsTotal),
             typography = QuackTypography.Body1.change(
                 color = QuackColor.Gray1,
             ),
@@ -129,7 +133,10 @@ internal fun ColumnScope.ChallengeCommentSection(
                 },
                 isMine = item.isMine,
                 innerPaddingValues = PaddingValues(horizontal = 16.dp),
-                onDeleteComment = { onDeleteComment(item.id) }
+                onDeleteComment = { onDeleteComment(item.id) },
+                onIgnoreComment = { onIgnoreComment(item.userId, item.userNickname) },
+                onReportComment = { onReportComment(item.id) },
+                visibleHeart = true,
             )
             Spacer(space = 8.dp)
         }
@@ -142,7 +149,7 @@ internal fun ColumnScope.PopularCommentSection(
     equalAnswerCount: Int,
 ) {
     Spacer(space = 28.dp)
-    QuackHeadLine2(text = "이 문제 인기 오답")
+    QuackHeadLine2(text = stringResource(id = R.string.exam_result_popular_comment))
     Spacer(space = 8.dp)
     Column(
         modifier = Modifier
@@ -159,7 +166,12 @@ internal fun ColumnScope.PopularCommentSection(
     ) {
         QuackHeadLine2(text = myAnswer)
         Spacer(space = 4.dp)
-        QuackBody2(text = "이 문제를 푼 유저 중 ${equalAnswerCount}명이 이렇게 답을 적었어요!")
+        QuackBody2(
+            text = stringResource(
+                id = R.string.exam_result_equal_comment_value,
+                equalAnswerCount
+            )
+        )
     }
     Spacer(space = 28.dp)
 }

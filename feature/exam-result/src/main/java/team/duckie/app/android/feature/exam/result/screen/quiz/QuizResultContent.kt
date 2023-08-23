@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,6 +68,8 @@ internal fun QuizResultContent(
     commentsTotal: Int,
     showCommentSheet: () -> Unit,
     onDeleteComment: (Int) -> Unit,
+    onIgnoreUser: (Int, String) -> Unit,
+    onReportComment: (Int) -> Unit,
 ) {
     LaunchedEffect(key1 = Unit) {
         initialState()
@@ -78,6 +81,31 @@ internal fun QuizResultContent(
             .padding(horizontal = 16.dp)
             .padding(bottom = 16.dp),
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = QuackColor.Gray4.value,
+                    shape = RoundedCornerShape(8.dp),
+                )
+                .padding(vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            QuackText(
+                text = stringResource(id = R.string.my_answer),
+                typography = QuackTypography.Body3.change(
+                    color = QuackColor.Gray1
+                ),
+            )
+            Spacer(space = 2.dp)
+            QuackText(
+                text = myAnswer,
+                typography = QuackTypography.HeadLine2.change(
+                    color = QuackColor.Black
+                ),
+            )
+        }
+        Spacer(space = 12.dp)
         DuckieFitImage(
             imageUrl = resultImageUrl,
             horizontalPadding = PaddingValues(horizontal = 0.dp),
@@ -176,6 +204,8 @@ internal fun QuizResultContent(
             commentsTotal = commentsTotal,
             showCommentSheet = showCommentSheet,
             onDeleteComment = onDeleteComment,
+            onIgnoreComment = onIgnoreUser,
+            onReportComment = onReportComment,
         )
     }
 }

@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -41,18 +42,20 @@ import team.duckie.app.android.common.compose.ui.QuackIconWrapper
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
 import team.duckie.app.android.common.compose.ui.icon.v2.FilledHeart
+import team.duckie.app.android.common.compose.ui.icon.v2.IcBlock24
+import team.duckie.app.android.common.compose.ui.icon.v2.IcTrash24
 import team.duckie.app.android.common.compose.ui.icon.v2.Order18
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.compose.util.fillMaxScreenWidth
 import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
+import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.animation.animateQuackColorAsState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
-import team.duckie.quackquack.material.icon.quackicon.outlined.Delete
 import team.duckie.quackquack.material.icon.quackicon.outlined.Flag
 import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
 import team.duckie.quackquack.material.quackClickable
@@ -65,7 +68,7 @@ import team.duckie.quackquack.ui.sugar.QuackTitle2
 @Composable
 internal fun ChallengeCommentBottomSheetContent(
     modifier: Modifier = Modifier,
-    commentsTotal: Int,
+    totalComments: Int,
     orderType: CommentOrderType,
     onOrderTypeChanged: () -> Unit,
     myComment: String,
@@ -92,7 +95,7 @@ internal fun ChallengeCommentBottomSheetContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     QuackText(
-                        text = "전체 댓글 ${commentsTotal}개",
+                        text = stringResource(id = R.string.exam_result_total_comment, totalComments),
                         typography = QuackTypography.Title2.change(
                             color = QuackColor.Gray1,
                         ),
@@ -116,7 +119,8 @@ internal fun ChallengeCommentBottomSheetContent(
         content = {
             LazyColumn(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(comments) { item ->
@@ -129,6 +133,7 @@ internal fun ChallengeCommentBottomSheetContent(
                         },
                         isMine = item.isMine,
                         onDeleteComment = { onDeleteComment(item.id) },
+                        visibleHeart = false,
                     )
                 }
             }
@@ -168,7 +173,7 @@ internal fun ChallengeCommentBottomSheetContent(
                             .background(QuackColor.Gray4.value),
                         text = myComment,
                         onTextChanged = onMyCommentChanged,
-                        placeholderText = "댓글을 남겨보세요!",
+                        placeholderText = stringResource(id = R.string.exam_result_input_comment_hint),
                         trailingIcon = QuackIcon.ArrowSendId,
                         trailingIconOnClick = onSendComment,
                         paddingValues = PaddingValues(
@@ -182,8 +187,6 @@ internal fun ChallengeCommentBottomSheetContent(
     )
 }
 
-private const val ComingSoon = "Comming Soon!"
-
 @Composable
 internal fun DraggableChallengeComment(
     modifier: Modifier = Modifier,
@@ -192,6 +195,9 @@ internal fun DraggableChallengeComment(
     onHeartClick: (Int) -> Unit,
     isMine: Boolean,
     onDeleteComment: (() -> Unit)? = null,
+    onIgnoreComment: (() -> Unit)? = null,
+    onReportComment: (() -> Unit)? = null,
+    visibleHeart: Boolean = false,
 ) {
     val (isRevealed, onChange) = remember { mutableStateOf(false) }
     val toast = rememberToast()
@@ -201,20 +207,26 @@ internal fun DraggableChallengeComment(
         isRevealed = isRevealed,
         onRevealedChanged = { onChange(it) },
         backgroundContent = { modifier ->
-            Row {
-                if(isMine) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(1.dp)
+            ) {
+                if (isMine) {
                     PullToDeleteButton(
                         modifier = modifier,
-                        icon = QuackIcon.Outlined.Delete,
+                        icon = QuackIcon.IcTrash24,
                         onClick = { onDeleteComment?.invoke() },
                     )
                 } else {
                     PullToDeleteButton(
                         modifier = modifier,
-                        icon = QuackIcon.Outlined.Flag,
-                        onClick = { toast.invoke(ComingSoon) },
+                        icon = QuackIcon.IcBlock24,
+                        onClick = { onReportComment?.invoke() },
                     )
-                    // TODO(limsaehyun) 신고 및 차단 기능 이곳에 구현하기
+                    PullToDeleteButton(
+                        modifier = modifier,
+                        icon = QuackIcon.Outlined.Flag,
+                        onClick = { onIgnoreComment?.invoke() },
+                    )
                 }
             }
         },
@@ -224,6 +236,7 @@ internal fun DraggableChallengeComment(
                 wrongComment = wrongComment,
                 onHeartClick = onHeartClick,
                 innerPaddingValues = innerPaddingValues,
+                visibleHeart = visibleHeart
             )
         },
     )
@@ -235,6 +248,7 @@ private fun ChallengeComment(
     wrongComment: ExamResultState.Success.ChallengeCommentUiModel,
     innerPaddingValues: PaddingValues = PaddingValues(),
     onHeartClick: (Int) -> Unit,
+    visibleHeart: Boolean,
 ) {
     val animateHeartColor =
         animateQuackColorAsState(targetValue = if (wrongComment.isHeart) QuackColor.Gray1 else QuackColor.Gray2)
@@ -253,7 +267,7 @@ private fun ChallengeComment(
         Spacer(space = 8.dp)
         Column {
             QuackText(
-                text = "${wrongComment.userNickname}님의 답",
+                text = stringResource(id = R.string.other_answer, wrongComment.userNickname),
                 typography = QuackTypography.Body3.change(
                     color = QuackColor.Gray1,
                 ),
@@ -271,29 +285,31 @@ private fun ChallengeComment(
             )
         }
         Spacer(weight = 1f)
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            QuackIcon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .quackClickable(
-                        onClick = {
-                            onHeartClick(wrongComment.id)
-                        },
+        if (visibleHeart) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                QuackIcon(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .quackClickable(
+                            onClick = {
+                                onHeartClick(wrongComment.id)
+                            },
+                        ),
+                    icon = if (wrongComment.isHeart) {
+                        QuackIcon.FilledHeart
+                    } else {
+                        QuackIcon.Outlined.Heart
+                    },
+                )
+                QuackText(
+                    text = wrongComment.heartCount.toString(),
+                    typography = QuackTypography.Body3.change(
+                        color = animateHeartColor.value,
                     ),
-                icon = if (wrongComment.isHeart) {
-                    QuackIcon.FilledHeart
-                } else {
-                    QuackIcon.Outlined.Heart
-                },
-            )
-            QuackText(
-                text = wrongComment.heartCount.toString(),
-                typography = QuackTypography.Body3.change(
-                    color = animateHeartColor.value,
-                ),
-            )
+                )
+            }
         }
     }
 }

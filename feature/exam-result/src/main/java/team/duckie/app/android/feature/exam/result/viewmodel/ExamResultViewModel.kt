@@ -25,7 +25,6 @@ import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.kotlin.exception.isHeartNotFound
 import team.duckie.app.android.common.kotlin.fastMap
-import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
 import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
 import team.duckie.app.android.domain.challengecomment.usecase.DeleteChallengeCommentHeartUseCase
 import team.duckie.app.android.domain.challengecomment.usecase.DeleteChallengeCommentUseCase
@@ -39,6 +38,7 @@ import team.duckie.app.android.domain.examInstance.model.ExamInstance
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
 import team.duckie.app.android.domain.heart.model.Heart
+import team.duckie.app.android.domain.ignore.usecase.UserIgnoreUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.MakeQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.PostQuizReactionUseCase
@@ -55,6 +55,7 @@ class ExamResultViewModel @Inject constructor(
     private val getQuizUseCase: GetQuizUseCase,
     private val makeQuizUseCase: MakeQuizUseCase,
     private val postQuizReactionUseCase: PostQuizReactionUseCase,
+    private val ignoreUseCase: UserIgnoreUseCase,
     // for 오답댓글쓰기
     private val getChallengeCommentListUseCase: GetChallengeCommentListUseCase,
     private val deleteChallengeCommentUseCase: DeleteChallengeCommentUseCase,
@@ -70,6 +71,22 @@ class ExamResultViewModel @Inject constructor(
     )
 
     // 오답 댓글쓰기 START
+    fun ignoreUser(userId: Int, nickname: String) = intent {
+        val state = state as ExamResultState.Success
+        ignoreUseCase(targetId = userId)
+            .onSuccess {
+                reduce {
+                    val comments = state.comments.filter { it.userId != userId }.toImmutableList()
+                    state.copy(
+                        comments = comments,
+                    )
+                }
+                postSideEffect(ExamResultSideEffect.SendIgnoreUserToast(nickname))
+            }.onFailure { exception ->
+                postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }
+    }
+
     fun transferCommentOrderType() = intent {
         val state = state as ExamResultState.Success
         val orderType = when (state.commentOrderType) {
@@ -77,6 +94,7 @@ class ExamResultViewModel @Inject constructor(
             CommentOrderType.LIKE -> CommentOrderType.DATE
         }
         reduce { state.copy(commentOrderType = orderType) }
+        getChallengeCommentList()
     }
 
     fun deleteChallengeComment(commentId: Int) = intent {
@@ -92,6 +110,7 @@ class ExamResultViewModel @Inject constructor(
                             commentsTotal = state.commentsTotal.minus(1),
                         )
                     }
+                    postSideEffect(ExamResultSideEffect.SendDeleteCommentSuccessToast)
                 }
             }.onFailure { exception ->
                 postSideEffect(ExamResultSideEffect.ReportError(exception))
@@ -111,20 +130,23 @@ class ExamResultViewModel @Inject constructor(
                             commentsTotal = state.commentsTotal.minus(1),
                         )
                     }
+                    postSideEffect(ExamResultSideEffect.SendReportCommentSuccessToast)
                 }
             }.onFailure { exception ->
                 postSideEffect(ExamResultSideEffect.ReportError(exception))
             }
     }
 
+
     fun getChallengeCommentList() = intent {
         val state = state as ExamResultState.Success
         getChallengeCommentListUseCase(
-            problemId = state.examId,
-            order = CommentOrderType.LIKE,
+            problemId = state.wrongProblemId,
+            order = state.commentOrderType,
         ).onSuccess { result ->
             val commentsUiModel =
-                result.data?.fastMap(ChallengeComment::toUiModel)?.toImmutableList()
+                result.data?.fastMap { it.toUiModel(isMine = it.isMine(state.userId)) }
+                    ?.toImmutableList()
                     ?: persistentListOf()
             reduce {
                 state.copy(
@@ -144,7 +166,7 @@ class ExamResultViewModel @Inject constructor(
             message = state.myWrongComment,
         ).onSuccess { challenge ->
             val comments = state.comments.toMutableList().apply {
-                add(challenge.toUiModel(isMine = true))
+                add(0, challenge.toUiModel(isMine = true))
             }.toImmutableList()
             reduce {
                 state.copy(
@@ -367,6 +389,7 @@ class ExamResultViewModel @Inject constructor(
                     with(quizResult) {
                         ExamResultState.Success(
                             examId = id,
+                            wrongProblemId = wrongProblem?.id ?: 0,
                             reportUrl = if (isPerfectScore) {
                                 exam.perfectScoreImageUrl ?: ""
                             } else {
@@ -383,12 +406,11 @@ class ExamResultViewModel @Inject constructor(
                             timer = exam.timer ?: 0,
                             originalExamId = exam.id,
                             isPerfectScore = isPerfectScore,
-                            nickname = user.nickname,
                             thumbnailUrl = exam.thumbnailUrl,
                             solvedCount = exam.solvedCount ?: 0,
                             isBestRecord = isBestRecord,
                             myAnswer = updateQuizParam.wrongAnswer ?: "",
-                            profileImg = user.profileImageUrl ?: "",
+                            me = user,
                         )
                     }
                 }

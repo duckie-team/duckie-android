@@ -19,4 +19,8 @@ data class ChallengeComment(
     val createdAt: Date,
     val user: User,
     val heart: Heart?,
-)
+) {
+    fun isMine(userId: Int): Boolean {
+        return user.id == userId
+    }
+}

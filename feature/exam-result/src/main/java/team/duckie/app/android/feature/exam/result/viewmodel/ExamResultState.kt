@@ -26,10 +26,14 @@ sealed class ExamResultState {
     object Loading : ExamResultState()
 
     data class Success(
+        // rooot
+        val me: User? = null,
         val currentScreen: ExamResultScreen = ExamResultScreen.EXAM_RESULT,
 
+        // defaut state
         val reportUrl: String = "",
         val examId: Int = 0,
+        val wrongProblemId: Int = 0,
         val isQuiz: Boolean = true,
         val correctProblemCount: Int = 0,
         val time: Double = 0.0,
@@ -41,16 +45,18 @@ sealed class ExamResultState {
         val requirementPlaceholder: String = "",
         val timer: Int = 0,
         val originalExamId: Int = 0,
-        val nickname: String = "",
         val thumbnailUrl: String = "",
         val solvedCount: Int = 0,
 
-        // 오답 댓글 쓰기
+        // challenge comment
         val comments: ImmutableList<ChallengeCommentUiModel> = persistentListOf(),
         val commentsTotal: Int = 0,
-        val commentOrderType: CommentOrderType = CommentOrderType.LIKE,
+        val commentOrderType: CommentOrderType = CommentOrderType.DATE,
         val isWriteComment: Boolean = false,
         val commentCreateAt: Date = Date(),
+        val myAnswer: String = "",
+        val equalAnswerCount: Int = 0,
+        val myWrongComment: String = "",
 
         // user input state
         val reaction: String = "",
@@ -58,14 +64,11 @@ sealed class ExamResultState {
 
         // dialog visible
         val isReactionValid: Boolean = ranking.isTopRanked() && isBestRecord,
+    ) : ExamResultState() {
 
-        // wrong answer
-        val myAnswer: String = "",
-        val profileImg: String = "",
-        val equalAnswerCount: Int = 0,
-        val myWrongComment: String = "",
-
-        ) : ExamResultState() {
+        val profileImg = me?.profileImageUrl ?: ""
+        val userId = me?.id ?: 0
+        val nickname = me?.nickname ?: ""
 
         val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
 
@@ -77,6 +80,7 @@ sealed class ExamResultState {
             val createdAt: String,
             val userProfileImg: String = "",
             val userNickname: String = "",
+            val userId: Int,
             val heart: Heart?,
             val isHeart: Boolean = false,
             val isMine: Boolean = false,
@@ -88,15 +92,17 @@ sealed class ExamResultState {
     ) : ExamResultState()
 }
 
-internal fun ChallengeComment.toUiModel(isMine: Boolean = false) = ExamResultState.Success.ChallengeCommentUiModel(
-    id = id,
-    message = message,
-    wrongAnswer = wrongAnswer,
-    heartCount = heartCount,
-    createdAt = createdAt.getDiffDayFromToday(isShowSecond = false),
-    userProfileImg = user.profileImageUrl ?: "",
-    userNickname = user.nickname,
-    heart = heart,
-    isHeart = heart != null,
-    isMine = isMine,
-)
+internal fun ChallengeComment.toUiModel(isMine: Boolean = false) =
+    ExamResultState.Success.ChallengeCommentUiModel(
+        id = id,
+        message = message,
+        wrongAnswer = wrongAnswer,
+        heartCount = heartCount,
+        createdAt = createdAt.getDiffDayFromToday(isShowSecond = false),
+        userProfileImg = user.profileImageUrl ?: "",
+        userNickname = user.nickname,
+        heart = heart,
+        isHeart = heart != null,
+        isMine = isMine,
+        userId = user.id,
+    )

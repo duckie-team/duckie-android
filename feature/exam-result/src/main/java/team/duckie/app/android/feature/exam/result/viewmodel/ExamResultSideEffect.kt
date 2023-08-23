@@ -7,6 +7,8 @@
 
 package team.duckie.app.android.feature.exam.result.viewmodel
 
+import com.google.firebase.crashlytics.internal.model.CrashlyticsReport.Session.User
+
 sealed class ExamResultSideEffect {
     object FinishExamResult : ExamResultSideEffect()
 
@@ -22,6 +24,10 @@ sealed class ExamResultSideEffect {
     object SendReactionSuccessToast : ExamResultSideEffect()
 
     object SendDeleteCommentSuccessToast : ExamResultSideEffect()
+
+    object SendReportCommentSuccessToast : ExamResultSideEffect()
+
+    data class SendIgnoreUserToast(val nickname: String): ExamResultSideEffect()
 
     data class SendErrorToast(val message: String) : ExamResultSideEffect()
 }

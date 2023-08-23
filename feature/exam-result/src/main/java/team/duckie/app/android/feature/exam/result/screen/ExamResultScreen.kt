@@ -192,7 +192,7 @@ private fun ExamResultSuccessScreen(
         sheetContent = {
             ChallengeCommentBottomSheetContent(
                 fullScreen = false, // TODO(limsaehyun) sheetState 내부 swipeable에 접근이 불가능.. ModalBottomSheet을 직접 구현해야 함
-                commentsTotal = state.commentsTotal,
+                totalComments = state.commentsTotal,
                 orderType = state.commentOrderType,
                 onOrderTypeChanged = viewModel::transferCommentOrderType,
                 myComment = state.myWrongComment,
@@ -274,7 +274,9 @@ private fun ExamResultSuccessScreen(
                                     sheetState.show()
                                 }
                             },
-                            onDeleteComment = viewModel::deleteChallengeComment
+                            onDeleteComment = viewModel::deleteChallengeComment,
+                            onIgnoreUser = viewModel::ignoreUser,
+                            onReportComment = viewModel::reportChallengeComment,
                         )
                     } else {
                         ExamResultContent(
