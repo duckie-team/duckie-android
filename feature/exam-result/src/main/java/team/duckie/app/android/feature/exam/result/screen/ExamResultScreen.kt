@@ -206,7 +206,9 @@ private fun ExamResultSuccessScreen(
                 onSendComment = {
                     viewModel.writeChallengeComment()
                 },
-                onDeleteComment = viewModel::deleteChallengeComment
+                onDeleteComment = viewModel::deleteChallengeComment,
+                onIgnoreComment = viewModel::ignoreUser,
+                onReportComment = viewModel::reportChallengeComment,
             )
         },
         useHandle = true,

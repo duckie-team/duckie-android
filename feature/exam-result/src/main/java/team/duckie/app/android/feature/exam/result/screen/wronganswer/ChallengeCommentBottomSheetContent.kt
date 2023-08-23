@@ -54,6 +54,8 @@ internal fun ChallengeCommentBottomSheetContent(
     onSendComment: () -> Unit,
     fullScreen: Boolean,
     onDeleteComment: (Int) -> Unit,
+    onIgnoreComment: (Int, String) -> Unit,
+    onReportComment: (Int) -> Unit,
 ) {
     WrapScaffoldLayout(
         fullScreen = fullScreen,
@@ -110,6 +112,8 @@ internal fun ChallengeCommentBottomSheetContent(
                         },
                         isMine = item.isMine,
                         onDeleteComment = { onDeleteComment(item.id) },
+                        onIgnoreComment = { onIgnoreComment(item.userId, item.userNickname) },
+                        onReportComment = { onReportComment(item.id) },
                         visibleHeart = true,
                     )
                 }
