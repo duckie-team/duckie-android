@@ -256,7 +256,7 @@ fun Preview() {
                     onClick = {},
                 )
                 .padding(8.dp)
-                .size(40.dp)
+                .size(40.dp),
 
         )
     }

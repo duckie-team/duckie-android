@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -160,11 +159,6 @@ private object QuackTopAppBarDefaults {
         color = QuackColor.Gray2,
     )
 
-    private val TrailingTextPadding = PaddingValues(
-        horizontal = 16.dp,
-        vertical = 15.dp,
-    )
-
     private val LogoIcon: QuackV1Icon = QuackIcon.TextLogoId.toQuackV1Icon!!
     private val LogoIconSize = DpSize(
         width = 72.dp,
@@ -183,39 +177,6 @@ private object QuackTopAppBarDefaults {
      * 모든 영역에서 사용되는 공통 아이콘 사이즈
      */
     private val IconSize: Dp = 24.dp
-
-    private val IconPadding = PaddingValues(
-        all = 8.dp,
-    )
-
-    /**
-     * ```
-     * [Icon][Icon]
-     * ```
-     *
-     * 위와 같은 형식에서 적용되는 개별 아이콘들의 패딩
-     *
-     * 아이콘 사이 간격인 8 을, 둘로 나누어 배분하였습니다.
-     * [IconSize] 는 아이콘이 하나만 쓰일 때 적용됩니다.
-     */
-    private val ExtraIconPadding = PaddingValues(
-        all = 4.dp,
-    )
-
-    /**
-     * trailing content 에 배치될 아이콘의 패딩을 조건에 맞게 계산합니다.
-     *
-     * @param hasExtraIcon extra icon 을 가지고 있는지 여부
-     *
-     * @return trailing content 에 배치될 아이콘의 패딩
-     */
-    @Stable
-    private fun trailingIconPaddingFor(
-        hasExtraIcon: Boolean,
-    ) = when (hasExtraIcon) {
-        true -> ExtraIconPadding
-        false -> IconPadding
-    }
 
     /**
      * leading content 를 배치합니다.
