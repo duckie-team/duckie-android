@@ -197,24 +197,11 @@ private object QuackTopAppBarDefaults {
             icon?.let {
                 QuackIcon(
                     modifier = Modifier
-                        .padding(IconPadding)
-                        .quackClickable(
-                            rippleEnabled = false,
-                            onClick = onIconClick,
-                        ),
-                    icon = icon,
-                    size = 24.dp,
-                )
-            }
-            icon?.let {
-                QuackIcon(
-                    modifier = Modifier
                         .expendedQuackClickable(
                             rippleEnabled = true,
                             onClick = onIconClick,
                         ),
                     icon = icon,
-                    size = 24.dp,
                 )
             }
             text?.let {
