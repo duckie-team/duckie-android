@@ -35,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.kotlin.orHyphen
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.QuizResultLargeDivider
 import team.duckie.app.android.feature.exam.result.screen.RANKER_THRESHOLD
@@ -61,6 +62,7 @@ internal fun QuizResultContent(
     message: String,
     ranking: Int,
     // challenge comment
+    isPerfectChallenge: Boolean,
     profileImg: String,
     myAnswer: String,
     onHeartComment: (Int) -> Unit,
@@ -73,6 +75,8 @@ internal fun QuizResultContent(
     mostWrongTotal: Int,
     mostWrongData: String,
     equalAnswerCount: Int,
+    myWrongComment: String,
+    myWrongCommentCreateAT: String,
 ) {
     LaunchedEffect(key1 = Unit) {
         initialState()
@@ -84,40 +88,42 @@ internal fun QuizResultContent(
             .padding(horizontal = 16.dp)
             .padding(bottom = 16.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = QuackColor.Gray4.value,
-                    shape = RoundedCornerShape(8.dp),
+        if (isPerfectChallenge.not()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = QuackColor.Gray4.value,
+                        shape = RoundedCornerShape(8.dp),
+                    )
+                    .padding(vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                QuackText(
+                    text = stringResource(id = R.string.my_answer),
+                    typography = QuackTypography.Body3.change(
+                        color = QuackColor.Gray1,
+                    ),
                 )
-                .padding(vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            QuackText(
-                text = stringResource(id = R.string.my_answer),
-                typography = QuackTypography.Body3.change(
-                    color = QuackColor.Gray1,
-                ),
-            )
-            Spacer(space = 2.dp)
-            QuackText(
-                text = myAnswer,
-                typography = QuackTypography.HeadLine2.change(
-                    color = QuackColor.Black,
-                    textAlign = TextAlign.Center,
-                ),
-            )
-            Spacer(space = 8.dp)
-            QuackText(
-                text = stringResource(
-                    id = R.string.exam_result_same_answer_with_me,
-                    equalAnswerCount,
-                ),
-                typography = QuackTypography.Body2.change(
-                    color = QuackColor.Gray1,
-                ),
-            )
+                Spacer(space = 2.dp)
+                QuackText(
+                    text = myAnswer.orHyphen(),
+                    typography = QuackTypography.HeadLine2.change(
+                        color = QuackColor.Black,
+                        textAlign = TextAlign.Center,
+                    ),
+                )
+                Spacer(space = 8.dp)
+                QuackText(
+                    text = stringResource(
+                        id = R.string.exam_result_same_answer_with_me,
+                        equalAnswerCount,
+                    ),
+                    typography = QuackTypography.Body2.change(
+                        color = QuackColor.Gray1,
+                    ),
+                )
+            }
         }
         Spacer(space = 12.dp)
         DuckieFitImage(
@@ -202,25 +208,29 @@ internal fun QuizResultContent(
                 ranking,
             ),
         )
-        // 오답 영역
-        Spacer(space = 28.dp)
-        QuizResultLargeDivider()
-        PopularCommentSection(
-            total = mostWrongTotal,
-            data = mostWrongData,
-        )
-        QuizResultLargeDivider()
-        ChallengeCommentSection(
-            profileUrl = profileImg,
-            myAnswer = myAnswer,
-            onHeartComment = onHeartComment,
-            comments = comments,
-            commentsTotal = commentsTotal,
-            showCommentSheet = showCommentSheet,
-            onDeleteComment = onDeleteComment,
-            onIgnoreComment = onIgnoreUser,
-            onReportComment = onReportComment,
-        )
+        // 오답 댓글쓰기 영역
+        if (isPerfectChallenge.not()) {
+            Spacer(space = 28.dp)
+            QuizResultLargeDivider()
+            PopularCommentSection(
+                total = mostWrongTotal,
+                data = mostWrongData,
+            )
+            QuizResultLargeDivider()
+            ChallengeCommentSection(
+                profileUrl = profileImg,
+                myAnswer = myAnswer,
+                onHeartComment = onHeartComment,
+                comments = comments,
+                commentsTotal = commentsTotal,
+                showCommentSheet = showCommentSheet,
+                onDeleteComment = onDeleteComment,
+                onIgnoreComment = onIgnoreUser,
+                onReportComment = onReportComment,
+                myWrongComment = myWrongComment,
+                myWrongCommentCreateAT = myWrongCommentCreateAT,
+            )
+        }
     }
 }
 

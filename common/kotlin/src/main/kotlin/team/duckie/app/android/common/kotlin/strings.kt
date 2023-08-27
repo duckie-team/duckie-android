@@ -40,3 +40,6 @@ fun randomString(length: Int): String {
         .map { charset.random() }
         .joinToString("")
 }
+
+fun String?.orHyphen(): String =
+    if(this.isNullOrEmpty()) "-" else this

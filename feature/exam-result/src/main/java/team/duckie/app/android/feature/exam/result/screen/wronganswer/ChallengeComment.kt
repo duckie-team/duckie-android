@@ -33,6 +33,7 @@ import team.duckie.app.android.common.compose.ui.icon.v2.FilledHeart
 import team.duckie.app.android.common.compose.ui.icon.v2.IcBlock24
 import team.duckie.app.android.common.compose.ui.icon.v2.IcTrash24
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
+import team.duckie.app.android.common.kotlin.orHyphen
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.animation.animateQuackColorAsState
@@ -42,11 +43,10 @@ import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Flag
 import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
-import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.sugar.QuackBody1
-import team.duckie.quackquack.ui.sugar.QuackTitle2
 
 @Composable
 internal fun DraggableChallengeComment(
@@ -59,6 +59,7 @@ internal fun DraggableChallengeComment(
     onIgnoreComment: (() -> Unit)? = null,
     onReportComment: (() -> Unit)? = null,
     visibleHeart: Boolean = false,
+    showCommentSheet: () -> Unit = { },
 ) {
     val (isRevealed, onChange) = remember { mutableStateOf(false) }
 
@@ -85,7 +86,7 @@ internal fun DraggableChallengeComment(
                         icon = QuackIcon.IcBlock24,
                         onClick = {
                             onChange(false)
-                            onReportComment?.invoke()
+                            onIgnoreComment?.invoke()
                         },
                     )
                     PullToDeleteButton(
@@ -93,7 +94,7 @@ internal fun DraggableChallengeComment(
                         icon = QuackIcon.Outlined.Flag,
                         onClick = {
                             onChange(false)
-                            onIgnoreComment?.invoke()
+                            onReportComment?.invoke()
                         },
                     )
                 }
@@ -106,6 +107,7 @@ internal fun DraggableChallengeComment(
                 onHeartClick = onHeartClick,
                 innerPaddingValues = innerPaddingValues,
                 visibleHeart = visibleHeart,
+                showCommentSheet = showCommentSheet,
             )
         },
     )
@@ -118,6 +120,7 @@ private fun ChallengeComment(
     innerPaddingValues: PaddingValues = PaddingValues(),
     onHeartClick: (Int) -> Unit,
     visibleHeart: Boolean,
+    showCommentSheet: () -> Unit,
 ) {
     val animateHeartColor =
         animateQuackColorAsState(targetValue = if (wrongComment.isHeart) QuackColor.Gray1 else QuackColor.Gray2)
@@ -127,6 +130,10 @@ private fun ChallengeComment(
             .fillMaxWidth()
             .background(QuackColor.White.value)
             .padding(innerPaddingValues)
+            .quackClickable(
+                rippleEnabled = true,
+                onClick = showCommentSheet,
+            )
             .padding(vertical = 8.dp),
     ) {
         QuackProfileImage(
@@ -142,7 +149,12 @@ private fun ChallengeComment(
                 ),
             )
             Spacer(space = 2.dp)
-            QuackTitle2(text = wrongComment.wrongAnswer)
+            QuackText(
+                text = wrongComment.wrongAnswer.orHyphen(),
+                typography = QuackTypography.Body2.change(
+                    color = QuackColor.Gray1,
+                )
+            )
             Spacer(space = 6.dp)
             QuackBody1(text = wrongComment.message)
             Spacer(space = 6.dp)
@@ -171,6 +183,7 @@ private fun ChallengeComment(
                     } else {
                         QuackIcon.Outlined.Heart
                     },
+                    tint = if (wrongComment.isHeart) QuackColor.Unspecified else QuackColor.Gray2,
                 )
                 QuackText(
                     text = wrongComment.heartCount.toString(),

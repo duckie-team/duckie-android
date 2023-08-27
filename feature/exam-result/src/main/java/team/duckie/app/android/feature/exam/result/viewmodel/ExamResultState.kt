@@ -17,6 +17,8 @@ import team.duckie.app.android.domain.heart.model.Heart
 import team.duckie.app.android.domain.user.model.User
 import java.util.Date
 
+internal const val CHALLENGE_COMMENT_MAX_LENGTH: Int = 200
+
 enum class ExamResultScreen {
     EXAM_RESULT,
     SHARE_EXAM_RESULT,
@@ -47,11 +49,13 @@ sealed class ExamResultState {
         val originalExamId: Int = 0,
         val thumbnailUrl: String = "",
         val solvedCount: Int = 0,
+        val isPerfectChallenge: Boolean = false,
 
         // challenge comment
-        val comments: ImmutableList<ChallengeCommentUiModel> = persistentListOf(),
+        val popularComments: ImmutableList<ChallengeCommentUiModel> = persistentListOf(),
+        val allComments: ImmutableList<ChallengeCommentUiModel> = persistentListOf(),
         val commentsTotal: Int = 0,
-        val commentOrderType: CommentOrderType = CommentOrderType.DATE,
+        val commentOrderType: CommentOrderType = CommentOrderType.LIKE,
         val isWriteComment: Boolean = false,
         val commentCreateAt: Date = Date(),
         val myAnswer: String = "",
@@ -71,6 +75,8 @@ sealed class ExamResultState {
         val profileImg = me?.profileImageUrl ?: ""
         val userId = me?.id ?: 0
         val nickname = me?.nickname ?: ""
+
+        val commentCreateAtWithDiff = commentCreateAt.getDiffDayFromToday(false)
 
         val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
 

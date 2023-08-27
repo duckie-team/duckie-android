@@ -34,6 +34,7 @@ import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.compose.util.fillMaxScreenWidth
+import team.duckie.app.android.common.kotlin.orHyphen
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.material.QuackColor
@@ -60,6 +61,8 @@ internal fun ColumnScope.ChallengeCommentSection(
     onDeleteComment: (Int) -> Unit,
     onIgnoreComment: (Int, String) -> Unit,
     onReportComment: (Int) -> Unit,
+    myWrongComment: String,
+    myWrongCommentCreateAT: String,
 ) {
     Spacer(space = 28.dp)
     QuackHeadLine2(text = stringResource(id = R.string.exam_result_wrong_comment_title))
@@ -78,7 +81,7 @@ internal fun ColumnScope.ChallengeCommentSection(
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             QuackBody2(text = stringResource(id = R.string.my_answer))
-            QuackHeadLine2(text = myAnswer)
+            QuackHeadLine2(text = myAnswer.orHyphen())
         }
     }
     Spacer(space = 12.dp)
@@ -100,12 +103,32 @@ internal fun ColumnScope.ChallengeCommentSection(
                 vertical = 16.dp,
             ),
     ) {
-        QuackText(
-            text = stringResource(id = R.string.exam_result_input_comment_hint),
-            typography = QuackTypography.Body2.change(
-                color = QuackColor.Gray2,
-            ),
-        )
+        if (myWrongComment.isEmpty()) {
+            QuackText(
+                text = stringResource(id = R.string.exam_result_input_comment_hint),
+                typography = QuackTypography.Body2.change(
+                    color = QuackColor.Gray2,
+                ),
+            )
+        } else {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                QuackText(
+                    text = myWrongComment,
+                    typography = QuackTypography.Body1.change(
+                        color = QuackColor.Gray1
+                    )
+                )
+                Spacer(weight = 1f)
+                QuackText(
+                    text = myWrongCommentCreateAT,
+                    typography = QuackTypography.Body3.change(
+                        color = QuackColor.Gray2
+                    ),
+                )
+            }
+        }
     }
     Spacer(space = 20.dp)
     QuackMaxWidthDivider()
@@ -140,6 +163,7 @@ internal fun ColumnScope.ChallengeCommentSection(
                 onIgnoreComment = { onIgnoreComment(item.userId, item.userNickname) },
                 onReportComment = { onReportComment(item.id) },
                 visibleHeart = true,
+                showCommentSheet = showCommentSheet,
             )
             Spacer(space = 8.dp)
         }

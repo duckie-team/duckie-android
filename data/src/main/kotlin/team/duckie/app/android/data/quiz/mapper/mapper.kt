@@ -7,7 +7,11 @@
 
 package team.duckie.app.android.data.quiz.mapper
 
+import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.data.challengecomment.mapper.toDomain
+import team.duckie.app.android.data.challengecomment.model.ChallengeCommentResponse
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.quiz.model.GetQuizResponse
 import team.duckie.app.android.data.quiz.model.PostQuizResponse
@@ -40,6 +44,8 @@ internal fun GetQuizResponse.toDomain() = QuizResult(
     ranking = ranking,
     requirementAnswer = requirementAnswer,
     isBestRecord = isBestRecord ?: false, // for start-exam
+    popularComments = popularComments?.data?.fastMap(ChallengeCommentResponse::toDomain)?.toImmutableList(),
+    commentsTotal = popularComments?.total,
 )
 
 internal fun QuizExamData.toDomain() = QuizExam(

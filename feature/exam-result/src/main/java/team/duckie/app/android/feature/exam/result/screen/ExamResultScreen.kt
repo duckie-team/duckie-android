@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 
 package team.duckie.app.android.feature.exam.result.screen
 
@@ -24,8 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,12 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.rememberKeyboardVisible
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.LoadingScreen
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.dialog.DuckieBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextArea
+import team.duckie.app.android.common.compose.util.HandleKeyboardVisibilityWithSheet
 import team.duckie.app.android.common.kotlin.getDiffDayFromToday
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
@@ -187,6 +191,7 @@ private fun ExamResultSuccessScreen(
     )
     val coroutineScope = rememberCoroutineScope()
 
+    HandleKeyboardVisibilityWithSheet(sheetState = sheetState)
     DuckieBottomSheetDialog(
         sheetState = sheetState,
         sheetContent = {
@@ -197,11 +202,11 @@ private fun ExamResultSuccessScreen(
                 onOrderTypeChanged = viewModel::transferCommentOrderType,
                 myComment = state.myWrongComment,
                 onMyCommentChanged = viewModel::updateWrongComment,
-                comments = state.comments,
+                comments = state.allComments,
                 onHeartComment = { commentId ->
                     viewModel.heartWrongComment(commentId)
                 },
-                myCommentCreateAt = state.commentCreateAt.getDiffDayFromToday(isShowSecond = false),
+                myCommentCreateAt = state.commentCreateAtWithDiff,
                 isWriteComment = state.isWriteComment,
                 onSendComment = {
                     viewModel.writeChallengeComment()
@@ -268,8 +273,8 @@ private fun ExamResultSuccessScreen(
                             initialState = {
                                 viewModel.getChallengeCommentList()
                             },
-                            comments = state.comments,
-                            commentsTotal = state.commentsTotal,
+                            comments = popularComments,
+                            commentsTotal = commentsTotal,
                             showCommentSheet = {
                                 coroutineScope.launch {
                                     sheetState.show()
@@ -281,6 +286,9 @@ private fun ExamResultSuccessScreen(
                             mostWrongTotal = mostWrongAnswerTotal,
                             mostWrongData = mostWrongAnswerData,
                             equalAnswerCount = equalAnswerCount,
+                            isPerfectChallenge = isPerfectChallenge,
+                            myWrongComment = myWrongComment,
+                            myWrongCommentCreateAT = commentCreateAtWithDiff
                         )
                     } else {
                         ExamResultContent(

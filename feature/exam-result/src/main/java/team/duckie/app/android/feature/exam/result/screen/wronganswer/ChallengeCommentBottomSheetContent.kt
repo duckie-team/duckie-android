@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.exam.result.screen.wronganswer
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -32,6 +34,7 @@ import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.util.fillMaxScreenWidth
 import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
 import team.duckie.app.android.feature.exam.result.R
+import team.duckie.app.android.feature.exam.result.viewmodel.CHALLENGE_COMMENT_MAX_LENGTH
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -57,6 +60,11 @@ internal fun ChallengeCommentBottomSheetContent(
     onIgnoreComment: (Int, String) -> Unit,
     onReportComment: (Int) -> Unit,
 ) {
+    val writeCommentButtonColor = animateColorAsState(
+        targetValue = if (myComment.isEmpty()) QuackColor.Unspecified.value else QuackColor.DuckieOrange.value,
+        label = "writeCommentButtonColor",
+    )
+
     WrapScaffoldLayout(
         fullScreen = fullScreen,
         modifier = modifier
@@ -153,7 +161,11 @@ internal fun ChallengeCommentBottomSheetContent(
                             .fillMaxWidth()
                             .background(QuackColor.Gray4.value),
                         text = myComment,
-                        onTextChanged = onMyCommentChanged,
+                        onTextChanged = { comment ->
+                            if (comment.length <= CHALLENGE_COMMENT_MAX_LENGTH) {
+                                onMyCommentChanged(comment)
+                            }
+                        },
                         placeholderText = stringResource(id = R.string.exam_result_input_comment_hint),
                         trailingIcon = QuackIcon.ArrowSendId,
                         trailingIconOnClick = onSendComment,
@@ -161,6 +173,7 @@ internal fun ChallengeCommentBottomSheetContent(
                             vertical = 14.dp,
                             horizontal = 16.dp,
                         ),
+                        trailingIconTint = writeCommentButtonColor.value,
                     )
                 }
             }

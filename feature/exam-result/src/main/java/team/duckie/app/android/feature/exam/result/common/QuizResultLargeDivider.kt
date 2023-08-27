@@ -12,10 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
+import team.duckie.quackquack.material.QuackColor
 
 @Composable
 internal fun QuizResultLargeDivider() {
     QuackMaxWidthDivider(
         modifier = Modifier.height(8.dp),
+        color = QuackColor.Gray4,
     )
 }
