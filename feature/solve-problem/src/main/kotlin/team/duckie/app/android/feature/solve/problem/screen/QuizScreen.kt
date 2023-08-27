@@ -42,6 +42,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.isCurrentPage
+import team.duckie.app.android.common.compose.isTargetPage
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
@@ -49,8 +50,8 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
 import team.duckie.app.android.feature.solve.problem.R
 import team.duckie.app.android.feature.solve.problem.answer.AnswerSection
+import team.duckie.app.android.feature.solve.problem.answer.TextFieldMargin
 import team.duckie.app.android.feature.solve.problem.common.ButtonBottomBar
-import team.duckie.app.android.feature.solve.problem.common.TextFieldMargin
 import team.duckie.app.android.feature.solve.problem.common.TimerTopBar
 import team.duckie.app.android.feature.solve.problem.common.verticalScrollModifierAsCondition
 import team.duckie.app.android.feature.solve.problem.question.QuestionSection
@@ -86,10 +87,6 @@ internal fun QuizScreen(
                 init = { InputAnswer() },
             ),
         )
-    }
-
-    LaunchedEffect(pagerState.targetPage) {
-        startTimer(state.time.toFloat())
     }
 
     LaunchedEffect(timeOver) {
@@ -134,6 +131,7 @@ internal fun QuizScreen(
                 updateInputAnswers = { index, answer ->
                     inputAnswers[index] = answer
                 },
+                startTimer = startTimer,
             )
             ButtonBottomBar(
                 modifier = Modifier
@@ -176,23 +174,39 @@ private fun ContentSection(
     state: SolveProblemState,
     inputAnswers: ImmutableList<InputAnswer>,
     updateInputAnswers: (page: Int, inputAnswer: InputAnswer) -> Unit,
+    startTimer: (Float) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     var textFieldHeight by remember { mutableStateOf(Dp.Unspecified) }
     val density = LocalDensity.current
+    val isImageLoading = remember {
+        mutableStateListOf(
+            elements = Array(
+                size = state.quizProblems.size,
+                init = { true },
+            ),
+        )
+    }
 
     HorizontalPager(
         modifier = modifier,
         state = pagerState,
         userScrollEnabled = false,
+        beyondBoundsPageCount = 3,
     ) { pageIndex ->
         val problem = state.quizProblems[pageIndex]
 
-        val requestFocus by remember(key1 = pagerState.currentPage) {
+        val isCurrentPage by remember(pagerState.currentPage) {
             derivedStateOf { pagerState.isCurrentPage(pageIndex) }
         }
 
-        LaunchedEffect(key1 = requestFocus) {
+        LaunchedEffect(pagerState.targetPage, isImageLoading) {
+            if (isImageLoading[pageIndex].not() && pagerState.isTargetPage(pageIndex)) {
+                startTimer(state.time.toFloat())
+            }
+        }
+
+        LaunchedEffect(key1 = isCurrentPage) {
             if (!problem.isSubjective()) {
                 keyboardController?.hide()
             }
@@ -204,7 +218,7 @@ private fun ContentSection(
         Column(
             modifier = Modifier
                 .verticalScrollModifierAsCondition(isImageChoice)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             Spacer(space = 16.dp)
             QuestionSection(
@@ -212,7 +226,14 @@ private fun ContentSection(
                 question = problem.question,
                 isImageChoice = isImageChoice,
                 isRequireFlexibleImage = isRequireFlexibleImage,
-                spaceImageToKeyboard = textFieldHeight + TextFieldMargin.Vertical,
+                spaceImageToKeyboard = textFieldHeight + TextFieldMargin.Top,
+                onImageLoading = {
+                    isImageLoading[pageIndex] = it
+                },
+                onImageSuccess = {
+                    isImageLoading[pageIndex] = it
+                },
+                isImageLoading = isImageLoading[pageIndex],
             )
             val answer = problem.answer
             AnswerSection(
@@ -228,7 +249,7 @@ private fun ContentSection(
                 },
                 inputAnswers = inputAnswers,
                 updateInputAnswers = updateInputAnswers,
-                requestFocus = requestFocus,
+                requestFocus = isCurrentPage,
                 keyboardController = keyboardController,
                 onShortAnswerSizeChanged = {
                     textFieldHeight = with(density) {

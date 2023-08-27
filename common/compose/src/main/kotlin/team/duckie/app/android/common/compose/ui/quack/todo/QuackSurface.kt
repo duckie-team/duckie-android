@@ -60,7 +60,7 @@ import team.duckie.quackquack.material.quackClickable
 @Composable
 // TODO: Modifier.quackSurface 로 변경
 // @NonRestartableComposable; 여기서 사용하는 Box 는 inline 됨
-public fun QuackSurface(
+fun QuackSurface(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
     backgroundColor: QuackColor = QuackColor.Unspecified,

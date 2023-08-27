@@ -25,6 +25,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -49,9 +50,9 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
 import team.duckie.app.android.feature.solve.problem.R
 import team.duckie.app.android.feature.solve.problem.answer.AnswerSection
+import team.duckie.app.android.feature.solve.problem.answer.TextFieldMargin
 import team.duckie.app.android.feature.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.solve.problem.common.DoubleButtonBottomBar
-import team.duckie.app.android.feature.solve.problem.common.TextFieldMargin
 import team.duckie.app.android.feature.solve.problem.common.verticalScrollModifierAsCondition
 import team.duckie.app.android.feature.solve.problem.question.QuestionSection
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
@@ -190,6 +191,8 @@ private fun ContentSection(
             }
         }
 
+        var isImageLoading by rememberSaveable { mutableStateOf(true) }
+
         LaunchedEffect(key1 = requestFocus) {
             if (!problem.isSubjective()) {
                 keyboardController?.hide()
@@ -214,7 +217,10 @@ private fun ContentSection(
                 question = problem.question,
                 isImageChoice = isImageChoice,
                 isRequireFlexibleImage = isRequireFlexibleImage,
-                spaceImageToKeyboard = textFieldHeight + TextFieldMargin.Vertical,
+                spaceImageToKeyboard = textFieldHeight + TextFieldMargin.Top,
+                onImageLoading = { isImageLoading = it },
+                onImageSuccess = { isImageLoading = it },
+                isImageLoading = isImageLoading,
             )
             val answer = problem.answer
             AnswerSection(

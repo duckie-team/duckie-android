@@ -44,4 +44,8 @@ class ProblemTimer(
     fun stop() {
         timerJob?.cancel()
     }
+
+    fun setTotalTime(time: Float) {
+        _remainingTime.value = time
+    }
 }

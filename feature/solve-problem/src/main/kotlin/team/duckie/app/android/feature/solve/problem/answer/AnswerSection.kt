@@ -33,10 +33,8 @@ import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 
 private val HorizontalPadding = PaddingValues(horizontal = 16.dp)
 
-private object TextFieldMargin {
-    val Top = 24.dp
-    val Bottom = 16.dp
-    val Vertical get() = Top + Bottom
+internal object TextFieldMargin {
+    val Top = 16.dp
 }
 
 @Composable
@@ -113,7 +111,6 @@ internal fun ColumnScope.AnswerSection(
                 requestFocus = requestFocus,
                 keyboardController = keyboardController,
             )
-            Spacer(space = TextFieldMargin.Bottom)
         }
     }
 }

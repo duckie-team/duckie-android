@@ -7,10 +7,13 @@
 
 package team.duckie.app.android.feature.solve.problem.question
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -22,6 +25,7 @@ import team.duckie.app.android.feature.solve.problem.question.audio.AudioPlayer
 import team.duckie.app.android.feature.solve.problem.question.image.FlexibleImageBox
 import team.duckie.app.android.feature.solve.problem.question.image.ImageBox
 import team.duckie.app.android.feature.solve.problem.question.video.VideoPlayer
+import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
 private val HorizontalPadding = 16.dp
@@ -33,6 +37,9 @@ internal fun ColumnScope.QuestionSection(
     isImageChoice: Boolean,
     isRequireFlexibleImage: Boolean,
     spaceImageToKeyboard: Dp,
+    onImageLoading: (Boolean) -> Unit,
+    onImageSuccess: (Boolean) -> Unit,
+    isImageLoading: Boolean,
 ) {
     val modifier = if (isImageChoice) {
         Modifier
@@ -49,19 +56,32 @@ internal fun ColumnScope.QuestionSection(
         is Question.Text -> {}
         is Question.Image -> {
             Spacer(space = 12.dp)
-            if (isRequireFlexibleImage) {
-                FlexibleImageBox(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    spaceImageToKeyboard = spaceImageToKeyboard,
-                    url = question.imageUrl,
-                )
-            } else {
-                ImageBox(
-                    modifier = modifier,
-                    url = question.imageUrl,
-                )
+            Box {
+                if (isRequireFlexibleImage) {
+                    FlexibleImageBox(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        spaceImageToKeyboard = spaceImageToKeyboard,
+                        url = question.imageUrl,
+                        onImageLoading = onImageLoading,
+                        onImageSuccess = onImageSuccess,
+                        isImageLoading = isImageLoading,
+                    )
+                } else {
+                    ImageBox(
+                        modifier = modifier
+                            .padding(horizontal = 16.dp)
+                            .background(
+                                color = QuackColor.Gray4.value,
+                                shape = RoundedCornerShape(8.dp),
+                            ),
+                        url = question.imageUrl,
+                        onImageLoading = onImageLoading,
+                        onImageSuccess = onImageSuccess,
+                        isImageLoading = isImageLoading,
+                    )
+                }
             }
         }
 

@@ -5,8 +5,6 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalQuackQuackApi::class)
-
 package team.duckie.app.android.feature.solve.problem.common
 
 import androidx.compose.animation.AnimatedContent
@@ -16,17 +14,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSurface
 import team.duckie.app.android.feature.solve.problem.R
 import team.duckie.quackquack.material.QuackBorder
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.ui.QuackButton
-import team.duckie.quackquack.ui.QuackButtonStyle
-import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackBorder
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun ButtonBottomBar(
@@ -149,11 +149,27 @@ private fun MediumButton(
     border: QuackBorder? = borderFor(enabled),
     textColor: QuackColor = textColorFor(enabled),
 ) {
-    QuackButton(
-        text = text,
-        style = QuackButtonStyle.SecondarySmall,
-        onClick = onClick,
-    )
+    QuackSurface(
+        modifier = Modifier
+            .quackBorder(
+                shape = RoundedCornerShape(8.dp),
+                border = border,
+            ),
+        shape = RoundedCornerShape(8.dp),
+        onClick = onClickFor(enabled, onClick),
+        backgroundColor = backgroundColor,
+    ) {
+        QuackText(
+            modifier = Modifier.padding(
+                vertical = 7.dp,
+                horizontal = 12.dp,
+            ),
+            text = text,
+            typography = QuackTypography.Body1.change(
+                color = textColor,
+            ),
+        )
+    }
 }
 
 @Composable
