@@ -150,11 +150,10 @@ private fun MediumButton(
     textColor: QuackColor = textColorFor(enabled),
 ) {
     QuackSurface(
-        modifier = Modifier
-            .quackBorder(
-                shape = RoundedCornerShape(8.dp),
-                border = border,
-            ),
+        modifier = Modifier.quackBorder(
+            shape = RoundedCornerShape(8.dp),
+            border = border,
+        ),
         shape = RoundedCornerShape(8.dp),
         onClick = onClickFor(enabled, onClick),
         backgroundColor = backgroundColor,
