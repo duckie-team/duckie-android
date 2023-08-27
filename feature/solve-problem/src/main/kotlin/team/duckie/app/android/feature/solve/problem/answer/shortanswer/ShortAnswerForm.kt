@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import team.duckie.quackquack.material.QuackBorder
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.quackBorder
-import team.duckie.quackquack.ui.component.QuackBody1
+import team.duckie.quackquack.ui.sugar.QuackBody1
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

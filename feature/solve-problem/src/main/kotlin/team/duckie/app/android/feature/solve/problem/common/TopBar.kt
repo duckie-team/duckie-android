@@ -14,20 +14,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.common.compose.ui.icon.v1.Clock
 import team.duckie.app.android.common.compose.ui.LinearProgressBar
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSubtitle2
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.icon.v2.Clock
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 @Composable
 internal fun CloseAndPageTopBar(
@@ -38,7 +40,7 @@ internal fun CloseAndPageTopBar(
 ) {
     QuackTopAppBar(
         modifier = modifier,
-        leadingIcon = QuackIcon.Close,
+        leadingIcon = QuackIcon.Outlined.Close,
         onLeadingIconClick = onCloseClick,
         trailingContent = {
             PageInfo(
@@ -58,12 +60,16 @@ internal fun TimerTopBar(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(
+                vertical = 12.dp,
+                horizontal = 16.dp,
+            ),
     ) {
         QuackTopAppBar(
-            leadingIcon = QuackIcon.Close,
+            leadingIcon = QuackIcon.Outlined.Close,
             onLeadingIconClick = onCloseClick,
         )
+        Spacer(space = 12.dp)
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterStart,
@@ -71,12 +77,10 @@ internal fun TimerTopBar(
             LinearProgressBar(
                 progress = progress(),
             )
-            QuackImage(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(QuackColor.White.composeColor),
-                src = QuackIcon.Clock,
-                size = DpSize(all = 16.dp),
+            QuackIcon(
+                modifier = Modifier.background(QuackColor.White.value),
+                icon = QuackIcon.Clock,
+                size = 16.dp,
             )
         }
     }
@@ -92,13 +96,13 @@ private fun PageInfo(
         horizontalArrangement = Arrangement.spacedBy(space = 2.dp),
     ) {
         QuackSubtitle2(text = currentPage.toString())
-        QuackSubtitle2(
+        QuackText(
             text = " / ",
-            color = QuackColor.Gray2,
+            typography = QuackTypography.Subtitle2.change(color = QuackColor.Gray2),
         )
-        QuackSubtitle2(
+        QuackText(
             text = totalPage.toString(),
-            color = QuackColor.Gray2,
+            typography = QuackTypography.Subtitle2.change(color = QuackColor.Gray2),
         )
     }
 }

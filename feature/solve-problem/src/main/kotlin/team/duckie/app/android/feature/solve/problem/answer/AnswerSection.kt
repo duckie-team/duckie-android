@@ -18,10 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.ui.DuckieGridLayout
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.feature.solve.problem.answer.choice.ImageAnswerBox
 import team.duckie.app.android.feature.solve.problem.answer.choice.TextAnswerBox
@@ -29,6 +32,10 @@ import team.duckie.app.android.feature.solve.problem.answer.shortanswer.ShortAns
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 
 private val HorizontalPadding = PaddingValues(horizontal = 16.dp)
+
+internal object TextFieldMargin {
+    val Top = 16.dp
+}
 
 @Composable
 internal fun ColumnScope.AnswerSection(
@@ -38,11 +45,14 @@ internal fun ColumnScope.AnswerSection(
     updateInputAnswers: (page: Int, inputAnswer: InputAnswer) -> Unit,
     requestFocus: Boolean,
     keyboardController: SoftwareKeyboardController?,
+    onShortAnswerSizeChanged: (IntSize) -> Unit,
 ) {
     when (answer) {
         is Answer.Choice -> {
             Column(
-                modifier = Modifier.padding(paddingValues = HorizontalPadding),
+                modifier = Modifier
+                    .padding(vertical = 24.dp)
+                    .padding(paddingValues = HorizontalPadding),
                 verticalArrangement = Arrangement.spacedBy(space = 12.dp),
             ) {
                 answer.choices.forEachIndexed { index, choice ->
@@ -91,7 +101,9 @@ internal fun ColumnScope.AnswerSection(
         }
 
         is Answer.Short -> {
+            Spacer(space = TextFieldMargin.Top)
             ShortAnswerForm(
+                modifier = Modifier.onSizeChanged(onShortAnswerSizeChanged),
                 answer = answer.correctAnswer,
                 onTextChanged = { inputText ->
                     updateInputAnswers(pageIndex, InputAnswer(0, inputText))
