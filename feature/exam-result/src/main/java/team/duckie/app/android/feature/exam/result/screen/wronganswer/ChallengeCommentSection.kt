@@ -58,9 +58,6 @@ internal fun ColumnScope.ChallengeCommentSection(
     commentsTotal: Int,
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     showCommentSheet: () -> Unit,
-    onDeleteComment: (Int) -> Unit,
-    onIgnoreComment: (Int, String) -> Unit,
-    onReportComment: (Int) -> Unit,
     myWrongComment: String,
     myWrongCommentCreateAT: String,
 ) {
@@ -151,17 +148,11 @@ internal fun ColumnScope.ChallengeCommentSection(
     Spacer(space = 8.dp)
     comments.forEach { item ->
         key(item.id) {
-            DraggableChallengeComment(
+            ChallengeComment(
                 modifier = Modifier.fillMaxScreenWidth(),
                 wrongComment = item,
-                onHeartClick = { commentId ->
-                    onHeartComment(commentId)
-                },
-                isMine = item.isMine,
+                onHeartClick = onHeartComment,
                 innerPaddingValues = PaddingValues(horizontal = 16.dp),
-                onDeleteComment = { onDeleteComment(item.id) },
-                onIgnoreComment = { onIgnoreComment(item.userId, item.userNickname) },
-                onReportComment = { onReportComment(item.id) },
                 visibleHeart = true,
                 showCommentSheet = showCommentSheet,
             )

@@ -114,7 +114,7 @@ internal fun DraggableChallengeComment(
 }
 
 @Composable
-private fun ChallengeComment(
+internal fun ChallengeComment(
     modifier: Modifier = Modifier,
     wrongComment: ExamResultState.Success.ChallengeCommentUiModel,
     innerPaddingValues: PaddingValues = PaddingValues(),
@@ -185,12 +185,14 @@ private fun ChallengeComment(
                     },
                     tint = if (wrongComment.isHeart) QuackColor.Unspecified else QuackColor.Gray2,
                 )
-                QuackText(
-                    text = wrongComment.heartCount.toString(),
-                    typography = QuackTypography.Body3.change(
-                        color = animateHeartColor.value,
-                    ),
-                )
+                if(wrongComment.heartCount != 0) {
+                    QuackText(
+                        text = wrongComment.heartCount.toString(),
+                        typography = QuackTypography.Body3.change(
+                            color = animateHeartColor.value,
+                        ),
+                    )
+                }
             }
         }
     }

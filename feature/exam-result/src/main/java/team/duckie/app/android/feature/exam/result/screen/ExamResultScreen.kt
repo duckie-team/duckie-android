@@ -203,14 +203,10 @@ private fun ExamResultSuccessScreen(
                 myComment = state.myWrongComment,
                 onMyCommentChanged = viewModel::updateWrongComment,
                 comments = state.allComments,
-                onHeartComment = { commentId ->
-                    viewModel.heartWrongComment(commentId)
-                },
+                onHeartComment = viewModel::heartWrongComment,
                 myCommentCreateAt = state.commentCreateAtWithDiff,
                 isWriteComment = state.isWriteComment,
-                onSendComment = {
-                    viewModel.writeChallengeComment()
-                },
+                onSendComment = viewModel::writeChallengeComment,
                 onDeleteComment = viewModel::deleteChallengeComment,
                 onIgnoreComment = viewModel::ignoreUser,
                 onReportComment = viewModel::reportChallengeComment,
@@ -280,9 +276,6 @@ private fun ExamResultSuccessScreen(
                                     sheetState.show()
                                 }
                             },
-                            onDeleteComment = viewModel::deleteChallengeComment,
-                            onIgnoreUser = viewModel::ignoreUser,
-                            onReportComment = viewModel::reportChallengeComment,
                             mostWrongTotal = mostWrongAnswerTotal,
                             mostWrongData = mostWrongAnswerData,
                             equalAnswerCount = equalAnswerCount,

@@ -164,23 +164,27 @@ class ExamResultViewModel @Inject constructor(
 
     fun writeChallengeComment() = intent {
         val state = state as ExamResultState.Success
-        writeChallengeCommentUseCase(
-            challengeId = state.examId,
-            message = state.myWrongComment,
-        ).onSuccess { challenge ->
-            val comments = state.allComments.toMutableList().apply {
-                add(0, challenge.toUiModel(isMine = true))
-            }.toImmutableList()
-            reduce {
-                state.copy(
-                    isWriteComment = true,
-                    allComments = comments,
-                    commentCreateAt = Date(),
-                    commentsTotal = state.commentsTotal.plus(1),
-                )
+        val myComment = state.myWrongComment
+
+        if(myComment.isNotEmpty()) {
+            writeChallengeCommentUseCase(
+                challengeId = state.examId,
+                message = myComment,
+            ).onSuccess { challenge ->
+                val comments = state.allComments.toMutableList().apply {
+                    add(0, challenge.toUiModel(isMine = true))
+                }.toImmutableList()
+                reduce {
+                    state.copy(
+                        isWriteComment = true,
+                        allComments = comments,
+                        commentCreateAt = Date(),
+                        commentsTotal = state.commentsTotal.plus(1),
+                    )
+                }
+            }.onFailure { exception ->
+                postSideEffect(ExamResultSideEffect.ReportError(exception))
             }
-        }.onFailure { exception ->
-            postSideEffect(ExamResultSideEffect.ReportError(exception))
         }
     }
 
