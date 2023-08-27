@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +34,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.systemBarPaddings
@@ -178,7 +176,6 @@ private val LoginScreenLoginAreaMeasurePolicy = MeasurePolicy { measurables, con
 @Composable
 private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.layoutId(LoginScreenLoginAreaLayoutId),
@@ -201,9 +198,7 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                     ),
                 )
                 .clickable {
-                    coroutineScope.launch {
-                        vm.getKakaoAccessTokenAndJoin()
-                    }
+                    vm.getKakaoAccessTokenAndJoin()
                 },
             content = {
                 Image(
