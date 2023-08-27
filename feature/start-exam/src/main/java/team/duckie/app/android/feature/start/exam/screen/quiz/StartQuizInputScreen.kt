@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalDesignToken::class, ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.feature.start.exam.screen.quiz
 
 import androidx.compose.foundation.background
@@ -16,30 +18,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.start.exam.R
+import team.duckie.app.android.feature.start.exam.screen.exam.StartExamTextField
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
-import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
+import team.duckie.quackquack.ui.span
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackHeadLine1
+import team.duckie.quackquack.ui.sugar.QuackTitle2
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 @Composable
 internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewModel) {
@@ -50,7 +54,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
         state.certifyingStatementInputText
     }
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         BackPressedTopAppBar(onBackPressed = viewModel::finishStartExam)
         Column(
             modifier = Modifier
@@ -62,7 +66,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(color = QuackColor.Gray4.composeColor)
+                    .background(color = QuackColor.Gray4.value)
                     .padding(all = 12.dp),
                 limitTime = state.timer,
             )
@@ -75,21 +79,24 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 modifier = Modifier.padding(top = 4.dp),
                 text = state.requirementQuestion, // TODO(EvergreenTree97) 추후 도전 조건 response 생기면 변경
             )
-            QuackGrayscaleTextField(
+            StartExamTextField(
                 modifier = Modifier.padding(top = 14.dp),
                 text = certifyingStatementText,
-                onTextChanged = viewModel::inputCertifyingStatement,
+                alwaysPlaceholderVisible = false,
                 placeholderText = "ex) ${state.requirementPlaceholder}",
+                onTextChanged = viewModel::inputCertifyingStatement,
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        QuackLargeButton(
-            modifier = Modifier.padding(
-                vertical = 12.dp,
-                horizontal = 16.dp,
-            ),
-            type = QuackLargeButtonType.Fill,
+        QuackButton(
+            modifier = Modifier
+                .padding(
+                    vertical = 12.dp,
+                    horizontal = 16.dp,
+                )
+                .align(Alignment.CenterHorizontally),
             text = stringResource(id = R.string.start_exam_quiz_start_button),
+            style = QuackButtonStyle.PrimaryLarge,
             enabled = certifyingStatementText.isNotEmpty(),
             onClick = viewModel::startSolveProblem,
         )
@@ -110,26 +117,23 @@ private fun InfoBox(
         Spacer(space = 4.dp)
         QuackBody2(text = stringResource(id = R.string.start_exam_information_before_quiz_line1))
         QuackText(
-            annotatedText = buildAnnotatedString {
-                append(stringResource(id = R.string.start_exam_information_before_quiz_line2_prefix))
-                withStyle(
-                    SpanStyle(
-                        color = QuackColor.Black.composeColor,
-                        fontWeight = FontWeight.Bold,
+            modifier = Modifier.span(
+                texts = listOf(
+                    stringResource(
+                        id = R.string.start_exam_information_before_quiz_line2_infix,
+                        limitTime.toString(),
                     ),
-                ) {
-                    append(
-                        stringResource(
-                            id = R.string.start_exam_information_before_quiz_line2_infix,
-                            limitTime.toString(),
-                        ),
-                    )
-                }
-                append(
-                    stringResource(id = R.string.start_exam_information_before_quiz_line2_postfix),
-                )
-            },
-            style = QuackTextStyle.Body2,
+                ),
+                style = SpanStyle(
+                    color = QuackColor.Black.value,
+                    fontWeight = FontWeight.Bold,
+                ),
+            ),
+            typography = QuackTypography.Body2,
+            text = stringResource(id = R.string.start_exam_information_before_quiz_line2_prefix) + stringResource(
+                id = R.string.start_exam_information_before_quiz_line2_infix,
+                limitTime.toString(),
+            ) + stringResource(id = R.string.start_exam_information_before_quiz_line2_postfix),
         )
     }
 }

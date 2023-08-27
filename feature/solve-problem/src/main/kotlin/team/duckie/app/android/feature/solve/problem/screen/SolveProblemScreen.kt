@@ -13,6 +13,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -24,13 +25,16 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -46,19 +50,19 @@ import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem.Companion.isSubjective
 import team.duckie.app.android.feature.solve.problem.R
 import team.duckie.app.android.feature.solve.problem.answer.AnswerSection
+import team.duckie.app.android.feature.solve.problem.answer.TextFieldMargin
 import team.duckie.app.android.feature.solve.problem.common.CloseAndPageTopBar
 import team.duckie.app.android.feature.solve.problem.common.DoubleButtonBottomBar
-import team.duckie.app.android.feature.solve.problem.common.FlexibleSubjectiveQuestionSection
 import team.duckie.app.android.feature.solve.problem.common.verticalScrollModifierAsCondition
 import team.duckie.app.android.feature.solve.problem.question.QuestionSection
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
+import team.duckie.quackquack.material.quackClickable
 
 private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
 private const val SolveProblemBottomBarLayoutId = "SolveProblemBottomBar"
 
-// 6번호
 @Composable
 internal fun SolveProblemScreen(
     state: SolveProblemState,
@@ -114,6 +118,8 @@ internal fun SolveProblemScreen(
             CloseAndPageTopBar(
                 modifier = Modifier
                     .layoutId(SolveProblemTopAppBarLayoutId)
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp)
                     .padding(start = 12.dp)
                     .padding(end = 16.dp),
                 onCloseClick = {
@@ -169,6 +175,8 @@ private fun ContentSection(
     updateInputAnswers: (Int, InputAnswer) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    var textFieldHeight by remember { mutableStateOf(Dp.Unspecified) }
+    val density = LocalDensity.current
 
     HorizontalPager(
         modifier = modifier,
@@ -182,6 +190,8 @@ private fun ContentSection(
             }
         }
 
+        var isImageLoading by rememberSaveable { mutableStateOf(true) }
+
         LaunchedEffect(key1 = requestFocus) {
             if (!problem.isSubjective()) {
                 keyboardController?.hide()
@@ -189,48 +199,50 @@ private fun ContentSection(
         }
 
         val isImageChoice = problem.answer?.isImageChoice == true
-
-        when {
-            // for keyboard flexible image height
-            problem.isSubjective() && problem.question.isImage() -> FlexibleSubjectiveQuestionSection(
-                problem = problem,
+        val isRequireFlexibleImage = problem.isSubjective() && problem.question.isImage()
+        Column(
+            modifier = Modifier
+                .verticalScrollModifierAsCondition(isImageChoice)
+                .fillMaxSize()
+                .quackClickable(
+                    rippleEnabled = false,
+                ) {
+                    keyboardController?.hide()
+                },
+        ) {
+            Spacer(space = 16.dp)
+            QuestionSection(
+                page = pageIndex,
+                question = problem.question,
+                isRequireFlexibleImage = isRequireFlexibleImage,
+                spaceImageToKeyboard = textFieldHeight + TextFieldMargin.Top,
+                onImageLoading = { isImageLoading = it },
+                onImageSuccess = { isImageLoading = it },
+                isImageLoading = isImageLoading,
+                isImageChoice = isImageChoice,
+            )
+            val answer = problem.answer
+            AnswerSection(
                 pageIndex = pageIndex,
+                answer = when (answer) {
+                    is Answer.Short -> Answer.Short(
+                        problem.correctAnswer
+                            ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
+                    )
+
+                    is Answer.Choice, is Answer.ImageChoice -> answer
+                    else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
+                },
+                inputAnswers = inputAnswers,
                 updateInputAnswers = updateInputAnswers,
                 requestFocus = requestFocus,
                 keyboardController = keyboardController,
+                onShortAnswerSizeChanged = {
+                    textFieldHeight = with(density) {
+                        it.height.toDp()
+                    }
+                },
             )
-
-            else -> Column(
-                modifier = Modifier
-                    .verticalScrollModifierAsCondition(isImageChoice)
-                    .fillMaxSize(),
-            ) {
-                Spacer(space = 16.dp)
-                QuestionSection(
-                    page = pageIndex,
-                    question = problem.question,
-                    isImageChoice = isImageChoice,
-                )
-                Spacer(space = 24.dp)
-                val answer = problem.answer
-                AnswerSection(
-                    pageIndex = pageIndex,
-                    answer = when (answer) {
-                        is Answer.Short -> Answer.Short(
-                            problem.correctAnswer
-                                ?: duckieResponseFieldNpe("null 이 되면 안됩니다."),
-                        )
-
-                        is Answer.Choice, is Answer.ImageChoice -> answer
-                        else -> duckieResponseFieldNpe("해당 분기로 빠질 수 없는 AnswerType 입니다.")
-                    },
-                    inputAnswers = inputAnswers,
-                    updateInputAnswers = updateInputAnswers,
-                    requestFocus = requestFocus,
-                    keyboardController = keyboardController,
-                )
-                Spacer(space = 16.dp)
-            }
         }
     }
 }

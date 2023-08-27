@@ -52,11 +52,11 @@ internal class SolveProblemViewModel @Inject constructor(
 
     val timerCount: StateFlow<Float> = problemTimer.remainingTime
 
-    fun startTimer(time: Float) {
+    fun startTimer(time: Float) = intent {
         problemTimer.start(time)
     }
 
-    fun stopTimer() {
+    private fun stopTimer() {
         problemTimer.stop()
     }
 
@@ -110,7 +110,9 @@ internal class SolveProblemViewModel @Inject constructor(
         reduce { state.copy(isProblemsLoading = true, isError = false) }
 
         getQuizUseCase(examId = examId).onSuccess { quizResult ->
-            val quizProblems = quizResult.exam.problems
+            val quizProblems = quizResult.exam.problems.also {
+                problemTimer.setTotalTime(quizResult.exam.timer?.toFloat() ?: 0f)
+            }
             if (quizProblems == null) {
                 stopExam()
             } else {
@@ -140,7 +142,6 @@ internal class SolveProblemViewModel @Inject constructor(
     ) = intent {
         val correctAnswer = state.quizProblems[pageIndex].correctAnswer
             ?: throw DuckieClientLogicProblemException(code = CORRECT_ANSWER_IS_NULL)
-        state.quizProblems[pageIndex].answer
         if (correctAnswer.replace(" ", "").lowercase() != inputAnswer.answer.replace(" ", "")
                 .lowercase()
         ) {

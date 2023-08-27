@@ -29,7 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,10 +57,12 @@ import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.material.icon.quackicon.outlined.Share
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 
 internal const val RANKER_THRESHOLD = 10
 
@@ -189,6 +191,7 @@ private fun ExamResultSuccessScreen(
     state: ExamResultState.Success,
     viewModel: ExamResultViewModel,
 ) {
+
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true, // TODO(limsaehyun) bottomContent가 보이지 않은 현상으로 인해 불가능
@@ -231,9 +234,9 @@ private fun ExamResultSuccessScreen(
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .padding(horizontal = 16.dp),
-                    leadingIcon = QuackIcon.Close,
+                    leadingIcon = team.duckie.quackquack.material.icon.QuackIcon.Outlined.Close,
                     onLeadingIconClick = viewModel::exitExam,
-                    trailingIcon = QuackIcon.Share,
+                    trailingIcon = team.duckie.quackquack.material.icon.QuackIcon.Outlined.Share,
                     onTrailingIconClick = {
                         viewModel.updateExamResultScreen(ExamResultScreen.SHARE_EXAM_RESULT)
                     },
@@ -252,11 +255,12 @@ private fun ExamResultSuccessScreen(
             PullRefreshIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth(CenterHorizontally)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
                     .zIndex(1f),
                 refreshing = state.isRefreshing,
                 state = pullRefreshState,
             )
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()

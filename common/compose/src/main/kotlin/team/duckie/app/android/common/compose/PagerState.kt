@@ -31,3 +31,7 @@ suspend inline fun PagerState.moveNextPage(maxPage: Int) {
 fun PagerState.isCurrentPage(targetIndex: Int): Boolean {
     return currentPageOffsetFraction == 0f && targetIndex == currentPage
 }
+
+fun PagerState.isTargetPage(targetIndex: Int): Boolean {
+    return targetIndex == targetPage
+}

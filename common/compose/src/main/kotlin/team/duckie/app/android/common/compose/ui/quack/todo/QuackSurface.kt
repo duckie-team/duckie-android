@@ -57,10 +57,10 @@ import team.duckie.quackquack.material.quackClickable
  * @param propagateMinConstraints 최소 제약 조건을 전파할지 여부. 기본값은 false 입니다.
  * @param content 표시할 컴포저블. [BoxScope] 를 receive 로 받습니다.
  */
-@Composable
 // TODO: Modifier.quackSurface 로 변경
 // @NonRestartableComposable; 여기서 사용하는 Box 는 inline 됨
-public fun QuackSurface(
+@Composable
+fun QuackSurface(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
     backgroundColor: QuackColor = QuackColor.Unspecified,

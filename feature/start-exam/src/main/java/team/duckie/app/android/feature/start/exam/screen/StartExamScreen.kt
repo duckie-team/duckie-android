@@ -15,13 +15,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.feature.start.exam.screen.exam.StartExamInputScreen
 import team.duckie.app.android.feature.start.exam.screen.quiz.StartQuizInputScreen
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackTitle1
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.ui.sugar.QuackTitle1
 
 @Composable
 internal fun StartExamScreen(
@@ -57,7 +57,7 @@ private fun StartExamLoadingScreen(modifier: Modifier, viewModel: StartExamViewM
     ) {
         // TODO(riflockle7): 추후 DuckieCircularProgressIndicator.kt 와 합치거나 꽥꽥 컴포넌트로 필요
         CircularProgressIndicator(
-            color = QuackColor.DuckieOrange.composeColor,
+            color = QuackColor.DuckieOrange.value,
         )
     }
 }
