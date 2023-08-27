@@ -267,7 +267,7 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     /* ----- Api ----- */
 
-    suspend fun getKakaoAccessTokenAndJoin() = intent {
+    fun getKakaoAccessTokenAndJoin() = intent {
         getKakaoAccessTokenUseCase()
             .onSuccess { token ->
                 postSideEffect(OnboardSideEffect.DelegateJoin(token))
@@ -275,7 +275,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             .attachExceptionHandling()
     }
 
-    suspend fun join(kakaoAccessToken: String) = intent {
+    fun join(kakaoAccessToken: String) = intent {
         joinUseCase(kakaoAccessToken)
             .onSuccess { response ->
                 reduce {

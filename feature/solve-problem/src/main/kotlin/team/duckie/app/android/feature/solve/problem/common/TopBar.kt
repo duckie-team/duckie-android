@@ -21,12 +21,12 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.LinearProgressBar
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.Clock
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Close
-import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
@@ -38,20 +38,17 @@ internal fun CloseAndPageTopBar(
     currentPage: Int,
     totalPage: Int,
 ) {
-    Row(
+    QuackTopAppBar(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        QuackIcon(
-            modifier = Modifier.quackClickable(onClick = onCloseClick),
-            icon = QuackIcon.Outlined.Close,
-        )
-        PageInfo(
-            currentPage = currentPage,
-            totalPage = totalPage,
-        )
-    }
+        leadingIcon = QuackIcon.Outlined.Close,
+        onLeadingIconClick = onCloseClick,
+        trailingContent = {
+            PageInfo(
+                currentPage = currentPage,
+                totalPage = totalPage,
+            )
+        },
+    )
 }
 
 @Composable
@@ -63,11 +60,14 @@ internal fun TimerTopBar(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(
+                vertical = 12.dp,
+                horizontal = 16.dp,
+            ),
     ) {
-        QuackIcon(
-            modifier = Modifier.quackClickable(onClick = onCloseClick),
-            icon = QuackIcon.Outlined.Close,
+        QuackTopAppBar(
+            leadingIcon = QuackIcon.Outlined.Close,
+            onLeadingIconClick = onCloseClick,
         )
         Spacer(space = 12.dp)
         Box(

@@ -8,7 +8,6 @@
 package team.duckie.app.android.feature.solve.problem.question
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,32 +55,30 @@ internal fun ColumnScope.QuestionSection(
         is Question.Text -> {}
         is Question.Image -> {
             Spacer(space = 12.dp)
-            Box {
-                if (isRequireFlexibleImage) {
-                    FlexibleImageBox(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        spaceImageToKeyboard = spaceImageToKeyboard,
-                        url = question.imageUrl,
-                        onImageLoading = onImageLoading,
-                        onImageSuccess = onImageSuccess,
-                        isImageLoading = isImageLoading,
-                    )
-                } else {
-                    ImageBox(
-                        modifier = modifier
-                            .padding(horizontal = 16.dp)
-                            .background(
-                                color = QuackColor.Gray4.value,
-                                shape = RoundedCornerShape(8.dp),
-                            ),
-                        url = question.imageUrl,
-                        onImageLoading = onImageLoading,
-                        onImageSuccess = onImageSuccess,
-                        isImageLoading = isImageLoading,
-                    )
-                }
+            if (isRequireFlexibleImage) {
+                FlexibleImageBox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    spaceImageToKeyboard = spaceImageToKeyboard,
+                    url = question.imageUrl,
+                    onImageLoading = onImageLoading,
+                    onImageSuccess = onImageSuccess,
+                    isImageLoading = isImageLoading,
+                )
+            } else {
+                ImageBox(
+                    modifier = modifier
+                        .padding(horizontal = 16.dp)
+                        .background(
+                            color = QuackColor.Gray4.value,
+                            shape = RoundedCornerShape(8.dp),
+                        ),
+                    url = question.imageUrl,
+                    onImageLoading = onImageLoading,
+                    onImageSuccess = onImageSuccess,
+                    isImageLoading = isImageLoading,
+                )
             }
         }
 

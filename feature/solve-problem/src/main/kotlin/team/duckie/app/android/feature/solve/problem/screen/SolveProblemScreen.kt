@@ -63,7 +63,6 @@ private const val SolveProblemTopAppBarLayoutId = "SolveProblemTopAppBar"
 private const val SolveProblemContentLayoutId = "SolveProblemContent"
 private const val SolveProblemBottomBarLayoutId = "SolveProblemBottomBar"
 
-// 6번호
 @Composable
 internal fun SolveProblemScreen(
     state: SolveProblemState,
@@ -215,12 +214,12 @@ private fun ContentSection(
             QuestionSection(
                 page = pageIndex,
                 question = problem.question,
-                isImageChoice = isImageChoice,
                 isRequireFlexibleImage = isRequireFlexibleImage,
                 spaceImageToKeyboard = textFieldHeight + TextFieldMargin.Top,
                 onImageLoading = { isImageLoading = it },
                 onImageSuccess = { isImageLoading = it },
                 isImageLoading = isImageLoading,
+                isImageChoice = isImageChoice,
             )
             val answer = problem.answer
             AnswerSection(

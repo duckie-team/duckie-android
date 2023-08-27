@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.solve.problem.R
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -83,46 +84,39 @@ internal fun ImageBox(
     onImageSuccess: (Boolean) -> Unit,
     isImageLoading: Boolean,
 ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center,
-    ) {
-        Box {
-            AsyncImage(
-                modifier = Modifier.fillMaxSize(),
-                onLoading = {
-                    onImageLoading(true)
-                },
-                onSuccess = {
-                    onImageSuccess(false)
-                },
-                model = url,
-                contentDescription = "",
-            )
-            AnimatedVisibility(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(QuackColor.Black.value.copy(alpha = 0.5f)),
-                visible = isImageLoading,
+    Box(modifier = modifier) {
+        AsyncImage(
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .fillMaxSize(),
+            onLoading = {
+                onImageLoading(true)
+            },
+            onSuccess = {
+                onImageSuccess(false)
+            },
+            model = url,
+            contentDescription = "",
+        )
+        AnimatedVisibility(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(8.dp))
+                .background(QuackColor.Black.value.copy(alpha = 0.5f)),
+            visible = isImageLoading,
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        QuackText(
-                            text = stringResource(id = R.string.loading_image),
-                            typography = QuackTypography.Body1.change(
-                                color = QuackColor.White,
-                            ),
-                        )
-                        CircularProgressIndicator(color = QuackColor.DuckieOrange.value)
-                    }
-                }
+                QuackText(
+                    text = stringResource(id = R.string.loading_image),
+                    typography = QuackTypography.Body1.change(
+                        color = QuackColor.White,
+                    ),
+                )
+                Spacer(space = 12.dp)
+                CircularProgressIndicator(color = QuackColor.DuckieOrange.value)
             }
         }
     }
