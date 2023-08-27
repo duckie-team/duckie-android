@@ -26,6 +26,9 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.kotlin.exception.isFollowingAlreadyExists
+import team.duckie.app.android.common.kotlin.exception.isFollowingNotFound
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
@@ -40,9 +43,6 @@ import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.viewmodel.mapper.toFollowingModel
 import team.duckie.app.android.feature.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.home.viewmodel.mapper.toUiModel
-import team.duckie.app.android.common.kotlin.exception.isFollowingAlreadyExists
-import team.duckie.app.android.common.kotlin.exception.isFollowingNotFound
-import team.duckie.app.android.common.kotlin.fastMap
 import javax.inject.Inject
 
 @HiltViewModel
@@ -135,7 +135,7 @@ internal class HomeViewModel @Inject constructor(
                         isHomeRecommendLoading = false,
                         jumbotrons = jumbotrons
                             .fastMap(Exam::toJumbotronModel)
-                            .toPersistentList(),
+                            .toImmutableList(),
                     )
                 }
             }.onFailure { exception ->

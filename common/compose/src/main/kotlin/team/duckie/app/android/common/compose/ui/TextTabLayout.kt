@@ -23,8 +23,8 @@ import team.duckie.quackquack.ui.QuackText
 @Composable
 fun TextTabLayout(
     titles: ImmutableList<String>,
-    selectedTabStyle: QuackTypography = QuackTypography.HeadLine2,
-    tabStyle: QuackTypography = QuackTypography.Title2,
+    selectedTabStyle: QuackTypography = QuackTypography.HeadLine1,
+    tabStyle: QuackTypography = QuackTypography.HeadLine2,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
     space: Dp = 12.dp,

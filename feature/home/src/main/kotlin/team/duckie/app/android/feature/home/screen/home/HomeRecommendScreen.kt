@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -35,6 +36,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,12 +50,16 @@ import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackAnnotatedText
 import team.duckie.app.android.common.compose.ui.skeleton
+import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.common.kotlin.addHashTag
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
@@ -66,10 +72,10 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody3
 import team.duckie.quackquack.ui.sugar.QuackLarge1
-import team.duckie.quackquack.ui.sugar.QuackPrimaryLargeButton
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
+private const val JumbotronSwipeInterval = 3000L
 
 @Composable
 internal fun HomeRecommendScreen(
@@ -85,6 +91,19 @@ internal fun HomeRecommendScreen(
         pageCount = { state.jumbotrons.size },
     )
 
+    LaunchedEffect(key1 = pageState.currentPage) {
+        while (true) {
+            delay(JumbotronSwipeInterval)
+            withContext(NonCancellable) {
+                if (pageState.isLastPage) {
+                    pageState.animateScrollToPage(0)
+                } else {
+                    pageState.animateScrollToPage(pageState.currentPage + 1)
+                }
+            }
+        }
+    }
+
     val lazyRecommendations = homeViewModel.recommendations.collectAsLazyPagingItems()
 
     val pullRefreshState = rememberPullRefreshState(
@@ -95,8 +114,7 @@ internal fun HomeRecommendScreen(
     )
 
     Box(
-        modifier = Modifier
-            .pullRefresh(pullRefreshState),
+        modifier = Modifier.pullRefresh(pullRefreshState),
     ) {
         LazyColumn(
             modifier = modifier
@@ -118,13 +136,11 @@ internal fun HomeRecommendScreen(
             }
 
             item {
-                HorizontalPager(
-                    state = pageState,
-                ) { page ->
+                HorizontalPager(state = pageState) { page ->
                     HomeRecommendJumbotronLayout(
                         modifier = Modifier
                             .padding(HomeHorizontalPadding),
-                        recommendItem = state.jumbotrons[page],
+                        item = state.jumbotrons.getOrNull(page % state.jumbotrons.size),
                         onStartClicked = { examId ->
                             navigateToHomeDetail(examId)
                         },
@@ -170,13 +186,16 @@ internal fun HomeRecommendScreen(
     }
 }
 
+private val PagerState.isLastPage: Boolean
+    get() = currentPage == pageCount - 1
+
 @Composable
 private fun HomeRecommendJumbotronLayout(
     modifier: Modifier = Modifier,
-    recommendItem: HomeState.HomeRecommendJumbotron,
+    item: HomeState.HomeRecommendJumbotron?,
     onStartClicked: (Int) -> Unit,
     isLoading: Boolean,
-) {
+) = item?.let { recommendItem ->
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -203,10 +222,12 @@ private fun HomeRecommendJumbotronLayout(
             typography = QuackTypography.Body1.change(textAlign = TextAlign.Center),
         )
         Spacer(modifier = Modifier.height(24.dp))
-        QuackPrimaryLargeButton(
+
+        TempFlexiblePrimaryLargeButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .skeleton(isLoading),
             text = recommendItem.buttonContent,
-            modifier = Modifier.skeleton(isLoading),
-            enabled = true,
             onClick = { onStartClicked(recommendItem.examId) },
         )
         Spacer(modifier = Modifier.height(8.dp))
