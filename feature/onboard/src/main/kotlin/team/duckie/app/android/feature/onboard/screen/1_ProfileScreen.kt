@@ -19,6 +19,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
@@ -63,6 +64,7 @@ import team.duckie.app.android.common.compose.ui.PhotoPickerConstants
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.constant.SharedIcon
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextField
+import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.feature.onboard.R
 import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
@@ -73,8 +75,6 @@ import team.duckie.app.android.feature.onboard.viewmodel.state.ProfileScreenStat
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
-import team.duckie.quackquack.ui.QuackButton
-import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
@@ -221,18 +221,18 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
             // TODO(riflockle7): 문제 있으므로 꽥꽥 이슈 해결할 때까지 주석 제거하지 않음
             // type = QuackLargeButtonType.Fill,
             // imeAnimation = true,
-            Box(modifier = Modifier.padding(horizontal = 20.dp)) {
-                QuackButton(
-                    style = QuackButtonStyle.PrimaryLarge,
-                    text = stringResource(R.string.button_next),
-                    enabled = profileScreenState == ProfileScreenState.Valid &&
-                            nickname.isNotEmpty(),
-                ) {
-                    navigateNextStep(
-                        vm = vm,
-                        nickname = nickname,
-                    )
-                }
+            TempFlexiblePrimaryLargeButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                text = stringResource(R.string.button_next),
+                enabled = profileScreenState == ProfileScreenState.Valid &&
+                        nickname.isNotEmpty(),
+            ) {
+                navigateNextStep(
+                    vm = vm,
+                    nickname = nickname,
+                )
             }
 
             ImeSpacer()
