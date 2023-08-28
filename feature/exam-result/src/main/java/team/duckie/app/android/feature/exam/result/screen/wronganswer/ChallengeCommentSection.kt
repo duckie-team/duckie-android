@@ -18,10 +18,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -130,34 +133,48 @@ internal fun ColumnScope.ChallengeCommentSection(
     Spacer(space = 20.dp)
     QuackMaxWidthDivider()
     Spacer(space = 20.dp)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
+    if (comments.isNotEmpty()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            QuackText(
+                text = stringResource(id = R.string.exam_result_total_comment, commentsTotal),
+                typography = QuackTypography.Body1.change(
+                    color = QuackColor.Gray1,
+                ),
+            )
+            QuackIcon(icon = QuackIcon.Outlined.ArrowDown)
+        }
+        Spacer(space = 8.dp)
+        comments.forEach { item ->
+            key(item.id) {
+                ChallengeComment(
+                    modifier = Modifier.fillMaxScreenWidth(),
+                    wrongComment = item,
+                    onHeartClick = onHeartComment,
+                    innerPaddingValues = PaddingValues(horizontal = 16.dp),
+                    visibleHeart = true,
+                    showCommentSheet = showCommentSheet,
+                )
+                Spacer(space = 8.dp)
+            }
+        }
+    } else {
         QuackText(
-            text = stringResource(id = R.string.exam_result_total_comment, commentsTotal),
-            typography = QuackTypography.Body1.change(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(CenterHorizontally)
+                .padding(vertical = 32.dp),
+            text = stringResource(id = R.string.exam_result_comments_empty),
+            typography = QuackTypography.Title2.change(
                 color = QuackColor.Gray1,
+                textAlign = TextAlign.Center,
             ),
         )
-        QuackIcon(icon = QuackIcon.Outlined.ArrowDown)
-    }
-    Spacer(space = 8.dp)
-    comments.forEach { item ->
-        key(item.id) {
-            ChallengeComment(
-                modifier = Modifier.fillMaxScreenWidth(),
-                wrongComment = item,
-                onHeartClick = onHeartComment,
-                innerPaddingValues = PaddingValues(horizontal = 16.dp),
-                visibleHeart = true,
-                showCommentSheet = showCommentSheet,
-            )
-            Spacer(space = 8.dp)
-        }
     }
 }
 

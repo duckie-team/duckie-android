@@ -32,6 +32,7 @@
     <string name="exam_result_total_comment">전체 댓글 %s개</string>
     <string name="exam_result_input_comment_hint">댓글을 남겨보세요!</string>
     <string name="exam_result_popular_comment">이 문제 인기 오답</string>
+    <string name="exam_result_comments_empty">영광의 오답러시군요.\n이 문제에 첫 댓글을 적어보세요!</string>
     <string name="exam_result_equal_comment_value">이 문제를 푼 유저 중 %s명이 이렇게 답을 적었어요!</string>
     <string name="other_answer">%s님의 답</string>
     <string name="my_answer">나의 답</string>
