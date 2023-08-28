@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -141,7 +142,25 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
-    fun getChallengeCommentList() = intent {
+    private fun updateRefreshState(isRefreshing: Boolean) = intent {
+        val state = state as ExamResultState.Success
+        reduce { state.copy(isRefreshing = isRefreshing) }
+    }
+
+    fun initialQuizState() {
+        getChallengeCommentList()
+    }
+
+    fun refreshQuizState(forceLoading: Boolean = false) = intent {
+        val state = state as ExamResultState.Success
+        updateRefreshState(true)
+        getChallengeCommentList()
+        state.updateCommentCreateAt()
+        if(forceLoading) delay(500L)
+        updateRefreshState(false)
+    }
+
+    private fun getChallengeCommentList() = intent {
         val state = state as ExamResultState.Success
         getChallengeCommentListUseCase(
             problemId = state.wrongProblemId,
@@ -166,7 +185,7 @@ class ExamResultViewModel @Inject constructor(
         val state = state as ExamResultState.Success
         val myComment = state.myWrongComment
 
-        if(myComment.isNotEmpty()) {
+        if (myComment.isNotEmpty()) {
             writeChallengeCommentUseCase(
                 challengeId = state.examId,
                 message = myComment,

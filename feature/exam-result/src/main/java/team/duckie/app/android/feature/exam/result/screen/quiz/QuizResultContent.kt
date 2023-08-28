@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package team.duckie.app.android.feature.exam.result.screen.quiz
 
 import androidx.compose.foundation.background
@@ -21,6 +23,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -52,8 +57,10 @@ import java.util.Locale
 
 @Composable
 internal fun QuizResultContent(
+    // root
     modifier: Modifier = Modifier,
     initialState: suspend CoroutineScope.() -> Unit,
+    // default
     nickname: String,
     resultImageUrl: String,
     time: Double,
@@ -75,9 +82,11 @@ internal fun QuizResultContent(
     myWrongComment: String,
     myWrongCommentCreateAT: String,
 ) {
+
     LaunchedEffect(key1 = Unit) {
         initialState()
     }
+
     Column(
         modifier = modifier
             .fillMaxSize()

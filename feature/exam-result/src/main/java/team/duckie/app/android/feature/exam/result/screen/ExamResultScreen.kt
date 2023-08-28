@@ -13,29 +13,35 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.compose.rememberKeyboardVisible
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.LoadingScreen
 import team.duckie.app.android.common.compose.ui.Spacer
@@ -43,7 +49,6 @@ import team.duckie.app.android.common.compose.ui.dialog.DuckieBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextArea
 import team.duckie.app.android.common.compose.util.HandleKeyboardVisibilityWithSheet
-import team.duckie.app.android.common.kotlin.getDiffDayFromToday
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
 import team.duckie.app.android.feature.exam.result.screen.exam.ExamResultContent
@@ -190,6 +195,12 @@ private fun ExamResultSuccessScreen(
         skipHalfExpanded = true, // TODO(limsaehyun) bottomContent가 보이지 않은 현상으로 인해 불가능
     )
     val coroutineScope = rememberCoroutineScope()
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isRefreshing,
+        onRefresh = {
+            viewModel.refreshQuizState(true)
+        },
+    )
 
     HandleKeyboardVisibilityWithSheet(sheetState = sheetState)
     DuckieBottomSheetDialog(
@@ -239,10 +250,19 @@ private fun ExamResultSuccessScreen(
                 )
             },
         ) { padding ->
+            PullRefreshIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(CenterHorizontally)
+                    .zIndex(1f),
+                refreshing = state.isRefreshing,
+                state = pullRefreshState,
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
+                    .padding(padding)
+                    .pullRefresh(pullRefreshState),
             ) {
                 with(state) {
                     if (isQuiz) {
@@ -267,7 +287,7 @@ private fun ExamResultSuccessScreen(
                                 viewModel.heartWrongComment(isLike)
                             },
                             initialState = {
-                                viewModel.getChallengeCommentList()
+                                viewModel.initialQuizState()
                             },
                             comments = popularComments,
                             commentsTotal = commentsTotal,
@@ -281,7 +301,7 @@ private fun ExamResultSuccessScreen(
                             equalAnswerCount = equalAnswerCount,
                             isPerfectChallenge = isPerfectChallenge,
                             myWrongComment = myWrongComment,
-                            myWrongCommentCreateAT = commentCreateAtWithDiff
+                            myWrongCommentCreateAT = commentCreateAtWithDiff,
                         )
                     } else {
                         ExamResultContent(

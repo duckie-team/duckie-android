@@ -42,14 +42,17 @@ sealed class ExamResultState {
         val mainTag: String = "",
         val ranking: Int = 0,
         val wrongAnswerMessage: String = "",
+        val thumbnailUrl: String = "",
+        val solvedCount: Int = 0,
+
+        // onlyQuiz
+        val isPerfectChallenge: Boolean = false,
         val isPerfectScore: Boolean = false,
         val requirementQuestion: String = "",
         val requirementPlaceholder: String = "",
         val timer: Int = 0,
         val originalExamId: Int = 0,
-        val thumbnailUrl: String = "",
-        val solvedCount: Int = 0,
-        val isPerfectChallenge: Boolean = false,
+        val isRefreshing: Boolean = false,
 
         // challenge comment
         val popularComments: ImmutableList<ChallengeCommentUiModel> = persistentListOf(),
@@ -79,6 +82,10 @@ sealed class ExamResultState {
         val commentCreateAtWithDiff = commentCreateAt.getDiffDayFromToday(false)
 
         val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
+
+        fun updateCommentCreateAt() = copy(
+            commentCreateAt = Date()
+        )
 
         data class ChallengeCommentUiModel(
             val id: Int,
