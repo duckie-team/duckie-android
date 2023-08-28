@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.ImeSpacer
+import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.feature.start.exam.R
 import team.duckie.app.android.feature.start.exam.screen.StartExamScreen
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
@@ -86,13 +87,14 @@ internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewMo
         Spacer(modifier = Modifier.weight(1f))
 
         // 시험시작 버튼
-        QuackButton(
-            modifier = Modifier.padding(
-                vertical = 12.dp,
-                horizontal = 16.dp,
-            ).align(alignment = Alignment.CenterHorizontally),
+        TempFlexiblePrimaryLargeButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    vertical = 12.dp,
+                    horizontal = 16.dp,
+                ),
             text = stringResource(id = R.string.start_exam_start_button),
-            style = QuackButtonStyle.PrimaryLarge,
             onClick = viewModel::startSolveProblem,
             enabled = viewModel.startExamValidate(),
         )
