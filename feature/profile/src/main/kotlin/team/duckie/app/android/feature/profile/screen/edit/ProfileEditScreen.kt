@@ -69,7 +69,7 @@ import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.textAreaCounter
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
-private const val MaxNicknameLength = 12
+private const val MaxNicknameLength = 10
 private const val MaxIntroductionLength = 60
 
 @Composable

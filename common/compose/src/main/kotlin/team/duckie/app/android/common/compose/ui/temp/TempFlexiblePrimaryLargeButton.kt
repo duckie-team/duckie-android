@@ -30,16 +30,15 @@ import team.duckie.quackquack.ui.modifier.quackClickable
 fun TempFlexiblePrimaryLargeButton(
     modifier: Modifier = Modifier,
     text: String,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
             .heightIn(44.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(QuackColor.DuckieOrange.value)
-            .quackClickable(
-                onClick = onClick,
-            ),
+            .background(backgroundFor(enabled))
+            .quackClickable(onClick = onClickFor(enabled, onClick)),
         contentAlignment = Alignment.Center,
     ) {
         QuackText(
@@ -49,4 +48,19 @@ fun TempFlexiblePrimaryLargeButton(
             ),
         )
     }
+}
+
+private fun backgroundFor(enabled: Boolean) = if (enabled) {
+    QuackColor.DuckieOrange.value
+} else {
+    QuackColor.Gray2.value
+}
+
+private fun onClickFor(
+    enabled: Boolean,
+    onClick: () -> Unit,
+) = if (enabled) {
+    onClick
+} else {
+    null
 }

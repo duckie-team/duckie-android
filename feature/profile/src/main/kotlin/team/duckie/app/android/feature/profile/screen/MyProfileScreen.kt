@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,6 +24,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.temp.TempFlexibleSecondaryLargeButton
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.user.model.UserProfile
@@ -40,8 +42,6 @@ import team.duckie.quackquack.material.icon.quackicon.outlined.Create
 import team.duckie.quackquack.material.icon.quackicon.outlined.Notice
 import team.duckie.quackquack.material.icon.quackicon.outlined.Setting
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackButton
-import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
@@ -120,12 +120,8 @@ fun MyProfileScreen(
                 title = stringResource(id = R.string.my_favorite_tag),
                 tags = tags,
                 emptySection = {
-                    // TODO(riflockle7): 디자인 확인 필요
-                    // QuackLargeButton(
-                    //    type = QuackLargeButtonType.Compact,
-                    QuackButton(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        style = QuackButtonStyle.SecondaryLarge,
+                    TempFlexibleSecondaryLargeButton(
+                        modifier = Modifier.fillMaxWidth(),
                         text = stringResource(id = R.string.add_favorite_tag),
                         onClick = onClickEditTag,
                     )
