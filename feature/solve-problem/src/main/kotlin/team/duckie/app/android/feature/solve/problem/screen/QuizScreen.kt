@@ -200,7 +200,7 @@ private fun ContentSection(
             derivedStateOf { pagerState.isCurrentPage(pageIndex) }
         }
 
-        LaunchedEffect(pagerState.targetPage, isImageLoading) {
+        LaunchedEffect(pagerState.targetPage, isImageLoading[pageIndex]) {
             if (isImageLoading[pageIndex].not() && pagerState.isTargetPage(pageIndex)) {
                 startTimer(state.time.toFloat())
             }

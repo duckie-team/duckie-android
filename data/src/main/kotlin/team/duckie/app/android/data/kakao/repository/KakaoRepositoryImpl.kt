@@ -15,7 +15,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import team.duckie.app.android.common.kotlin.exception.DuckieThirdPartyException
 import team.duckie.app.android.common.kotlin.exception.ExceptionCode
 import team.duckie.app.android.domain.kakao.repository.KakaoRepository
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
@@ -34,11 +33,9 @@ private const val KakaoNotSupportStatusCode: Int = 302
 class KakaoRepositoryImpl @Inject constructor(
     @ActivityContext private val activityContext: Context,
 ) : KakaoRepository {
-    private val _activity = WeakReference(activityContext)
-    private val activity get() = _activity.get()!!
 
     override suspend fun getAccessToken(): String {
-        return if (UserApiClient.instance.isKakaoTalkLoginAvailable(activity)) {
+        return if (UserApiClient.instance.isKakaoTalkLoginAvailable(activityContext)) {
             loginWithKakaoTalk()
         } else {
             loginWithWebView()
@@ -47,7 +44,7 @@ class KakaoRepositoryImpl @Inject constructor(
 
     private suspend fun loginWithKakaoTalk(): String {
         return suspendCancellableCoroutine { continuation ->
-            UserApiClient.instance.loginWithKakaoTalk(activity) { token, error ->
+            UserApiClient.instance.loginWithKakaoTalk(activityContext) { token, error ->
                 continuation.resume(
                     when {
                         error != null -> {
@@ -74,7 +71,7 @@ class KakaoRepositoryImpl @Inject constructor(
 
     override suspend fun loginWithWebView(): String {
         return suspendCancellableCoroutine { continuation ->
-            UserApiClient.instance.loginWithKakaoAccount(activity) { token, error ->
+            UserApiClient.instance.loginWithKakaoAccount(activityContext) { token, error ->
                 continuation.resume(
                     when {
                         error != null -> failure(error)

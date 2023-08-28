@@ -75,10 +75,20 @@ fun DuckieHorizontalPagerIndicator(
         Box(
             Modifier
                 .offset {
-                    val scrollPosition = (pagerState.currentPage + pagerState.currentPageOffsetFraction)
-                        .coerceIn(0f, pagerState.currentPage.coerceAtLeast(0).toFloat())
+                    val scrollPosition =
+                        (pagerState.currentPage + pagerState.currentPageOffsetFraction)
+                            .coerceIn(
+                                minimumValue = 0f,
+                                maximumValue = pagerState.currentPage
+                                    .coerceAtLeast(0)
+                                    .toFloat(),
+                            )
                     IntOffset(
-                        x = ((spacingPx + indicatorWidthPx) * scrollPosition).toInt(),
+                        x = if (pagerState.targetPage == 0) {
+                            0
+                        } else {
+                            ((spacingPx + indicatorWidthPx) * scrollPosition).toInt()
+                        },
                         y = 0,
                     )
                 }
