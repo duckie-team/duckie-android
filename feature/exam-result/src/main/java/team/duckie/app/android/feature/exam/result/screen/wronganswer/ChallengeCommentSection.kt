@@ -109,19 +109,19 @@ internal fun ColumnScope.ChallengeCommentSection(
             )
         } else {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 QuackText(
                     text = myWrongComment,
                     typography = QuackTypography.Body1.change(
-                        color = QuackColor.Gray1
-                    )
+                        color = QuackColor.Gray1,
+                    ),
                 )
                 Spacer(weight = 1f)
                 QuackText(
                     text = myWrongCommentCreateAT,
                     typography = QuackTypography.Body3.change(
-                        color = QuackColor.Gray2
+                        color = QuackColor.Gray2,
                     ),
                 )
             }

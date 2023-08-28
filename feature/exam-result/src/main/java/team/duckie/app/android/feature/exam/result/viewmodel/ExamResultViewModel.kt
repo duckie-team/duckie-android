@@ -74,6 +74,8 @@ class ExamResultViewModel @Inject constructor(
         ExamResultState.Loading,
     )
 
+    private val pullToRefreshMinLoadingDelay = 500L
+
     // 오답 댓글쓰기 START
     fun ignoreUser(userId: Int, nickname: String) = intent {
         ignoreUseCase(targetId = userId)
@@ -156,7 +158,7 @@ class ExamResultViewModel @Inject constructor(
         updateRefreshState(true)
         getChallengeCommentList()
         state.updateCommentCreateAt()
-        if(forceLoading) delay(500L)
+        if (forceLoading) delay(pullToRefreshMinLoadingDelay)
         updateRefreshState(false)
     }
 

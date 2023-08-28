@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import team.duckie.app.android.common.compose.centerVertical
-import team.duckie.app.android.common.compose.centerVerticalWithMaxHeight
 import team.duckie.app.android.common.compose.heightOrZero
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
 import team.duckie.app.android.common.compose.ui.quack.TextFieldDecorationLayoutId.LeadingId
@@ -176,7 +175,7 @@ private fun TextFieldDecoration(
                 )
             }
             Box(
-                modifier = Modifier.layoutId(TextFieldId)
+                modifier = Modifier.layoutId(TextFieldId),
             ) {
                 textField()
             }
@@ -219,36 +218,35 @@ private fun quackNoUnderlineTextFieldMeasurePolicy() = MeasurePolicy { measurabl
 
     val textFieldPlaceable = measurables.fastFirstOrNull { it.layoutId == TextFieldId }
         ?.measure(
-            textConstraints.copy(minHeight = 0).offset(horizontal = -occupiedSpaceHorizontally)
+            textConstraints.copy(minHeight = 0).offset(horizontal = -occupiedSpaceHorizontally),
         )
 
     val maxOfHeight = maxOf(
         trailingPlaceable.heightOrZero(),
         leadingPlaceable.heightOrZero(),
         placeHolderPlaceable.heightOrZero(),
-        textFieldPlaceable.heightOrZero()
+        textFieldPlaceable.heightOrZero(),
     )
 
     layout(layoutWidth, maxOfHeight) {
         leadingPlaceable?.placeRelative(
             0,
-            maxOfHeight.centerVertical(leadingPlaceable.heightOrZero())
+            maxOfHeight.centerVertical(leadingPlaceable.heightOrZero()),
         )
         trailingPlaceable?.placeRelative(
             layoutWidth - trailingWidth,
-            maxOfHeight.centerVertical(trailingPlaceable.heightOrZero())
+            maxOfHeight.centerVertical(trailingPlaceable.heightOrZero()),
         )
         textFieldPlaceable?.placeRelative(
             leadingWidth,
-            maxOfHeight.centerVertical(textFieldPlaceable.heightOrZero())
+            maxOfHeight.centerVertical(textFieldPlaceable.heightOrZero()),
         )
         placeHolderPlaceable?.placeRelative(
             leadingWidth,
-            maxOfHeight.centerVertical(placeHolderPlaceable.heightOrZero())
+            maxOfHeight.centerVertical(placeHolderPlaceable.heightOrZero()),
         )
     }
 }
-
 
 @Preview
 @Composable

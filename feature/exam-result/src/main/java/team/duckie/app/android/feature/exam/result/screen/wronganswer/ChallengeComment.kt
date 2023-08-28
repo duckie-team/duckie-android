@@ -153,7 +153,7 @@ internal fun ChallengeComment(
                 text = wrongComment.wrongAnswer.orHyphen(),
                 typography = QuackTypography.Body2.change(
                     color = QuackColor.Gray1,
-                )
+                ),
             )
             Spacer(space = 6.dp)
             QuackBody1(text = wrongComment.message)
@@ -185,7 +185,7 @@ internal fun ChallengeComment(
                     },
                     tint = if (wrongComment.isHeart) QuackColor.Unspecified else QuackColor.Gray2,
                 )
-                if(wrongComment.heartCount != 0) {
+                if (wrongComment.heartCount != 0) {
                     QuackText(
                         text = wrongComment.heartCount.toString(),
                         typography = QuackTypography.Body3.change(

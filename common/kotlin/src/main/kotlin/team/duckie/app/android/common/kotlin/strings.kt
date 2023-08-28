@@ -42,4 +42,4 @@ fun randomString(length: Int): String {
 }
 
 fun String?.orHyphen(): String =
-    if(this.isNullOrEmpty()) "-" else this
+    if (this.isNullOrEmpty()) "-" else this

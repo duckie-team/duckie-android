@@ -84,7 +84,7 @@ sealed class ExamResultState {
         val percent: Double = (ranking.toDouble() / solvedCount.toDouble()) * 100
 
         fun updateCommentCreateAt() = copy(
-            commentCreateAt = Date()
+            commentCreateAt = Date(),
         )
 
         data class ChallengeCommentUiModel(
