@@ -88,7 +88,7 @@ class SearchActivity : BaseActivity() {
 
         setContent {
             val state = vm.collectAsState().value
-            val focusRequester = remember{ FocusRequester() }
+            val focusRequester = remember { FocusRequester() }
 
             vm.searchUsers.collectAndHandleState(handleLoadStates = vm::checkError)
             vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
@@ -99,7 +99,7 @@ class SearchActivity : BaseActivity() {
                     .launchIn(this)
             }
 
-            LaunchedEffect(Unit){
+            LaunchedEffect(Unit) {
                 focusRequester.requestFocus()
             }
 

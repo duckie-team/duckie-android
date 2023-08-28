@@ -136,7 +136,6 @@ private fun TextFieldDecoration(
                     src = leadingIcon,
                 )
             }
-
             if (isPlaceholder && placeholderText != null) {
                 Box(
                     propagateMinConstraints = true,
@@ -152,8 +151,6 @@ private fun TextFieldDecoration(
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
-            } else {
-                null
             }
             Spacer(modifier = Modifier.weight(1f))
             if (trailingIcon != null && text.isNotEmpty()) {
