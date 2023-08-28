@@ -52,7 +52,7 @@ internal class SolveProblemViewModel @Inject constructor(
 
     val timerCount: StateFlow<Float> = problemTimer.remainingTime
 
-    fun startTimer(time: Float) = intent {
+    fun startTimer(time: Float) {
         problemTimer.start(time)
     }
 
