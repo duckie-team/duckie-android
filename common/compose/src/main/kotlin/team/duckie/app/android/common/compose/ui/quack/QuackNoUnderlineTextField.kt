@@ -90,6 +90,7 @@ fun QuackNoUnderlineTextField(
         decorationBox = { textField ->
             TextFieldDecoration(
                 textField = textField,
+                text = text,
                 isPlaceholder = isPlaceholder,
                 placeholderText = placeholderText,
                 leadingIcon = leadingIcon,
@@ -105,6 +106,7 @@ fun QuackNoUnderlineTextField(
 @Composable
 private fun TextFieldDecoration(
     textField: @Composable () -> Unit,
+    text: String,
     isPlaceholder: Boolean,
     placeholderText: String?,
     @DrawableRes
@@ -154,7 +156,7 @@ private fun TextFieldDecoration(
                 null
             }
             Spacer(modifier = Modifier.weight(1f))
-            if (trailingIcon != null) {
+            if (trailingIcon != null && text.isNotEmpty()) {
                 QuackImage(
                     modifier = Modifier
                         .quackClickable(

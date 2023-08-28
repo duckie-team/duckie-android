@@ -24,8 +24,11 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.firebase.crashlytics.ktx.crashlytics
@@ -85,6 +88,7 @@ class SearchActivity : BaseActivity() {
 
         setContent {
             val state = vm.collectAsState().value
+            val focusRequester = remember{ FocusRequester() }
 
             vm.searchUsers.collectAndHandleState(handleLoadStates = vm::checkError)
             vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
@@ -93,6 +97,10 @@ class SearchActivity : BaseActivity() {
                 vm.container.sideEffectFlow
                     .onEach(::handleSideEffect)
                     .launchIn(this)
+            }
+
+            LaunchedEffect(Unit){
+                focusRequester.requestFocus()
             }
 
             QuackTheme {
@@ -116,6 +124,7 @@ class SearchActivity : BaseActivity() {
                             clearSearchKeyword = {
                                 vm.clearSearchKeyword()
                             },
+                            focusRequester = focusRequester,
                         )
                         AnimatedContent(
                             targetState = state.searchStep,
@@ -201,6 +210,7 @@ private fun SearchTextFieldTopBar(
     onSearchKeywordChanged: (String) -> Unit,
     clearSearchKeyword: () -> Unit,
     onPrevious: () -> Unit,
+    focusRequester: FocusRequester,
 ) {
     Row(
         modifier = modifier
@@ -218,6 +228,7 @@ private fun SearchTextFieldTopBar(
         )
         Spacer(space = 8.dp)
         QuackNoUnderlineTextField(
+            modifier = Modifier.focusRequester(focusRequester),
             text = searchKeyword,
             onTextChanged = { keyword ->
                 onSearchKeywordChanged(keyword)
@@ -225,7 +236,6 @@ private fun SearchTextFieldTopBar(
             placeholderText = stringResource(id = R.string.try_search),
             trailingIcon = SharedIcon.ic_textfield_delete_16,
             trailingIconOnClick = clearSearchKeyword,
-            trailingEndPadding = 12.dp,
         )
     }
 }

@@ -63,7 +63,7 @@ internal fun SearchScreen(
             .fillMaxSize()
             .imePadding(),
     ) {
-        Spacer(modifier = Modifier.height(22.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         if (state.recentSearch.isEmpty()) {
             RecentSearchNotFoundScreen()
         } else {
@@ -206,9 +206,11 @@ private fun RecentSearchLayout(
         QuackBody1(text = keyword)
         Spacer(modifier = Modifier.weight(1f))
         QuackIcon(
-            modifier = Modifier.quackClickable(onClick = {
-                onCloseClick(keyword)
-            },),
+            modifier = Modifier.quackClickable(
+                onClick = {
+                    onCloseClick(keyword)
+                },
+            ),
             icon = QuackIcon.Outlined.Close,
             size = 16.dp,
             tint = QuackColor.Gray2,

@@ -140,7 +140,7 @@ internal fun SearchMainScreen(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(22.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             QuackTitle2(
                 modifier = Modifier.padding(start = SearchScreenHorizontalPaddingDp),
                 text = stringResource(id = R.string.popular_tag),
