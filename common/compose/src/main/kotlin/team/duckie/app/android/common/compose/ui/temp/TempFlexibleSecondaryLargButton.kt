@@ -16,8 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import team.duckie.quackquack.material.QuackBorder
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackBorder
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.modifier.quackClickable
 
@@ -27,40 +29,28 @@ import team.duckie.quackquack.ui.modifier.quackClickable
  * TODO(limsaehyun): 추후 QuackQuackV2 로 대체되어야 함
  */
 @Composable
-fun TempFlexiblePrimaryLargeButton(
+fun TempFlexibleSecondaryLargeButton(
     modifier: Modifier = Modifier,
     text: String,
-    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
             .heightIn(44.dp)
+            .quackBorder(
+                border = QuackBorder(color = QuackColor.Gray3),
+                shape = RoundedCornerShape(8.dp),
+            )
             .clip(RoundedCornerShape(8.dp))
-            .background(backgroundFor(enabled))
-            .quackClickable(onClick = onClickFor(enabled, onClick)),
+            .background(QuackColor.White.value)
+            .quackClickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         QuackText(
             text = text,
             typography = QuackTypography.Subtitle.change(
-                color = QuackColor.White,
+                color = QuackColor.Black,
             ),
         )
     }
-}
-
-private fun backgroundFor(enabled: Boolean) = if (enabled) {
-    QuackColor.DuckieOrange.value
-} else {
-    QuackColor.Gray2.value
-}
-
-private fun onClickFor(
-    enabled: Boolean,
-    onClick: () -> Unit,
-) = if (enabled) {
-    onClick
-} else {
-    null
 }

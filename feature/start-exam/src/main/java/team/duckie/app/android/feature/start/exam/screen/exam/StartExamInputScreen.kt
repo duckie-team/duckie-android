@@ -20,7 +20,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -28,14 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.ImeSpacer
+import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.feature.start.exam.R
 import team.duckie.app.android.feature.start.exam.screen.StartExamScreen
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.ui.QuackButton
-import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
@@ -86,13 +84,14 @@ internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewMo
         Spacer(modifier = Modifier.weight(1f))
 
         // 시험시작 버튼
-        QuackButton(
-            modifier = Modifier.padding(
-                vertical = 12.dp,
-                horizontal = 16.dp,
-            ).align(alignment = Alignment.CenterHorizontally),
+        TempFlexiblePrimaryLargeButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    vertical = 12.dp,
+                    horizontal = 16.dp,
+                ),
             text = stringResource(id = R.string.start_exam_start_button),
-            style = QuackButtonStyle.PrimaryLarge,
             onClick = viewModel::startSolveProblem,
             enabled = viewModel.startExamValidate(),
         )

@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -29,14 +28,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.feature.start.exam.R
 import team.duckie.app.android.feature.start.exam.screen.exam.StartExamTextField
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.ui.QuackButton
-import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.span
@@ -88,17 +86,16 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        QuackButton(
+        TempFlexiblePrimaryLargeButton(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(
                     vertical = 12.dp,
                     horizontal = 16.dp,
-                )
-                .align(Alignment.CenterHorizontally),
+                ),
             text = stringResource(id = R.string.start_exam_quiz_start_button),
-            style = QuackButtonStyle.PrimaryLarge,
-            enabled = certifyingStatementText.isNotEmpty(),
             onClick = viewModel::startSolveProblem,
+            enabled = certifyingStatementText.isNotEmpty(),
         )
         ImeSpacer()
     }

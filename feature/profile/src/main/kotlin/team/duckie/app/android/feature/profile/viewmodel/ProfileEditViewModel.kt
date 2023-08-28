@@ -200,8 +200,6 @@ class ProfileEditViewModel @Inject constructor(
     }
 
     fun clickEditComplete(applicationContext: Context?) = intent {
-        updateLoading(true)
-
         getUploadableFileUrl(
             state.profile.toString(),
             applicationContext,
@@ -217,14 +215,11 @@ class ProfileEditViewModel @Inject constructor(
                 nickname = state.nickname,
                 introduction = state.introduce,
             ).onSuccess {
-                updateLoading(false)
                 postSideEffect(ProfileEditSideEffect.NavigateBack)
             }.onFailure {
-                updateLoading(false)
                 postSideEffect(ProfileEditSideEffect.ReportError(it))
             }
         }.onFailure {
-            updateLoading(false)
             postSideEffect(ProfileEditSideEffect.ReportError(it))
         }
     }
