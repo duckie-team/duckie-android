@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
+import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.centerVertical
 import team.duckie.app.android.common.compose.heightOrZero
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
@@ -277,7 +279,7 @@ fun PreviewQuackNoUnderlineTextField() {
                 .background(QuackColor.Gray4.value),
             text = value,
             onTextChanged = onValueChanged,
-            placeholderText = "댓글을 남겨보세요!",
+            placeholderText = stringResource(id = R.string.exam_result_input_comment_hint),
             trailingIcon = QuackIcon.ArrowSendId,
             trailingIconOnClick = { },
             paddingValues = PaddingValues(

@@ -11,6 +11,8 @@
     <string name="default_network_error_message">잠시 후 다시 시도해 주세요.</string>
     <string name="default_error_retry">다시 시도하기</string>
 
+    <string name="exam_result_input_comment_hint">댓글을 남겨보세요!</string>
+
     <string name="following">팔로잉</string>
     <string name="follow">팔로우</string>
     <string name="examinee">응시자</string>

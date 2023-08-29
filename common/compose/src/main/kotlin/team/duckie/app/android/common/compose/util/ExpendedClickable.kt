@@ -21,11 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.quackClickable
 
 @Preview
 @Composable
-fun PreviewExpandedCickable() {
+fun PreviewExpandedClickable() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,20 +43,20 @@ fun PreviewExpandedCickable() {
         )
         Box(
             modifier = Modifier
-            .background(QuackColor.Gray4.value)
-            .size(50.dp)
-            .expendedQuackClickable {
-            },
+                .background(QuackColor.Gray4.value)
+                .size(50.dp)
+                .expendedQuackClickable {
+                },
         )
         Box(
             modifier = Modifier
-            .background(QuackColor.Gray4.value)
-            .size(50.dp)
-            .expendedQuackClickable(
-                verticalExpendedSize = 24.dp,
-                horizontalExpendedSize = 24.dp,
-            ) {
-            },
+                .background(QuackColor.Gray4.value)
+                .size(50.dp)
+                .expendedQuackClickable(
+                    verticalExpendedSize = 24.dp,
+                    horizontalExpendedSize = 24.dp,
+                ) {
+                },
         )
     }
 }
@@ -65,7 +65,7 @@ fun Modifier.expendedQuackClickable(
     verticalExpendedSize: Dp = 12.dp,
     horizontalExpendedSize: Dp = 12.dp,
     rippleEnabled: Boolean = true,
-    rippleColor: team.duckie.quackquack.ui.color.QuackColor? = null,
+    rippleColor: QuackColor? = null,
     onLongClick: (() -> Unit)? = null,
     onClick: (() -> Unit)?,
 ): Modifier {

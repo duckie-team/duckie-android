@@ -25,8 +25,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.icon.QuackIcon
@@ -72,7 +74,7 @@ fun DuckieTextFieldBottomSheet(
                             text.value = str
                         },
                         style = QuackTextFieldStyle.Default,
-                        placeholderText = "댓글을 남겨보세요!",
+                        placeholderText = stringResource(id = R.string.exam_result_input_comment_hint),
                     )
                     QuackIcon(
                         modifier = Modifier.quackClickable(rippleEnabled = false) {
