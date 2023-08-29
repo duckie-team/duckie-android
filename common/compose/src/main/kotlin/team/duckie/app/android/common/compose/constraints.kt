@@ -8,6 +8,7 @@
 package team.duckie.app.android.common.compose
 
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.LayoutDirection
 
@@ -34,8 +35,17 @@ fun Constraints.centerHorizontally(width: Int, layoutDirection: LayoutDirection)
         layoutDirection = layoutDirection,
     )
 
-fun Constraints.centerVertical(size: Int): Int =
+fun Constraints.centerVerticalWithMaxHeight(size: Int): Int =
     Alignment.CenterVertically.align(
         size = size,
         space = maxHeight,
     )
+
+fun Int.centerVertical(size: Int): Int =
+    Alignment.CenterVertically.align(
+        size = size,
+        space = this,
+    )
+
+fun Placeable?.widthOrZero() = this?.width ?: 0
+fun Placeable?.heightOrZero() = this?.height ?: 0

@@ -10,7 +10,9 @@ package team.duckie.app.android.common.kotlin
 
 import java.util.Date
 
-fun Date.getDiffDayFromToday(): String {
+fun Date.getDiffDayFromToday(
+    isShowSecond: Boolean = true,
+): String {
     val currentTime = Date()
     val differenceInMillis = currentTime.time - this.time
 
@@ -27,6 +29,6 @@ fun Date.getDiffDayFromToday(): String {
         days > 0 -> "${days}일 전"
         hours > 0 -> "${hours}시간 전"
         minutes > 0 -> "${minutes}분 전"
-        else -> "${seconds}초 전"
+        else -> if (isShowSecond) "${seconds}초 전" else "방금 전"
     }
 }

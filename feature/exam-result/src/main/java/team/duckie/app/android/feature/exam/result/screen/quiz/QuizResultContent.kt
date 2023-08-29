@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package team.duckie.app.android.feature.exam.result.screen.quiz
 
 import androidx.compose.foundation.background
@@ -19,19 +21,30 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.CoroutineScope
 import team.duckie.app.android.common.compose.DuckieFitImage
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.kotlin.orHyphen
 import team.duckie.app.android.feature.exam.result.R
+import team.duckie.app.android.feature.exam.result.common.QuizResultLargeDivider
 import team.duckie.app.android.feature.exam.result.screen.RANKER_THRESHOLD
+import team.duckie.app.android.feature.exam.result.screen.wronganswer.ChallengeCommentSection
+import team.duckie.app.android.feature.exam.result.screen.wronganswer.PopularCommentSection
+import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
@@ -42,7 +55,10 @@ import java.util.Locale
 
 @Composable
 internal fun QuizResultContent(
+    // root
     modifier: Modifier = Modifier,
+    initialState: suspend CoroutineScope.() -> Unit,
+    // default
     nickname: String,
     resultImageUrl: String,
     time: Double,
@@ -50,7 +66,24 @@ internal fun QuizResultContent(
     mainTag: String,
     message: String,
     ranking: Int,
+    // challenge comment
+    isPerfectChallenge: Boolean,
+    profileImg: String,
+    myAnswer: String,
+    onHeartComment: (Int) -> Unit,
+    comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
+    commentsTotal: Int,
+    showCommentSheet: () -> Unit,
+    mostWrongTotal: Int,
+    mostWrongData: String,
+    equalAnswerCount: Int,
+    myWrongComment: String,
+    myWrongCommentCreateAT: String,
 ) {
+    LaunchedEffect(key1 = Unit) {
+        initialState()
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -58,6 +91,44 @@ internal fun QuizResultContent(
             .padding(horizontal = 16.dp)
             .padding(bottom = 16.dp),
     ) {
+        if (isPerfectChallenge.not()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = QuackColor.Gray4.value,
+                        shape = RoundedCornerShape(8.dp),
+                    )
+                    .padding(vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                QuackText(
+                    text = stringResource(id = R.string.my_answer),
+                    typography = QuackTypography.Body3.change(
+                        color = QuackColor.Gray1,
+                    ),
+                )
+                Spacer(space = 2.dp)
+                QuackText(
+                    text = myAnswer.orHyphen(),
+                    typography = QuackTypography.HeadLine2.change(
+                        color = QuackColor.Black,
+                        textAlign = TextAlign.Center,
+                    ),
+                )
+                Spacer(space = 8.dp)
+                QuackText(
+                    text = stringResource(
+                        id = R.string.exam_result_same_answer_with_me,
+                        equalAnswerCount,
+                    ),
+                    typography = QuackTypography.Body2.change(
+                        color = QuackColor.Gray1,
+                    ),
+                )
+            }
+        }
+        Spacer(space = 12.dp)
         DuckieFitImage(
             imageUrl = resultImageUrl,
             horizontalPadding = PaddingValues(horizontal = 0.dp),
@@ -140,6 +211,26 @@ internal fun QuizResultContent(
                 ranking,
             ),
         )
+        // 오답 댓글쓰기 영역
+        if (isPerfectChallenge.not()) {
+            Spacer(space = 28.dp)
+            QuizResultLargeDivider()
+            PopularCommentSection(
+                total = mostWrongTotal,
+                data = mostWrongData,
+            )
+            QuizResultLargeDivider()
+            ChallengeCommentSection(
+                profileUrl = profileImg,
+                myAnswer = myAnswer,
+                onHeartComment = onHeartComment,
+                comments = comments,
+                commentsTotal = commentsTotal,
+                showCommentSheet = showCommentSheet,
+                myWrongComment = myWrongComment,
+                myWrongCommentCreateAT = myWrongCommentCreateAT,
+            )
+        }
     }
 }
 

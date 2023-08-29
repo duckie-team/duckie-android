@@ -43,11 +43,14 @@ fun RowScope.Divider(
  * @param modifier 이 컴포넌트에 사용할 [Modifier]
  */
 @Composable
-fun DuckieDivider(modifier: Modifier = Modifier) {
+fun DuckieDivider(
+    modifier: Modifier = Modifier,
+    color: QuackColor = QuackColor.Gray3,
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(1.dp)
-            .background(color = QuackColor.Gray3.value),
+            .background(color = color.value),
     )
 }

@@ -10,7 +10,6 @@ package team.duckie.app.android.common.compose.ui
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -21,7 +20,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.asLoose
-import team.duckie.app.android.common.compose.centerVertical
+import team.duckie.app.android.common.compose.centerVerticalWithMaxHeight
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.npe
@@ -159,7 +158,7 @@ private fun getUserFollowingLayoutMeasurePolicy(
         userNamePlaceable.place(
             x = userProfilePlaceable.width,
             y = if (nameVisible) {
-                constraints.centerVertical(userNamePlaceable.height)
+                constraints.centerVerticalWithMaxHeight(userNamePlaceable.height)
             } else {
                 0
             },
@@ -173,7 +172,7 @@ private fun getUserFollowingLayoutMeasurePolicy(
         if (!isMine) {
             userFollowingButtonPlaceable.place(
                 x = constraints.maxWidth - userFollowingButtonPlaceable.width,
-                y = constraints.centerVertical(userFollowingButtonPlaceable.height),
+                y = constraints.centerVerticalWithMaxHeight(userFollowingButtonPlaceable.height),
             )
         }
     }

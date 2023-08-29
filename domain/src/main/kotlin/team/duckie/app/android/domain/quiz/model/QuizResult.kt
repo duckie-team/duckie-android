@@ -8,6 +8,8 @@
 package team.duckie.app.android.domain.quiz.model
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.user.model.User
@@ -21,7 +23,18 @@ data class QuizResult(
     val time: Double,
     val user: User,
     val wrongProblem: Problem?,
+    val wrongAnswer: WrongAnswer?,
     val ranking: Int?,
     val requirementAnswer: String?,
     val isBestRecord: Boolean,
-)
+    val popularComments: ImmutableList<ChallengeComment>?,
+    val commentsTotal: Int?,
+) {
+    @Immutable
+    data class WrongAnswer(
+        val meTotal: Int,
+        val meData: String,
+        val mostTotal: Int,
+        val mostData: String,
+    )
+}

@@ -5,36 +5,54 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+
 package team.duckie.app.android.feature.exam.result.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.LoadingScreen
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.dialog.DuckieBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextArea
+import team.duckie.app.android.common.compose.util.HandleKeyboardVisibilityWithSheet
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
 import team.duckie.app.android.feature.exam.result.screen.exam.ExamResultContent
 import team.duckie.app.android.feature.exam.result.screen.quiz.QuizResultContent
+import team.duckie.app.android.feature.exam.result.screen.wronganswer.ChallengeCommentBottomSheetContent
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
@@ -171,58 +189,124 @@ private fun ExamResultSuccessScreen(
     state: ExamResultState.Success,
     viewModel: ExamResultViewModel,
 ) {
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            QuackTopAppBar(
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true, // TODO(limsaehyun) bottomContent가 보이지 않은 현상으로 인해 불가능
+    )
+    val coroutineScope = rememberCoroutineScope()
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isRefreshing,
+        onRefresh = {
+            viewModel.refreshQuizState(true)
+        },
+    )
+
+    HandleKeyboardVisibilityWithSheet(sheetState = sheetState)
+    DuckieBottomSheetDialog(
+        sheetState = sheetState,
+        sheetContent = {
+            ChallengeCommentBottomSheetContent(
+                fullScreen = false, // TODO(limsaehyun) sheetState 내부 swipeable에 접근이 불가능.. ModalBottomSheet을 직접 구현해야 함
+                totalComments = state.commentsTotal,
+                orderType = state.commentOrderType,
+                onOrderTypeChanged = viewModel::transferCommentOrderType,
+                myComment = state.myWrongComment,
+                onMyCommentChanged = viewModel::updateWrongComment,
+                comments = state.allComments,
+                onHeartComment = viewModel::heartWrongComment,
+                myCommentCreateAt = state.commentCreateAtWithDiff,
+                isWriteComment = state.isWriteComment,
+                onSendComment = viewModel::writeChallengeComment,
+                onDeleteComment = viewModel::deleteChallengeComment,
+                onIgnoreComment = viewModel::ignoreUser,
+                onReportComment = viewModel::reportChallengeComment,
+            )
+        },
+        useHandle = true,
+    ) {
+        Scaffold(
+            modifier = modifier,
+            topBar = {
+                QuackTopAppBar(
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .padding(horizontal = 16.dp),
+                    leadingIcon = QuackIcon.Close,
+                    onLeadingIconClick = viewModel::exitExam,
+                    trailingIcon = QuackIcon.Share,
+                    onTrailingIconClick = {
+                        viewModel.updateExamResultScreen(ExamResultScreen.SHARE_EXAM_RESULT)
+                    },
+                )
+            },
+            bottomBar = {
+                ResultBottomBar(
+                    isQuiz = state.isQuiz(),
+                    onClickRetryButton = {
+                        viewModel.clickRetry()
+                    },
+                    onClickExitButton = viewModel::exitExam,
+                )
+            },
+        ) { padding ->
+            PullRefreshIndicator(
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .padding(horizontal = 16.dp),
-                leadingIcon = QuackIcon.Close,
-                onLeadingIconClick = viewModel::exitExam,
-                trailingIcon = QuackIcon.Share,
-                onTrailingIconClick = {
-                    viewModel.updateExamResultScreen(ExamResultScreen.SHARE_EXAM_RESULT)
-                },
+                    .fillMaxWidth()
+                    .wrapContentWidth(CenterHorizontally)
+                    .zIndex(1f),
+                refreshing = state.isRefreshing,
+                state = pullRefreshState,
             )
-        },
-        bottomBar = {
-            ResultBottomBar(
-                isQuiz = state.isQuiz(),
-                onClickRetryButton = {
-                    viewModel.clickRetry()
-                },
-                onClickExitButton = viewModel::exitExam,
-            )
-        },
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-        ) {
-            with(state) {
-                if (isQuiz) {
-                    QuizResultContent(
-                        resultImageUrl = reportUrl,
-                        correctProblemCount = correctProblemCount,
-                        time = time,
-                        mainTag = mainTag,
-                        ranking = ranking,
-                        message = if (isPerfectScore) {
-                            stringResource(
-                                id = R.string.exam_result_correct_problem_all,
-                                mainTag,
-                            )
-                        } else {
-                            wrongAnswerMessage
-                        },
-                        nickname = nickname,
-                    )
-                } else {
-                    ExamResultContent(
-                        resultImageUrl = reportUrl,
-                    )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .pullRefresh(pullRefreshState),
+            ) {
+                with(state) {
+                    if (isQuiz) {
+                        QuizResultContent(
+                            resultImageUrl = reportUrl,
+                            correctProblemCount = correctProblemCount,
+                            time = time,
+                            mainTag = mainTag,
+                            ranking = ranking,
+                            message = if (isPerfectScore) {
+                                stringResource(
+                                    id = R.string.exam_result_correct_problem_all,
+                                    mainTag,
+                                )
+                            } else {
+                                wrongAnswerMessage
+                            },
+                            nickname = nickname,
+                            myAnswer = myAnswer,
+                            profileImg = profileImg,
+                            onHeartComment = { isLike ->
+                                viewModel.heartWrongComment(isLike)
+                            },
+                            initialState = {
+                                viewModel.initialQuizState()
+                            },
+                            comments = popularComments,
+                            commentsTotal = commentsTotal,
+                            showCommentSheet = {
+                                coroutineScope.launch {
+                                    sheetState.show()
+                                }
+                            },
+                            mostWrongTotal = mostWrongAnswerTotal,
+                            mostWrongData = mostWrongAnswerData,
+                            equalAnswerCount = equalAnswerCount,
+                            isPerfectChallenge = isPerfectChallenge,
+                            myWrongComment = myWrongComment,
+                            myWrongCommentCreateAT = commentCreateAtWithDiff,
+                        )
+                    } else {
+                        ExamResultContent(
+                            resultImageUrl = reportUrl,
+                        )
+                    }
                 }
             }
         }

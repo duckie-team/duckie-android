@@ -42,7 +42,12 @@ object ExceptionCode {
 
     const val KAKAOTALK_NOT_SUPPORT_EXCEPTION =
         "KAKAOTALK_NOT_SUPPORT_EXCEPTION"
+
+    const val HEART_NOT_FOUND = "HEART_NOT_FOUND"
 }
+
+val Throwable.isHeartNotFound: Boolean
+    get() = (this as? DuckieResponseException)?.code == ExceptionCode.HEART_NOT_FOUND
 
 val Throwable.isReportAlreadyExists: Boolean
     get() = (this as? DuckieResponseException)?.code == ExceptionCode.ReportAlreadyExists

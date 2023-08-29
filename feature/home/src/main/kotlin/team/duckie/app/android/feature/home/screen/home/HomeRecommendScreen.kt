@@ -237,6 +237,12 @@ private fun HomeTopicRecommendLayout(
     onMoreClick: (Int) -> Unit,
     isLoading: Boolean,
 ) {
+    val categoryTitle = if (title.contains(tag)) {
+        title.replace(tag, tag.addHashTag())
+    } else {
+        "${tag.addHashTag()} $title"
+    }
+
     Column(
         modifier = modifier,
     ) {
@@ -246,7 +252,7 @@ private fun HomeTopicRecommendLayout(
             modifier = Modifier
                 .padding(HomeHorizontalPadding)
                 .skeleton(isLoading),
-            text = title,
+            text = categoryTitle,
             highlightTextPairs = persistentListOf(
                 tag.addHashTag() to { onTagClicked(tag) },
             ),

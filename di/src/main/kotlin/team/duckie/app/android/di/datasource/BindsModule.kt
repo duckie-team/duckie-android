@@ -13,6 +13,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import team.duckie.app.android.data.auth.datasource.AuthDataSource
 import team.duckie.app.android.data.auth.datasource.AuthRemoteDataSourceImpl
+import team.duckie.app.android.data.challengecomment.datasource.ChallengeCommentRemoteDataSource
+import team.duckie.app.android.data.challengecomment.datasource.ChallengeCommentRemoteDataSourceImpl
 import team.duckie.app.android.data.devMode.datasource.DevModeDataSource
 import team.duckie.app.android.data.devMode.datasource.DevModeDataSourceImpl
 import team.duckie.app.android.data.exam.datasource.ExamInfoDataSource
@@ -81,4 +83,8 @@ abstract class BindsModule {
     @Singleton
     @Binds
     abstract fun bindIgnoreRemoteDataSource(impl: IgnoreRemoteDataSourceImpl): IgnoreRemoteDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindChallengeCommentRemoteDataSource(impl: ChallengeCommentRemoteDataSourceImpl): ChallengeCommentRemoteDataSource
 }

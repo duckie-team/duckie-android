@@ -115,7 +115,7 @@ fun QuackAnnotatedText(
                 )
             }
         },
-        style = QuackTextStyle.HeadLine2,
+        style = QuackTextStyle.HeadLine1,
         singleLine = singleLine,
         overflow = overflow,
         defaultOnClick = onClick,

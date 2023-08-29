@@ -7,7 +7,11 @@
 
 package team.duckie.app.android.data.quiz.mapper
 
+import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.data.challengecomment.mapper.toDomain
+import team.duckie.app.android.data.challengecomment.model.ChallengeCommentResponse
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.quiz.model.GetQuizResponse
 import team.duckie.app.android.data.quiz.model.PostQuizResponse
@@ -36,13 +40,23 @@ internal fun GetQuizResponse.toDomain() = QuizResult(
     score = score ?: duckieResponseFieldNpe("${this::class.java.simpleName}.score"),
     user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
     wrongProblem = wrongProblem?.toDomain(),
+    wrongAnswer = wrongAnswer?.toDomain(),
     ranking = ranking,
     requirementAnswer = requirementAnswer,
     isBestRecord = isBestRecord ?: false, // for start-exam
+    popularComments = popularComments?.data?.fastMap(ChallengeCommentResponse::toDomain)?.toImmutableList(),
+    commentsTotal = popularComments?.total,
 )
 
 internal fun QuizExamData.toDomain() = QuizExam(
     id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
     answerRate = answerRate,
     heart = heart,
+)
+
+internal fun GetQuizResponse.MeAndMostWrongAnswer.toDomain() = QuizResult.WrongAnswer(
+    meTotal = me.total,
+    meData = me.data,
+    mostTotal = most.total,
+    mostData = most.data,
 )

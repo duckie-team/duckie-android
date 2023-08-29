@@ -5,10 +5,9 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.data.ranking.model
+package team.duckie.app.android.data.challengecomment.model
 
-enum class OrderType(val text: String) {
-    AnswerRate("answer_rate"),
-    SolvedCount("solve_count"),
-    ;
+enum class CommentOrderTypeData(val type: String) {
+    DATE("date"),
+    LIKE("like"),
 }
