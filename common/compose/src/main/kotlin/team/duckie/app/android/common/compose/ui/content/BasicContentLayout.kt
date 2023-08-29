@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.centerVertical
+import team.duckie.app.android.common.compose.centerVerticalWithMaxHeight
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.npe
@@ -144,7 +145,7 @@ private fun getUserContentLayoutMeasurePolicy(
             titlePlaceable.place(
                 x = leadingImagePlaceable.width,
                 y = if (isTitleCenter) {
-                    constraints.centerVertical(titlePlaceable.height)
+                    constraints.centerVerticalWithMaxHeight(titlePlaceable.height)
                 } else {
                     0
                 },
@@ -158,7 +159,7 @@ private fun getUserContentLayoutMeasurePolicy(
             if (visibleTrailingButton) {
                 trailingButtonPlaceable.place(
                     x = constraints.maxWidth - trailingButtonPlaceable.width,
-                    y = constraints.centerVertical(trailingButtonPlaceable.height),
+                    y = constraints.centerVerticalWithMaxHeight(trailingButtonPlaceable.height),
                 )
             }
         }

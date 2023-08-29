@@ -230,11 +230,9 @@ private fun SearchTextFieldTopBar(
         QuackNoUnderlineTextField(
             modifier = Modifier.focusRequester(focusRequester),
             text = searchKeyword,
-            onTextChanged = { keyword ->
-                onSearchKeywordChanged(keyword)
-            },
+            onTextChanged = onSearchKeywordChanged,
             placeholderText = stringResource(id = R.string.try_search),
-            trailingIcon = SharedIcon.ic_textfield_delete_16,
+            trailingIcon = if (searchKeyword.isNotEmpty()) SharedIcon.ic_textfield_delete_16 else null,
             trailingIconOnClick = clearSearchKeyword,
         )
     }

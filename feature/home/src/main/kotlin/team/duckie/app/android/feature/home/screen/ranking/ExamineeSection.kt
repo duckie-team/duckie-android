@@ -130,6 +130,6 @@ private fun ExamineeContent(
                 }
             }
         }
-        DuckieDivider(color = QuackColor.Gray4.value)
+        DuckieDivider(color = QuackColor.Gray4)
     }
 }

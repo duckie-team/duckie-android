@@ -62,10 +62,12 @@ fun QuackNoUnderlineTextField(
     onTextChanged: (text: String) -> Unit,
     placeholderText: String? = null,
     paddingValues: PaddingValues = PaddingValues(
-        vertical = 8.dp,
-        horizontal = 12.dp,
+        top = 8.dp,
+        bottom = 8.dp,
+        start = 12.dp,
     ),
     startPadding: Dp = 0.dp,
+    leadingIconOnClick: (() -> Unit)? = null,
     @DrawableRes leadingIcon: Int? = null,
     trailingEndPadding: Dp = 0.dp,
     @DrawableRes trailingIcon: Int? = null,
@@ -118,6 +120,7 @@ fun QuackNoUnderlineTextField(
                 trailingIconOnClick = trailingIconOnClick,
                 trailingIconSize = trailingIconSize,
                 trailingIconTint = trailingIconTint,
+                leadingIconOnClick = leadingIconOnClick,
             )
         },
     )
@@ -135,13 +138,13 @@ private fun TextFieldDecoration(
     textField: @Composable () -> Unit,
     isPlaceholder: Boolean,
     placeholderText: String?,
-    @DrawableRes
-    leadingIcon: Int?,
+    @DrawableRes leadingIcon: Int?,
     trailingIcon: Int?,
     startPadding: Dp = 0.dp,
     leadingEndPadding: Dp = 0.dp,
     trailingStartPadding: Dp = 16.dp,
     trailingIconSize: Dp = 24.dp,
+    leadingIconOnClick: (() -> Unit)? = null,
     trailingIconOnClick: (() -> Unit)?,
     trailingIconTint: Color = Color.Unspecified,
 ) = with(TextFieldDecorationLayoutId) {
@@ -155,7 +158,7 @@ private fun TextFieldDecoration(
                         .size(DpSize(16.dp, 16.dp))
                         .padding(end = leadingEndPadding)
                         .quackClickable(
-                            onClick = trailingIconOnClick,
+                            onClick = leadingIconOnClick,
                             rippleEnabled = false,
                         )
                         .padding(end = 16.dp),

@@ -12,8 +12,12 @@ package team.duckie.app.android.feature.friends
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -23,6 +27,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Bottom
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -205,7 +211,9 @@ private fun FriendNotFoundScreen(
         )
     } else {
         NoItemScreen(
-            modifier = Modifier.padding(top = 72.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(CenterHorizontally),
             title = stringResource(
                 id = if (isFollower) {
                     R.string.follower_not_found_title

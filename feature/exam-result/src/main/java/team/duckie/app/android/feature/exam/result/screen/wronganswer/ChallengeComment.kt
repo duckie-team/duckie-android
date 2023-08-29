@@ -43,9 +43,9 @@ import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Flag
 import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
+import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.sugar.QuackBody1
 
 @Composable
