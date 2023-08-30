@@ -29,6 +29,7 @@ dependencies {
         libs.orbit.viewmodel,
         libs.orbit.compose,
         libs.compose.lifecycle.runtime,
+        libs.compose.ui.material,
         libs.firebase.crashlytics,
         libs.paging.runtime,
         libs.paging.compose,

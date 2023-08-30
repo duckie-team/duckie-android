@@ -50,6 +50,7 @@ internal fun SearchResultScreen(
     modifier: Modifier = Modifier,
     vm: SearchViewModel = activityViewModel(),
     navigateDetail: (Int) -> Unit,
+    openBottomSheet: (Int) -> Unit,
 ) {
     val state = vm.collectAsState().value
 
@@ -79,6 +80,7 @@ internal fun SearchResultScreen(
                 SearchResultForExam(
                     searchExams = searchExams,
                     navigateDetail = navigateDetail,
+                    onMoreClick = openBottomSheet,
                 )
             }
 
@@ -151,6 +153,7 @@ private fun SearchResultForUser(
 private fun SearchResultForExam(
     searchExams: LazyPagingItems<Exam>,
     navigateDetail: (Int) -> Unit,
+    onMoreClick: (Int) -> Unit,
 ) {
     if (searchExams.itemCount == 0) {
         Column(
@@ -195,7 +198,9 @@ private fun SearchResultForExam(
                         onItemClick = {
                             navigateDetail(exam?.id ?: 0)
                         },
-                        onMoreClick = {},
+                        onMoreClick = {
+                            onMoreClick(exam?.id ?: 0)
+                        }
                     )
                 }
             }

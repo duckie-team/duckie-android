@@ -37,6 +37,9 @@ internal data class SearchState(
     val recommendSearchs: Flow<PagingData<Tag>> = flow { PagingData.empty<Tag>() },
     val searchKeyword: String = "",
     val tagSelectedTab: SearchResultStep = SearchResultStep.DuckExam,
+    val targetExamId: Int = 0,
+    val bottomSheetVisible: Boolean = false,
+    val reportDialogVisible: Boolean = false,
 ) {
     data class SearchUser(
         val userId: Int,
