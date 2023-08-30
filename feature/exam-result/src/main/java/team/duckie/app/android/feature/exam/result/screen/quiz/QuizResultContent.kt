@@ -70,7 +70,6 @@ internal fun QuizResultContent(
     isPerfectChallenge: Boolean,
     profileImg: String,
     myAnswer: String,
-    onHeartComment: (Int) -> Unit,
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     commentsTotal: Int,
     showCommentSheet: () -> Unit,
@@ -208,7 +207,6 @@ internal fun QuizResultContent(
             ChallengeCommentSection(
                 profileUrl = profileImg,
                 myAnswer = myAnswer,
-                onHeartComment = onHeartComment,
                 comments = comments,
                 commentsTotal = commentsTotal,
                 showCommentSheet = showCommentSheet,

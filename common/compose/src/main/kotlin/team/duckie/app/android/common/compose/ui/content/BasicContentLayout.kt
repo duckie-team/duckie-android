@@ -25,7 +25,6 @@ import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.asLoose
-import team.duckie.app.android.common.compose.centerVertical
 import team.duckie.app.android.common.compose.centerVerticalWithMaxHeight
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.fastFirstOrNull

@@ -118,7 +118,7 @@ internal fun ChallengeComment(
     modifier: Modifier = Modifier,
     wrongComment: ExamResultState.Success.ChallengeCommentUiModel,
     innerPaddingValues: PaddingValues = PaddingValues(),
-    onHeartClick: (Int) -> Unit,
+    onHeartClick: ((Int) -> Unit)?,
     visibleHeart: Boolean,
     showCommentSheet: () -> Unit,
 ) {
@@ -131,7 +131,7 @@ internal fun ChallengeComment(
             .background(QuackColor.White.value)
             .padding(innerPaddingValues)
             .quackClickable(
-                rippleEnabled = true,
+                rippleEnabled = false,
                 onClick = showCommentSheet,
             )
             .padding(vertical = 8.dp),
@@ -175,7 +175,9 @@ internal fun ChallengeComment(
                         .size(24.dp)
                         .quackClickable(
                             onClick = {
-                                onHeartClick(wrongComment.id)
+                                if (onHeartClick != null) {
+                                    onHeartClick(wrongComment.id)
+                                }
                             },
                         ),
                     icon = if (wrongComment.isHeart) {
