@@ -129,11 +129,7 @@ fun PhotoPicker(
                                 rippleEnabled = false,
                                 onClick = onAddClick,
                             )
-                        }
-                        .padding(
-                            horizontal = 16.dp,
-                            vertical = 15.dp,
-                        ),
+                        },
                     text = stringResource(R.string.topappbar_add),
                     typography = QuackTypography.Subtitle.change(
                         color = if (isAddable) {
