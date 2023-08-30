@@ -65,10 +65,7 @@ fun ProfileScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(scrollState)
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 24.dp,
-                ),
+                .padding(vertical = 24.dp),
         ) {
             with(userProfile) {
                 ProfileSection(

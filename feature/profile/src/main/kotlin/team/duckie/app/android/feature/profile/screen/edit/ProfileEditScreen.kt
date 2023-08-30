@@ -111,6 +111,7 @@ internal fun ProfileEditScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = QuackColor.White.value)
+                .padding(horizontal = 16.dp)
                 .navigationBarsPadding()
                 .systemBarsPadding(),
             imageUris = galleryState.images,
