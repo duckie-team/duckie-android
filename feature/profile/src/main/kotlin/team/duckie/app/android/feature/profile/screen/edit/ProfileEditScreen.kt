@@ -173,14 +173,17 @@ internal fun ProfileEditScreen(
                 maxLength = MaxNicknameLength,
                 textFieldState = when (state.nicknameState) {
                     NicknameState.NicknameRuleError -> QuackErrorableTextFieldState.Error(
-                        stringResource(R.string.profile_nickname_rule_error)
+                        errorText = stringResource(R.string.profile_nickname_rule_error),
                     )
 
                     NicknameState.NicknameDuplicateError -> QuackErrorableTextFieldState.Error(
-                        stringResource(R.string.profile_nickname_duplicate_error)
+                        errorText = stringResource(R.string.profile_nickname_duplicate_error)
                     )
 
-                    NicknameState.Valid -> QuackErrorableTextFieldState.Success("성공")
+                    NicknameState.Valid -> QuackErrorableTextFieldState.Success(
+                        successText = stringResource(R.string.profile_nickname_valid)
+                    )
+
                     else -> QuackErrorableTextFieldState.Normal
                 },
                 keyboardActions = KeyboardActions {
