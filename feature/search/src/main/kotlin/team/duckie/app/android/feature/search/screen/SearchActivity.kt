@@ -5,9 +5,12 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package team.duckie.app.android.feature.search.screen
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedContent
@@ -22,21 +25,30 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
@@ -46,7 +58,11 @@ import team.duckie.app.android.common.compose.ui.DuckieCircularProgressIndicator
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.constant.SharedIcon
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
+import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.constants.SearchStep
@@ -89,13 +105,19 @@ class SearchActivity : BaseActivity() {
         setContent {
             val state = vm.collectAsState().value
             val focusRequester = remember { FocusRequester() }
+            val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+            val coroutineScope = rememberCoroutineScope()
+            val keyboardController = LocalSoftwareKeyboardController.current
 
             vm.searchUsers.collectAndHandleState(handleLoadStates = vm::checkError)
-            vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
+            val searchExams =
+                vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
 
             LaunchedEffect(key1 = vm) {
                 vm.container.sideEffectFlow
-                    .onEach(::handleSideEffect)
+                    .onEach {
+                        handleSideEffect(it, searchExams)
+                    }
                     .launchIn(this)
             }
 
@@ -104,79 +126,110 @@ class SearchActivity : BaseActivity() {
             }
 
             QuackTheme {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .systemBarsPadding(),
-                    contentAlignment = Alignment.Center,
+                ReportDialog(
+                    visible = state.reportDialogVisible,
+                    onClick = { vm.updateReportDialogVisible(false) },
+                    onDismissRequest = { vm.updateReportDialogVisible(false) },
+                )
+                DuckieSelectableBottomSheetDialog(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomSheetState = bottomSheetDialogState,
+                    closeSheet = {
+                        coroutineScope.launch {
+                            bottomSheetDialogState.hide()
+                        }
+                    },
+                    onReport = vm::report,
+                    onCopyLink = vm::copyExamDynamicLink,
+                    types = persistentListOf(
+                        DuckieSelectableType.CopyLink,
+                        DuckieSelectableType.Report
+                    ),
                 ) {
-                    Column(
-                        modifier = Modifier.background(QuackColor.White.value),
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .systemBarsPadding(),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        SearchTextFieldTopBar(
-                            searchKeyword = state.searchKeyword,
-                            onSearchKeywordChanged = { keyword ->
-                                vm.updateSearchKeyword(keyword = keyword)
-                            },
-                            onPrevious = {
-                                finishWithAnimation()
-                            },
-                            clearSearchKeyword = {
-                                vm.clearSearchKeyword()
-                            },
-                            focusRequester = focusRequester,
-                        )
-                        AnimatedContent(
-                            targetState = state.searchStep,
-                            label = "AnimatedContent",
-                        ) { step ->
-                            when (step) {
-                                SearchStep.Search -> SearchScreen(vm = vm)
-                                SearchStep.SearchResult -> {
-                                    if (state.isSearchProblemError &&
-                                        state.tagSelectedTab == SearchResultStep.DuckExam
-                                    ) {
-                                        ErrorScreen(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .statusBarsPadding(),
-                                            false,
-                                            onRetryClick = {
-                                                vm.fetchSearchExams(state.searchKeyword)
-                                            },
-                                        )
-                                    } else if (state.isSearchUserError &&
-                                        state.tagSelectedTab == SearchResultStep.User
-                                    ) {
-                                        ErrorScreen(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .statusBarsPadding(),
-                                            false,
-                                            onRetryClick = {
-                                                vm.fetchSearchUsers(state.searchKeyword)
-                                            },
-                                        )
-                                    } else {
-                                        SearchResultScreen(
-                                            navigateDetail = { examId ->
-                                                vm.navigateToDetail(examId = examId)
-                                            },
-                                        )
+                        Column(
+                            modifier = Modifier.background(QuackColor.White.value),
+                        ) {
+                            SearchTextFieldTopBar(
+                                searchKeyword = state.searchKeyword,
+                                onSearchKeywordChanged = { keyword ->
+                                    vm.updateSearchKeyword(keyword = keyword)
+                                },
+                                onPrevious = {
+                                    finishWithAnimation()
+                                },
+                                clearSearchKeyword = {
+                                    vm.clearSearchKeyword()
+                                },
+                                focusRequester = focusRequester,
+                            )
+                            AnimatedContent(
+                                targetState = state.searchStep,
+                                label = "AnimatedContent",
+                            ) { step ->
+                                when (step) {
+                                    SearchStep.Search -> SearchScreen(vm = vm)
+                                    SearchStep.SearchResult -> {
+                                        if (state.isSearchProblemError &&
+                                            state.tagSelectedTab == SearchResultStep.DuckExam
+                                        ) {
+                                            ErrorScreen(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .statusBarsPadding(),
+                                                false,
+                                                onRetryClick = {
+                                                    vm.fetchSearchExams(state.searchKeyword)
+                                                },
+                                            )
+                                        } else if (state.isSearchUserError &&
+                                            state.tagSelectedTab == SearchResultStep.User
+                                        ) {
+                                            ErrorScreen(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .statusBarsPadding(),
+                                                false,
+                                                onRetryClick = {
+                                                    vm.fetchSearchUsers(state.searchKeyword)
+                                                },
+                                            )
+                                        } else {
+                                            SearchResultScreen(
+                                                navigateDetail = { examId ->
+                                                    vm.navigateToDetail(examId = examId)
+                                                },
+                                                openBottomSheet = { examId ->
+                                                    vm.setTargetExamId(examId = examId)
+                                                    coroutineScope.launch {
+                                                        keyboardController?.hide()
+                                                        bottomSheetDialogState.show()
+                                                    }
+                                                },
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    if (state.isSearchLoading) {
-                        DuckieCircularProgressIndicator()
+                        if (state.isSearchLoading) {
+                            DuckieCircularProgressIndicator()
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun handleSideEffect(sideEffect: SearchSideEffect) {
+    private fun handleSideEffect(
+        sideEffect: SearchSideEffect,
+        examPagingItems: LazyPagingItems<Exam>,
+    ) {
         when (sideEffect) {
             is SearchSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
@@ -198,6 +251,18 @@ class SearchActivity : BaseActivity() {
                         putExtra(Extras.UserId, sideEffect.userId)
                     },
                 )
+            }
+
+            is SearchSideEffect.SendToast -> {
+                Toast.makeText(this, sideEffect.message, Toast.LENGTH_SHORT).show()
+            }
+
+            is SearchSideEffect.CopyDynamicLink -> {
+                DynamicLinkHelper.createAndShareLink(this, sideEffect.examId)
+            }
+
+            SearchSideEffect.ExamRefresh -> {
+                examPagingItems.refresh()
             }
         }
     }

@@ -36,7 +36,7 @@ internal class SearchExamPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<Int, Exam>): Int {
-        return ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2)
-            .coerceAtLeast(0)
+        return ((state.anchorPosition ?: SearchExamStartingKey) - state.config.initialLoadSize / 2)
+            .coerceAtLeast(SearchExamStartingKey)
     }
 }

@@ -8,6 +8,7 @@
 package team.duckie.app.android.domain.kakao.usecase
 
 import androidx.compose.runtime.Immutable
+import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotSupportAccount
 import team.duckie.app.android.domain.kakao.repository.KakaoRepository
 import javax.inject.Inject
 
@@ -25,6 +26,14 @@ class GetKakaoAccessTokenUseCase @Inject constructor(
     suspend operator fun invoke(): Result<String> {
         return runCatching {
             repository.getAccessToken()
+        }.onFailure { exception ->
+            when {
+                exception.isKakaoTalkNotSupportAccount -> {
+                    return runCatching {
+                        repository.loginWithWebView()
+                    }
+                }
+            }
         }
     }
 }

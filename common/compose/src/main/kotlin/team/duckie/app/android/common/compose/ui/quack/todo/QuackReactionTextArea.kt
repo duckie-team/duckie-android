@@ -18,6 +18,8 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.getPlaceable
+import team.duckie.app.android.common.kotlin.fastFirstOrNull
+import team.duckie.app.android.common.kotlin.npe
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
@@ -43,8 +45,9 @@ private fun getQuackReactionTextAreaMeasurePolicy(
             measurables.getPlaceable(QuizReviewPlaceHolder, looseConstraints)
         val quizReviewTextAreaPlaceable =
             measurables.getPlaceable(QuizReviewTextArea, extraLooseConstraints)
-        val reactionLimitTextPlaceable =
-            measurables.getPlaceable(ReactionLimitText, looseConstraints)
+        val reactionLimitTextPlaceable = measurables.fastFirstOrNull { measureable ->
+            measureable.layoutId == ReactionLimitText
+        }?.measure(constraints)
 
         layout(
             width = constraints.maxWidth,
@@ -54,7 +57,7 @@ private fun getQuackReactionTextAreaMeasurePolicy(
             if (placeholderVisible) {
                 quizReviewPlaceHolderPlaceable.place(x = 0, y = 0)
             }
-            reactionLimitTextPlaceable.place(
+            reactionLimitTextPlaceable?.place(
                 x = constraints.maxWidth - reactionLimitTextPlaceable.width,
                 y = quizReviewTextAreaPlaceable.height - reactionLimitTextPlaceable.height,
             )

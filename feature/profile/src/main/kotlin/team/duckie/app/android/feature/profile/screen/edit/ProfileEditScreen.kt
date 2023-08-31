@@ -111,6 +111,7 @@ internal fun ProfileEditScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = QuackColor.White.value)
+                .padding(horizontal = 16.dp)
                 .navigationBarsPadding()
                 .systemBarsPadding(),
             imageUris = galleryState.images,
@@ -152,7 +153,7 @@ internal fun ProfileEditScreen(
             Spacer(space = 40.dp)
             ProfileEditSection(
                 profile = state.profile,
-                onClickEditProfile = vm::clickEditProfile,
+                onClickEditProfile = vm::loadGalleryImages,
             )
             Spacer(space = 40.dp)
             QuackText(
