@@ -64,6 +64,7 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
+import team.duckie.app.android.common.compose.HideKeyboardWhenBottomSheetHidden
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
@@ -163,14 +164,7 @@ internal fun AdditionalInformationScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        val sheetStateFlow = snapshotFlow { sheetState.currentValue }
-        sheetStateFlow.collect { state ->
-            if (state == ModalBottomSheetValue.Hidden) {
-                keyboard?.hide()
-            }
-        }
-    }
+    HideKeyboardWhenBottomSheetHidden(sheetState)
 
     ModalBottomSheetLayout(
         modifier = modifier,

@@ -62,36 +62,37 @@ fun SettingAccountInfoScreen(
             modifier = Modifier.padding(vertical = 12.dp),
             text = stringResource(id = R.string.sign_in_account),
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(44.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            QuackBody1(
-                text = stringResource(id = R.string.email),
-            )
-            Spacer(space = 12.dp)
-            Box(
-                modifier = Modifier
-                    .size(18.dp)
-                    .background(
-                        color = KakaoColor,
-                        shape = RoundedCornerShape(2.dp),
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                QuackImage(
-                    modifier = Modifier.size(12.dp, 10.dp),
-                    src = R.drawable.ic_setting_kakao,
-                )
-            }
-            Spacer(space = 4.dp)
-            QuackText(
-                text = email,
-                typography = SettingHorizontalResultTypography,
-            )
-        }
+//        이메일 로직: 필요시 주석 해제 후 사용
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(44.dp),
+//            verticalAlignment = Alignment.CenterVertically,
+//        ) {
+//            QuackBody1(
+//                text = stringResource(id = R.string.email),
+//            )
+//            Spacer(space = 12.dp)
+//            Box(
+//                modifier = Modifier
+//                    .size(18.dp)
+//                    .background(
+//                        color = KakaoColor,
+//                        shape = RoundedCornerShape(2.dp),
+//                    ),
+//                contentAlignment = Alignment.Center,
+//            ) {
+//                QuackImage(
+//                    modifier = Modifier.size(12.dp, 10.dp),
+//                    src = R.drawable.ic_setting_kakao,
+//                )
+//            }
+//            Spacer(space = 4.dp)
+//            QuackText(
+//                text = email,
+//                typography = SettingHorizontalResultTypography,
+//            )
+//        }
         QuackMaxWidthDivider(modifier = Modifier.padding(vertical = 16.dp))
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(4.dp),

@@ -178,6 +178,7 @@ private fun SearchResultForExam(
         }
     } else {
         LazyVerticalGrid(
+            modifier = Modifier.padding(top = 20.dp),
             columns = GridCells.Fixed(2),
             state = rememberLazyGridState(),
             verticalArrangement = Arrangement.spacedBy(48.dp),

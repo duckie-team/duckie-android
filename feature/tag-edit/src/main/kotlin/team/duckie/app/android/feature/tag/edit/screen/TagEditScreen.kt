@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.HideKeyboardWhenBottomSheetHidden
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.common.compose.ui.ErrorScreen
@@ -94,6 +95,8 @@ fun TagEditSuccessScreen(
             activity.finish()
         }
     }
+
+    HideKeyboardWhenBottomSheetHidden(sheetState)
 
     DuckieTagAddBottomSheet(
         sheetState = sheetState,

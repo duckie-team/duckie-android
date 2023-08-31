@@ -8,6 +8,7 @@
 package team.duckie.app.android.common.compose.ui.quack
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -55,6 +57,13 @@ import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
 
+@NonRestartableComposable
+@Composable
+fun blackAndPrimaryColor(text: String) = animateColorAsState(
+    targetValue = if (text.isEmpty()) QuackColor.Unspecified.value else QuackColor.DuckieOrange.value,
+    label = "writeCommentButtonColor",
+)
+
 @Composable
 fun QuackNoUnderlineTextField(
     modifier: Modifier = Modifier,
@@ -65,6 +74,7 @@ fun QuackNoUnderlineTextField(
         top = 8.dp,
         bottom = 8.dp,
         start = 12.dp,
+        end = 12.dp
     ),
     startPadding: Dp = 0.dp,
     leadingIconOnClick: (() -> Unit)? = null,

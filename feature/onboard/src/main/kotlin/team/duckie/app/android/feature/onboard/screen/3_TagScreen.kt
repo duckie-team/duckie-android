@@ -54,6 +54,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.HideKeyboardWhenBottomSheetHidden
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.systemBarPaddings
@@ -142,14 +143,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
             skipHalfExpanded = true,
         )
 
-    LaunchedEffect(sheetState) {
-        val sheetStateFlow = snapshotFlow { sheetState.currentValue }
-        sheetStateFlow.collect { state ->
-            if (state == ModalBottomSheetValue.Hidden) {
-                keyboard?.hide()
-            }
-        }
-    }
+    HideKeyboardWhenBottomSheetHidden(sheetState)
 
     BackHandler(sheetState.isVisible) {
         coroutineScope.launch {
