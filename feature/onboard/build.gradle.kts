@@ -33,6 +33,7 @@ dependencies {
         libs.orbit.compose,
         libs.ktx.lifecycle.runtime,
         libs.compose.ui.material, // needs for ModalBottomSheet
+        libs.compose.ui.foundation,
         libs.compose.lifecycle.runtime,
         libs.compose.ui.accompanist.flowlayout,
         libs.kotlin.collections.immutable,

@@ -5,7 +5,10 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(FlowPreview::class, ExperimentalComposeUiApi::class, ExperimentalQuackQuackApi::class)
+@file:OptIn(
+    FlowPreview::class, ExperimentalComposeUiApi::class, ExperimentalQuackQuackApi::class,
+    ExperimentalDesignToken::class
+)
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 
 package team.duckie.app.android.feature.onboard.screen
@@ -64,6 +67,7 @@ import team.duckie.app.android.common.compose.ui.PhotoPickerConstants
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.constant.SharedIcon
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextField
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextFieldState
 import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.feature.onboard.R
@@ -76,6 +80,7 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val currentStep = OnboardStep.Profile
@@ -135,11 +140,11 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
             },
         )
     }
-    var lastErrorText by remember { mutableStateOf("") }
 
     LaunchedEffect(vm) {
         val nicknameInputFlow = snapshotFlow { nickname }
         nicknameInputFlow
+            .onEach { vm.nicknameChecking() }
             .onEach { vm.readyToScreenCheck(currentStep) }
             .debounce(Debounce.SearchSecond)
             .collect { nickname ->
@@ -156,17 +161,14 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
             modifier = Modifier
                 .zIndex(1f)
                 .fillMaxSize()
+                .padding(horizontal = 16.dp)
                 .padding(bottom = systemBarPaddings.calculateBottomPadding() + 16.dp),
         ) {
             val profileScreenState = vm.collectAsState().value.profileState
             OnboardTopAppBar(currentStep = currentStep)
             TitleAndDescription(
                 modifier = Modifier
-                    .padding(
-                        top = 12.dp,
-                        start = 20.dp,
-                        end = 20.dp,
-                    ),
+                    .padding(top = 12.dp),
                 titleRes = R.string.profile_title,
                 descriptionRes = R.string.profile_description,
             )
@@ -174,7 +176,6 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                 ProfilePhoto(
                     modifier = Modifier
                         .padding(
-                            // 항상 center 에 배치돼서 horizontal padding 불필요
                             top = 32.dp,
                             bottom = 20.dp,
                         ),
@@ -190,10 +191,9 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                     }.takeIf { vm.isImagePermissionGranted == true },
                 )
             }
+
             QuackErrorableTextField(
-                modifier = Modifier
-                    // 패딩이 왜 2배로 들어가지??
-                    .padding(horizontal = 10.dp),
+                modifier = Modifier,
                 text = nickname,
                 onTextChanged = { text ->
                     if (text.length <= MaxNicknameLength) {
@@ -201,15 +201,25 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
                     }
                 },
                 placeholderText = stringResource(R.string.profile_nickname_placeholder),
-                isError = ProfileScreenState.errorState.contains(profileScreenState),
                 maxLength = MaxNicknameLength,
-                errorText = when (profileScreenState) {
-                    ProfileScreenState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
-                    ProfileScreenState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
-                    ProfileScreenState.NicknameEmpty -> stringResource(R.string.profile_nickname_empty)
-                    else -> lastErrorText // 안하면 invisible 될 때 갑자기 텍스트가 사라짐 (애니메이션 X)
-                }.also { errorText ->
-                    lastErrorText = errorText
+                textFieldState = when (profileScreenState) {
+                    ProfileScreenState.NicknameRuleError -> QuackErrorableTextFieldState.Error(
+                        errorText = stringResource(R.string.profile_nickname_rule_error),
+                    )
+
+                    ProfileScreenState.NicknameDuplicateError -> QuackErrorableTextFieldState.Error(
+                        errorText = stringResource(R.string.profile_nickname_duplicate_error),
+                    )
+
+                    ProfileScreenState.NicknameEmpty -> QuackErrorableTextFieldState.Error(
+                        errorText = stringResource(R.string.profile_nickname_empty),
+                    )
+
+                    ProfileScreenState.Valid -> QuackErrorableTextFieldState.Success(
+                        successText = stringResource(R.string.profile_nickname_valid),
+                    )
+
+                    else -> QuackErrorableTextFieldState.Normal
                 },
                 keyboardActions = KeyboardActions {
                     keyboard?.hide()
@@ -217,14 +227,8 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
             )
 
             Spacer(weight = 1f)
-
-            // TODO(riflockle7): 문제 있으므로 꽥꽥 이슈 해결할 때까지 주석 제거하지 않음
-            // type = QuackLargeButtonType.Fill,
-            // imeAnimation = true,
             TempFlexiblePrimaryLargeButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.button_next),
                 enabled = profileScreenState == ProfileScreenState.Valid &&
                         nickname.isNotEmpty(),
