@@ -56,6 +56,7 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
 
 @NonRestartableComposable
 @Composable
@@ -176,15 +177,14 @@ private fun TextFieldDecoration(
                 )
             }
             if (isPlaceholder && placeholderText != null) {
-                Text(
+                QuackText(
                     modifier = Modifier
                         .layoutId(PlaceholderId)
                         .padding(start = startPadding),
                     text = placeholderText,
-                    style = QuackTypography.Body1.asComposeStyle().copy(
-                        color = QuackColor.Gray2.value,
+                    typography = QuackTypography.Body1.change(
+                        color = QuackColor.Gray2,
                     ),
-                    maxLines = 1,
                     softWrap = false,
                     overflow = TextOverflow.Ellipsis,
                 )

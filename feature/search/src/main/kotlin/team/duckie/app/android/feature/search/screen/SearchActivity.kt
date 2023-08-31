@@ -80,6 +80,8 @@ import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.theme.QuackTheme
 import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.plugin.interceptor.textfield.QuackTextFieldFontFamilyRemovalPlugin
+import team.duckie.quackquack.ui.plugin.rememberQuackPlugins
 import javax.inject.Inject
 
 internal val SearchHorizontalPadding = PaddingValues(horizontal = 16.dp)
@@ -113,8 +115,7 @@ class SearchActivity : BaseActivity() {
             val keyboardController = LocalSoftwareKeyboardController.current
 
             vm.searchUsers.collectAndHandleState(handleLoadStates = vm::checkError)
-            val searchExams =
-                vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
+            val searchExams = vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
 
             LaunchedEffect(key1 = vm) {
                 vm.container.sideEffectFlow
@@ -128,7 +129,11 @@ class SearchActivity : BaseActivity() {
                 focusRequester.requestFocus()
             }
 
-            QuackTheme {
+            QuackTheme(
+                plugins = rememberQuackPlugins {
+                    +QuackTextFieldFontFamilyRemovalPlugin
+                }
+            ) {
                 ReportDialog(
                     visible = state.reportDialogVisible,
                     onClick = { vm.updateReportDialogVisible(false) },
