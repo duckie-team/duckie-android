@@ -286,9 +286,6 @@ private fun ExamResultSuccessScreen(
                             nickname = nickname,
                             myAnswer = myAnswer,
                             profileImg = profileImg,
-                            onHeartComment = { isLike ->
-                                viewModel.heartWrongComment(isLike)
-                            },
                             initialState = {
                                 viewModel.initialQuizState()
                             },

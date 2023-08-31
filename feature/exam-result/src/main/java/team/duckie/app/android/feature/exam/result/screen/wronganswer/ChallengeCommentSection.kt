@@ -57,7 +57,6 @@ private val PaleOrange: Color = Color(0xFFFFEFCF)
 internal fun ColumnScope.ChallengeCommentSection(
     profileUrl: String,
     myAnswer: String,
-    onHeartComment: (Int) -> Unit,
     commentsTotal: Int,
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     showCommentSheet: () -> Unit,
@@ -155,10 +154,12 @@ internal fun ColumnScope.ChallengeCommentSection(
                 ChallengeComment(
                     modifier = Modifier.fillMaxScreenWidth(),
                     wrongComment = item,
-                    onHeartClick = onHeartComment,
                     innerPaddingValues = PaddingValues(horizontal = 16.dp),
                     visibleHeart = true,
                     showCommentSheet = showCommentSheet,
+                    onHeartClick = {
+                        showCommentSheet() // 하트 클릭 미지원
+                    },
                 )
                 Spacer(space = 8.dp)
             }
