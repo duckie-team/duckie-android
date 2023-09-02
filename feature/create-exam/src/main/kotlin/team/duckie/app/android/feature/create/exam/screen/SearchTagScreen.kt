@@ -5,9 +5,12 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalDesignToken::class, ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.feature.create.exam.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +33,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.ui.ImeSpacer
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.feature.create.exam.R
 import team.duckie.app.android.feature.create.exam.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.create.exam.common.ExitAppBar
@@ -37,14 +44,12 @@ import team.duckie.app.android.feature.create.exam.common.SearchResultText
 import team.duckie.app.android.feature.create.exam.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.exam.viewmodel.state.FindResultType
 import team.duckie.app.android.feature.create.exam.viewmodel.state.SearchScreenData
-import team.duckie.app.android.common.compose.ui.ImeSpacer
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.kotlin.fastMap
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.component.QuackBasicTextField
-import team.duckie.quackquack.ui.component.QuackLazyVerticalGridTag
-import team.duckie.quackquack.ui.component.QuackTagType
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.ui.QuackDefaultTextField
+import team.duckie.quackquack.ui.QuackTextFieldStyle
+import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private const val MaximumSubTagCount = 5
 
@@ -111,13 +116,16 @@ internal fun SearchTagScreen(
                 ),
                 horizontalSpace = 4.dp,
                 items = state.results.fastMap { it.name },
-                tagType = QuackTagType.Circle(QuackIcon.Close),
+                trailingIcon = OutlinedGroup.Close,
                 onClick = { viewModel.onClickCloseTag(it) },
                 itemChunkedSize = 3,
             )
         }
 
-        QuackBasicTextField(
+        // TODO(riflockle7): 동작 확인 필요
+        QuackDefaultTextField(
+            // TODO(riflockle7): 꽥꽥 기능 제공 안함
+            // leadingIcon = QuackIcon.Search,
             modifier = Modifier
                 .padding(
                     top = 16.dp,
@@ -125,11 +133,11 @@ internal fun SearchTagScreen(
                     end = 16.dp,
                 )
                 .focusRequester(focusRequester),
-            leadingIcon = QuackIcon.Search,
-            text = searchTextFieldValue,
-            onTextChanged = { textFieldValue ->
+            value = searchTextFieldValue,
+            onValueChange = { textFieldValue ->
                 viewModel.setTextFieldValue(textFieldValue = textFieldValue)
             },
+            style = QuackTextFieldStyle.Default,
             placeholderText = placeholderText,
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -140,7 +148,7 @@ internal fun SearchTagScreen(
             ),
         )
 
-        QuackAnimatedVisibility(
+        AnimatedVisibility(
             modifier = Modifier.padding(
                 top = 8.dp,
                 start = 16.dp,

@@ -44,6 +44,8 @@ val QuackV2Icon.CheckId: Int get() = QuackV1Icon.Check.drawableId
 
 val QuackV2Icon.CreateId: Int get() = QuackV1Icon.Create
 
+val QuackV2Icon.AreaId: Int get() = QuackV1Icon.Area.drawableId
+
 val Int.toQuackV1Icon: QuackV1Icon?
     get() = when (this) {
         QuackV1Icon.ArrowBack.drawableId -> QuackV1Icon.ArrowBack
@@ -55,5 +57,6 @@ val Int.toQuackV1Icon: QuackV1Icon?
         QuackV1Icon.Camera.drawableId -> QuackV1Icon.Camera
         QuackV1Icon.TextLogo.drawableId -> QuackV1Icon.TextLogo
         QuackV1Icon.Check.drawableId -> QuackV1Icon.Check
+        QuackV1Icon.Area.drawableId -> QuackV1Icon.Area
         else -> null
     }
