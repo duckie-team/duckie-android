@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.getPlaceable
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
-import team.duckie.app.android.common.kotlin.npe
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText

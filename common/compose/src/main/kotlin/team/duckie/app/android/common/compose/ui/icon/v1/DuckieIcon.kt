@@ -22,6 +22,8 @@ val QuackV1Icon.Companion.Crown get() = R.drawable.ic_crown_12
 
 val QuackV2Icon.ArrowBackId: Int get() = QuackV1Icon.ArrowBack.drawableId
 
+val QuackV2Icon.ArrowRightId: Int get() = QuackV1Icon.ArrowRight.drawableId
+
 val QuackV2Icon.ArrowSendId: Int get() = QuackV1Icon.ArrowSend.drawableId
 
 val QuackV2Icon.CloseId: Int get() = QuackV1Icon.Close.drawableId
@@ -45,6 +47,7 @@ val QuackV2Icon.CreateId: Int get() = QuackV1Icon.Create
 val Int.toQuackV1Icon: QuackV1Icon?
     get() = when (this) {
         QuackV1Icon.ArrowBack.drawableId -> QuackV1Icon.ArrowBack
+        QuackV1Icon.ArrowRight.drawableId -> QuackV1Icon.ArrowRight
         QuackV1Icon.ArrowSend.drawableId -> QuackV1Icon.ArrowSend
         QuackV1Icon.Close.drawableId -> QuackV1Icon.Close
         QuackV1Icon.Search.drawableId -> QuackV1Icon.Search

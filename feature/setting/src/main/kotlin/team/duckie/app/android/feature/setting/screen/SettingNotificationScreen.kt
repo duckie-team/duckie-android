@@ -22,8 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.feature.setting.constans.SettingNotificationType
 import team.duckie.app.android.feature.setting.constans.SettingDesignToken
+import team.duckie.app.android.feature.setting.constans.SettingNotificationType
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody1
 
@@ -51,6 +51,7 @@ fun SettingNotificationScreen() {
     }
 }
 
+@Suppress("unused")
 @Composable
 private fun SettingNotificationLayout(
     title: String,

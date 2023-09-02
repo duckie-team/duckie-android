@@ -57,7 +57,7 @@ class MainActivity : BaseActivity() {
     private val homeViewModel: HomeViewModel by viewModels()
 
     @Inject
-    lateinit var createProblemNavigator: CreateProblemNavigator
+    lateinit var createExamNavigator: CreateProblemNavigator
 
     @Inject
     lateinit var notificationNavigator: NotificationNavigator
@@ -200,7 +200,7 @@ class MainActivity : BaseActivity() {
             }
 
             is MainSideEffect.NavigateToCreateProblem -> {
-                createProblemNavigator.navigateFrom(activity = this)
+                createExamNavigator.navigateFrom(activity = this)
             }
 
             is MainSideEffect.NavigateToSetting -> {

@@ -61,6 +61,7 @@ internal fun HomeRecommendFollowingScreen(
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
                 onClickedCreate = navigateToCreateProblem,
+                onClickedNotice = {},
             )
         }
 

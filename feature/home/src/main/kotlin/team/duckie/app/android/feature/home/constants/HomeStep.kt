@@ -22,8 +22,12 @@ internal enum class HomeStep(
         index = 0,
     ),
 
-    HomeFollowingScreen(
+    HomeProceedScreen(
         index = 1,
+    ),
+
+    HomeFollowingScreen(
+        index = 2,
     ),
     ;
 

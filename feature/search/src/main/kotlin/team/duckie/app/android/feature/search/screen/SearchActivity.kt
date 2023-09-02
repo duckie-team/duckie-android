@@ -6,6 +6,9 @@
  */
 
 @file:OptIn(ExperimentalMaterialApi::class)
+// TODO(limsaehyun): The function onCreate is too long (127).
+//  The maximum length is 100. [LongMethod] 대응 필요
+@file:Suppress("LongMethod")
 
 package team.duckie.app.android.feature.search.screen
 
@@ -143,7 +146,7 @@ class SearchActivity : BaseActivity() {
                     onCopyLink = vm::copyExamDynamicLink,
                     types = persistentListOf(
                         DuckieSelectableType.CopyLink,
-                        DuckieSelectableType.Report
+                        DuckieSelectableType.Report,
                     ),
                 ) {
                     Box(

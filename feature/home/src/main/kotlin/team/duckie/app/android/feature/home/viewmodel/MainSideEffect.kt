@@ -35,7 +35,7 @@ internal sealed class MainSideEffect {
     object NavigateToSetting : MainSideEffect()
 
     /**
-     * [CreateProblemActivity] 로 이동하는 SideEffect 입니다.
+     * [CreateExamActivity] 로 이동하는 SideEffect 입니다.
      */
     object NavigateToCreateProblem : MainSideEffect()
 

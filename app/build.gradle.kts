@@ -95,7 +95,7 @@ dependencies {
         projects.feature.examResult,
         projects.feature.solveProblem,
         projects.feature.notification,
-        projects.feature.createProblem,
+        projects.feature.createExam,
         projects.feature.startExam,
         projects.feature.detail,
         projects.feature.profile,

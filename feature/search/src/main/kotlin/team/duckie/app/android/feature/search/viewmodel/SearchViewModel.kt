@@ -217,7 +217,6 @@ internal class SearchViewModel @Inject constructor(
         postSideEffect(SearchSideEffect.CopyDynamicLink(examId))
     }
 
-
     /** 검색 화면에서 [query] 값에 맞는 검색 결과를 가져온다. */
     private suspend fun recommendKeywords(query: String) {
         _getRecommendKeywords.emit(query)
