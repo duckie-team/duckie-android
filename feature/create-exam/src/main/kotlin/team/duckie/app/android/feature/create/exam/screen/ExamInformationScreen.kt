@@ -5,11 +5,14 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalQuackQuackApi::class, ExperimentalDesignToken::class)
+
 package team.duckie.app.android.feature.create.exam.screen
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -36,7 +39,6 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -44,6 +46,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.DuckieGridLayout
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSurface
 import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.app.android.feature.create.exam.R
 import team.duckie.app.android.feature.create.exam.common.CreateProblemBottomLayout
@@ -53,18 +56,21 @@ import team.duckie.app.android.feature.create.exam.common.TitleAndComponent
 import team.duckie.app.android.feature.create.exam.common.getCreateProblemMeasurePolicy
 import team.duckie.app.android.feature.create.exam.common.moveDownFocus
 import team.duckie.app.android.feature.create.exam.viewmodel.CreateProblemViewModel
-import team.duckie.quackquack.ui.animation.QuackAnimatedVisibility
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBasicTextField
-import team.duckie.quackquack.ui.component.QuackCircleTag
-import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
-import team.duckie.quackquack.ui.component.QuackReviewTextArea
-import team.duckie.quackquack.ui.component.QuackSurface
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackDefaultTextField
+import team.duckie.quackquack.ui.QuackTag
+import team.duckie.quackquack.ui.QuackTagStyle
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.QuackTextArea
+import team.duckie.quackquack.ui.QuackTextAreaStyle
+import team.duckie.quackquack.ui.QuackTextFieldStyle
+import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
+import team.duckie.quackquack.ui.trailingIcon
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private const val TopAppBarLayoutId = "ExamInformationScreenTopAppBarLayoutId"
 private const val ContentLayoutId = "ExamInformationScreenContentLayoutId"
@@ -147,30 +153,34 @@ internal fun ExamInformationScreen(
                 }
                 TitleAndComponent(stringResource = R.string.main_tag) {
                     if (state.isMainTagSelected) {
-                        QuackCircleTag(
+                        QuackTag(
                             text = state.mainTag,
-                            trailingIcon = QuackIcon.Close,
-                            isSelected = false,
-                            onClick = { viewModel.onClickCloseTag() },
-                        )
+                            style = QuackTagStyle.Outlined,
+                            modifier = Modifier.trailingIcon(OutlinedGroup.Close) { viewModel.onClickCloseTag() },
+                            selected = false,
+                        ) {}
                     }
-                    QuackAnimatedVisibility(visible = !state.isMainTagSelected) {
-                        QuackBasicTextField(
-                            modifier = Modifier.quackClickable {
-                                viewModel.goToSearchMainTag(lazyListState.firstVisibleItemIndex)
-                            },
-                            leadingIcon = QuackIcon.Search,
-                            text = state.mainTag,
-                            onTextChanged = {},
+                    AnimatedVisibility(visible = !state.isMainTagSelected) {
+                        // TODO(riflockle7): 동작 확인 필요
+                        QuackDefaultTextField(
+                            modifier = Modifier.quackClickable(
+                                onClick = {
+                                    viewModel.goToSearchMainTag(lazyListState.firstVisibleItemIndex)
+                                },
+                            ),
+                            // leadingIcon = QuackIcon.Search,
+                            value = state.mainTag,
+                            onValueChange = {},
                             placeholderText = stringResource(id = R.string.search_main_tag_placeholder),
+                            style = QuackTextFieldStyle.Default,
                             enabled = false,
                         )
                     }
                 }
                 TitleAndComponent(stringResource = R.string.exam_title) {
-                    QuackBasicTextField(
-                        text = state.examTitle,
-                        onTextChanged = {
+                    QuackDefaultTextField(
+                        value = state.examTitle,
+                        onValueChange = {
                             viewModel.setExamTitle(
                                 it.takeBy(
                                     ExamTitleMaxLength,
@@ -178,6 +188,7 @@ internal fun ExamInformationScreen(
                                 ),
                             )
                         },
+                        style = QuackTextFieldStyle.Default,
                         placeholderText = stringResource(
                             id = R.string.input_exam_title,
                             ExamTitleMaxLength,
@@ -187,15 +198,17 @@ internal fun ExamInformationScreen(
                     )
                 }
                 TitleAndComponent(stringResource = R.string.exam_description) {
-                    QuackReviewTextArea(
+                    // TODO(riflockle7): 동작 확인 필요
+                    QuackTextArea(
                         modifier = Modifier
                             .heightIn(140.dp)
                             .focusRequester(focusRequester = focusRequester)
                             .onFocusChanged { state ->
                                 viewModel.onSearchTextFocusChanged(state.isFocused)
                             },
-                        text = state.examDescription,
-                        onTextChanged = {
+                        value = state.examDescription,
+                        style = QuackTextAreaStyle.Default,
+                        onValueChange = {
                             viewModel.setExamDescription(
                                 it.takeBy(
                                     ExamDescriptionMaxLength,
@@ -207,16 +220,17 @@ internal fun ExamInformationScreen(
                             id = R.string.input_exam_description,
                             ExamDescriptionMaxLength,
                         ),
-                        imeAction = ImeAction.Next,
-                        keyboardActions = moveDownFocus(focusManager),
-                        focused = state.examDescriptionFocused,
+                        // TODO(riflockle7): 꽥꽥에서 기능 제공 안함
+                        // imeAction = ImeAction.Next,
+                        // keyboardActions = moveDownFocus(focusManager),
+                        // focused = state.examDescriptionFocused,
                     )
                 }
                 TitleAndComponent(stringResource = R.string.certifying_statement) {
-                    QuackGrayscaleTextField(
+                    QuackDefaultTextField(
                         modifier = Modifier.padding(bottom = 16.dp),
-                        text = state.certifyingStatement,
-                        onTextChanged = {
+                        value = state.certifyingStatement,
+                        onValueChange = {
                             viewModel.setCertifyingStatement(
                                 it.takeBy(
                                     CertifyingStatementMaxLength,
@@ -224,6 +238,7 @@ internal fun ExamInformationScreen(
                                 ),
                             )
                         },
+                        style = QuackTextFieldStyle.Default,
                         placeholderText = stringResource(
                             id = R.string.input_certifying_statement,
                             CertifyingStatementMaxLength,
@@ -236,8 +251,9 @@ internal fun ExamInformationScreen(
                                 }
                             },
                         ),
-                        maxLength = CertifyingStatementMaxLength,
-                        showCounter = true,
+                        // TODO(riflockle7): 꽥꽥에서 기능 제공 안함
+                        // maxLength = CertifyingStatementMaxLength,
+                        // showCounter = true,
                     )
                 }
             }
@@ -289,11 +305,12 @@ private fun MediumButton(
             height = 40.dp,
         ),
         backgroundColor = QuackColor.White,
-        border = QuackBorder(
-            color = when (selected) {
+        border = BorderStroke(
+            width = 1.dp,
+            brush = when (selected) {
                 true -> QuackColor.DuckieOrange
                 else -> QuackColor.Gray3
-            },
+            }.toBrush(),
         ),
         shape = RoundedCornerShape(size = 8.dp),
         onClick = onClick,
@@ -301,13 +318,13 @@ private fun MediumButton(
         QuackText(
             modifier = Modifier.padding(all = 10.dp),
             text = text,
-            style = when (selected) {
-                true -> QuackTextStyle.Title2.change(
+            typography = when (selected) {
+                true -> QuackTypography.Title2.change(
                     color = QuackColor.DuckieOrange,
                     textAlign = TextAlign.Center,
                 )
 
-                else -> QuackTextStyle.Body1.change(
+                else -> QuackTypography.Body1.change(
                     color = QuackColor.Black,
                     textAlign = TextAlign.Center,
                 )

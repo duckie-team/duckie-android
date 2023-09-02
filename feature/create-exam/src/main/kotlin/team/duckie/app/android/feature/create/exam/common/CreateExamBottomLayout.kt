@@ -13,27 +13,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.asLoose
+import team.duckie.app.android.common.compose.ui.QuackDivider
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.npe
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackSubtitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.material.QuackBorder
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackBorder
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.QuackText
 
 internal fun getCreateProblemMeasurePolicy(
     topLayoutId: String,
@@ -88,7 +89,7 @@ internal fun getCreateProblemMeasurePolicy(
 @Composable
 internal fun CreateProblemBottomLayout(
     modifier: Modifier,
-    leftButtonLeadingIcon: QuackIcon? = null,
+    leftButtonLeadingIcon: ImageVector? = null,
     leftButtonText: String? = null,
     leftButtonClick: (() -> Unit)? = null,
     tempSaveButtonText: String? = null,
@@ -99,7 +100,7 @@ internal fun CreateProblemBottomLayout(
     isValidateCheck: () -> Boolean,
 ) {
     val isValidate = isValidateCheck()
-    Column(modifier = modifier.background(QuackColor.White.composeColor)) {
+    Column(modifier = modifier.background(QuackColor.White.value)) {
         QuackDivider()
         Row(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
@@ -119,10 +120,21 @@ internal fun CreateProblemBottomLayout(
                         .padding(4.dp),
                 ) {
                     // TODO(riflockle7): 추후 비활성화 될 때의 resouce 이미지 필요
-                    leftButtonLeadingIcon?.let { QuackImage(src = it, size = DpSize(16.dp, 16.dp)) }
-                    QuackSubtitle2(
+                    leftButtonLeadingIcon?.let {
+                        QuackIcon(
+                            modifier = modifier.size(DpSize(16.dp, 16.dp)),
+                            icon = it,
+                        )
+                    }
+                    QuackText(
                         text = leftButtonText,
-                        color = if (isCreateProblemValidate) QuackColor.Black else QuackColor.Gray2,
+                        typography = QuackTypography.Subtitle2.change(
+                            if (isCreateProblemValidate) {
+                                QuackColor.Black
+                            } else {
+                                QuackColor.Gray2
+                            },
+                        ),
                     )
                 }
             }
@@ -132,30 +144,30 @@ internal fun CreateProblemBottomLayout(
             // 임시저장 버튼
             tempSaveButtonClick?.let {
                 requireNotNull(tempSaveButtonText)
-                QuackSubtitle(
+                QuackText(
                     modifier = Modifier
                         .clip(RoundedCornerShape(size = 8.dp))
-                        .background(QuackColor.White.composeColor)
+                        .background(QuackColor.White.value)
                         .quackClickable(onClick = tempSaveButtonClick)
-                        .applyAnimatedQuackBorder(
+                        .quackBorder(
                             QuackBorder(1.dp, QuackColor.Gray3),
                             shape = RoundedCornerShape(size = 8.dp),
                         )
                         .padding(vertical = 12.dp, horizontal = 19.dp),
-                    color = QuackColor.Black,
+                    typography = QuackTypography.Subtitle.change(QuackColor.Black),
                     text = tempSaveButtonText,
                 )
             }
 
             // 다음 버튼
-            QuackSubtitle(
+            QuackText(
                 modifier = Modifier
                     .clip(RoundedCornerShape(size = 8.dp))
                     .background(
                         if (isValidate) {
-                            QuackColor.DuckieOrange.composeColor
+                            QuackColor.DuckieOrange.value
                         } else {
-                            QuackColor.Gray2.composeColor
+                            QuackColor.Gray2.value
                         },
                     )
                     .quackClickable {
@@ -163,7 +175,7 @@ internal fun CreateProblemBottomLayout(
                             nextButtonClick()
                         }
                     }
-                    .applyAnimatedQuackBorder(
+                    .quackBorder(
                         QuackBorder(
                             1.dp,
                             if (isValidate) {
@@ -178,7 +190,7 @@ internal fun CreateProblemBottomLayout(
                         vertical = 12.dp,
                         horizontal = 19.dp,
                     ),
-                color = QuackColor.White,
+                typography = QuackTypography.Subtitle.change(QuackColor.White),
                 text = nextButtonText,
             )
         }

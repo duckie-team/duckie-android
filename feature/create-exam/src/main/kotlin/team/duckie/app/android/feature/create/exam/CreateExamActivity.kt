@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
@@ -44,10 +45,11 @@ import team.duckie.app.android.feature.create.exam.screen.SearchTagScreen
 import team.duckie.app.android.feature.create.exam.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.exam.viewmodel.sideeffect.CreateProblemSideEffect
 import team.duckie.app.android.feature.create.exam.viewmodel.state.CreateProblemStep
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackTitle1
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.theme.QuackTheme
+import team.duckie.quackquack.ui.QuackText
 
 @AndroidEntryPoint
 class CreateExamActivity : BaseActivity() {
@@ -80,7 +82,7 @@ class CreateExamActivity : BaseActivity() {
                 AnimatedContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor),
+                        .background(color = QuackColor.White.value),
                     targetState = createExamStep,
                     label = "AnimatedContent",
                 ) { step: CreateProblemStep ->
@@ -132,20 +134,20 @@ class CreateExamActivity : BaseActivity() {
                     modifier = Modifier
                         .quackClickable(rippleEnabled = false) {}
                         .fillMaxSize()
-                        .background(color = QuackColor.Dimmed.composeColor),
+                        .background(color = QuackColor.Dimmed.value),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
                     // 로딩 바
                     CircularProgressIndicator(
-                        color = QuackColor.DuckieOrange.composeColor,
+                        color = QuackColor.DuckieOrange.value,
                     )
 
                     // 제목
-                    QuackTitle1(
+                    QuackText(
+                        modifier = Modifier.padding(PaddingValues(top = 8.dp)),
                         text = stringResource(id = R.string.make_exam_loading),
-                        color = QuackColor.White,
-                        padding = PaddingValues(top = 8.dp),
+                        typography = QuackTypography.Title1.change(QuackColor.White),
                     )
                 }
             }

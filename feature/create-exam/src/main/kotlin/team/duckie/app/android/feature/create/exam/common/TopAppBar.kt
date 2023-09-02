@@ -16,11 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.feature.create.exam.R
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
+import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
 @Composable
 internal fun PrevAndNextTopAppBar(
@@ -32,7 +35,7 @@ internal fun PrevAndNextTopAppBar(
 ) { // TODO(EvergreenTree97): enabled 속성 필요
     QuackTopAppBar(
         modifier = modifier,
-        leadingIcon = QuackIcon.ArrowBack,
+        leadingIcon = OutlinedGroup.ArrowBack,
         leadingText = stringResource(id = R.string.create_problem),
         onLeadingIconClick = onLeadingIconClick,
         trailingText = trailingText,
@@ -64,9 +67,9 @@ internal fun ExitAppBar(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         QuackHeadLine2(text = leadingText)
-        QuackImage(
-            src = QuackIcon.Close,
-            onClick = onTrailingIconClick,
+        QuackIcon(
+            modifier = Modifier.quackClickable(onClick = onTrailingIconClick),
+            icon = OutlinedGroup.Close,
         )
     }
 }

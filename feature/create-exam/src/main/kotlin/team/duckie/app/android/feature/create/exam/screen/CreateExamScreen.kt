@@ -7,7 +7,8 @@
 
 @file:OptIn(
     ExperimentalMaterialApi::class,
-    ExperimentalComposeUiApi::class,
+    ExperimentalDesignToken::class,
+    ExperimentalQuackQuackApi::class,
 )
 
 package team.duckie.app.android.feature.create.exam.screen
@@ -32,6 +33,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,7 +52,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
@@ -71,6 +72,7 @@ import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
 import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.common.kotlin.takeBy
@@ -84,19 +86,25 @@ import team.duckie.app.android.feature.create.exam.common.getCreateProblemMeasur
 import team.duckie.app.android.feature.create.exam.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.exam.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.create.exam.viewmodel.state.CreateProblemStep
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.border.applyAnimatedQuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBasic2TextField
-import team.duckie.quackquack.ui.component.QuackBasicTextField
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackBorderTextField
+import team.duckie.quackquack.material.QuackBorder
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.material.icon.quackicon.outlined.Image
+import team.duckie.quackquack.material.icon.quackicon.outlined.Plus
+import team.duckie.quackquack.material.quackBorder
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackDefaultTextField
+import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.QuackTextFieldStyle
 import team.duckie.quackquack.ui.component.QuackDropDownCard
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackRoundCheckBox
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
+import team.duckie.quackquack.ui.sugar.QuackSubtitle
+import team.duckie.quackquack.ui.trailingIcon
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private const val TopAppBarLayoutId = "CreateProblemScreenTopAppBarLayoutId"
 private const val ContentLayoutId = "CreateProblemScreenContentLayoutId"
@@ -193,8 +201,8 @@ internal fun CreateExamScreen(
     ModalBottomSheetLayout(
         modifier = modifier,
         sheetState = sheetState,
-        sheetBackgroundColor = QuackColor.White.composeColor,
-        scrimColor = QuackColor.Dimmed.composeColor,
+        sheetBackgroundColor = QuackColor.White.value,
+        scrimColor = QuackColor.Dimmed.value,
         sheetShape = RoundedCornerShape(
             topStart = 16.dp,
             topEnd = 16.dp,
@@ -213,7 +221,7 @@ internal fun CreateExamScreen(
                         .width(40.dp)
                         .height(4.dp)
                         .clip(RoundedCornerShape(2.dp))
-                        .background(QuackColor.Gray2.composeColor),
+                        .background(QuackColor.Gray2.value),
                 )
 
                 // 선택 목록
@@ -223,26 +231,30 @@ internal fun CreateExamScreen(
                         .padding(top = 16.dp),
                 ) {
                     buttonNames.fastForEach {
-                        QuackSubtitle(
-                            modifier = Modifier.fillMaxWidth(),
-                            padding = PaddingValues(
-                                vertical = 12.dp,
-                                horizontal = 16.dp,
-                            ),
-                            text = it.first,
-                            onClick = {
-                                coroutineShape.launch {
-                                    selectedQuestionIndex?.let { questionIndex ->
-                                        // 특정 문제의 답안 유형 수정
-                                        vm.editAnswersType(questionIndex, it.second)
-                                        selectedQuestionIndex = null
-                                    } ?: run {
-                                        // 문제 추가
-                                        vm.addProblem(it.second)
+                        QuackText(
+                            modifier = Modifier
+                                .quackClickable {
+                                    coroutineShape.launch {
+                                        selectedQuestionIndex?.let { questionIndex ->
+                                            // 특정 문제의 답안 유형 수정
+                                            vm.editAnswersType(questionIndex, it.second)
+                                            selectedQuestionIndex = null
+                                        } ?: run {
+                                            // 문제 추가
+                                            vm.addProblem(it.second)
+                                        }
+                                        hideBottomSheet(sheetState) { selectedQuestionIndex = null }
                                     }
-                                    hideBottomSheet(sheetState) { selectedQuestionIndex = null }
                                 }
-                            },
+                                .fillMaxWidth()
+                                .padding(
+                                    PaddingValues(
+                                        vertical = 12.dp,
+                                        horizontal = 16.dp,
+                                    ),
+                                ),
+                            text = it.first,
+                            typography = QuackTypography.Subtitle,
                         )
                     }
                 }
@@ -487,7 +499,7 @@ internal fun CreateExamScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .layoutId(BottomLayoutId),
-                    leftButtonLeadingIcon = QuackIcon.Plus,
+                    leftButtonLeadingIcon = OutlinedGroup.Plus,
                     leftButtonText = stringResource(id = R.string.create_problem_add_problem_button),
                     leftButtonClick = {
                         coroutineShape.launch {
@@ -516,7 +528,7 @@ internal fun CreateExamScreen(
             modifier = Modifier
                 .padding(top = systemBarPaddings.calculateTopPadding())
                 .fillMaxSize()
-                .background(color = QuackColor.White.composeColor)
+                .background(color = QuackColor.White.value)
                 .layoutId(GalleryListLayoutId),
             imageUris = galleryImages,
             imageSelections = galleryImagesSelections,
@@ -629,23 +641,28 @@ private fun CreateProblemTitleLayout(
     dropDownTitle: String,
     onDropdownItemClick: (Int) -> Unit,
 ) {
+    // TODO(riflockle7): 동작 확인 필요
     // TODO(riflockle7): 최상단 Line 없는 TextField 필요
-    QuackBasic2TextField(
-        text = question?.text ?: "",
-        onTextChanged = titleChanged,
+    QuackDefaultTextField(
+        modifier = Modifier.trailingIcon(
+            icon = OutlinedGroup.Image,
+            onClick = imageClick,
+        ),
+        value = question?.text ?: "",
+        onValueChange = titleChanged,
+        style = QuackTextFieldStyle.Default,
         placeholderText = stringResource(
             id = R.string.create_problem_question_placeholder,
             "${questionIndex + 1}",
         ),
-        trailingIcon = QuackIcon.Image,
-        trailingIconOnClick = imageClick,
     )
 
     (question as? Question.Image)?.imageUrl?.let {
         QuackImage(
-            modifier = Modifier.padding(top = 24.dp),
+            modifier = Modifier
+                .padding(top = 24.dp)
+                .size(DpSize(200.dp, 200.dp)),
             src = it,
-            size = DpSize(200.dp, 200.dp),
         )
     }
 
@@ -661,6 +678,7 @@ private fun CreateProblemTitleLayout(
 
 /** 객관식/글 Layout */
 @Composable
+@Suppress("unused")
 private fun ChoiceProblemLayout(
     questionIndex: Int,
     question: Question?,
@@ -694,45 +712,46 @@ private fun ChoiceProblemLayout(
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
             val answerNo = answerIndex + 1
             val isChecked = correctAnswers == "$answerIndex"
-            QuackBorderTextField(
+            QuackDefaultTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp)
-                    .applyAnimatedQuackBorder(
+                    .quackBorder(
                         border = QuackBorder(
-                            width = 1.dp,
                             color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4,
                         ),
                     )
                     .quackClickable(
                         onLongClick = { deleteLongClick(answerIndex) },
                     ) {},
-                text = choiceModel.text,
-                onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
+                value = choiceModel.text,
+                onValueChange = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
                 placeholderText = stringResource(
                     id = R.string.create_problem_answer_placeholder,
                     "$answerNo",
                 ),
-                trailingContent = {
-                    Column(
-                        modifier = Modifier.quackClickable(
-                            onClick = {
-                                setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
-                            },
-                        ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        QuackRoundCheckBox(checked = isChecked)
-
-                        if (isChecked) {
-                            QuackBody3(
-                                modifier = Modifier.padding(top = 2.dp),
-                                color = QuackColor.DuckieOrange,
-                                text = stringResource(id = R.string.answer),
-                            )
-                        }
-                    }
-                },
+                style = QuackTextFieldStyle.Default,
+                // TODO(riflockle7): 꽥꽥 기능 제공 안함
+                // trailingContent = {
+                //     Column(
+                //         modifier = Modifier.quackClickable(
+                //             onClick = {
+                //                 setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
+                //             },
+                //         ),
+                //         horizontalAlignment = Alignment.CenterHorizontally,
+                //     ) {
+                //         QuackRoundCheckBox(checked = isChecked)
+                //
+                //         if (isChecked) {
+                //             QuackText(
+                //                 modifier = Modifier.padding(top = 2.dp),
+                //                 typography = QuackTypography.Body3.change(QuackColor.DuckieOrange),
+                //                 text = stringResource(id = R.string.answer),
+                //             )
+                //         }
+                //     }
+                // },
             )
         }
 
@@ -740,9 +759,10 @@ private fun ChoiceProblemLayout(
 
         if (answers.choices.size < MaximumChoice) {
             QuackSubtitle(
-                modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
+                modifier = Modifier
+                    .quackClickable(onClick = addAnswerClick)
+                    .padding(vertical = 2.dp, horizontal = 4.dp),
                 text = stringResource(id = R.string.create_problem_add_button),
-                onClick = { addAnswerClick() },
             )
         }
     }
@@ -797,10 +817,9 @@ private fun ImageChoiceProblemLayout(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .applyAnimatedQuackBorder(border = QuackBorder(color = QuackColor.Gray4))
-                        .applyAnimatedQuackBorder(
+                        .quackBorder(border = QuackBorder(color = QuackColor.Gray4))
+                        .quackBorder(
                             border = QuackBorder(
-                                width = 1.dp,
                                 color = if (isChecked) {
                                     QuackColor.DuckieOrange
                                 } else {
@@ -824,21 +843,22 @@ private fun ImageChoiceProblemLayout(
                         )
 
                         if (isChecked) {
-                            QuackBody3(
+                            QuackText(
                                 modifier = Modifier.padding(start = 2.dp),
-                                color = QuackColor.DuckieOrange,
+                                typography = QuackTypography.Body3.change(QuackColor.DuckieOrange),
                                 text = stringResource(id = R.string.answer),
                             )
                         }
 
                         Spacer(Modifier.weight(1f))
 
-                        QuackImage(
-                            modifier = Modifier.quackClickable(
-                                onClick = { deleteLongClick(answerIndex) },
-                            ),
-                            src = QuackIcon.Close,
-                            size = DpSize(20.dp, 20.dp),
+                        QuackIcon(
+                            icon = OutlinedGroup.Close,
+                            modifier = Modifier
+                                .quackClickable(
+                                    onClick = { deleteLongClick(answerIndex) },
+                                )
+                                .size(DpSize(20.dp, 20.dp)),
                         )
                     }
 
@@ -846,32 +866,37 @@ private fun ImageChoiceProblemLayout(
                         Box(
                             modifier = Modifier
                                 .quackClickable { answerImageClick(answerIndex) }
-                                .background(color = QuackColor.Gray4.composeColor)
+                                .background(color = QuackColor.Gray4.value)
                                 .padding(52.dp),
                         ) {
-                            QuackImage(
-                                src = QuackIcon.Image,
-                                size = DpSize(32.dp, 32.dp),
+                            QuackIcon(
+                                modifier = Modifier.size(DpSize(32.dp, 32.dp)),
+                                icon = OutlinedGroup.Image,
                             )
                         }
                     } else {
                         QuackImage(
+                            modifier = Modifier
+                                .quackClickable(
+                                    onClick = { answerImageClick(answerIndex) },
+                                    onLongClick = { deleteLongClick(answerIndex) },
+                                )
+                                .size(DpSize(136.dp, 136.dp)),
                             src = answerItem.imageUrl,
-                            size = DpSize(136.dp, 136.dp),
-                            onClick = { answerImageClick(answerIndex) },
-                            onLongClick = { deleteLongClick(answerIndex) },
                         )
                     }
 
-                    QuackBasicTextField(
-                        text = answers.imageChoice[answerIndex].text,
-                        onTextChanged = { newAnswer ->
+                    // TODO(riflockle7): 동작 확인 필요
+                    QuackDefaultTextField(
+                        value = answers.imageChoice[answerIndex].text,
+                        onValueChange = { newAnswer ->
                             answerTextChanged(newAnswer, answerIndex)
                         },
                         placeholderText = stringResource(
                             id = R.string.create_problem_answer_placeholder,
                             "$answerNo",
                         ),
+                        style = QuackTextFieldStyle.Default,
                     )
                 }
             },
@@ -881,9 +906,10 @@ private fun ImageChoiceProblemLayout(
 
         if (answers.imageChoice.size < MaximumChoice) {
             QuackSubtitle(
-                modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
+                modifier = Modifier
+                    .quackClickable(onClick = addAnswerClick)
+                    .padding(vertical = 2.dp, horizontal = 4.dp),
                 text = stringResource(id = R.string.create_problem_add_button),
-                onClick = { addAnswerClick() },
             )
         }
     }
@@ -918,10 +944,12 @@ private fun ShortAnswerProblemLayout(
             onDropdownItemClick,
         )
 
-        QuackBasicTextField(
-            text = answer,
-            onTextChanged = { newAnswer -> answerTextChanged(newAnswer, 0) },
+        // TODO(riflockle7): 동작 확인 필요
+        QuackDefaultTextField(
+            value = answer,
+            onValueChange = { newAnswer -> answerTextChanged(newAnswer, 0) },
             placeholderText = stringResource(id = R.string.create_problem_short_answer_placeholder),
+            style = QuackTextFieldStyle.Default,
         )
     }
 }
