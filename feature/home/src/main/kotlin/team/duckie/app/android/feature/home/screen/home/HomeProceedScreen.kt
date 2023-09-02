@@ -494,9 +494,10 @@ fun ProceedCategoryItemView(categoryItem: String) {
 private fun ProceedViewAllButton(onViewAllClick: () -> Unit) {
     Row(
         modifier = Modifier
-            .quackClickable(onClick = onViewAllClick)
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
+            .clip(RoundedCornerShape(size = 8.dp))
+            .quackClickable(onClick = onViewAllClick)
             .border(
                 width = 1.dp,
                 color = QuackColor.Gray3.value,
