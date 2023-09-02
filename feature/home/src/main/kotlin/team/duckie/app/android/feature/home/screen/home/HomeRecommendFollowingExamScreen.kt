@@ -140,6 +140,7 @@ private fun HomeRecommendFollowingSuccessScreen(
                         vm.changedHomeScreen(HomeStep.toStep(step))
                     },
                     onClickedCreate = navigateToCreateProblem,
+                    onClickedNotice = {},
                 )
             }
 
@@ -279,6 +280,7 @@ private fun HomeFollowingExamNotFoundScreen(
             onClickedCreate = {
                 navigateToCreateProblem()
             },
+            onClickedNotice = {},
         )
         Spacer(space = 60.dp)
         QuackText(

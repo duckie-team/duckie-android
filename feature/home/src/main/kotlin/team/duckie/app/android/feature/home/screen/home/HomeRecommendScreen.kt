@@ -132,6 +132,7 @@ internal fun HomeRecommendScreen(
                     onClickedCreate = {
                         navigateToCreateProblem()
                     },
+                    onClickedNotice = {},
                 )
             }
 
