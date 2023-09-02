@@ -43,7 +43,7 @@ internal fun HomeTopAppBar(
         immutableListOf(
             context.getString(R.string.recommend),
             context.getString(R.string.proceed),
-            // context.getString(R.string.following),
+            context.getString(R.string.following),
         )
     }
 

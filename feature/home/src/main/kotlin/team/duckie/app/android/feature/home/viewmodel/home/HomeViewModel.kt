@@ -125,6 +125,21 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 진행중 탭을 새로고침한다.
+     *
+     * [forceLoading] - PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
+     */
+    fun refreshProceeds(forceLoading: Boolean = false) {
+        viewModelScope.launch {
+            updateHomeProceedRefreshLoading(true)
+            // TODO(riflockle7): 진행중 시험 API 로직 필요
+            // fetchRecommendFollowingExam()
+            if (forceLoading) delay(pullToRefreshMinLoadingDelay)
+            updateHomeProceedRefreshLoading(false)
+        }
+    }
+
     /** 홈 화면의 jumbotron을 가져온다. */
     internal fun fetchJumbotrons() = intent {
         startHomeRecommendLoading()
@@ -284,6 +299,19 @@ internal class HomeViewModel @Inject constructor(
             state.copy(
                 isHomeRecommendFollowingExamRefreshLoading = loading,
                 isHomeRecommendFollowingExamLoading = loading, // for skeleton UI
+                isError = false,
+            )
+        }
+    }
+
+    /** 홈 화면의 진행중 탭의 pull refresh 로딩 상태를 [loading]으로 바꾼다. */
+    private fun updateHomeProceedRefreshLoading(
+        loading: Boolean,
+    ) = intent {
+        reduce {
+            state.copy(
+                isHomeProceedPullRefreshLoading = loading,
+                isHomeProceedLoading = loading, // for skeleton UI
                 isError = false,
             )
         }

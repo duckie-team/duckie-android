@@ -19,6 +19,7 @@
     <string name="follow">팔로우</string>
     <string name="examinee">응시자</string>
     <string name="recommend">추천</string>
+    <string name="proceed">진행중</string>
 
     <string name="try_search">"관심있는 키워드를 검색해보세요!"</string>
     <string name="popular_tag">인기 태그</string>
@@ -66,4 +67,15 @@
     <!-- home -->
     <string name="home_following_exam_not_found_title">팔로우한 유저 중에\n아직 올라온 덕력고사가 없어요.</string>
     <string name="home_following_exam_not_found_subtitle">다른 유저들을 더 찾아보세요!</string>
+
+    <!-- home - proceed -->
+    <string name="home_proceed_title">출제 임박 덕력고사</string>
+    <string name="home_proceed_item_count_down">오픈까지 %s문제!</string>
+    <string name="home_proceed_item_info">%s | %s</string>
+    <string name="home_proceed_item_join_count">%s명 참여</string>
+    <string name="home_proceed_item_problem_count">%s/%s</string>
+    <string name="home_proceed_view_all_button_title">전체보기</string>
+    <string name="home_proceed_banner_title">직접 덕력고사를 열고 싶다면?</string>
+    <string name="home_proceed_banner_submit_button_title">출제 제안하기</string>
+    <string name="home_proceed_category_title">%s,\n이런 덕력고사도 있덕</string>
 </resources>
