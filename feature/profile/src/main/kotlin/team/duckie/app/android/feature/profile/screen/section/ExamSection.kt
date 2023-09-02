@@ -50,8 +50,7 @@ fun ExamSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-            ,
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -85,7 +84,7 @@ fun ExamSection(
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                item{
+                item {
                     Spacer(space = 16.dp)
                 }
                 items(exams) { item ->

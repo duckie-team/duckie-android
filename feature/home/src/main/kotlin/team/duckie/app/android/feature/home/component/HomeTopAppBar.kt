@@ -28,7 +28,7 @@ import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.material.QuackColor as QuackV2Color
 
-@Suppress("UnusedPrivateMember") // 시험 생성하기를 추후에 다시 활용하기 위함
+@Suppress("unused") // 진행중 API 추가 작업을 위함
 @Composable
 internal fun HomeTopAppBar(
     modifier: Modifier = Modifier,
@@ -61,12 +61,6 @@ internal fun HomeTopAppBar(
             onTabSelected = onTabSelected,
             tabStyle = QuackTypography.HeadLine1.change(color = QuackV2Color.Gray2),
         )
-//      TODO(limsaehyun): 시험 생성하기가 가능한 스펙에서 활용
-//      QuackImage(
-//          src = QuackIcon.Create,
-//          onClick = onClickedCreate,
-//          size = HomeIconSize,
-//      )
 
         QuackImage(
             src = R.drawable.home_ic_notice,

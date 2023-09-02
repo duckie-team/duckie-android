@@ -14,6 +14,8 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -24,13 +26,11 @@ import java.util.UUID
  * Media 처리용 유틸 클래스
  * // TODO(riflockle7): 추후 ImageUtil 로 바꿀지 고민
  */
+@AllowMagicNumber("for MediaUtil")
 object MediaUtil {
     private const val maxWidth = 1600
     private const val maxHeight = 1600
     private const val bitmapQuality = 100
-    private const val rotate90 = 90
-    private const val rotate180 = 180
-    private const val rotate270 = 270
 
     /**
      * 업로드할 이미지를 가져온다.
@@ -169,7 +169,7 @@ object MediaUtil {
             bitmap.recycle()
             bmRotated
         } catch (e: OutOfMemoryError) {
-            e.printStackTrace()
+            FirebaseCrashlytics.getInstance().recordException(e)
             null
         }
     }

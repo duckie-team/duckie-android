@@ -10,6 +10,9 @@
     ExperimentalQuackQuackApi::class,
 )
 
+@file:Suppress("unused") // 더미 값, 미구현 된 내용
+@file:AllowMagicNumber("더미 값, 미구현 된 내용")
+
 package team.duckie.app.android.feature.home.screen.home
 
 import androidx.compose.foundation.background
@@ -54,6 +57,7 @@ import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowRightId
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.home.constants.HomeStep
@@ -107,6 +111,7 @@ object HomeProceedTempConstants {
     }
 }
 
+@Suppress("unused") // 더미 값
 @Composable
 internal fun HomeProceedScreen(
     modifier: Modifier = Modifier,
@@ -230,7 +235,7 @@ fun ProceedItemView() {
                         topEnd = 8.dp,
                         bottomEnd = 0.dp,
                         bottomStart = 0.dp,
-                    )
+                    ),
                 ),
         ) {
             // 덕퀴즈/덕질고사 썸네일 이미지
@@ -252,7 +257,7 @@ fun ProceedItemView() {
                             QuackColor.DuckieOrange.value
                         } else {
                             Color(0xFF222222)
-                        }
+                        },
                     )
                     .padding(vertical = 4.dp, horizontal = 8.dp),
                 text = stringResource(
@@ -270,7 +275,7 @@ fun ProceedItemView() {
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(currentExamCount.toFloat())
-                    .background(QuackColor.DuckieOrange.value)
+                    .background(QuackColor.DuckieOrange.value),
             )
 
             // 두 번째 막대 (8:2 비율)
@@ -278,7 +283,7 @@ fun ProceedItemView() {
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(remainCount.toFloat())
-                    .background(QuackColor.Gray3.value)
+                    .background(QuackColor.Gray3.value),
             )
         }
 

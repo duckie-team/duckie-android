@@ -47,6 +47,7 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.dialog.DuckieBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextArea
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.common.compose.util.HandleKeyboardVisibilityWithSheet
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
@@ -62,7 +63,6 @@ import team.duckie.quackquack.material.icon.quackicon.outlined.Close
 import team.duckie.quackquack.material.icon.quackicon.outlined.Share
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
-import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 
 internal const val RANKER_THRESHOLD = 10
 
@@ -191,7 +191,6 @@ private fun ExamResultSuccessScreen(
     state: ExamResultState.Success,
     viewModel: ExamResultViewModel,
 ) {
-
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true, // TODO(limsaehyun) bottomContent가 보이지 않은 현상으로 인해 불가능

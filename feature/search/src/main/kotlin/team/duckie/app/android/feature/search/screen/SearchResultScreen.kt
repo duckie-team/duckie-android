@@ -200,7 +200,7 @@ private fun SearchResultForExam(
                         },
                         onMoreClick = {
                             onMoreClick(exam?.id ?: 0)
-                        }
+                        },
                     )
                 }
             }
