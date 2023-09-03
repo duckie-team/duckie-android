@@ -182,6 +182,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
+    fun nicknameChecking() = intent {
+        reduce { state.copy(profileState = ProfileScreenState.Checking) }
+    }
+
     /** 닉네임을 체크한다. */
     fun checkNickname(nickname: String) {
         val isNicknameRuleError = checkNicknameRule(nickname)

@@ -52,6 +52,7 @@ import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextField
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextFieldState
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.feature.profile.R
 import team.duckie.app.android.feature.profile.component.EditTopAppBar
@@ -160,6 +161,7 @@ internal fun ProfileEditScreen(
                 text = stringResource(R.string.nickname),
                 typography = QuackTypography.Body1.change(color = QuackColor.Gray1),
             )
+            Spacer(space = 16.dp)
             QuackErrorableTextField(
                 modifier = Modifier.skeleton(state.isLoading),
                 text = state.nickname,
@@ -169,12 +171,21 @@ internal fun ProfileEditScreen(
                     }
                 },
                 placeholderText = stringResource(R.string.profile_nickname_placeholder),
-                isError = state.nicknameState.isInValid(),
                 maxLength = MaxNicknameLength,
-                errorText = when (state.nicknameState) {
-                    NicknameState.NicknameRuleError -> stringResource(R.string.profile_nickname_rule_error)
-                    NicknameState.NicknameDuplicateError -> stringResource(R.string.profile_nickname_duplicate_error)
-                    else -> ""
+                textFieldState = when (state.nicknameState) {
+                    NicknameState.NicknameRuleError -> QuackErrorableTextFieldState.Error(
+                        errorText = stringResource(R.string.profile_nickname_rule_error),
+                    )
+
+                    NicknameState.NicknameDuplicateError -> QuackErrorableTextFieldState.Error(
+                        errorText = stringResource(R.string.profile_nickname_duplicate_error),
+                    )
+
+                    NicknameState.Valid -> QuackErrorableTextFieldState.Success(
+                        successText = stringResource(R.string.profile_nickname_valid),
+                    )
+
+                    else -> QuackErrorableTextFieldState.Normal
                 },
                 keyboardActions = KeyboardActions {
                     keyboardController?.hide()
