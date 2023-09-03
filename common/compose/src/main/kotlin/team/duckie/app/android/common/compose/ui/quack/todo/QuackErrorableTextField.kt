@@ -74,7 +74,7 @@ fun QuackErrorableTextField(
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(bottom = 8.dp)
+                            .padding(bottom = 8.dp),
                     ) {
                         if (text.isEmpty()) {
                             QuackText(
@@ -101,7 +101,7 @@ fun QuackErrorableTextField(
                                 } else {
                                     QuackColor.Black
                                 },
-                            )
+                            ),
                         )
                         QuackText(
                             text = "/",
@@ -181,7 +181,8 @@ private fun Modifier.bottomBorder(
                 }
 
                 else -> QuackColor.Success.value
-            }, label = ""
+            },
+                label = "",
         )
         val density = LocalDensity.current
         val strokeWidthPx = density.run { strokeWidth.toPx() }
@@ -194,9 +195,8 @@ private fun Modifier.bottomBorder(
                 color = color,
                 start = Offset(x = 0f, y = height),
                 end = Offset(x = width, y = height),
-                strokeWidth = strokeWidthPx
+                strokeWidth = strokeWidthPx,
             )
         }
-    }
+    },
 )
-

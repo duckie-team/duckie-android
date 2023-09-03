@@ -6,8 +6,10 @@
  */
 
 @file:OptIn(
-    FlowPreview::class, ExperimentalComposeUiApi::class, ExperimentalQuackQuackApi::class,
-    ExperimentalDesignToken::class
+    FlowPreview::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalQuackQuackApi::class,
+    ExperimentalDesignToken::class,
 )
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
 

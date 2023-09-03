@@ -177,11 +177,11 @@ internal fun ProfileEditScreen(
                     )
 
                     NicknameState.NicknameDuplicateError -> QuackErrorableTextFieldState.Error(
-                        errorText = stringResource(R.string.profile_nickname_duplicate_error)
+                        errorText = stringResource(R.string.profile_nickname_duplicate_error),
                     )
 
                     NicknameState.Valid -> QuackErrorableTextFieldState.Success(
-                        successText = stringResource(R.string.profile_nickname_valid)
+                        successText = stringResource(R.string.profile_nickname_valid),
                     )
 
                     else -> QuackErrorableTextFieldState.Normal

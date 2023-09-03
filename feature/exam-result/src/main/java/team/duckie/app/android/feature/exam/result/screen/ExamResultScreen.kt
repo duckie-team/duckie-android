@@ -191,7 +191,6 @@ private fun ExamResultSuccessScreen(
     state: ExamResultState.Success,
     viewModel: ExamResultViewModel,
 ) {
-
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true, // TODO(limsaehyun) bottomContent가 보이지 않은 현상으로 인해 불가능
