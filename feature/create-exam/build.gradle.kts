@@ -33,7 +33,6 @@ dependencies {
         libs.compose.lifecycle.runtime,
         libs.compose.ui.material, // needs for Scaffold
         libs.quack.v2.ui,
-        libs.quack.ui.components, // needs QuackDropDownCard
         libs.kotlin.collections.immutable,
         libs.firebase.crashlytics,
     )

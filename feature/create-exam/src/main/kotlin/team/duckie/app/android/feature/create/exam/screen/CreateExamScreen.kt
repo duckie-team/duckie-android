@@ -22,18 +22,14 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,7 +56,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -72,38 +67,27 @@ import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
-import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
 import team.duckie.app.android.common.kotlin.fastForEach
-import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.create.exam.R
 import team.duckie.app.android.feature.create.exam.common.CreateProblemBottomLayout
-import team.duckie.app.android.feature.create.exam.common.NoLazyGridItems
 import team.duckie.app.android.feature.create.exam.common.PrevAndNextTopAppBar
 import team.duckie.app.android.feature.create.exam.common.getCreateProblemMeasurePolicy
+import team.duckie.app.android.feature.create.exam.common.type.ImageChoiceLayout
+import team.duckie.app.android.feature.create.exam.common.type.ShortAnswerLayout
+import team.duckie.app.android.feature.create.exam.common.type.TextChoiceLayout
 import team.duckie.app.android.feature.create.exam.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.exam.viewmodel.state.CreateProblemPhotoState
 import team.duckie.app.android.feature.create.exam.viewmodel.state.CreateProblemStep
-import team.duckie.quackquack.material.QuackBorder
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
-import team.duckie.quackquack.material.icon.quackicon.outlined.Close
-import team.duckie.quackquack.material.icon.quackicon.outlined.Image
 import team.duckie.quackquack.material.icon.quackicon.outlined.Plus
-import team.duckie.quackquack.material.quackBorder
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackDefaultTextField
-import team.duckie.quackquack.ui.QuackIcon
-import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.QuackTextFieldStyle
-import team.duckie.quackquack.ui.component.QuackDropDownCard
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
-import team.duckie.quackquack.ui.sugar.QuackSubtitle
-import team.duckie.quackquack.ui.trailingIcon
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private const val TopAppBarLayoutId = "CreateProblemScreenTopAppBarLayoutId"
@@ -111,7 +95,6 @@ private const val ContentLayoutId = "CreateProblemScreenContentLayoutId"
 private const val BottomLayoutId = "CreateProblemScreenBottomLayoutId"
 private const val GalleryListLayoutId = "CreateProblemScreenGalleryListLayoutId"
 
-private const val MaximumChoice = 5
 private const val MaximumProblem = 10
 private const val TextFieldMaxLength = 20
 
@@ -297,7 +280,7 @@ internal fun CreateExamScreen(
                             val correctAnswer = state.correctAnswers[questionIndex]
 
                             when (answers) {
-                                is Answer.Short -> ShortAnswerProblemLayout(
+                                is Answer.Short -> ShortAnswerLayout(
                                     questionIndex = questionIndex,
                                     question = question,
                                     titleChanged = { newTitle ->
@@ -346,7 +329,7 @@ internal fun CreateExamScreen(
                                     },
                                 )
 
-                                is Answer.Choice -> ChoiceProblemLayout(
+                                is Answer.Choice -> TextChoiceLayout(
                                     questionIndex = questionIndex,
                                     question = question,
                                     titleChanged = { newTitle ->
@@ -408,7 +391,7 @@ internal fun CreateExamScreen(
                                     },
                                 )
 
-                                is Answer.ImageChoice -> ImageChoiceProblemLayout(
+                                is Answer.ImageChoice -> ImageChoiceLayout(
                                     questionIndex = questionIndex,
                                     question = question,
                                     titleChanged = { newTitle ->
@@ -628,329 +611,6 @@ private fun CoroutineScope.openPhotoPicker(
         keyboard?.hide()
     } else {
         launcher.launch(imagePermission)
-    }
-}
-
-/** 문제 항목 Layout 내 공통 제목 Layout */
-@Composable
-private fun CreateProblemTitleLayout(
-    questionIndex: Int,
-    question: Question?,
-    titleChanged: (String) -> Unit,
-    imageClick: () -> Unit,
-    dropDownTitle: String,
-    onDropdownItemClick: (Int) -> Unit,
-) {
-    // TODO(riflockle7): 동작 확인 필요
-    // TODO(riflockle7): 최상단 Line 없는 TextField 필요
-    QuackDefaultTextField(
-        modifier = Modifier.trailingIcon(
-            icon = OutlinedGroup.Image,
-            onClick = imageClick,
-        ),
-        value = question?.text ?: "",
-        onValueChange = titleChanged,
-        style = QuackTextFieldStyle.Default,
-        placeholderText = stringResource(
-            id = R.string.create_problem_question_placeholder,
-            "${questionIndex + 1}",
-        ),
-    )
-
-    (question as? Question.Image)?.imageUrl?.let {
-        QuackImage(
-            modifier = Modifier
-                .padding(top = 24.dp)
-                .size(DpSize(200.dp, 200.dp)),
-            src = it,
-        )
-    }
-
-    // TODO(riflockle7): border 없는 DropDownCard 필요
-    QuackDropDownCard(
-        modifier = Modifier.padding(top = 24.dp),
-        text = dropDownTitle,
-        onClick = {
-            onDropdownItemClick(questionIndex)
-        },
-    )
-}
-
-/** 객관식/글 Layout */
-@Composable
-@Suppress("unused")
-private fun ChoiceProblemLayout(
-    questionIndex: Int,
-    question: Question?,
-    titleChanged: (String) -> Unit,
-    imageClick: () -> Unit,
-    onDropdownItemClick: (Int) -> Unit,
-    answers: Answer.Choice,
-    answerTextChanged: (String, Int) -> Unit,
-    addAnswerClick: () -> Unit,
-    correctAnswers: String?,
-    setCorrectAnswerClick: (String) -> Unit,
-    deleteLongClick: (Int?) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .quackClickable(
-                onLongClick = { deleteLongClick(null) },
-            ) {},
-    ) {
-        CreateProblemTitleLayout(
-            questionIndex,
-            question,
-            titleChanged,
-            imageClick,
-            answers.type.title,
-            onDropdownItemClick,
-        )
-
-        answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
-            val answerNo = answerIndex + 1
-            val isChecked = correctAnswers == "$answerIndex"
-            QuackDefaultTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-                    .quackBorder(
-                        border = QuackBorder(
-                            color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4,
-                        ),
-                    )
-                    .quackClickable(
-                        onLongClick = { deleteLongClick(answerIndex) },
-                    ) {},
-                value = choiceModel.text,
-                onValueChange = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
-                placeholderText = stringResource(
-                    id = R.string.create_problem_answer_placeholder,
-                    "$answerNo",
-                ),
-                style = QuackTextFieldStyle.Default,
-                // TODO(riflockle7): 꽥꽥 기능 제공 안함
-                // trailingContent = {
-                //     Column(
-                //         modifier = Modifier.quackClickable(
-                //             onClick = {
-                //                 setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
-                //             },
-                //         ),
-                //         horizontalAlignment = Alignment.CenterHorizontally,
-                //     ) {
-                //         QuackRoundCheckBox(checked = isChecked)
-                //
-                //         if (isChecked) {
-                //             QuackText(
-                //                 modifier = Modifier.padding(top = 2.dp),
-                //                 typography = QuackTypography.Body3.change(QuackColor.DuckieOrange),
-                //                 text = stringResource(id = R.string.answer),
-                //             )
-                //         }
-                //     }
-                // },
-            )
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        if (answers.choices.size < MaximumChoice) {
-            QuackSubtitle(
-                modifier = Modifier
-                    .quackClickable(onClick = addAnswerClick)
-                    .padding(vertical = 2.dp, horizontal = 4.dp),
-                text = stringResource(id = R.string.create_problem_add_button),
-            )
-        }
-    }
-}
-
-/**
- * 객관식/사진 Layout
- * // TODO(riflockle7): 정답 체크 연동 필요
- */
-@Composable
-private fun ImageChoiceProblemLayout(
-    questionIndex: Int,
-    question: Question?,
-    titleChanged: (String) -> Unit,
-    imageClick: () -> Unit,
-    onDropdownItemClick: (Int) -> Unit,
-    answers: Answer.ImageChoice,
-    answerTextChanged: (String, Int) -> Unit,
-    answerImageClick: (Int) -> Unit,
-    addAnswerClick: () -> Unit,
-    correctAnswers: String?,
-    setCorrectAnswerClick: (String) -> Unit,
-    deleteLongClick: (Int?) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .quackClickable(
-                onLongClick = { deleteLongClick(null) },
-            ) {},
-    ) {
-        CreateProblemTitleLayout(
-            questionIndex,
-            question,
-            titleChanged,
-            imageClick,
-            answers.type.title,
-            onDropdownItemClick,
-        )
-
-        NoLazyGridItems(
-            count = answers.imageChoice.size,
-            nColumns = 2,
-            paddingValues = PaddingValues(top = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            itemContent = { answerIndex ->
-                val answerNo = answerIndex + 1
-                val answerItem = answers.imageChoice[answerIndex]
-                val isChecked = correctAnswers == "$answerIndex"
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .quackBorder(border = QuackBorder(color = QuackColor.Gray4))
-                        .quackBorder(
-                            border = QuackBorder(
-                                color = if (isChecked) {
-                                    QuackColor.DuckieOrange
-                                } else {
-                                    QuackColor.Gray4
-                                },
-                            ),
-                        )
-                        .padding(12.dp),
-                ) {
-                    Row(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        QuackRoundCheckBox(
-                            modifier = Modifier.quackClickable(
-                                onClick = {
-                                    setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
-                                },
-                            ),
-                            checked = isChecked,
-                        )
-
-                        if (isChecked) {
-                            QuackText(
-                                modifier = Modifier.padding(start = 2.dp),
-                                typography = QuackTypography.Body3.change(QuackColor.DuckieOrange),
-                                text = stringResource(id = R.string.answer),
-                            )
-                        }
-
-                        Spacer(Modifier.weight(1f))
-
-                        QuackIcon(
-                            icon = OutlinedGroup.Close,
-                            modifier = Modifier
-                                .quackClickable(
-                                    onClick = { deleteLongClick(answerIndex) },
-                                )
-                                .size(DpSize(20.dp, 20.dp)),
-                        )
-                    }
-
-                    if (answerItem.imageUrl.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .quackClickable { answerImageClick(answerIndex) }
-                                .background(color = QuackColor.Gray4.value)
-                                .padding(52.dp),
-                        ) {
-                            QuackIcon(
-                                modifier = Modifier.size(DpSize(32.dp, 32.dp)),
-                                icon = OutlinedGroup.Image,
-                            )
-                        }
-                    } else {
-                        QuackImage(
-                            modifier = Modifier
-                                .quackClickable(
-                                    onClick = { answerImageClick(answerIndex) },
-                                    onLongClick = { deleteLongClick(answerIndex) },
-                                )
-                                .size(DpSize(136.dp, 136.dp)),
-                            src = answerItem.imageUrl,
-                        )
-                    }
-
-                    // TODO(riflockle7): 동작 확인 필요
-                    QuackDefaultTextField(
-                        value = answers.imageChoice[answerIndex].text,
-                        onValueChange = { newAnswer ->
-                            answerTextChanged(newAnswer, answerIndex)
-                        },
-                        placeholderText = stringResource(
-                            id = R.string.create_problem_answer_placeholder,
-                            "$answerNo",
-                        ),
-                        style = QuackTextFieldStyle.Default,
-                    )
-                }
-            },
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        if (answers.imageChoice.size < MaximumChoice) {
-            QuackSubtitle(
-                modifier = Modifier
-                    .quackClickable(onClick = addAnswerClick)
-                    .padding(vertical = 2.dp, horizontal = 4.dp),
-                text = stringResource(id = R.string.create_problem_add_button),
-            )
-        }
-    }
-}
-
-/** 주관식 Layout */
-@Composable
-private fun ShortAnswerProblemLayout(
-    questionIndex: Int,
-    question: Question?,
-    titleChanged: (String) -> Unit,
-    imageClick: () -> Unit,
-    onDropdownItemClick: (Int) -> Unit,
-    answer: String,
-    answerTextChanged: (String, Int) -> Unit,
-    deleteLongClick: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .quackClickable(
-                onLongClick = { deleteLongClick() },
-            ) {},
-    ) {
-        CreateProblemTitleLayout(
-            questionIndex,
-            question,
-            titleChanged,
-            imageClick,
-            Answer.Type.ShortAnswer.title,
-            onDropdownItemClick,
-        )
-
-        // TODO(riflockle7): 동작 확인 필요
-        QuackDefaultTextField(
-            value = answer,
-            onValueChange = { newAnswer -> answerTextChanged(newAnswer, 0) },
-            placeholderText = stringResource(id = R.string.create_problem_short_answer_placeholder),
-            style = QuackTextFieldStyle.Default,
-        )
     }
 }
 

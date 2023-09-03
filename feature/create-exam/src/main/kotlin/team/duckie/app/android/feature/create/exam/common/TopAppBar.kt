@@ -34,7 +34,7 @@ internal fun PrevAndNextTopAppBar(
     trailingTextEnabled: Boolean = false,
 ) { // TODO(EvergreenTree97): enabled 속성 필요
     QuackTopAppBar(
-        modifier = modifier,
+        modifier = modifier.padding(12.dp),
         leadingIcon = OutlinedGroup.ArrowBack,
         leadingText = stringResource(id = R.string.create_problem),
         onLeadingIconClick = onLeadingIconClick,
