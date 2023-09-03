@@ -72,6 +72,7 @@ import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.PhotoPicker
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackDropDownCard
 import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
 import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
@@ -100,7 +101,6 @@ import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.QuackTextFieldStyle
-import team.duckie.quackquack.ui.component.QuackDropDownCard
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.sugar.QuackSubtitle
 import team.duckie.quackquack.ui.trailingIcon
