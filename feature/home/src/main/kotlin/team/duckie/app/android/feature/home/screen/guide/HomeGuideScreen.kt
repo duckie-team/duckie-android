@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -142,7 +143,10 @@ private fun HomeGuideStartScreen(
         QuackText(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(id = R.string.guide_start_message),
-            typography = QuackTypography.HeadLine1.change(color = QuackColor.White),
+            typography = QuackTypography.HeadLine1.change(
+                color = QuackColor.White,
+                textAlign = TextAlign.Center,
+            ),
         )
         Spacer(space = 20.dp)
         QuackButton(

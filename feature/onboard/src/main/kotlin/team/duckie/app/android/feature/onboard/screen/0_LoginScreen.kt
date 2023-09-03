@@ -236,7 +236,10 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
         QuackText(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(R.string.kakaologin_login_terms),
-            typography = QuackTypography.Body3.change(color = QuackColor.Gray2),
+            typography = QuackTypography.Body3.change(
+                color = QuackColor.Gray2,
+                textAlign = TextAlign.Center,
+            ),
         )
     }
 }
