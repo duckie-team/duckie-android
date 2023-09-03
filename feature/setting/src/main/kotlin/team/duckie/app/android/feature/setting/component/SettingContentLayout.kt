@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.util.fillMaxScreenWidth
 import team.duckie.app.android.feature.setting.constans.SettingDesignToken
 import team.duckie.quackquack.material.QuackTypography
@@ -62,6 +63,7 @@ internal fun SettingContentLayout(
                 typography = SettingHorizontalResultTypography,
             )
         }
+        Spacer(weight = 1f)
         if (trailingText != null) {
             QuackText(
                 modifier = Modifier
