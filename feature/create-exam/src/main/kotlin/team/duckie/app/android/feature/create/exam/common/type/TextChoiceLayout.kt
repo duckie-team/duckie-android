@@ -5,8 +5,10 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalDesignToken::class, ExperimentalDesignToken::class,
-    ExperimentalQuackQuackApi::class
+@file:OptIn(
+    ExperimentalDesignToken::class,
+    ExperimentalDesignToken::class,
+    ExperimentalQuackQuackApi::class,
 )
 
 package team.duckie.app.android.feature.create.exam.common.type
@@ -125,4 +127,3 @@ internal fun TextChoiceLayout(
         }
     }
 }
-
