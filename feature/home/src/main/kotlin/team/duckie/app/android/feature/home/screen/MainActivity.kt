@@ -110,7 +110,7 @@ class MainActivity : BaseActivity() {
                     finish()
                 }
             }
-
+            
             QuackTheme {
                 ReportDialog(
                     visible = state.reportDialogVisible,

@@ -110,6 +110,12 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    fun saveJumbotronPage(page: Int) = intent {
+        reduce {
+            state.copy(jumbotronPage = page)
+        }
+    }
+
     /**
      * 팔로잉 추천 탭을 새로고침한다.
      * [forceLoading] - PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
