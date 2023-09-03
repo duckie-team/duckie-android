@@ -200,7 +200,9 @@ private object QuackTopAppBarDefaults {
                         .expendedQuackClickable(
                             rippleEnabled = true,
                             onClick = onIconClick,
-                        ),
+                        )
+                        .size(DpSize(44.dp, 44.dp))
+                        .padding(10.dp),
                     icon = icon,
                 )
             }
