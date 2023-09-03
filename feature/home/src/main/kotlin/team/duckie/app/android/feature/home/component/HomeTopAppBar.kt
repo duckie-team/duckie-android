@@ -24,7 +24,10 @@ import okhttp3.internal.immutableListOf
 import team.duckie.app.android.common.compose.ui.TextTabLayout
 import team.duckie.app.android.feature.home.R
 import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
+import team.duckie.quackquack.material.icon.quackicon.outlined.Create
 import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.material.QuackColor as QuackV2Color
 
@@ -67,6 +70,14 @@ internal fun HomeTopAppBar(
             modifier = Modifier
                 .quackClickable(onClick = onClickedNotice)
                 .size(DpSize(24.dp, 24.dp)),
+        )
+
+        // TODO(riflockle7): 임시로 활성화
+        QuackIcon(
+            modifier = Modifier
+                .quackClickable(onClick = onClickedCreate)
+                .size(DpSize(24.dp, 24.dp)),
+            icon = OutlinedGroup.Create,
         )
     }
 }
