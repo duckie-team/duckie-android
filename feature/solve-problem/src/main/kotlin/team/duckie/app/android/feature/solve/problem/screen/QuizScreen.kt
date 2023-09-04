@@ -123,7 +123,7 @@ internal fun QuizScreen(
                 if (keyboardVisible.value) {
                     keyboard?.hide()
                 }
-            }
+            },
         ),
         content = {
             TimerTopBar(

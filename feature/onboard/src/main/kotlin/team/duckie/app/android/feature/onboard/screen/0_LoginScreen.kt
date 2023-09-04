@@ -131,7 +131,7 @@ private fun LoginScreenWelcome() {
             text = stringResource(R.string.kakaologin_welcome_message),
             typography = QuackTypography.HeadLine2.change(
                 textAlign = TextAlign.Center,
-            )
+            ),
         )
     }
 }

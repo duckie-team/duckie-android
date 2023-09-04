@@ -46,7 +46,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
@@ -129,7 +128,6 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 
 @Composable
 internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
-    val keyboard = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 
     var isLoadingToFinish by remember { mutableStateOf(false) }

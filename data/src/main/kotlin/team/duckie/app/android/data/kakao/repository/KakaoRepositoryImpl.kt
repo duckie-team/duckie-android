@@ -25,7 +25,7 @@ import kotlin.coroutines.resume
 private val KakaoLoginException = IllegalStateException("Kakao API response is nothing.")
 
 private val KakaoCancelledException = DuckieThirdPartyException(
-    code = ExceptionCode.KAKAO_CANCELLED
+    code = ExceptionCode.KAKAO_CANCELLED,
 )
 
 private val KakaoTalkNotSupportException = DuckieThirdPartyException(

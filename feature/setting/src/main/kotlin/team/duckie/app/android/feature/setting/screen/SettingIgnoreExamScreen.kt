@@ -41,7 +41,7 @@ internal fun SettingIgnoreExamScreen(
             QuackText(
                 text = stringResource(id = R.string.setting_ignore_exam_not_found),
                 typography = QuackTypography.HeadLine1.change(
-                    color = QuackColor.DuckieOrange
+                    color = QuackColor.DuckieOrange,
                 ),
             )
         }

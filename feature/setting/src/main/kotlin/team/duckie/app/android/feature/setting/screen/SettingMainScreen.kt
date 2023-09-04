@@ -55,7 +55,7 @@ internal fun SettingMainScreen(
                 typography = QuackTypography.Body1,
                 onClick = {
                     toast.invoke("개발 중인 기능입니다!") // TODO(limsaehyun) 알림 develop 필요
-                }
+                },
             )
             QuackMaxWidthDivider()
         }

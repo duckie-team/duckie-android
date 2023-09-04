@@ -73,7 +73,7 @@ fun ViewAllScreen(
                 .padding(horizontal = 16.dp),
             columns = GridCells.Fixed(GRID_COUNT),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(40.dp)
+            verticalArrangement = Arrangement.spacedBy(40.dp),
         ) {
             when (examType) {
                 ExamType.Heart, ExamType.Created -> {

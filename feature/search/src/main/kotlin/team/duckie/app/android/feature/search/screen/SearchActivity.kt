@@ -140,7 +140,7 @@ class SearchActivity : BaseActivity() {
             QuackTheme(
                 plugins = rememberQuackPlugins {
                     +QuackTextFieldFontFamilyRemovalPlugin
-                }
+                },
             ) {
                 ReportDialog(
                     visible = state.reportDialogVisible,
