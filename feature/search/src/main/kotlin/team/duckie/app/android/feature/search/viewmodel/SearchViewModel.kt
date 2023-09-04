@@ -21,6 +21,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
@@ -74,6 +75,9 @@ internal class SearchViewModel @Inject constructor(
         MutableStateFlow<PagingData<SearchState.SearchUser>>(PagingData.empty())
     val searchUsers: Flow<PagingData<SearchState.SearchUser>> = _searchUsers
 
+    private val _searchText = MutableStateFlow("")
+    val searchText: StateFlow<String> = _searchText
+
     init {
         initState()
     }
@@ -98,7 +102,7 @@ internal class SearchViewModel @Inject constructor(
     ).apply {
         intent {
             this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
-                refreshSearchStep(keyword = state.searchKeyword)
+                refreshSearchStep(keyword = _searchText.value)
                 // TODO(limsaehyun): 추후 추천 검색어 비즈니스 로직을 이곳에서 작업해야 함
             }
         }
@@ -226,10 +230,9 @@ internal class SearchViewModel @Inject constructor(
     fun updateSearchKeyword(
         keyword: String,
         debounce: Boolean = true,
-    ) = intent {
-        reduce {
-            state.copy(searchKeyword = keyword)
-        }.run {
+    ) {
+        viewModelScope.launch {
+            _searchText.value = keyword
             recommendKeywords(query = keyword)
             if (!debounce) refreshSearchStep(keyword = keyword)
         }
@@ -245,12 +248,12 @@ internal class SearchViewModel @Inject constructor(
         if (keyword.isEmpty()) {
             navigateSearchStep(
                 step = SearchStep.Search,
-                keyword = state.searchKeyword,
+                keyword = _searchText.value,
             )
         } else {
             navigateSearchStep(
                 step = SearchStep.SearchResult,
-                keyword = state.searchKeyword,
+                keyword = _searchText.value,
             )
         }
     }
