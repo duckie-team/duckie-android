@@ -89,17 +89,16 @@ internal fun HomeRecommendScreen(
 ) {
     val pageState = rememberPagerState(
         pageCount = { state.jumbotrons.size },
+        initialPage = state.jumbotronPage,
     )
 
     LaunchedEffect(key1 = pageState.currentPage) {
-        while (true) {
-            delay(JumbotronSwipeInterval)
-            withContext(NonCancellable) {
-                if (pageState.isLastPage) {
-                    pageState.animateScrollToPage(0)
-                } else {
-                    pageState.animateScrollToPage(pageState.currentPage + 1)
-                }
+        delay(JumbotronSwipeInterval)
+        withContext(NonCancellable) {
+            if (pageState.isLastPage) {
+                pageState.animateScrollToPage(0.also(homeViewModel::saveJumbotronPage))
+            } else {
+                pageState.animateScrollToPage((pageState.currentPage + 1).also(homeViewModel::saveJumbotronPage))
             }
         }
     }

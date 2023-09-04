@@ -162,11 +162,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        myPageViewModel.getUserProfile()
-    }
-
     private fun startedGuide(intent: Intent) {
         intent.getBooleanExtra(Extras.StartGuide, false).also { start ->
             if (start) {

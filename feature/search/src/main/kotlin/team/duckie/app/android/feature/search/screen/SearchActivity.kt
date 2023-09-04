@@ -33,6 +33,7 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -42,6 +43,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -111,6 +113,7 @@ class SearchActivity : BaseActivity() {
             val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
             val coroutineScope = rememberCoroutineScope()
             val keyboardController = LocalSoftwareKeyboardController.current
+            val searchText by vm.searchText.collectAsStateWithLifecycle()
 
             vm.searchUsers.collectAndHandleState(handleLoadStates = vm::checkError)
             val searchExams =
@@ -159,7 +162,7 @@ class SearchActivity : BaseActivity() {
                             modifier = Modifier.background(QuackColor.White.value),
                         ) {
                             SearchTextFieldTopBar(
-                                searchKeyword = state.searchKeyword,
+                                searchKeyword = searchText,
                                 onSearchKeywordChanged = { keyword ->
                                     vm.updateSearchKeyword(keyword = keyword)
                                 },
@@ -187,7 +190,7 @@ class SearchActivity : BaseActivity() {
                                                     .statusBarsPadding(),
                                                 false,
                                                 onRetryClick = {
-                                                    vm.fetchSearchExams(state.searchKeyword)
+                                                    vm.fetchSearchExams(searchText)
                                                 },
                                             )
                                         } else if (state.isSearchUserError &&
@@ -199,7 +202,7 @@ class SearchActivity : BaseActivity() {
                                                     .statusBarsPadding(),
                                                 false,
                                                 onRetryClick = {
-                                                    vm.fetchSearchUsers(state.searchKeyword)
+                                                    vm.fetchSearchUsers(searchText)
                                                 },
                                             )
                                         } else {
