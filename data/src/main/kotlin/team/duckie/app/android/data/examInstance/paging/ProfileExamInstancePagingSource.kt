@@ -36,7 +36,7 @@ class ProfileExamInstancePagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<Int, ProfileExamInstance>): Int? {
-        return ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2)
-            .coerceAtLeast(0)
+        return ((state.anchorPosition ?: STARTING_KEY) - state.config.initialLoadSize / 2)
+            .coerceAtLeast(STARTING_KEY)
     }
 }
