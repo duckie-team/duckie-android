@@ -110,7 +110,7 @@ class MainActivity : BaseActivity() {
                     finish()
                 }
             }
-            
+
             QuackTheme {
                 ReportDialog(
                     visible = state.reportDialogVisible,
@@ -160,11 +160,6 @@ class MainActivity : BaseActivity() {
                 )
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        myPageViewModel.getUserProfile()
     }
 
     private fun startedGuide(intent: Intent) {
