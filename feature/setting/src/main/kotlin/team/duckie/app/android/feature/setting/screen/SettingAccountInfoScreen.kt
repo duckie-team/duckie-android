@@ -7,22 +7,14 @@
 
 package team.duckie.app.android.feature.setting.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -30,14 +22,10 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
-import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
 import team.duckie.app.android.feature.setting.constans.SettingDesignToken
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.ui.QuackImage
-import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 private val KakaoColor: Color = Color(0xFFFEE500)

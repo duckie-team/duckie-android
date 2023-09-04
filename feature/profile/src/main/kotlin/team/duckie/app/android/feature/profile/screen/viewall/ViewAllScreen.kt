@@ -43,7 +43,7 @@ private const val GRID_COUNT: Int = 2
 private fun LazyGridScope.spaceItem(maxIndex: Int) {
     val count = maxIndex % GRID_COUNT + 1
     repeat(count) {
-        item {  }
+        item { }
     }
 }
 

@@ -7,7 +7,6 @@
 
 package team.duckie.app.android.feature.setting.screen
 
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -27,7 +26,6 @@ import team.duckie.app.android.feature.setting.component.SettingContentLayout
 import team.duckie.app.android.feature.setting.constans.SettingType
 import team.duckie.app.android.feature.setting.viewmodel.SettingViewModel
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.material.quackClickable
 
 @Composable
 internal fun SettingMainScreen(

@@ -32,7 +32,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -45,8 +44,6 @@ import team.duckie.app.android.feature.home.viewmodel.guide.HomeGuideViewModel
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackButton
-import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 

@@ -11,14 +11,12 @@ package team.duckie.app.android.common.compose
 
 import android.graphics.Rect
 import android.view.ViewTreeObserver
-import androidx.compose.material.BottomSheetState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,7 +71,6 @@ fun Modifier.composedWithKeyboardVisibility(
         .composed { if (keyboardVisible.value) whenKeyboardVisible() else this }
         .composed { if (!keyboardVisible.value) whenKeyboardHidden() else this }
 }
-
 
 @Composable
 fun HideKeyboardWhenBottomSheetHidden(sheetState: ModalBottomSheetState) {

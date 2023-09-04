@@ -79,8 +79,6 @@ import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackButton
-import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi

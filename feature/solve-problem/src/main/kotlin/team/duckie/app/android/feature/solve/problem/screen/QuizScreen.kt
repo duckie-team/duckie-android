@@ -120,7 +120,7 @@ internal fun QuizScreen(
         modifier = Modifier.quackClickable(
             rippleEnabled = false,
             onClick = {
-                if(keyboardVisible.value) {
+                if (keyboardVisible.value) {
                     keyboard?.hide()
                 }
             }

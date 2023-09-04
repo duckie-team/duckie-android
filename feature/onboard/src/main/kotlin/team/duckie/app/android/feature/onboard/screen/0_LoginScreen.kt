@@ -47,7 +47,6 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
 @Suppress("UnusedPrivateMember", "unused")
 private val currentStep = OnboardStep.Login

@@ -38,4 +38,3 @@ fun <T : Any> itemsPagingKey(
  */
 fun Int?.getUniqueKey(secondId: Int): String =
     this.toString() + secondId
-

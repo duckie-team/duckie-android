@@ -84,7 +84,7 @@ class KakaoRepositoryImpl @Inject constructor(
             UserApiClient.instance.loginWithKakaoAccount(activityContext) { token, error ->
                 continuation.resume(
                     when {
-                        error != null -> when(error) {
+                        error != null -> when (error) {
                             is ClientError -> failure(filterKakaoClientError(error))
                             else -> failure(error)
                         }
