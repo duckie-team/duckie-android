@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -59,6 +60,7 @@ import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.android.ui.popStringExtra
 import team.duckie.app.android.common.compose.collectAndHandleState
+import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.DuckieCircularProgressIndicator
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.Spacer
@@ -118,7 +120,8 @@ class SearchActivity : BaseActivity() {
             val searchText by vm.searchText.collectAsStateWithLifecycle()
 
             vm.searchUsers.collectAndHandleState(handleLoadStates = vm::checkError)
-            val searchExams = vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
+            val searchExams =
+                vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
 
             LaunchedEffect(key1 = vm) {
                 vm.container.sideEffectFlow
@@ -128,8 +131,10 @@ class SearchActivity : BaseActivity() {
                     .launchIn(this)
             }
 
-            LaunchedEffect(Unit) {
-                focusRequester.requestFocus()
+            LaunchedEffect(key1 = state.searchAutoFocusing) {
+                if (state.searchAutoFocusing) {
+                    focusRequester.requestFocus()
+                }
             }
 
             QuackTheme(
@@ -143,7 +148,10 @@ class SearchActivity : BaseActivity() {
                     onDismissRequest = { vm.updateReportDialogVisible(false) },
                 )
                 DuckieSelectableBottomSheetDialog(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .systemBarsPadding()
+                        .navigationBarsPadding(),
                     bottomSheetState = bottomSheetDialogState,
                     closeSheet = {
                         coroutineScope.launch {
@@ -160,12 +168,11 @@ class SearchActivity : BaseActivity() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .systemBarsPadding(),
+                            .background(QuackColor.White.value),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Column(
-                            modifier = Modifier.background(QuackColor.White.value),
-                        ) {
+                        Column {
+                            systemBarPaddings
                             SearchTextFieldTopBar(
                                 searchKeyword = searchText,
                                 onSearchKeywordChanged = { keyword ->
