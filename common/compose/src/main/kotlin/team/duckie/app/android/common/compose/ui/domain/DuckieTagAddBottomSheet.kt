@@ -229,7 +229,7 @@ private fun DuckieTagAddBottomSheetContent(
             trailingIconOnClick = ::updateTagInput,
             keyboardActions = KeyboardActions { updateTagInput() },
             trailingIconTint = blackAndPrimaryColor(tagInput).value,
-            paddingValues = PaddingValues(all = 16.dp)
+            paddingValues = PaddingValues(all = 16.dp),
         )
         ImeSpacer()
     }

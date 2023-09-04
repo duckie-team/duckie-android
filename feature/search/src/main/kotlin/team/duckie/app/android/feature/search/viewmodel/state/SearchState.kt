@@ -41,6 +41,7 @@ internal data class SearchState(
     val targetExamId: Int = 0,
     val bottomSheetVisible: Boolean = false,
     val reportDialogVisible: Boolean = false,
+    val searchAutoFocusing: Boolean = false,
 ) {
     data class SearchUser(
         val userId: Int,

@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.search.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
@@ -32,6 +33,7 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.android.ui.const.Debounce
+import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.domain.exam.model.Exam
@@ -64,6 +66,7 @@ internal class SearchViewModel @Inject constructor(
     private val followUseCase: FollowUseCase,
     private val getMeUseCase: GetMeUseCase,
     private val reportUseCase: ReportUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<SearchState, SearchSideEffect>, ViewModel() {
 
     override val container = container<SearchState, SearchSideEffect>(SearchState())
@@ -80,6 +83,13 @@ internal class SearchViewModel @Inject constructor(
 
     init {
         initState()
+        getAutoFocusing()
+    }
+
+    private fun getAutoFocusing() = intent {
+        val autoFocusing = savedStateHandle.getStateFlow(Extras.AutoFocusing, true).value
+
+        reduce { state.copy(searchAutoFocusing = autoFocusing) }
     }
 
     /** [SearchViewModel]의 초기 상태를 설정한다. */

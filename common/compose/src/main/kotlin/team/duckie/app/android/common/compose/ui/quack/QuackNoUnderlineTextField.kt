@@ -74,7 +74,7 @@ fun QuackNoUnderlineTextField(
         top = 8.dp,
         bottom = 8.dp,
         start = 12.dp,
-        end = 12.dp
+        end = 12.dp,
     ),
     startPadding: Dp = 0.dp,
     leadingIconOnClick: (() -> Unit)? = null,

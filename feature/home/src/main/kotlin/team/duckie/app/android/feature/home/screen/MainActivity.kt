@@ -181,6 +181,7 @@ class MainActivity : BaseActivity() {
                 startActivityWithAnimation<SearchActivity>(
                     intentBuilder = {
                         putExtra(Extras.SearchTag, sideEffect.searchTag)
+                        putExtra(Extras.AutoFocusing, sideEffect.autoFocusing)
                     },
                 )
             }

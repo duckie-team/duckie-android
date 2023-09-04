@@ -41,7 +41,7 @@ internal fun SettingIgnoreUserScreen(
             QuackText(
                 text = stringResource(id = R.string.setting_ignore_user_not_found),
                 typography = QuackTypography.HeadLine1.change(
-                    color = QuackColor.DuckieOrange
+                    color = QuackColor.DuckieOrange,
                 ),
             )
         }
