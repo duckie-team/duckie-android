@@ -123,7 +123,7 @@ internal fun ChallengeComment(
     showCommentSheet: () -> Unit,
 ) {
     val animateHeartColor =
-        animateQuackColorAsState(targetValue = if (wrongComment.isHeart) QuackColor.Gray1 else QuackColor.Gray2)
+        animateQuackColorAsState(targetValue = if (wrongComment.isHeart)QuackColor.Gray1 else QuackColor.Gray2)
 
     Row(
         modifier = modifier

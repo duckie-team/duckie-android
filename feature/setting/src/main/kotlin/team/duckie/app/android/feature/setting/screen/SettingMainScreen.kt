@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
@@ -33,6 +34,7 @@ internal fun SettingMainScreen(
 ) {
     val userSettings = SettingType.userSettings
     val otherSettings = SettingType.otherSettings
+    val toast = rememberToast()
 
     LazyColumn {
         titleSection(title = R.string.user_settings)
@@ -47,9 +49,13 @@ internal fun SettingMainScreen(
             Spacer(modifier = Modifier.height(12.dp))
             QuackMaxWidthDivider()
             SettingContentLayout(
-                modifier = Modifier.padding(vertical = 12.dp),
+                modifier = Modifier
+                    .padding(vertical = 12.dp),
                 title = stringResource(id = R.string.notification),
                 typography = QuackTypography.Body1,
+                onClick = {
+                    toast.invoke("개발 중인 기능입니다!") // TODO(limsaehyun) 알림 develop 필요
+                }
             )
             QuackMaxWidthDivider()
         }

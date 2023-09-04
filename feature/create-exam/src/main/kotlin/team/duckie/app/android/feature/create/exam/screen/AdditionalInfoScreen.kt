@@ -39,14 +39,12 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,6 +62,7 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
+import team.duckie.app.android.common.compose.HideKeyboardWhenBottomSheetHidden
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
@@ -163,14 +162,7 @@ internal fun AdditionalInformationScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        val sheetStateFlow = snapshotFlow { sheetState.currentValue }
-        sheetStateFlow.collect { state ->
-            if (state == ModalBottomSheetValue.Hidden) {
-                keyboard?.hide()
-            }
-        }
-    }
+    HideKeyboardWhenBottomSheetHidden(sheetState)
 
     ModalBottomSheetLayout(
         modifier = modifier,

@@ -48,8 +48,10 @@ import team.duckie.app.android.common.compose.invisible
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.ImeSpacer
+import team.duckie.app.android.common.compose.ui.QuackDivider
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.ui.quack.blackAndPrimaryColor
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackCircleTag
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.common.kotlin.takeBy
@@ -216,17 +218,18 @@ private fun DuckieTagAddBottomSheetContent(
                 }
             }
         }
-
+        QuackDivider()
         QuackNoUnderlineTextField(
             text = tagInput,
             onTextChanged = {
                 tagInput = it.takeBy(TagTitleMaxLength, tagInput)
             },
             placeholderText = stringResource(R.string.tag_add_manual_placeholder),
-            trailingEndPadding = 16.dp,
             trailingIcon = QuackIcon.ArrowSendId,
             trailingIconOnClick = ::updateTagInput,
             keyboardActions = KeyboardActions { updateTagInput() },
+            trailingIconTint = blackAndPrimaryColor(tagInput).value,
+            paddingValues = PaddingValues(all = 16.dp)
         )
         ImeSpacer()
     }

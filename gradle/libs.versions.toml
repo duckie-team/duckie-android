@@ -115,6 +115,7 @@ quack-lint-compose = "1.0.2"
 
 # quack v2
 quack-v2-ui = "2.0.0-alpha11"
+quack-v2-ui-plugin-interceptor-textfield ="2.0.0-alpha01"
 
 # test
 test-strikt = "0.34.1"
@@ -258,6 +259,7 @@ quack-lint-quack = { module = "team.duckie.quack:quack-lint-quack", version.ref 
 quack-lint-compose = { module = "team.duckie.quack:quack-lint-compose", version.ref = "quack-lint-compose" }
 
 quack-v2-ui = { module = "team.duckie.quackquack.ui:ui", version.ref = "quack-v2-ui" }
+quack-v2-ui-plugin-interceptor-textfield = { module = "team.duckie.quackquack.ui:ui-plugin-interceptor-textfield", version.ref = "quack-v2-ui-plugin-interceptor-textfield"}
 
 test-strikt = { module = "io.strikt:strikt-core", version.ref = "test-strikt" }
 test-junit-core = { module = "junit:junit", version.ref = "test-junit-core" }

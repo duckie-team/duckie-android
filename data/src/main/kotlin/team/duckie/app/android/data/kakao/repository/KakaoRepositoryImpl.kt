@@ -9,6 +9,8 @@ package team.duckie.app.android.data.kakao.repository
 
 import android.content.Context
 import com.kakao.sdk.common.model.AuthError
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -21,6 +23,10 @@ import kotlin.Result.Companion.success
 import kotlin.coroutines.resume
 
 private val KakaoLoginException = IllegalStateException("Kakao API response is nothing.")
+
+private val KakaoCancelledException = DuckieThirdPartyException(
+    code = ExceptionCode.KAKAO_CANCELLED
+)
 
 private val KakaoTalkNotSupportException = DuckieThirdPartyException(
     code = ExceptionCode.KAKAOTALK_NOT_SUPPORT_EXCEPTION,
@@ -57,6 +63,10 @@ class KakaoRepositoryImpl @Inject constructor(
                                     }
                                 }
 
+                                is ClientError -> {
+                                    failure(filterKakaoClientError(error))
+                                }
+
                                 else -> failure(error)
                             }
                         }
@@ -74,12 +84,22 @@ class KakaoRepositoryImpl @Inject constructor(
             UserApiClient.instance.loginWithKakaoAccount(activityContext) { token, error ->
                 continuation.resume(
                     when {
-                        error != null -> failure(error)
+                        error != null -> when (error) {
+                            is ClientError -> failure(filterKakaoClientError(error))
+                            else -> failure(error)
+                        }
                         token != null -> success(token.accessToken)
                         else -> failure(KakaoLoginException)
                     },
                 )
             }
         }.getOrThrow()
+    }
+
+    private fun filterKakaoClientError(clientError: ClientError): RuntimeException {
+        return when (clientError.reason) {
+            ClientErrorCause.Cancelled -> KakaoCancelledException
+            else -> clientError
+        }
     }
 }

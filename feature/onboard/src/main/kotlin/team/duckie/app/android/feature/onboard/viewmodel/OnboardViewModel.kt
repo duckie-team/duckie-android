@@ -35,6 +35,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.android.permission.PermissionCompat
 import team.duckie.app.android.common.android.savedstate.SaveableMutableStateFlow
 import team.duckie.app.android.common.android.viewmodel.context
+import team.duckie.app.android.common.kotlin.exception.isKakaoCancelled
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.JoinUseCase
@@ -375,7 +376,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         additinal: suspend (exception: Throwable) -> Unit = {},
     ) = intent {
         onFailure { exception ->
-            postSideEffect(OnboardSideEffect.ReportError(exception))
+            when {
+                exception.isKakaoCancelled -> return@onFailure // this is not error
+                else -> postSideEffect(OnboardSideEffect.ReportError(exception))
+            }
             additinal(exception)
         }
     }

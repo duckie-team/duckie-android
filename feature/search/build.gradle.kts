@@ -34,6 +34,7 @@ dependencies {
         libs.paging.runtime,
         libs.paging.compose,
         libs.quack.v2.ui,
+        libs.quack.v2.ui.plugin.interceptor.textfield,
         libs.kotlin.collections.immutable,
     )
 }

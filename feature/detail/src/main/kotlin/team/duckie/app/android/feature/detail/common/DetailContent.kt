@@ -172,11 +172,12 @@ private fun DetailProfileLayout(
     profileClick: (Int) -> Unit,
 ) {
     val isFollowed = remember(state.isFollowing) { state.isFollowing }
+    val onProfileClick = { profileClick(state.exam.user?.id ?: 0) }
 
     Row(
         modifier = Modifier
             .quackClickable(
-                onClick = { profileClick(state.exam.user?.id ?: 0) },
+                onClick = onProfileClick,
                 rippleEnabled = false,
             )
             .padding(
@@ -189,6 +190,7 @@ private fun DetailProfileLayout(
         QuackProfileImage(
             profileUrl = state.profileImageUrl,
             size = DpSize(36.dp, 36.dp),
+            onClick = onProfileClick,
         )
 
         // 공백

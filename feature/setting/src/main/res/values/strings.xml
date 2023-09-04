@@ -55,6 +55,9 @@
     <string name="setting_notification_ranking">명예의 전당</string>
     <string name="setting_notification_notice">공지사항</string>
 
+    <string name="setting_ignore_user_not_found">차단한 유저가 없습니다.</string>
+    <string name="setting_ignore_exam_not_found">차단한 덕력고사가 없습니다.</string>
+
     <string name="setting_notification_exam_review_description">내가 출제한 덕력고사 및 문제에 대한 알림</string>
     <string name="setting_notification_exam_like_description">내 덕력고사에 다른 유저가 좋아요를 눌렀을 때의 알림</string>
     <string name="setting_notification_follow_description">다른 유저가 나를 팔로우했을 때의 알림</string>

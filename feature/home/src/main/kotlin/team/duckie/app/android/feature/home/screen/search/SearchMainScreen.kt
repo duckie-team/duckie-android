@@ -153,6 +153,12 @@ internal fun SearchMainScreen(
             ) {
                 state.popularTags.forEach { tag ->
                     QuackTag(
+                        modifier = Modifier.quackClickable(
+                            rippleEnabled = true,
+                            onClick = {
+                                vm.navigateToSearch(tag.name)
+                            }
+                        ),
                         text = tag.name,
                         style = QuackTagStyle.Filled,
                         selected = false,

@@ -32,6 +32,7 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import team.duckie.app.android.common.compose.activityViewModel
@@ -46,7 +47,6 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
 @Suppress("UnusedPrivateMember", "unused")
 private val currentStep = OnboardStep.Login
@@ -126,9 +126,12 @@ private fun LoginScreenWelcome() {
             ),
             src = R.drawable.img_duckie_talk,
         )
-        QuackHeadLine2(
+        QuackText(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(R.string.kakaologin_welcome_message),
+            typography = QuackTypography.HeadLine2.change(
+                textAlign = TextAlign.Center,
+            )
         )
     }
 }
@@ -232,7 +235,10 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
         QuackText(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(R.string.kakaologin_login_terms),
-            typography = QuackTypography.Body3.change(color = QuackColor.Gray2),
+            typography = QuackTypography.Body3.change(
+                color = QuackColor.Gray2,
+                textAlign = TextAlign.Center,
+            ),
         )
     }
 }

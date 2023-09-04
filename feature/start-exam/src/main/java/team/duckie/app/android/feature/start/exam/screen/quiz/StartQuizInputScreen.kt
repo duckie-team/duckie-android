@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +53,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
     val certifyingStatementText: String = remember(state.certifyingStatementInputText) {
         state.certifyingStatementInputText
     }
+    val keyboard = LocalSoftwareKeyboardController.current
 
     Column(modifier = modifier.fillMaxWidth()) {
         BackPressedTopAppBar(onBackPressed = viewModel::finishStartExam)
@@ -78,11 +81,15 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 text = state.requirementQuestion, // TODO(EvergreenTree97) 추후 도전 조건 response 생기면 변경
             )
             StartExamTextField(
-                modifier = Modifier.padding(top = 14.dp),
+                modifier = Modifier.padding(top = 14.dp).clip(RoundedCornerShape(8.dp)),
                 text = certifyingStatementText,
                 alwaysPlaceholderVisible = false,
                 placeholderText = "ex) ${state.requirementPlaceholder}",
                 onTextChanged = viewModel::inputCertifyingStatement,
+                keyboardActions = KeyboardActions {
+                    keyboard?.hide()
+                    viewModel.startSolveProblem()
+                }
             )
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -117,7 +124,7 @@ private fun InfoBox(
             modifier = Modifier.span(
                 texts = listOf(
                     stringResource(
-                        id = R.string.start_exam_information_before_quiz_line2_infix,
+                        id = R.string.start_exam_information_before_quiz_line2_highlight,
                         limitTime.toString(),
                     ),
                 ),
