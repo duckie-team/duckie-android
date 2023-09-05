@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.common.compose.ui.skeleton
@@ -50,10 +51,6 @@ internal fun NotificationScreen(
 ) {
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.getNotifications()
-    }
-
     Column(modifier = modifier) {
         QuackTopAppBar(
             leadingIcon = QuackIcon.Outlined.ArrowBack,
@@ -74,10 +71,12 @@ internal fun NotificationScreen(
                 }
 
                 isEmpty -> {
-                    Box(
+                    Column(
                         modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
+                        Spacer(space = 120.dp)
                         NoItemScreen(
                             title = stringResource(id = R.string.empty_notfications),
                             description = stringResource(id = R.string.check_notifications_after_activity),

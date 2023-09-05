@@ -51,8 +51,7 @@ class NotificationActivity : BaseActivity() {
                     .background(color = QuackColor.White.value)
                     .systemBarsPadding()
                     .navigationBarsPadding()
-                    .padding(top = 12.dp)
-                    .padding(horizontal = 12.dp),
+                    .padding(horizontal = 16.dp),
             )
         }
         viewModel.observe(

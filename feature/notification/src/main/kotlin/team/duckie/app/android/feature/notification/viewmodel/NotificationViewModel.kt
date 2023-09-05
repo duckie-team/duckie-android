@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.notification.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -28,6 +29,18 @@ internal class NotificationViewModel @Inject constructor(
     ContainerHost<NotificationState, NotificationSideEffect> {
     override val container =
         container<NotificationState, NotificationSideEffect>(NotificationState())
+
+    init {
+        // TODO(EvergreenTree97) : 알림 기능 구현 후 제거
+        intent {
+            reduce {
+                state.copy(
+                    isLoading = false,
+                    notifications = persistentListOf()
+                )
+            }
+        }
+    }
 
     fun getNotifications() = intent {
         startLoading()
