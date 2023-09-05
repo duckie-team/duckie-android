@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -28,8 +27,9 @@ import team.duckie.app.android.feature.setting.constans.SettingDesignToken
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
-private val KakaoColor: Color = Color(0xFFFEE500)
+// private val KakaoColor: Color = Color(0xFFFEE500)
 
+@Suppress("UnusedPrivateMember") // TODO(limsaehyun) 추후 이메일 작업 필요
 @Composable
 fun SettingAccountInfoScreen(
     email: String,

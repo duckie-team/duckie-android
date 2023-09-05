@@ -89,7 +89,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 keyboardActions = KeyboardActions {
                     keyboard?.hide()
                     viewModel.startSolveProblem()
-                }
+                },
             )
         }
         Spacer(modifier = Modifier.weight(1f))

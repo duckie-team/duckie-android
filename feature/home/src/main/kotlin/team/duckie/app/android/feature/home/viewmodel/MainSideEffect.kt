@@ -22,7 +22,7 @@ internal sealed class MainSideEffect {
     /**
      * [SearchResultActivity] 로 이동하는 SideEffect 입니다.
      */
-    class NavigateToSearch(val searchTag: String?) : MainSideEffect()
+    class NavigateToSearch(val searchTag: String?, val autoFocusing: Boolean) : MainSideEffect()
 
     /**
      * [HomeDetailActivity] 로 이동하는 SideEffect 입니다.
