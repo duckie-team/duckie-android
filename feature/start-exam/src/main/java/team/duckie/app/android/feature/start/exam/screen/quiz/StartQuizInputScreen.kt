@@ -81,7 +81,9 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 text = state.requirementQuestion, // TODO(EvergreenTree97) 추후 도전 조건 response 생기면 변경
             )
             StartExamTextField(
-                modifier = Modifier.padding(top = 14.dp).clip(RoundedCornerShape(8.dp)),
+                modifier = Modifier
+                    .padding(top = 14.dp)
+                    .clip(RoundedCornerShape(8.dp)),
                 text = certifyingStatementText,
                 alwaysPlaceholderVisible = false,
                 placeholderText = "ex) ${state.requirementPlaceholder}",
@@ -138,6 +140,23 @@ private fun InfoBox(
                 id = R.string.start_exam_information_before_quiz_line2_infix,
                 limitTime.toString(),
             ) + stringResource(id = R.string.start_exam_information_before_quiz_line2_postfix),
+        )
+        QuackText(
+            modifier = Modifier.span(
+                texts = listOf(
+                    stringResource(
+                        id = R.string.start_exam_information_before_quiz_line3_highlight,
+                        limitTime.toString(),
+                    ),
+                ),
+                style = SpanStyle(
+                    color = QuackColor.Black.value,
+                    fontWeight = FontWeight.Bold,
+                ),
+            ),
+            typography = QuackTypography.Body2,
+            text = stringResource(id = R.string.start_exam_information_before_quiz_line3_prefix)
+                    + stringResource(id = R.string.start_exam_information_before_quiz_line3_highlight),
         )
     }
 }
