@@ -164,10 +164,7 @@ object MediaUtil {
             else -> return bitmap
         }
         return try {
-            val bmRotated =
-                Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-            bitmap.recycle()
-            bmRotated
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
         } catch (e: OutOfMemoryError) {
             FirebaseCrashlytics.getInstance().recordException(e)
             null
