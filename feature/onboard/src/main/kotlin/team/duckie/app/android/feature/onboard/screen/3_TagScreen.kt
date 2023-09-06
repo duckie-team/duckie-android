@@ -183,7 +183,10 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                     // type = QuackLargeButtonType.Fill,
                     // isLoading = isLoadingToFinish,
                     TempFlexiblePrimaryLargeButton(
-                        modifier = Modifier.layoutId(TagScreenQuackLargeButtonLayoutId),
+                        modifier = Modifier
+                            .layoutId(TagScreenQuackLargeButtonLayoutId)
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
                         text = stringResource(id = R.string.button_start_duckie),
                         enabled = true,
                     ) {

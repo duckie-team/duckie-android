@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -116,6 +117,10 @@ fun PhotoPicker(
 
     Column(modifier = modifier.zIndex(zIndex)) {
         QuackTopAppBar(
+            modifier = Modifier.padding(
+                start = 12.dp,
+                end = 16.dp,
+            ),
             leadingIcon = QuackIcon.Outlined.Close,
             onLeadingIconClick = onCloseClick,
             centerText = stringResource(R.string.topappbar_filter_full),
