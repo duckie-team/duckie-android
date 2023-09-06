@@ -32,6 +32,8 @@ object MediaUtil {
     private const val maxHeight = 1600
     private const val bitmapQuality = 100
 
+    private var bitmap: Bitmap? = null
+
     /**
      * 업로드할 이미지를 가져온다.
      *
@@ -58,9 +60,9 @@ object MediaUtil {
 
         decodeBitmapFromUri(uri, applicationContext, maxSizeLimitEnable)?.apply {
             compress(Bitmap.CompressFormat.JPEG, bitmapQuality, fos)
-            recycle()
         } ?: throw NullPointerException("bitmap 생성 오류")
 
+        bitmap = null
         fos.flush()
         fos.close()
 
@@ -76,7 +78,6 @@ object MediaUtil {
         // 인자 값으로 넘어온 입력 스트림을 나중에 사용하기 위해 저장하는 BufferedInputStream 사용
         val input = BufferedInputStream(context.contentResolver.openInputStream(uri))
         input.mark(input.available()) // 입력 스트림의 특정 위치를 기억
-        var bitmap: Bitmap?
 
         BitmapFactory.Options().run {
             if (maxSizeLimitEnable) {
