@@ -28,6 +28,7 @@ import coil.compose.AsyncImage
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.icon.v1.MoreId
 import team.duckie.app.android.common.kotlin.runIf
+import team.duckie.app.android.common.kotlin.toDecimalFormat
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
@@ -140,7 +141,7 @@ internal fun DuckSmallCoverInternal(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             QuackText(
-                text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.solvedCount}",
+                text = "${stringResource(id = R.string.examinee)} ${duckTestCoverItem.solvedCount.toDecimalFormat()}",
                 typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
             )
             QuackText(
@@ -148,7 +149,7 @@ internal fun DuckSmallCoverInternal(
                 typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
             )
             QuackText(
-                text = "${stringResource(id = R.string.heart)} ${duckTestCoverItem.heartCount}",
+                text = "${stringResource(id = R.string.heart)} ${duckTestCoverItem.heartCount.toDecimalFormat()}",
                 typography = QuackTypography.Body2.change(color = QuackColor.Gray2),
             )
         }
