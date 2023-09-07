@@ -184,9 +184,18 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
+    private var isWriteSending: Boolean = false
+    private val existSendingMessage: String = "열심히 댓글을 등록하고 있어요! 조금만 기다려 주세요."
+
     fun writeChallengeComment() = intent {
         val state = state as ExamResultState.Success
         val myComment = state.myWrongComment
+
+        if (isWriteSending) {
+            postSideEffect(ExamResultSideEffect.SendErrorToast(existSendingMessage))
+            return@intent
+        }
+        isWriteSending = true
 
         if (myComment.isNotEmpty()) {
             writeChallengeCommentUseCase(
@@ -206,6 +215,8 @@ class ExamResultViewModel @Inject constructor(
                 }
             }.onFailure { exception ->
                 postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }.also {
+                isWriteSending = false
             }
         }
     }
