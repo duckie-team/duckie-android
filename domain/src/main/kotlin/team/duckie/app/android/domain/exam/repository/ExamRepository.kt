@@ -11,6 +11,7 @@ import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
@@ -37,4 +38,8 @@ interface ExamRepository {
     suspend fun getHeartExam(userId: Int): Flow<PagingData<ProfileExam>>
 
     suspend fun getSubmittedExam(userId: Int): Flow<PagingData<ProfileExam>>
+
+    suspend fun getIgnoreExams(): List<IgnoreExam>
+
+    suspend fun cancelExamIgnore(examId: Int): Boolean
 }

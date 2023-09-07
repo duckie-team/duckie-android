@@ -8,6 +8,7 @@
 package team.duckie.app.android.common.compose.ui.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -32,14 +33,14 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.ImeSpacer
-import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
 import team.duckie.app.android.common.compose.ui.icon.v1.SearchId
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
-import team.duckie.quackquack.animation.QuackAnimatedVisibility
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
 
@@ -86,7 +87,7 @@ fun SearchTagScreen(
     ) {
         QuackTopAppBar(
             leadingText = title,
-            trailingIconResId = QuackIcon.CloseId,
+            trailingIcon = QuackIcon.Outlined.Close,
             onTrailingIconClick = onCloseClick,
         )
 
@@ -100,7 +101,6 @@ fun SearchTagScreen(
                 ),
                 horizontalSpace = 4.dp,
                 items = tags,
-                tagTypeResId = QuackIcon.CloseId,
                 onClick = { onTagClick(it) },
                 itemChunkedSize = 3,
             )
@@ -129,7 +129,7 @@ fun SearchTagScreen(
             ),
         )
 
-        QuackAnimatedVisibility(
+        AnimatedVisibility(
             modifier = Modifier.padding(
                 top = 8.dp,
             ),

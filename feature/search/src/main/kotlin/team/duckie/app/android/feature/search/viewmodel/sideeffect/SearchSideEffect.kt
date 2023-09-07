@@ -19,4 +19,10 @@ internal sealed class SearchSideEffect {
     class NavigateToDetail(val examId: Int) : SearchSideEffect()
 
     class NavigateToUserProfile(val userId: Int) : SearchSideEffect()
+
+    class SendToast(val message: String) : SearchSideEffect()
+
+    object ExamRefresh : SearchSideEffect()
+
+    class CopyDynamicLink(val examId: Int) : SearchSideEffect()
 }

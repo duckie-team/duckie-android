@@ -35,6 +35,7 @@ import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.compose.moveNextPage
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.common.compose.util.addFocusCleaner
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
 import team.duckie.app.android.feature.solve.problem.common.LoadingIndicator
 import team.duckie.app.android.feature.solve.problem.screen.QuizScreen
@@ -42,8 +43,8 @@ import team.duckie.app.android.feature.solve.problem.screen.SolveProblemScreen
 import team.duckie.app.android.feature.solve.problem.viewmodel.SolveProblemViewModel
 import team.duckie.app.android.feature.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -60,7 +61,9 @@ class SolveProblemActivity : BaseActivity() {
             QuackTheme {
                 val state by viewModel.collectAsState()
                 val progress by viewModel.timerCount.collectAsStateWithLifecycle()
-                val pagerState = rememberPagerState()
+                val pagerState = rememberPagerState(
+                    pageCount = { state.totalPage },
+                )
 
                 LaunchedEffect(viewModel.container.sideEffectFlow) {
                     viewModel.container.sideEffectFlow.collect { sideEffect ->
@@ -74,7 +77,8 @@ class SolveProblemActivity : BaseActivity() {
                 QuackCrossfade(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor)
+                        .background(color = QuackColor.White.value)
+                        .addFocusCleaner()
                         .systemBarsPadding()
                         .navigationBarsPadding()
                         .imePadding(),

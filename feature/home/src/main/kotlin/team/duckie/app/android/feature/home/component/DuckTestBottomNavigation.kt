@@ -18,21 +18,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import okhttp3.internal.immutableListOf
-import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.app.android.feature.home.R
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackText
 
 /**
  * [DuckTestBottomNavigation] 를 그리는데 필요한 리소스들을 정의합니다.
@@ -41,7 +43,7 @@ private object DuckTestBottomNavigationDefaults {
     val Height = 52.dp
     val BackgroundColor = QuackColor.White
 
-    val IconSize = DpSize(all = 24.dp)
+    val IconSize = DpSize(width = 24.dp, height = 24.dp)
 }
 
 /**
@@ -71,7 +73,7 @@ internal fun DuckTestBottomNavigation(
                 height = Height,
             )
             .background(
-                color = BackgroundColor.composeColor,
+                color = BackgroundColor.value,
             ),
     ) {
         rememberBottomNavigationIcons().fastForEachIndexed { index, icons ->
@@ -83,25 +85,29 @@ internal fun DuckTestBottomNavigation(
                     .fillMaxSize()
                     .quackClickable(
                         rippleEnabled = false,
-                    ) {
-                        onClick(
-                            /* index = */
-                            index,
-                        )
-                    },
+                        onClick = {
+                            onClick(index)
+                        },
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
                 QuackImage(
+                    modifier = Modifier.size(IconSize),
                     src = icons.pick(
                         isSelected = index == selectedIndex,
                     ),
-                    size = IconSize,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                QuackBody2(
+                QuackText(
                     text = stringResource(id = icons.title),
-                    color = if (index == selectedIndex) QuackColor.Black else QuackColor.Gray1,
+                    typography = QuackTypography.Body2.change(
+                        color = if (index == selectedIndex) {
+                            QuackColor.Black
+                        } else {
+                            QuackColor.Gray1
+                        },
+                    ),
                 )
             }
         }

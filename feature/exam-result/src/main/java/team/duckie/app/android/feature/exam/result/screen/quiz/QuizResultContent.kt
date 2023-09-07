@@ -10,7 +10,6 @@
 package team.duckie.app.android.feature.exam.result.screen.quiz
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -51,6 +50,7 @@ import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
+import team.duckie.quackquack.ui.sugar.QuackQuote
 import java.util.Locale
 
 @Composable
@@ -70,7 +70,6 @@ internal fun QuizResultContent(
     isPerfectChallenge: Boolean,
     profileImg: String,
     myAnswer: String,
-    onHeartComment: (Int) -> Unit,
     comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
     commentsTotal: Int,
     showCommentSheet: () -> Unit,
@@ -136,22 +135,7 @@ internal fun QuizResultContent(
         Spacer(space = 16.dp)
         // TODO(limsaehyun): QuackText Quote의 버그가 픽스된 후 아래 코드로 변경해야 함
         // https://duckie-team.slack.com/archives/C054HU0CKMY/p1688278156256779
-        // QuackText(text = message, typography = QuackTypography.Quote)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            QuackHeadLine1(text = "\"")
-            Box(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.Center,
-            ) {
-                QuackHeadLine1(text = message)
-            }
-            QuackHeadLine1(text = "\"")
-        }
+        QuackQuote(text = message)
         Spacer(space = 24.dp)
         QuackMaxWidthDivider()
         Row(
@@ -223,7 +207,6 @@ internal fun QuizResultContent(
             ChallengeCommentSection(
                 profileUrl = profileImg,
                 myAnswer = myAnswer,
-                onHeartComment = onHeartComment,
                 comments = comments,
                 commentsTotal = commentsTotal,
                 showCommentSheet = showCommentSheet,

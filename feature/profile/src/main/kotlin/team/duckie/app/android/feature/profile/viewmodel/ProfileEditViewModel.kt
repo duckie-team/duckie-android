@@ -15,7 +15,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -111,10 +113,6 @@ class ProfileEditViewModel @Inject constructor(
         }
     }
 
-    fun clickEditProfile() = intent {
-        loadGalleryImages()
-    }
-
     private fun initUser() = intent {
         updateLoading(true)
         getUserUseCase(state.userId).onSuccess { user ->
@@ -135,17 +133,19 @@ class ProfileEditViewModel @Inject constructor(
         }
     }
 
-    private fun loadGalleryImages() = intent {
-        loadGalleryImagesUseCase().onSuccess { images ->
-            changeGalleryState(
-                galleryState = state.galleryState.copy(
-                    images = persistentListOf(*images.toTypedArray()),
-                    imagesSelections = images.fastMap { false }.toImmutableList(),
-                ),
-            )
-            changePhotoPickerVisible(true)
-        }.onFailure {
-            postSideEffect(ProfileEditSideEffect.ReportError(it))
+    fun loadGalleryImages() = intent {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadGalleryImagesUseCase().onSuccess { images ->
+                changeGalleryState(
+                    galleryState = state.galleryState.copy(
+                        images = persistentListOf(*images.toTypedArray()),
+                        imagesSelections = images.fastMap { false }.toImmutableList(),
+                    ),
+                )
+                changePhotoPickerVisible(true)
+            }.onFailure {
+                postSideEffect(ProfileEditSideEffect.ReportError(it))
+            }
         }
     }
 
@@ -200,8 +200,6 @@ class ProfileEditViewModel @Inject constructor(
     }
 
     fun clickEditComplete(applicationContext: Context?) = intent {
-        updateLoading(true)
-
         getUploadableFileUrl(
             state.profile.toString(),
             applicationContext,
@@ -217,14 +215,11 @@ class ProfileEditViewModel @Inject constructor(
                 nickname = state.nickname,
                 introduction = state.introduce,
             ).onSuccess {
-                updateLoading(false)
                 postSideEffect(ProfileEditSideEffect.NavigateBack)
             }.onFailure {
-                updateLoading(false)
                 postSideEffect(ProfileEditSideEffect.ReportError(it))
             }
         }.onFailure {
-            updateLoading(false)
             postSideEffect(ProfileEditSideEffect.ReportError(it))
         }
     }

@@ -22,7 +22,7 @@ internal sealed class MainSideEffect {
     /**
      * [SearchResultActivity] 로 이동하는 SideEffect 입니다.
      */
-    class NavigateToSearch(val searchTag: String?) : MainSideEffect()
+    class NavigateToSearch(val searchTag: String?, val autoFocusing: Boolean) : MainSideEffect()
 
     /**
      * [HomeDetailActivity] 로 이동하는 SideEffect 입니다.
@@ -35,11 +35,13 @@ internal sealed class MainSideEffect {
     object NavigateToSetting : MainSideEffect()
 
     /**
-     * [CreateProblemActivity] 로 이동하는 SideEffect 입니다.
+     * [CreateExamActivity] 로 이동하는 SideEffect 입니다.
      */
     object NavigateToCreateProblem : MainSideEffect()
 
     object NavigateToNotification : MainSideEffect()
+
+    data class NavigateToProfile(val userId: Int) : MainSideEffect()
 
     object ClickRankingRetry : MainSideEffect()
 

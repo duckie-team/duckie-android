@@ -19,4 +19,5 @@
     <string name="submit_answer">답안을 제출하시겠어요?</string>
     <string name="submit_answer_warning">아직 풀지 않은 문제가 있는지 확인해주세요.</string>
     <string name="length_contains_space">띄어쓰기 포함 %s자</string>
+    <string name="loading_image">이미지를 불러오고 있어요 :)</string>
 </resources>

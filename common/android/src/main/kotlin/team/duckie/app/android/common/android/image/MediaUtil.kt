@@ -14,6 +14,8 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -24,13 +26,13 @@ import java.util.UUID
  * Media 처리용 유틸 클래스
  * // TODO(riflockle7): 추후 ImageUtil 로 바꿀지 고민
  */
+@AllowMagicNumber("for MediaUtil")
 object MediaUtil {
     private const val maxWidth = 1600
     private const val maxHeight = 1600
     private const val bitmapQuality = 100
-    private const val rotate90 = 90
-    private const val rotate180 = 180
-    private const val rotate270 = 270
+
+    private var bitmap: Bitmap? = null
 
     /**
      * 업로드할 이미지를 가져온다.
@@ -58,9 +60,9 @@ object MediaUtil {
 
         decodeBitmapFromUri(uri, applicationContext, maxSizeLimitEnable)?.apply {
             compress(Bitmap.CompressFormat.JPEG, bitmapQuality, fos)
-            recycle()
         } ?: throw NullPointerException("bitmap 생성 오류")
 
+        bitmap = null
         fos.flush()
         fos.close()
 
@@ -76,7 +78,6 @@ object MediaUtil {
         // 인자 값으로 넘어온 입력 스트림을 나중에 사용하기 위해 저장하는 BufferedInputStream 사용
         val input = BufferedInputStream(context.contentResolver.openInputStream(uri))
         input.mark(input.available()) // 입력 스트림의 특정 위치를 기억
-        var bitmap: Bitmap?
 
         BitmapFactory.Options().run {
             if (maxSizeLimitEnable) {
@@ -130,23 +131,44 @@ object MediaUtil {
             ExifInterface(uri.path!!)
         }
 
-        return when (
-            exif.getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL,
-            )
-        ) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, rotate90)
-            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, rotate180)
-            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, rotate270)
-            else -> bitmap
-        }
+        val orientation = exif.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL,
+        )
+        return rotateBitmap(bitmap, orientation)
     }
 
     /** 이미지를 회전한다. */
-    private fun rotateImage(bitmap: Bitmap, degree: Int): Bitmap? {
+    private fun rotateBitmap(bitmap: Bitmap, orientation: Int): Bitmap? {
         val matrix = Matrix()
-        matrix.postRotate(degree.toFloat())
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        when (orientation) {
+            ExifInterface.ORIENTATION_NORMAL -> return bitmap
+            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.setScale(-1f, 1f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.setRotate(180f)
+            ExifInterface.ORIENTATION_FLIP_VERTICAL -> {
+                matrix.setRotate(180f)
+                matrix.postScale(-1f, 1f)
+            }
+
+            ExifInterface.ORIENTATION_TRANSPOSE -> {
+                matrix.setRotate(90f)
+                matrix.postScale(-1f, 1f)
+            }
+
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.setRotate(90f)
+            ExifInterface.ORIENTATION_TRANSVERSE -> {
+                matrix.setRotate(-90f)
+                matrix.postScale(-1f, 1f)
+            }
+
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.setRotate(-90f)
+            else -> return bitmap
+        }
+        return try {
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        } catch (e: OutOfMemoryError) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            null
+        }
     }
 }

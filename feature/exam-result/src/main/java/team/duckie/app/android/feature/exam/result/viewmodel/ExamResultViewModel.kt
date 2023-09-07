@@ -158,6 +158,7 @@ class ExamResultViewModel @Inject constructor(
         updateRefreshState(true)
         getChallengeCommentList()
         state.updateCommentCreateAt()
+        refreshQuiz()
         if (forceLoading) delay(pullToRefreshMinLoadingDelay)
         updateRefreshState(false)
     }
@@ -183,9 +184,18 @@ class ExamResultViewModel @Inject constructor(
         }
     }
 
+    private var isWriteSending: Boolean = false
+    private val existSendingMessage: String = "열심히 댓글을 등록하고 있어요! 조금만 기다려 주세요."
+
     fun writeChallengeComment() = intent {
         val state = state as ExamResultState.Success
         val myComment = state.myWrongComment
+
+        if (isWriteSending) {
+            postSideEffect(ExamResultSideEffect.SendErrorToast(existSendingMessage))
+            return@intent
+        }
+        isWriteSending = true
 
         if (myComment.isNotEmpty()) {
             writeChallengeCommentUseCase(
@@ -205,6 +215,8 @@ class ExamResultViewModel @Inject constructor(
                 }
             }.onFailure { exception ->
                 postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }.also {
+                isWriteSending = false
             }
         }
     }
@@ -456,6 +468,28 @@ class ExamResultViewModel @Inject constructor(
                 }
                 postSideEffect(ExamResultSideEffect.ReportError(it))
             }
+        }
+    }
+
+    private fun refreshQuiz() = intent {
+        val state = state as ExamResultState.Success
+        getQuizUseCase(state.examId).onSuccess { quizResult ->
+            reduce {
+                with(quizResult) {
+                    state.copy(
+                        popularComments = popularComments?.fastMap(ChallengeComment::toUiModel)
+                            ?.toImmutableList() ?: persistentListOf(),
+                        commentsTotal = commentsTotal ?: 0,
+                        equalAnswerCount = wrongAnswer?.meTotal ?: 0,
+                    )
+                }
+            }
+        }.onFailure {
+            it.printStackTrace()
+            reduce {
+                ExamResultState.Error(exception = it)
+            }
+            postSideEffect(ExamResultSideEffect.ReportError(it))
         }
     }
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -32,49 +33,54 @@ import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.UserFollowingLayout
+import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
+import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.search.viewmodel.state.SearchState
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackMainTab
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackTab
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun SearchResultScreen(
     modifier: Modifier = Modifier,
     vm: SearchViewModel = activityViewModel(),
     navigateDetail: (Int) -> Unit,
+    openBottomSheet: (Int) -> Unit,
 ) {
     val state = vm.collectAsState().value
 
     val searchUsers = vm.searchUsers.collectAsLazyPagingItems()
     val searchExams = vm.searchExams.collectAsLazyPagingItems()
 
-    val tabTitles = SearchResultStep.values().map {
-        it.title
-    }.toPersistentList()
+    val tabTitles = remember {
+        SearchResultStep.values().map { step ->
+            step.title
+        }.toPersistentList()
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .nestedScroll(rememberNestedScrollInteropConnection()),
     ) {
-        QuackMainTab(
-            titles = tabTitles,
-            selectedTabIndex = state.tagSelectedTab.index,
-            onTabSelected = { index ->
-                vm.updateSearchResultTab(SearchResultStep.toStep(index))
-            },
-        )
+        QuackTab(index = state.tagSelectedTab.index) {
+            tabTitles.fastForEach { label ->
+                tab(label) { index ->
+                    vm.updateSearchResultTab(SearchResultStep.toStep(index))
+                }
+            }
+        }
         when (state.tagSelectedTab) {
             SearchResultStep.DuckExam -> {
                 SearchResultForExam(
                     searchExams = searchExams,
                     navigateDetail = navigateDetail,
+                    onMoreClick = openBottomSheet,
                 )
             }
 
@@ -108,14 +114,18 @@ private fun SearchResultForUser(
                 .padding(top = 60.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            QuackHeadLine1(
+            QuackText(
                 text = stringResource(id = R.string.no_search_user),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.HeadLine1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
             Spacer(space = 12.dp)
-            QuackBody1(
+            QuackText(
                 text = stringResource(id = R.string.search_another_keyword),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.Body1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
         }
     } else {
@@ -128,10 +138,10 @@ private fun SearchResultForUser(
                     favoriteTag = item?.favoriteTag ?: "",
                     tier = item?.tier ?: "",
                     isFollowing = item?.isFollowing ?: false,
-                    onClickFollow = { follow ->
+                    onClickTrailingButton = { follow ->
                         onClickFollow(item?.userId ?: 0, follow)
                     },
-                    isMine = myUserId == item?.userId,
+                    visibleTrailingButton = myUserId != item?.userId,
                     onClickUserProfile = onClickUserProfile,
                 )
             }
@@ -143,6 +153,7 @@ private fun SearchResultForUser(
 private fun SearchResultForExam(
     searchExams: LazyPagingItems<Exam>,
     navigateDetail: (Int) -> Unit,
+    onMoreClick: (Int) -> Unit,
 ) {
     if (searchExams.itemCount == 0) {
         Column(
@@ -151,18 +162,23 @@ private fun SearchResultForExam(
                 .padding(top = 60.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            QuackHeadLine1(
+            QuackText(
                 text = stringResource(id = R.string.no_search_exam),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.HeadLine1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
             Spacer(space = 12.dp)
-            QuackBody1(
+            QuackText(
                 text = stringResource(id = R.string.search_another_keyword),
-                color = QuackColor.Gray1,
+                typography = QuackTypography.Body1.change(
+                    color = QuackColor.Gray1,
+                ),
             )
         }
     } else {
         LazyVerticalGrid(
+            modifier = Modifier.padding(top = 20.dp),
             columns = GridCells.Fixed(2),
             state = rememberLazyGridState(),
             verticalArrangement = Arrangement.spacedBy(48.dp),
@@ -183,7 +199,9 @@ private fun SearchResultForExam(
                         onItemClick = {
                             navigateDetail(exam?.id ?: 0)
                         },
-                        onMoreClick = {},
+                        onMoreClick = {
+                            onMoreClick(exam?.id ?: 0)
+                        },
                     )
                 }
             }

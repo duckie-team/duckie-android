@@ -5,11 +5,15 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.feature.setting.screen
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,20 +34,23 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextArea
+import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.constans.Withdraweason
 import team.duckie.app.android.feature.setting.viewmodel.SettingViewModel
 import team.duckie.app.android.feature.setting.viewmodel.state.SettingState
-import team.duckie.quackquack.animation.QuackAnimatedVisibility
+import team.duckie.quackquack.animation.animateQuackColorAsState
 import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackReviewTextArea
-import team.duckie.quackquack.ui.component.QuackRoundCheckBox
-import team.duckie.quackquack.ui.modifier.quackClickable
+import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
+import team.duckie.quackquack.ui.sugar.QuackSubtitle
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 @Composable
 internal fun SettingWithdrawScreen(
@@ -92,8 +99,8 @@ internal fun SettingWithdrawScreen(
             )
         }
         item {
-            QuackAnimatedVisibility(visible = state.withdrawReasonSelected == Withdraweason.OTHERS) {
-                QuackReviewTextArea(
+            AnimatedVisibility(visible = state.withdrawReasonSelected == Withdraweason.OTHERS) {
+                QuackReactionTextArea(
                     modifier = Modifier
                         .padding(top = 4.dp)
                         .height(140.dp)
@@ -101,15 +108,14 @@ internal fun SettingWithdrawScreen(
                         .onFocusChanged { state ->
                             vm.updateWithDrawFocus(state.isFocused)
                         },
-                    text = state.withdrawUserInputReason,
-                    onTextChanged = { text ->
+                    reaction = state.withdrawUserInputReason,
+                    onReactionChanged = { text ->
                         vm.updateWithdrawUserInputReason(text)
                     },
-                    focused = state.withdrawIsFocused,
-                    placeholderText = stringResource(
-                        // TODO(limsaehyun): placeholder의 maxline을 설정할 수 있어야 함
+                    placeHolderText = stringResource(
                         id = R.string.withdraw_others_text_field_hint,
                     ),
+                    visibleCurrentLength = false,
                 )
             }
         }
@@ -124,20 +130,49 @@ internal fun SettingWithdrawScreen(
                     .weight(1f)
                     .height(44.dp)
 
-                QuackLargeButton(
-                    modifier = buttonModifier,
-                    type = QuackLargeButtonType.Border,
-                    text = stringResource(id = R.string.withdraw_cancel_msg),
-                    onClick = vm::navigateBack,
-                )
-                Spacer(space = 8.dp)
-                QuackLargeButton(
-                    modifier = buttonModifier,
-                    type = QuackLargeButtonType.Fill,
-                    text = stringResource(id = R.string.withdraw),
-                    enabled = state.withdrawReasonSelected != Withdraweason.INITIAL,
+                val buttonEnabled = state.withdrawReasonSelected != Withdraweason.INITIAL
+
+                val primaryButtonColor =
+                    animateQuackColorAsState(targetValue = if (buttonEnabled) QuackColor.DuckieOrange else QuackColor.Gray2)
+
+                Box(
+                    modifier = buttonModifier
+                        .background(
+                            color = QuackColor.White.value,
+                            shape = RoundedCornerShape(8.dp),
+                        )
+                        .border(
+                            width = 1.dp,
+                            shape = RoundedCornerShape(8.dp),
+                            color = QuackColor.Gray3.value,
+                        )
+                        .quackClickable(
+                            onClick = vm::navigateBack,
+                        ),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    vm.changeWithdrawDialogVisible(true)
+                    QuackSubtitle(text = stringResource(id = R.string.withdraw_cancel_msg))
+                }
+                Spacer(space = 8.dp)
+                Box(
+                    modifier = buttonModifier
+                        .background(
+                            color = primaryButtonColor.value.value,
+                            shape = RoundedCornerShape(8.dp),
+                        )
+                        .runIf(buttonEnabled) {
+                            quackClickable(
+                                onClick = { vm.changeWithdrawDialogVisible(true) },
+                            )
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    QuackText(
+                        text = stringResource(id = R.string.withdraw),
+                        typography = QuackTypography.Subtitle.change(
+                            color = QuackColor.White,
+                        ),
+                    )
                 }
             }
         }
@@ -157,9 +192,11 @@ internal fun SettingCheckBox(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .quackClickable {
-                onClick(reason)
-            }
+            .quackClickable(
+                onClick = {
+                    onClick(reason)
+                },
+            )
             .clip(RoundedCornerShape(8.dp))
             .background(
                 color = QuackColor.Gray4.value,

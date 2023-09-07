@@ -10,16 +10,20 @@ package team.duckie.app.android.data.exam.mapper
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.kotlin.AllowCyclomaticComplexMethod
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
+import team.duckie.app.android.common.kotlin.exception.duckieSimpleResponseFieldNpe
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.data.category.mapper.toDomain
 import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.ChoiceData
+import team.duckie.app.android.data.exam.model.ExamBlockDetailResponse
+import team.duckie.app.android.data.exam.model.ExamBlockResponse
 import team.duckie.app.android.data.exam.model.ExamBodyData
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import team.duckie.app.android.data.exam.model.ExamInstanceBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
+import team.duckie.app.android.data.exam.model.ExamMeBlocksResponse
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
 import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
 import team.duckie.app.android.data.exam.model.ExamsData
@@ -37,6 +41,8 @@ import team.duckie.app.android.data.user.mapper.toDomain
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.exam.model.ExamBlock
+import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ExamBody
 import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
@@ -281,4 +287,21 @@ internal fun SolutionData.toDomain() = Solution(
     emptyAnswerMessage = emptyAnswerMessage,
     title = title,
     description = description,
+)
+
+internal fun ExamMeBlocksResponse.toDomain(): List<IgnoreExam> =
+    exams?.fastMap { it.toDomain() } ?: duckieSimpleResponseFieldNpe<ExamMeBlocksResponse>("exams")
+
+internal fun ExamBlockDetailResponse.toDomain() = IgnoreExam(
+    id = id ?: duckieSimpleResponseFieldNpe<ExamBlockDetailResponse>("exams"),
+    title = title ?: duckieSimpleResponseFieldNpe<ExamBlockDetailResponse>("title"),
+    thumbnailUrl = thumbnailUrl
+        ?: duckieSimpleResponseFieldNpe<ExamBlockDetailResponse>("thumbnailUrl"),
+    user = user?.toDomain() ?: duckieSimpleResponseFieldNpe<ExamBlockDetailResponse>("user"),
+    examBlock = examBlock?.toDomain()
+        ?: duckieSimpleResponseFieldNpe<ExamBlockDetailResponse>("examBlock"),
+)
+
+internal fun ExamBlockResponse.toDomain() = ExamBlock(
+    id = id ?: duckieSimpleResponseFieldNpe<ExamBlockResponse>("id"),
 )

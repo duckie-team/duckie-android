@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -87,7 +88,7 @@ internal class ProfileViewModel @Inject constructor(
 
     fun init() = intent {
         val userId = savedStateHandle.getStateFlow(Extras.UserId, 0).value
-        startLoading()
+        updateLoading(true)
 
         val job = viewModelScope.launch {
             getMeUseCase()
@@ -97,7 +98,7 @@ internal class ProfileViewModel @Inject constructor(
                     reduce { state.copy(step = ProfileStep.Error) }
                     postSideEffect(ProfileSideEffect.ReportError(it))
                 }.also {
-                    stopLoading()
+                    updateLoading(false)
                 }
         }.apply { join() }
 
@@ -118,7 +119,7 @@ internal class ProfileViewModel @Inject constructor(
                         reduce { state.copy(step = ProfileStep.Error) }
                         postSideEffect(ProfileSideEffect.ReportError(it))
                     }.also {
-                        stopLoading()
+                        updateLoading(false)
                     }
                 }
             }
@@ -156,7 +157,6 @@ internal class ProfileViewModel @Inject constructor(
     }
 
     fun getUserProfile() = intent {
-        startLoading()
         viewModelScope.launch {
             fetchUserProfileUseCase(state.userId)
                 .onSuccess { profile ->
@@ -170,8 +170,6 @@ internal class ProfileViewModel @Inject constructor(
                 .onFailure {
                     reduce { state.copy(step = ProfileStep.Error) }
                     postSideEffect(ProfileSideEffect.ReportError(it))
-                }.also {
-                    stopLoading()
                 }
         }
     }
@@ -241,15 +239,9 @@ internal class ProfileViewModel @Inject constructor(
         postSideEffect(ProfileSideEffect.NavigateToMakeExam)
     }
 
-    private fun startLoading() = intent {
+    private suspend fun SimpleSyntax<ProfileState, *>.updateLoading(isLoading: Boolean) {
         reduce {
-            state.copy(isLoading = true)
-        }
-    }
-
-    private fun stopLoading() = intent {
-        reduce {
-            state.copy(isLoading = false)
+            state.copy(isLoading = isLoading)
         }
     }
 }

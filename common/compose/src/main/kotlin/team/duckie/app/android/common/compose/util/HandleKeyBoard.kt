@@ -9,12 +9,17 @@
 
 package team.duckie.app.android.common.compose.util
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import team.duckie.app.android.common.compose.rememberKeyboardVisible
 
@@ -27,5 +32,17 @@ fun HandleKeyboardVisibilityWithSheet(sheetState: ModalBottomSheetState) {
         if (keyboardVisible.value && sheetState.currentValue == ModalBottomSheetValue.Hidden) {
             keyboardController?.hide()
         }
+    }
+}
+
+fun Modifier.addFocusCleaner(
+    doOnClear: () -> Unit = {},
+): Modifier = composed {
+    val focusManager = LocalFocusManager.current
+    pointerInput(Unit) {
+        detectTapGestures(onTap = {
+            doOnClear()
+            focusManager.clearFocus()
+        },)
     }
 }

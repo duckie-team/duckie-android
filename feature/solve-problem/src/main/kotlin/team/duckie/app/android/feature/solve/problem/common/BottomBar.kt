@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.solve.problem.common
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,16 +18,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackSurface
 import team.duckie.app.android.feature.solve.problem.R
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackDivider
-import team.duckie.quackquack.ui.component.QuackSurface
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.material.QuackBorder
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackBorder
+import team.duckie.quackquack.ui.QuackText
 
 @Composable
 internal fun ButtonBottomBar(
@@ -38,7 +38,7 @@ internal fun ButtonBottomBar(
     Column(
         modifier = modifier,
     ) {
-        QuackDivider()
+        QuackMaxWidthDivider()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -49,7 +49,10 @@ internal fun ButtonBottomBar(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Spacer(modifier = Modifier)
-            QuackAnimatedContent(targetState = isLastPage) {
+            AnimatedContent(
+                targetState = isLastPage,
+                label = "AnimatedContent",
+            ) {
                 when (it) {
                     false -> MediumButton(
                         text = stringResource(id = R.string.next),
@@ -86,7 +89,7 @@ internal fun DoubleButtonBottomBar(
     Column(
         modifier = modifier,
     ) {
-        QuackDivider()
+        QuackMaxWidthDivider()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -96,7 +99,10 @@ internal fun DoubleButtonBottomBar(
                 ),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            QuackAnimatedContent(targetState = isFirstPage) {
+            AnimatedContent(
+                targetState = isFirstPage,
+                label = "AnimatedContent",
+            ) {
                 when (it) {
                     true -> {
                         Spacer(modifier = Modifier)
@@ -111,7 +117,10 @@ internal fun DoubleButtonBottomBar(
                 }
             }
 
-            QuackAnimatedContent(targetState = isLastPage) {
+            AnimatedContent(
+                targetState = isLastPage,
+                label = "AnimatedContent",
+            ) {
                 when (it) {
                     false -> MediumButton(
                         text = stringResource(id = R.string.next),
@@ -141,11 +150,13 @@ private fun MediumButton(
     textColor: QuackColor = textColorFor(enabled),
 ) {
     QuackSurface(
-        modifier = Modifier,
-        backgroundColor = backgroundColor,
-        border = border,
-        shape = RoundedCornerShape(size = 8.dp),
+        modifier = Modifier.quackBorder(
+            shape = RoundedCornerShape(8.dp),
+            border = border,
+        ),
+        shape = RoundedCornerShape(8.dp),
         onClick = onClickFor(enabled, onClick),
+        backgroundColor = backgroundColor,
     ) {
         QuackText(
             modifier = Modifier.padding(
@@ -153,11 +164,9 @@ private fun MediumButton(
                 horizontal = 12.dp,
             ),
             text = text,
-            style = QuackTextStyle.Body1.change(
+            typography = QuackTypography.Body1.change(
                 color = textColor,
-                textAlign = TextAlign.Center,
             ),
-            singleLine = true,
         )
     }
 }

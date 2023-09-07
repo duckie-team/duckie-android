@@ -28,9 +28,10 @@ dependencies {
         projects.common.compose,
         libs.orbit.viewmodel,
         libs.orbit.compose,
-        libs.quack.ui.components,
         libs.compose.lifecycle.runtime,
         libs.compose.ui.material, // needs for CircularProgressIndicator
         libs.firebase.crashlytics,
+        libs.quack.v2.ui,
+        libs.kotlin.collections.immutable,
     )
 }

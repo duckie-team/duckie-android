@@ -43,7 +43,7 @@ import team.duckie.app.android.navigator.feature.profile.ViewAllNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
 import team.duckie.app.android.navigator.feature.setting.SettingNavigator
 import team.duckie.app.android.navigator.feature.tagedit.TagEditNavigator
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AllowMagicNumber("앱 종료 시간에 대해서 매직 넘버 처리")
@@ -57,7 +57,7 @@ class MainActivity : BaseActivity() {
     private val homeViewModel: HomeViewModel by viewModels()
 
     @Inject
-    lateinit var createProblemNavigator: CreateProblemNavigator
+    lateinit var createExamNavigator: CreateProblemNavigator
 
     @Inject
     lateinit var notificationNavigator: NotificationNavigator
@@ -162,11 +162,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        myPageViewModel.getUserProfile()
-    }
-
     private fun startedGuide(intent: Intent) {
         intent.getBooleanExtra(Extras.StartGuide, false).also { start ->
             if (start) {
@@ -186,6 +181,7 @@ class MainActivity : BaseActivity() {
                 startActivityWithAnimation<SearchActivity>(
                     intentBuilder = {
                         putExtra(Extras.SearchTag, sideEffect.searchTag)
+                        putExtra(Extras.AutoFocusing, sideEffect.autoFocusing)
                     },
                 )
             }
@@ -200,7 +196,7 @@ class MainActivity : BaseActivity() {
             }
 
             is MainSideEffect.NavigateToCreateProblem -> {
-                createProblemNavigator.navigateFrom(activity = this)
+                createExamNavigator.navigateFrom(activity = this)
             }
 
             is MainSideEffect.NavigateToSetting -> {
@@ -232,6 +228,15 @@ class MainActivity : BaseActivity() {
 
             is MainSideEffect.CopyExamIdDynamicLink -> {
                 DynamicLinkHelper.createAndShareLink(this, sideEffect.examId)
+            }
+
+            is MainSideEffect.NavigateToProfile -> {
+                profileNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.UserId, sideEffect.userId)
+                    },
+                )
             }
         }
     }

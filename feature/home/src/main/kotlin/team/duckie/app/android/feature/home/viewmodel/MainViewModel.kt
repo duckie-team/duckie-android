@@ -16,12 +16,12 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.android.ui.const.Extras
-import team.duckie.app.android.domain.report.usecase.ReportUseCase
-import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
-import team.duckie.app.android.feature.home.constants.BottomNavigationStep
 import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
+import team.duckie.app.android.domain.report.usecase.ReportUseCase
+import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
+import team.duckie.app.android.feature.home.constants.BottomNavigationStep
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import javax.inject.Inject
 
@@ -136,8 +136,9 @@ internal class MainViewModel @Inject constructor(
     /** 검색 화면으로 이동한다 */
     fun navigateToSearch(
         searchTag: String? = null,
+        autoFocusing: Boolean = true,
     ) = intent {
-        postSideEffect(MainSideEffect.NavigateToSearch(searchTag))
+        postSideEffect(MainSideEffect.NavigateToSearch(searchTag, autoFocusing))
     }
 
     /** 홈 디테일 화면으로 이동한다 */
@@ -169,6 +170,10 @@ internal class MainViewModel @Inject constructor(
     /** 알림 화면으로 이동한다 */
     fun navigateToNotification() = intent {
         postSideEffect(MainSideEffect.NavigateToNotification)
+    }
+
+    fun navigateToProfile(userId: Int) = intent {
+        postSideEffect(MainSideEffect.NavigateToProfile(userId))
     }
 
     /** 온보딩(가이드) 활성화 여부를 업데이트한다 */

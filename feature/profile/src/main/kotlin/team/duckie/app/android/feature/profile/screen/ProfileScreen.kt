@@ -65,16 +65,13 @@ fun ProfileScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(scrollState)
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 24.dp,
-                ),
+                .padding(vertical = 24.dp),
         ) {
             with(userProfile) {
                 ProfileSection(
                     userId = user?.id ?: 0,
                     profile = user?.profileImageUrl ?: "",
-                    duckPower = user?.duckPower?.tier ?: "",
+                    duckPower = user?.duckPower?.tier ?: "0덕",
                     follower = followerCount,
                     following = followingCount,
                     introduce = user?.introduction

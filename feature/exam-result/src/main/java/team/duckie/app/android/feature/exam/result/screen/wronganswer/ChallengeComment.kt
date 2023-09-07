@@ -43,9 +43,9 @@ import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.Flag
 import team.duckie.quackquack.material.icon.quackicon.outlined.Heart
+import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.modifier.quackClickable
 import team.duckie.quackquack.ui.sugar.QuackBody1
 
 @Composable
@@ -118,12 +118,12 @@ internal fun ChallengeComment(
     modifier: Modifier = Modifier,
     wrongComment: ExamResultState.Success.ChallengeCommentUiModel,
     innerPaddingValues: PaddingValues = PaddingValues(),
-    onHeartClick: (Int) -> Unit,
+    onHeartClick: ((Int) -> Unit)?,
     visibleHeart: Boolean,
     showCommentSheet: () -> Unit,
 ) {
     val animateHeartColor =
-        animateQuackColorAsState(targetValue = if (wrongComment.isHeart) QuackColor.Gray1 else QuackColor.Gray2)
+        animateQuackColorAsState(targetValue = if (wrongComment.isHeart)QuackColor.Gray1 else QuackColor.Gray2)
 
     Row(
         modifier = modifier
@@ -131,7 +131,7 @@ internal fun ChallengeComment(
             .background(QuackColor.White.value)
             .padding(innerPaddingValues)
             .quackClickable(
-                rippleEnabled = true,
+                rippleEnabled = false,
                 onClick = showCommentSheet,
             )
             .padding(vertical = 8.dp),
@@ -175,7 +175,9 @@ internal fun ChallengeComment(
                         .size(24.dp)
                         .quackClickable(
                             onClick = {
-                                onHeartClick(wrongComment.id)
+                                if (onHeartClick != null) {
+                                    onHeartClick(wrongComment.id)
+                                }
                             },
                         ),
                     icon = if (wrongComment.isHeart) {

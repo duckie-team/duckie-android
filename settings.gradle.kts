@@ -51,7 +51,7 @@ include(
     ":feature:home",
     ":feature:start-exam",
     ":feature:solve-problem",
-    ":feature:create-problem",
+    ":feature:create-exam",
     ":feature:detail",
     ":feature:exam-result",
     ":feature:profile",

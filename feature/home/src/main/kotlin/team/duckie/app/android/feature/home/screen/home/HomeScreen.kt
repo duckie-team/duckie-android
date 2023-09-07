@@ -25,15 +25,15 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import okhttp3.internal.immutableListOf
 import org.orbitmvi.orbit.compose.collectAsState
-import team.duckie.app.android.feature.home.constants.HomeStep
-import team.duckie.app.android.feature.home.viewmodel.home.HomeSideEffect
-import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
-import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
-import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
+import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.constants.MainScreenType
+import team.duckie.app.android.feature.home.viewmodel.home.HomeSideEffect
+import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
 
@@ -47,6 +47,7 @@ internal fun HomeScreen(
     navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
+    navigateToProfile: (Int) -> Unit,
 ) {
     val state = vm.collectAsState().value
     val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -106,6 +107,20 @@ internal fun HomeScreen(
                         },
                     )
 
+                    page == HomeStep.HomeProceedScreen -> HomeProceedScreen(
+                        state = state,
+                        homeViewModel = vm,
+                        navigateToCreateProblem = navigateToCreateProblem,
+                        navigateToHomeDetail = navigateToHomeDetail,
+                        navigateToSearch = navigateToSearch,
+                        openExamBottomSheet = { exam ->
+                            setTargetExamId(exam)
+                            coroutineScope.launch {
+                                bottomSheetDialogState.show()
+                            }
+                        },
+                    )
+
                     page == HomeStep.HomeFollowingScreen -> if (state.isFollowingExist) {
                         HomeRecommendFollowingExamScreen(
                             initState = initState,
@@ -113,6 +128,7 @@ internal fun HomeScreen(
                             state = state,
                             navigateToHomeDetail = navigateToHomeDetail,
                             navigateToCreateProblem = navigateToCreateProblem,
+                            navigateToProfile = navigateToProfile,
                         )
                     } else {
                         HomeRecommendFollowingScreen(

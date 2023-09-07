@@ -29,7 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,6 +47,7 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.dialog.DuckieBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackReactionTextArea
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.app.android.common.compose.util.HandleKeyboardVisibilityWithSheet
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.common.ResultBottomBar
@@ -57,8 +58,9 @@ import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.quackquack.material.QuackColor
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.material.icon.quackicon.outlined.Share
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 
@@ -231,9 +233,9 @@ private fun ExamResultSuccessScreen(
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .padding(horizontal = 16.dp),
-                    leadingIcon = QuackIcon.Close,
+                    leadingIcon = team.duckie.quackquack.material.icon.QuackIcon.Outlined.Close,
                     onLeadingIconClick = viewModel::exitExam,
-                    trailingIcon = QuackIcon.Share,
+                    trailingIcon = team.duckie.quackquack.material.icon.QuackIcon.Outlined.Share,
                     onTrailingIconClick = {
                         viewModel.updateExamResultScreen(ExamResultScreen.SHARE_EXAM_RESULT)
                     },
@@ -252,11 +254,12 @@ private fun ExamResultSuccessScreen(
             PullRefreshIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth(CenterHorizontally)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
                     .zIndex(1f),
                 refreshing = state.isRefreshing,
                 state = pullRefreshState,
             )
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -282,9 +285,6 @@ private fun ExamResultSuccessScreen(
                             nickname = nickname,
                             myAnswer = myAnswer,
                             profileImg = profileImg,
-                            onHeartComment = { isLike ->
-                                viewModel.heartWrongComment(isLike)
-                            },
                             initialState = {
                                 viewModel.initialQuizState()
                             },

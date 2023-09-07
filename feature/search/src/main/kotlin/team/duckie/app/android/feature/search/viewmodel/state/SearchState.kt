@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.search.viewmodel.state
 
+import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -27,6 +28,7 @@ import team.duckie.app.android.feature.search.constants.SearchStep
  * [searchKeyword] 검색어
  * [tagSelectedTab] 검색 결과에서 선택된 탭
  */
+@Immutable
 internal data class SearchState(
     val me: User? = null,
     val isSearchLoading: Boolean = false,
@@ -35,8 +37,11 @@ internal data class SearchState(
     val searchStep: SearchStep = SearchStep.Search,
     val recentSearch: ImmutableList<String> = persistentListOf(),
     val recommendSearchs: Flow<PagingData<Tag>> = flow { PagingData.empty<Tag>() },
-    val searchKeyword: String = "",
     val tagSelectedTab: SearchResultStep = SearchResultStep.DuckExam,
+    val targetExamId: Int = 0,
+    val bottomSheetVisible: Boolean = false,
+    val reportDialogVisible: Boolean = false,
+    val searchAutoFocusing: Boolean = false,
 ) {
     data class SearchUser(
         val userId: Int,

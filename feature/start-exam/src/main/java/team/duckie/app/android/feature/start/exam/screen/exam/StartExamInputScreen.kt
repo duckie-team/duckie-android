@@ -5,6 +5,8 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.feature.start.exam.screen.exam
 
 import androidx.compose.foundation.background
@@ -25,17 +27,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.ImeSpacer
+import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.feature.start.exam.R
 import team.duckie.app.android.feature.start.exam.screen.StartExamScreen
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackGrayscaleTextField
-import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackHeadLine1
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /**
  * 시험 시작 입력 화면
@@ -53,7 +54,7 @@ internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewMo
         state.certifyingStatementInputText
     }
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         // 상단 탭바
         BackPressedTopAppBar(onBackPressed = viewModel::finishStartExam)
 
@@ -83,17 +84,17 @@ internal fun StartExamInputScreen(modifier: Modifier, viewModel: StartExamViewMo
         Spacer(modifier = Modifier.weight(1f))
 
         // 시험시작 버튼
-        QuackLargeButton(
-            modifier = Modifier.padding(
-                vertical = 12.dp,
-                horizontal = 16.dp,
-            ),
-            type = QuackLargeButtonType.Fill,
+        TempFlexiblePrimaryLargeButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    vertical = 12.dp,
+                    horizontal = 16.dp,
+                ),
             text = stringResource(id = R.string.start_exam_start_button),
-            enabled = viewModel.startExamValidate(),
             onClick = viewModel::startSolveProblem,
+            enabled = viewModel.startExamValidate(),
         )
-
         ImeSpacer()
     }
 }
@@ -117,14 +118,14 @@ internal fun StartExamTextField(
     BasicTextField(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = QuackColor.Gray4.composeColor)
+            .background(color = QuackColor.Gray4.value)
             .padding(
                 vertical = 17.dp,
                 horizontal = 20.dp,
             ),
         value = text,
         onValueChange = onTextChanged,
-        textStyle = QuackTextStyle.Body1.asComposeStyle(),
+        textStyle = QuackTypography.Body1.asComposeStyle(),
         keyboardOptions = KeyboardOptions(imeAction = imeAction),
         keyboardActions = keyboardActions,
         singleLine = true,
@@ -135,7 +136,7 @@ internal fun StartExamTextField(
                 if (alwaysPlaceholderVisible || text.isEmpty()) {
                     QuackText(
                         text = placeholderText,
-                        style = QuackTextStyle.Body1.change(color = QuackColor.Gray2),
+                        typography = QuackTypography.Body1.change(color = QuackColor.Gray2),
                     )
                 }
             }

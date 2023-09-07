@@ -23,7 +23,7 @@ import team.duckie.app.android.feature.exam.result.screen.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultSideEffect
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.app.android.navigator.feature.startexam.StartExamNavigator
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -78,6 +78,7 @@ class ExamResultActivity : BaseActivity() {
                     withFinish = true,
                 )
             }
+
             is ExamResultSideEffect.SendReactionSuccessToast -> {
                 ToastWrapper(this).invoke(getString(R.string.exam_result_post_reaction_success))
             }

@@ -25,6 +25,11 @@ internal enum class HomeStep(
     HomeFollowingScreen(
         index = 1,
     ),
+
+    // TODO(riflockle7): 추후 index = 1
+    HomeProceedScreen(
+        index = 2,
+    ),
     ;
 
     companion object {

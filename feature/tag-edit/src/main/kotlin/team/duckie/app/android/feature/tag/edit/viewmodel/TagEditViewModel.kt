@@ -12,12 +12,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.kotlin.copy
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 import team.duckie.app.android.domain.user.model.User
@@ -56,13 +56,14 @@ internal class TagEditViewModel @Inject constructor(
 
     /** 각 태그 항목의 x 버튼 클릭 시 동작 */
     fun onTrailingClick(index: Int) = intent {
-        val newTags = myTags.toMutableList().apply { removeAt(index) }.toPersistentList()
+        require(state is TagEditState.Success)
+        val newTags = (state as TagEditState.Success).myTags.copy { removeAt(index) }
         reduce { TagEditState.Success(myTags = newTags) }
     }
 
     /** 바텀 시트에서 오른쪽 방향 화살표를 눌러 태그 추가를 완료한다. */
     fun addNewTags(newTag: List<Tag>) {
-        val newTags = myTags.toMutableList().apply { addAll(newTag) }.toPersistentList()
+        val newTags = myTags.copy { addAll(newTag) }
         intent { reduce { TagEditState.Success(myTags = newTags) } }
     }
 

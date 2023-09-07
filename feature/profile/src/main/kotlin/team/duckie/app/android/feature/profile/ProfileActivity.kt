@@ -55,7 +55,7 @@ class ProfileActivity : BaseActivity() {
     private val viewModel: ProfileViewModel by viewModels()
 
     @Inject
-    lateinit var createProblemNavigator: CreateProblemNavigator
+    lateinit var createExamNavigator: CreateProblemNavigator
 
     @Inject
     lateinit var notificationNavigator: NotificationNavigator
@@ -170,7 +170,7 @@ class ProfileActivity : BaseActivity() {
             }
 
             ProfileSideEffect.NavigateToMakeExam -> {
-                createProblemNavigator.navigateFrom(this@ProfileActivity)
+                createExamNavigator.navigateFrom(this@ProfileActivity)
             }
 
             is ProfileSideEffect.NavigateToExamDetail -> {

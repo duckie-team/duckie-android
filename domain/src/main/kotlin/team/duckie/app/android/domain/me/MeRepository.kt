@@ -18,4 +18,6 @@ interface MeRepository {
     suspend fun clearMeToken()
 
     suspend fun getIsStage(): Boolean
+
+    suspend fun getIsProceedEnable(): Boolean
 }
