@@ -26,6 +26,9 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.kotlin.exception.isFollowingAlreadyExists
+import team.duckie.app.android.common.kotlin.exception.isFollowingNotFound
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
@@ -40,9 +43,6 @@ import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.viewmodel.mapper.toFollowingModel
 import team.duckie.app.android.feature.home.viewmodel.mapper.toJumbotronModel
 import team.duckie.app.android.feature.home.viewmodel.mapper.toUiModel
-import team.duckie.app.android.common.kotlin.exception.isFollowingAlreadyExists
-import team.duckie.app.android.common.kotlin.exception.isFollowingNotFound
-import team.duckie.app.android.common.kotlin.fastMap
 import javax.inject.Inject
 
 @HiltViewModel
@@ -110,6 +110,12 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    fun saveJumbotronPage(page: Int) = intent {
+        reduce {
+            state.copy(jumbotronPage = page)
+        }
+    }
+
     /**
      * 팔로잉 추천 탭을 새로고침한다.
      * [forceLoading] - PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
@@ -125,6 +131,21 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 진행중 탭을 새로고침한다.
+     *
+     * [forceLoading] - PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
+     */
+    fun refreshProceeds(forceLoading: Boolean = false) {
+        viewModelScope.launch {
+            updateHomeProceedRefreshLoading(true)
+            // TODO(riflockle7): 진행중 시험 API 로직 필요
+            // fetchRecommendFollowingExam()
+            if (forceLoading) delay(pullToRefreshMinLoadingDelay)
+            updateHomeProceedRefreshLoading(false)
+        }
+    }
+
     /** 홈 화면의 jumbotron을 가져온다. */
     internal fun fetchJumbotrons() = intent {
         startHomeRecommendLoading()
@@ -135,7 +156,7 @@ internal class HomeViewModel @Inject constructor(
                         isHomeRecommendLoading = false,
                         jumbotrons = jumbotrons
                             .fastMap(Exam::toJumbotronModel)
-                            .toPersistentList(),
+                            .toImmutableList(),
                     )
                 }
             }.onFailure { exception ->
@@ -284,6 +305,19 @@ internal class HomeViewModel @Inject constructor(
             state.copy(
                 isHomeRecommendFollowingExamRefreshLoading = loading,
                 isHomeRecommendFollowingExamLoading = loading, // for skeleton UI
+                isError = false,
+            )
+        }
+    }
+
+    /** 홈 화면의 진행중 탭의 pull refresh 로딩 상태를 [loading]으로 바꾼다. */
+    private fun updateHomeProceedRefreshLoading(
+        loading: Boolean,
+    ) = intent {
+        reduce {
+            state.copy(
+                isHomeProceedPullRefreshLoading = loading,
+                isHomeProceedLoading = loading, // for skeleton UI
                 isError = false,
             )
         }

@@ -40,7 +40,7 @@ private fun getQuackReactionTextAreaMeasurePolicy(
 
     with(QuackReactionTextAreaLayoutId) {
         val quizReviewPlaceHolderPlaceable =
-            measurables.getPlaceable(QuizReviewPlaceHolder, looseConstraints)
+            measurables.getPlaceable(QuizReviewPlaceHolder, extraLooseConstraints)
         val quizReviewTextAreaPlaceable =
             measurables.getPlaceable(QuizReviewTextArea, extraLooseConstraints)
         val reactionLimitTextPlaceable =
@@ -50,12 +50,12 @@ private fun getQuackReactionTextAreaMeasurePolicy(
             width = constraints.maxWidth,
             height = constraints.maxHeight,
         ) {
-            quizReviewTextAreaPlaceable.place(x = 0, y = 0)
+            quizReviewTextAreaPlaceable.placeRelative(x = 0, y = 0)
             if (placeholderVisible) {
-                quizReviewPlaceHolderPlaceable.place(x = 0, y = 0)
+                quizReviewPlaceHolderPlaceable.placeRelative(x = 0, y = 0)
             }
-            reactionLimitTextPlaceable.place(
-                x = constraints.maxWidth - reactionLimitTextPlaceable.width,
+            reactionLimitTextPlaceable?.placeRelative(
+                x = quizReviewTextAreaPlaceable.width - reactionLimitTextPlaceable.width,
                 y = quizReviewTextAreaPlaceable.height - reactionLimitTextPlaceable.height,
             )
         }
@@ -64,12 +64,15 @@ private fun getQuackReactionTextAreaMeasurePolicy(
 
 @Composable
 fun QuackReactionTextArea(
+    modifier: Modifier = Modifier,
     reaction: String,
     onReactionChanged: (String) -> Unit,
     maxLength: Int = RANKER_REACTION_MAX_LENGTH,
+    placeHolderText: String = RANKER_REACTION_PLACE_HOLDER,
+    visibleCurrentLength: Boolean = true,
 ) = with(QuackReactionTextAreaLayoutId) {
     Layout(
-        modifier = Modifier.height(100.dp),
+        modifier = modifier.height(100.dp),
         measurePolicy = getQuackReactionTextAreaMeasurePolicy(
             placeholderVisible = reaction.isEmpty(),
         ),
@@ -91,23 +94,25 @@ fun QuackReactionTextArea(
                 modifier = Modifier
                     .layoutId(QuizReviewPlaceHolder)
                     .padding(all = 16.dp),
-                text = RANKER_REACTION_PLACE_HOLDER,
+                text = placeHolderText,
                 typography = QuackTypography.Body1.change(
                     color = QuackColor.Gray2,
                 ),
             )
-            QuackText(
-                modifier = Modifier
-                    .layoutId(ReactionLimitText)
-                    .padding(
-                        bottom = 12.dp,
-                        end = 12.dp,
+            if (visibleCurrentLength) {
+                QuackText(
+                    modifier = Modifier
+                        .layoutId(ReactionLimitText)
+                        .padding(
+                            bottom = 12.dp,
+                            end = 12.dp,
+                        ),
+                    text = "${reaction.length} / $RANKER_REACTION_MAX_LENGTH",
+                    typography = QuackTypography.Body1.change(
+                        color = QuackColor.Gray2,
                     ),
-                text = "${reaction.length} / $RANKER_REACTION_MAX_LENGTH",
-                typography = QuackTypography.Body1.change(
-                    color = QuackColor.Gray2,
-                ),
-            )
+                )
+            }
         },
     )
 }

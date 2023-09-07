@@ -4,6 +4,7 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
+@file:Suppress("UnusedPrivateMember")
 
 package team.duckie.app.android.feature.setting.screen
 
@@ -21,10 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import team.duckie.app.android.feature.setting.constans.SettingNotificationType
 import team.duckie.app.android.feature.setting.constans.SettingDesignToken
+import team.duckie.app.android.feature.setting.constans.SettingNotificationType
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.component.QuackSwitch
 import team.duckie.quackquack.ui.sugar.QuackBody1
 
 /**
@@ -51,6 +51,7 @@ fun SettingNotificationScreen() {
     }
 }
 
+@Suppress("unused")
 @Composable
 private fun SettingNotificationLayout(
     title: String,
@@ -75,9 +76,10 @@ private fun SettingNotificationLayout(
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        QuackSwitch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-        )
+//        QuackSwitch(
+//            checked = checked,
+//            onCheckedChange = onCheckedChange,
+//        )
+// TODO(limsaehyun) [QuackQuack] Switch 작업 필요!
     }
 }

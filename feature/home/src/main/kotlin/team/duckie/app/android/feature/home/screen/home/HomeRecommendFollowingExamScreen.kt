@@ -40,29 +40,30 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
+import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.collectAndHandleState
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
+import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.home.constants.HomeStep
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.compose.collectAndHandleState
-import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
-import team.duckie.app.android.feature.home.constants.MainScreenType
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackSubtitle
-import team.duckie.quackquack.ui.component.QuackSubtitle2
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackBody3
+import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 internal const val ThumbnailRatio = 4f / 3f
 
 private val HomeProfileSize: DpSize = DpSize(
-    all = 24.dp,
+    width = 32.dp,
+    height = 32.dp,
 )
 
 @Composable
@@ -73,6 +74,7 @@ internal fun HomeRecommendFollowingExamScreen(
     state: HomeState,
     navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
+    navigateToProfile: (Int) -> Unit,
 ) {
     val followingExam =
         vm.followingExam.collectAndHandleState(vm::handleLoadRecommendFollowingState)
@@ -105,6 +107,7 @@ internal fun HomeRecommendFollowingExamScreen(
             followingExam = followingExam,
             navigateToCreateProblem = navigateToCreateProblem,
             navigateToHomeDetail = navigateToHomeDetail,
+            navigateToProfile = navigateToProfile,
         )
     }
 }
@@ -118,6 +121,7 @@ private fun HomeRecommendFollowingSuccessScreen(
     followingExam: LazyPagingItems<HomeState.RecommendExam>,
     navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
+    navigateToProfile: (Int) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -136,6 +140,7 @@ private fun HomeRecommendFollowingSuccessScreen(
                         vm.changedHomeScreen(HomeStep.toStep(step))
                     },
                     onClickedCreate = navigateToCreateProblem,
+                    onClickedNotice = {},
                 )
             }
 
@@ -148,10 +153,10 @@ private fun HomeRecommendFollowingSuccessScreen(
                     title = maker?.title ?: "",
                     tier = maker?.owner?.tier ?: "",
                     favoriteTag = maker?.owner?.favoriteTag ?: "",
-                    onClickUserProfile = {
-                        // TODO(limsaehyun): 마이페이지로 이동
+                    onUserProfileClick = {
+                        navigateToProfile(maker?.owner?.userId ?: 0)
                     },
-                    onClickTestCover = {
+                    onTestClick = {
                         navigateToHomeDetail(maker?.examId ?: 0)
                     },
                     cover = maker?.coverUrl ?: "",
@@ -176,9 +181,9 @@ private fun TestCoverWithMaker(
     name: String,
     tier: String,
     favoriteTag: String,
-    onClickTestCover: () -> Unit,
-    onClickUserProfile: () -> Unit,
+    onTestClick: () -> Unit,
     isLoading: Boolean,
+    onUserProfileClick: () -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -188,9 +193,7 @@ private fun TestCoverWithMaker(
                 .aspectRatio(ThumbnailRatio)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .quackClickable {
-                    onClickTestCover()
-                }
+                .quackClickable(onClick = onTestClick)
                 .skeleton(isLoading),
             model = cover,
             contentDescription = null,
@@ -203,8 +206,9 @@ private fun TestCoverWithMaker(
             name = name,
             tier = tier,
             favoriteTag = favoriteTag,
-            onClickUserProfile = onClickUserProfile,
             isLoading = isLoading,
+            onUserProfileClick = onUserProfileClick,
+            onLayoutClick = onTestClick,
         )
     }
 }
@@ -218,17 +222,22 @@ private fun TestMakerLayout(
     tier: String,
     favoriteTag: String,
     isLoading: Boolean,
-    onClickUserProfile: (() -> Unit)? = null,
+    onLayoutClick: () -> Unit,
+    onUserProfileClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.quackClickable(
+            rippleEnabled = false,
+        ) {
+            onLayoutClick()
+        },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         QuackProfileImage(
             modifier = Modifier.skeleton(isLoading),
             profileUrl = profileImageUrl,
             size = HomeProfileSize,
-            onClick = onClickUserProfile,
+            onClick = onUserProfileClick,
         )
         Column(modifier = Modifier.padding(start = 8.dp)) {
             QuackSubtitle2(
@@ -241,10 +250,10 @@ private fun TestMakerLayout(
                     text = name,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                QuackBody3(
+                QuackText(
                     modifier = Modifier.skeleton(isLoading),
                     text = "$tier · $favoriteTag",
-                    color = QuackColor.Gray2,
+                    typography = QuackTypography.Body3.change(color = QuackColor.Gray2),
                 )
             }
         }
@@ -271,11 +280,12 @@ private fun HomeFollowingExamNotFoundScreen(
             onClickedCreate = {
                 navigateToCreateProblem()
             },
+            onClickedNotice = {},
         )
         Spacer(space = 60.dp)
-        QuackSubtitle(
+        QuackText(
             text = stringResource(id = R.string.home_following_exam_not_found_title),
-            align = TextAlign.Center,
+            typography = QuackTypography.Subtitle.change(textAlign = TextAlign.Center),
         )
         Spacer(space = 12.dp)
         QuackBody2(text = stringResource(id = R.string.home_following_exam_not_found_subtitle))

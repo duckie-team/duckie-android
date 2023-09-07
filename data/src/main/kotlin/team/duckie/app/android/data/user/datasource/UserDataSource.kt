@@ -9,6 +9,7 @@ package team.duckie.app.android.data.user.datasource
 
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.tag.model.Tag
+import team.duckie.app.android.domain.user.model.IgnoreUser
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserFollowings
 import team.duckie.app.android.domain.user.model.UserProfile
@@ -39,4 +40,6 @@ interface UserDataSource {
     suspend fun fetchUserFollowings(userId: Int): List<User>
 
     suspend fun fetchUserFollowers(userId: Int): List<User>
+
+    suspend fun fetchIgnoreUsers(): List<IgnoreUser>
 }

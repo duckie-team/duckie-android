@@ -21,6 +21,9 @@ object Extras {
     const val SearchTag = "ExtraSearchTag"
     const val StartGuide = "StartGuide"
 
+    /** using for SearchActivity */
+    const val AutoFocusing = "AutoFocusing"
+
     /** using for FriendsActivity */
     const val FriendType = "ExtraFriendType"
     const val ProfileNickName = "ProfileNickName"

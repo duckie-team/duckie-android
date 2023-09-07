@@ -36,19 +36,22 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackBody1
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackHeadLine1
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.material.icon.quackicon.outlined.Search
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackBody1
+import team.duckie.quackquack.ui.sugar.QuackTitle2
 
 @Composable
 internal fun SearchScreen(
     vm: SearchViewModel,
+    onSearchComplete: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         vm.getRecentSearch()
@@ -61,7 +64,7 @@ internal fun SearchScreen(
             .fillMaxSize()
             .imePadding(),
     ) {
-        Spacer(modifier = Modifier.height(22.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         if (state.recentSearch.isEmpty()) {
             RecentSearchNotFoundScreen()
         } else {
@@ -75,6 +78,7 @@ internal fun SearchScreen(
                         vm.clearRecentSearch(keyword = keyword)
                     },
                     navigateToResult = { keyword ->
+                        onSearchComplete()
                         vm.updateSearchKeyword(
                             keyword = keyword,
                             debounce = false,
@@ -98,14 +102,18 @@ private fun RecentSearchNotFoundScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        QuackHeadLine1(
+        QuackText(
             text = stringResource(id = R.string.no_recent_search),
-            color = QuackColor.Gray1,
+            typography = QuackTypography.HeadLine1.change(
+                color = QuackColor.Gray1,
+            ),
         )
         Spacer(space = 12.dp)
-        QuackBody1(
+        QuackText(
             text = stringResource(id = R.string.search_favorite_exam),
-            color = QuackColor.Gray1,
+            typography = QuackTypography.Body1.change(
+                color = QuackColor.Gray1,
+            ),
         )
     }
 }
@@ -125,9 +133,9 @@ private fun LazyListScope.recommendKeywordSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(44.dp)
-                .quackClickable {
-                    onClickedSearch()
-                },
+                .quackClickable(
+                    onClick = onClickedSearch,
+                ),
             contentAlignment = Alignment.CenterStart,
         ) {
             QuackTitle2(text = tag?.name ?: "") // TODO(limsaehyun): QuackAnnotationTitle2 교체 필요
@@ -154,12 +162,14 @@ private fun LazyListScope.recentKeywordSection(
         ) {
             QuackTitle2(text = stringResource(id = R.string.recent_search))
             Spacer(modifier = Modifier.weight(1f))
-            QuackBody2(
+            QuackText(
+                modifier = Modifier.quackClickable(
+                    onClick = onClickedClearAll,
+                ),
                 text = stringResource(id = R.string.clear_all),
-                color = QuackColor.Gray1,
-                onClick = {
-                    onClickedClearAll()
-                },
+                typography = QuackTypography.Body2.change(
+                    color = QuackColor.Gray1,
+                ),
             )
         }
     }
@@ -189,19 +199,23 @@ private fun RecentSearchLayout(
             .padding(SearchHorizontalPadding)
             .padding(vertical = 12.dp),
     ) {
-        QuackImage(
-            src = QuackIcon.Search,
-            size = DpSize(16.dp),
+        QuackIcon(
+            icon = QuackIcon.Outlined.Search,
+            size = 16.dp,
             tint = QuackColor.Gray2,
         )
         Spacer(modifier = Modifier.width(8.dp))
         QuackBody1(text = keyword)
         Spacer(modifier = Modifier.weight(1f))
-        QuackImage(
-            src = QuackIcon.Close,
-            size = DpSize(16.dp),
+        QuackIcon(
+            modifier = Modifier.quackClickable(
+                onClick = {
+                    onCloseClick(keyword)
+                },
+            ),
+            icon = QuackIcon.Outlined.Close,
+            size = 16.dp,
             tint = QuackColor.Gray2,
-            onClick = { onCloseClick(keyword) },
         )
     }
 }

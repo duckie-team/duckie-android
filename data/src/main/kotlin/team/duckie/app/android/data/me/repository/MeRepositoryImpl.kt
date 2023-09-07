@@ -31,6 +31,7 @@ class MeRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) : MeRepository {
     private var isStageChecked: Boolean = false
+    private var isProceedEnabled: Boolean? = null
     private var me: User? = null
     override suspend fun getMe(): User {
         // 0. DevMode 에서 API
@@ -38,6 +39,9 @@ class MeRepositoryImpl @Inject constructor(
             isStageChecked = true
             devModeDataSource.setApiEnvironment(getIsStage())
         }
+
+        // 1. 피처 플래그 갱신
+        featureFlagCheck()
 
         // 1. DataStore 에 토큰 값이 있는지 체크
         val meToken = getMeToken() ?: duckieClientLogicProblemException(code = ClientMeTokenNull)
@@ -67,6 +71,15 @@ class MeRepositoryImpl @Inject constructor(
         }
     }
 
+    /** featureFlag 값을 체크하여, 각 플래그 항목들을 갱신한다. */
+    private suspend fun featureFlagCheck() {
+        isProceedEnabled = if (isProceedEnabled == null) {
+            dataStore.data.first()[PreferenceKey.FeatureFlag.IsProceedEnable] ?: false
+        } else {
+            false
+        }
+    }
+
     override suspend fun setMe(newMe: User) {
         me = newMe
     }
@@ -93,5 +106,11 @@ class MeRepositoryImpl @Inject constructor(
         // TODO(riflockle7): 더 좋은 구현 방법이 있을까?
         // ref: https://medium.com/androiddevelopers/datastore-and-synchronous-work-576f3869ec4c
         return dataStore.data.first()[PreferenceKey.DevMode.IsStage] ?: false
+    }
+
+    override suspend fun getIsProceedEnable(): Boolean {
+        // TODO(riflockle7): 더 좋은 구현 방법이 있을까?
+        // ref: https://medium.com/androiddevelopers/datastore-and-synchronous-work-576f3869ec4c
+        return dataStore.data.first()[PreferenceKey.FeatureFlag.IsProceedEnable] ?: false
     }
 }

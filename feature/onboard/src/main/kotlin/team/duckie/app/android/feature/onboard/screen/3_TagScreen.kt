@@ -5,7 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@file:OptIn(
+    ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalQuackQuackApi::class,
+)
 @file:Suppress(
     "ConstPropertyName",
     "PrivatePropertyName",
@@ -42,7 +46,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
@@ -50,10 +53,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.compose.HideKeyboardWhenBottomSheetHidden
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.domain.DuckieTagAddBottomSheet
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackCircleTag
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackOutLinedSingeLazyRowTag
+import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.fastAny
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
@@ -68,15 +75,12 @@ import team.duckie.app.android.feature.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
 import team.duckie.app.android.feature.onboard.viewmodel.state.OnboardState
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackCircleTag
-import team.duckie.quackquack.ui.component.QuackHeadLine2
-import team.duckie.quackquack.ui.component.QuackLargeButton
-import team.duckie.quackquack.ui.component.QuackLargeButtonType
-import team.duckie.quackquack.ui.component.QuackSingeLazyRowTag
-import team.duckie.quackquack.ui.component.QuackTagType
-import team.duckie.quackquack.ui.component.QuackTitle2
-import team.duckie.quackquack.ui.icon.QuackIcon
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackTitle2
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val currentStep = OnboardStep.Tag
 
@@ -124,7 +128,6 @@ private val TagScreenMeasurePolicy = MeasurePolicy { measurables, constraints ->
 
 @Composable
 internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
-    val keyboard = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 
     var isLoadingToFinish by remember { mutableStateOf(false) }
@@ -137,14 +140,7 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
             skipHalfExpanded = true,
         )
 
-    LaunchedEffect(sheetState) {
-        val sheetStateFlow = snapshotFlow { sheetState.currentValue }
-        sheetStateFlow.collect { state ->
-            if (state == ModalBottomSheetValue.Hidden) {
-                keyboard?.hide()
-            }
-        }
-    }
+    HideKeyboardWhenBottomSheetHidden(sheetState)
 
     BackHandler(sheetState.isVisible) {
         coroutineScope.launch {
@@ -182,14 +178,17 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                             addedTags.remove(addedTags[index])
                         },
                     )
-                    QuackLargeButton(
+
+                    // TODO(riflockle7): 문제 있으므로 꽥꽥 이슈 해결할 때까지 주석 제거하지 않음
+                    // type = QuackLargeButtonType.Fill,
+                    // isLoading = isLoadingToFinish,
+                    TempFlexiblePrimaryLargeButton(
                         modifier = Modifier
                             .layoutId(TagScreenQuackLargeButtonLayoutId)
+                            .fillMaxWidth()
                             .padding(horizontal = 20.dp),
                         text = stringResource(id = R.string.button_start_duckie),
-                        type = QuackLargeButtonType.Fill,
                         enabled = true,
-                        isLoading = isLoadingToFinish,
                     ) {
                         updateUserAndFinishOnboard(
                             coroutineScope = coroutineScope,
@@ -308,31 +307,29 @@ private fun TagSelection(
                         QuackCircleTag(
                             text = tag.name,
                             isSelected = false,
-                            trailingIcon = QuackIcon.Close,
                         ) {
                             requestRemoveAddedTag(index)
                         }
                     }
                 }
             }
-            QuackHeadLine2(
-                modifier = Modifier.padding(
-                    top = if (addedTags.isNotEmpty()) 0.dp else 4.dp,
-                    start = 10.dp,
-                ),
+            QuackText(
+                modifier = Modifier
+                    .quackClickable(
+                        onClick = {
+                            coroutineScope.launch {
+                                sheetState.show()
+                            }
+                        },
+                    )
+                    .padding(
+                        top = if (addedTags.isNotEmpty()) 0.dp else 8.dp,
+                        start = 20.dp,
+                        end = 10.dp,
+                        bottom = 8.dp,
+                    ),
                 text = stringResource(R.string.tag_add_manual),
-                padding = PaddingValues(
-                    top = if (addedTags.isNotEmpty()) 0.dp else 4.dp,
-                    start = 10.dp,
-                    end = 10.dp,
-                    bottom = 8.dp,
-                ),
-                color = QuackColor.DuckieOrange,
-                onClick = {
-                    coroutineScope.launch {
-                        sheetState.show()
-                    }
-                },
+                typography = QuackTypography.HeadLine2.change(color = QuackColor.DuckieOrange),
             )
         }
         @AllowMagicNumber(because = "(34 - 8).dp")
@@ -344,11 +341,11 @@ private fun TagSelection(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             onboardState.selectedCategories.fastForEachIndexed { categoryIndex, category ->
-                QuackSingeLazyRowTag(
+                QuackOutLinedSingeLazyRowTag(
                     title = stringResource(R.string.tag_hottest_tag, category.name),
                     items = hottestTags[categoryIndex],
                     itemSelections = hottestTagSelections[categoryIndex],
-                    tagType = QuackTagType.Circle(),
+                    trailingIcon = null,
                     contentPadding = PaddingValues(horizontal = 20.dp),
                     onClick = { tagIndex ->
                         hottestTagSelections[categoryIndex][tagIndex] =

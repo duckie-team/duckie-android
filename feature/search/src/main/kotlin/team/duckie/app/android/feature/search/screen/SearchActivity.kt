@@ -5,37 +5,74 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalMaterialApi::class)
+// TODO(limsaehyun): The function onCreate is too long (127).
+//  The maximum length is 100. [LongMethod] 대응 필요
+@file:Suppress("LongMethod")
+
 package team.duckie.app.android.feature.search.screen
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.popStringExtra
+import team.duckie.app.android.common.compose.collectAndHandleState
+import team.duckie.app.android.common.compose.systemBarPaddings
+import team.duckie.app.android.common.compose.ui.DuckieCircularProgressIndicator
+import team.duckie.app.android.common.compose.ui.ErrorScreen
+import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.constant.SharedIcon
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
+import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
+import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.util.addFocusCleaner
+import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
 import team.duckie.app.android.feature.search.constants.SearchStep
@@ -43,20 +80,15 @@ import team.duckie.app.android.feature.search.viewmodel.SearchViewModel
 import team.duckie.app.android.feature.search.viewmodel.sideeffect.SearchSideEffect
 import team.duckie.app.android.navigator.feature.detail.DetailNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
-import team.duckie.app.android.common.compose.ui.DuckieCircularProgressIndicator
-import team.duckie.app.android.common.compose.ui.ErrorScreen
-import team.duckie.app.android.common.compose.ui.constant.SharedIcon
-import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
-import team.duckie.app.android.common.compose.collectAndHandleState
-import team.duckie.app.android.common.android.ui.finishWithAnimation
-import team.duckie.app.android.common.android.ui.popStringExtra
-import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.quackquack.ui.animation.QuackAnimatedContent
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.theme.QuackTheme
-import team.duckie.quackquack.ui.util.DpSize
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.theme.QuackTheme
+import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.plugin.interceptor.textfield.QuackTextFieldFontFamilyRemovalPlugin
+import team.duckie.quackquack.ui.plugin.rememberQuackPlugins
 import javax.inject.Inject
 
 internal val SearchHorizontalPadding = PaddingValues(horizontal = 16.dp)
@@ -84,88 +116,152 @@ class SearchActivity : BaseActivity() {
 
         setContent {
             val state = vm.collectAsState().value
+            val focusRequester = remember { FocusRequester() }
+            val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+            val coroutineScope = rememberCoroutineScope()
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val searchText by vm.searchText.collectAsStateWithLifecycle()
+            val focusManager = LocalFocusManager.current
 
             vm.searchUsers.collectAndHandleState(handleLoadStates = vm::checkError)
-            vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
+            val searchExams =
+                vm.searchExams.collectAndHandleState(handleLoadStates = vm::checkError)
 
             LaunchedEffect(key1 = vm) {
                 vm.container.sideEffectFlow
-                    .onEach(::handleSideEffect)
+                    .onEach {
+                        handleSideEffect(it, searchExams)
+                    }
                     .launchIn(this)
             }
 
-            QuackTheme {
-                Box(
+            LaunchedEffect(key1 = state.searchAutoFocusing) {
+                if (state.searchAutoFocusing) {
+                    focusRequester.requestFocus()
+                }
+            }
+
+            QuackTheme(
+                plugins = rememberQuackPlugins {
+                    +QuackTextFieldFontFamilyRemovalPlugin
+                },
+            ) {
+                ReportDialog(
+                    visible = state.reportDialogVisible,
+                    onClick = { vm.updateReportDialogVisible(false) },
+                    onDismissRequest = { vm.updateReportDialogVisible(false) },
+                )
+                DuckieSelectableBottomSheetDialog(
                     modifier = Modifier
                         .fillMaxSize()
-                        .systemBarsPadding(),
-                    contentAlignment = Alignment.Center,
+                        .systemBarsPadding()
+                        .navigationBarsPadding(),
+                    bottomSheetState = bottomSheetDialogState,
+                    closeSheet = {
+                        coroutineScope.launch {
+                            bottomSheetDialogState.hide()
+                        }
+                    },
+                    onReport = vm::report,
+                    onCopyLink = vm::copyExamDynamicLink,
+                    types = persistentListOf(
+                        DuckieSelectableType.CopyLink,
+                        DuckieSelectableType.Report,
+                    ),
                 ) {
-                    Column(
-                        modifier = Modifier.background(QuackColor.White.composeColor),
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(QuackColor.White.value)
+                            .addFocusCleaner(),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        SearchTextFieldTopBar(
-                            searchKeyword = state.searchKeyword,
-                            onSearchKeywordChanged = { keyword ->
-                                vm.updateSearchKeyword(keyword = keyword)
-                            },
-                            onPrevious = {
-                                finishWithAnimation()
-                            },
-                            clearSearchKeyword = {
-                                vm.clearSearchKeyword()
-                            },
-                        )
-                        QuackAnimatedContent(
-                            targetState = state.searchStep,
-                        ) { step ->
-                            when (step) {
-                                SearchStep.Search -> SearchScreen(vm = vm)
-                                SearchStep.SearchResult -> {
-                                    if (state.isSearchProblemError &&
-                                        state.tagSelectedTab == SearchResultStep.DuckExam
-                                    ) {
-                                        ErrorScreen(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .statusBarsPadding(),
-                                            false,
-                                            onRetryClick = {
-                                                vm.fetchSearchExams(state.searchKeyword)
-                                            },
-                                        )
-                                    } else if (state.isSearchUserError &&
-                                        state.tagSelectedTab == SearchResultStep.User
-                                    ) {
-                                        ErrorScreen(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .statusBarsPadding(),
-                                            false,
-                                            onRetryClick = {
-                                                vm.fetchSearchUsers(state.searchKeyword)
-                                            },
-                                        )
-                                    } else {
-                                        SearchResultScreen(
-                                            navigateDetail = { examId ->
-                                                vm.navigateToDetail(examId = examId)
-                                            },
-                                        )
+                        Column {
+                            systemBarPaddings
+                            SearchTextFieldTopBar(
+                                searchKeyword = searchText,
+                                onSearchKeywordChanged = { keyword ->
+                                    vm.updateSearchKeyword(keyword = keyword)
+                                },
+                                onPrevious = {
+                                    finishWithAnimation()
+                                },
+                                clearSearchKeyword = {
+                                    vm.clearSearchKeyword()
+                                },
+                                onAction = {
+                                    focusManager.clearFocus()
+                                },
+                                focusRequester = focusRequester,
+                            )
+                            AnimatedContent(
+                                targetState = state.searchStep,
+                                label = "AnimatedContent",
+                            ) { step ->
+                                when (step) {
+                                    SearchStep.Search -> SearchScreen(
+                                        vm = vm,
+                                        onSearchComplete = {
+                                            focusManager.clearFocus()
+                                        },
+                                    )
+
+                                    SearchStep.SearchResult -> {
+                                        if (state.isSearchProblemError &&
+                                            state.tagSelectedTab == SearchResultStep.DuckExam
+                                        ) {
+                                            ErrorScreen(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .statusBarsPadding(),
+                                                false,
+                                                onRetryClick = {
+                                                    vm.fetchSearchExams(searchText)
+                                                },
+                                            )
+                                        } else if (state.isSearchUserError &&
+                                            state.tagSelectedTab == SearchResultStep.User
+                                        ) {
+                                            ErrorScreen(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .statusBarsPadding(),
+                                                false,
+                                                onRetryClick = {
+                                                    vm.fetchSearchUsers(searchText)
+                                                },
+                                            )
+                                        } else {
+                                            SearchResultScreen(
+                                                navigateDetail = { examId ->
+                                                    vm.navigateToDetail(examId = examId)
+                                                },
+                                                openBottomSheet = { examId ->
+                                                    vm.setTargetExamId(examId = examId)
+                                                    coroutineScope.launch {
+                                                        keyboardController?.hide()
+                                                        bottomSheetDialogState.show()
+                                                    }
+                                                },
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    if (state.isSearchLoading) {
-                        DuckieCircularProgressIndicator()
+                        if (state.isSearchLoading) {
+                            DuckieCircularProgressIndicator()
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun handleSideEffect(sideEffect: SearchSideEffect) {
+    private fun handleSideEffect(
+        sideEffect: SearchSideEffect,
+        examPagingItems: LazyPagingItems<Exam>,
+    ) {
         when (sideEffect) {
             is SearchSideEffect.ReportError -> {
                 Firebase.crashlytics.recordException(sideEffect.exception)
@@ -188,6 +284,18 @@ class SearchActivity : BaseActivity() {
                     },
                 )
             }
+
+            is SearchSideEffect.SendToast -> {
+                Toast.makeText(this, sideEffect.message, Toast.LENGTH_SHORT).show()
+            }
+
+            is SearchSideEffect.CopyDynamicLink -> {
+                DynamicLinkHelper.createAndShareLink(this, sideEffect.examId)
+            }
+
+            SearchSideEffect.ExamRefresh -> {
+                examPagingItems.refresh()
+            }
         }
     }
 }
@@ -199,6 +307,8 @@ private fun SearchTextFieldTopBar(
     onSearchKeywordChanged: (String) -> Unit,
     clearSearchKeyword: () -> Unit,
     onPrevious: () -> Unit,
+    onAction: () -> Unit,
+    focusRequester: FocusRequester,
 ) {
     Row(
         modifier = modifier
@@ -210,21 +320,23 @@ private fun SearchTextFieldTopBar(
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        QuackImage(
-            src = QuackIcon.ArrowBack,
-            size = DpSize(all = 24.dp),
-            onClick = onPrevious,
+        QuackIcon(
+            modifier = Modifier.quackClickable(onClick = onPrevious),
+            icon = QuackIcon.Outlined.ArrowBack,
         )
         Spacer(space = 8.dp)
         QuackNoUnderlineTextField(
+            modifier = Modifier.focusRequester(focusRequester),
             text = searchKeyword,
-            onTextChanged = { keyword ->
-                onSearchKeywordChanged(keyword)
-            },
+            onTextChanged = onSearchKeywordChanged,
             placeholderText = stringResource(id = R.string.try_search),
-            trailingIcon = SharedIcon.ic_textfield_delete_16,
+            trailingIcon = if (searchKeyword.isNotEmpty()) SharedIcon.ic_textfield_delete_16 else null,
             trailingIconOnClick = clearSearchKeyword,
-            trailingEndPadding = 12.dp,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onAction()
+                },
+            ),
         )
     }
 }

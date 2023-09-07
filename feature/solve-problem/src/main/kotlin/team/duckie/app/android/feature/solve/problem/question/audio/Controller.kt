@@ -5,29 +5,25 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalQuackQuackApi::class)
+
 package team.duckie.app.android.feature.solve.problem.question.audio
 
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
-import team.duckie.quackquack.ui.border.QuackBorder
-import team.duckie.quackquack.ui.color.QuackColor
-import team.duckie.quackquack.ui.component.QuackSurface
-import team.duckie.quackquack.ui.component.internal.QuackText
-import team.duckie.quackquack.ui.textstyle.QuackTextStyle
+import team.duckie.quackquack.ui.QuackButton
+import team.duckie.quackquack.ui.QuackButtonStyle
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 @Composable
 internal fun AudioController(
@@ -87,23 +83,10 @@ private fun LargeButton(
     text: String,
     onClick: () -> Unit,
 ) {
-    QuackSurface(
-        modifier = modifier.sizeIn(
-            minWidth = 82.dp,
-            minHeight = 40.dp,
-        ),
-        backgroundColor = QuackColor.White,
-        border = QuackBorder(
-            color = QuackColor.Gray3,
-        ),
-        shape = RoundedCornerShape(size = 8.dp),
+    QuackButton(
+        modifier = modifier,
+        text = text,
+        style = QuackButtonStyle.SecondaryRoundSmall,
         onClick = onClick,
-    ) {
-        QuackText(
-            modifier = Modifier.padding(all = 10.dp),
-            text = text,
-            style = QuackTextStyle.Subtitle,
-            singleLine = true,
-        )
-    }
+    )
 }

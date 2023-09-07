@@ -21,14 +21,17 @@ internal data class HomeState(
 
     val isHomeRecommendLoading: Boolean = false,
     val isHomeRecommendFollowingExamLoading: Boolean = false,
+    val isHomeProceedLoading: Boolean = false,
 
     val isHomeRecommendFollowingExamRefreshLoading: Boolean = false,
     val isHomeRecommendPullRefreshLoading: Boolean = false,
+    val isHomeProceedPullRefreshLoading: Boolean = false,
 
     val homeSelectedIndex: HomeStep = HomeStep.HomeRecommendScreen,
 
     val jumbotrons: ImmutableList<HomeRecommendJumbotron> = skeletonJumbotrons,
     val recommendTopics: ImmutableList<RecommendTopic> = persistentListOf(),
+    val jumbotronPage: Int = 0,
 
     val isFollowingExist: Boolean = true,
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
@@ -60,13 +63,14 @@ internal data class HomeState(
             val profileImgUrl: String,
             val favoriteTag: String,
             val tier: String,
+            val userId: Int,
         ) {
             /**
              * [User] 의 Empty Model 입니다.
              * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
              */
             companion object {
-                fun empty() = User("", "", "", "")
+                fun empty() = User("", "", "", "", 0)
             }
         }
 

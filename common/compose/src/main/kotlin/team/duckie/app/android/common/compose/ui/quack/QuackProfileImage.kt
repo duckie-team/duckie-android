@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import team.duckie.app.android.common.compose.R
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
 
@@ -60,12 +61,11 @@ fun QuackProfileImage(
         modifier = modifier
             .size(size)
             .clip(shape)
-            .quackClickable(
-                rippleEnabled = false,
-            ) {
-                if (onClick != null) {
-                    onClick()
-                }
+            .runIf(onClick != null) {
+                quackClickable(
+                    rippleEnabled = true,
+                    onClick = onClick,
+                )
             },
         painter = asyncImagePainter,
         contentScale = contentScale,

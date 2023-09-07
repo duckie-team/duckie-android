@@ -5,13 +5,18 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:Suppress("CyclomaticComplexMethod")
+
 package team.duckie.app.android.feature.exam.result.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -21,15 +26,28 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.kotlin.exception.isHeartNotFound
+import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.domain.challengecomment.model.ChallengeComment
+import team.duckie.app.android.domain.challengecomment.model.CommentOrderType
+import team.duckie.app.android.domain.challengecomment.usecase.DeleteChallengeCommentHeartUseCase
+import team.duckie.app.android.domain.challengecomment.usecase.DeleteChallengeCommentUseCase
+import team.duckie.app.android.domain.challengecomment.usecase.GetChallengeCommentListUseCase
+import team.duckie.app.android.domain.challengecomment.usecase.PostChallengeCommentHeartUseCase
+import team.duckie.app.android.domain.challengecomment.usecase.ReportChallengeCommentUseCase
+import team.duckie.app.android.domain.challengecomment.usecase.WriteChallengeCommentUseCase
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.examInstance.model.ExamInstance
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
 import team.duckie.app.android.domain.examInstance.usecase.MakeExamInstanceSubmitUseCase
+import team.duckie.app.android.domain.heart.model.Heart
+import team.duckie.app.android.domain.ignore.usecase.UserIgnoreUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.MakeQuizUseCase
 import team.duckie.app.android.domain.quiz.usecase.PostQuizReactionUseCase
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,12 +59,260 @@ class ExamResultViewModel @Inject constructor(
     private val getQuizUseCase: GetQuizUseCase,
     private val makeQuizUseCase: MakeQuizUseCase,
     private val postQuizReactionUseCase: PostQuizReactionUseCase,
+    private val ignoreUseCase: UserIgnoreUseCase,
+    // for 오답댓글쓰기
+    private val getChallengeCommentListUseCase: GetChallengeCommentListUseCase,
+    private val deleteChallengeCommentUseCase: DeleteChallengeCommentUseCase,
+    private val deleteChallengeCommentHeartUseCase: DeleteChallengeCommentHeartUseCase,
+    private val postChallengeCommentHeartUseCase: PostChallengeCommentHeartUseCase,
+    private val reportChallengeCommentUseCase: ReportChallengeCommentUseCase,
+    private val writeChallengeCommentUseCase: WriteChallengeCommentUseCase,
 ) : ViewModel(),
     ContainerHost<ExamResultState, ExamResultSideEffect> {
 
     override val container: Container<ExamResultState, ExamResultSideEffect> = container(
         ExamResultState.Loading,
     )
+
+    private val pullToRefreshMinLoadingDelay = 500L
+
+    // 오답 댓글쓰기 START
+    fun ignoreUser(userId: Int, nickname: String) = intent {
+        ignoreUseCase(targetId = userId)
+            .onSuccess {
+                deleteCommentByUserId(userId)
+                postSideEffect(ExamResultSideEffect.SendIgnoreUserToast(nickname))
+            }.onFailure { exception ->
+                postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }
+    }
+
+    fun transferCommentOrderType() = intent {
+        val state = state as ExamResultState.Success
+        val orderType = when (state.commentOrderType) {
+            CommentOrderType.DATE -> CommentOrderType.LIKE
+            CommentOrderType.LIKE -> CommentOrderType.DATE
+        }
+        reduce { state.copy(commentOrderType = orderType) }
+        getChallengeCommentList()
+    }
+
+    fun deleteChallengeComment(commentId: Int) = intent {
+        deleteChallengeCommentUseCase(commentId = commentId)
+            .onSuccess { success ->
+                if (success) {
+                    deleteCommentByCommentId(commentId)
+                    postSideEffect(ExamResultSideEffect.SendDeleteCommentSuccessToast)
+                }
+            }.onFailure { exception ->
+                postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }
+    }
+
+    fun reportChallengeComment(commentId: Int) = intent {
+        reportChallengeCommentUseCase(commentId = commentId)
+            .onSuccess { success ->
+                if (success) {
+                    postSideEffect(ExamResultSideEffect.SendReportCommentSuccessToast)
+                }
+            }.onFailure { exception ->
+                postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }
+    }
+
+    private fun deleteCommentByUserId(userId: Int) = intent {
+        val state = state as ExamResultState.Success
+        reduce {
+            val comments =
+                state.allComments.filter { it.userId != userId }.toImmutableList()
+            state.copy(
+                allComments = comments,
+                commentsTotal = state.commentsTotal.minus(1),
+            )
+        }
+    }
+
+    private fun deleteCommentByCommentId(commentId: Int) = intent {
+        val state = state as ExamResultState.Success
+        reduce {
+            val comments =
+                state.allComments.filter { it.id != commentId }.toImmutableList()
+            state.copy(
+                allComments = comments,
+                commentsTotal = state.commentsTotal.minus(1),
+            )
+        }
+    }
+
+    private fun updateRefreshState(isRefreshing: Boolean) = intent {
+        val state = state as ExamResultState.Success
+        reduce { state.copy(isRefreshing = isRefreshing) }
+    }
+
+    fun initialQuizState() {
+        getChallengeCommentList()
+    }
+
+    fun refreshQuizState(forceLoading: Boolean = false) = intent {
+        val state = state as ExamResultState.Success
+        updateRefreshState(true)
+        getChallengeCommentList()
+        state.updateCommentCreateAt()
+        refreshQuiz()
+        if (forceLoading) delay(pullToRefreshMinLoadingDelay)
+        updateRefreshState(false)
+    }
+
+    private fun getChallengeCommentList() = intent {
+        val state = state as ExamResultState.Success
+        getChallengeCommentListUseCase(
+            problemId = state.wrongProblemId,
+            order = state.commentOrderType,
+        ).onSuccess { result ->
+            val commentsUiModel =
+                result.data?.fastMap { it.toUiModel(isMine = it.isMine(state.userId)) }
+                    ?.toImmutableList()
+                    ?: persistentListOf()
+            reduce {
+                state.copy(
+                    allComments = commentsUiModel,
+                    commentsTotal = result.total ?: 0,
+                )
+            }
+        }.onFailure { exception ->
+            postSideEffect(ExamResultSideEffect.ReportError(exception))
+        }
+    }
+
+    private var isWriteSending: Boolean = false
+    private val existSendingMessage: String = "열심히 댓글을 등록하고 있어요! 조금만 기다려 주세요."
+
+    fun writeChallengeComment() = intent {
+        val state = state as ExamResultState.Success
+        val myComment = state.myWrongComment
+
+        if (isWriteSending) {
+            postSideEffect(ExamResultSideEffect.SendErrorToast(existSendingMessage))
+            return@intent
+        }
+        isWriteSending = true
+
+        if (myComment.isNotEmpty()) {
+            writeChallengeCommentUseCase(
+                challengeId = state.examId,
+                message = myComment,
+            ).onSuccess { challenge ->
+                val comments = state.allComments.toMutableList().apply {
+                    add(0, challenge.toUiModel(isMine = true))
+                }.toImmutableList()
+                reduce {
+                    state.copy(
+                        isWriteComment = true,
+                        allComments = comments,
+                        commentCreateAt = Date(),
+                        commentsTotal = state.commentsTotal.plus(1),
+                    )
+                }
+            }.onFailure { exception ->
+                postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }.also {
+                isWriteSending = false
+            }
+        }
+    }
+
+    fun heartWrongComment(commentId: Int) = intent {
+        val state = state as ExamResultState.Success
+        state.allComments
+            .firstOrNull { it.id == commentId }
+            ?.let { comment ->
+                if (comment.isHeart) {
+                    deleteCommentHeart(commentId)
+                } else {
+                    postCommentHeart(commentId)
+                }
+            } ?: postSideEffect(ExamResultSideEffect.SendErrorToast(COMMENT_NOT_FOUND_MESSAGE))
+    }
+
+    private fun postCommentHeart(commentId: Int) = intent {
+        val state = state as ExamResultState.Success
+        postChallengeCommentHeartUseCase(commentId = commentId)
+            .onSuccess { heartId ->
+                reduce {
+                    val comments = postHeartId(
+                        comments = state.allComments,
+                        commentId = commentId,
+                        heartId = heartId,
+                    )
+                    state.copy(
+                        allComments = comments,
+                    )
+                }
+            }.onFailure { exception ->
+                postSideEffect(ExamResultSideEffect.ReportError(exception))
+            }
+    }
+
+    private fun deleteCommentHeart(commentId: Int) = intent {
+        val state = state as ExamResultState.Success
+        state.allComments.firstOrNull { it.id == commentId }?.heart?.id
+            ?.let { heartId ->
+                deleteChallengeCommentHeartUseCase(heartId = heartId)
+                    .onSuccess {
+                        reduce {
+                            val comments = deleteHeartId(
+                                comments = state.allComments,
+                                commentId = commentId,
+                            )
+                            state.copy(
+                                allComments = comments,
+                            )
+                        }
+                    }.onFailure { exception ->
+                        when {
+                            exception.isHeartNotFound -> postSideEffect(
+                                ExamResultSideEffect.SendErrorToast(
+                                    HEART_NOT_FOUND_MESSAGE,
+                                ),
+                            )
+
+                            else -> postSideEffect(ExamResultSideEffect.ReportError(exception))
+                        }
+                    }
+            } ?: postSideEffect(ExamResultSideEffect.SendErrorToast(HEART_NOT_FOUND_MESSAGE))
+    }
+
+    private fun postHeartId(
+        comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
+        commentId: Int,
+        heartId: Int,
+    ) = comments.fastMap { comment ->
+        if (comment.id == commentId) {
+            comment.copy(
+                heart = Heart(id = heartId),
+                isHeart = true,
+                heartCount = comment.heartCount.plus(1),
+            )
+        } else {
+            comment
+        }
+    }.toImmutableList()
+
+    private fun deleteHeartId(
+        comments: ImmutableList<ExamResultState.Success.ChallengeCommentUiModel>,
+        commentId: Int,
+    ) = comments.fastMap { comment ->
+        if (comment.id == commentId) {
+            comment.copy(
+                heart = null,
+                isHeart = false,
+                heartCount = comment.heartCount.minus(1),
+            )
+        } else {
+            comment
+        }
+    }.toImmutableList()
+    // 오답 댓글쓰기 END
 
     private fun postQuizReaction() = intent {
         val state = state as ExamResultState.Success
@@ -86,6 +352,15 @@ class ExamResultViewModel @Inject constructor(
                     ),
                 )
             }
+        }
+    }
+
+    fun updateWrongComment(comment: String) = intent {
+        val state = state as ExamResultState.Success
+        reduce {
+            state.copy(
+                myWrongComment = comment,
+            )
         }
     }
 
@@ -137,9 +412,7 @@ class ExamResultViewModel @Inject constructor(
         examId: Int,
         updateQuizParam: SubmitQuizUseCase.Param,
     ) = intent {
-        reduce {
-            ExamResultState.Loading
-        }
+        reduce { ExamResultState.Loading }
         viewModelScope.launch {
             submitQuizUseCase(examId, updateQuizParam).onFailure {
                 it.printStackTrace()
@@ -156,6 +429,7 @@ class ExamResultViewModel @Inject constructor(
                     with(quizResult) {
                         ExamResultState.Success(
                             examId = id,
+                            wrongProblemId = wrongProblem?.id ?: 0,
                             reportUrl = if (isPerfectScore) {
                                 exam.perfectScoreImageUrl ?: ""
                             } else {
@@ -172,12 +446,19 @@ class ExamResultViewModel @Inject constructor(
                             timer = exam.timer ?: 0,
                             originalExamId = exam.id,
                             isPerfectScore = isPerfectScore,
-                            nickname = user.nickname,
                             thumbnailUrl = exam.thumbnailUrl,
                             solvedCount = exam.solvedCount ?: 0,
                             isBestRecord = isBestRecord,
-
-                            )
+                            myAnswer = updateQuizParam.wrongAnswer ?: "",
+                            me = user,
+                            mostWrongAnswerData = wrongAnswer?.mostData ?: "",
+                            mostWrongAnswerTotal = wrongAnswer?.mostTotal ?: 0,
+                            popularComments = popularComments?.fastMap(ChallengeComment::toUiModel)
+                                ?.toImmutableList() ?: persistentListOf(),
+                            commentsTotal = commentsTotal ?: 0,
+                            equalAnswerCount = wrongAnswer?.meTotal ?: 0,
+                            isPerfectChallenge = wrongProblem == null,
+                        )
                     }
                 }
             }.onFailure {
@@ -187,6 +468,28 @@ class ExamResultViewModel @Inject constructor(
                 }
                 postSideEffect(ExamResultSideEffect.ReportError(it))
             }
+        }
+    }
+
+    private fun refreshQuiz() = intent {
+        val state = state as ExamResultState.Success
+        getQuizUseCase(state.examId).onSuccess { quizResult ->
+            reduce {
+                with(quizResult) {
+                    state.copy(
+                        popularComments = popularComments?.fastMap(ChallengeComment::toUiModel)
+                            ?.toImmutableList() ?: persistentListOf(),
+                        commentsTotal = commentsTotal ?: 0,
+                        equalAnswerCount = wrongAnswer?.meTotal ?: 0,
+                    )
+                }
+            }
+        }.onFailure {
+            it.printStackTrace()
+            reduce {
+                ExamResultState.Error(exception = it)
+            }
+            postSideEffect(ExamResultSideEffect.ReportError(it))
         }
     }
 
@@ -244,5 +547,10 @@ class ExamResultViewModel @Inject constructor(
 
     fun exitExam() = intent {
         postSideEffect(ExamResultSideEffect.FinishExamResult)
+    }
+
+    private companion object {
+        const val COMMENT_NOT_FOUND_MESSAGE = "댓글을 찾을 수 없습니다."
+        const val HEART_NOT_FOUND_MESSAGE = "좋아요를 찾을 수 없습니다."
     }
 }

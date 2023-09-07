@@ -8,55 +8,46 @@
 package team.duckie.app.android.feature.notification.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import team.duckie.app.android.feature.notification.R
-import team.duckie.app.android.feature.notification.viewmodel.NotificationViewModel
-import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.NoItemScreen
-import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.kotlin.getDiffDayFromToday
-import team.duckie.quackquack.ui.component.QuackBody2
-import team.duckie.quackquack.ui.component.QuackBody3
-import team.duckie.quackquack.ui.component.QuackImage
-import team.duckie.quackquack.ui.component.QuackTopAppBar
-import team.duckie.quackquack.ui.icon.QuackIcon
-import team.duckie.quackquack.ui.modifier.quackClickable
-import team.duckie.quackquack.ui.shape.SquircleShape
-import team.duckie.quackquack.ui.util.DpSize
-import java.util.Date
+import team.duckie.quackquack.material.quackClickable
+import team.duckie.quackquack.material.shape.SquircleShape
+import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackBody3
 
 @Composable
 internal fun NotificationScreen(
     modifier: Modifier = Modifier,
-    viewModel: NotificationViewModel = activityViewModel(),
+    // viewModel: NotificationViewModel = activityViewModel(),
 ) {
-    val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.getNotifications()
-    }
+    // val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
     Column(modifier = modifier) {
-        QuackTopAppBar(
-            leadingIcon = QuackIcon.ArrowBack,
+        // TODO(EvergreenTree97) : 알림 화면 구현 후 제거
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(space = 120.dp)
+            NoItemScreen(
+                title = "아직 알림기능이 준비중입니다",
+                description = "조금만 기다려주세요:)",
+            )
+        }
+        /*QuackTopAppBar(
+            leadingIcon = QuackIcon.Outlined.ArrowBack,
             leadingText = stringResource(id = R.string.notification),
             onLeadingIconClick = viewModel::clickBackPress,
         )
@@ -74,10 +65,12 @@ internal fun NotificationScreen(
                 }
 
                 isEmpty -> {
-                    Box(
+                    Column(
                         modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
+                        Spacer(space = 120.dp)
                         NoItemScreen(
                             title = stringResource(id = R.string.empty_notfications),
                             description = stringResource(id = R.string.check_notifications_after_activity),
@@ -110,15 +103,16 @@ internal fun NotificationScreen(
                     }
                 }
             }
-        }
+        }*/
     }
 }
 
+@Suppress("UnusedPrivateMember")
 @Composable
 private fun NotificationItem(
     thumbnailUrl: String,
     body: String,
-    createdAt: Date,
+    createdAt: String,
     isLoading: Boolean,
     onClick: () -> Unit,
 ) {
@@ -129,12 +123,13 @@ private fun NotificationItem(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         QuackImage(
-            modifier = Modifier.skeleton(
-                visible = isLoading,
-                shape = SquircleShape,
-            ),
+            modifier = Modifier
+                .size(36.dp)
+                .skeleton(
+                    visible = isLoading,
+                    shape = SquircleShape,
+                ),
             src = thumbnailUrl,
-            size = DpSize(all = 36.dp),
         )
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -146,7 +141,7 @@ private fun NotificationItem(
             )
             QuackBody3(
                 modifier = Modifier.skeleton(visible = isLoading),
-                text = createdAt.getDiffDayFromToday(),
+                text = createdAt,
             )
         }
     }

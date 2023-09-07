@@ -38,6 +38,7 @@
     <string name="profile_nickname_rule_error">이름에는 문자, 숫자, 밑줄, 마침표만 사용할 수 있어요.</string>
     <string name="profile_nickname_duplicate_error">이미 있는 이름이에요</string>
     <string name="profile_view_all">전체보기</string>
+    <string name="profile_nickname_valid">사용 가능한 닉네임이에요!</string>
 
     <string name="nickname">닉네임</string>
     <string name="introduce">소개</string>

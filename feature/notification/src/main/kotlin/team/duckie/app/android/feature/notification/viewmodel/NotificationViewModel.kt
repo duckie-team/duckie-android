@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.notification.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -29,25 +30,38 @@ internal class NotificationViewModel @Inject constructor(
     override val container =
         container<NotificationState, NotificationSideEffect>(NotificationState())
 
-    fun getNotifications() = intent {
-        startLoading()
-        getNotificationsUseCase().onSuccess { notifications ->
+    init {
+        // TODO(EvergreenTree97) : 알림 기능 구현 후 제거
+        intent {
             reduce {
                 state.copy(
                     isLoading = false,
-                    isError = false,
-                    notifications = notifications.toImmutableList(),
-                )
-            }
-        }.onFailure {
-            reduce {
-                state.copy(
-                    isLoading = false,
-                    isError = true,
-                    notifications = emptyList<Notification>().toImmutableList(),
+                    notifications = persistentListOf(),
                 )
             }
         }
+    }
+
+    fun getNotifications() = intent {
+        startLoading()
+        getNotificationsUseCase()
+            .onSuccess { notifications ->
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        isError = false,
+                        notifications = notifications.toImmutableList(),
+                    )
+                }
+            }.onFailure {
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        isError = true,
+                        notifications = emptyList<Notification>().toImmutableList(),
+                    )
+                }
+            }
     }
 
     fun clickBackPress() = intent { postSideEffect(NotificationSideEffect.FinishActivity) }

@@ -48,11 +48,13 @@ import team.duckie.app.android.common.compose.invisible
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.ImeSpacer
+import team.duckie.app.android.common.compose.ui.QuackDivider
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowSendId
-import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.ui.quack.blackAndPrimaryColor
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackCircleTag
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
+import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -63,6 +65,8 @@ import team.duckie.quackquack.ui.QuackTagStyle
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
+
+const val TagTitleMaxLength = 10
 
 /**
  * 태그를 추가할 수 있는 [ModalBottomSheetLayout]
@@ -198,7 +202,6 @@ private fun DuckieTagAddBottomSheetContent(
                         QuackCircleTag(
                             text = tag.name,
                             isSelected = false,
-                            trailingIconResId = QuackIcon.CloseId,
                         ) {
                             inputtedTags.remove(inputtedTags[index])
                         }
@@ -215,17 +218,18 @@ private fun DuckieTagAddBottomSheetContent(
                 }
             }
         }
-
-        // TODO(riflockle7): 사용해도 괜찮을지 검토 필요
+        QuackDivider()
         QuackNoUnderlineTextField(
             text = tagInput,
-            onTextChanged = { tagInput = it },
+            onTextChanged = {
+                tagInput = it.takeBy(TagTitleMaxLength, tagInput)
+            },
             placeholderText = stringResource(R.string.tag_add_manual_placeholder),
-            startPadding = 16.dp,
-            trailingEndPadding = 10.dp,
             trailingIcon = QuackIcon.ArrowSendId,
             trailingIconOnClick = ::updateTagInput,
             keyboardActions = KeyboardActions { updateTagInput() },
+            trailingIconTint = blackAndPrimaryColor(tagInput).value,
+            paddingValues = PaddingValues(all = 16.dp),
         )
         ImeSpacer()
     }

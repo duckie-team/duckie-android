@@ -23,7 +23,7 @@ import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
 import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowBack
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
@@ -47,9 +47,9 @@ internal fun EditTopAppBar(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            QuackImage(
+            QuackIcon(
                 modifier = Modifier.quackClickable(onClick = onBackPressed),
-                src = QuackIcon.Outlined.ArrowBack,
+                icon = QuackIcon.Outlined.ArrowBack,
             )
 
             QuackHeadLine2(text = title)

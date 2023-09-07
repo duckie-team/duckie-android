@@ -23,7 +23,7 @@ import team.duckie.app.android.feature.exam.result.screen.ExamResultScreen
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultSideEffect
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultViewModel
 import team.duckie.app.android.navigator.feature.startexam.StartExamNavigator
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.theme.QuackTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -78,8 +78,27 @@ class ExamResultActivity : BaseActivity() {
                     withFinish = true,
                 )
             }
+
             is ExamResultSideEffect.SendReactionSuccessToast -> {
                 ToastWrapper(this).invoke(getString(R.string.exam_result_post_reaction_success))
+            }
+
+            is ExamResultSideEffect.SendDeleteCommentSuccessToast -> {
+                // TODO(limsaehyun): 취소 할 수 있게 구현해야 함
+                ToastWrapper(this).invoke(getString(R.string.exam_result_delete_comment_success))
+            }
+
+            is ExamResultSideEffect.SendErrorToast -> {
+                ToastWrapper(this).invoke(sideEffect.message)
+            }
+
+            is ExamResultSideEffect.SendIgnoreUserToast -> {
+                // TODO(limsaehyun): 취소 할 수 있게 구현해야 함
+                ToastWrapper(this).invoke(getString(R.string.exam_result_ignore_user_success, sideEffect.nickname))
+            }
+
+            is ExamResultSideEffect.SendReportCommentSuccessToast -> {
+                ToastWrapper(this).invoke(getString(R.string.exam_result_report_comment_success))
             }
         }
     }

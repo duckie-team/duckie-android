@@ -33,7 +33,6 @@ import com.ujizin.camposer.state.rememberCameraState
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.icon.v1.CameraId
-import team.duckie.app.android.common.compose.ui.icon.v1.CloseId
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackGridLayout
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImage
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
@@ -42,6 +41,8 @@ import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Close
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
@@ -116,7 +117,11 @@ fun PhotoPicker(
 
     Column(modifier = modifier.zIndex(zIndex)) {
         QuackTopAppBar(
-            leadingIconResId = QuackIcon.CloseId,
+            modifier = Modifier.padding(
+                start = 12.dp,
+                end = 16.dp,
+            ),
+            leadingIcon = QuackIcon.Outlined.Close,
             onLeadingIconClick = onCloseClick,
             centerText = stringResource(R.string.topappbar_filter_full),
             trailingContent = {
@@ -128,11 +133,7 @@ fun PhotoPicker(
                                 rippleEnabled = false,
                                 onClick = onAddClick,
                             )
-                        }
-                        .padding(
-                            horizontal = 16.dp,
-                            vertical = 15.dp,
-                        ),
+                        },
                     text = stringResource(R.string.topappbar_add),
                     typography = QuackTypography.Subtitle.change(
                         color = if (isAddable) {

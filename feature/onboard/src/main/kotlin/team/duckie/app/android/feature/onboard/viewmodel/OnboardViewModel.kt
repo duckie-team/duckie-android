@@ -35,6 +35,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.android.permission.PermissionCompat
 import team.duckie.app.android.common.android.savedstate.SaveableMutableStateFlow
 import team.duckie.app.android.common.android.viewmodel.context
+import team.duckie.app.android.common.kotlin.exception.isKakaoCancelled
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseCase
 import team.duckie.app.android.domain.auth.usecase.JoinUseCase
@@ -182,6 +183,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         }
     }
 
+    fun nicknameChecking() = intent {
+        reduce { state.copy(profileState = ProfileScreenState.Checking) }
+    }
+
     /** 닉네임을 체크한다. */
     fun checkNickname(nickname: String) {
         val isNicknameRuleError = checkNicknameRule(nickname)
@@ -267,7 +272,7 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     /* ----- Api ----- */
 
-    suspend fun getKakaoAccessTokenAndJoin() = intent {
+    fun getKakaoAccessTokenAndJoin() = intent {
         getKakaoAccessTokenUseCase()
             .onSuccess { token ->
                 postSideEffect(OnboardSideEffect.DelegateJoin(token))
@@ -275,7 +280,7 @@ internal class OnboardViewModel @AssistedInject constructor(
             .attachExceptionHandling()
     }
 
-    suspend fun join(kakaoAccessToken: String) = intent {
+    fun join(kakaoAccessToken: String) = intent {
         joinUseCase(kakaoAccessToken)
             .onSuccess { response ->
                 reduce {
@@ -371,7 +376,10 @@ internal class OnboardViewModel @AssistedInject constructor(
         additinal: suspend (exception: Throwable) -> Unit = {},
     ) = intent {
         onFailure { exception ->
-            postSideEffect(OnboardSideEffect.ReportError(exception))
+            when {
+                exception.isKakaoCancelled -> return@onFailure // this is not error
+                else -> postSideEffect(OnboardSideEffect.ReportError(exception))
+            }
             additinal(exception)
         }
     }

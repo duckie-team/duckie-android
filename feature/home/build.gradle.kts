@@ -32,7 +32,7 @@ dependencies {
         projects.navigator,
         libs.orbit.viewmodel,
         libs.orbit.compose,
-        libs.quack.ui.components,
+        libs.kotlin.collections.immutable,
         libs.quack.v2.ui,
         libs.compose.lifecycle.runtime,
         libs.compose.ui.navigation,

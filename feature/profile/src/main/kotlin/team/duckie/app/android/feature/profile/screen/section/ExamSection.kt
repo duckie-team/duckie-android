@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -30,7 +31,7 @@ import team.duckie.app.android.feature.profile.R
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackImage
+import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 
@@ -47,7 +48,9 @@ fun ExamSection(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -55,11 +58,11 @@ fun ExamSection(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                QuackImage(
+                QuackIcon(
                     modifier = Modifier
                         .size(DpSize(24.dp, 24.dp))
                         .skeleton(isLoading),
-                    src = icon,
+                    icon = icon,
                 )
                 QuackTitle2(
                     modifier = Modifier.skeleton(isLoading),
@@ -81,6 +84,9 @@ fun ExamSection(
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
+                item {
+                    Spacer(space = 16.dp)
+                }
                 items(exams) { item ->
                     DuckExamSmallCover(
                         isLoading = isLoading,

@@ -44,16 +44,17 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import team.duckie.app.android.feature.home.R
-import team.duckie.app.android.feature.home.component.HeadLineTopAppBar
-import team.duckie.app.android.feature.home.constants.RankingPage
-import team.duckie.app.android.feature.home.viewmodel.ranking.RankingSideEffect
-import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.fastForEach
+import team.duckie.app.android.feature.home.R
+import team.duckie.app.android.feature.home.component.HeadLineTopAppBar
 import team.duckie.app.android.feature.home.constants.MainScreenType
-import team.duckie.quackquack.ui.component.QuackMainTab
+import team.duckie.app.android.feature.home.constants.RankingPage
+import team.duckie.app.android.feature.home.viewmodel.ranking.RankingSideEffect
+import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
+import team.duckie.quackquack.ui.QuackTab
 
 @Composable
 internal fun RankingScreen(
@@ -73,7 +74,10 @@ internal fun RankingScreen(
             context.getString(R.string.exam),
         )
     }
-    val pagerState = rememberPagerState(initialPage = state.selectedTab)
+    val pagerState = rememberPagerState(
+        initialPage = state.selectedTab,
+        pageCount = { tabs.size },
+    )
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
     val lazyGridState = rememberLazyGridState()
@@ -171,20 +175,19 @@ internal fun RankingScreen(
                         onRetryClick = viewModel::refresh,
                     )
                 } else {
-                    QuackMainTab(
-                        titles = tabs,
-                        selectedTabIndex = state.selectedTab,
-                        onTabSelected = {
-                            viewModel.setSelectedTab(it)
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(it)
+                    QuackTab(index = state.selectedTab) {
+                        tabs.fastForEach { label ->
+                            tab(label) { index ->
+                                viewModel.setSelectedTab(index)
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
                             }
-                        },
-                    )
+                        }
+                    }
                     HorizontalPager(
                         modifier = Modifier.fillMaxSize(),
                         state = pagerState,
-                        pageCount = tabs.size,
                         key = { tabs[it] },
                     ) { page ->
                         when (page) {

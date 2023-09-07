@@ -30,3 +30,11 @@ fun <T : Any> itemsPagingKey(
         key(index) ?: index
     }
 }
+
+/**
+ * 서버측 에러로 PK가 중복으로 내려오는 경우 방치
+ *
+ * @return PK + [secondId] 형식의 String
+ */
+fun Int?.getUniqueKey(secondId: Int): String =
+    this.toString() + secondId

@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.search.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
@@ -21,6 +22,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
@@ -31,9 +33,13 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.android.ui.const.Debounce
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.compose.ui.dialog.ReportAlreadyExists
+import team.duckie.app.android.common.kotlin.exception.isReportAlreadyExists
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
+import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.search.usecase.ClearAllRecentSearchUseCase
 import team.duckie.app.android.domain.search.usecase.ClearRecentSearchUseCase
 import team.duckie.app.android.domain.search.usecase.GetRecentSearchUseCase
@@ -59,6 +65,8 @@ internal class SearchViewModel @Inject constructor(
     private val clearRecentSearchUseCase: ClearRecentSearchUseCase,
     private val followUseCase: FollowUseCase,
     private val getMeUseCase: GetMeUseCase,
+    private val reportUseCase: ReportUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ContainerHost<SearchState, SearchSideEffect>, ViewModel() {
 
     override val container = container<SearchState, SearchSideEffect>(SearchState())
@@ -70,8 +78,18 @@ internal class SearchViewModel @Inject constructor(
         MutableStateFlow<PagingData<SearchState.SearchUser>>(PagingData.empty())
     val searchUsers: Flow<PagingData<SearchState.SearchUser>> = _searchUsers
 
+    private val _searchText = MutableStateFlow("")
+    val searchText: StateFlow<String> = _searchText
+
     init {
         initState()
+        getAutoFocusing()
+    }
+
+    private fun getAutoFocusing() = intent {
+        val autoFocusing = savedStateHandle.getStateFlow(Extras.AutoFocusing, true).value
+
+        reduce { state.copy(searchAutoFocusing = autoFocusing) }
     }
 
     /** [SearchViewModel]의 초기 상태를 설정한다. */
@@ -94,7 +112,7 @@ internal class SearchViewModel @Inject constructor(
     ).apply {
         intent {
             this@apply.debounce(Debounce.SearchSecond).collectLatest { query ->
-                refreshSearchStep(keyword = state.searchKeyword)
+                refreshSearchStep(keyword = _searchText.value)
                 // TODO(limsaehyun): 추후 추천 검색어 비즈니스 로직을 이곳에서 작업해야 함
             }
         }
@@ -149,6 +167,12 @@ internal class SearchViewModel @Inject constructor(
             }
     }
 
+    fun updateReportDialogVisible(visible: Boolean) = intent {
+        reduce {
+            state.copy(reportDialogVisible = visible)
+        }
+    }
+
     /** [keyword]에 따른 덕질고사 검색 결과를 가져온다. */
     internal fun fetchSearchExams(keyword: String) {
         intent { reduce { state.copy(isSearchProblemError = false) } }
@@ -178,6 +202,35 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
+    fun setTargetExamId(examId: Int) = intent {
+        reduce {
+            state.copy(targetExamId = examId)
+        }
+    }
+
+    fun report() = intent {
+        reportUseCase(state.targetExamId)
+            .onSuccess {
+                updateReportDialogVisible(true)
+                postSideEffect(SearchSideEffect.ExamRefresh)
+            }
+            .onFailure { exception ->
+                when {
+                    exception.isReportAlreadyExists -> postSideEffect(
+                        SearchSideEffect.SendToast(ReportAlreadyExists),
+                    )
+
+                    else -> postSideEffect(SearchSideEffect.ReportError(exception))
+                }
+            }
+    }
+
+    fun copyExamDynamicLink() = intent {
+        val examId = state.targetExamId
+
+        postSideEffect(SearchSideEffect.CopyDynamicLink(examId))
+    }
+
     /** 검색 화면에서 [query] 값에 맞는 검색 결과를 가져온다. */
     private suspend fun recommendKeywords(query: String) {
         _getRecommendKeywords.emit(query)
@@ -187,10 +240,9 @@ internal class SearchViewModel @Inject constructor(
     fun updateSearchKeyword(
         keyword: String,
         debounce: Boolean = true,
-    ) = intent {
-        reduce {
-            state.copy(searchKeyword = keyword)
-        }.run {
+    ) {
+        viewModelScope.launch {
+            _searchText.value = keyword
             recommendKeywords(query = keyword)
             if (!debounce) refreshSearchStep(keyword = keyword)
         }
@@ -206,12 +258,12 @@ internal class SearchViewModel @Inject constructor(
         if (keyword.isEmpty()) {
             navigateSearchStep(
                 step = SearchStep.Search,
-                keyword = state.searchKeyword,
+                keyword = _searchText.value,
             )
         } else {
             navigateSearchStep(
                 step = SearchStep.SearchResult,
-                keyword = state.searchKeyword,
+                keyword = _searchText.value,
             )
         }
     }

@@ -42,7 +42,14 @@ object ExceptionCode {
 
     const val KAKAOTALK_NOT_SUPPORT_EXCEPTION =
         "KAKAOTALK_NOT_SUPPORT_EXCEPTION"
+
+    const val HEART_NOT_FOUND = "HEART_NOT_FOUND"
+
+    const val KAKAO_CANCELLED = "KAKAO_CANCELLED"
 }
+
+val Throwable.isHeartNotFound: Boolean
+    get() = (this as? DuckieResponseException)?.code == ExceptionCode.HEART_NOT_FOUND
 
 val Throwable.isReportAlreadyExists: Boolean
     get() = (this as? DuckieResponseException)?.code == ExceptionCode.ReportAlreadyExists
@@ -78,3 +85,6 @@ val Throwable.isKakaoTalkNotConnectedAccount: Boolean
 
 val Throwable.isKakaoTalkNotSupportAccount: Boolean
     get() = (this as? DuckieThirdPartyException)?.code == ExceptionCode.KAKAOTALK_NOT_SUPPORT_EXCEPTION
+
+val Throwable.isKakaoCancelled: Boolean
+    get() = (this as? DuckieThirdPartyException)?.code == ExceptionCode.KAKAO_CANCELLED

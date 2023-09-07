@@ -44,7 +44,7 @@ import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.profile.screen.MyProfileScreen
 import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.app.android.feature.profile.viewmodel.state.ProfileStep
-import team.duckie.quackquack.ui.color.QuackColor
+import team.duckie.quackquack.material.QuackColor
 
 @Composable
 internal fun MyPageScreen(
@@ -147,7 +147,7 @@ internal fun MyPageScreen(
                 MyProfileScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = QuackColor.White.composeColor),
+                        .background(color = QuackColor.White.value),
                     userProfile = state.userProfile,
                     isLoading = state.isLoading,
                     onClickSetting = viewModel::clickSetting,

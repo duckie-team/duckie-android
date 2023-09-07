@@ -50,5 +50,6 @@ internal fun Exam.toFollowingModel() =
             profileImgUrl = user?.profileImageUrl ?: "",
             favoriteTag = user?.duckPower?.tag?.name ?: "",
             tier = user?.duckPower?.tier ?: "",
+            userId = user?.id ?: 0,
         ),
     )

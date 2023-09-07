@@ -20,4 +20,12 @@ sealed class ExamResultSideEffect {
     class ReportError(val exception: Throwable) : ExamResultSideEffect()
 
     object SendReactionSuccessToast : ExamResultSideEffect()
+
+    object SendDeleteCommentSuccessToast : ExamResultSideEffect()
+
+    object SendReportCommentSuccessToast : ExamResultSideEffect()
+
+    data class SendIgnoreUserToast(val nickname: String) : ExamResultSideEffect()
+
+    data class SendErrorToast(val message: String) : ExamResultSideEffect()
 }

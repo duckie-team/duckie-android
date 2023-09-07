@@ -40,6 +40,10 @@ object PreferenceKey {
     object DevMode {
         val IsStage = booleanPreferencesKey(buildPreferenceKey(type = "devMode", token = "isStage"))
     }
+
+    object FeatureFlag {
+        val IsProceedEnable = booleanPreferencesKey(buildPreferenceKey(type = "feature", token = "isProceedEnable"))
+    }
 }
 
 val Context.dataStore by preferencesDataStore(

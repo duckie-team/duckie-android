@@ -32,20 +32,20 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
-import team.duckie.app.android.domain.user.model.UserStatus
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.ui.BaseActivity
+import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
+import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.core.datastore.PreferenceKey
 import team.duckie.app.android.core.datastore.dataStore
+import team.duckie.app.android.domain.user.model.UserStatus
 import team.duckie.app.android.feature.home.screen.MainActivity
 import team.duckie.app.android.feature.onboard.OnboardActivity
 import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
-import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
-import team.duckie.app.android.common.kotlin.seconds
-import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
-import team.duckie.app.android.common.android.ui.const.Extras
-import team.duckie.quackquack.ui.theme.QuackTheme
+import team.duckie.quackquack.material.theme.QuackTheme
 
 private val SplashScreenExitAnimationDurationMillis = 0.2.seconds
 private val SplashScreenFinishDurationMillis = 1.5.seconds

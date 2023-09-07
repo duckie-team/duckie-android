@@ -22,24 +22,23 @@ import okhttp3.internal.immutableListOf
 import team.duckie.app.android.common.compose.ui.TextTabLayout
 import team.duckie.app.android.feature.home.R
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.ui.util.DpSize
 import team.duckie.quackquack.material.QuackColor as QuackV2Color
 
-internal val HomeIconSize = DpSize(24.dp)
-
-@Suppress("UnusedPrivateMember") // 시험 생성하기를 추후에 다시 활용하기 위함
+@Suppress("unused") // 진행중 API 추가 작업을 위함
 @Composable
 internal fun HomeTopAppBar(
     modifier: Modifier = Modifier,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
     onClickedCreate: () -> Unit,
+    onClickedNotice: () -> Unit,
 ) {
     val context = LocalContext.current
 
     val homeTextTabTitles = remember {
         immutableListOf(
             context.getString(R.string.recommend),
+            // context.getString(R.string.proceed),
             context.getString(R.string.following),
         )
     }
@@ -53,15 +52,25 @@ internal fun HomeTopAppBar(
     ) {
         TextTabLayout(
             titles = homeTextTabTitles.toImmutableList(),
+            selectedTabStyle = QuackTypography.HeadLine1,
             selectedTabIndex = selectedTabIndex,
             onTabSelected = onTabSelected,
-            tabStyle = QuackTypography.Title2.change(color = QuackV2Color.Gray2),
+            tabStyle = QuackTypography.HeadLine1.change(color = QuackV2Color.Gray2),
         )
-//      TODO(limsaehyun): 시험 생성하기가 가능한 스펙에서 활용
-//      QuackImage(
-//          src = QuackIcon.Create,
-//          onClick = onClickedCreate,
-//          size = HomeIconSize,
-//      )
+
+        // QuackImage(
+        //     src = R.drawable.home_ic_notice,
+        //     modifier = Modifier
+        //         .quackClickable(onClick = onClickedNotice)
+        //         .size(DpSize(24.dp, 24.dp)),
+        // )
+        //
+        // // TODO(riflockle7): 임시로 활성화
+        // QuackIcon(
+        //     modifier = Modifier
+        //         .quackClickable(onClick = onClickedCreate)
+        //         .size(DpSize(24.dp, 24.dp)),
+        //     icon = OutlinedGroup.Create,
+        // )
     }
 }

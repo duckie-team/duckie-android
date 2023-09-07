@@ -22,6 +22,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import team.duckie.app.android.feature.setting.R
 import team.duckie.app.android.feature.setting.component.SettingContentLayout
+import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 
 /**
@@ -57,7 +58,8 @@ fun SettingInquiryScreen() {
                 SettingContentLayout(
                     title = stringResource(id = item.first),
                     content = item.second,
-                    isBold = false,
+                    typography = QuackTypography.Body1,
+                    horizontalArrangement = Arrangement.Start,
                 )
             }
         }

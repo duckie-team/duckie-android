@@ -5,17 +5,25 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package team.duckie.app.android.common.compose
 
 import android.graphics.Rect
 import android.view.ViewTreeObserver
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 
@@ -62,4 +70,18 @@ fun Modifier.composedWithKeyboardVisibility(
     return this
         .composed { if (keyboardVisible.value) whenKeyboardVisible() else this }
         .composed { if (!keyboardVisible.value) whenKeyboardHidden() else this }
+}
+
+@Composable
+fun HideKeyboardWhenBottomSheetHidden(sheetState: ModalBottomSheetState) {
+    val keyboard = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(Unit) {
+        val sheetStateFlow = snapshotFlow { sheetState.currentValue }
+        sheetStateFlow.collect { state ->
+            if (state == ModalBottomSheetValue.Hidden) {
+                keyboard?.hide()
+            }
+        }
+    }
 }

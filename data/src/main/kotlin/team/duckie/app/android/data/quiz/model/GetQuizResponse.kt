@@ -8,6 +8,7 @@
 package team.duckie.app.android.data.quiz.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import team.duckie.app.android.data.challengecomment.model.ChallengeCommentResponse
 import team.duckie.app.android.data.exam.model.ExamData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.user.model.UserResponse
@@ -27,10 +28,33 @@ internal data class GetQuizResponse(
     val user: UserResponse? = null,
     @field:JsonProperty("wrongProblem")
     val wrongProblem: ProblemData? = null,
+    @field:JsonProperty("wrongAnswer")
+    val wrongAnswer: MeAndMostWrongAnswer? = null,
     @field:JsonProperty("ranking")
     val ranking: Int? = null,
     @field:JsonProperty("requirementAnswer")
     val requirementAnswer: String? = null,
     @field:JsonProperty("isBestRecord")
     val isBestRecord: Boolean? = null,
-)
+    @field:JsonProperty("popularComments")
+    val popularComments: PopularComments?,
+) {
+    data class PopularComments(
+        @field:JsonProperty("total")
+        val total: Int,
+        @field:JsonProperty("data")
+        val data: List<ChallengeCommentResponse>,
+    )
+    data class MeAndMostWrongAnswer(
+        @field:JsonProperty("me")
+        val me: SimpleWrongAnswer,
+        @field:JsonProperty("most")
+        val most: SimpleWrongAnswer,
+    )
+    data class SimpleWrongAnswer(
+        @field:JsonProperty("total")
+        val total: Int,
+        @field:JsonProperty("data")
+        val data: String,
+    )
+}
