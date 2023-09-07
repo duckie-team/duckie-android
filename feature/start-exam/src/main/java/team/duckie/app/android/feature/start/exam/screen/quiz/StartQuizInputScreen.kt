@@ -17,14 +17,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
@@ -37,9 +42,7 @@ import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
-import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 import team.duckie.quackquack.ui.sugar.QuackTitle2
@@ -122,41 +125,49 @@ private fun InfoBox(
         QuackTitle2(text = stringResource(id = R.string.start_exam_information_before_quiz_title))
         Spacer(space = 4.dp)
         QuackBody2(text = stringResource(id = R.string.start_exam_information_before_quiz_line1))
-        QuackText(
-            modifier = Modifier.span(
-                texts = listOf(
-                    stringResource(
-                        id = R.string.start_exam_information_before_quiz_line2_highlight,
-                        limitTime.toString(),
-                    ),
-                ),
-                style = SpanStyle(
-                    color = QuackColor.Black.value,
-                    fontWeight = FontWeight.Bold,
-                ),
+        Text(
+            style = QuackTypography.Body2.asComposeStyle().copy(
+                lineBreak = LineBreak.Simple,
             ),
-            typography = QuackTypography.Body2,
-            text = stringResource(id = R.string.start_exam_information_before_quiz_line2_prefix) + stringResource(
-                id = R.string.start_exam_information_before_quiz_line2_infix,
-                limitTime.toString(),
-            ) + stringResource(id = R.string.start_exam_information_before_quiz_line2_postfix),
+            text = buildAnnotatedString {
+                append(stringResource(id = R.string.start_exam_information_before_quiz_line2_prefix))
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                ) {
+                    append(
+                        stringResource(
+                            id = R.string.start_exam_information_before_quiz_line2_highlight,
+                            limitTime.toString(),
+                        )
+                    )
+                }
+                append(
+                    stringResource(
+                        id = R.string.start_exam_information_before_quiz_line2_infix,
+                        limitTime.toString(),
+                    )
+                )
+                append(stringResource(id = R.string.start_exam_information_before_quiz_line2_postfix))
+            },
         )
-        QuackText(
-            modifier = Modifier.span(
-                texts = listOf(
-                    stringResource(
-                        id = R.string.start_exam_information_before_quiz_line3_highlight,
-                        limitTime.toString(),
-                    ),
-                ),
-                style = SpanStyle(
-                    color = QuackColor.Black.value,
-                    fontWeight = FontWeight.Bold,
-                ),
+        Text(
+            style = QuackTypography.Body2.asComposeStyle().copy(
+                lineBreak = LineBreak.Simple,
             ),
-            typography = QuackTypography.Body2,
-            text = stringResource(id = R.string.start_exam_information_before_quiz_line3_prefix)
-                    + stringResource(id = R.string.start_exam_information_before_quiz_line3_highlight),
+            text = buildAnnotatedString {
+                append(stringResource(id = R.string.start_exam_information_before_quiz_line3_prefix))
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                ) {
+                    append(stringResource(id = R.string.start_exam_information_before_quiz_line3_highlight))
+                }
+            },
         )
     }
 }
