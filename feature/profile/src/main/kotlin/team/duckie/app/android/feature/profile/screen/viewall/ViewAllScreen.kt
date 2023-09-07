@@ -40,10 +40,13 @@ private const val GRID_COUNT: Int = 2
 /**
  * [GRID_COUNT]만큼 item 을 생성하여 [Arrangement.spacedBy]로 스크롤에 여백을 만듭니다.
  */
-private fun LazyGridScope.spaceItem(maxIndex: Int) {
+private fun LazyGridScope.spaceItem(
+    maxIndex: Int,
+    content: @Composable () -> Unit = {},
+) {
     val count = maxIndex % GRID_COUNT + 1
     repeat(count) {
-        item { }
+        item { content() }
     }
 }
 
@@ -72,10 +75,11 @@ fun ViewAllScreen(
                 .padding(horizontal = 16.dp),
             columns = GridCells.Fixed(GRID_COUNT),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(40.dp),
         ) {
-            item {
-                Spacer(space = 20.dp)
+            repeat(GRID_COUNT) {
+                item {
+                    Spacer(space = 20.dp)
+                }
             }
             when (examType) {
                 ExamType.Heart, ExamType.Created -> {
@@ -89,6 +93,7 @@ fun ViewAllScreen(
                         profileExams[index]?.let { item ->
                             val duckTestCoverItem = item.toUiModel()
                             DuckExamSmallCoverForColumn(
+                                modifier = Modifier.padding(bottom = 40.dp),
                                 duckTestCoverItem = duckTestCoverItem,
                                 onItemClick = { onItemClick(duckTestCoverItem) },
                                 isLoading = profileExamInstances.loadState.append == LoadState.Loading,
