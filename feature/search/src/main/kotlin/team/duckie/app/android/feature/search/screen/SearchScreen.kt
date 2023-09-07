@@ -51,6 +51,7 @@ import team.duckie.quackquack.ui.sugar.QuackTitle2
 @Composable
 internal fun SearchScreen(
     vm: SearchViewModel,
+    onSearchComplete: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         vm.getRecentSearch()
@@ -77,6 +78,7 @@ internal fun SearchScreen(
                         vm.clearRecentSearch(keyword = keyword)
                     },
                     navigateToResult = { keyword ->
+                        onSearchComplete()
                         vm.updateSearchKeyword(
                             keyword = keyword,
                             debounce = false,

@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -119,6 +121,7 @@ class SearchActivity : BaseActivity() {
             val coroutineScope = rememberCoroutineScope()
             val keyboardController = LocalSoftwareKeyboardController.current
             val searchText by vm.searchText.collectAsStateWithLifecycle()
+            val focusManager = LocalFocusManager.current
 
             vm.searchUsers.collectAndHandleState(handleLoadStates = vm::checkError)
             val searchExams =
@@ -186,6 +189,9 @@ class SearchActivity : BaseActivity() {
                                 clearSearchKeyword = {
                                     vm.clearSearchKeyword()
                                 },
+                                onAction = {
+                                    focusManager.clearFocus()
+                                },
                                 focusRequester = focusRequester,
                             )
                             AnimatedContent(
@@ -193,7 +199,13 @@ class SearchActivity : BaseActivity() {
                                 label = "AnimatedContent",
                             ) { step ->
                                 when (step) {
-                                    SearchStep.Search -> SearchScreen(vm = vm)
+                                    SearchStep.Search -> SearchScreen(
+                                        vm = vm,
+                                        onSearchComplete = {
+                                            focusManager.clearFocus()
+                                        }
+                                    )
+
                                     SearchStep.SearchResult -> {
                                         if (state.isSearchProblemError &&
                                             state.tagSelectedTab == SearchResultStep.DuckExam
@@ -231,9 +243,6 @@ class SearchActivity : BaseActivity() {
                                                         bottomSheetDialogState.show()
                                                     }
                                                 },
-                                                onSearchComplete = {
-                                                    focusRequester.freeFocus()
-                                                }
                                             )
                                         }
                                     }
@@ -298,6 +307,7 @@ private fun SearchTextFieldTopBar(
     onSearchKeywordChanged: (String) -> Unit,
     clearSearchKeyword: () -> Unit,
     onPrevious: () -> Unit,
+    onAction: () -> Unit,
     focusRequester: FocusRequester,
 ) {
     Row(
@@ -322,6 +332,11 @@ private fun SearchTextFieldTopBar(
             placeholderText = stringResource(id = R.string.try_search),
             trailingIcon = if (searchKeyword.isNotEmpty()) SharedIcon.ic_textfield_delete_16 else null,
             trailingIconOnClick = clearSearchKeyword,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onAction()
+                },
+            ),
         )
     }
 }
