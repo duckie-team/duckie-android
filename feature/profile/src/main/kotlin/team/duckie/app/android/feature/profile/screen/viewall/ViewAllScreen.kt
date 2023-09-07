@@ -66,7 +66,6 @@ fun ViewAllScreen(
             title = getViewAllTitle(examType = examType),
             onBackPressed = onBackPressed,
         )
-        Spacer(space = 20.dp)
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxSize()
@@ -75,6 +74,9 @@ fun ViewAllScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(40.dp),
         ) {
+            item {
+                Spacer(space = 20.dp)
+            }
             when (examType) {
                 ExamType.Heart, ExamType.Created -> {
                     items(
