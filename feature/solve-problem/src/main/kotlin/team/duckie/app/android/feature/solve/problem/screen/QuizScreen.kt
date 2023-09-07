@@ -40,7 +40,6 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.compose.isCurrentPage
 import team.duckie.app.android.common.compose.isTargetPage
-import team.duckie.app.android.common.compose.rememberKeyboardVisible
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
@@ -55,7 +54,6 @@ import team.duckie.app.android.feature.solve.problem.common.verticalScrollModifi
 import team.duckie.app.android.feature.solve.problem.question.QuestionSection
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
-import team.duckie.quackquack.material.quackClickable
 
 private const val QuizTopAppBarLayoutId = "QuizTopAppBar"
 private const val QuizContentLayoutId = "QuizContent"
@@ -88,9 +86,6 @@ internal fun QuizScreen(
         )
     }
 
-    val keyboardVisible = rememberKeyboardVisible()
-    val keyboard = LocalSoftwareKeyboardController.current
-
     LaunchedEffect(timeOver) {
         if (timeOver) {
             onNextPage(
@@ -117,14 +112,6 @@ internal fun QuizScreen(
     )
 
     Layout(
-        modifier = Modifier.quackClickable(
-            rippleEnabled = false,
-            onClick = {
-                if (keyboardVisible.value) {
-                    keyboard?.hide()
-                }
-            },
-        ),
         content = {
             TimerTopBar(
                 modifier = Modifier.layoutId(QuizTopAppBarLayoutId),
@@ -230,7 +217,6 @@ private fun ContentSection(
                 .verticalScrollModifierAsCondition(isImageChoice)
                 .fillMaxSize(),
         ) {
-            Spacer(space = 16.dp)
             QuestionSection(
                 page = pageIndex,
                 question = problem.question,

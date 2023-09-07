@@ -69,6 +69,7 @@ import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSh
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.util.addFocusCleaner
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
@@ -230,6 +231,9 @@ class SearchActivity : BaseActivity() {
                                                         bottomSheetDialogState.show()
                                                     }
                                                 },
+                                                onSearchComplete = {
+                                                    focusRequester.freeFocus()
+                                                }
                                             )
                                         }
                                     }

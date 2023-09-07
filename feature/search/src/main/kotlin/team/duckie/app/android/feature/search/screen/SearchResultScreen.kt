@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +52,7 @@ internal fun SearchResultScreen(
     vm: SearchViewModel = activityViewModel(),
     navigateDetail: (Int) -> Unit,
     openBottomSheet: (Int) -> Unit,
+    onSearchComplete: () -> Unit,
 ) {
     val state = vm.collectAsState().value
 
@@ -61,6 +63,10 @@ internal fun SearchResultScreen(
         SearchResultStep.values().map { step ->
             step.title
         }.toPersistentList()
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        onSearchComplete()
     }
 
     Column(

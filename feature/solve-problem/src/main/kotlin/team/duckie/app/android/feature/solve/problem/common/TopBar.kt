@@ -60,18 +60,16 @@ internal fun TimerTopBar(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                vertical = 12.dp,
-                horizontal = 16.dp,
-            ),
+            .padding(bottom = 16.dp),
     ) {
         QuackTopAppBar(
             leadingIcon = QuackIcon.Outlined.Close,
             onLeadingIconClick = onCloseClick,
         )
-        Spacer(space = 12.dp)
         Box(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
             LinearProgressBar(
