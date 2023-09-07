@@ -36,7 +36,7 @@ internal class NotificationViewModel @Inject constructor(
             reduce {
                 state.copy(
                     isLoading = false,
-                    notifications = persistentListOf()
+                    notifications = persistentListOf(),
                 )
             }
         }

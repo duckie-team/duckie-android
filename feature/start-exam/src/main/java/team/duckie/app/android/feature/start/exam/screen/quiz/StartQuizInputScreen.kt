@@ -141,14 +141,14 @@ private fun InfoBox(
                         stringResource(
                             id = R.string.start_exam_information_before_quiz_line2_highlight,
                             limitTime.toString(),
-                        )
+                        ),
                     )
                 }
                 append(
                     stringResource(
                         id = R.string.start_exam_information_before_quiz_line2_infix,
                         limitTime.toString(),
-                    )
+                    ),
                 )
                 append(stringResource(id = R.string.start_exam_information_before_quiz_line2_postfix))
             },

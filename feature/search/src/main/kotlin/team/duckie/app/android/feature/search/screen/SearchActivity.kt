@@ -203,7 +203,7 @@ class SearchActivity : BaseActivity() {
                                         vm = vm,
                                         onSearchComplete = {
                                             focusManager.clearFocus()
-                                        }
+                                        },
                                     )
 
                                     SearchStep.SearchResult -> {

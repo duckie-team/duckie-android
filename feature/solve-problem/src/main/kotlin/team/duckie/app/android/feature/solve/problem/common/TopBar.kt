@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.LinearProgressBar
-import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.Clock
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackTopAppBar
 import team.duckie.quackquack.material.QuackColor

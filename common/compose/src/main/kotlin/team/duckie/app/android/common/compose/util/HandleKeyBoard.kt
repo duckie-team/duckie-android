@@ -43,6 +43,6 @@ fun Modifier.addFocusCleaner(
         detectTapGestures(onTap = {
             doOnClear()
             focusManager.clearFocus()
-        })
+        },)
     }
 }
