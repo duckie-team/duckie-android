@@ -35,6 +35,7 @@ import team.duckie.app.android.common.android.ui.finishWithAnimation
 import team.duckie.app.android.common.compose.moveNextPage
 import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
+import team.duckie.app.android.common.compose.util.addFocusCleaner
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
 import team.duckie.app.android.feature.solve.problem.common.LoadingIndicator
 import team.duckie.app.android.feature.solve.problem.screen.QuizScreen
@@ -77,6 +78,7 @@ class SolveProblemActivity : BaseActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = QuackColor.White.value)
+                        .addFocusCleaner()
                         .systemBarsPadding()
                         .navigationBarsPadding()
                         .imePadding(),

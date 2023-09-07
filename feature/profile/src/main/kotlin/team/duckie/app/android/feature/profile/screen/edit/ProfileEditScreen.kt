@@ -54,6 +54,7 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextField
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextFieldState
 import team.duckie.app.android.common.compose.ui.skeleton
+import team.duckie.app.android.common.compose.util.addFocusCleaner
 import team.duckie.app.android.feature.profile.R
 import team.duckie.app.android.feature.profile.component.EditTopAppBar
 import team.duckie.app.android.feature.profile.component.GrayBorderButton
@@ -135,6 +136,7 @@ internal fun ProfileEditScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(QuackColor.White.value)
+            .addFocusCleaner()
             .navigationBarsPadding()
             .systemBarsPadding(),
     ) {

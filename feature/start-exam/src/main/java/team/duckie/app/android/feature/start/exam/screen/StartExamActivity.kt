@@ -21,6 +21,7 @@ import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.compose.util.addFocusCleaner
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamSideEffect
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
 import team.duckie.app.android.navigator.feature.solveproblem.SolveProblemNavigator
@@ -43,6 +44,7 @@ class StartExamActivity : BaseActivity() {
                 StartExamScreen(
                     Modifier
                         .fillMaxSize()
+                        .addFocusCleaner()
                         .background(color = QuackColor.White.value)
                         .systemBarsPadding(),
                 )

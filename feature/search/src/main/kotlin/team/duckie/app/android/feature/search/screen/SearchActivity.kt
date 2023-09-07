@@ -168,7 +168,8 @@ class SearchActivity : BaseActivity() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(QuackColor.White.value),
+                            .background(QuackColor.White.value)
+                            .addFocusCleaner(),
                         contentAlignment = Alignment.Center,
                     ) {
                         Column {
