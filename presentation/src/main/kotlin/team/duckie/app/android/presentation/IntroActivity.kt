@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.presentation
 
+import android.Manifest
 import android.animation.ObjectAnimator
 import android.content.ContentValues.TAG
 import android.os.Build
@@ -17,6 +18,7 @@ import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.animation.doOnEnd
@@ -33,9 +35,11 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
+import team.duckie.app.android.common.android.permission.PermissionCompat
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
 import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.core.datastore.PreferenceKey
 import team.duckie.app.android.core.datastore.dataStore
@@ -46,6 +50,7 @@ import team.duckie.app.android.presentation.screen.IntroScreen
 import team.duckie.app.android.presentation.viewmodel.IntroViewModel
 import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.quackquack.material.theme.QuackTheme
+import team.duckie.app.android.presentation.R
 
 private val SplashScreenExitAnimationDurationMillis = 0.2.seconds
 private val SplashScreenFinishDurationMillis = 1.5.seconds

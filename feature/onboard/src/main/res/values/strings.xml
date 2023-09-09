@@ -10,6 +10,8 @@
     <string name="permission_denied">권한이 거부되어 프로필 사진을 기본 사진으로 사용할게요.</string>
     <string name="bad_internet">인터넷 연결이 불안정해요. 인터넷 연결 상태를 확인해 보세요.</string>
 
+    <string name="notification_permission_deny">알림을 비활성화 하셨어요! 설정에서 활성화 시킬 수 있어요."</string>
+
     <string name="topappbar_trailing_skip">건너뛰기</string>
 
     <string name="button_done">완료</string>
