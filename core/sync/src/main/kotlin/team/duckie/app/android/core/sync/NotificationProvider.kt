@@ -32,7 +32,6 @@ object NotificationProvider {
     private const val DEFAULT_NOTIFICATION_TITLE = "Duckie"
     private const val DEFAULT_NOTIFICATION_BODY = "덕키에서 회원님에게 알람이 도착했어요!"
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(): NotificationChannel {
         return NotificationChannel(
@@ -68,7 +67,7 @@ object NotificationProvider {
 
         notificationManager.notify(
             PUSH_NOTIFICATION_ID,
-            notificationBuilder.build()
+            notificationBuilder.build(),
         )
     }
 }

@@ -9,14 +9,9 @@ package team.duckie.app.android.common.android.permission
 
 import android.Manifest
 import android.app.Activity
-import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
-import android.provider.Settings
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat

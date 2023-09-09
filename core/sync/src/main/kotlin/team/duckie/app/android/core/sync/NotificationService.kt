@@ -24,7 +24,6 @@ import team.duckie.app.android.domain.device.usecase.DeviceRegisterUseCase
 import team.duckie.app.android.presentation.IntroActivity
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class NotificationService : FirebaseMessagingService() {
 
@@ -55,11 +54,14 @@ class NotificationService : FirebaseMessagingService() {
         }
 
         val pendingIntent = PendingIntent.getActivity(
-            this, 0, intent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            this,
+            0,
+            intent,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
             } else {
                 PendingIntent.FLAG_UPDATE_CURRENT
-            }
+            },
         )
 
         remoteMessage.notification?.let { notification ->
@@ -71,7 +73,6 @@ class NotificationService : FirebaseMessagingService() {
             )
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

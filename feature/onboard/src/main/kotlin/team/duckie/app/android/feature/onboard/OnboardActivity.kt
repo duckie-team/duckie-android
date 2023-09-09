@@ -91,7 +91,7 @@ class OnboardActivity : BaseActivity() {
     }
 
     private fun requestNotificationPermission() {
-        if(!PermissionCompat.isNotificationPermission(this)) {
+        if (!PermissionCompat.isNotificationPermission(this)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 notificationPermissionResult.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
@@ -99,7 +99,7 @@ class OnboardActivity : BaseActivity() {
     }
 
     private val notificationPermissionResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGrant ->
-        if(!isGrant) {
+        if (!isGrant) {
             ToastWrapper(this).invoke(getString(R.string.notification_permission_deny))
         }
     }
@@ -210,7 +210,6 @@ class OnboardActivity : BaseActivity() {
             vm.finishOnboard(vm.me)
         }
     }
-
 
     private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
         when (sideEffect) {
