@@ -44,6 +44,7 @@ internal sealed class MainSideEffect {
     data class NavigateToProfile(val userId: Int) : MainSideEffect()
 
     object ClickRankingRetry : MainSideEffect()
+    object ClickMusicRetry : MainSideEffect()
 
     class NavigateToFriends(val friendType: FriendsType, val myUserId: Int, val nickname: String) :
         MainSideEffect()
