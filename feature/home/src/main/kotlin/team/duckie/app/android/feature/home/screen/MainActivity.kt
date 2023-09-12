@@ -30,6 +30,7 @@ import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.viewmodel.MainSideEffect
 import team.duckie.app.android.feature.home.viewmodel.MainViewModel
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
+import team.duckie.app.android.feature.home.viewmodel.music.MusicViewModel
 import team.duckie.app.android.feature.home.viewmodel.mypage.MyPageViewModel
 import team.duckie.app.android.feature.home.viewmodel.ranking.RankingViewModel
 import team.duckie.app.android.feature.search.screen.SearchActivity
@@ -55,6 +56,7 @@ class MainActivity : BaseActivity() {
     private val rankingViewModel: RankingViewModel by viewModels()
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
+    private val musicViewModel: MusicViewModel by viewModels()
 
     @Inject
     lateinit var createExamNavigator: CreateProblemNavigator
@@ -123,6 +125,7 @@ class MainActivity : BaseActivity() {
                     rankingViewModel = rankingViewModel,
                     myPageViewModel = myPageViewModel,
                     homeViewModel = homeViewModel,
+                    musicViewModel = musicViewModel,
                     state = state,
                     navigateToUserProfile = {
                         profileNavigator.navigateFrom(
@@ -237,6 +240,10 @@ class MainActivity : BaseActivity() {
                         putExtra(Extras.UserId, sideEffect.userId)
                     },
                 )
+            }
+
+            MainSideEffect.ClickMusicRetry -> {
+                musicViewModel.clickRetryMusic()
             }
         }
     }
