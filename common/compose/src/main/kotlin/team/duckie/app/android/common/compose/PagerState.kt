@@ -9,8 +9,14 @@
 
 package team.duckie.app.android.common.compose
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 
 suspend inline fun PagerState.movePrevPage() {
     if (currentPage > 0 && canScrollBackward) {
@@ -34,4 +40,25 @@ fun PagerState.isCurrentPage(targetIndex: Int): Boolean {
 
 fun PagerState.isTargetPage(targetIndex: Int): Boolean {
     return targetIndex == targetPage
+}
+
+val PagerState.isLastPage: Boolean
+    get() = currentPage == pageCount - 1
+
+@SuppressLint("ComposableNaming")
+@Composable
+fun PagerState.scrollToOriginalPage(
+    rememberPage: Int
+){
+    val isLocateMiddle by remember {
+        derivedStateOf {
+           currentPageOffsetFraction != 0.0f
+        }
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        if (isLocateMiddle) {
+            scrollToPage(rememberPage)
+        }
+    }
 }
