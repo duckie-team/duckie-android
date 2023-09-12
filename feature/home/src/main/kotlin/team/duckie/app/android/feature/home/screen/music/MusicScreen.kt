@@ -60,6 +60,7 @@ import team.duckie.app.android.common.compose.ui.columnSpacer
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
+import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.viewmodel.music.MusicSideEffect
 import team.duckie.app.android.feature.home.viewmodel.music.MusicViewModel
@@ -203,6 +204,9 @@ internal fun MusicScreen(
                                 thumbnailUrl = "https://images.unsplash.com/photo-1693418161641-99928097b5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1760&q=80",
                                 solvedCount = 0,
                                 heartCount = 0,
+                                user = User.empty().copy(
+                                    nickname = "test",
+                                ),
                             )
                         ),
                     )
