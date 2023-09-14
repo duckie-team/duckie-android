@@ -158,7 +158,18 @@ internal fun MainScreen(
                     }
 
                     composable(BottomNavigationStep.MusicScreen.name) {
-                        MusicScreen(vm = musicViewModel)
+                        MusicScreen(
+                            vm = musicViewModel,
+                            onReport = {
+                                mainViewModel.report()
+                            },
+                            onShare = {
+                                mainViewModel.copyExamDynamicLink()
+                            },
+                            setTargetExamId = { examId ->
+                                mainViewModel.setTargetExamId(examId)
+                            },
+                        )
                     }
 
                     composable(BottomNavigationStep.SearchScreen.name) {

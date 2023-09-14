@@ -92,9 +92,10 @@ fun TitleAndMusicContents(
 }
 
 data class MusicItemModel(
+    val id: Int,
     val thumbnail: String,
     val title: String,
-    val onClickMore: () -> Unit,
+    val onClickMore: (Int) -> Unit,
     val currentSolvedCount: Int,
     val totalSolvedCount: Int,
 )
@@ -161,9 +162,11 @@ private fun MusicItem(
                 }
             }
             QuackIcon(
-                modifier = Modifier
-                    .padding(end = 4.dp)
-                    .quackClickable(onClick = onClickMore),
+                modifier = Modifier.quackClickable(
+                    onClick = {
+                        onClickMore(id)
+                    },
+                ),
                 icon = QuackIcon.Outlined.More,
                 size = 16.dp,
             )

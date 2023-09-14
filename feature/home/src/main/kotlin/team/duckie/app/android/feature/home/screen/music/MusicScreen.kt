@@ -25,9 +25,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +52,7 @@ import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ExperimentalToolbarApi
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
+import okhttp3.internal.immutableListOf
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import team.duckie.app.android.common.compose.isLastPage
@@ -57,6 +60,8 @@ import team.duckie.app.android.common.compose.scrollToOriginalPage
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.columnSpacer
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
+import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
@@ -76,10 +81,46 @@ private const val PullRefreshDelay = 1000L
 private const val HeroModuleSwipeInterval = 3000L
 private const val CollapsingToolbarExpandSpeed = 100
 
-@OptIn(ExperimentalToolbarApi::class)
 @Composable
 internal fun MusicScreen(
     vm: MusicViewModel,
+    setTargetExamId: (Int) -> Unit,
+    onReport: () -> Unit,
+    onShare: () -> Unit,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+
+    DuckieSelectableBottomSheetDialog(
+        modifier = Modifier.fillMaxSize(),
+        bottomSheetState = bottomSheetDialogState,
+        navigationBarsPaddingVisible = false,
+        closeSheet = {
+            coroutineScope.launch {
+                bottomSheetDialogState.hide()
+            }
+        },
+        onReport = onReport,
+        onCopyLink = onShare,
+        types = immutableListOf(DuckieSelectableType.CopyLink, DuckieSelectableType.Report),
+    ) {
+        MusicComponent(
+            vm = vm,
+            openExamBottomSheet = { exam ->
+                setTargetExamId(exam)
+                coroutineScope.launch {
+                    bottomSheetDialogState.show()
+                }
+            },
+        )
+    }
+}
+
+@OptIn(ExperimentalToolbarApi::class)
+@Composable
+internal fun MusicComponent(
+    vm: MusicViewModel,
+    openExamBottomSheet: (Int) -> Unit,
 ) {
     val state = vm.collectAsState().value
     var isPullRefresh by remember { mutableStateOf(false) }
@@ -89,6 +130,7 @@ internal fun MusicScreen(
     }
     val lazyListState = rememberLazyListState()
     val toolbarScaffoldState = rememberCollapsingToolbarScaffoldState()
+
 
     vm.collectSideEffect {
         when (it) {
@@ -179,9 +221,10 @@ internal fun MusicScreen(
                     onClickShowAll = {},
                     musicItems = persistentListOf(
                         MusicItemModel(
+                            id = 1,
                             title = "test",
                             thumbnail = "https://images.unsplash.com/photo-1693418161641-99928097b5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1760&q=80",
-                            onClickMore = {},
+                            onClickMore = openExamBottomSheet,
                             currentSolvedCount = 0,
                             totalSolvedCount = 0,
                         )
@@ -219,8 +262,7 @@ internal fun MusicScreen(
                     exams = item.exams.toImmutableList(),
                     onExamClicked = { },
                     isLoading = false,
-                    onMoreClick = {
-                    },
+                    onMoreClick = openExamBottomSheet,
                 )
             }
             columnSpacer(48.dp)
