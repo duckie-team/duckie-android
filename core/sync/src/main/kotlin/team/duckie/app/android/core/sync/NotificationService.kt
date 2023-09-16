@@ -45,31 +45,28 @@ class NotificationService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.d("MyFcmService", "Notification Title :: ${remoteMessage.notification?.title}")
-        Log.d("MyFcmService", "Notification Body :: ${remoteMessage.notification?.body}")
-        Log.d("MyFcmService", "Notification Data :: ${remoteMessage.data}")
-
         val intent = Intent(this, IntroActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
         }
 
         val pendingIntent = PendingIntent.getActivity(
             this,
             0,
             intent,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
             } else {
                 PendingIntent.FLAG_UPDATE_CURRENT
             },
         )
 
-        remoteMessage.notification?.let { notification ->
+        remoteMessage.data.let { data ->
             NotificationProvider.sendNotification(
                 context = this,
-                title = notification.title,
-                body = notification.body,
+                title = data["title"],
+                body = data["body"],
                 intent = pendingIntent,
+                messageId = remoteMessage.messageId,
             )
         }
     }
