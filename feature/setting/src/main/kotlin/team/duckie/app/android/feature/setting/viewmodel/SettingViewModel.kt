@@ -16,7 +16,7 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import team.duckie.app.android.common.kotlin.seconds
-import team.duckie.app.android.domain.auth.usecase.ClearTokenUseCase
+import team.duckie.app.android.domain.auth.usecase.LogOutUseCase
 import team.duckie.app.android.domain.exam.usecase.CancelExamIgnoreUseCase
 import team.duckie.app.android.domain.exam.usecase.GetExamIgnoresUseCase
 import team.duckie.app.android.domain.ignore.usecase.CancelUserIgnoreUseCase
@@ -37,7 +37,7 @@ private const val ClickCount: Int = 4
 internal class SettingViewModel @Inject constructor(
     private val getMeUseCase: GetMeUseCase,
     private val getIsStageUseCase: GetIsStageUseCase,
-    private val clearTokenUseCase: ClearTokenUseCase,
+    private val logOutUseCase: LogOutUseCase,
     private val fetchIgnoreUsers: FetchIgnoreUsersUseCase,
     private val cancelUserIgnoreUseCase: CancelUserIgnoreUseCase,
     private val getIgnoreExamsUseCase: GetExamIgnoresUseCase,
@@ -148,7 +148,7 @@ internal class SettingViewModel @Inject constructor(
     }
 
     fun logout() = intent {
-        clearTokenUseCase()
+        logOutUseCase(state.me?.id ?: 0)
             .onSuccess {
                 postSideEffect(SettingSideEffect.NavigateIntro)
             }

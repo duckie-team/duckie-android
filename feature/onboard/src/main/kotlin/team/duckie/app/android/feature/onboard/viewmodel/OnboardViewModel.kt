@@ -41,6 +41,7 @@ import team.duckie.app.android.domain.auth.usecase.AttachAccessTokenToHeaderUseC
 import team.duckie.app.android.domain.auth.usecase.JoinUseCase
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.category.usecase.GetCategoriesUseCase
+import team.duckie.app.android.domain.device.usecase.DeviceRegisterUseCase
 import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
@@ -77,6 +78,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     private val tagCreateUseCase: TagCreateUseCase,
     private val userUpdateUseCase: UserUpdateUseCase,
     private val setMeUseCase: SetMeUseCase,
+    private val deviceRegisterUseCase: DeviceRegisterUseCase,
     @Assisted private val getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
 ) : ContainerHost<OnboardState, OnboardSideEffect>, AndroidViewModel(application) {
     /* ----- Assisted ----- */
@@ -171,6 +173,11 @@ internal class OnboardViewModel @AssistedInject constructor(
     fun finishOnboard(newMe: User) = intent {
         setMeUseCase(newMe)
         postSideEffect(OnboardSideEffect.FinishOnboard(state.isNewUser, "${newMe.id}"))
+    }
+
+    fun saveDeviceToken(token: String) = intent {
+        deviceRegisterUseCase(token)
+            .attachExceptionHandling()
     }
 
     // validation

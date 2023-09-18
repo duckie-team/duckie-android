@@ -9,7 +9,9 @@ package team.duckie.app.android.feature.onboard
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
@@ -30,6 +33,7 @@ import team.duckie.app.android.common.android.exception.handling.reporter.report
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.android.lifecycle.repeatOnCreated
 import team.duckie.app.android.common.android.network.NetworkUtil
+import team.duckie.app.android.common.android.permission.PermissionCompat
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
 import team.duckie.app.android.common.android.ui.collectWithLifecycle
@@ -83,6 +87,20 @@ class OnboardActivity : BaseActivity() {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
             vm.updateImagePermissionGrantState(isGranted[vm.imagePermission])
             vm.isCameraPermissionGranted = isGranted[Manifest.permission.CAMERA] ?: false
+        }
+    }
+
+    private fun requestNotificationPermission() {
+        if (!PermissionCompat.isNotificationPermission(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                notificationPermissionResult.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private val notificationPermissionResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGrant ->
+        if (!isGrant) {
+            ToastWrapper(this).invoke(getString(R.string.notification_permission_deny))
         }
     }
 
@@ -149,6 +167,7 @@ class OnboardActivity : BaseActivity() {
     }
 
     private fun permissionInit() {
+        requestNotificationPermission()
         vm.updateImagePermissionGrantState(
             ActivityCompat.checkSelfPermission(
                 this,
@@ -172,6 +191,17 @@ class OnboardActivity : BaseActivity() {
         } else {
             toast(getString(R.string.permission_denied))
         }
+    }
+
+    private fun saveDeviceToken() {
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result
+                    Log.d("DeviceToken", token)
+                    vm.saveDeviceToken(token)
+                }
+            }
     }
 
     private fun handleState(state: OnboardState) {
@@ -202,6 +232,7 @@ class OnboardActivity : BaseActivity() {
             }
 
             is OnboardSideEffect.Joined -> {
+                saveDeviceToken()
                 if (sideEffect.isNewUser) {
                     vm.navigateStep(
                         step = OnboardStep.Profile,
