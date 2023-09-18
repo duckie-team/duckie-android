@@ -8,6 +8,7 @@
 package team.duckie.app.android.feature.onboard
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -34,10 +35,10 @@ import team.duckie.app.android.common.android.lifecycle.repeatOnCreated
 import team.duckie.app.android.common.android.network.NetworkUtil
 import team.duckie.app.android.common.android.permission.PermissionCompat
 import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
 import team.duckie.app.android.common.android.ui.collectWithLifecycle
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotConnectedAccount
 import team.duckie.app.android.core.datastore.PreferenceKey
@@ -202,6 +203,7 @@ class OnboardActivity : BaseActivity() {
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
         when (sideEffect) {
             is OnboardSideEffect.UpdateGalleryImages -> {
@@ -235,12 +237,16 @@ class OnboardActivity : BaseActivity() {
             }
 
             is OnboardSideEffect.FinishOnboard -> {
+                val dynamicLinkExamId = intent.getIntExtra(Extras.DynamicLinkExamId, -1)
                 applicationContext.dataStore.edit { preference ->
                     preference[PreferenceKey.Onboard.Finish] = true
                 }
-                changeActivityWithAnimation<MainActivity>(
+                startActivityWithAnimation<MainActivity>(
                     intentBuilder = {
+                        if (dynamicLinkExamId != -1) putExtra(Extras.DynamicLinkExamId, dynamicLinkExamId)
                         putExtra(Extras.StartGuide, sideEffect.isNewUser)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     },
                 )
             }

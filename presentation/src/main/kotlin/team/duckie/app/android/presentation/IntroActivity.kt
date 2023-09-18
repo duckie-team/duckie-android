@@ -11,6 +11,7 @@ package team.duckie.app.android.presentation
 
 import android.animation.ObjectAnimator
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -34,8 +35,8 @@ import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
 import team.duckie.app.android.common.android.ui.const.Extras
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.app.android.common.kotlin.seconds
 import team.duckie.app.android.core.datastore.PreferenceKey
 import team.duckie.app.android.core.datastore.dataStore
@@ -54,18 +55,21 @@ private val LottieDurationMillis = 2.seconds
 class IntroActivity : BaseActivity() {
 
     private val vm: IntroViewModel by viewModels()
+    private val enabledDelay get() = isTaskRoot
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            splashScreen.setOnExitAnimationListener { splashScreenView ->
-                ObjectAnimator.ofFloat(splashScreenView, View.ALPHA, 1f, 0f).run {
-                    interpolator = LinearInterpolator()
-                    duration = SplashScreenExitAnimationDurationMillis
-                    doOnEnd { splashScreenView.remove() }
-                    start()
+        if (enabledDelay) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                splashScreen.setOnExitAnimationListener { splashScreenView ->
+                    ObjectAnimator.ofFloat(splashScreenView, View.ALPHA, 1f, 0f).run {
+                        interpolator = LinearInterpolator()
+                        duration = SplashScreenExitAnimationDurationMillis
+                        doOnEnd { splashScreenView.remove() }
+                        start()
+                    }
                 }
             }
         }
@@ -77,7 +81,9 @@ class IntroActivity : BaseActivity() {
 
         setContent {
             LaunchedEffect(vm) {
-                delay(LottieDurationMillis)
+                if(enabledDelay) {
+                    delay(LottieDurationMillis)
+                }
                 vm.checkUpdateRequire()
             }
 
@@ -134,16 +140,23 @@ class IntroActivity : BaseActivity() {
         }
     }
 
-    private fun launchOnboardActivity() {
-        changeActivityWithAnimation<OnboardActivity>()
+    private fun launchOnboardActivity() = lifecycleScope.launch {
+        val dynamicLinkExamId = parseExamIdDeepLink().await()
+        startActivityWithAnimation<OnboardActivity>(
+            intentBuilder = {
+                if (dynamicLinkExamId != null) putExtra(Extras.DynamicLinkExamId, dynamicLinkExamId)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            },
+        )
     }
 
     private fun launchHomeActivity() = lifecycleScope.launch {
-        val examId = parseExamIdDeepLink().await()
-
-        changeActivityWithAnimation<MainActivity>(
+        val dynamicLinkExamId = parseExamIdDeepLink().await()
+        startActivityWithAnimation<MainActivity>(
             intentBuilder = {
-                if (examId != null) putExtra(Extras.DynamicLinkExamId, examId) else this
+                if (dynamicLinkExamId != null) putExtra(Extras.DynamicLinkExamId, dynamicLinkExamId)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             },
         )
     }
