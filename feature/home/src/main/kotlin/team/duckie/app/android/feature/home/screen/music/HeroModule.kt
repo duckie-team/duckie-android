@@ -26,11 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import team.duckie.app.android.common.compose.ui.Gray35
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
@@ -81,12 +81,6 @@ internal fun HeroModule(
     }
 
 }
-
-private val QuackColor.Companion.Gray35
-    get() = QuackColor(
-        value = Color(0xFF222222)
-            .copy(alpha = 0.5f),
-    )
 
 @Composable
 fun PageBadge(

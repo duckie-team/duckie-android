@@ -148,9 +148,7 @@ internal fun MainScreen(
                             setTargetExamId = { examId ->
                                 mainViewModel.setTargetExamId(examId)
                             },
-                            onReport = {
-                                mainViewModel.report()
-                            },
+                            onReport = mainViewModel::report,
                             onShare = {
                                 mainViewModel.copyExamDynamicLink()
                             },

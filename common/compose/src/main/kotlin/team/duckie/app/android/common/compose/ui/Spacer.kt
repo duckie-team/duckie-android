@@ -42,3 +42,9 @@ fun LazyListScope.columnSpacer(space: Dp) {
         Spacer(modifier = Modifier.height(height = space))
     }
 }
+
+fun LazyListScope.rowSpacer(space: Dp) {
+    item {
+        Spacer(modifier = Modifier.width(width = space))
+    }
+}

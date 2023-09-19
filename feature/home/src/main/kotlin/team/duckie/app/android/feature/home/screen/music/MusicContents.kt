@@ -31,6 +31,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.ui.Spacer
+import team.duckie.app.android.common.compose.ui.rowSpacer
+import team.duckie.app.android.common.kotlin.addAmountString
+import team.duckie.app.android.common.kotlin.addHashTag
 import team.duckie.app.android.feature.home.R
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -76,9 +79,7 @@ fun TitleAndMusicContents(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            item {
-                Spacer(space = 16.dp)
-            }
+            rowSpacer(16.dp)
             items(
                 items = musicItems
             ) { item ->
@@ -157,7 +158,7 @@ private fun MusicItem(
                         typography = QuackTypography.Body2.change(
                             color = QuackColor.Gray1,
                         ),
-                        text = "/${totalSolvedCount}개",
+                        text = "/${totalSolvedCount}".addAmountString(),
                     )
                 }
             }
