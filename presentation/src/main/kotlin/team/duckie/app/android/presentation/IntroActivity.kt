@@ -48,7 +48,7 @@ import team.duckie.app.android.presentation.viewmodel.sideeffect.IntroSideEffect
 import team.duckie.quackquack.material.theme.QuackTheme
 
 private val SplashScreenExitAnimationDurationMillis = 0.2.seconds
-private val SplashScreenFinishDurationMillis = 1.5.seconds
+private val LottieDurationMillis = 2.seconds
 
 @AndroidEntryPoint
 class IntroActivity : BaseActivity() {
@@ -77,7 +77,7 @@ class IntroActivity : BaseActivity() {
 
         setContent {
             LaunchedEffect(vm) {
-                delay(SplashScreenFinishDurationMillis)
+                delay(LottieDurationMillis)
                 vm.checkUpdateRequire()
             }
 
