@@ -8,7 +8,6 @@
 @file:OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalFoundationApi::class,
-    ExperimentalQuackQuackApi::class,
 )
 
 package team.duckie.app.android.feature.home.screen.home
@@ -28,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -37,9 +35,6 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,7 +52,8 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import team.duckie.app.android.common.compose.activityViewModel
-import team.duckie.app.android.common.compose.rememberLazyListState
+import team.duckie.app.android.common.compose.isLastPage
+import team.duckie.app.android.common.compose.scrollToOriginalPage
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
@@ -96,17 +92,7 @@ internal fun HomeRecommendScreen(
         initialPage = state.jumbotronPage,
     )
 
-    val isLocateMiddle by remember {
-        derivedStateOf {
-            pageState.currentPageOffsetFraction != 0.0f
-        }
-    }
-
-    LaunchedEffect(key1 = Unit) {
-        if (isLocateMiddle) {
-            pageState.scrollToPage(state.jumbotronPage)
-        }
-    }
+    pageState.scrollToOriginalPage(rememberPage = state.jumbotronPage)
 
     LaunchedEffect(key1 = pageState.currentPage) {
         delay(JumbotronSwipeInterval)
@@ -134,7 +120,6 @@ internal fun HomeRecommendScreen(
         LazyColumn(
             modifier = modifier
                 .fillMaxSize(),
-            state = lazyRecommendations.rememberLazyListState(),
         ) {
             item {
                 HomeTopAppBar(
@@ -202,9 +187,6 @@ internal fun HomeRecommendScreen(
         )
     }
 }
-
-private val PagerState.isLastPage: Boolean
-    get() = currentPage == pageCount - 1
 
 @Composable
 private fun HomeRecommendJumbotronLayout(

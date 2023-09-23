@@ -123,8 +123,13 @@ internal class MainViewModel @Inject constructor(
     fun navigationPage(
         step: BottomNavigationStep,
     ) = intent {
-        if (step == BottomNavigationStep.RankingScreen && state.bottomNavigationStep == BottomNavigationStep.RankingScreen) {
-            postSideEffect(MainSideEffect.ClickRankingRetry)
+        when{
+            step == BottomNavigationStep.RankingScreen && state.bottomNavigationStep == BottomNavigationStep.RankingScreen -> {
+                postSideEffect(MainSideEffect.ClickRankingRetry)
+            }
+            step == BottomNavigationStep.MusicScreen && state.bottomNavigationStep == BottomNavigationStep.MusicScreen -> {
+                postSideEffect(MainSideEffect.ClickMusicRetry)
+            }
         }
         reduce {
             state.copy(
