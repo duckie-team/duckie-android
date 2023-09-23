@@ -41,7 +41,7 @@ import team.duckie.quackquack.ui.QuackText
 internal fun HeroModule(
     pagerState: PagerState,
     items: ImmutableList<String>,
-    onClickThumbnail: (String) -> Unit,
+    onClickThumbnail: (Int) -> Unit,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     Box {
@@ -58,7 +58,7 @@ internal fun HeroModule(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .quackClickable {
-                        onClickThumbnail(items[page])
+                        onClickThumbnail(0) // TODO(EvergreenTree97) model 변경에 따라 argument 바꿔야함
                     },
             ) {
                 QuackImage(

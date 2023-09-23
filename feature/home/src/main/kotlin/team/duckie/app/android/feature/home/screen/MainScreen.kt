@@ -167,6 +167,9 @@ internal fun MainScreen(
                             setTargetExamId = { examId ->
                                 mainViewModel.setTargetExamId(examId)
                             },
+                            navigateToExamDetail = { examId ->
+                                mainViewModel.navigateToHomeDetail(examId)
+                            },
                         )
                     }
 
