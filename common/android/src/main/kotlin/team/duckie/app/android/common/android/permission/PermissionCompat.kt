@@ -37,7 +37,7 @@ object PermissionCompat {
     fun getNotificationPermission(): String? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.POST_NOTIFICATIONS
-        }else{
+        } else {
             null
         }
     }
@@ -47,7 +47,11 @@ object PermissionCompat {
         if (ContextCompat.checkSelfPermission(activity, permission) !=
             PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(activity, arrayOf(permission), PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(permission),
+                PERMISSION_REQUEST_CODE,
+            )
         }
     }
 
