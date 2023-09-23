@@ -50,6 +50,7 @@ import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.tag.usecase.TagCreateUseCase
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.domain.user.model.UserStatus
+import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.domain.user.usecase.NicknameDuplicateCheckUseCase
 import team.duckie.app.android.domain.user.usecase.SetMeUseCase
 import team.duckie.app.android.domain.user.usecase.UserUpdateUseCase
@@ -78,6 +79,7 @@ internal class OnboardViewModel @AssistedInject constructor(
     private val tagCreateUseCase: TagCreateUseCase,
     private val userUpdateUseCase: UserUpdateUseCase,
     private val setMeUseCase: SetMeUseCase,
+    private val getMeUseCase: GetMeUseCase,
     private val deviceRegisterUseCase: DeviceRegisterUseCase,
     @Assisted private val getKakaoAccessTokenUseCase: GetKakaoAccessTokenUseCase,
 ) : ContainerHost<OnboardState, OnboardSideEffect>, AndroidViewModel(application) {
@@ -141,6 +143,19 @@ internal class OnboardViewModel @AssistedInject constructor(
     val profileImageUrl: String? get() = container.stateFlow.value.me?.profileImageUrl
 
     /* ----- Onboard Logic ----- */
+
+    /* 이미 카카오 로그인을 했던 유저라면, me가 null이 아니고, 온보딩으로 넘어옴 */
+    init {
+        intent {
+            getMeUseCase().getOrNull()?.let {
+                reduce { state.copy(me = it) }
+                navigateStep(
+                    step = OnboardStep.Profile,
+                    ignoreThrottle = true,
+                )
+            }
+        }
+    }
 
     fun navigateStep(step: OnboardStep, ignoreThrottle: Boolean = false) = intent {
         if (!ignoreThrottle &&
