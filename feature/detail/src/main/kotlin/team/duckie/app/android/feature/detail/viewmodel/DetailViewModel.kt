@@ -32,6 +32,7 @@ import team.duckie.app.android.domain.follow.usecase.FollowUseCase
 import team.duckie.app.android.domain.heart.usecase.DeleteHeartUseCase
 import team.duckie.app.android.domain.heart.usecase.PostHeartUseCase
 import team.duckie.app.android.domain.quiz.usecase.MakeQuizUseCase
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.report.usecase.ReportUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
 import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEffect
@@ -177,8 +178,8 @@ class DetailViewModel @Inject constructor(
             require(state is DetailState.Success)
             val successState = state as DetailState.Success
             successState.run {
-                when (isQuiz) {
-                    true -> {
+                when (examType) {
+                    ExamType.Challenge -> {
                         makeQuizUseCase(examId = exam.id)
                             .onSuccess { result ->
                                 postSideEffect(
@@ -187,7 +188,7 @@ class DetailViewModel @Inject constructor(
                                         requirementQuestion = exam.requirementQuestion ?: "",
                                         requirementPlaceholder = exam.requirementPlaceholder ?: "",
                                         timer = exam.timer ?: 0,
-                                        isQuiz = isQuiz,
+                                        isQuiz = true,
                                     ),
                                 )
                             }.onFailure {
@@ -195,7 +196,7 @@ class DetailViewModel @Inject constructor(
                             }
                     }
 
-                    false -> {
+                    else -> {
                         makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
                             when (result.status) {
                                 ExamStatus.Ready -> {
@@ -203,7 +204,7 @@ class DetailViewModel @Inject constructor(
                                         DetailSideEffect.StartExam(
                                             examId = result.id,
                                             certifyingStatement = certifyingStatement,
-                                            isQuiz = isQuiz,
+                                            isQuiz = false,
                                         ),
                                     )
                                 }

@@ -7,12 +7,12 @@
 
 package team.duckie.app.android.feature.detail.viewmodel.state
 
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
-import team.duckie.app.android.common.kotlin.fastMap
 
 /**
  * [DetailViewModel] 의 상태를 나타냅니다.
@@ -59,8 +59,8 @@ sealed class DetailState {
         val isHeart: Boolean
             get() = exam.heart?.id != null
 
-        val isQuiz: Boolean
-            get() = ExamType.toExamType(exam.type ?: "") == ExamType.Challenge
+        val examType: ExamType
+            get() = ExamType.toExamType(exam.type ?: "")
     }
 
     /**
@@ -73,3 +73,4 @@ sealed class DetailState {
         val isNetworkError: Boolean = false,
     ) : DetailState()
 }
+
