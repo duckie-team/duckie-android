@@ -79,7 +79,7 @@ fun TitleAndMusicContents(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            rowSpacer(16.dp)
+            rowSpacer(4.dp)
             items(
                 items = musicItems
             ) { item ->
