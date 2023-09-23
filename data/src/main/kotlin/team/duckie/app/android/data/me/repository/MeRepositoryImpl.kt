@@ -37,6 +37,7 @@ class MeRepositoryImpl @Inject constructor(
     }
 
     private suspend fun checkAndGetMe(): User {
+        // 0. DevMode 에서 API 환경 설정
         if (!isStageChecked) {
             isStageChecked = true
             devModeDataSource.setApiEnvironment(getIsStage())
@@ -45,10 +46,10 @@ class MeRepositoryImpl @Inject constructor(
         // 1. 피처 플래그 갱신
         featureFlagCheck()
 
-        // 1. DataStore 에 토큰 값이 있는지 체크
+        // 2. DataStore 에 토큰 값이 있는지 체크
         val meToken = getMeToken() ?: duckieClientLogicProblemException(code = ClientMeTokenNull)
 
-        // 2. 토큰 검증한다.
+        // 3. 토큰 유효성 검사, 앱 최소버전을 맞추지 않으면 예외 발생
         val accessTokenCheckResponse = authDataSource.checkAccessToken(meToken)
         val accessTokenValid = accessTokenCheckResponse.userId > 0
 
