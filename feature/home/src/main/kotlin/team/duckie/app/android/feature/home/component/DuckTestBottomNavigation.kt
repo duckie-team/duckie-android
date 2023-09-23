@@ -128,6 +128,11 @@ private fun rememberBottomNavigationIcons() = remember {
             title = R.string.home,
         ),
         BottomNavigationIcon(
+            defaultIcon = R.drawable.home_ic_headphone_24,
+            selectedIcon = R.drawable.home_ic_headphone_filled_24,
+            title = R.string.music_test,
+        ),
+        BottomNavigationIcon(
             defaultIcon = R.drawable.home_ic_search_24,
             selectedIcon = R.drawable.home_ic_search_filled_24,
             title = R.string.search,

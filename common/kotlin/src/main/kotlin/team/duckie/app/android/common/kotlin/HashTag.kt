@@ -12,6 +12,10 @@ fun String.addHashTag() = buildString {
     insert(0, "#")
 }
 
+fun String.addAmountString() = buildString {
+    append("개")
+}
+
 /* String 연산을 위한 builder  */
 fun String.buildString(builder: StringBuilder.() -> Unit) =
     StringBuilder(this).apply(builder).toString()

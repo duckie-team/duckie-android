@@ -41,5 +41,6 @@ dependencies {
         libs.firebase.crashlytics,
         libs.paging.runtime,
         libs.paging.compose,
+        libs.compose.ui.collapsing.toolbar,
     )
 }

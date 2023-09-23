@@ -19,9 +19,10 @@ internal enum class BottomNavigationStep(
     val index: Int,
 ) {
     HomeScreen(index = 0),
-    SearchScreen(index = 1),
-    RankingScreen(index = 2),
-    MyPageScreen(index = 3),
+    MusicScreen(index = 1),
+    SearchScreen(index = 2),
+    RankingScreen(index = 3),
+    MyPageScreen(index = 4),
     ;
 
     companion object {

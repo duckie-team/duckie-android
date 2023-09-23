@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -34,4 +35,16 @@ fun RowScope.Spacer(space: Dp) {
 @Composable
 fun RowScope.Spacer(weight: Float) {
     Spacer(modifier = Modifier.weight(weight))
+}
+
+fun LazyListScope.columnSpacer(space: Dp) {
+    item {
+        Spacer(modifier = Modifier.height(height = space))
+    }
+}
+
+fun LazyListScope.rowSpacer(space: Dp) {
+    item {
+        Spacer(modifier = Modifier.width(width = space))
+    }
 }
