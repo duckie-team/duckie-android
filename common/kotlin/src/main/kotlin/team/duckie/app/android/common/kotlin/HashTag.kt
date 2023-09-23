@@ -16,6 +16,10 @@ fun String.addAmountString() = buildString {
     append("개")
 }
 
+fun String.addCountString() = buildString {
+    append("번")
+}
+
 /* String 연산을 위한 builder  */
 fun String.buildString(builder: StringBuilder.() -> Unit) =
     StringBuilder(this).apply(builder).toString()
