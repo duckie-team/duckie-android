@@ -87,6 +87,7 @@ internal fun MusicScreen(
     setTargetExamId: (Int) -> Unit,
     onReport: () -> Unit,
     onShare: () -> Unit,
+    navigateToExamDetail: (Int) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -112,6 +113,7 @@ internal fun MusicScreen(
                     bottomSheetDialogState.show()
                 }
             },
+            navigateToExamDetail = navigateToExamDetail,
         )
     }
 }
@@ -121,6 +123,7 @@ internal fun MusicScreen(
 internal fun MusicComponent(
     vm: MusicViewModel,
     openExamBottomSheet: (Int) -> Unit,
+    navigateToExamDetail: (Int) -> Unit,
 ) {
     val state = vm.collectAsState().value
     var isPullRefresh by remember { mutableStateOf(false) }
@@ -137,6 +140,10 @@ internal fun MusicComponent(
             is MusicSideEffect.ListPullUp -> {
                 lazyListState.animateScrollToItem(0)
                 toolbarScaffoldState.toolbarState.expand(CollapsingToolbarExpandSpeed)
+            }
+
+            is MusicSideEffect.NavigateToMusicExamDetail -> {
+                navigateToExamDetail(it.examId)
             }
         }
     }
@@ -211,7 +218,7 @@ internal fun MusicComponent(
                     items = (1..5).map {
                         "https://images.unsplash.com/photo-1693418161641-99928097b5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1760&q=80"
                     }.toImmutableList(),
-                    onClickThumbnail = {},
+                    onClickThumbnail = vm::clickMusicExam,
                 )
             }
             columnSpacer(40.dp)
@@ -230,7 +237,7 @@ internal fun MusicComponent(
                         )
                     ),
                     onClickMusicItem = {
-
+                        vm.clickMusicExam(it.id)
                     },
                 )
             }
@@ -260,7 +267,7 @@ internal fun MusicComponent(
                         .padding(top = 40.dp),
                     title = item.title,
                     exams = item.exams.toImmutableList(),
-                    onExamClicked = { },
+                    onExamClicked = vm::clickMusicExam,
                     isLoading = false,
                     onMoreClick = openExamBottomSheet,
                 )

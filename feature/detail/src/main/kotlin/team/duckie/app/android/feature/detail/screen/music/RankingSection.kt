@@ -5,7 +5,7 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.feature.detail.screen.quiz
+package team.duckie.app.android.feature.detail.screen.music
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,16 +19,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.DuckieMedal
-import team.duckie.app.android.common.compose.ui.LeftChatBubble
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.Crown
@@ -39,7 +36,7 @@ import team.duckie.app.android.common.kotlin.isFirstRanked
 import team.duckie.app.android.common.kotlin.isTopRanked
 import team.duckie.app.android.domain.quiz.model.QuizInfo
 import team.duckie.app.android.feature.detail.R
-import team.duckie.app.android.feature.detail.common.DetailContentLayout
+import team.duckie.app.android.feature.detail.screen.quiz.ProfileImageSize
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -51,34 +48,63 @@ import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 
-internal val PaleOrange: Color = Color(0xFFFFEFCF)
-internal val ProfileImageSize: DpSize = DpSize(44.dp, 44.dp)
-
 @Composable
-internal fun QuizDetailContentLayout(
+internal fun MusicRankingSection(
     modifier: Modifier = Modifier,
     state: DetailState.Success,
-    tagItemClick: (String) -> Unit,
-    moreButtonClick: () -> Unit,
-    followButtonClick: () -> Unit,
-    profileClick: (Int) -> Unit,
+    userContentClick: (Int) -> Unit,
 ) {
-    DetailContentLayout(
+    val quizRankings = state.exam.quizs
+
+    Column(
         modifier = modifier,
-        state = state,
-        tagItemClick = tagItemClick,
-        moreButtonClick = moreButtonClick,
-        followButtonClick = followButtonClick,
-        profileClick = profileClick,
-        additionalInfo = {
-            if (state.exam.quizs.isNullOrEmpty().not()) {
-                RankingSection(
-                    state = state,
-                    userContentClick = profileClick,
-                )
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
+            QuackHeadLine2(
+                text = stringResource(id = R.string.music_ranking_title, state.mainTagNames),
+            )
+            Spacer(space = 12.dp)
+            MyRankingSection(
+                nickname = state.appUser.nickname,
+                quizInfo = state.exam.myRecord,
+            )
+            QuackMaxWidthDivider()
+            Spacer(space = 24.dp)
+            QuackText(
+                text = stringResource(id = R.string.all_rank),
+                typography = QuackTypography.Body2.change(
+                    color = QuackColor.Gray1,
+                ),
+            )
+            Spacer(space = 4.dp)
+        }
+        if (quizRankings.isNullOrEmpty()) {
+            QuackText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.detail_ranker_not_found),
+                typography = QuackTypography.Title2.change(
+                    color = QuackColor.Gray1,
+                    textAlign = TextAlign.Center,
+                ),
+            )
+        } else {
+            quizRankings.fastForEachIndexed { index, item ->
+                key(item.id) {
+                    RankingContent(
+                        rank = index + 1,
+                        quizInfo = item,
+                        onClick = userContentClick,
+                    )
+                }
             }
-        },
-    )
+        }
+        Spacer(space = 26.dp)
+    }
 }
 
 @Composable
@@ -92,7 +118,7 @@ private fun ColumnScope.MyRankingSection(
     Spacer(space = 4.dp)
     Row(
         modifier = Modifier.height(68.dp),
-        verticalAlignment = CenterVertically,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (quizInfo == null) {
             QuackTitle2(text = "-")
@@ -124,66 +150,6 @@ private fun ColumnScope.MyRankingSection(
     }
 }
 
-@Composable
-private fun RankingSection(
-    state: DetailState.Success,
-    userContentClick: (Int) -> Unit,
-) {
-    val quizRankings = state.exam.quizs
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 28.dp),
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp),
-        ) {
-            QuackHeadLine2(
-                text = stringResource(id = R.string.quiz_ranking_title, state.mainTagNames),
-            )
-            Spacer(space = 12.dp)
-            MyRankingSection(
-                nickname = state.appUser.nickname,
-                quizInfo = state.exam.myRecord,
-            )
-            QuackMaxWidthDivider()
-            Spacer(space = 24.dp)
-            QuackText(
-                text = stringResource(id = R.string.all_rank),
-                typography = QuackTypography.Body2.change(
-                    color = QuackColor.Gray1,
-                ),
-            )
-            Spacer(space = 4.dp)
-        }
-        if (quizRankings.isNullOrEmpty()) {
-            QuackText(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 32.dp)
-                    .align(CenterHorizontally),
-                text = stringResource(id = R.string.detail_ranker_not_found),
-                typography = QuackTypography.Title2.change(
-                    color = QuackColor.Gray1,
-                    textAlign = TextAlign.Center,
-                ),
-            )
-        } else {
-            quizRankings.fastForEachIndexed { index, item ->
-                key(item.id) {
-                    RankingContent(
-                        rank = index + 1,
-                        quizInfo = item,
-                        onClick = userContentClick,
-                    )
-                }
-            }
-        }
-        Spacer(space = 26.dp)
-    }
-}
-
 @AllowMagicNumber
 @Composable
 private fun RankingContent(
@@ -203,7 +169,7 @@ private fun RankingContent(
                 .padding(vertical = 12.dp, horizontal = 16.dp),
         ) {
             Row(
-                verticalAlignment = CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 DuckieMedal(score = rank)
                 Spacer(space = 12.dp)
@@ -215,32 +181,16 @@ private fun RankingContent(
             Spacer(space = 8.dp)
             Column(
                 modifier = Modifier.heightIn(min = ProfileImageSize.height),
-                verticalArrangement = if (quizInfo.reaction == null) Arrangement.Center else Arrangement.Top,
+                verticalArrangement = Arrangement.Top,
             ) {
                 Row(
-                    verticalAlignment = CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (rank.isFirstRanked()) {
                         QuackIcon(icon = QuackIcon.Crown)
                         Spacer(space = 2.dp)
                     }
                     QuackTitle2(text = user.nickname)
-                }
-                if (quizInfo.reaction != null) {
-                    Spacer(space = 4.dp)
-                    if (rank.isFirstRanked()) {
-                        LeftChatBubble(
-                            message = quizInfo.reaction ?: "",
-                            backgroundColor = PaleOrange,
-                        )
-                    } else {
-                        QuackText(
-                            text = quizInfo.reaction ?: "",
-                            typography = QuackTypography.Body2.change(
-                                color = QuackColor.Gray1,
-                            ),
-                        )
-                    }
                 }
                 Spacer(space = 6.dp)
                 if (rank.isFirstRanked()) {
@@ -266,6 +216,7 @@ private fun RankingContent(
     }
 }
 
+
 @Composable
 private fun getUserPerformanceString(correctProblemCount: Int, time: Double) =
     buildString {
@@ -273,3 +224,4 @@ private fun getUserPerformanceString(correctProblemCount: Int, time: Double) =
         append(" / ")
         append(stringResource(id = R.string.time, time))
     }
+

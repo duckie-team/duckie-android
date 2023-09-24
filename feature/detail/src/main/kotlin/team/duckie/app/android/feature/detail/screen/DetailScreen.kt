@@ -39,9 +39,11 @@ import team.duckie.app.android.common.compose.ui.LoadingScreen
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSheetDialog
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.detail.common.DetailBottomLayout
 import team.duckie.app.android.feature.detail.common.TopAppCustomBar
 import team.duckie.app.android.feature.detail.screen.exam.ExamDetailContentLayout
+import team.duckie.app.android.feature.detail.screen.music.MusicDetailContentLayout
 import team.duckie.app.android.feature.detail.screen.quiz.QuizDetailContentLayout
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
@@ -135,8 +137,8 @@ internal fun ExamDetailScreen(
                     state = state,
                     onTagClick = viewModel::goToSearch,
                 )
-                when (state.isQuiz) {
-                    true -> {
+                when (state.examType) {
+                    ExamType.Challenge -> {
                         QuizDetailContentLayout(
                             modifier = Modifier.layoutId(DetailScreenContentLayoutId),
                             state = state,
@@ -147,7 +149,18 @@ internal fun ExamDetailScreen(
                         )
                     }
 
-                    false -> {
+                    ExamType.Audio -> {
+                        MusicDetailContentLayout(
+                            modifier = Modifier.layoutId(DetailScreenContentLayoutId),
+                            state = state,
+                            tagItemClick = viewModel::goToSearch,
+                            moreButtonClick = openBottomSheet,
+                            followButtonClick = viewModel::followUser,
+                            profileClick = viewModel::goToProfile,
+                        )
+                    }
+
+                    else -> {
                         ExamDetailContentLayout(
                             modifier = Modifier.layoutId(DetailScreenContentLayoutId),
                             state = state,

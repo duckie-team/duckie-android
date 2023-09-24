@@ -31,5 +31,9 @@ internal class MusicViewModel @Inject constructor(
     fun clickRetryMusic() = intent {
         postSideEffect(MusicSideEffect.ListPullUp)
     }
+
+    fun clickMusicExam(examId: Int) = intent {
+        postSideEffect(MusicSideEffect.NavigateToMusicExamDetail(examId))
+    }
 }
 

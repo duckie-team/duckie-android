@@ -65,6 +65,8 @@ sealed class DetailState {
         // TODO(riflockle7): 출제용 상세화면 구현 시 추가 작업 필요
         val isUpcoming: Boolean
             get() = false
+        val examType: ExamType
+            get() = ExamType.toExamType(exam.type ?: "")
     }
 
     /**
