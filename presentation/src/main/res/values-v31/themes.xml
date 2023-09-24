@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Designed and developed by Duckie Team, 2022
+  ~
+  ~ Licensed under the MIT.
+  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+  -->
+
+<resources>
+    <style name="Theme.Duckie.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/duckie_orange</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/bg_splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.Duckie</item>
+        <item name="android:windowSplashScreenAnimationDuration">1000</item>
+        <item name="android:statusBarColor">@color/duckie_orange</item>
+        <item name="android:navigationBarColor">@color/duckie_orange</item>
+    </style>
+</resources>
