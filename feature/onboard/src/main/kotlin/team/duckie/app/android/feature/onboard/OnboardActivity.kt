@@ -9,7 +9,6 @@ package team.duckie.app.android.feature.onboard
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.addCallback
@@ -79,28 +78,18 @@ class OnboardActivity : BaseActivity() {
 
     private val permissions by lazy {
         arrayOf(
-            vm.imagePermission,
+            PermissionCompat.getImageStoragePermission(),
             Manifest.permission.CAMERA,
-        )
+        ).run {
+            PermissionCompat.getNotificationPermission()?.let {
+                this + it
+            } ?: this
+        }
     }
     private val requestPermissionLauncher by lazy {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
-            vm.updateImagePermissionGrantState(isGranted[vm.imagePermission])
+            vm.updateImagePermissionGrantState(isGranted[PermissionCompat.getImageStoragePermission()])
             vm.isCameraPermissionGranted = isGranted[Manifest.permission.CAMERA] ?: false
-        }
-    }
-
-    private fun requestNotificationPermission() {
-        if (!PermissionCompat.isNotificationPermission(this)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                notificationPermissionResult.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
-    }
-
-    private val notificationPermissionResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGrant ->
-        if (!isGrant) {
-            ToastWrapper(this).invoke(getString(R.string.notification_permission_deny))
         }
     }
 
@@ -167,7 +156,9 @@ class OnboardActivity : BaseActivity() {
     }
 
     private fun permissionInit() {
-        requestNotificationPermission()
+        val isNotificationGranted = PermissionCompat.getNotificationPermission()?.let {
+            ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+        } ?: true
         vm.updateImagePermissionGrantState(
             ActivityCompat.checkSelfPermission(
                 this,
@@ -179,7 +170,7 @@ class OnboardActivity : BaseActivity() {
             Manifest.permission.CAMERA,
         ) == PackageManager.PERMISSION_GRANTED
 
-        if (vm.isImagePermissionGranted == false || !vm.isCameraPermissionGranted) {
+        if (vm.isImagePermissionGranted == false || !vm.isCameraPermissionGranted || !isNotificationGranted) {
             toast(getString(R.string.permission_needs_for_profile_photo))
             requestPermissionLauncher.launch(permissions)
         }
@@ -246,7 +237,6 @@ class OnboardActivity : BaseActivity() {
             is OnboardSideEffect.FinishOnboard -> {
                 applicationContext.dataStore.edit { preference ->
                     preference[PreferenceKey.Onboard.Finish] = true
-                    sideEffect.userId?.let { preference[PreferenceKey.User.Id] = it }
                 }
                 changeActivityWithAnimation<MainActivity>(
                     intentBuilder = {
