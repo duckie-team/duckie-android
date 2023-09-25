@@ -81,7 +81,7 @@ class IntroActivity : BaseActivity() {
 
         setContent {
             LaunchedEffect(vm) {
-                if(enabledDelay) {
+                if (enabledDelay) {
                     delay(LottieDurationMillis)
                 }
                 vm.checkUpdateRequire()
