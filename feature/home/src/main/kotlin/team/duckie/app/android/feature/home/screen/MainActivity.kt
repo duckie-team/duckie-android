@@ -195,6 +195,16 @@ class MainActivity : BaseActivity() {
                 )
             }
 
+            is MainSideEffect.NavigateToMainDetailWithSingleTop -> {
+                detailNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    },
+                )
+            }
+
             is MainSideEffect.NavigateToCreateProblem -> {
                 createExamNavigator.navigateFrom(activity = this)
             }

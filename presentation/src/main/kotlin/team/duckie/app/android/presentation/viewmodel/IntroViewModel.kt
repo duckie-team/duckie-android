@@ -23,18 +23,24 @@ import team.duckie.app.android.common.kotlin.exception.isAppUpgradeRequire
 import team.duckie.app.android.common.kotlin.exception.isLoginRequireCode
 import team.duckie.app.android.common.kotlin.exception.isTokenExpired
 import team.duckie.app.android.common.kotlin.exception.isUserNotFound
+import team.duckie.app.android.domain.user.usecase.GetTokenValidUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 internal class IntroViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getMeUseCase: GetMeUseCase,
+    private val getTokenValidUseCase: GetTokenValidUseCase,
 ) : ContainerHost<IntroState, IntroSideEffect>, ViewModel() {
 
     override val container = container<IntroState, IntroSideEffect>(
         initialState = IntroState(),
         savedStateHandle = savedStateHandle,
     )
+
+    suspend fun isTokenValid(): Boolean {
+        return getTokenValidUseCase().getOrDefault(false)
+    }
 
     /** 앱 업데이트 여부를 체크한다. */
     fun checkUpdateRequire() = intent {

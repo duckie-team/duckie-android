@@ -85,6 +85,12 @@ class MeRepositoryImpl @Inject constructor(
         me = newMe
     }
 
+    override suspend fun getTokenValid(): Boolean {
+        val meToken = getMeToken() ?: return false
+
+        return authDataSource.checkAccessToken(meToken).userId > 0
+    }
+
     override suspend fun clearMeToken() {
         dataStore.edit { preferences ->
             preferences.remove(PreferenceKey.Account.AccessToken)

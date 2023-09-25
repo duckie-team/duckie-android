@@ -29,6 +29,8 @@ internal sealed class MainSideEffect {
      */
     class NavigateToMainDetail(val examId: Int) : MainSideEffect()
 
+    class NavigateToMainDetailWithSingleTop(val examId: Int) : MainSideEffect()
+
     /**
      * [SettingActivity] 로 이동하는 SideEffect 입니다.
      */
