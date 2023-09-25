@@ -1,3 +1,5 @@
+@file:Suppress("TooGenericExceptionCaught", "SwallowedException", "AnnotationOnSeparateLine")
+
 /*
  * Designed and developed by Duckie Team, 2022
  *
@@ -14,6 +16,8 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
+import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import java.io.BufferedInputStream
@@ -170,5 +174,38 @@ object MediaUtil {
             FirebaseCrashlytics.getInstance().recordException(e)
             null
         }
+    }
+
+    fun imageExternalSave(bitmap: Bitmap): String {
+        val state = Environment.getExternalStorageState()
+        if (Environment.MEDIA_MOUNTED == state) {
+            val rootPath =
+                "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)}/mbti"
+            val fileName = "덕퀴즈 결과 ${System.currentTimeMillis()}.png"
+            val savePath = File(rootPath)
+            savePath.mkdirs()
+
+            val file = File(savePath, fileName)
+
+            if (file.exists()) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    file.delete()
+                } else {
+                    File(file.toString()).delete()
+                }
+            }
+
+            try {
+                val out = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                out.flush()
+                out.close()
+
+                return file.path
+            } catch (e: Exception) {
+                Log.d("MediaUtil", "Error!")
+            }
+        }
+        return ""
     }
 }
