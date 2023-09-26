@@ -37,9 +37,9 @@ fun TempSmallOutlineButton(
                 color = QuackColor.Gray3.value,
                 shape = RoundedCornerShape(12.dp),
             )
-            .quackClickable {
-                onClick()
-            }
+            .quackClickable(
+                onClick = onClick,
+            )
             .padding(
                 vertical = 12.dp,
             ),

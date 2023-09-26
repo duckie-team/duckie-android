@@ -17,7 +17,6 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import java.io.BufferedInputStream
@@ -195,15 +194,11 @@ object MediaUtil {
                 }
             }
 
-            try {
-                val out = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-                out.flush()
-                out.close()
-
-                return file.path
-            } catch (e: Exception) {
-                Log.d("MediaUtil", "Error!")
+            file.outputStream().use { outputStream ->
+                if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
+                    outputStream.flush()
+                    return file.path
+                }
             }
         }
         return ""
