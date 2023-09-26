@@ -42,7 +42,9 @@ import coil.ImageLoader
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
+import team.duckie.app.android.common.android.image.MediaUtil
 import team.duckie.app.android.common.android.image.saveImageInGallery
+import team.duckie.app.android.common.android.share.ShareUtil
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
@@ -50,6 +52,8 @@ import team.duckie.app.android.common.compose.ui.QuackDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.Download
 import team.duckie.app.android.common.compose.ui.icon.v2.DuckieTextLogo
+import team.duckie.app.android.common.compose.ui.icon.v2.Instagram
+import team.duckie.app.android.common.compose.ui.quack.TempSmallOutlineButton
 import team.duckie.app.android.common.compose.util.ComposeToBitmap
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
 import team.duckie.app.android.feature.exam.result.R
@@ -59,11 +63,9 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.icons
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
-import team.duckie.quackquack.ui.sugar.QuackSecondaryLargeButton
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 import kotlin.math.round
@@ -108,16 +110,21 @@ internal fun ExamResultShareScreen(
             )
         },
         bottomBar = {
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(68.dp)
-                    .background(Color.White),
-                contentAlignment = Alignment.Center,
+                    .background(Color.White)
+                    .padding(
+                        horizontal = 16.dp,
+                        vertical = 12.dp,
+                    ),
             ) {
-                QuackSecondaryLargeButton(
-                    modifier = Modifier.icons(leadingIcon = QuackIcon.Download),
+                TempSmallOutlineButton(
+                    modifier = Modifier
+                        .weight(1f),
                     text = stringResource(id = R.string.exam_result_save_image),
+                    icon = QuackIcon.Download,
                 ) {
                     coroutineScope.launch {
                         val bitmap = snapShot.invoke()
@@ -131,6 +138,26 @@ internal fun ExamResultShareScreen(
                         )
                     }
                     rememberToast.invoke(context.getString(R.string.exam_success_save_image_message))
+                }
+                Spacer(space = 8.dp)
+                TempSmallOutlineButton(
+                    modifier = Modifier
+                        .weight(1f),
+                    text = stringResource(id = R.string.exam_result_instagram_share),
+                    icon = QuackIcon.Instagram,
+                ) {
+                    coroutineScope.launch {
+                        val bitmap = snapShot.invoke()
+                        val file = MediaUtil.imageExternalSave(bitmap)
+                        runCatching {
+                            val intent = ShareUtil.intentInstagramStory(file)
+                            context.startActivity(intent)
+                        }.onSuccess {
+                            rememberToast.invoke(context.getString(R.string.exam_success_save_image_message))
+                        }.onFailure {
+                            rememberToast.invoke(context.getString(R.string.exam_share_failed))
+                        }
+                    }
                 }
             }
         },
