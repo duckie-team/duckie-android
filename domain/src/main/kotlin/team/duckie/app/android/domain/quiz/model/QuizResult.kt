@@ -29,6 +29,8 @@ data class QuizResult(
     val isBestRecord: Boolean,
     val popularComments: ImmutableList<ChallengeComment>?,
     val commentsTotal: Int?,
+    val solveRank: Int?,
+    val percentileRank: String?,
 ) {
     @Immutable
     data class WrongAnswer(

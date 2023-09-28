@@ -68,7 +68,6 @@ import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
-import kotlin.math.round
 
 private val PaleOrange = Color(0xFFFFF8E5)
 
@@ -141,8 +140,7 @@ internal fun ExamResultShareScreen(
                 }
                 Spacer(space = 8.dp)
                 TempSmallOutlineButton(
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     text = stringResource(id = R.string.exam_result_instagram_share),
                     icon = QuackIcon.Instagram,
                 ) {
@@ -276,7 +274,7 @@ private fun ExamResultImage(
             ),
         )
         Spacer(space = 4.dp)
-        QuackBody1(text = "${state.solvedCount}명 중 ${round(state.percent)}%!")
+        QuackBody1(text = "${state.solveRank}명 중 ${state.percentileRank}%!")
         Spacer(space = 24.dp)
         QuackIcon(
             modifier = Modifier.size(48.dp, 16.dp),
