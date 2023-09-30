@@ -9,6 +9,7 @@
 
 package team.duckie.app.android.feature.exam.result.screen
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,10 +42,14 @@ import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import team.duckie.app.android.common.android.image.MediaUtil
 import team.duckie.app.android.common.android.image.saveImageInGallery
+import team.duckie.app.android.common.android.intent.goToMarket
 import team.duckie.app.android.common.android.share.ShareUtil
+import team.duckie.app.android.common.android.share.ShareUtil.INSTAGRAM_PACKAGE_NAME
+import team.duckie.app.android.common.android.share.isAppInstalled
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
@@ -55,6 +60,7 @@ import team.duckie.app.android.common.compose.ui.icon.v2.DuckieTextLogo
 import team.duckie.app.android.common.compose.ui.icon.v2.Instagram
 import team.duckie.app.android.common.compose.ui.quack.TempSmallOutlineButton
 import team.duckie.app.android.common.compose.util.ComposeToBitmap
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
@@ -71,6 +77,7 @@ import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val PaleOrange = Color(0xFFFFF8E5)
 
+@AllowMagicNumber("for instagram delete external save delay")
 @Composable
 internal fun ExamResultShareScreen(
     state: ExamResultState.Success,
@@ -150,10 +157,15 @@ internal fun ExamResultShareScreen(
                         runCatching {
                             val intent = ShareUtil.intentInstagramStory(file)
                             context.startActivity(intent)
-                        }.onSuccess {
-                            rememberToast.invoke(context.getString(R.string.exam_success_save_image_message))
-                        }.onFailure {
-                            rememberToast.invoke(context.getString(R.string.exam_share_failed))
+                        }.onSuccess { // for delete external save
+                            delay(3000L)
+                            MediaUtil.deleteFile(file)
+                        }.onFailure { _ ->
+                            if (!context.isAppInstalled(INSTAGRAM_PACKAGE_NAME)) {
+                                (context as Activity).goToMarket(INSTAGRAM_PACKAGE_NAME)
+                            } else {
+                                rememberToast.invoke(context.getString(R.string.exam_share_failed))
+                            }
                         }
                     }
                 }
