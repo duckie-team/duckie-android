@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.R
+import team.duckie.app.android.common.compose.VibrateOnTap
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -43,19 +44,22 @@ fun UserFollowingLayout(
         description = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
         onClickLayout = onClickUserProfile,
         trailingButton = {
-            QuackText(
-                modifier = it
-                    .quackClickable(
-                        onClick = {
-                            onClickTrailingButton(!isFollowing)
-                        },
-                        rippleEnabled = false,
+            VibrateOnTap { vibrate ->
+                QuackText(
+                    modifier = Modifier
+                        .quackClickable(
+                            onClick = {
+                                vibrate()
+                                onClickTrailingButton(!isFollowing)
+                            },
+                            rippleEnabled = false,
+                        ),
+                    text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
+                    typography = QuackTypography.Body2.change(
+                        color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                     ),
-                text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
-                typography = QuackTypography.Body2.change(
-                    color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
-                ),
-            )
+                )
+            }
         },
         visibleTrailingButton = visibleTrailingButton,
         leadingImageContent = {

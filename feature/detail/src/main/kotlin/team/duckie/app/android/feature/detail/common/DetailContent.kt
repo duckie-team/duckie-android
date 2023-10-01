@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
+import team.duckie.app.android.common.compose.VibrateOnTap
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.kotlin.fastForEach
@@ -217,31 +218,36 @@ private fun DetailProfileLayout(
         // 공백
         Spacer(modifier = Modifier.weight(1f))
         // 팔로우 버튼
-        QuackText(
-            modifier = Modifier
-                .padding(
-                    PaddingValues(
-                        top = 8.dp,
-                        bottom = 8.dp,
+        VibrateOnTap { vibrate ->
+            QuackText(
+                modifier = Modifier
+                    .padding(
+                        PaddingValues(
+                            top = 8.dp,
+                            bottom = 8.dp,
+                        ),
+                    )
+                    .quackClickable(
+                        onClick = {
+                            vibrate()
+                            followButtonClick()
+                        },
                     ),
-                )
-                .quackClickable(
-                    onClick = followButtonClick,
+                text = stringResource(
+                    if (isFollowed) {
+                        R.string.detail_following
+                    } else {
+                        R.string.detail_follow
+                    },
                 ),
-            text = stringResource(
-                if (isFollowed) {
-                    R.string.detail_following
-                } else {
-                    R.string.detail_follow
-                },
-            ),
-            typography = QuackTypography.Body2.change(
-                color = if (isFollowed) {
-                    QuackColor.Gray2
-                } else {
-                    QuackColor.DuckieOrange
-                },
-            ),
-        )
+                typography = QuackTypography.Body2.change(
+                    color = if (isFollowed) {
+                        QuackColor.Gray2
+                    } else {
+                        QuackColor.DuckieOrange
+                    },
+                ),
+            )
+        }
     }
 }

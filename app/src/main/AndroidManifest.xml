@@ -16,7 +16,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
-
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <!--
     [ android:largeHeap="true" ]
     https://stackoverflow.com/a/18034671/14299073
