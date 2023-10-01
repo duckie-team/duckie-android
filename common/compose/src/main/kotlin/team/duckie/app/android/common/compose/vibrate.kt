@@ -15,7 +15,9 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 
+@AllowMagicNumber("vibration seconds")
 private fun vibrateDevice(context: Context) {
     when {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
