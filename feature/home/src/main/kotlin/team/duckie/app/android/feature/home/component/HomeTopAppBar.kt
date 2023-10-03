@@ -11,23 +11,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
 import okhttp3.internal.immutableListOf
 import team.duckie.app.android.common.compose.ui.TextTabLayout
 import team.duckie.app.android.feature.home.R
 import team.duckie.quackquack.material.QuackTypography
-import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
-import team.duckie.quackquack.material.icon.quackicon.outlined.Create
-import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.material.QuackColor as QuackV2Color
 
 @Suppress("unused") // 진행중 API 추가 작업을 위함
@@ -71,12 +65,12 @@ internal fun HomeTopAppBar(
         //         .size(DpSize(24.dp, 24.dp)),
         // )
         //
-         // TODO(riflockle7): 임시로 활성화
-         QuackIcon(
-             modifier = Modifier
-                 .quackClickable(onClick = onClickedCreate)
-                 .size(DpSize(24.dp, 24.dp)),
-             icon = OutlinedGroup.Create,
-         )
+        // // TODO(riflockle7): 임시로 활성화
+        // QuackIcon(
+        //     modifier = Modifier
+        //         .quackClickable(onClick = onClickedCreate)
+        //         .size(DpSize(24.dp, 24.dp)),
+        //     icon = OutlinedGroup.Create,
+        // )
     }
 }
