@@ -589,10 +589,10 @@ internal class CreateProblemViewModel @Inject constructor(
         questionType: Question.Type?,
         questionIndex: Int,
         title: String? = null,
-        urlSource: Uri,
+        urlSource: Uri?,
         applicationContext: Context,
     ) = viewModelScope.launch {
-        urlSource.run {
+        urlSource?.run {
             runCatching {
                 requestImage(
                     when (questionType) {
@@ -609,6 +609,8 @@ internal class CreateProblemViewModel @Inject constructor(
             }.onFailure {
                 intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
             }
+        } ?: kotlin.run {
+            setQuestion(Question.Type.Text, questionIndex, title)
         }
     }
 
