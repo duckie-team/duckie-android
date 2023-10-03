@@ -13,25 +13,32 @@
 
 package team.duckie.app.android.feature.create.exam.common.type
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackDropDownCard
+import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.create.exam.R
 import team.duckie.quackquack.material.QuackBorder
 import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackBorder
 import team.duckie.quackquack.material.quackClickable
-import team.duckie.quackquack.ui.QuackDefaultTextField
-import team.duckie.quackquack.ui.QuackTextFieldStyle
+import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.sugar.QuackSubtitle
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
@@ -43,7 +50,8 @@ internal fun TextChoiceLayout(
     questionIndex: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
-    imageClick: () -> Unit,
+    onImageClick: () -> Unit,
+    onImageClear: () -> Unit,
     onDropdownItemClick: (Int) -> Unit,
     answers: Answer.Choice,
     answerTextChanged: (String, Int) -> Unit,
@@ -55,27 +63,45 @@ internal fun TextChoiceLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
             .quackClickable(
                 onLongClick = { deleteLongClick(null) },
             ) {},
     ) {
+        // 제목 뷰
         TitleView(
             questionIndex,
             question,
             titleChanged,
-            imageClick,
-            answers.type.title,
-            onDropdownItemClick,
+            onImageClick,
+            onImageClear,
         )
 
+        // 구분선
+        Box(
+            modifier = Modifier
+                .background(QuackColor.Gray4.value)
+                .fillMaxWidth()
+                .height(8.dp),
+        )
+
+        // 문제 타입 선택 DropDown
+        QuackDropDownCard(
+            modifier = Modifier.padding(start = 4.dp, top = 28.dp),
+            text = answers.type.title,
+            showBorder = false,
+            onClick = {
+                onDropdownItemClick(questionIndex)
+            },
+        )
+
+        // 문제 목록
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
             val answerNo = answerIndex + 1
             val isChecked = correctAnswers == "$answerIndex"
-            QuackDefaultTextField(
+            QuackNoUnderlineTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 12.dp)
                     .quackBorder(
                         border = QuackBorder(
                             color = if (isChecked) QuackColor.DuckieOrange else QuackColor.Gray4,
@@ -84,42 +110,44 @@ internal fun TextChoiceLayout(
                     .quackClickable(
                         onLongClick = { deleteLongClick(answerIndex) },
                     ) {},
-                value = choiceModel.text,
-                onValueChange = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
+                text = choiceModel.text,
+                onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
+                paddingValues = PaddingValues(vertical = 16.dp, horizontal = 12.dp),
                 placeholderText = stringResource(
                     id = R.string.create_problem_answer_placeholder,
                     "$answerNo",
                 ),
-                style = QuackTextFieldStyle.Default,
-                // TODO(riflockle7): 꽥꽥 기능 제공 안함
-                // trailingContent = {
-                //     Column(
-                //         modifier = Modifier.quackClickable(
-                //             onClick = {
-                //                 setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
-                //             },
-                //         ),
-                //         horizontalAlignment = Alignment.CenterHorizontally,
-                //     ) {
-                //         QuackRoundCheckBox(checked = isChecked)
-                //
-                //         if (isChecked) {
-                //             QuackText(
-                //                 modifier = Modifier.padding(top = 2.dp),
-                //                 typography = QuackTypography.Body3.change(QuackColor.DuckieOrange),
-                //                 text = stringResource(id = R.string.answer),
-                //             )
-                //         }
-                //     }
-                // },
+                trailingContent = {
+                    Column(
+                        modifier = Modifier.quackClickable(
+                            onClick = {
+                                setCorrectAnswerClick(if (isChecked) "" else "$answerIndex")
+                            },
+                        ),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        QuackRoundCheckBox(checked = isChecked)
+
+                        if (isChecked) {
+                            QuackText(
+                                modifier = Modifier.padding(top = 2.dp),
+                                typography = QuackTypography.Body3.change(QuackColor.DuckieOrange),
+                                text = stringResource(id = R.string.answer),
+                            )
+                        }
+                    }
+                },
             )
         }
 
+        // 공백
         Spacer(modifier = Modifier.height(12.dp))
 
+        // + 보기추가 버튼
         if (answers.choices.size < MaximumChoice) {
             QuackSubtitle(
                 modifier = Modifier
+                    .padding(start = 16.dp)
                     .quackClickable(onClick = addAnswerClick)
                     .padding(vertical = 2.dp, horizontal = 4.dp),
                 text = stringResource(id = R.string.create_problem_add_button),

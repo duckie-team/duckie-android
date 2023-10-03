@@ -285,7 +285,7 @@ internal fun CreateExamScreen(
                                             ),
                                         )
                                     },
-                                    imageClick = {
+                                    onImageClick = {
                                         coroutineShape.openPhotoPicker(
                                             context,
                                             vm,
@@ -295,6 +295,14 @@ internal fun CreateExamScreen(
                                             ),
                                             keyboard,
                                             launcher,
+                                        )
+                                    },
+                                    onImageClear = {
+                                        vm.setQuestionWithMedia(
+                                            Question.Type.Image,
+                                            questionIndex,
+                                            urlSource = null,
+                                            applicationContext = context.applicationContext,
                                         )
                                     },
                                     onDropdownItemClick = {
@@ -334,7 +342,7 @@ internal fun CreateExamScreen(
                                             ),
                                         )
                                     },
-                                    imageClick = {
+                                    onImageClick = {
                                         coroutineShape.openPhotoPicker(
                                             context,
                                             vm,
@@ -344,6 +352,14 @@ internal fun CreateExamScreen(
                                             ),
                                             keyboard,
                                             launcher,
+                                        )
+                                    },
+                                    onImageClear = {
+                                        vm.setQuestionWithMedia(
+                                            Question.Type.Image,
+                                            questionIndex,
+                                            urlSource = null,
+                                            applicationContext = context.applicationContext,
                                         )
                                     },
                                     onDropdownItemClick = {
@@ -396,7 +412,7 @@ internal fun CreateExamScreen(
                                             ),
                                         )
                                     },
-                                    imageClick = {
+                                    onImageClick = {
                                         coroutineShape.openPhotoPicker(
                                             context,
                                             vm,
@@ -406,6 +422,14 @@ internal fun CreateExamScreen(
                                             ),
                                             keyboard,
                                             launcher,
+                                        )
+                                    },
+                                    onImageClear = {
+                                        vm.setQuestionWithMedia(
+                                            Question.Type.Image,
+                                            questionIndex,
+                                            urlSource = null,
+                                            applicationContext = context.applicationContext,
                                         )
                                     },
                                     onDropdownItemClick = {
@@ -482,8 +506,6 @@ internal fun CreateExamScreen(
                             sheetState.show()
                         }
                     },
-                    tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
-                    tempSaveButtonClick = {},
                     nextButtonText = stringResource(id = R.string.next),
                     nextButtonClick = {
                         coroutineShape.launch {

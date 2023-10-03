@@ -127,7 +127,7 @@ internal fun CreateProblemBottomLayout(
                     // TODO(riflockle7): 추후 비활성화 될 때의 resouce 이미지 필요
                     leftButtonLeadingIcon?.let {
                         QuackIcon(
-                            modifier = modifier.size(DpSize(16.dp, 16.dp)),
+                            modifier = Modifier.size(DpSize(16.dp, 16.dp)),
                             icon = it,
                         )
                     }
