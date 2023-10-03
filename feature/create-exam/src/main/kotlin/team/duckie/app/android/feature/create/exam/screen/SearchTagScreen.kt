@@ -143,7 +143,7 @@ internal fun SearchTagScreen(
                 .defaultTextFieldIndicator(
                     colorGetter = { _, _, _ ->
                         return@defaultTextFieldIndicator QuackColor.Gray3
-                    }
+                    },
                 )
                 .focusRequester(focusRequester),
             value = searchTextFieldValue,

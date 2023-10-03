@@ -103,7 +103,7 @@ internal fun CreateProblemBottomLayout(
     isValidateCheck: () -> Boolean,
 ) {
     val isValidate = isValidateCheck()
-    val needsWeightSpace = leftButtonClick != null || tempSaveButtonClick != null;
+    val needsWeightSpace = leftButtonClick != null || tempSaveButtonClick != null
 
     Column(modifier = modifier.background(QuackColor.White.value)) {
         QuackDivider()

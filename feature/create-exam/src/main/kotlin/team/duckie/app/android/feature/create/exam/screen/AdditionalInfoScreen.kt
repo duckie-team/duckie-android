@@ -393,7 +393,7 @@ private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel(
                 .defaultTextFieldIndicator(
                     colorGetter = { _, _, _ ->
                         return@defaultTextFieldIndicator QuackColor.Gray3
-                    }
+                    },
                 )
                 // 글자 수
                 .counter(
@@ -439,7 +439,7 @@ private fun AdditionalSubTagsLayout(vm: CreateProblemViewModel = activityViewMod
                 .defaultTextFieldIndicator(
                     colorGetter = { _, _, _ ->
                         return@defaultTextFieldIndicator QuackColor.Gray3
-                    }
+                    },
                 ),
             value = "",
             onValueChange = { },

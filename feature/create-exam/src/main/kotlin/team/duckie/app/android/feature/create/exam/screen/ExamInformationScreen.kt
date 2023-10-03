@@ -6,6 +6,7 @@
  */
 
 @file:OptIn(ExperimentalQuackQuackApi::class, ExperimentalDesignToken::class)
+@file:Suppress("MagicNumber")
 
 package team.duckie.app.android.feature.create.exam.screen
 
@@ -177,7 +178,7 @@ internal fun ExamInformationScreen(
                                 .defaultTextFieldIndicator(
                                     colorGetter = { _, _, _ ->
                                         return@defaultTextFieldIndicator QuackColor.Gray3
-                                    }
+                                    },
                                 )
                                 .defaultTextFieldIcon(
                                     OutlinedGroup.Search,
@@ -204,7 +205,7 @@ internal fun ExamInformationScreen(
                             .defaultTextFieldIndicator(
                                 colorGetter = { _, _, _ ->
                                     return@defaultTextFieldIndicator QuackColor.Gray3
-                                }
+                                },
                             )
                             .counter(
                                 maxLength = 12,
