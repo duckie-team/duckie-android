@@ -14,6 +14,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,15 +41,20 @@ import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.feature.create.exam.R
 import team.duckie.app.android.feature.create.exam.common.CreateProblemBottomLayout
 import team.duckie.app.android.feature.create.exam.common.ExitAppBar
-import team.duckie.app.android.feature.create.exam.common.SearchResultText
 import team.duckie.app.android.feature.create.exam.viewmodel.CreateProblemViewModel
 import team.duckie.app.android.feature.create.exam.viewmodel.state.FindResultType
 import team.duckie.app.android.feature.create.exam.viewmodel.state.SearchScreenData
+import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
 import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackDefaultTextField
+import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.QuackTextFieldStyle
+import team.duckie.quackquack.ui.defaultTextFieldIndicator
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
+import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private const val MaximumSubTagCount = 5
@@ -127,10 +133,17 @@ internal fun SearchTagScreen(
             // TODO(riflockle7): 꽥꽥 기능 제공 안함
             // leadingIcon = QuackIcon.Search,
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(
                     top = 16.dp,
                     start = 16.dp,
                     end = 16.dp,
+                )
+                // 밑줄
+                .defaultTextFieldIndicator(
+                    colorGetter = { _, _, _ ->
+                        return@defaultTextFieldIndicator QuackColor.Gray3
+                    }
                 )
                 .focusRequester(focusRequester),
             value = searchTextFieldValue,
@@ -158,29 +171,44 @@ internal fun SearchTagScreen(
         ) {
             LazyColumn {
                 item {
-                    SearchResultText(
+                    QuackText(
+                        modifier = Modifier
+                            .quackClickable(
+                                onClick = {
+                                    if (searchTextValidate(searchTextFieldValue, state)) {
+                                        coroutineScope.launch {
+                                            viewModel.onClickSearchListHeader()
+                                        }
+                                    }
+                                },
+                            )
+                            .fillMaxWidth()
+                            .padding(PaddingValues(vertical = 12.dp)),
+                        typography = QuackTypography.Body1.change(color = QuackColor.Gray1),
                         text = stringResource(
                             id = R.string.add_also,
                             state.textFieldValue,
                         ),
-                        onClick = {
-                            if (searchTextValidate(searchTextFieldValue, state)) {
-                                coroutineScope.launch { viewModel.onClickSearchListHeader() }
-                            }
-                        },
                     )
                 }
                 itemsIndexed(
                     items = state.searchResults.fastMap { it.name },
                     key = { _, item -> item },
                 ) { index: Int, item: String ->
-                    SearchResultText(
+                    QuackBody1(
+                        modifier = Modifier
+                            .quackClickable(
+                                onClick = {
+                                    if (searchTextValidate(searchTextFieldValue, state)) {
+                                        coroutineScope.launch {
+                                            viewModel.onClickSearchList(index)
+                                        }
+                                    }
+                                },
+                            )
+                            .fillMaxWidth()
+                            .padding(PaddingValues(vertical = 12.dp)),
                         text = item,
-                        onClick = {
-                            if (searchTextValidate(searchTextFieldValue, state)) {
-                                coroutineScope.launch { viewModel.onClickSearchList(index) }
-                            }
-                        },
                     )
                 }
             }
