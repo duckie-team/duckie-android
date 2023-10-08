@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.data.exam.repository
 
+import HomeFundingsResponseData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -32,19 +33,25 @@ import team.duckie.app.android.data.exam.datasource.ExamInfoDataSource
 import team.duckie.app.android.data.exam.mapper.toData
 import team.duckie.app.android.data.exam.mapper.toDomain
 import team.duckie.app.android.data.exam.model.ExamData
+import team.duckie.app.android.data.exam.model.ExamFundingsResponseData
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import team.duckie.app.android.data.exam.model.ExamMeBlocksResponse
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
+import team.duckie.app.android.data.exam.model.ExamTagsResponseData
 import team.duckie.app.android.data.exam.model.ProfileExamDatas
 import team.duckie.app.android.data.exam.paging.ExamMeFollowingPagingSource
 import team.duckie.app.android.data.exam.paging.ProfileExamPagingSource
+import team.duckie.app.android.data.home.mapper.toDomain
 import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.domain.exam.model.ExamFunding
 import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
+import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.repository.ExamRepository
+import team.duckie.app.android.domain.home.model.HomeFunding
+import team.duckie.app.android.domain.tag.model.Tag
 import javax.inject.Inject
 
 class ExamRepositoryImpl @Inject constructor(
@@ -211,6 +218,47 @@ class ExamRepositoryImpl @Inject constructor(
 
     override suspend fun getFavoriteExams(): List<ExamInfo> {
         return examInfoDataSource.getFavoriteExams().map(ExamInfoEntity::toDomain)
+    }
+
+    // https://www.notion.so/duckie-team/GET-exams-funding-7b32c947ac624ba297cd7bf25fd051ea?pvs=4
+    override suspend fun getFunding(tagId: Int?, page: Int, limit: Int?): List<ExamFunding> {
+        val response = client.get {
+            url("/exams/funding")
+            parameter("page", page)
+            tagId?.let { parameter("tagId", it) }
+            limit?.let { parameter("limit", it) }
+        }
+        val result = responseCatching(
+            response = response,
+            parse = ExamFundingsResponseData::toDomain,
+        )
+        return result.exams
+    }
+
+    // https://www.notion.so/duckie-team/GET-exams-upcoming-b2ad00eb989c4fe89bb32d164f8b2eb5?pvs=4
+    override suspend fun getUpcoming(page: Int): List<HomeFunding> {
+        val response = client.get {
+            url("/exams/upcoming")
+            parameter("page", page)
+        }
+        val result = responseCatching(
+            response = response,
+            parse = HomeFundingsResponseData::toDomain,
+        )
+        return result.upcomingExams
+    }
+
+    // https://www.notion.so/duckie-team/GET-exams-tags-edf8f3a12b834bed8bc0df1d080ddaa2?pvs=4
+    override suspend fun getTags(status: String): List<Tag> {
+        val response = client.get {
+            url("/exams/tags")
+            parameter("status", status)
+        }
+        val result = responseCatching(
+            response = response,
+            parse = ExamTagsResponseData::toDomain,
+        )
+        return result.tags
     }
 
     internal companion object {

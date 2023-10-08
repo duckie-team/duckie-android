@@ -19,13 +19,17 @@ import team.duckie.app.android.data.exam.model.ExamBlockDetailResponse
 import team.duckie.app.android.data.exam.model.ExamBlockResponse
 import team.duckie.app.android.data.exam.model.ExamBodyData
 import team.duckie.app.android.data.exam.model.ExamData
+import team.duckie.app.android.data.exam.model.ExamFundingData
+import team.duckie.app.android.data.exam.model.ExamFundingsResponseData
 import team.duckie.app.android.data.exam.model.ExamInfoEntity
 import team.duckie.app.android.data.exam.model.ExamInstanceBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitBodyData
 import team.duckie.app.android.data.exam.model.ExamInstanceSubmitData
 import team.duckie.app.android.data.exam.model.ExamMeBlocksResponse
 import team.duckie.app.android.data.exam.model.ExamMeFollowingResponseData
+import team.duckie.app.android.data.exam.model.ExamTagsResponseData
 import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
+import team.duckie.app.android.data.exam.model.ExamUncomingsResponseData
 import team.duckie.app.android.data.exam.model.ExamsData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
 import team.duckie.app.android.data.exam.model.ProblemData
@@ -35,21 +39,27 @@ import team.duckie.app.android.data.exam.model.QuestionData
 import team.duckie.app.android.data.exam.model.QuizInfoResponse
 import team.duckie.app.android.data.exam.model.SolutionData
 import team.duckie.app.android.data.heart.mapper.toDomain
+import team.duckie.app.android.data.home.mapper.toDomain
 import team.duckie.app.android.data.tag.mapper.toDomain
 import team.duckie.app.android.data.tag.model.TagData
 import team.duckie.app.android.data.user.mapper.toDomain
+import team.duckie.app.android.data.user.model.UserResponse
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ChoiceModel
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.exam.model.ExamBlock
-import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.domain.exam.model.ExamFunding
+import team.duckie.app.android.domain.exam.model.ExamFundingsResponse
 import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamInstanceBody
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmit
 import team.duckie.app.android.domain.exam.model.ExamInstanceSubmitBody
 import team.duckie.app.android.domain.exam.model.ExamMeFollowingResponse
+import team.duckie.app.android.domain.exam.model.ExamTagsResponse
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
+import team.duckie.app.android.domain.exam.model.ExamUncomingsResponse
+import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.ProfileExam
@@ -304,4 +314,31 @@ internal fun ExamBlockDetailResponse.toDomain() = IgnoreExam(
 
 internal fun ExamBlockResponse.toDomain() = ExamBlock(
     id = id ?: duckieSimpleResponseFieldNpe<ExamBlockResponse>("id"),
+)
+
+internal fun ExamFundingsResponseData.toDomain() = ExamFundingsResponse(
+    exams = exams?.map { it.toDomain() }
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams"),
+    page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
+)
+
+internal fun ExamUncomingsResponseData.toDomain() = ExamUncomingsResponse(
+    exams = exams?.map { it.toDomain() }
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.exams"),
+    page = page ?: duckieResponseFieldNpe("${this::class.java.simpleName}.page"),
+)
+
+internal fun ExamFundingData.toDomain() = ExamFunding(
+    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
+    title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
+    thumbnailUrl = thumbnailUrl
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.thumbnailUrl"),
+    contributorCount = contributorCount
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.contributorCount"),
+    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+)
+
+internal fun ExamTagsResponseData.toDomain() = ExamTagsResponse(
+    tags = tags?.map { it.toDomain() }
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tags")
 )

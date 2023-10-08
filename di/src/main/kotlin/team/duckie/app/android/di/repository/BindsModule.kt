@@ -26,6 +26,7 @@ import team.duckie.app.android.data.heart.repository.HeartRepositoryImpl
 import team.duckie.app.android.data.ignore.repository.IgnoreRepositoryImpl
 import team.duckie.app.android.data.me.repository.MeRepositoryImpl
 import team.duckie.app.android.data.notification.repository.NotificationRepositoryImpl
+import team.duckie.app.android.data.problem.repository.ProblemRepositoryImpl
 import team.duckie.app.android.data.quiz.repository.QuizRepositoryImpl
 import team.duckie.app.android.data.ranking.repository.RankingRepositoryImpl
 import team.duckie.app.android.data.recommendation.repository.RecommendationRepositoryImpl
@@ -47,6 +48,7 @@ import team.duckie.app.android.domain.heart.repository.HeartRepository
 import team.duckie.app.android.domain.ignore.repository.IgnoreRepository
 import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.notification.repository.NotificationRepository
+import team.duckie.app.android.domain.problem.repository.ProblemRepository
 import team.duckie.app.android.domain.quiz.repository.QuizRepository
 import team.duckie.app.android.domain.ranking.repository.RankingRepository
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
@@ -143,4 +145,8 @@ abstract class BindsModule {
     @Singleton
     @Binds
     abstract fun bindChallengeCommentRepository(impl: ChallengeCommentRepositoryImpl): ChallengeCommentRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindProblemRepository(impl: ProblemRepositoryImpl): ProblemRepository
 }
