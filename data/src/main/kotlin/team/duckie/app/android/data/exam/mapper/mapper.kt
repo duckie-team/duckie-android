@@ -178,49 +178,53 @@ internal fun ExamThumbnailBody.toData() = ExamThumbnailBodyData(
 )
 
 internal fun Problem.toData() = ProblemData(
-    question = question.let { question ->
-        when (question) {
-            is Question.Text -> QuestionData.Text(
-                text = question.text,
-            )
-
-            is Question.Video -> QuestionData.Video(
-                videoUrl = question.videoUrl,
-                text = question.text,
-            )
-
-            is Question.Image -> QuestionData.Image(
-                imageUrl = question.imageUrl,
-                text = question.text,
-            )
-
-            is Question.Audio -> QuestionData.Audio(
-                audioUrl = question.audioUrl,
-                text = question.text,
-            )
-        }
-    },
-    answer = answer?.let { answer ->
-        when (answer) {
-            is Answer.Short -> AnswerData.ShortAnswer()
-
-            is Answer.Choice -> AnswerData.Choice(
-                choices = answer.choices.map {
-                    it.toData()
-                }.toList(),
-            )
-
-            is Answer.ImageChoice -> AnswerData.ImageChoice(
-                choices = answer.imageChoice.map {
-                    it.toData()
-                }.toList(),
-            )
-        }
-    },
+    question = question.toData(),
+    answer = answer.toData(),
     correctAnswer = correctAnswer,
     hint = hint,
     memo = memo,
 )
+
+internal fun Question?.toData() = when (this) {
+    is Question.Text -> QuestionData.Text(
+        text = this.text,
+    )
+
+    is Question.Video -> QuestionData.Video(
+        videoUrl = this.videoUrl,
+        text = this.text,
+    )
+
+    is Question.Image -> QuestionData.Image(
+        imageUrl = this.imageUrl,
+        text = this.text,
+    )
+
+    is Question.Audio -> QuestionData.Audio(
+        audioUrl = this.audioUrl,
+        text = this.text,
+    )
+
+    else -> null
+}
+
+internal fun Answer?.toData() = when (this) {
+    is Answer.Short -> AnswerData.ShortAnswer()
+
+    is Answer.Choice -> AnswerData.Choice(
+        choices = choices.map {
+            it.toData()
+        }.toList(),
+    )
+
+    is Answer.ImageChoice -> AnswerData.ImageChoice(
+        choices = imageChoice.map {
+            it.toData()
+        }.toList(),
+    )
+
+    else -> null
+}
 
 internal fun ChoiceModel.toData() = ChoiceData(text = text)
 
