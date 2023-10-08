@@ -95,6 +95,10 @@ internal fun ExamData.toDomain() = Exam(
     requirementQuestion = requirementQuestion,
     problemCount = problemCount,
     myRecord = myRecord?.toDomain(),
+    totalProblemCount = totalProblemCount,
+    contributors = contributors?.fastMap(UserResponse::toDomain)?.toImmutableList(),
+    contributorCount = contributorCount,
+    sampleQuestion = sampleQuestion?.fastMap(QuestionData::toDomain)?.toImmutableList(),
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
@@ -166,6 +170,8 @@ internal fun ExamBody.toData() = ExamBodyData(
     buttonTitle = buttonTitle,
     problems = problems.fastMap(Problem::toData),
     status = status,
+    type = type,
+    totalProblemCount = totalProblemCount,
 )
 
 internal fun ExamThumbnailBody.toData() = ExamThumbnailBodyData(

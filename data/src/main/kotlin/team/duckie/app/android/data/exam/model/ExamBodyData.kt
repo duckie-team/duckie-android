@@ -44,6 +44,13 @@ internal data class ExamBodyData(
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @field:JsonProperty("status")
     val status: String? = null,
+
+    // text, audio, video, challenge
+    @field:JsonProperty("type")
+    val type: String? = null,
+
+    @field:JsonProperty("totalProblemCount")
+    val totalProblemCount: Int? = null,
 )
 
 internal data class ExamInstanceBodyData(
