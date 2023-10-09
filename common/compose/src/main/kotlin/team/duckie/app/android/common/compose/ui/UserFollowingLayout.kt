@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.R
+import team.duckie.app.android.common.compose.VibrateOnTap
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.centerVerticalWithMaxHeight
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
@@ -101,21 +102,24 @@ fun UserFollowingLayout(
                     .skeleton(isLoading),
                 text = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
             )
-            QuackText(
-                modifier = Modifier
-                    .layoutId(UserInfoBlockFollowingButtonLayoutId)
-                    .skeleton(isLoading)
-                    .quackClickable(
-                        onClick = {
-                            onClickFollow(!isFollowing)
-                        },
-                        rippleEnabled = false,
+            VibrateOnTap { vibrate ->
+                QuackText(
+                    modifier = Modifier
+                        .layoutId(UserInfoBlockFollowingButtonLayoutId)
+                        .skeleton(isLoading)
+                        .quackClickable(
+                            onClick = {
+                                vibrate()
+                                onClickFollow(!isFollowing)
+                            },
+                            rippleEnabled = false,
+                        ),
+                    text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
+                    typography = QuackTypography.Body2.change(
+                        color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
                     ),
-                text = stringResource(id = if (isFollowing) R.string.following else R.string.follow),
-                typography = QuackTypography.Body2.change(
-                    color = if (isFollowing) QuackColor.Gray1 else QuackColor.DuckieOrange,
-                ),
-            )
+                )
+            }
         },
         measurePolicy = getUserFollowingLayoutMeasurePolicy(
             nameVisible = tier.isEmpty() || favoriteTag.isEmpty(),

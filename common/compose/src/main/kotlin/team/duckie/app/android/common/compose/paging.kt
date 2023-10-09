@@ -7,6 +7,9 @@
 
 package team.duckie.app.android.common.compose
 
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.paging.compose.LazyPagingItems
 
 fun <T : Any> itemsIndexedPagingKey(
@@ -38,3 +41,18 @@ fun <T : Any> itemsPagingKey(
  */
 fun Int?.getUniqueKey(secondId: Int): String =
     this.toString() + secondId
+
+/**
+ * 스크롤 위치를 알맞게 재설정 함
+ * https://issuetracker.google.com/issues/177245496 이슈의 임시 해결책
+ * LazyPagingItems 가 재생성 시 일시적으로 0을 반환하는 문제
+ */
+@Composable
+fun <T : Any> LazyPagingItems<T>.rememberLazyListState(): LazyListState {
+    return when (itemCount) {
+        // Return a different LazyListState instance.
+        0 -> remember(this) { LazyListState(0, 0) }
+        // Return rememberLazyListState (normal case).
+        else -> androidx.compose.foundation.lazy.rememberLazyListState()
+    }
+}

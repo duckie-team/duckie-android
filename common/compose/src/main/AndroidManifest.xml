@@ -5,6 +5,7 @@
   ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
   -->
 
-<manifest>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.VibrateOnTap
 import team.duckie.app.android.feature.profile.R
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -29,16 +30,21 @@ internal fun FollowSection(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-    EditButton(
-        modifier = modifier,
-        text = if (enabled) {
-            stringResource(id = R.string.follow)
-        } else {
-            stringResource(id = R.string.following)
-        },
-        enabled = enabled,
-        onClick = onClick,
-    )
+    VibrateOnTap { vibrate ->
+        EditButton(
+            modifier = modifier,
+            text = if (enabled) {
+                stringResource(id = R.string.follow)
+            } else {
+                stringResource(id = R.string.following)
+            },
+            enabled = enabled,
+            onClick = {
+                vibrate()
+                onClick()
+            },
+        )
+    }
 }
 
 @Composable
