@@ -22,4 +22,3 @@ data class HomeFunding(
     val user: User?,
     val heart: Heart?,
 )
-

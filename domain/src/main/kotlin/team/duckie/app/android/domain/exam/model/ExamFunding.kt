@@ -18,4 +18,3 @@ data class ExamFunding(
     val title: String,
     val user: User,
 )
-

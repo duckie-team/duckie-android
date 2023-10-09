@@ -17,4 +17,3 @@ internal data class ExamUncomingsResponseData(
     @field:JsonProperty("page")
     val page: Int? = null,
 )
-

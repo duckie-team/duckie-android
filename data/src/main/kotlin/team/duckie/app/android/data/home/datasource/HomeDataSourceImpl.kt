@@ -16,8 +16,7 @@ import team.duckie.app.android.data.home.mapper.toDomain
 import team.duckie.app.android.domain.home.model.HomeFunding
 import javax.inject.Inject
 
-class HomeDataSourceImpl @Inject constructor(
-) : HomeDataSource {
+class HomeDataSourceImpl @Inject constructor() : HomeDataSource {
     // https://www.notion.so/duckie-team/GET-home-funding-b1a282245a2446b6a500b986e3464cf6?pvs=4
     override suspend fun getFunding(): List<HomeFunding> {
         val response = client.get {

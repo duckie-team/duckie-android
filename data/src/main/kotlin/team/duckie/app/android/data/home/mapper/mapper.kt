@@ -32,5 +32,5 @@ internal fun HomeFundingData.toDomain() = HomeFunding(
 
 internal fun HomeFundingsResponseData.toDomain() = HomeFundingsResponse(
     upcomingExams = upcomingExams?.map { it.toDomain() }
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.upcomingExams")
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.upcomingExams"),
 )

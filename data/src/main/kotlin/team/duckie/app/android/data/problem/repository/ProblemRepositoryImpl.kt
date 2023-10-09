@@ -29,7 +29,7 @@ class ProblemRepositoryImpl @Inject constructor(
         wrongAnswerMessage: String,
         solutionImageUrl: String,
         memo: String,
-        hint: String
+        hint: String,
     ): Problem {
         return problemDataSource.postProblem(
             correctAnswer,

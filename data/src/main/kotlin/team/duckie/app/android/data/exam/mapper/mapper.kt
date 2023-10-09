@@ -350,5 +350,5 @@ internal fun ExamFundingData.toDomain() = ExamFunding(
 
 internal fun ExamTagsResponseData.toDomain() = ExamTagsResponse(
     tags = tags?.map { it.toDomain() }
-        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tags")
+        ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tags"),
 )

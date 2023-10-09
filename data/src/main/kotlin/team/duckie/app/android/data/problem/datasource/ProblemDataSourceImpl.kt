@@ -23,7 +23,7 @@ import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.Question
 import javax.inject.Inject
 
-class ProblemDataSourceImpl @Inject constructor(): ProblemDataSource {
+class ProblemDataSourceImpl @Inject constructor() : ProblemDataSource {
     // https://www.notion.so/duckie-team/PATCH-problems-id-046950c590de43c5b478c3d8a16e84df?pvs=4
     override suspend fun patchProblem(problemId: Int, status: String, isSample: Boolean): Problem {
         val response = client.patch {
@@ -51,15 +51,15 @@ class ProblemDataSourceImpl @Inject constructor(): ProblemDataSource {
             url("/problems")
             setBody(
                 ProblemBody(
-                correctAnswer = correctAnswer,
-                        question = question.toData(),
-                        answer = answer.toData(),
-                        examId = examId,
-                        wrongAnswerMessage = wrongAnswerMessage,
-                        solutionImageUrl = solutionImageUrl,
-                        memo = memo,
-                        hint = hint,
-            )
+                    correctAnswer = correctAnswer,
+                    question = question.toData(),
+                    answer = answer.toData(),
+                    examId = examId,
+                    wrongAnswerMessage = wrongAnswerMessage,
+                    solutionImageUrl = solutionImageUrl,
+                    memo = memo,
+                    hint = hint,
+                ),
             )
         }
 
