@@ -273,6 +273,8 @@ internal class CreateProblemViewModel @Inject constructor(
             problems = problems,
             buttonTitle = additionalInfoState.takeTitle,
             status = null, // 운영용
+            type = "text", // TODO(riflockle7): 값 넣는 스펙에 대해 확인 필요
+            totalProblemCount = problems.size,
         )
     }
 

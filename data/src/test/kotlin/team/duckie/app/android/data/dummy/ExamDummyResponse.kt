@@ -65,7 +65,11 @@ object ExamDummyResponse {
             "timer": 0,
             "requirementQuestion": "",
             "requirementPlaceholder": "",
-            "problemCount": null
+            "problemCount": null,
+            "totalProblemCount": null,
+            "contributors": null,
+            "contributorCount": null,
+            "sampleQuestion": null
         }
     """
 
@@ -115,5 +119,9 @@ object ExamDummyResponse {
         requirementPlaceholder = "",
         problemCount = null,
         myRecord = null,
+        totalProblemCount = null,
+        contributors = null,
+        contributorCount = null,
+        sampleQuestion = null,
     )
 }
