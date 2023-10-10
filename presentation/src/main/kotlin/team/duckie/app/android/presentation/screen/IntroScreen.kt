@@ -14,19 +14,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.android.intent.goToMarket
@@ -45,7 +46,7 @@ internal fun IntroScreen(
 ) {
     val activity = LocalContext.current as Activity
     val composition by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(R.raw.bg_splash),
+        spec = LottieCompositionSpec.RawRes(R.raw.intro_bg_splash),
     )
 
     Column(
@@ -54,28 +55,19 @@ internal fun IntroScreen(
             .background(color = QuackColor.White.value)
             .padding(systemBarPaddings)
             .padding(
-                top = 65.dp,
-                bottom = 38.dp,
+                top = 110.dp,
+                bottom = 139.dp,
             ),
-        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(horizontal = 20.dp),
+                .padding(start = 28.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            QuackImage(
-                modifier = Modifier.size(
-                    size = DpSize(
-                        width = 110.dp,
-                        height = 32.dp,
-                    ),
-                ),
-                src = R.drawable.duckie_text_logo,
-            )
+            QuackImage(src = R.drawable.intro_duckie_text_logo)
             QuackHeadLine1(text = stringResource(R.string.intro_slogan))
         }
         LottieAnimation(
