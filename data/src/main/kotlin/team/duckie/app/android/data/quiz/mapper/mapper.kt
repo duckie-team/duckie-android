@@ -46,6 +46,8 @@ internal fun GetQuizResponse.toDomain() = QuizResult(
     isBestRecord = isBestRecord ?: false, // for start-exam
     popularComments = popularComments?.data?.fastMap(ChallengeCommentResponse::toDomain)?.toImmutableList(),
     commentsTotal = popularComments?.total,
+    solveRank = solveRank,
+    percentileRank = percentileRank,
 )
 
 internal fun QuizExamData.toDomain() = QuizExam(

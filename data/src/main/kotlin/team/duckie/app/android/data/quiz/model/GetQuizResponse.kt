@@ -38,6 +38,10 @@ internal data class GetQuizResponse(
     val isBestRecord: Boolean? = null,
     @field:JsonProperty("popularComments")
     val popularComments: PopularComments?,
+    @field:JsonProperty("solveRank")
+    val solveRank: Int? = null,
+    @field:JsonProperty("percentileRank")
+    val percentileRank: String? = null,
 ) {
     data class PopularComments(
         @field:JsonProperty("total")

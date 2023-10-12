@@ -175,11 +175,23 @@ object MediaUtil {
         }
     }
 
+    /**
+     * @return 파일 삭제 성공 여부
+     */
+    fun deleteFile(filePath: String): Boolean {
+        val file = File(filePath)
+        return if (file.exists()) {
+            file.delete()
+        } else {
+            false
+        }
+    }
+
     fun imageExternalSave(bitmap: Bitmap): String {
         val state = Environment.getExternalStorageState()
         if (Environment.MEDIA_MOUNTED == state) {
             val rootPath =
-                "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)}/mbti"
+                "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)}/duckie"
             val fileName = "덕퀴즈 결과 ${System.currentTimeMillis()}.png"
             val savePath = File(rootPath)
             savePath.mkdirs()

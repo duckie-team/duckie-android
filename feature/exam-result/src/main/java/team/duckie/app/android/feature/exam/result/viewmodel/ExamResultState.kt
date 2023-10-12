@@ -53,6 +53,8 @@ sealed class ExamResultState {
         val timer: Int = 0,
         val originalExamId: Int = 0,
         val isRefreshing: Boolean = false,
+        val solveRank: Int = 0,
+        val percentileRank: String = "",
 
         // challenge comment
         val popularComments: ImmutableList<ChallengeCommentUiModel> = persistentListOf(),
