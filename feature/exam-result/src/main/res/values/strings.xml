@@ -11,6 +11,7 @@
     <string name="exam_result_name">덕키 %s 성적표</string>
     <string name="exam_success_save_image_message">성적표를 저장했습니다</string>
     <string name="exam_share_failed">공유에 실패했습니다. 지속된다면 앱을 재설치 해주세요.</string>
+    <string name="exam_share_result_percent">%s명 중 %s%%!</string>
 
     <string name="exam_result_image_title">%s님의\n%s 성적은?</string>
     <string name="exam_result_solve_retry">다시 풀기</string>

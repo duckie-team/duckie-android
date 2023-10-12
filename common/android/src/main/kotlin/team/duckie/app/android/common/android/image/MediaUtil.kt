@@ -175,6 +175,9 @@ object MediaUtil {
         }
     }
 
+    /**
+     * @return 파일 삭제 성공 여부
+     */
     fun deleteFile(filePath: String): Boolean {
         val file = File(filePath)
         return if (file.exists()) {
