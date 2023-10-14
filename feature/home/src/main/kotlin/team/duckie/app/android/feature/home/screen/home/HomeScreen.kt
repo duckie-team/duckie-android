@@ -108,6 +108,7 @@ internal fun HomeScreen(
                     )
 
                     page == HomeStep.HomeProceedScreen -> HomeProceedScreen(
+                        initState = initState,
                         state = state,
                         homeViewModel = vm,
                         navigateToCreateProblem = navigateToCreateProblem,

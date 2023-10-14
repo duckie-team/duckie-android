@@ -10,7 +10,10 @@ package team.duckie.app.android.feature.home.viewmodel.home
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.domain.exam.model.ExamFunding
+import team.duckie.app.android.domain.home.model.HomeFunding
 import team.duckie.app.android.domain.recommendation.model.ExamType
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.home.constants.HomeStep
 
@@ -35,6 +38,11 @@ internal data class HomeState(
 
     val isFollowingExist: Boolean = true,
     val recommendFollowing: ImmutableList<RecommendUserByTopic> = persistentListOf(),
+
+    val homeFundings: ImmutableList<HomeFunding> = persistentListOf(),
+    val homeFundingTags: ImmutableList<Tag> = persistentListOf(),
+    val homeFundingSelectedTag: Tag = Tag.empty(),
+    val examFundings: ImmutableList<ExamFunding> = persistentListOf(),
 ) {
     /**
      * 팔로잉의 덕질고사 추천 피드 data class [RecommendExam]

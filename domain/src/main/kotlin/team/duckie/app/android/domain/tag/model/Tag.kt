@@ -16,4 +16,16 @@ import kotlinx.parcelize.Parcelize
 data class Tag(
     val id: Int,
     val name: String,
-) : Parcelable
+) : Parcelable {
+    companion object {
+        private const val EMPTY_TAG = 0
+        /**
+         * [Tag] 의 Empty Model 을 제공합니다.
+         * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
+         */
+        fun empty() = Tag(
+            id = EMPTY_TAG,
+            name = "",
+        )
+    }
+}
