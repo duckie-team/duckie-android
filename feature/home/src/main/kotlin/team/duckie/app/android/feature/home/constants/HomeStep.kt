@@ -22,12 +22,11 @@ internal enum class HomeStep(
         index = 0,
     ),
 
-    HomeFollowingScreen(
+    HomeProceedScreen(
         index = 1,
     ),
 
-    // TODO(riflockle7): 추후 index = 1
-    HomeProceedScreen(
+    HomeFollowingScreen(
         index = 2,
     ),
     ;
