@@ -320,7 +320,7 @@ internal class HomeViewModel @Inject constructor(
     fun clickProceedFundingTag(tag: Tag) = intent {
         reduce { state.copy(homeFundingSelectedTag = tag) }
         val tagId = if (tag == Tag.all()) null else tag.id
-        fetchExamFundings(tagId, 1, 5)
+        fetchExamFundings(tagId, 1, PROCEED_FUNDING_COUNT_BY_TAG)
     }
 
     /** 홈 화면의 추천 탭의 로딩 상태를 [loading]으로 바꾼다. */
@@ -376,5 +376,9 @@ internal class HomeViewModel @Inject constructor(
                 isError = false,
             )
         }
+    }
+
+    companion object {
+        const val PROCEED_FUNDING_COUNT_BY_TAG = 5
     }
 }

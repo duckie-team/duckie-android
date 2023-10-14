@@ -20,6 +20,7 @@ data class Tag(
     companion object {
         private const val ALL = -1
         private const val EMPTY_TAG = 0
+
         /**
          * [Tag] 의 Empty Model 을 제공합니다.
          * 초기화 혹은 Skeleton UI 등에 필요한 Mock Data 로 쓰입니다.
@@ -35,7 +36,7 @@ data class Tag(
          */
         fun all() = Tag(
             id = ALL,
-            name = "전체"
+            name = "전체",
         )
     }
 }

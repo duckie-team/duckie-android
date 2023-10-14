@@ -60,6 +60,7 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowRightId
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.domain.exam.model.ExamFunding
 import team.duckie.app.android.domain.home.model.HomeFunding
 import team.duckie.app.android.domain.tag.model.Tag
@@ -408,7 +409,7 @@ fun ProceedCategorySection(
 
     // 카테고리에 해당하는 덕력고사 목록
     Column {
-        items.forEach { item ->
+        items.fastForEach { item ->
             ProceedCategoryItemView(categoryItem = item)
         }
     }
