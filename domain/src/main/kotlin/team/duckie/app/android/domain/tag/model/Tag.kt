@@ -18,6 +18,7 @@ data class Tag(
     val name: String,
 ) : Parcelable {
     companion object {
+        private const val ALL = -1
         private const val EMPTY_TAG = 0
         /**
          * [Tag] 의 Empty Model 을 제공합니다.
@@ -26,6 +27,15 @@ data class Tag(
         fun empty() = Tag(
             id = EMPTY_TAG,
             name = "",
+        )
+
+        /**
+         * [Tag] 의 전체를 제공합니다.
+         * 일부 UI 에서 사용됩니다. (ex. 출제중 화면)
+         */
+        fun all() = Tag(
+            id = ALL,
+            name = "전체"
         )
     }
 }

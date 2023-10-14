@@ -39,6 +39,7 @@ import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.usecase.FetchExamMeFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.usecase.FetchRecommendUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
@@ -206,10 +207,11 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    /** [tagId] 에 기반하여 펀딩 중인 시험 목록을 가져온다. 전체를 가져오려면 null 을 넣는다. */
+    /** 진행중 화면에서 태그 목록을 가져온다. */
     private fun fetchFundingTags() = intent {
         getExamTagsUseCase().onSuccess {
-            reduce { state.copy(homeFundingTags = it.toImmutableList()) }
+            val newFundingTags = it.toMutableList().apply { add(0, Tag.all()) }
+            reduce { state.copy(homeFundingTags = newFundingTags.toImmutableList()) }
         }.onFailure {
             reduce { state.copy(isHomeProceedLoading = false, isError = true) }
             postSideEffect(HomeSideEffect.ReportError(it))
