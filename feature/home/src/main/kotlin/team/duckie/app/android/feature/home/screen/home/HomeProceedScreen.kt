@@ -171,8 +171,8 @@ internal fun HomeProceedScreen(
             item {
                 ProceedCategorySection(
                     username = state.me?.nickname ?: "사용자",
-                    selectedTagIndex = 0,
-                    tagItemClick = {},
+                    tagItemClick = homeViewModel::clickProceedFundingTag,
+                    selectedTag = state.homeFundingSelectedTag,
                     categories = state.homeFundingTags,
                     items = state.examFundings,
                 )
@@ -368,8 +368,8 @@ fun ProceedBannerView() {
 @Composable
 fun ProceedCategorySection(
     username: String,
-    selectedTagIndex: Int = 0,
-    tagItemClick: (String) -> Unit,
+    tagItemClick: (Tag) -> Unit,
+    selectedTag: Tag,
     categories: List<Tag>,
     items: List<ExamFunding>,
 ) {
@@ -391,14 +391,14 @@ fun ProceedCategorySection(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
     ) {
-        itemsIndexed(items = categories) { index, tagName ->
+        itemsIndexed(items = categories) { index, tag ->
             QuackTag(
-                text = tagName.name,
+                text = tag.name,
                 style = QuackTagStyle.Outlined,
                 onClick = {
-                    tagItemClick(tagName.name)
+                    tagItemClick(tag)
                 },
-                selected = index == selectedTagIndex,
+                selected = selectedTag.id == tag.id,
             )
         }
     }

@@ -316,6 +316,13 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /** 진행중 화면에서 특정 태그[tag]를 클릭합니다. */
+    fun clickProceedFundingTag(tag: Tag) = intent {
+        reduce { state.copy(homeFundingSelectedTag = tag) }
+        val tagId = if (tag == Tag.all()) null else tag.id
+        fetchExamFundings(tagId, 1, 5)
+    }
+
     /** 홈 화면의 추천 탭의 로딩 상태를 [loading]으로 바꾼다. */
     private fun startHomeRecommendLoading() = intent {
         reduce {

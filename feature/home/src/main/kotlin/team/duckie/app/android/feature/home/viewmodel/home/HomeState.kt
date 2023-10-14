@@ -41,7 +41,7 @@ internal data class HomeState(
 
     val homeFundings: ImmutableList<HomeFunding> = persistentListOf(),
     val homeFundingTags: ImmutableList<Tag> = persistentListOf(Tag.all()),
-    val homeFundingSelectedTag: Tag = Tag.empty(),
+    val homeFundingSelectedTag: Tag = Tag.all(),
     val examFundings: ImmutableList<ExamFunding> = persistentListOf(),
 ) {
     /**
