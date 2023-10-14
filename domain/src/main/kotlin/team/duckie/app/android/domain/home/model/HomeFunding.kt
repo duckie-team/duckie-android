@@ -21,4 +21,7 @@ data class HomeFunding(
     val contributorCount: Int,
     val user: User?,
     val heart: Heart?,
-)
+) {
+    val remainCount: Int
+        get() = totalProblemCount - problemCount
+}

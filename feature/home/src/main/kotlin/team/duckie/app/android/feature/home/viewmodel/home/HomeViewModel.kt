@@ -30,12 +30,16 @@ import team.duckie.app.android.common.kotlin.exception.isFollowingAlreadyExists
 import team.duckie.app.android.common.kotlin.exception.isFollowingNotFound
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.exam.usecase.GetExamFundingUseCase
+import team.duckie.app.android.domain.exam.usecase.GetExamTagsUseCase
 import team.duckie.app.android.domain.follow.model.FollowBody
 import team.duckie.app.android.domain.follow.usecase.FollowUseCase
+import team.duckie.app.android.domain.home.usecase.GetHomeFundingUseCase
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.usecase.FetchExamMeFollowingUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchJumbotronsUseCase
 import team.duckie.app.android.domain.recommendation.usecase.FetchRecommendationsUseCase
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.UserFollowing
 import team.duckie.app.android.domain.user.usecase.FetchRecommendUserFollowingUseCase
 import team.duckie.app.android.domain.user.usecase.GetMeUseCase
@@ -53,6 +57,9 @@ internal class HomeViewModel @Inject constructor(
     private val fetchRecommendUserFollowingUseCase: FetchRecommendUserFollowingUseCase,
     private val followUseCase: FollowUseCase,
     private val getMeUseCase: GetMeUseCase,
+    private val getHomeFundingUseCase: GetHomeFundingUseCase,
+    private val getExamFundingUseCase: GetExamFundingUseCase,
+    private val getExamTagsUseCase: GetExamTagsUseCase,
 ) : ContainerHost<HomeState, HomeSideEffect>, ViewModel() {
 
     override val container = container<HomeState, HomeSideEffect>(HomeState())
@@ -136,11 +143,12 @@ internal class HomeViewModel @Inject constructor(
      *
      * [forceLoading] - PullRefresh 를 할 경우 사용자에게 새로고침이 됐음을 알리기 위한 최소한의 로딩 시간을 부여한다.
      */
-    fun refreshProceeds(forceLoading: Boolean = false) {
+    fun refreshProceedScreen(forceLoading: Boolean = false) {
         viewModelScope.launch {
             updateHomeProceedRefreshLoading(true)
-            // TODO(riflockle7): 진행중 시험 API 로직 필요
-            // fetchRecommendFollowingExam()
+            fetchHomeFundings()
+            fetchFundingTags()
+            fetchExamFundings(page = 1)
             if (forceLoading) delay(pullToRefreshMinLoadingDelay)
             updateHomeProceedRefreshLoading(false)
         }
@@ -171,6 +179,15 @@ internal class HomeViewModel @Inject constructor(
         updateHomeRecommendFollowingLoading(false)
     }
 
+    /** 잰행중 탭을 초기화합니다. */
+    fun initProceedScreen() {
+        updateHomeProceedRefreshLoading(true)
+        fetchHomeFundings()
+        fetchFundingTags()
+        fetchExamFundings(page = 1)
+        updateHomeProceedRefreshLoading(false)
+    }
+
     /** 팔로워들의 추천 덕질고사들을 가져온다. */
     private fun fetchRecommendFollowingExam() = intent {
         fetchExamMeFollowingUseCase()
@@ -178,6 +195,37 @@ internal class HomeViewModel @Inject constructor(
             .collect { exams ->
                 _followingExams.value = exams.map(Exam::toFollowingModel)
             }
+    }
+
+    /** 진행중 문제들을 가져온다. */
+    private fun fetchHomeFundings() = intent {
+        getHomeFundingUseCase().onSuccess {
+            reduce { state.copy(homeFundings = it.toImmutableList()) }
+        }.onFailure {
+            reduce { state.copy(isHomeProceedLoading = false, isError = true) }
+            postSideEffect(HomeSideEffect.ReportError(it))
+        }
+    }
+
+    /** 진행중 화면에서 태그 목록을 가져온다. */
+    private fun fetchFundingTags() = intent {
+        getExamTagsUseCase().onSuccess {
+            val newFundingTags = it.toMutableList().apply { add(0, Tag.all()) }
+            reduce { state.copy(homeFundingTags = newFundingTags.toImmutableList()) }
+        }.onFailure {
+            reduce { state.copy(isHomeProceedLoading = false, isError = true) }
+            postSideEffect(HomeSideEffect.ReportError(it))
+        }
+    }
+
+    /** [tagId] 에 기반하여 펀딩 중인 시험 목록을 가져온다. 전체를 가져오려면 null 을 넣는다. */
+    private fun fetchExamFundings(tagId: Int? = null, page: Int, limit: Int = 5) = intent {
+        getExamFundingUseCase(tagId, page, limit).onSuccess {
+            reduce { state.copy(examFundings = it.toImmutableList()) }
+        }.onFailure {
+            reduce { state.copy(isHomeProceedLoading = false, isError = true) }
+            postSideEffect(HomeSideEffect.ReportError(it))
+        }
     }
 
     /** 팔로잉 탭의 페이징 상태를 관리합니다.  */
@@ -268,6 +316,13 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    /** 진행중 화면에서 특정 태그[tag]를 클릭합니다. */
+    fun clickProceedFundingTag(tag: Tag) = intent {
+        reduce { state.copy(homeFundingSelectedTag = tag) }
+        val tagId = if (tag == Tag.all()) null else tag.id
+        fetchExamFundings(tagId, 1, PROCEED_FUNDING_COUNT_BY_TAG)
+    }
+
     /** 홈 화면의 추천 탭의 로딩 상태를 [loading]으로 바꾼다. */
     private fun startHomeRecommendLoading() = intent {
         reduce {
@@ -321,5 +376,9 @@ internal class HomeViewModel @Inject constructor(
                 isError = false,
             )
         }
+    }
+
+    companion object {
+        const val PROCEED_FUNDING_COUNT_BY_TAG = 5
     }
 }

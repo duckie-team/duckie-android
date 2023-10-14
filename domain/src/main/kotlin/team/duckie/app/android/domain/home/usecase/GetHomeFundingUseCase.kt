@@ -5,11 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-package team.duckie.app.android.data.home.usecase
+package team.duckie.app.android.domain.home.usecase
 
+import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.home.model.HomeFunding
 import team.duckie.app.android.domain.home.repository.HomeRepository
-import javax.annotation.concurrent.Immutable
 import javax.inject.Inject
 
 @Immutable

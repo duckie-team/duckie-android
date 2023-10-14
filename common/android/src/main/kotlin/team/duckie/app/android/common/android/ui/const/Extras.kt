@@ -36,6 +36,9 @@ object Extras {
     const val Timer = "ExtraTimer"
     const val RequirementAnswer = "ExtraRequirementAnswer"
 
+    /** using for SearchActivity */
+    const val isCreateProblem = "isCreateProblem"
+
     /** using for DynamicLink */
     const val DynamicLinkExamId = "DynamicLinkExamId"
 }

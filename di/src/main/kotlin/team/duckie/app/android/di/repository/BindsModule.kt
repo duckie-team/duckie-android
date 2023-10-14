@@ -23,6 +23,7 @@ import team.duckie.app.android.data.file.repository.FileRepositoryImpl
 import team.duckie.app.android.data.follow.repository.FollowRepositoryImpl
 import team.duckie.app.android.data.gallery.repository.GalleryRepositoryImpl
 import team.duckie.app.android.data.heart.repository.HeartRepositoryImpl
+import team.duckie.app.android.data.home.repository.HomeRepositoryImpl
 import team.duckie.app.android.data.ignore.repository.IgnoreRepositoryImpl
 import team.duckie.app.android.data.me.repository.MeRepositoryImpl
 import team.duckie.app.android.data.notification.repository.NotificationRepositoryImpl
@@ -45,6 +46,7 @@ import team.duckie.app.android.domain.file.repository.FileRepository
 import team.duckie.app.android.domain.follow.repository.FollowRepository
 import team.duckie.app.android.domain.gallery.repository.GalleryRepository
 import team.duckie.app.android.domain.heart.repository.HeartRepository
+import team.duckie.app.android.domain.home.repository.HomeRepository
 import team.duckie.app.android.domain.ignore.repository.IgnoreRepository
 import team.duckie.app.android.domain.me.MeRepository
 import team.duckie.app.android.domain.notification.repository.NotificationRepository
@@ -145,6 +147,10 @@ abstract class BindsModule {
     @Singleton
     @Binds
     abstract fun bindChallengeCommentRepository(impl: ChallengeCommentRepositoryImpl): ChallengeCommentRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindHomeRepository(impl: HomeRepositoryImpl): HomeRepository
 
     @Singleton
     @Binds
