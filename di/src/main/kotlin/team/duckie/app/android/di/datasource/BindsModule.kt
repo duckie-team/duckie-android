@@ -19,6 +19,8 @@ import team.duckie.app.android.data.devMode.datasource.DevModeDataSource
 import team.duckie.app.android.data.devMode.datasource.DevModeDataSourceImpl
 import team.duckie.app.android.data.exam.datasource.ExamInfoDataSource
 import team.duckie.app.android.data.exam.datasource.ExamInfoLocalDataSourceImpl
+import team.duckie.app.android.data.home.datasource.HomeDataSource
+import team.duckie.app.android.data.home.datasource.HomeDataSourceImpl
 import team.duckie.app.android.data.ignore.datasource.IgnoreRemoteDataSource
 import team.duckie.app.android.data.ignore.datasource.IgnoreRemoteDataSourceImpl
 import team.duckie.app.android.data.notification.datasource.NotificationDataSource
@@ -89,6 +91,10 @@ abstract class BindsModule {
     @Singleton
     @Binds
     abstract fun bindChallengeCommentRemoteDataSource(impl: ChallengeCommentRemoteDataSourceImpl): ChallengeCommentRemoteDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindHomeDataSource(impl: HomeDataSourceImpl): HomeDataSource
 
     @Singleton
     @Binds
