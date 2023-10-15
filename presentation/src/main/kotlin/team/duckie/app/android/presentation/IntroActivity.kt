@@ -148,12 +148,15 @@ class IntroActivity : BaseActivity() {
             android.R.anim.fade_in,
             R.anim.hold,
         ).toBundle()
-        startActivity(Intent(this@IntroActivity, OnboardActivity::class.java).apply {
-            if (dynamicLinkExamId != null) {
-                putExtra(Extras.DynamicLinkExamId, dynamicLinkExamId)
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-        }, animationBundle)
+        startActivity(
+            Intent(this@IntroActivity, OnboardActivity::class.java).apply {
+                if (dynamicLinkExamId != null) {
+                    putExtra(Extras.DynamicLinkExamId, dynamicLinkExamId)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            },
+            animationBundle,
+        )
     }
 
     private fun launchHomeActivity() = lifecycleScope.launch {
