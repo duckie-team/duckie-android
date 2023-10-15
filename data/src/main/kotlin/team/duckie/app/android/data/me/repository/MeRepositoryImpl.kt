@@ -92,6 +92,7 @@ class MeRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearMeToken() {
+        me = null
         dataStore.edit { preferences ->
             preferences.remove(PreferenceKey.Account.AccessToken)
         }
