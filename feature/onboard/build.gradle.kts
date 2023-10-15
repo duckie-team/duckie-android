@@ -28,6 +28,7 @@ dependencies {
         projects.common.compose,
         projects.common.android,
         projects.core.datastore,
+        libs.firebase.messaging,
         libs.apache.commons.io,
         libs.orbit.viewmodel,
         libs.orbit.compose,
@@ -38,5 +39,6 @@ dependencies {
         libs.compose.ui.accompanist.flowlayout,
         libs.kotlin.collections.immutable,
         libs.quack.v2.ui,
+        libs.compose.ui.lottie,
     )
 }

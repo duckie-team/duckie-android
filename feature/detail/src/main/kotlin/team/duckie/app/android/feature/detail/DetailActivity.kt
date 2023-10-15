@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.detail
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -53,6 +54,7 @@ class DetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             QuackTheme {
                 DetailScreen(
@@ -68,6 +70,16 @@ class DetailActivity : BaseActivity() {
             lifecycleOwner = this,
             sideEffect = ::handleSideEffect,
         )
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        vm.parseDynamicLink()
     }
 
     override fun onStart() {

@@ -11,11 +11,14 @@ import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ExamBody
+import team.duckie.app.android.domain.exam.model.ExamFunding
 import team.duckie.app.android.domain.exam.model.ExamInfo
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
+import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ProfileExam
+import team.duckie.app.android.domain.home.model.HomeFunding
+import team.duckie.app.android.domain.tag.model.Tag
 
 @Immutable
 interface ExamRepository {
@@ -42,4 +45,10 @@ interface ExamRepository {
     suspend fun getIgnoreExams(): List<IgnoreExam>
 
     suspend fun cancelExamIgnore(examId: Int): Boolean
+
+    suspend fun getFunding(tagId: Int?, page: Int, limit: Int?): List<ExamFunding>
+
+    suspend fun getUpcoming(page: Int): List<HomeFunding>
+
+    suspend fun getTags(status: String): List<Tag>
 }

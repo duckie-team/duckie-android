@@ -43,6 +43,7 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.common.kotlin.FriendsType
+import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.feature.friends.viewmodel.FriendsViewModel
 import team.duckie.app.android.feature.friends.viewmodel.state.FriendsState
 import team.duckie.quackquack.material.QuackColor
@@ -84,7 +85,7 @@ internal fun FriendScreen(
             index = pagerState.currentPage,
             colors = QuackTabColors.defaultTabColors(),
         ) {
-            tabs.forEach { label ->
+            tabs.fastForEach { label ->
                 tab(label) { index ->
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(index)

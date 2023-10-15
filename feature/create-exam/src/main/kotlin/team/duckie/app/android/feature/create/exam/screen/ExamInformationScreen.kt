@@ -6,6 +6,7 @@
  */
 
 @file:OptIn(ExperimentalQuackQuackApi::class, ExperimentalDesignToken::class)
+@file:Suppress("MagicNumber")
 
 package team.duckie.app.android.feature.create.exam.screen
 
@@ -23,6 +24,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -39,6 +42,7 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -60,15 +64,21 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
 import team.duckie.quackquack.material.icon.quackicon.outlined.Close
+import team.duckie.quackquack.material.icon.quackicon.outlined.Search
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackDefaultTextField
+import team.duckie.quackquack.ui.QuackFilledTextField
 import team.duckie.quackquack.ui.QuackTag
 import team.duckie.quackquack.ui.QuackTagStyle
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.QuackTextArea
 import team.duckie.quackquack.ui.QuackTextAreaStyle
 import team.duckie.quackquack.ui.QuackTextFieldStyle
+import team.duckie.quackquack.ui.counter
+import team.duckie.quackquack.ui.defaultTextFieldIcon
+import team.duckie.quackquack.ui.defaultTextFieldIndicator
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
+import team.duckie.quackquack.ui.token.HorizontalDirection
 import team.duckie.quackquack.ui.trailingIcon
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
@@ -163,12 +173,23 @@ internal fun ExamInformationScreen(
                     AnimatedVisibility(visible = !state.isMainTagSelected) {
                         // TODO(riflockle7): 동작 확인 필요
                         QuackDefaultTextField(
-                            modifier = Modifier.quackClickable(
-                                onClick = {
-                                    viewModel.goToSearchMainTag(lazyListState.firstVisibleItemIndex)
-                                },
-                            ),
-                            // leadingIcon = QuackIcon.Search,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .defaultTextFieldIndicator(
+                                    colorGetter = { _, _, _ ->
+                                        return@defaultTextFieldIndicator QuackColor.Gray3
+                                    },
+                                )
+                                .defaultTextFieldIcon(
+                                    OutlinedGroup.Search,
+                                    iconSize = 16.dp,
+                                    direction = HorizontalDirection.Left,
+                                )
+                                .quackClickable(
+                                    onClick = {
+                                        viewModel.goToSearchMainTag(lazyListState.firstVisibleItemIndex)
+                                    },
+                                ),
                             value = state.mainTag,
                             onValueChange = {},
                             placeholderText = stringResource(id = R.string.search_main_tag_placeholder),
@@ -179,6 +200,17 @@ internal fun ExamInformationScreen(
                 }
                 TitleAndComponent(stringResource = R.string.exam_title) {
                     QuackDefaultTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .defaultTextFieldIndicator(
+                                colorGetter = { _, _, _ ->
+                                    return@defaultTextFieldIndicator QuackColor.Gray3
+                                },
+                            )
+                            .counter(
+                                maxLength = 12,
+                                highlightColor = QuackColor.Gray2,
+                            ),
                         value = state.examTitle,
                         onValueChange = {
                             viewModel.setExamTitle(
@@ -201,6 +233,7 @@ internal fun ExamInformationScreen(
                     // TODO(riflockle7): 동작 확인 필요
                     QuackTextArea(
                         modifier = Modifier
+                            .fillMaxWidth()
                             .heightIn(140.dp)
                             .focusRequester(focusRequester = focusRequester)
                             .onFocusChanged { state ->
@@ -220,15 +253,22 @@ internal fun ExamInformationScreen(
                             id = R.string.input_exam_description,
                             ExamDescriptionMaxLength,
                         ),
+                        keyboardOptions = ImeActionNext,
+                        keyboardActions = moveDownFocus(focusManager),
                         // TODO(riflockle7): 꽥꽥에서 기능 제공 안함
-                        // imeAction = ImeAction.Next,
-                        // keyboardActions = moveDownFocus(focusManager),
                         // focused = state.examDescriptionFocused,
                     )
                 }
                 TitleAndComponent(stringResource = R.string.certifying_statement) {
-                    QuackDefaultTextField(
-                        modifier = Modifier.padding(bottom = 16.dp),
+                    QuackFilledTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .counter(
+                                16,
+                                highlightColor = QuackColor.Gray2,
+                            )
+                            .padding(bottom = 16.dp)
+                            .clip(RoundedCornerShape(8.dp)),
                         value = state.certifyingStatement,
                         onValueChange = {
                             viewModel.setCertifyingStatement(
@@ -238,11 +278,12 @@ internal fun ExamInformationScreen(
                                 ),
                             )
                         },
-                        style = QuackTextFieldStyle.Default,
+                        style = QuackTextFieldStyle.FilledLarge,
                         placeholderText = stringResource(
                             id = R.string.input_certifying_statement,
                             CertifyingStatementMaxLength,
                         ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(
                             onDone = {
                                 coroutineScope.launch {
@@ -251,9 +292,6 @@ internal fun ExamInformationScreen(
                                 }
                             },
                         ),
-                        // TODO(riflockle7): 꽥꽥에서 기능 제공 안함
-                        // maxLength = CertifyingStatementMaxLength,
-                        // showCounter = true,
                     )
                 }
             }
@@ -264,8 +302,6 @@ internal fun ExamInformationScreen(
                     .fillMaxWidth()
                     .layoutId(BottomLayoutId),
                 leftButtonText = stringResource(id = R.string.additional_information_next),
-                tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
-                tempSaveButtonClick = {},
                 nextButtonText = stringResource(id = R.string.next),
                 nextButtonClick = {
                     coroutineScope.launch {

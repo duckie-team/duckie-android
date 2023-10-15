@@ -57,6 +57,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import team.duckie.app.android.common.compose.activityViewModel
+import team.duckie.app.android.common.compose.rememberLazyListState
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
@@ -133,6 +134,7 @@ internal fun HomeRecommendScreen(
         LazyColumn(
             modifier = modifier
                 .fillMaxSize(),
+            state = lazyRecommendations.rememberLazyListState(),
         ) {
             item {
                 HomeTopAppBar(

@@ -34,6 +34,7 @@ internal fun ProfileSection(
     userId: Int,
     profile: String,
     duckPower: String,
+    favoriteTag: String,
     follower: Int,
     following: Int,
     introduce: String,
@@ -62,7 +63,7 @@ internal fun ProfileSection(
             ) {
                 EachInformation(
                     value = { duckPower },
-                    title = stringResource(id = R.string.duck_power),
+                    title = favoriteTag,
                     isLoading = isLoading,
                 )
                 Divider(height = 12.dp)

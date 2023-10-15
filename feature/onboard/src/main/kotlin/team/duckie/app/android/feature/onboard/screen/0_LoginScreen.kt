@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +36,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.systemBarPaddings
@@ -47,6 +52,7 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackHeadLine1
 
 @Suppress("UnusedPrivateMember", "unused")
 private val currentStep = OnboardStep.Login
@@ -94,11 +100,9 @@ internal fun LoginScreen() {
     Layout(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = QuackColor.White.value)
             .padding(systemBarPaddings)
-            .padding(
-                horizontal = 20.dp,
-                vertical = 24.dp,
-            ),
+            .padding(bottom = 28.dp),
         content = {
             LoginScreenWelcome()
             LoginScreenLoginArea()
@@ -109,29 +113,33 @@ internal fun LoginScreen() {
 
 @Composable
 private fun LoginScreenWelcome() {
+    val composition by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(R.raw.onboard_bg_splash),
+    )
+
     Column(
         modifier = Modifier
+            .layoutId(LoginScreenWelcomeLayoutId)
             .fillMaxSize()
-            .layoutId(LoginScreenWelcomeLayoutId),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(
-            space = 16.dp,
-            alignment = Alignment.CenterVertically,
-        ),
+            .padding(
+                top = 110.dp,
+                bottom = 22.dp,
+            ),
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        QuackImage(
-            modifier = Modifier.size(
-                width = 180.dp,
-                height = 248.dp,
-            ),
-            src = R.drawable.img_duckie_talk,
-        )
-        QuackText(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = stringResource(R.string.kakaologin_welcome_message),
-            typography = QuackTypography.HeadLine2.change(
-                textAlign = TextAlign.Center,
-            ),
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 28.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            QuackImage(src = R.drawable.onboard_duckie_text_logo)
+            QuackHeadLine1(text = stringResource(R.string.onboard_slogan))
+        }
+        LottieAnimation(
+            composition = composition,
+            iterations = LottieConstants.IterateForever,
         )
     }
 }
@@ -156,7 +164,7 @@ private val LoginScreenLoginAreaMeasurePolicy = MeasurePolicy { measurables, con
         height = constraints.maxHeight,
     ) {
         symbolPlaceable.place(
-            x = 30.dp.roundToPx(),
+            x = 16.dp.roundToPx(),
             y = Alignment.CenterVertically.align(
                 size = symbolPlaceable.height,
                 space = constraints.maxHeight,
@@ -181,8 +189,10 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier.layoutId(LoginScreenLoginAreaLayoutId),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .layoutId(LoginScreenLoginAreaLayoutId)
+            .padding(horizontal = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // 카카오 로그인 버튼
@@ -190,7 +200,7 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
         Layout(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(55.dp)
+                .height(45.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(
                     color = Color(
@@ -206,8 +216,7 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
             content = {
                 Image(
                     modifier = Modifier
-                        .layoutId(LoginScreenLoginAreaKakaoSymbolLayoutId)
-                        .size(24.dp),
+                        .layoutId(LoginScreenLoginAreaKakaoSymbolLayoutId),
                     painter = painterResource(R.drawable.ic_kakao_symbol),
                     colorFilter = ColorFilter.tint(
                         Color(
@@ -219,13 +228,17 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                     ),
                     contentDescription = null,
                 )
-                // QuackColor 생성자가 internal 이라 BasicText 사용
                 QuackText(
                     modifier = Modifier.layoutId(LoginScreenLoginAreaKakaoLoginLabelLayoutId),
                     text = stringResource(R.string.kakaologin_button_label),
                     typography = QuackTypography.HeadLine2.change(
                         color = QuackColor(
-                            Color(ContextCompat.getColor(context, R.color.kakao_login_button_label)),
+                            Color(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.kakao_login_button_label,
+                                ),
+                            ),
                         ),
                     ),
                 )
@@ -235,7 +248,7 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
         QuackText(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(R.string.kakaologin_login_terms),
-            typography = QuackTypography.Body3.change(
+            typography = QuackTypography.Body2.change(
                 color = QuackColor.Gray2,
                 textAlign = TextAlign.Center,
             ),

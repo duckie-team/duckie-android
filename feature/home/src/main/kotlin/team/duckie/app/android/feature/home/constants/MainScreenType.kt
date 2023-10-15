@@ -11,6 +11,7 @@ package team.duckie.app.android.feature.home.constants
 enum class MainScreenType {
     HomeRecommendFollowingExam,
     HomeRecommendFollowing,
+    HomeProceed,
     Search,
     Ranking,
     MyPage,

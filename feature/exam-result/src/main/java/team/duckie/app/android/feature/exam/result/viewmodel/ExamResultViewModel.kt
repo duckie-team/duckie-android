@@ -458,6 +458,8 @@ class ExamResultViewModel @Inject constructor(
                             commentsTotal = commentsTotal ?: 0,
                             equalAnswerCount = wrongAnswer?.meTotal ?: 0,
                             isPerfectChallenge = wrongProblem == null,
+                            solveRank = solveRank ?: 0,
+                            percentileRank = percentileRank ?: "",
                         )
                     }
                 }

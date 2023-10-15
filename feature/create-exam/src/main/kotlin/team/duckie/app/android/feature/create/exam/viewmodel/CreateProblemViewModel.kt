@@ -273,6 +273,8 @@ internal class CreateProblemViewModel @Inject constructor(
             problems = problems,
             buttonTitle = additionalInfoState.takeTitle,
             status = null, // 운영용
+            type = "text", // TODO(riflockle7): 값 넣는 스펙에 대해 확인 필요
+            totalProblemCount = problems.size,
         )
     }
 
@@ -589,10 +591,10 @@ internal class CreateProblemViewModel @Inject constructor(
         questionType: Question.Type?,
         questionIndex: Int,
         title: String? = null,
-        urlSource: Uri,
+        urlSource: Uri?,
         applicationContext: Context,
     ) = viewModelScope.launch {
-        urlSource.run {
+        urlSource?.run {
             runCatching {
                 requestImage(
                     when (questionType) {
@@ -609,6 +611,8 @@ internal class CreateProblemViewModel @Inject constructor(
             }.onFailure {
                 intent { postSideEffect(CreateProblemSideEffect.ReportError(it)) }
             }
+        } ?: kotlin.run {
+            setQuestion(Question.Type.Text, questionIndex, title)
         }
     }
 

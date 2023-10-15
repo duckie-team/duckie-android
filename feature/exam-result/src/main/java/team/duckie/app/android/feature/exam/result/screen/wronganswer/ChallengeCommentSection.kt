@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +36,7 @@ import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.compose.util.fillMaxScreenWidth
+import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.common.kotlin.orHyphen
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
@@ -149,7 +149,7 @@ internal fun ColumnScope.ChallengeCommentSection(
             QuackIcon(icon = QuackIcon.Outlined.ArrowDown)
         }
         Spacer(space = 8.dp)
-        comments.forEach { item ->
+        comments.fastForEach { item ->
             key(item.id) {
                 ChallengeComment(
                     modifier = Modifier.fillMaxScreenWidth(),

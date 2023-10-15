@@ -68,6 +68,7 @@ fun blackAndPrimaryColor(text: String) = animateColorAsState(
 fun QuackNoUnderlineTextField(
     modifier: Modifier = Modifier,
     text: String,
+    textTypography: QuackTypography? = null,
     onTextChanged: (text: String) -> Unit,
     placeholderText: String? = null,
     paddingValues: PaddingValues = PaddingValues(
@@ -79,6 +80,7 @@ fun QuackNoUnderlineTextField(
     startPadding: Dp = 0.dp,
     leadingIconOnClick: (() -> Unit)? = null,
     @DrawableRes leadingIcon: Int? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
     trailingEndPadding: Dp = 0.dp,
     @DrawableRes trailingIcon: Int? = null,
     trailingIconSize: Dp = 24.dp,
@@ -93,7 +95,7 @@ fun QuackNoUnderlineTextField(
     val inputTypography = remember(
         key1 = isPlaceholder,
     ) {
-        QuackTypography.Subtitle.runIf(
+        (textTypography ?: QuackTypography.Subtitle).runIf(
             condition = isPlaceholder,
         ) {
             change(
@@ -121,11 +123,13 @@ fun QuackNoUnderlineTextField(
         decorationBox = { textField ->
             TextFieldDecoration(
                 textField = textField,
+                textTypography = textTypography,
                 isPlaceholder = isPlaceholder,
                 placeholderText = placeholderText,
                 leadingIcon = leadingIcon,
                 trailingIcon = trailingIcon,
                 startPadding = startPadding,
+                trailingContent = trailingContent,
                 trailingStartPadding = trailingEndPadding,
                 trailingIconOnClick = trailingIconOnClick,
                 trailingIconSize = trailingIconSize,
@@ -146,12 +150,14 @@ private object TextFieldDecorationLayoutId {
 @Composable
 private fun TextFieldDecoration(
     textField: @Composable () -> Unit,
+    textTypography: QuackTypography? = null,
     isPlaceholder: Boolean,
     placeholderText: String?,
     @DrawableRes leadingIcon: Int?,
     trailingIcon: Int?,
     startPadding: Dp = 0.dp,
     leadingEndPadding: Dp = 0.dp,
+    trailingContent: @Composable (() -> Unit)? = null,
     trailingStartPadding: Dp = 16.dp,
     trailingIconSize: Dp = 24.dp,
     leadingIconOnClick: (() -> Unit)? = null,
@@ -181,7 +187,7 @@ private fun TextFieldDecoration(
                         .layoutId(PlaceholderId)
                         .padding(start = startPadding),
                     text = placeholderText,
-                    typography = QuackTypography.Body1.change(
+                    typography = (textTypography ?: QuackTypography.Body1).change(
                         color = QuackColor.Gray2,
                     ),
                     softWrap = false,
@@ -193,7 +199,19 @@ private fun TextFieldDecoration(
             ) {
                 textField()
             }
-            if (trailingIcon != null) {
+            if (trailingContent != null) {
+                Box(
+                    modifier = Modifier
+                        .layoutId(TrailingId)
+                        .quackClickable(
+                            onClick = trailingIconOnClick,
+                            rippleEnabled = false,
+                        )
+                        .padding(start = trailingStartPadding),
+                ) {
+                    trailingContent()
+                }
+            } else if (trailingIcon != null) {
                 QuackImage(
                     modifier = Modifier
                         .layoutId(TrailingId)

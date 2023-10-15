@@ -130,7 +130,7 @@ private fun HomeRecommendFollowingSuccessScreen(
         LazyColumn(
             modifier = modifier
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(bottom = 24.dp),
         ) {
             item {
