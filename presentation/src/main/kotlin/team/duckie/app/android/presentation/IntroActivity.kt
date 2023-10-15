@@ -157,6 +157,7 @@ class IntroActivity : BaseActivity() {
             },
             animationBundle,
         )
+        finish()
     }
 
     private fun launchHomeActivity() = lifecycleScope.launch {
