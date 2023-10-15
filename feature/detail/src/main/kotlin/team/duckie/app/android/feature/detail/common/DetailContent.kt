@@ -218,7 +218,7 @@ private fun DetailProfileLayout(
         // 공백
         Spacer(modifier = Modifier.weight(1f))
         // 팔로우 버튼
-        VibrateOnTap { vibrate ->
+        VibrateOnTap { _, vibrate ->
             QuackText(
                 modifier = Modifier
                     .padding(

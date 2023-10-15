@@ -30,7 +30,7 @@ internal fun FollowSection(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-    VibrateOnTap { vibrate ->
+    VibrateOnTap { _, vibrate ->
         EditButton(
             modifier = modifier,
             text = if (enabled) {

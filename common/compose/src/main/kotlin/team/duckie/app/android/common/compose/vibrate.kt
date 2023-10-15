@@ -14,6 +14,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 
@@ -44,10 +45,13 @@ private fun vibrateDevice(context: Context) {
 }
 
 @Composable
-fun VibrateOnTap(content: @Composable (() -> Unit) -> Unit) {
+fun VibrateOnTap(
+    modifier: Modifier = Modifier,
+    content: @Composable (modifier: Modifier, () -> Unit) -> Unit,
+) {
     val context = LocalContext.current
 
-    content {
+    content(modifier) {
         vibrateDevice(context)
     }
 }

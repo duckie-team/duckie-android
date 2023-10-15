@@ -102,10 +102,11 @@ fun UserFollowingLayout(
                     .skeleton(isLoading),
                 text = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
             )
-            VibrateOnTap { vibrate ->
+            VibrateOnTap(
+                modifier = Modifier.layoutId(UserInfoBlockFollowingButtonLayoutId),
+            ) { modifier, vibrate ->
                 QuackText(
-                    modifier = Modifier
-                        .layoutId(UserInfoBlockFollowingButtonLayoutId)
+                    modifier = modifier
                         .skeleton(isLoading)
                         .quackClickable(
                             onClick = {

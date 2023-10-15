@@ -43,10 +43,10 @@ fun UserFollowingLayout(
         nickname = nickname,
         description = tier + if (favoriteTag.isNotEmpty()) "· $favoriteTag" else "",
         onClickLayout = onClickUserProfile,
-        trailingButton = {
-            VibrateOnTap { vibrate ->
+        trailingButton = { modifier ->
+            VibrateOnTap(modifier) { modifier, vibrate ->
                 QuackText(
-                    modifier = Modifier
+                    modifier = modifier
                         .quackClickable(
                             onClick = {
                                 vibrate()
