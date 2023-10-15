@@ -8,8 +8,10 @@
 package team.duckie.app.android.feature.onboard
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.edit
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
@@ -30,11 +33,12 @@ import team.duckie.app.android.common.android.exception.handling.reporter.report
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
 import team.duckie.app.android.common.android.lifecycle.repeatOnCreated
 import team.duckie.app.android.common.android.network.NetworkUtil
+import team.duckie.app.android.common.android.permission.PermissionCompat
 import team.duckie.app.android.common.android.ui.BaseActivity
-import team.duckie.app.android.common.android.ui.changeActivityWithAnimation
 import team.duckie.app.android.common.android.ui.collectWithLifecycle
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.finishWithAnimation
+import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.app.android.common.compose.ToastWrapper
 import team.duckie.app.android.common.kotlin.exception.isKakaoTalkNotConnectedAccount
 import team.duckie.app.android.core.datastore.PreferenceKey
@@ -75,13 +79,17 @@ class OnboardActivity : BaseActivity() {
 
     private val permissions by lazy {
         arrayOf(
-            vm.imagePermission,
+            PermissionCompat.getImageStoragePermission(),
             Manifest.permission.CAMERA,
-        )
+        ).run {
+            PermissionCompat.getNotificationPermission()?.let {
+                this + it
+            } ?: this
+        }
     }
     private val requestPermissionLauncher by lazy {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
-            vm.updateImagePermissionGrantState(isGranted[vm.imagePermission])
+            vm.updateImagePermissionGrantState(isGranted[PermissionCompat.getImageStoragePermission()])
             vm.isCameraPermissionGranted = isGranted[Manifest.permission.CAMERA] ?: false
         }
     }
@@ -149,6 +157,9 @@ class OnboardActivity : BaseActivity() {
     }
 
     private fun permissionInit() {
+        val isNotificationGranted = PermissionCompat.getNotificationPermission()?.let {
+            ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+        } ?: true
         vm.updateImagePermissionGrantState(
             ActivityCompat.checkSelfPermission(
                 this,
@@ -160,7 +171,7 @@ class OnboardActivity : BaseActivity() {
             Manifest.permission.CAMERA,
         ) == PackageManager.PERMISSION_GRANTED
 
-        if (vm.isImagePermissionGranted == false || !vm.isCameraPermissionGranted) {
+        if (vm.isImagePermissionGranted == false || !vm.isCameraPermissionGranted || !isNotificationGranted) {
             toast(getString(R.string.permission_needs_for_profile_photo))
             requestPermissionLauncher.launch(permissions)
         }
@@ -174,6 +185,17 @@ class OnboardActivity : BaseActivity() {
         }
     }
 
+    private fun saveDeviceToken() {
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result
+                    Log.d("DeviceToken", token)
+                    vm.saveDeviceToken(token)
+                }
+            }
+    }
+
     private fun handleState(state: OnboardState) {
         onboardStepState = state.step
         if (state.finishOnboarding) {
@@ -181,6 +203,7 @@ class OnboardActivity : BaseActivity() {
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private suspend fun handleSideEffect(sideEffect: OnboardSideEffect) {
         when (sideEffect) {
             is OnboardSideEffect.UpdateGalleryImages -> {
@@ -202,6 +225,7 @@ class OnboardActivity : BaseActivity() {
             }
 
             is OnboardSideEffect.Joined -> {
+                saveDeviceToken()
                 if (sideEffect.isNewUser) {
                     vm.navigateStep(
                         step = OnboardStep.Profile,
@@ -213,13 +237,16 @@ class OnboardActivity : BaseActivity() {
             }
 
             is OnboardSideEffect.FinishOnboard -> {
+                val dynamicLinkExamId = intent.getIntExtra(Extras.DynamicLinkExamId, -1)
                 applicationContext.dataStore.edit { preference ->
                     preference[PreferenceKey.Onboard.Finish] = true
-                    sideEffect.userId?.let { preference[PreferenceKey.User.Id] = it }
                 }
-                changeActivityWithAnimation<MainActivity>(
+                startActivityWithAnimation<MainActivity>(
                     intentBuilder = {
+                        if (dynamicLinkExamId != -1) putExtra(Extras.DynamicLinkExamId, dynamicLinkExamId)
                         putExtra(Extras.StartGuide, sideEffect.isNewUser)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     },
                 )
             }

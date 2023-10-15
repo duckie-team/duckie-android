@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,6 +26,7 @@ import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import applyIf
 import team.duckie.app.android.common.compose.asLoose
 import team.duckie.app.android.common.compose.ui.QuackDivider
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
@@ -100,6 +103,8 @@ internal fun CreateProblemBottomLayout(
     isValidateCheck: () -> Boolean,
 ) {
     val isValidate = isValidateCheck()
+    val needsWeightSpace = leftButtonClick != null || tempSaveButtonClick != null
+
     Column(modifier = modifier.background(QuackColor.White.value)) {
         QuackDivider()
         Row(
@@ -122,7 +127,7 @@ internal fun CreateProblemBottomLayout(
                     // TODO(riflockle7): 추후 비활성화 될 때의 resouce 이미지 필요
                     leftButtonLeadingIcon?.let {
                         QuackIcon(
-                            modifier = modifier.size(DpSize(16.dp, 16.dp)),
+                            modifier = Modifier.size(DpSize(16.dp, 16.dp)),
                             icon = it,
                         )
                     }
@@ -139,7 +144,9 @@ internal fun CreateProblemBottomLayout(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            if (needsWeightSpace) {
+                Spacer(modifier = Modifier.weight(1f))
+            }
 
             // 임시저장 버튼
             tempSaveButtonClick?.let {
@@ -162,6 +169,14 @@ internal fun CreateProblemBottomLayout(
             // 다음 버튼
             QuackText(
                 modifier = Modifier
+                    .quackClickable {
+                        if (isValidate) {
+                            nextButtonClick()
+                        }
+                    }
+                    .applyIf(!needsWeightSpace) {
+                        fillMaxWidth()
+                    }
                     .clip(RoundedCornerShape(size = 8.dp))
                     .background(
                         if (isValidate) {
@@ -170,10 +185,8 @@ internal fun CreateProblemBottomLayout(
                             QuackColor.Gray2.value
                         },
                     )
-                    .quackClickable {
-                        if (isValidate) {
-                            nextButtonClick()
-                        }
+                    .applyIf(!needsWeightSpace) {
+                        wrapContentWidth(Alignment.CenterHorizontally)
                     }
                     .quackBorder(
                         QuackBorder(

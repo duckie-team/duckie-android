@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -40,6 +41,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,21 +60,14 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v1.ArrowRightId
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.fastForEach
+import team.duckie.app.android.domain.exam.model.ExamFunding
+import team.duckie.app.android.domain.home.model.HomeFunding
+import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.HomeTopAppBar
 import team.duckie.app.android.feature.home.constants.HomeStep
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedCategory.categories
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedCategory.categoryThumbnailUrl
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedCategory.items
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedItemView.currentExamCount
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedItemView.joinCount
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedItemView.maximumExamCount
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedItemView.nickname
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedItemView.profileImageUrl
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedItemView.remainCount
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedItemView.thumbnailUrl
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.ProceedItemView.title
-import team.duckie.app.android.feature.home.screen.home.HomeProceedTempConstants.username
+import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
 import team.duckie.quackquack.material.QuackColor
@@ -87,33 +82,10 @@ import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.sugar.QuackSubtitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
-object HomeProceedTempConstants {
-    const val username = "무지개양말"
-    object ProceedItemView {
-        const val title = "투바투 덕력고사"
-        const val thumbnailUrl =
-            "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1684545439537"
-        const val maximumExamCount = 10
-        const val currentExamCount = 9
-        val remainCount: Int
-            get() = maximumExamCount - currentExamCount
-        const val profileImageUrl =
-            "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/profile/1686068260083"
-        const val nickname = "킹도로"
-        const val joinCount = 5
-    }
-
-    object ProceedCategory {
-        val categories = listOf("전체", "애니", "아이돌", "영화", "운동", "트렌드")
-        const val categoryThumbnailUrl =
-            "https://duckie-resource.s3.ap-northeast-2.amazonaws.com/exam/thumbnail/1684545439537"
-        val items = listOf("투바투 덕력고사", "베스킨라빈스 31 덕력고사", "예능 덕력고사", "코난 극장판 덕력고사", "아따맘마 덕력고사")
-    }
-}
-
 @Suppress("unused") // 더미 값
 @Composable
 internal fun HomeProceedScreen(
+    initState: (MainScreenType, () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
     state: HomeState,
     homeViewModel: HomeViewModel = activityViewModel(),
@@ -125,9 +97,13 @@ internal fun HomeProceedScreen(
     val pullRefreshState = rememberPullRefreshState(
         refreshing = state.isHomeProceedPullRefreshLoading,
         onRefresh = {
-            homeViewModel.refreshProceeds(forceLoading = true)
+            homeViewModel.refreshProceedScreen(forceLoading = true)
         },
     )
+
+    LaunchedEffect(Unit) {
+        initState(MainScreenType.HomeProceed) { homeViewModel.initProceedScreen() }
+    }
 
     Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
         LazyColumn(modifier = modifier.fillMaxSize()) {
@@ -163,8 +139,8 @@ internal fun HomeProceedScreen(
             }
 
             // 진행중인 덕력고사 목록 뷰
-            items(10) {
-                ProceedItemView()
+            items(state.homeFundings) { item ->
+                ProceedItemView(item)
             }
 
             // 공백
@@ -195,16 +171,17 @@ internal fun HomeProceedScreen(
             // 덕력고사 진행 중 카테고리 영역 뷰
             item {
                 ProceedCategorySection(
-                    selectedTagIndex = 0,
-                    tagItemClick = {},
-                    categories = categories,
-                    items = items,
+                    username = state.me?.nickname ?: "사용자",
+                    tagItemClick = homeViewModel::clickProceedFundingTag,
+                    selectedTag = state.homeFundingSelectedTag,
+                    categories = state.homeFundingTags,
+                    items = state.examFundings,
                 )
             }
         }
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
-            refreshing = state.isHomeRecommendPullRefreshLoading,
+            refreshing = state.isHomeProceedPullRefreshLoading,
             state = pullRefreshState,
         )
     }
@@ -212,7 +189,7 @@ internal fun HomeProceedScreen(
 
 /** 진행중인 덕력고사 Item 뷰 */
 @Composable
-fun ProceedItemView() {
+fun ProceedItemView(homeFunding: HomeFunding) {
     Column(
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 16.dp)
@@ -240,7 +217,7 @@ fun ProceedItemView() {
         ) {
             // 덕퀴즈/덕질고사 썸네일 이미지
             AsyncImage(
-                model = thumbnailUrl,
+                model = homeFunding.thumbnailUrl,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(ratio = GetHeightRatioW328H240),
@@ -253,7 +230,7 @@ fun ProceedItemView() {
                 modifier = Modifier
                     .clip(RoundedCornerShape(bottomEnd = 4.dp))
                     .background(
-                        if (remainCount == 1) {
+                        if (homeFunding.remainCount == 1) {
                             QuackColor.DuckieOrange.value
                         } else {
                             Color(0xFF222222)
@@ -262,7 +239,7 @@ fun ProceedItemView() {
                     .padding(vertical = 4.dp, horizontal = 8.dp),
                 text = stringResource(
                     id = R.string.home_proceed_item_count_down,
-                    remainCount,
+                    homeFunding.remainCount,
                 ),
                 typography = QuackTypography.Body3.change(color = QuackColor.White),
             )
@@ -274,7 +251,7 @@ fun ProceedItemView() {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(currentExamCount.toFloat())
+                    .weight(homeFunding.problemCount.toFloat())
                     .background(QuackColor.DuckieOrange.value),
             )
 
@@ -282,7 +259,7 @@ fun ProceedItemView() {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(remainCount.toFloat())
+                    .weight(homeFunding.remainCount.toFloat())
                     .background(QuackColor.Gray3.value),
             )
         }
@@ -290,7 +267,7 @@ fun ProceedItemView() {
         // 덕력고사 정보 & 참여율
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             // 덕력고사 이름
-            QuackText(text = title, typography = QuackTypography.HeadLine2)
+            QuackText(text = homeFunding.title, typography = QuackTypography.HeadLine2)
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -298,7 +275,7 @@ fun ProceedItemView() {
                 // 프로필 이미지
                 QuackProfileImage(
                     modifier = Modifier.size(DpSize(width = 16.dp, height = 16.dp)),
-                    profileUrl = profileImageUrl,
+                    profileUrl = homeFunding.user?.profileImageUrl,
                 )
 
                 // 닉네임 + 참여 인원수
@@ -306,8 +283,8 @@ fun ProceedItemView() {
                     modifier = Modifier.padding(start = 4.dp),
                     text = stringResource(
                         R.string.home_proceed_item_info,
-                        nickname,
-                        stringResource(id = R.string.home_proceed_item_join_count, joinCount),
+                        homeFunding.user?.nickname ?: "",
+                        stringResource(id = R.string.home_proceed_item_join_count, homeFunding.contributorCount),
                     ),
                     typography = QuackTypography.Body2.change(color = QuackColor.Gray1),
                 )
@@ -320,8 +297,8 @@ fun ProceedItemView() {
                     modifier = Modifier.padding(start = 4.dp),
                     text = stringResource(
                         R.string.home_proceed_item_problem_count,
-                        currentExamCount,
-                        maximumExamCount,
+                        homeFunding.problemCount,
+                        homeFunding.totalProblemCount,
                     ),
                     typography = QuackTypography.Body2.change(color = QuackColor.Gray1),
                 )
@@ -391,10 +368,11 @@ fun ProceedBannerView() {
 /** 진행중인 덕력고사 카테고리 섹션 */
 @Composable
 fun ProceedCategorySection(
-    selectedTagIndex: Int = 0,
-    tagItemClick: (String) -> Unit,
-    categories: List<String>,
-    items: List<String>,
+    username: String,
+    tagItemClick: (Tag) -> Unit,
+    selectedTag: Tag,
+    categories: List<Tag>,
+    items: List<ExamFunding>,
 ) {
     // 제목
     QuackText(
@@ -414,14 +392,14 @@ fun ProceedCategorySection(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
     ) {
-        itemsIndexed(items = categories) { index, tagName ->
+        itemsIndexed(items = categories) { index, tag ->
             QuackTag(
-                text = tagName,
+                text = tag.name,
                 style = QuackTagStyle.Outlined,
                 onClick = {
-                    tagItemClick(tagName)
+                    tagItemClick(tag)
                 },
-                selected = index == selectedTagIndex,
+                selected = selectedTag.id == tag.id,
             )
         }
     }
@@ -431,7 +409,7 @@ fun ProceedCategorySection(
 
     // 카테고리에 해당하는 덕력고사 목록
     Column {
-        items.forEach { item ->
+        items.fastForEach { item ->
             ProceedCategoryItemView(categoryItem = item)
         }
     }
@@ -445,14 +423,14 @@ fun ProceedCategorySection(
 
 /** 카테고리별 뷰[ProceedCategorySection]에 보이는 Item 뷰 */
 @Composable
-fun ProceedCategoryItemView(categoryItem: String) {
+fun ProceedCategoryItemView(categoryItem: ExamFunding) {
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // 덕퀴즈/덕질고사 썸네일 이미지
         AsyncImage(
-            model = categoryThumbnailUrl,
+            model = categoryItem.thumbnailUrl,
             modifier = Modifier
                 .width(85.dp)
                 .clip(RoundedCornerShape(8.dp))
@@ -464,7 +442,7 @@ fun ProceedCategoryItemView(categoryItem: String) {
         // 덕력고사 정보 & 참여율
         Column(modifier = Modifier.padding(start = 8.dp)) {
             // 덕력고사 이름
-            QuackText(text = title, typography = QuackTypography.HeadLine2)
+            QuackText(text = categoryItem.title, typography = QuackTypography.HeadLine2)
 
             // 공백
             Spacer(modifier = Modifier.height(4.dp))
@@ -473,7 +451,7 @@ fun ProceedCategoryItemView(categoryItem: String) {
                 // 프로필 이미지
                 QuackProfileImage(
                     modifier = Modifier.size(DpSize(width = 16.dp, height = 16.dp)),
-                    profileUrl = profileImageUrl,
+                    profileUrl = categoryItem.user.profileImageUrl,
                 )
 
                 // 닉네임 + 참여 인원수
@@ -481,8 +459,8 @@ fun ProceedCategoryItemView(categoryItem: String) {
                     modifier = Modifier.padding(start = 4.dp),
                     text = stringResource(
                         R.string.home_proceed_item_info,
-                        nickname,
-                        stringResource(id = R.string.home_proceed_item_join_count, joinCount),
+                        categoryItem.user.nickname,
+                        stringResource(id = R.string.home_proceed_item_join_count, categoryItem.contributorCount),
                     ),
                     typography = QuackTypography.Body2.change(color = QuackColor.Gray1),
                 )

@@ -9,6 +9,8 @@
 
 package team.duckie.app.android.feature.exam.result.screen
 
+import android.app.Activity
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,8 +43,14 @@ import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import team.duckie.app.android.common.android.image.MediaUtil
 import team.duckie.app.android.common.android.image.saveImageInGallery
+import team.duckie.app.android.common.android.intent.goToMarket
+import team.duckie.app.android.common.android.share.ShareUtil
+import team.duckie.app.android.common.android.share.ShareUtil.INSTAGRAM_PACKAGE_NAME
+import team.duckie.app.android.common.android.share.isAppInstalled
 import team.duckie.app.android.common.compose.GetHeightRatioW328H240
 import team.duckie.app.android.common.compose.rememberToast
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
@@ -50,7 +58,10 @@ import team.duckie.app.android.common.compose.ui.QuackDivider
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.icon.v2.Download
 import team.duckie.app.android.common.compose.ui.icon.v2.DuckieTextLogo
+import team.duckie.app.android.common.compose.ui.icon.v2.Instagram
+import team.duckie.app.android.common.compose.ui.quack.TempSmallOutlineButton
 import team.duckie.app.android.common.compose.util.ComposeToBitmap
+import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.toHourMinuteSecond
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.app.android.feature.exam.result.viewmodel.ExamResultState
@@ -59,17 +70,16 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.ui.QuackIcon
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.icons
 import team.duckie.quackquack.ui.span
 import team.duckie.quackquack.ui.sugar.QuackBody1
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
-import team.duckie.quackquack.ui.sugar.QuackSecondaryLargeButton
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
-import kotlin.math.round
 
 private val PaleOrange = Color(0xFFFFF8E5)
+private const val DelayDeleteFile: Long = 3000L
 
+@AllowMagicNumber("for instagram delete external save delay")
 @Composable
 internal fun ExamResultShareScreen(
     state: ExamResultState.Success,
@@ -108,16 +118,21 @@ internal fun ExamResultShareScreen(
             )
         },
         bottomBar = {
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(68.dp)
-                    .background(Color.White),
-                contentAlignment = Alignment.Center,
+                    .background(Color.White)
+                    .padding(
+                        horizontal = 16.dp,
+                        vertical = 12.dp,
+                    ),
             ) {
-                QuackSecondaryLargeButton(
-                    modifier = Modifier.icons(leadingIcon = QuackIcon.Download),
+                TempSmallOutlineButton(
+                    modifier = Modifier
+                        .weight(1f),
                     text = stringResource(id = R.string.exam_result_save_image),
+                    icon = QuackIcon.Download,
                 ) {
                     coroutineScope.launch {
                         val bitmap = snapShot.invoke()
@@ -132,6 +147,24 @@ internal fun ExamResultShareScreen(
                     }
                     rememberToast.invoke(context.getString(R.string.exam_success_save_image_message))
                 }
+                Spacer(space = 8.dp)
+                TempSmallOutlineButton(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(id = R.string.exam_result_instagram_share),
+                    icon = QuackIcon.Instagram,
+                ) {
+                    coroutineScope.launch {
+                        val bitmap = snapShot.invoke()
+                        val file = MediaUtil.imageExternalSave(bitmap)
+                        sharInstagramStory(
+                            filePath = file,
+                            context = context,
+                            onFailed = {
+                                rememberToast.invoke(context.getString(R.string.exam_share_failed))
+                            },
+                        )
+                    }
+                }
             }
         },
     ) { padding ->
@@ -145,6 +178,26 @@ internal fun ExamResultShareScreen(
         ) {
             Spacer(space = 20.dp)
             ExamResultImage(state = state, painter = imagePainter)
+        }
+    }
+}
+
+private suspend fun sharInstagramStory(
+    filePath: String,
+    context: Context,
+    onFailed: () -> Unit,
+) {
+    runCatching {
+        val intent = ShareUtil.intentInstagramStory(filePath)
+        context.startActivity(intent)
+    }.onSuccess {
+        delay(DelayDeleteFile) // for delete external save
+        MediaUtil.deleteFile(filePath)
+    }.onFailure { _ ->
+        if (!context.isAppInstalled(INSTAGRAM_PACKAGE_NAME)) {
+            (context as Activity).goToMarket(INSTAGRAM_PACKAGE_NAME)
+        } else {
+            onFailed()
         }
     }
 }
@@ -249,7 +302,13 @@ private fun ExamResultImage(
             ),
         )
         Spacer(space = 4.dp)
-        QuackBody1(text = "${state.solvedCount}명 중 ${round(state.percent)}%!")
+        QuackBody1(
+            text = stringResource(
+                id = R.string.exam_share_result_percent,
+                state.solveRank,
+                state.percentileRank,
+            ),
+        )
         Spacer(space = 24.dp)
         QuackIcon(
             modifier = Modifier.size(48.dp, 16.dp),

@@ -31,6 +31,8 @@ data class ExamBody(
     val buttonTitle: String,
     val problems: ImmutableList<Problem>,
     val status: String?,
+    val type: String?,
+    val totalProblemCount: Int?,
 )
 
 @Immutable

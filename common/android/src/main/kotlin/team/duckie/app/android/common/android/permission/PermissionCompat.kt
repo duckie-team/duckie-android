@@ -9,9 +9,11 @@ package team.duckie.app.android.common.android.permission
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 
 object PermissionCompat {
@@ -32,12 +34,28 @@ object PermissionCompat {
         }
     }
 
+    fun getNotificationPermission(): String? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.POST_NOTIFICATIONS
+        } else {
+            null
+        }
+    }
+
     fun requestWriteExternalStoragePermission(activity: Activity) {
         val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
         if (ContextCompat.checkSelfPermission(activity, permission) !=
             PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(activity, arrayOf(permission), PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(permission),
+                PERMISSION_REQUEST_CODE,
+            )
         }
+    }
+
+    fun isNotificationPermission(context: Context): Boolean {
+        return NotificationManagerCompat.from(context).areNotificationsEnabled()
     }
 }

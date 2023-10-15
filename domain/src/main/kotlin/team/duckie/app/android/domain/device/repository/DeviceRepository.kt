@@ -12,4 +12,5 @@ import androidx.compose.runtime.Immutable
 @Immutable
 interface DeviceRepository {
     suspend fun register(fcmToken: String)
+    suspend fun unRegister(userId: Int): Boolean
 }

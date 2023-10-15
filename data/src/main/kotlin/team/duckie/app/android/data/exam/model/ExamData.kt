@@ -88,6 +88,18 @@ internal data class ExamData(
 
     @field:JsonProperty("problemCount")
     val problemCount: Int? = null,
+
+    @field:JsonProperty("totalProblemCount")
+    val totalProblemCount: Int? = null,
+
+    @field:JsonProperty("contributors")
+    val contributors: List<UserResponse>? = null,
+
+    @field:JsonProperty("contributorCount")
+    val contributorCount: Int? = null,
+
+    @field:JsonProperty("sampleQuestion")
+    val sampleQuestion: List<QuestionData>? = null,
 )
 
 internal data class ExamsData(

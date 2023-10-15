@@ -213,7 +213,7 @@ class ProfileEditViewModel @Inject constructor(
                 tags = null,
                 status = null,
                 nickname = state.nickname,
-                introduction = state.introduce,
+                introduction = state.introduce.ifEmpty { null },
             ).onSuccess {
                 postSideEffect(ProfileEditSideEffect.NavigateBack)
             }.onFailure {

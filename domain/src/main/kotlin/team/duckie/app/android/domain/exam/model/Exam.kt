@@ -44,6 +44,10 @@ data class Exam(
     val requirementQuestion: String?,
     val requirementPlaceholder: String?,
     val problemCount: Int?,
+    val totalProblemCount: Int?,
+    val contributors: ImmutableList<User>?,
+    val contributorCount: Int?,
+    val sampleQuestion: List<Question>?,
 ) {
     companion object {
         /*
@@ -76,6 +80,10 @@ data class Exam(
             requirementPlaceholder = null,
             problemCount = null,
             myRecord = null,
+            totalProblemCount = null,
+            contributors = null,
+            contributorCount = null,
+            sampleQuestion = null,
         )
     }
 }

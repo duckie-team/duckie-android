@@ -1,3 +1,5 @@
+@file:Suppress("TooGenericExceptionCaught", "SwallowedException", "AnnotationOnSeparateLine")
+
 /*
  * Designed and developed by Duckie Team, 2022
  *
@@ -14,6 +16,7 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import java.io.BufferedInputStream
@@ -170,5 +173,46 @@ object MediaUtil {
             FirebaseCrashlytics.getInstance().recordException(e)
             null
         }
+    }
+
+    /**
+     * @return 파일 삭제 성공 여부
+     */
+    fun deleteFile(filePath: String): Boolean {
+        val file = File(filePath)
+        return if (file.exists()) {
+            file.delete()
+        } else {
+            false
+        }
+    }
+
+    fun imageExternalSave(bitmap: Bitmap): String {
+        val state = Environment.getExternalStorageState()
+        if (Environment.MEDIA_MOUNTED == state) {
+            val rootPath =
+                "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)}/duckie"
+            val fileName = "덕퀴즈 결과 ${System.currentTimeMillis()}.png"
+            val savePath = File(rootPath)
+            savePath.mkdirs()
+
+            val file = File(savePath, fileName)
+
+            if (file.exists()) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    file.delete()
+                } else {
+                    File(file.toString()).delete()
+                }
+            }
+
+            file.outputStream().use { outputStream ->
+                if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
+                    outputStream.flush()
+                    return file.path
+                }
+            }
+        }
+        return ""
     }
 }

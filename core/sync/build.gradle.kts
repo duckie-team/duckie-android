@@ -9,6 +9,7 @@ import DependencyHandler.Extensions.implementations
 
 plugins {
     id(ConventionEnum.AndroidLibrary)
+    id(ConventionEnum.AndroidHilt)
 }
 
 android {
@@ -17,7 +18,9 @@ android {
 
 dependencies {
     implementations(
+        projects.domain,
+        projects.presentation,
         platform(libs.firebase.bom),
-        libs.firebase.messaging
+        libs.firebase.messaging,
     )
 }

@@ -50,6 +50,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.icon.v1.SearchId
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.viewmodel.MainViewModel
@@ -151,7 +152,7 @@ internal fun SearchMainScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                state.popularTags.forEach { tag ->
+                state.popularTags.fastForEach { tag ->
                     QuackTag(
                         text = tag.name,
                         style = QuackTagStyle.Filled,

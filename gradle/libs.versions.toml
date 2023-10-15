@@ -57,7 +57,7 @@ compose-lifecycle = "2.6.1" # use alpha for StateFlow#collectAsStateWithLifecycl
 compose-compiler = "1.4.3"
 compose-activity = "1.7.1"
 compose-accompanist = "0.30.1"
-compose-lottie = "6.0.0"
+compose-lottie = "6.1.0"
 compose-camposer = "0.2.1"
 compose-customview-pooling-container = "1.0.0"
 compose-coil = "2.3.0"
@@ -114,7 +114,7 @@ quack-lint-compose = "1.0.2"
 # TODO(sungbin): quack-lint-writing
 
 # quack v2
-quack-v2-ui = "2.0.0-alpha11"
+quack-v2-ui = "2.0.0-alpha14"
 quack-v2-ui-plugin-interceptor-textfield ="2.0.0-alpha01"
 
 # test
@@ -258,8 +258,8 @@ quack-lint-core = { module = "team.duckie.quack:quack-lint-core", version.ref = 
 quack-lint-quack = { module = "team.duckie.quack:quack-lint-quack", version.ref = "quack-lint-quack" }
 quack-lint-compose = { module = "team.duckie.quack:quack-lint-compose", version.ref = "quack-lint-compose" }
 
-quack-v2-ui = { module = "team.duckie.quackquack.ui:ui", version.ref = "quack-v2-ui" }
-quack-v2-ui-plugin-interceptor-textfield = { module = "team.duckie.quackquack.ui:ui-plugin-interceptor-textfield", version.ref = "quack-v2-ui-plugin-interceptor-textfield"}
+quack-v2-ui = { module = "io.github.duckie-team.ui:ui", version.ref = "quack-v2-ui" }
+#quack-v2-ui-plugin-interceptor-textfield = { module = "team.duckie.quackquack.ui:ui-plugin-interceptor-textfield", version.ref = "quack-v2-ui-plugin-interceptor-textfield"}
 
 test-strikt = { module = "io.strikt:strikt-core", version.ref = "test-strikt" }
 test-junit-core = { module = "junit:junit", version.ref = "test-junit-core" }

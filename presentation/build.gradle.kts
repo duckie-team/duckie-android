@@ -35,5 +35,6 @@ dependencies {
         libs.androidx.splash,
         libs.quack.v2.ui,
         libs.orbit.compose,
+        libs.compose.ui.lottie,
     )
 }

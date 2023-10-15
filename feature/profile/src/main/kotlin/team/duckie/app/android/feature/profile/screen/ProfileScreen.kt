@@ -72,6 +72,7 @@ fun ProfileScreen(
                     userId = user?.id ?: 0,
                     profile = user?.profileImageUrl ?: "",
                     duckPower = user?.duckPower?.tier ?: "0덕",
+                    favoriteTag = user?.duckPower?.tag?.name ?: "",
                     follower = followerCount,
                     following = followingCount,
                     introduce = user?.introduction

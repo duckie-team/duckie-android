@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -86,6 +88,7 @@ import team.duckie.app.android.feature.create.exam.viewmodel.state.CreateProblem
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.OutlinedGroup
+import team.duckie.quackquack.material.icon.quackicon.outlined.ArrowRight
 import team.duckie.quackquack.material.icon.quackicon.outlined.Close
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackButton
@@ -93,8 +96,11 @@ import team.duckie.quackquack.ui.QuackButtonStyle
 import team.duckie.quackquack.ui.QuackDefaultTextField
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.QuackTextFieldStyle
+import team.duckie.quackquack.ui.counter
+import team.duckie.quackquack.ui.defaultTextFieldIndicator
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.sugar.QuackSubtitle
+import team.duckie.quackquack.ui.trailingIcon
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private const val TopAppBarLayoutId = "AdditionalInfoScreenTopAppBarLayoutId"
@@ -268,6 +274,9 @@ internal fun AdditionalInformationScreen(
 
                     // 시험 태그 추가 (태그 추가) Layout
                     AdditionalSubTagsLayout()
+
+                    // 공백
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
 
                 // 최하단 Layout
@@ -277,12 +286,8 @@ internal fun AdditionalInformationScreen(
                         .layoutId(BottomLayoutId),
                     tempSaveButtonText = stringResource(id = R.string.create_problem_temp_save_button),
                     tempSaveButtonClick = {},
-                    nextButtonText = stringResource(id = R.string.next),
-                    nextButtonClick = {
-                        coroutineScope.launch {
-                            vm.makeExam()
-                        }
-                    },
+                    nextButtonText = stringResource(id = R.string.additional_information_next),
+                    nextButtonClick = vm::makeExam,
                     isValidateCheck = vm::isAllFieldsNotEmpty,
                 )
             },
@@ -336,7 +341,6 @@ private fun AdditionalThumbnailLayout(
 ) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
-    val thumbnailWidthDp = screenWidthDp - 32.dp
 
     TitleAndComponent(
         modifier = Modifier
@@ -345,22 +349,25 @@ private fun AdditionalThumbnailLayout(
         stringResource = R.string.category_title,
     ) {
         QuackImage(
-            modifier = Modifier.size(
-                DpSize(
-                    thumbnailWidthDp,
-                    thumbnailWidthDp * GetHeightRatioW328H240,
-                ),
-            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(GetHeightRatioW328H240),
             contentScale = ContentScale.FillWidth,
             src = thumbnail,
         )
 
         // 썸네일 종류 선택 버튼
-        // TODO(riflockle7): 동작 확인 필요
         QuackButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp)
+                // TODO(riflockle7): 현재 이 코드 동작 안됨
+                .trailingIcon(
+                    icon = OutlinedGroup.ArrowRight,
+                    onClick = {},
+                ),
             text = stringResource(id = R.string.additional_information_thumbnail_select),
-            style = QuackButtonStyle.PrimaryLarge,
-            modifier = Modifier.padding(top = 4.dp),
+            style = QuackButtonStyle.SecondaryLarge,
             onClick = onClick,
         )
     }
@@ -373,11 +380,26 @@ private fun AdditionalTakeLayout(vm: CreateProblemViewModel = activityViewModel(
     val state = vm.collectAsState().value.additionalInfo
 
     TitleAndComponent(
-        modifier = Modifier.padding(top = 48.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp),
         stringResource = R.string.additional_information_take_title,
     ) {
         // TODO(riflockle7): 동작 확인 필요
         QuackDefaultTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                // 밑줄
+                .defaultTextFieldIndicator(
+                    colorGetter = { _, _, _ ->
+                        return@defaultTextFieldIndicator QuackColor.Gray3
+                    },
+                )
+                // 글자 수
+                .counter(
+                    maxLength = 12,
+                    highlightColor = QuackColor.Gray2,
+                ),
             value = state.takeTitle,
             onValueChange = {
                 vm.setButtonTitle(
@@ -403,14 +425,22 @@ private fun AdditionalSubTagsLayout(vm: CreateProblemViewModel = activityViewMod
     val state = vm.collectAsState().value.additionalInfo
 
     TitleAndComponent(
-        modifier = Modifier.padding(top = 48.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp),
         stringResource = R.string.additional_information_sub_tags_title,
     ) {
         // TODO(riflockle7): 동작 확인 필요
         QuackDefaultTextField(
-            modifier = Modifier.quackClickable {
-                vm.goToSearchSubTags()
-            },
+            modifier = Modifier
+                .quackClickable(onClick = vm::goToSearchSubTags)
+                .fillMaxWidth()
+                // 밑줄
+                .defaultTextFieldIndicator(
+                    colorGetter = { _, _, _ ->
+                        return@defaultTextFieldIndicator QuackColor.Gray3
+                    },
+                ),
             value = "",
             onValueChange = { },
             style = QuackTextFieldStyle.Default,

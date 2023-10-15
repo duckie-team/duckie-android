@@ -52,12 +52,34 @@ class DetailViewModel @Inject constructor(
 ) : ContainerHost<DetailState, DetailSideEffect>, ViewModel() {
     override val container = container<DetailState, DetailSideEffect>(DetailState.Loading)
 
+    private val initialExamId: Int = -1
+
+    private val dynamicExamId =
+        savedStateHandle.getStateFlow(Extras.DynamicLinkExamId, initialExamId).value
+
     init {
-        val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        initState(examId)
+        launchValid {
+            val examId = savedStateHandle.getStateFlow(Extras.ExamId, initialExamId).value
+            initExam(examId)
+        }
     }
 
-    private fun initState(examId: Int) = intent {
+    fun parseDynamicLink() {
+        if (dynamicExamId != initialExamId) {
+            initExam(dynamicExamId)
+        }
+    }
+
+    /**
+     * App Link 형식으로 넘어왔을 경우 [block] 을 싱행하지 않습니다.
+     */
+    private fun launchValid(block: () -> Unit) {
+        if (dynamicExamId == initialExamId) {
+            block()
+        }
+    }
+
+    private fun initExam(examId: Int) = intent {
         val exam = getExamUseCase(examId).getOrElse {
             postSideEffect(DetailSideEffect.ReportError(it))
             null
@@ -83,7 +105,7 @@ class DetailViewModel @Inject constructor(
     fun refresh() {
         container.stateFlow.value.let { state ->
             if (state is DetailState.Success) {
-                initState(state.exam.id)
+                initExam(state.exam.id)
             }
         }
     }

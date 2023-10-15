@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.quack.todo.QuackDropDownCard
 import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
@@ -57,7 +58,8 @@ internal fun ImageChoiceLayout(
     questionIndex: Int,
     question: Question?,
     titleChanged: (String) -> Unit,
-    imageClick: () -> Unit,
+    onImageClick: () -> Unit,
+    onImageClear: () -> Unit,
     onDropdownItemClick: (Int) -> Unit,
     answers: Answer.ImageChoice,
     answerTextChanged: (String, Int) -> Unit,
@@ -70,24 +72,42 @@ internal fun ImageChoiceLayout(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
             .quackClickable(
                 onLongClick = { deleteLongClick(null) },
             ) {},
     ) {
+        // 제목 뷰
         TitleView(
             questionIndex,
             question,
             titleChanged,
-            imageClick,
-            answers.type.title,
-            onDropdownItemClick,
+            onImageClick,
+            onImageClear,
         )
 
+        // 구분선
+        Box(
+            modifier = Modifier
+                .background(QuackColor.Gray4.value)
+                .fillMaxWidth()
+                .height(8.dp),
+        )
+
+        // 문제 타입 선택 DropDown
+        QuackDropDownCard(
+            modifier = Modifier.padding(start = 4.dp, top = 28.dp),
+            text = answers.type.title,
+            showBorder = false,
+            onClick = {
+                onDropdownItemClick(questionIndex)
+            },
+        )
+
+        // 문제 목록
         NoLazyGridItems(
             count = answers.imageChoice.size,
             nColumns = 2,
-            paddingValues = PaddingValues(top = 12.dp),
+            paddingValues = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             itemContent = { answerIndex ->
                 val answerNo = answerIndex + 1
@@ -182,8 +202,10 @@ internal fun ImageChoiceLayout(
             },
         )
 
+        // 공백
         Spacer(modifier = Modifier.height(12.dp))
 
+        // + 보기추가 버튼
         if (answers.imageChoice.size < MaximumChoice) {
             QuackSubtitle(
                 modifier = Modifier

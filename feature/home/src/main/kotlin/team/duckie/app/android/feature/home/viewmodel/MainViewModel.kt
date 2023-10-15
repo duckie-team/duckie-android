@@ -53,11 +53,11 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private fun processDeepLink() {
+    private fun processDeepLink() = intent {
         val examId = savedStateHandle.getStateFlow(Extras.DynamicLinkExamId, -1).value
 
         if (examId != -1) {
-            navigateToHomeDetail(examId = examId)
+            postSideEffect(MainSideEffect.NavigateToMainDetailWithSingleTop(examId))
         }
     }
 
