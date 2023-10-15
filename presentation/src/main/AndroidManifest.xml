@@ -9,13 +9,12 @@
 
     <application
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.Duckie.Splash">
+        android:label="@string/app_name">
 
         <activity
             android:name=".IntroActivity"
-            android:exported="true">
-
+            android:exported="true"
+            android:theme="@style/Theme.Duckie.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

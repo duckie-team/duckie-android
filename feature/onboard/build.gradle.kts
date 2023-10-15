@@ -39,5 +39,6 @@ dependencies {
         libs.compose.ui.accompanist.flowlayout,
         libs.kotlin.collections.immutable,
         libs.quack.v2.ui,
+        libs.compose.ui.lottie,
     )
 }

@@ -10,6 +10,7 @@
 package team.duckie.app.android.presentation
 
 import android.animation.ObjectAnimator
+import android.app.ActivityOptions
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
@@ -142,11 +143,19 @@ class IntroActivity : BaseActivity() {
 
     private fun launchOnboardActivity() = lifecycleScope.launch {
         val dynamicLinkExamId = parseExamIdDeepLink().await()
-        startActivityWithAnimation<OnboardActivity>(
-            intentBuilder = {
-                if (dynamicLinkExamId != null) putExtra(Extras.DynamicLinkExamId, dynamicLinkExamId)
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        val animationBundle = ActivityOptions.makeCustomAnimation(
+            this@IntroActivity,
+            android.R.anim.fade_in,
+            R.anim.hold,
+        ).toBundle()
+        startActivity(
+            Intent(this@IntroActivity, OnboardActivity::class.java).apply {
+                if (dynamicLinkExamId != null) {
+                    putExtra(Extras.DynamicLinkExamId, dynamicLinkExamId)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
             },
+            animationBundle,
         )
     }
 
