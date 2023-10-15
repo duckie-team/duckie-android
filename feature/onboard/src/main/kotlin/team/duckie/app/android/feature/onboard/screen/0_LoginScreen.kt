@@ -34,7 +34,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.airbnb.lottie.compose.LottieAnimation
@@ -237,8 +236,8 @@ private fun LoginScreenLoginArea(vm: OnboardViewModel = activityViewModel()) {
                             Color(
                                 ContextCompat.getColor(
                                     context,
-                                    R.color.kakao_login_button_label
-                                )
+                                    R.color.kakao_login_button_label,
+                                ),
                             ),
                         ),
                     ),

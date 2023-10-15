@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.Spacer
@@ -37,6 +38,7 @@ fun TempSmallOutlineButton(
                 color = QuackColor.Gray3.value,
                 shape = RoundedCornerShape(12.dp),
             )
+            .clip(RoundedCornerShape(12.dp))
             .quackClickable(
                 onClick = onClick,
             )
