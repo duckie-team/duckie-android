@@ -160,7 +160,8 @@ internal fun HomeProceedScreen(
 
             // 덕력고사 진행중 배너 뷰
             item {
-                ProceedBannerView()
+                // TODO(riflockle7): 이렇게 화면 이동하는 게 맞는지 확인 필요
+                ProceedBannerView(navigateToCreateProblem)
             }
 
             // 공백
@@ -309,7 +310,7 @@ fun ProceedItemView(homeFunding: HomeFunding) {
 
 /** 배너 뷰 */
 @Composable
-fun ProceedBannerView() {
+fun ProceedBannerView(navigateToCreateProblem: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -335,6 +336,7 @@ fun ProceedBannerView() {
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100.dp))
+                    .quackClickable(onClick = navigateToCreateProblem)
                     .background(QuackColor.White.value)
                     .padding(vertical = 6.dp, horizontal = 12.dp),
             ) {
