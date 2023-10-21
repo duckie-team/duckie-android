@@ -31,6 +31,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.feature.createproblem.CreateProblemType
 import team.duckie.app.android.common.android.image.MediaUtil
 import team.duckie.app.android.common.android.network.NetworkUtil
 import team.duckie.app.android.common.android.ui.const.Debounce
@@ -73,8 +74,6 @@ import team.duckie.app.android.feature.create.exam.viewmodel.state.FindResultTyp
 import javax.inject.Inject
 
 private const val TagsMaximumCount = 10
-private const val MinimumProblem = 5
-private const val MaximumProblem = 10
 
 @HiltViewModel
 @Suppress("LargeClass")
@@ -96,6 +95,15 @@ internal class CreateProblemViewModel @Inject constructor(
 
     suspend fun initState() {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
+        val createProblemType = savedStateHandle.getStateFlow(
+            Extras.CreateProblemType,
+            CreateProblemType.Exam,
+        ).value
+        val createProblemStep = if (createProblemType == CreateProblemType.Problem) {
+            CreateProblemStep.CreateProblem
+        } else {
+            CreateProblemStep.ExamInformation
+        }
         val isEditMode = examId != -1
 
         if (!NetworkUtil.isNetworkAvailable(this.context)) {
@@ -110,8 +118,9 @@ internal class CreateProblemViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             me = me,
+                            createProblemType = createProblemType,
                             isEditMode = false,
-                            createExamStep = CreateProblemStep.ExamInformation,
+                            createExamStep = createProblemStep,
                         )
                     }
                 }.onFailure {
@@ -810,8 +819,10 @@ internal class CreateProblemViewModel @Inject constructor(
 
     /** 문제 만들기 2단계 화면의 유효성을 체크한다. */
     internal fun createExamIsValidate(): Boolean {
-        return with(container.stateFlow.value.createExam) {
-            val examCountValidate = this.questions.size in MinimumProblem..MaximumProblem
+        val state = container.stateFlow.value;
+        return with(state.createExam) {
+            val examCountValidate =
+                this.questions.size in state.createProblemType.minCount..state.createProblemType.maxCount
             val questionsValidate = this.questions.asSequence()
                 .map { it.validate() }
                 .reduce { acc, next -> acc && next }

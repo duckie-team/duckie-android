@@ -45,6 +45,7 @@ internal fun HomeScreen(
     onReport: () -> Unit,
     onShare: () -> Unit,
     navigateToCreateExam: () -> Unit,
+    navigateToCreateProblem: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
     navigateToProfile: (Int) -> Unit,
@@ -112,6 +113,7 @@ internal fun HomeScreen(
                         state = state,
                         homeViewModel = vm,
                         navigateToCreateExam = navigateToCreateExam,
+                        navigateToCreateProblem = navigateToCreateProblem,
                         navigateToHomeDetail = navigateToHomeDetail,
                         navigateToSearch = navigateToSearch,
                         openExamBottomSheet = { exam ->

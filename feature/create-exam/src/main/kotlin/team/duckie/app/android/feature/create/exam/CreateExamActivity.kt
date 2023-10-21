@@ -125,6 +125,12 @@ class CreateExamActivity : BaseActivity() {
                             isNetworkError = rootState.isNetworkError,
                             onRetryClick = viewModel::refresh,
                         )
+
+                        CreateProblemStep.CreateProblem -> CreateExamScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .statusBarsPadding(),
+                        )
                     }
                 }
             }

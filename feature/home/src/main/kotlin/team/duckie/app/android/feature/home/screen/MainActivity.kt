@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
+import team.duckie.app.android.common.android.feature.createproblem.CreateProblemType
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.startActivityWithAnimation
@@ -207,6 +208,12 @@ class MainActivity : BaseActivity() {
 
             is MainSideEffect.NavigateToCreateExam -> {
                 createExamNavigator.navigateFrom(activity = this)
+            }
+
+            is MainSideEffect.NavigateToCreateProblem -> {
+                createExamNavigator.navigateFrom(activity = this, intentBuilder = {
+                    putExtra(Extras.CreateProblemType, CreateProblemType.Problem)
+                })
             }
 
             is MainSideEffect.NavigateToSetting -> {

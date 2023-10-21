@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.create.exam.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.common.android.feature.createproblem.CreateProblemType
 import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.exam.model.Answer
@@ -21,9 +22,10 @@ import team.duckie.app.android.domain.user.model.User
 
 internal data class CreateProblemState(
     val me: User? = null,
+    val createProblemType: CreateProblemType = CreateProblemType.Exam,
     val isNetworkError: Boolean = false,
     val isEditMode: Boolean = false,
-    val createExamStep: CreateProblemStep = CreateProblemStep.CreateExam,
+    val createExamStep: CreateProblemStep = CreateProblemStep.Loading,
     val examInformation: ExamInformation = ExamInformation(),
     val createExam: CreateProblem = CreateProblem(),
     val additionalInfo: AdditionInfo = AdditionInfo(),
