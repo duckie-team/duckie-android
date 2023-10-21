@@ -6,8 +6,9 @@
  */
 
 @file:OptIn(
-    ExperimentalDesignToken::class, ExperimentalQuackQuackApi::class,
-    ExperimentalDesignToken::class
+    ExperimentalDesignToken::class,
+    ExperimentalQuackQuackApi::class,
+    ExperimentalDesignToken::class,
 )
 
 package team.duckie.app.android.common.compose.ui.dialog

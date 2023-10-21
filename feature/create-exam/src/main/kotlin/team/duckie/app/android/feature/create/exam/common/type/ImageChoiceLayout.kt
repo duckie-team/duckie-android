@@ -125,7 +125,7 @@ internal fun ImageChoiceLayout(
                     defaultValue = answers.imageChoice[answerIndex].text,
                     updateState = { newAnswer ->
                         answerTextChanged(newAnswer, answerIndex)
-                    }
+                    },
                 )
 
                 Column(

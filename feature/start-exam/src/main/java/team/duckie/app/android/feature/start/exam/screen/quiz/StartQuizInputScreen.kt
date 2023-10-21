@@ -6,8 +6,9 @@
  */
 
 @file:OptIn(
-    ExperimentalDesignToken::class, ExperimentalQuackQuackApi::class,
-    ExperimentalComposeApi::class
+    ExperimentalDesignToken::class,
+    ExperimentalQuackQuackApi::class,
+    ExperimentalComposeApi::class,
 )
 
 package team.duckie.app.android.feature.start.exam.screen.quiz
