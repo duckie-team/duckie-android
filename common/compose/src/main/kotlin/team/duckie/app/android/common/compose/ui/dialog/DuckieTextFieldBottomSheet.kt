@@ -5,7 +5,10 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalDesignToken::class, ExperimentalQuackQuackApi::class)
+@file:OptIn(
+    ExperimentalDesignToken::class, ExperimentalQuackQuackApi::class,
+    ExperimentalDesignToken::class
+)
 
 package team.duckie.app.android.common.compose.ui.dialog
 

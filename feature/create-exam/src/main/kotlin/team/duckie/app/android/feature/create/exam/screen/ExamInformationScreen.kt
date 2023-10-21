@@ -51,6 +51,7 @@ import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.DuckieGridLayout
 import team.duckie.app.android.common.compose.ui.dialog.DuckieDialog
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSurface
+import team.duckie.app.android.common.compose.util.rememberUserInputState
 import team.duckie.app.android.common.kotlin.takeBy
 import team.duckie.app.android.feature.create.exam.R
 import team.duckie.app.android.feature.create.exam.common.CreateProblemBottomLayout
@@ -102,6 +103,18 @@ internal fun ExamInformationScreen(
     val lazyListState = rememberLazyListState()
     var createExamExitDialogVisible by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
+
+    var examTitleUserInput by rememberUserInputState(
+        defaultValue = state.examTitle,
+        updateState = {
+            viewModel.setExamTitle(
+                it.takeBy(
+                    ExamTitleMaxLength,
+                    state.examTitle,
+                ),
+            )
+        },
+    )
 
     BackHandler {
         if (!createExamExitDialogVisible) {
@@ -211,15 +224,8 @@ internal fun ExamInformationScreen(
                                 maxLength = 12,
                                 highlightColor = QuackColor.Gray2,
                             ),
-                        value = state.examTitle,
-                        onValueChange = {
-                            viewModel.setExamTitle(
-                                it.takeBy(
-                                    ExamTitleMaxLength,
-                                    state.examTitle,
-                                ),
-                            )
-                        },
+                        value = examTitleUserInput,
+                        onValueChange = { examTitleUserInput = it },
                         style = QuackTextFieldStyle.Default,
                         placeholderText = stringResource(
                             id = R.string.input_exam_title,

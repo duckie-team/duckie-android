@@ -5,7 +5,10 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalDesignToken::class, ExperimentalQuackQuackApi::class)
+@file:OptIn(
+    ExperimentalDesignToken::class, ExperimentalQuackQuackApi::class,
+    ExperimentalComposeApi::class
+)
 
 package team.duckie.app.android.feature.start.exam.screen.quiz
 
@@ -19,7 +22,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.ExperimentalComposeApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -36,6 +41,7 @@ import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
+import team.duckie.app.android.common.compose.util.rememberUserInputState
 import team.duckie.app.android.feature.start.exam.R
 import team.duckie.app.android.feature.start.exam.screen.exam.StartExamTextField
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
@@ -53,9 +59,11 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
     val state =
         viewModel.container.stateFlow.collectAsStateWithLifecycle().value as StartExamState.Input
 
-    val certifyingStatementText: String = remember(state.certifyingStatementInputText) {
-        state.certifyingStatementInputText
-    }
+    var certifyingStatementText by rememberUserInputState(
+        defaultValue = "",
+        updateState = viewModel::inputCertifyingStatement,
+    )
+
     val keyboard = LocalSoftwareKeyboardController.current
 
     Column(modifier = modifier.fillMaxWidth()) {
@@ -90,7 +98,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
                 text = certifyingStatementText,
                 alwaysPlaceholderVisible = false,
                 placeholderText = "ex) ${state.requirementPlaceholder}",
-                onTextChanged = viewModel::inputCertifyingStatement,
+                onTextChanged = { certifyingStatementText = it },
                 keyboardActions = KeyboardActions {
                     keyboard?.hide()
                     viewModel.startSolveProblem()
