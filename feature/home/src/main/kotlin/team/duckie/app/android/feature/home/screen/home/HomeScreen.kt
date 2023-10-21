@@ -44,7 +44,7 @@ internal fun HomeScreen(
     setTargetExamId: (Int) -> Unit,
     onReport: () -> Unit,
     onShare: () -> Unit,
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
     navigateToProfile: (Int) -> Unit,
@@ -96,7 +96,7 @@ internal fun HomeScreen(
                     page == HomeStep.HomeRecommendScreen -> HomeRecommendScreen(
                         state = state,
                         homeViewModel = vm,
-                        navigateToCreateProblem = navigateToCreateProblem,
+                        navigateToCreateExam = navigateToCreateExam,
                         navigateToHomeDetail = navigateToHomeDetail,
                         navigateToSearch = navigateToSearch,
                         openExamBottomSheet = { exam ->
@@ -111,7 +111,7 @@ internal fun HomeScreen(
                         initState = initState,
                         state = state,
                         homeViewModel = vm,
-                        navigateToCreateProblem = navigateToCreateProblem,
+                        navigateToCreateExam = navigateToCreateExam,
                         navigateToHomeDetail = navigateToHomeDetail,
                         navigateToSearch = navigateToSearch,
                         openExamBottomSheet = { exam ->
@@ -128,14 +128,14 @@ internal fun HomeScreen(
                             modifier = Modifier.padding(HomeHorizontalPadding),
                             state = state,
                             navigateToHomeDetail = navigateToHomeDetail,
-                            navigateToCreateProblem = navigateToCreateProblem,
+                            navigateToCreateExam = navigateToCreateExam,
                             navigateToProfile = navigateToProfile,
                         )
                     } else {
                         HomeRecommendFollowingScreen(
                             initState = initState,
                             modifier = Modifier.padding(HomeHorizontalPadding),
-                            navigateToCreateProblem = navigateToCreateProblem,
+                            navigateToCreateExam = navigateToCreateExam,
                         )
                     }
                 }

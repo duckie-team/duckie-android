@@ -89,7 +89,7 @@ internal fun HomeProceedScreen(
     modifier: Modifier = Modifier,
     state: HomeState,
     homeViewModel: HomeViewModel = activityViewModel(),
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
     openExamBottomSheet: (Int) -> Unit,
@@ -114,7 +114,7 @@ internal fun HomeProceedScreen(
                     onTabSelected = { step ->
                         homeViewModel.changedHomeScreen(HomeStep.toStep(step))
                     },
-                    onClickedCreate = navigateToCreateProblem,
+                    onClickedCreate = navigateToCreateExam,
                     onClickedNotice = {},
                 )
             }
@@ -161,7 +161,7 @@ internal fun HomeProceedScreen(
             // 덕력고사 진행중 배너 뷰
             item {
                 // TODO(riflockle7): 이렇게 화면 이동하는 게 맞는지 확인 필요
-                ProceedBannerView(navigateToCreateProblem)
+                ProceedBannerView(navigateToCreateExam)
             }
 
             // 공백
@@ -310,7 +310,7 @@ fun ProceedItemView(homeFunding: HomeFunding) {
 
 /** 배너 뷰 */
 @Composable
-fun ProceedBannerView(navigateToCreateProblem: () -> Unit) {
+fun ProceedBannerView(navigateToCreateExam: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -336,7 +336,7 @@ fun ProceedBannerView(navigateToCreateProblem: () -> Unit) {
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100.dp))
-                    .quackClickable(onClick = navigateToCreateProblem)
+                    .quackClickable(onClick = navigateToCreateExam)
                     .background(QuackColor.White.value)
                     .padding(vertical = 6.dp, horizontal = 12.dp),
             ) {

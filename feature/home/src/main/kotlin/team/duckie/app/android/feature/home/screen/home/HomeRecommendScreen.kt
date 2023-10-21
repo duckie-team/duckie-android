@@ -86,7 +86,7 @@ internal fun HomeRecommendScreen(
     modifier: Modifier = Modifier,
     state: HomeState,
     homeViewModel: HomeViewModel = activityViewModel(),
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
     openExamBottomSheet: (Int) -> Unit,
@@ -146,7 +146,7 @@ internal fun HomeRecommendScreen(
                         homeViewModel.changedHomeScreen(HomeStep.toStep(step))
                     },
                     onClickedCreate = {
-                        navigateToCreateProblem()
+                        navigateToCreateExam()
                     },
                     onClickedNotice = {},
                 )

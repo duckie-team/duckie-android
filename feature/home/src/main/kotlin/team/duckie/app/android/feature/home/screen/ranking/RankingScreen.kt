@@ -60,7 +60,7 @@ import team.duckie.quackquack.ui.QuackTab
 internal fun RankingScreen(
     initState: (MainScreenType, () -> Unit) -> Unit,
     viewModel: RankingViewModel,
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
     navigateToDetail: (Int) -> Unit,
     navigateToUserProfile: (Int) -> Unit,
     onReport: () -> Unit,
@@ -112,8 +112,8 @@ internal fun RankingScreen(
                     Firebase.crashlytics.recordException(sideEffect.exception)
                 }
 
-                RankingSideEffect.NavigateToCreateProblem -> {
-                    navigateToCreateProblem()
+                RankingSideEffect.NavigateToCreateExam -> {
+                    navigateToCreateExam()
                 }
 
                 is RankingSideEffect.NavigateToExamDetail -> {

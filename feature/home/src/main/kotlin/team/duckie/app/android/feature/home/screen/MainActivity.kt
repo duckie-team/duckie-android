@@ -205,7 +205,7 @@ class MainActivity : BaseActivity() {
                 )
             }
 
-            is MainSideEffect.NavigateToCreateProblem -> {
+            is MainSideEffect.NavigateToCreateExam -> {
                 createExamNavigator.navigateFrom(activity = this)
             }
 

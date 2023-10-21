@@ -21,14 +21,14 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.kotlin.fastMap
+import team.duckie.app.android.common.kotlin.fastMapIndexed
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.ranking.usecase.GetExamRankingsByAnswerRate
 import team.duckie.app.android.domain.ranking.usecase.GetExamRankingsBySolvedCount
 import team.duckie.app.android.domain.ranking.usecase.GetUserRankingsUseCase
 import team.duckie.app.android.domain.tag.usecase.FetchPopularTagsUseCase
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.common.kotlin.fastMap
-import team.duckie.app.android.common.kotlin.fastMapIndexed
 import javax.inject.Inject
 
 @HiltViewModel
@@ -157,7 +157,7 @@ internal class RankingViewModel @Inject constructor(
 
     @Suppress("NoConsecutiveBlankLines") // 시험 생성하기가 가능한 스펙에서 활용
     fun clickAppBarRightIcon() = intent {
-        postSideEffect(RankingSideEffect.NavigateToCreateProblem)
+        postSideEffect(RankingSideEffect.NavigateToCreateExam)
     }
 
     fun clickExam(examId: Int) = intent {
