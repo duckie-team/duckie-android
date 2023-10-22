@@ -26,6 +26,7 @@ import kotlinx.collections.immutable.ImmutableList
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.QuackMaxWidthDivider
+import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
 import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.component.HomeTopAppBar
@@ -33,7 +34,6 @@ import team.duckie.app.android.feature.home.constants.HomeStep
 import team.duckie.app.android.feature.home.constants.MainScreenType
 import team.duckie.app.android.feature.home.viewmodel.home.HomeState
 import team.duckie.app.android.feature.home.viewmodel.home.HomeViewModel
-import team.duckie.app.android.common.compose.ui.content.UserFollowingLayout
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackTitle2
@@ -43,7 +43,7 @@ internal fun HomeRecommendFollowingScreen(
     initState: (MainScreenType, () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
     vm: HomeViewModel = activityViewModel(),
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
 ) {
     val state = vm.collectAsState().value
 
@@ -60,7 +60,7 @@ internal fun HomeRecommendFollowingScreen(
                 onTabSelected = { step ->
                     vm.changedHomeScreen(HomeStep.toStep(step))
                 },
-                onClickedCreate = navigateToCreateProblem,
+                onClickedCreate = navigateToCreateExam,
                 onClickedNotice = {},
             )
         }

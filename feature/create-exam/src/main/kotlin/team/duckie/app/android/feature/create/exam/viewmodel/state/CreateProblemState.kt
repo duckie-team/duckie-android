@@ -9,6 +9,8 @@ package team.duckie.app.android.feature.create.exam.viewmodel.state
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import team.duckie.app.android.common.android.feature.createproblem.CreateProblemType
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.domain.category.model.Category
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
@@ -17,12 +19,12 @@ import team.duckie.app.android.domain.exam.model.ThumbnailType
 import team.duckie.app.android.domain.exam.model.getDefaultAnswer
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
-import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 
 internal data class CreateProblemState(
     val me: User? = null,
+    val createProblemType: CreateProblemType = CreateProblemType.Exam,
     val isNetworkError: Boolean = false,
-    val isEditMode: Boolean = false,
+    val editExamId: Int = -1,
     val createExamStep: CreateProblemStep = CreateProblemStep.Loading,
     val examInformation: ExamInformation = ExamInformation(),
     val createExam: CreateProblem = CreateProblem(),

@@ -52,7 +52,7 @@ internal fun MyPageScreen(
     navigateToSetting: () -> Unit,
     navigateToNotification: () -> Unit,
     navigateToExam: (Int) -> Unit,
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
     navigateToSearch: (String) -> Unit,
     navigateToFriend: (FriendsType, Int, String) -> Unit,
     navigateToEditProfile: (Int) -> Unit,
@@ -94,7 +94,7 @@ internal fun MyPageScreen(
                 }
 
                 MyPageSideEffect.NavigateToMakeExam -> {
-                    navigateToCreateProblem()
+                    navigateToCreateExam()
                 }
 
                 is MyPageSideEffect.NavigateToExamDetail -> {

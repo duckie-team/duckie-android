@@ -138,9 +138,10 @@ internal fun MainScreen(
                             navigateToHomeDetail = { examId ->
                                 mainViewModel.navigateToHomeDetail(examId)
                             },
-                            navigateToCreateProblem = {
-                                mainViewModel.navigateToCreateProblem()
+                            navigateToCreateExam = {
+                                mainViewModel.navigateToCreateExam()
                             },
+                            navigateToCreateExamDetail = mainViewModel::navigateToCreateExamDetail,
                             navigateToProfile = mainViewModel::navigateToProfile,
                             setTargetExamId = { examId ->
                                 mainViewModel.setTargetExamId(examId)
@@ -162,8 +163,8 @@ internal fun MainScreen(
                         RankingScreen(
                             initState = mainViewModel::initState,
                             viewModel = rankingViewModel,
-                            navigateToCreateProblem = {
-                                mainViewModel.navigateToCreateProblem()
+                            navigateToCreateExam = {
+                                mainViewModel.navigateToCreateExam()
                             },
                             navigateToDetail = { examId ->
                                 mainViewModel.navigateToHomeDetail(examId)
@@ -189,8 +190,8 @@ internal fun MainScreen(
                             navigateToExam = { examId ->
                                 mainViewModel.navigateToHomeDetail(examId)
                             },
-                            navigateToCreateProblem = {
-                                mainViewModel.navigateToCreateProblem()
+                            navigateToCreateExam = {
+                                mainViewModel.navigateToCreateExam()
                             },
                             navigateToSearch = { searchTag ->
                                 mainViewModel.navigateToSearch(searchTag)

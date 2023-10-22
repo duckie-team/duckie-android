@@ -8,9 +8,8 @@
 package team.duckie.app.android.domain.problem.usecase
 
 import androidx.compose.runtime.Immutable
-import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem
-import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.problem.model.ProblemBody
 import team.duckie.app.android.domain.problem.repository.ProblemRepository
 import javax.inject.Inject
 
@@ -18,27 +17,9 @@ import javax.inject.Inject
 class PostProblemUseCase @Inject constructor(
     private val repository: ProblemRepository,
 ) {
-    suspend operator fun invoke(
-        correctAnswer: String,
-        question: Question,
-        answer: Answer,
-        examId: Int,
-        wrongAnswerMessage: String,
-        solutionImageUrl: String,
-        memo: String = "",
-        hint: String = "",
-    ): Result<Problem> {
+    suspend operator fun invoke(problemBody: ProblemBody): Result<Problem> {
         return runCatching {
-            repository.postProblem(
-                correctAnswer,
-                question,
-                answer,
-                examId,
-                wrongAnswerMessage,
-                solutionImageUrl,
-                memo,
-                hint,
-            )
+            repository.postProblem(problemBody)
         }
     }
 }

@@ -14,6 +14,7 @@
 package team.duckie.app.android.feature.create.exam.screen
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -60,6 +61,7 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import team.duckie.app.android.common.android.feature.createproblem.CreateProblemType
 import team.duckie.app.android.common.compose.HideKeyboardWhenBottomSheetHidden
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.rememberToast
@@ -137,6 +139,8 @@ internal fun CreateExamScreen(
     var deleteDialogNo: (Pair<Int, Int?>)? by remember { mutableStateOf(null) }
     var galleryImagesSelectionIndex by remember { mutableStateOf(0) }
 
+    var createExamExitDialogVisible by remember { mutableStateOf(false) }
+
     // 단일 권한 설정 launcher
     // TODO(riflockle7): 권한 로직은 추후 PermissionViewModel 과 같이 쓰면서 지워질 예정
     val launcher = rememberLauncherForActivityResult(
@@ -162,12 +166,16 @@ internal fun CreateExamScreen(
     }
 
     BackHandler {
-        if (sheetState.isVisible) {
+        if (rootState.isMakeExamUploading) {
+            return@BackHandler
+        } else if (sheetState.isVisible) {
             coroutineShape.hideBottomSheet(sheetState) { selectedQuestionIndex = null }
         } else if (photoState != null) {
             vm.updatePhotoState(null)
-        } else {
+        } else if (rootState.createProblemType == CreateProblemType.Exam) {
             vm.navigateStep(CreateProblemStep.ExamInformation)
+        } else if (!createExamExitDialogVisible) {
+            createExamExitDialogVisible = true
         }
     }
 
@@ -324,8 +332,12 @@ internal fun CreateExamScreen(
                                             ),
                                         )
                                     },
-                                    deleteLongClick = {
-                                        deleteDialogNo = Pair(questionIndex, null)
+                                    onProblemLongClick = if (rootState.createProblemType == CreateProblemType.Exam) {
+                                        {
+                                            deleteDialogNo = Pair(questionIndex, null)
+                                        }
+                                    } else {
+                                        null
                                     },
                                 )
 
@@ -394,7 +406,14 @@ internal fun CreateExamScreen(
                                             correctAnswer = newCorrectAnswer,
                                         )
                                     },
-                                    deleteLongClick = { answerIndex: Int? ->
+                                    onProblemLongClick = if (rootState.createProblemType == CreateProblemType.Exam) {
+                                        { answerIndex: Int? ->
+                                            deleteDialogNo = Pair(questionIndex, answerIndex)
+                                        }
+                                    } else {
+                                        null
+                                    },
+                                    onChoiceItemLongClick = { answerIndex: Int? ->
                                         deleteDialogNo = Pair(questionIndex, answerIndex)
                                     },
                                 )
@@ -482,7 +501,14 @@ internal fun CreateExamScreen(
                                             correctAnswer = newCorrectAnswer,
                                         )
                                     },
-                                    deleteLongClick = { answerIndex ->
+                                    onProblemLongClick = if (rootState.createProblemType == CreateProblemType.Exam) {
+                                        { answerIndex ->
+                                            deleteDialogNo = Pair(questionIndex, answerIndex)
+                                        }
+                                    } else {
+                                        null
+                                    },
+                                    onChoiceItemLongClick = { answerIndex ->
                                         deleteDialogNo = Pair(questionIndex, answerIndex)
                                     },
                                 )
@@ -498,20 +524,32 @@ internal fun CreateExamScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .layoutId(BottomLayoutId),
-                    leftButtonLeadingIcon = OutlinedGroup.Plus,
-                    leftButtonText = stringResource(id = R.string.create_problem_add_problem_button),
-                    leftButtonClick = {
-                        coroutineShape.launch {
-                            keyboard?.hide()
-                            sheetState.show()
-                        }
+                    leftButtonLeadingIcon = if (rootState.createProblemType == CreateProblemType.Exam) {
+                        OutlinedGroup.Plus
+                    } else {
+                        null
                     },
-                    nextButtonText = stringResource(id = R.string.next),
-                    nextButtonClick = {
-                        coroutineShape.launch {
-                            vm.navigateStep(CreateProblemStep.AdditionalInformation)
-                        }
+                    leftButtonText = if (rootState.createProblemType == CreateProblemType.Exam) {
+                        stringResource(id = R.string.create_problem_add_problem_button)
+                    } else {
+                        null
                     },
+                    leftButtonClick = if (rootState.createProblemType == CreateProblemType.Exam) {
+                        {
+                            coroutineShape.launch {
+                                keyboard?.hide()
+                                sheetState.show()
+                            }
+                        }
+                    } else {
+                        null
+                    },
+                    nextButtonText = if (rootState.createProblemType == CreateProblemType.Exam) {
+                        stringResource(id = R.string.next)
+                    } else {
+                        stringResource(id = R.string.create_problem_submit_button)
+                    },
+                    nextButtonClick = vm::nextBtnClick,
                     isCreateProblemValidate = problemCount < MaximumProblem,
                     isValidateCheck = vm::createExamIsValidate,
                 )
@@ -598,6 +636,20 @@ internal fun CreateExamScreen(
             deleteDialogNo = null
         },
         onDismissRequest = { deleteDialogNo = null },
+    )
+
+    DuckieDialog(
+        title = stringResource(id = R.string.create_problem_exit_dialog_title),
+        message = stringResource(id = R.string.create_problem_exit_dialog_message),
+        visible = createExamExitDialogVisible,
+        leftButtonText = stringResource(id = R.string.cancel),
+        leftButtonOnClick = { createExamExitDialogVisible = false },
+        rightButtonText = stringResource(id = R.string.ok),
+        rightButtonOnClick = {
+            createExamExitDialogVisible = false
+            (context as Activity).finish()
+        },
+        onDismissRequest = { createExamExitDialogVisible = false },
     )
 }
 

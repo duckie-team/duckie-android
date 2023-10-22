@@ -37,7 +37,7 @@ object Extras {
     const val RequirementAnswer = "ExtraRequirementAnswer"
 
     /** using for SearchActivity */
-    const val isCreateProblem = "isCreateProblem"
+    const val CreateProblemType = "CreateProblemType"
 
     /** using for DynamicLink */
     const val DynamicLinkExamId = "DynamicLinkExamId"

@@ -31,6 +31,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import team.duckie.app.android.common.android.feature.createproblem.CreateProblemType
 import team.duckie.app.android.common.android.image.MediaUtil
 import team.duckie.app.android.common.android.network.NetworkUtil
 import team.duckie.app.android.common.android.ui.const.Debounce
@@ -59,6 +60,8 @@ import team.duckie.app.android.domain.exam.usecase.MakeExamUseCase
 import team.duckie.app.android.domain.file.constant.FileType
 import team.duckie.app.android.domain.file.usecase.FileUploadUseCase
 import team.duckie.app.android.domain.gallery.usecase.LoadGalleryImagesUseCase
+import team.duckie.app.android.domain.problem.model.ProblemBody
+import team.duckie.app.android.domain.problem.usecase.PostProblemUseCase
 import team.duckie.app.android.domain.recommendation.model.SearchType
 import team.duckie.app.android.domain.search.model.Search
 import team.duckie.app.android.domain.search.usecase.GetSearchUseCase
@@ -73,13 +76,12 @@ import team.duckie.app.android.feature.create.exam.viewmodel.state.FindResultTyp
 import javax.inject.Inject
 
 private const val TagsMaximumCount = 10
-private const val MinimumProblem = 5
-private const val MaximumProblem = 10
 
 @HiltViewModel
 @Suppress("LargeClass")
 internal class CreateProblemViewModel @Inject constructor(
     application: Application,
+    private val submitProblemUseCase: PostProblemUseCase,
     private val makeExamUseCase: MakeExamUseCase,
     private val getExamThumbnailUseCase: GetExamThumbnailUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
@@ -96,7 +98,16 @@ internal class CreateProblemViewModel @Inject constructor(
 
     suspend fun initState() {
         val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-        val isEditMode = examId != -1
+        val createProblemType = savedStateHandle.getStateFlow(
+            Extras.CreateProblemType,
+            CreateProblemType.Exam,
+        ).value
+        val createProblemStep = if (createProblemType == CreateProblemType.Problem) {
+            CreateProblemStep.CreateProblem
+        } else {
+            CreateProblemStep.ExamInformation
+        }
+        val isEditMode = examId != -1 && createProblemType == CreateProblemType.Exam
 
         if (!NetworkUtil.isNetworkAvailable(this.context)) {
             loadErrorPage(isNetworkError = true)
@@ -110,8 +121,9 @@ internal class CreateProblemViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             me = me,
-                            isEditMode = false,
-                            createExamStep = CreateProblemStep.ExamInformation,
+                            createProblemType = createProblemType,
+                            editExamId = examId,
+                            createExamStep = createProblemStep,
                         )
                     }
                 }.onFailure {
@@ -211,6 +223,28 @@ internal class CreateProblemViewModel @Inject constructor(
     }
 
     // 공통
+    /** 문제를 제출한다. */
+    internal fun submitExam() = intent {
+        reduce { state.copy(isMakeExamUploading = true) }
+        runCatching { generateProblemBody() }
+            .onSuccess { problemBody ->
+                submitProblemUseCase(problemBody)
+                    .onSuccess { problem: Problem ->
+                        reduce { state.copy(isMakeExamUploading = false) }
+                        print(problem)
+                        finishCreateProblem()
+                    }.onFailure {
+                        reduce { state.copy(isMakeExamUploading = false) }
+                        it.printStackTrace()
+                        postSideEffect(CreateProblemSideEffect.ReportError(it))
+                    }
+            }.onFailure {
+                reduce { state.copy(isMakeExamUploading = false) }
+                it.printStackTrace()
+                postSideEffect(CreateProblemSideEffect.ReportError(it))
+            }
+    }
+
     /** 시험 컨텐츠를 만든다. */
     internal fun makeExam() = intent {
         reduce { state.copy(isMakeExamUploading = true) }
@@ -275,6 +309,27 @@ internal class CreateProblemViewModel @Inject constructor(
             status = null, // 운영용
             type = "text", // TODO(riflockle7): 값 넣는 스펙에 대해 확인 필요
             totalProblemCount = problems.size,
+        )
+    }
+
+    /** request 를 위해 필요한 [Problem] 를 생성한다. */
+    private fun generateProblemBody(): ProblemBody {
+        val rootState = container.stateFlow.value
+        val createExamState = container.stateFlow.value.createExam
+
+        val serverCorrectAnswer = createExamState.correctAnswers.first()
+            .toCorrectAnswerData(createExamState.answers.first())
+
+        return ProblemBody(
+            question = createExamState.questions.first(),
+            answer = createExamState.answers.first(),
+            correctAnswer = serverCorrectAnswer,
+            examId = rootState.editExamId,
+            wrongAnswerMessage = "",
+            solutionImageUrl = "",
+            hint = createExamState.hints.first(),
+            memo = createExamState.memos.first(),
+            status = "READY",
         )
     }
 
@@ -808,10 +863,22 @@ internal class CreateProblemViewModel @Inject constructor(
         }
     }
 
+    /** 특정 화면으로 이동한다. */
+    internal fun nextBtnClick() {
+        val state = container.stateFlow.value
+        if (state.createProblemType == CreateProblemType.Exam) {
+            navigateStep(CreateProblemStep.AdditionalInformation)
+        } else if (createExamIsValidate()) {
+            submitExam()
+        }
+    }
+
     /** 문제 만들기 2단계 화면의 유효성을 체크한다. */
     internal fun createExamIsValidate(): Boolean {
-        return with(container.stateFlow.value.createExam) {
-            val examCountValidate = this.questions.size in MinimumProblem..MaximumProblem
+        val state = container.stateFlow.value
+        return with(state.createExam) {
+            val examCountValidate =
+                this.questions.size in state.createProblemType.minCount..state.createProblemType.maxCount
             val questionsValidate = this.questions.asSequence()
                 .map { it.validate() }
                 .reduce { acc, next -> acc && next }

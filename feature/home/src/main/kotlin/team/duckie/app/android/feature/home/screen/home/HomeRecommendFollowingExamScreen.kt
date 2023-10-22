@@ -72,7 +72,7 @@ internal fun HomeRecommendFollowingExamScreen(
     modifier: Modifier = Modifier,
     vm: HomeViewModel = activityViewModel(),
     state: HomeState,
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToProfile: (Int) -> Unit,
 ) {
@@ -96,7 +96,7 @@ internal fun HomeRecommendFollowingExamScreen(
             changeHomeStep = { step ->
                 vm.changedHomeScreen(step)
             },
-            navigateToCreateProblem = navigateToCreateProblem,
+            navigateToCreateExam = navigateToCreateExam,
         )
 
         else -> HomeRecommendFollowingSuccessScreen(
@@ -105,7 +105,7 @@ internal fun HomeRecommendFollowingExamScreen(
             state = state,
             vm = vm,
             followingExam = followingExam,
-            navigateToCreateProblem = navigateToCreateProblem,
+            navigateToCreateExam = navigateToCreateExam,
             navigateToHomeDetail = navigateToHomeDetail,
             navigateToProfile = navigateToProfile,
         )
@@ -119,7 +119,7 @@ private fun HomeRecommendFollowingSuccessScreen(
     state: HomeState,
     vm: HomeViewModel,
     followingExam: LazyPagingItems<HomeState.RecommendExam>,
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToProfile: (Int) -> Unit,
 ) {
@@ -139,7 +139,7 @@ private fun HomeRecommendFollowingSuccessScreen(
                     onTabSelected = { step ->
                         vm.changedHomeScreen(HomeStep.toStep(step))
                     },
-                    onClickedCreate = navigateToCreateProblem,
+                    onClickedCreate = navigateToCreateExam,
                     onClickedNotice = {},
                 )
             }
@@ -264,7 +264,7 @@ private fun TestMakerLayout(
 private fun HomeFollowingExamNotFoundScreen(
     homeSelectedIndex: Int,
     changeHomeStep: (HomeStep) -> Unit,
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -278,7 +278,7 @@ private fun HomeFollowingExamNotFoundScreen(
                 changeHomeStep(HomeStep.toStep(step))
             },
             onClickedCreate = {
-                navigateToCreateProblem()
+                navigateToCreateExam()
             },
             onClickedNotice = {},
         )

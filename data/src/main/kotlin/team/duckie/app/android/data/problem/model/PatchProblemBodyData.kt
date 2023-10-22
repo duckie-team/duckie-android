@@ -9,7 +9,7 @@ package team.duckie.app.android.data.problem.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-internal data class PatchProblemBody(
+internal data class PatchProblemBodyData(
     @JsonProperty("answer")
     val status: String?,
 

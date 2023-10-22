@@ -7,21 +7,11 @@
 
 package team.duckie.app.android.data.problem.datasource
 
-import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Problem
-import team.duckie.app.android.domain.exam.model.Question
+import team.duckie.app.android.domain.problem.model.ProblemBody
 
 interface ProblemDataSource {
     suspend fun patchProblem(problemId: Int, status: String, isSample: Boolean): Problem
 
-    suspend fun postProblem(
-        correctAnswer: String,
-        question: Question,
-        answer: Answer,
-        examId: Int,
-        wrongAnswerMessage: String,
-        solutionImageUrl: String,
-        memo: String = "",
-        hint: String = "",
-    ): Problem
+    suspend fun postProblem(problemBody: ProblemBody): Problem
 }

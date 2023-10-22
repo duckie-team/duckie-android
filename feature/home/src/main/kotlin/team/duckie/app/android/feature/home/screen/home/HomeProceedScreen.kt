@@ -89,7 +89,8 @@ internal fun HomeProceedScreen(
     modifier: Modifier = Modifier,
     state: HomeState,
     homeViewModel: HomeViewModel = activityViewModel(),
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExam: () -> Unit,
+    navigateToCreateExamDetail: (Int) -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
     openExamBottomSheet: (Int) -> Unit,
@@ -114,7 +115,7 @@ internal fun HomeProceedScreen(
                     onTabSelected = { step ->
                         homeViewModel.changedHomeScreen(HomeStep.toStep(step))
                     },
-                    onClickedCreate = navigateToCreateProblem,
+                    onClickedCreate = navigateToCreateExam,
                     onClickedNotice = {},
                 )
             }
@@ -140,7 +141,7 @@ internal fun HomeProceedScreen(
 
             // 진행중인 덕력고사 목록 뷰
             items(state.homeFundings) { item ->
-                ProceedItemView(item)
+                ProceedItemView(item, navigateToCreateExamDetail)
             }
 
             // 공백
@@ -160,6 +161,7 @@ internal fun HomeProceedScreen(
 
             // 덕력고사 진행중 배너 뷰
             item {
+                // TODO(riflockle7): 이렇게 화면 이동하는 게 맞는지 확인 필요
                 ProceedBannerView()
             }
 
@@ -176,6 +178,7 @@ internal fun HomeProceedScreen(
                     selectedTag = state.homeFundingSelectedTag,
                     categories = state.homeFundingTags,
                     items = state.examFundings,
+                    navigateToCreateExamDetail = navigateToCreateExamDetail,
                 )
             }
         }
@@ -189,7 +192,7 @@ internal fun HomeProceedScreen(
 
 /** 진행중인 덕력고사 Item 뷰 */
 @Composable
-fun ProceedItemView(homeFunding: HomeFunding) {
+fun ProceedItemView(homeFunding: HomeFunding, navigateToCreateExamDetail: (Int) -> Unit) {
     Column(
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 16.dp)
@@ -200,7 +203,7 @@ fun ProceedItemView(homeFunding: HomeFunding) {
                 shape = RoundedCornerShape(8.dp),
             )
             .quackClickable(
-                onClick = {},
+                onClick = { navigateToCreateExamDetail(homeFunding.id) },
             ),
     ) {
         Box(
@@ -221,7 +224,7 @@ fun ProceedItemView(homeFunding: HomeFunding) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(ratio = GetHeightRatioW328H240),
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 contentDescription = null,
             )
 
@@ -247,15 +250,15 @@ fun ProceedItemView(homeFunding: HomeFunding) {
 
         // 만들어진 문제 개수 / 최대 문제 개수 비율 막대 그래프
         Row(modifier = Modifier.height(8.dp)) {
-            // 첫 번째 막대 (8:2 비율)
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(homeFunding.problemCount.toFloat())
-                    .background(QuackColor.DuckieOrange.value),
-            )
+            if (homeFunding.problemCount != 0) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(homeFunding.problemCount.toFloat())
+                        .background(QuackColor.DuckieOrange.value),
+                )
+            }
 
-            // 두 번째 막대 (8:2 비율)
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -373,6 +376,7 @@ fun ProceedCategorySection(
     selectedTag: Tag,
     categories: List<Tag>,
     items: List<ExamFunding>,
+    navigateToCreateExamDetail: (Int) -> Unit,
 ) {
     // 제목
     QuackText(
@@ -410,7 +414,10 @@ fun ProceedCategorySection(
     // 카테고리에 해당하는 덕력고사 목록
     Column {
         items.fastForEach { item ->
-            ProceedCategoryItemView(categoryItem = item)
+            ProceedCategoryItemView(
+                categoryItem = item,
+                navigateToCreateExamDetail = navigateToCreateExamDetail,
+            )
         }
     }
 
@@ -423,9 +430,12 @@ fun ProceedCategorySection(
 
 /** 카테고리별 뷰[ProceedCategorySection]에 보이는 Item 뷰 */
 @Composable
-fun ProceedCategoryItemView(categoryItem: ExamFunding) {
+fun ProceedCategoryItemView(categoryItem: ExamFunding, navigateToCreateExamDetail: (Int) -> Unit) {
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .quackClickable(onClick = { navigateToCreateExamDetail(categoryItem.id) }),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // 덕퀴즈/덕질고사 썸네일 이미지

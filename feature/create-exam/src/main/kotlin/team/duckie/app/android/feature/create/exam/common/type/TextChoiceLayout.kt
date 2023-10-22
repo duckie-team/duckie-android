@@ -30,6 +30,7 @@ import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackDropDownCard
 import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.create.exam.R
@@ -58,14 +59,18 @@ internal fun TextChoiceLayout(
     addAnswerClick: () -> Unit,
     correctAnswers: String?,
     setCorrectAnswerClick: (String) -> Unit,
-    deleteLongClick: (Int?) -> Unit,
+    onProblemLongClick: ((Int?) -> Unit)? = null,
+    onChoiceItemLongClick: (Int?) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .quackClickable(
-                onLongClick = { deleteLongClick(null) },
-            ) {},
+            .runIf(onProblemLongClick != null) {
+                quackClickable(
+                    onClick = null,
+                    onLongClick = { onProblemLongClick?.invoke(null) },
+                )
+            },
     ) {
         // 제목 뷰
         TitleView(
@@ -108,7 +113,7 @@ internal fun TextChoiceLayout(
                         ),
                     )
                     .quackClickable(
-                        onLongClick = { deleteLongClick(answerIndex) },
+                        onLongClick = { onChoiceItemLongClick(answerIndex) },
                     ) {},
                 text = choiceModel.text,
                 onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },

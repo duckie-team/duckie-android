@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import team.duckie.app.android.data.exam.model.AnswerData
 import team.duckie.app.android.data.exam.model.QuestionData
 
-internal data class ProblemBody(
+internal data class ProblemBodyData(
     @JsonProperty("answer")
     val answer: AnswerData?,
 
@@ -26,6 +26,9 @@ internal data class ProblemBody(
 
     @JsonProperty("memo")
     val memo: String?,
+
+    @JsonProperty("status")
+    val status: String?,
 
     @JsonProperty("question")
     val question: QuestionData?,

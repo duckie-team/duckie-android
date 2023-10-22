@@ -205,8 +205,18 @@ class MainActivity : BaseActivity() {
                 )
             }
 
-            is MainSideEffect.NavigateToCreateProblem -> {
+            is MainSideEffect.NavigateToCreateExam -> {
                 createExamNavigator.navigateFrom(activity = this)
+            }
+
+            is MainSideEffect.NavigateToCreateExamDetail -> {
+                detailNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                        // TODO(riflockle7): 출제용 상세화면 이동을 위한 작업 필요
+                    },
+                )
             }
 
             is MainSideEffect.NavigateToSetting -> {
