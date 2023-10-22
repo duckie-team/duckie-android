@@ -71,10 +71,10 @@ class ChallengeCommentRemoteDataSourceImpl @Inject constructor() :
         return responseCatchingReturnSuccess(response)
     }
 
-    override suspend fun reportChallengeComment(commetnId: Int): Boolean {
+    override suspend fun reportChallengeComment(commentId: Int): Boolean {
         val response = client.post("/challenge-comment-reports") {
             jsonBody {
-                "challengeCommentId" withInt commetnId
+                "challengeCommentId" withInt commentId
             }
         }
         return responseCatchingReturnSuccess(response)
