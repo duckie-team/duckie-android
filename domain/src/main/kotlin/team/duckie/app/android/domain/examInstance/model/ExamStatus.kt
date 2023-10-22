@@ -9,6 +9,8 @@ package team.duckie.app.android.domain.examInstance.model
 
 enum class ExamStatus(val text: String) {
     Ready("READY"),
+    Funding("FUNDING"),
+    Pending("PENDING"),
     Submitted("SUBMITTED"),
     ;
 

@@ -60,13 +60,15 @@ class DetailViewModel @Inject constructor(
     init {
         launchValid {
             val examId = savedStateHandle.getStateFlow(Extras.ExamId, initialExamId).value
-            initExam(examId)
+            val examStatus =
+                savedStateHandle.getStateFlow(Extras.ExamStatus, ExamStatus.Ready).value
+            initExam(examId, examStatus)
         }
     }
 
     fun parseDynamicLink() {
         if (dynamicExamId != initialExamId) {
-            initExam(dynamicExamId)
+            initExam(dynamicExamId, null)
         }
     }
 
@@ -79,7 +81,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    private fun initExam(examId: Int) = intent {
+    private fun initExam(examId: Int, examStatus: ExamStatus?) = intent {
         val exam = getExamUseCase(examId).getOrElse {
             postSideEffect(DetailSideEffect.ReportError(it))
             null
@@ -92,6 +94,8 @@ class DetailViewModel @Inject constructor(
                             exam = exam,
                             appUser = me,
                             isFollowing = exam.user?.follow != null,
+                            examStatus = examStatus ?: (ExamStatus.from(exam.status ?: "")
+                                ?: ExamStatus.Ready),
                         )
                     } else {
                         DetailState.Error(DuckieResponseFieldNPE("exam or me is Null"))
@@ -105,7 +109,7 @@ class DetailViewModel @Inject constructor(
     fun refresh() {
         container.stateFlow.value.let { state ->
             if (state is DetailState.Success) {
-                initExam(state.exam.id)
+                initExam(state.exam.id, state.examStatus)
             }
         }
     }
@@ -199,8 +203,12 @@ class DetailViewModel @Inject constructor(
             require(state is DetailState.Success)
             val successState = state as DetailState.Success
             successState.run {
-                when (isQuiz) {
-                    true -> {
+                when {
+                    examStatus == ExamStatus.Funding -> {
+                        // TODO(riflockle7): 시험 시작이 아닌 문제 생성으로 넘어가야 함
+                    }
+
+                    isQuiz -> {
                         makeQuizUseCase(examId = exam.id)
                             .onSuccess { result ->
                                 postSideEffect(
@@ -217,7 +225,7 @@ class DetailViewModel @Inject constructor(
                             }
                     }
 
-                    false -> {
+                    !isQuiz -> {
                         makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
                             when (result.status) {
                                 ExamStatus.Ready -> {
@@ -235,11 +243,15 @@ class DetailViewModel @Inject constructor(
                                         DetailSideEffect.NavigateToExamResult(result.id),
                                     )
                                 }
+
+                                else -> {}
                             }
                         }.onFailure {
                             postSideEffect(DetailSideEffect.ReportError(it))
                         }
                     }
+
+                    else -> {}
                 }
             }
         }

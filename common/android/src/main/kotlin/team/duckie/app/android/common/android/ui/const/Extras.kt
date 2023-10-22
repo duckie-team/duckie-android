@@ -9,6 +9,7 @@ package team.duckie.app.android.common.android.ui.const
 
 /** Intent.Extra Key 값 모음 */
 object Extras {
+    const val ExamStatus = "ExamStatus"
     const val ExamId = "ExtraExamId"
     const val CertifyingStatement = "ExtraCertifyingStatement"
     const val Submitted = "ExtraSubmitted"

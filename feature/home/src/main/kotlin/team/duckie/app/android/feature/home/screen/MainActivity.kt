@@ -26,6 +26,7 @@ import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.startActivityWithAnimation
 import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
+import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.viewmodel.MainSideEffect
 import team.duckie.app.android.feature.home.viewmodel.MainViewModel
@@ -213,6 +214,7 @@ class MainActivity : BaseActivity() {
                 detailNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
+                        putExtra(Extras.ExamStatus, ExamStatus.Funding)
                         putExtra(Extras.ExamId, sideEffect.examId)
                         // TODO(riflockle7): 출제용 상세화면 이동을 위한 작업 필요
                     },

@@ -47,7 +47,7 @@ data class Exam(
     val totalProblemCount: Int?,
     val contributors: ImmutableList<User>?,
     val contributorCount: Int?,
-    val sampleQuestion: List<Question>?,
+    val sampleQuestion: Question.Image?,
 ) {
     companion object {
         /*
