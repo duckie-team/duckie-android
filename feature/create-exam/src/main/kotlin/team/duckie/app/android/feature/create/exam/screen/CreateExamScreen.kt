@@ -166,7 +166,9 @@ internal fun CreateExamScreen(
     }
 
     BackHandler {
-        if (sheetState.isVisible) {
+        if (rootState.isMakeExamUploading) {
+            return@BackHandler
+        } else if (sheetState.isVisible) {
             coroutineShape.hideBottomSheet(sheetState) { selectedQuestionIndex = null }
         } else if (photoState != null) {
             vm.updatePhotoState(null)
@@ -330,8 +332,12 @@ internal fun CreateExamScreen(
                                             ),
                                         )
                                     },
-                                    deleteLongClick = {
-                                        deleteDialogNo = Pair(questionIndex, null)
+                                    onProblemLongClick = if (rootState.createProblemType == CreateProblemType.Exam) {
+                                        {
+                                            deleteDialogNo = Pair(questionIndex, null)
+                                        }
+                                    } else {
+                                        null
                                     },
                                 )
 
@@ -400,9 +406,16 @@ internal fun CreateExamScreen(
                                             correctAnswer = newCorrectAnswer,
                                         )
                                     },
-                                    deleteLongClick = { answerIndex: Int? ->
-                                        deleteDialogNo = Pair(questionIndex, answerIndex)
+                                    onProblemLongClick = if (rootState.createProblemType == CreateProblemType.Exam) {
+                                        { answerIndex: Int? ->
+                                            deleteDialogNo = Pair(questionIndex, answerIndex)
+                                        }
+                                    } else {
+                                        null
                                     },
+                                    onChoiceItemLongClick = { answerIndex: Int? ->
+                                        deleteDialogNo = Pair(questionIndex, answerIndex)
+                                    }
                                 )
 
                                 is Answer.ImageChoice -> ImageChoiceLayout(
@@ -488,7 +501,14 @@ internal fun CreateExamScreen(
                                             correctAnswer = newCorrectAnswer,
                                         )
                                     },
-                                    deleteLongClick = { answerIndex ->
+                                    onProblemLongClick = if (rootState.createProblemType == CreateProblemType.Exam) {
+                                        { answerIndex ->
+                                            deleteDialogNo = Pair(questionIndex, answerIndex)
+                                        }
+                                    } else {
+                                        null
+                                    },
+                                    onChoiceItemLongClick = { answerIndex ->
                                         deleteDialogNo = Pair(questionIndex, answerIndex)
                                     },
                                 )
@@ -504,20 +524,32 @@ internal fun CreateExamScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .layoutId(BottomLayoutId),
-                    leftButtonLeadingIcon = OutlinedGroup.Plus,
-                    leftButtonText = stringResource(id = R.string.create_problem_add_problem_button),
-                    leftButtonClick = {
-                        coroutineShape.launch {
-                            keyboard?.hide()
-                            sheetState.show()
-                        }
+                    leftButtonLeadingIcon = if (rootState.createProblemType == CreateProblemType.Exam) {
+                        OutlinedGroup.Plus
+                    } else {
+                        null
                     },
-                    nextButtonText = stringResource(id = R.string.next),
-                    nextButtonClick = {
-                        coroutineShape.launch {
-                            vm.navigateStep(CreateProblemStep.AdditionalInformation)
-                        }
+                    leftButtonText = if (rootState.createProblemType == CreateProblemType.Exam) {
+                        stringResource(id = R.string.create_problem_add_problem_button)
+                    } else {
+                        null
                     },
+                    leftButtonClick = if (rootState.createProblemType == CreateProblemType.Exam) {
+                        {
+                            coroutineShape.launch {
+                                keyboard?.hide()
+                                sheetState.show()
+                            }
+                        }
+                    } else {
+                        null
+                    },
+                    nextButtonText = if (rootState.createProblemType == CreateProblemType.Exam) {
+                        stringResource(id = R.string.next)
+                    } else {
+                        stringResource(id = R.string.create_problem_submit_button)
+                    },
+                    nextButtonClick = vm::nextBtnClick,
                     isCreateProblemValidate = problemCount < MaximumProblem,
                     isValidateCheck = vm::createExamIsValidate,
                 )

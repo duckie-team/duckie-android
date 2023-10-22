@@ -27,6 +27,9 @@ internal data class ProblemBodyData(
     @JsonProperty("memo")
     val memo: String?,
 
+    @JsonProperty("status")
+    val status: String?,
+
     @JsonProperty("question")
     val question: QuestionData?,
 

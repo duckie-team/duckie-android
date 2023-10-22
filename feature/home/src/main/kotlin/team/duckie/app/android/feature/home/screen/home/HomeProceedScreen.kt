@@ -249,7 +249,6 @@ fun ProceedItemView(homeFunding: HomeFunding) {
 
         // 만들어진 문제 개수 / 최대 문제 개수 비율 막대 그래프
         Row(modifier = Modifier.height(8.dp)) {
-            // 첫 번째 막대 (8:2 비율)
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -257,7 +256,6 @@ fun ProceedItemView(homeFunding: HomeFunding) {
                     .background(QuackColor.DuckieOrange.value),
             )
 
-            // 두 번째 막대 (8:2 비율)
             Box(
                 modifier = Modifier
                     .fillMaxHeight()

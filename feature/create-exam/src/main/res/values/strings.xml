@@ -52,4 +52,6 @@
     <string name="additional_information_take_input_hint">응시버튼 커스텀을 해보세요 (최대 %s자)</string>
     <string name="additional_information_sub_tags_title">태그 추가</string>
     <string name="additional_information_sub_tags_placeholder"># 태그입력</string>
+
+    <string name="create_problem_submit_button">문제 제출</string>
 </resources>

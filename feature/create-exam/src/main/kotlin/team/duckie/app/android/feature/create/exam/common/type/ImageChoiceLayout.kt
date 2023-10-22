@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackDropDownCard
 import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.create.exam.R
@@ -67,14 +68,18 @@ internal fun ImageChoiceLayout(
     addAnswerClick: () -> Unit,
     correctAnswers: String?,
     setCorrectAnswerClick: (String) -> Unit,
-    deleteLongClick: (Int?) -> Unit,
+    onProblemLongClick: ((Int?) -> Unit)?,
+    onChoiceItemLongClick: (Int?) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .quackClickable(
-                onLongClick = { deleteLongClick(null) },
-            ) {},
+            .runIf(onProblemLongClick != null) {
+                quackClickable(
+                    onLongClick = { onProblemLongClick?.invoke(null) },
+                    onClick = null,
+                )
+            },
     ) {
         // 제목 뷰
         TitleView(
@@ -156,7 +161,7 @@ internal fun ImageChoiceLayout(
                             icon = OutlinedGroup.Close,
                             modifier = Modifier
                                 .quackClickable(
-                                    onClick = { deleteLongClick(answerIndex) },
+                                    onClick = { onChoiceItemLongClick(answerIndex) },
                                 )
                                 .size(DpSize(20.dp, 20.dp)),
                         )
@@ -179,7 +184,7 @@ internal fun ImageChoiceLayout(
                             modifier = Modifier
                                 .quackClickable(
                                     onClick = { answerImageClick(answerIndex) },
-                                    onLongClick = { deleteLongClick(answerIndex) },
+                                    onLongClick = { onChoiceItemLongClick(answerIndex) },
                                 )
                                 .size(DpSize(136.dp, 136.dp)),
                             src = answerItem.imageUrl,

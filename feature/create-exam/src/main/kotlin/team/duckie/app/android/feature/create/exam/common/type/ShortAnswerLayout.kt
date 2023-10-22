@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackDropDownCard
+import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.feature.create.exam.R
@@ -41,14 +42,17 @@ internal fun ShortAnswerLayout(
     onDropdownItemClick: (Int) -> Unit,
     answer: String,
     answerTextChanged: (String, Int) -> Unit,
-    deleteLongClick: () -> Unit,
+    onProblemLongClick: (() -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .quackClickable(
-                onLongClick = { deleteLongClick() },
-            ) {},
+            .runIf(onProblemLongClick != null) {
+                quackClickable(
+                    onLongClick = { onProblemLongClick?.invoke() },
+                    onClick = null,
+                )
+            },
     ) {
         // 제목 뷰
         TitleView(

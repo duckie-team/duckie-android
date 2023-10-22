@@ -24,7 +24,7 @@ internal data class CreateProblemState(
     val me: User? = null,
     val createProblemType: CreateProblemType = CreateProblemType.Exam,
     val isNetworkError: Boolean = false,
-    val isEditMode: Boolean = false,
+    val editExamId: Int = -1,
     val createExamStep: CreateProblemStep = CreateProblemStep.Loading,
     val examInformation: ExamInformation = ExamInformation(),
     val createExam: CreateProblem = CreateProblem(),
