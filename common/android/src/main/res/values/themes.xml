@@ -6,6 +6,5 @@
   -->
 
 <resources>
-    <color name="white">#FFFFFF</color>
-    <color name="duckie_orange">#FF8300</color>
+    <style name="Theme.Duckie" parent="android:Theme.Material.Light.NoActionBar"/>
 </resources>

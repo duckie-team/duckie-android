@@ -7,7 +7,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application>
+    <application
+        android:theme="@style/Theme.Duckie">
         <activity
             android:name="team.duckie.app.android.feature.notification.NotificationActivity"
             android:exported="false" />

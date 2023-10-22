@@ -20,7 +20,9 @@
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
 
-    <application android:usesCleartextTraffic="true">
+    <application
+        android:theme="@style/Theme.Duckie"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".OnboardActivity"
             android:exported="true"
