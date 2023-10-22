@@ -41,6 +41,7 @@ import team.duckie.app.android.common.kotlin.isTopRanked
 import team.duckie.app.android.domain.quiz.model.QuizInfo
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.common.DetailContentLayout
+import team.duckie.app.android.feature.detail.common.DetailProfileSection
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
@@ -72,6 +73,8 @@ internal fun QuizDetailContentLayout(
         followButtonClick = followButtonClick,
         profileClick = profileClick,
         additionalInfo = {
+            DetailProfileSection(state, followButtonClick, profileClick)
+
             if (state.exam.quizs.isNullOrEmpty().not()) {
                 RankingSection(
                     state = state,

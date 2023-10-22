@@ -24,6 +24,7 @@ import team.duckie.app.android.common.compose.ui.icon.v2.Pager
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.common.DetailContentLayout
+import team.duckie.app.android.feature.detail.common.DetailProfileSection
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
@@ -49,6 +50,8 @@ internal fun ExamDetailContentLayout(
         followButtonClick = followButtonClick,
         profileClick = profileClick,
         additionalInfo = {
+            DetailProfileSection(state, followButtonClick, profileClick)
+
             MetadataSection(
                 totalExamCount = state.exam.problemCount ?: 0,
                 totalExaminee = state.exam.solvedCount ?: 0,

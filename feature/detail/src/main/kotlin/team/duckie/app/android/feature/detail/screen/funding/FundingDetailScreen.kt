@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.feature.detail.common.DetailContentLayout
+import team.duckie.app.android.feature.detail.common.DetailProfileSection
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
 
 @Composable
@@ -32,6 +33,8 @@ internal fun FundingDetailContentLayout(
         followButtonClick = followButtonClick,
         profileClick = profileClick,
         additionalInfo = {
+            DetailProfileSection(state, followButtonClick, profileClick)
+
             FundingSection()
         },
     )
