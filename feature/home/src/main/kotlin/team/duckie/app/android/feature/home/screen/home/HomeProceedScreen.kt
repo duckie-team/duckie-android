@@ -223,7 +223,7 @@ fun ProceedItemView(homeFunding: HomeFunding) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(ratio = GetHeightRatioW328H240),
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 contentDescription = null,
             )
 
@@ -249,12 +249,14 @@ fun ProceedItemView(homeFunding: HomeFunding) {
 
         // 만들어진 문제 개수 / 최대 문제 개수 비율 막대 그래프
         Row(modifier = Modifier.height(8.dp)) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(homeFunding.problemCount.toFloat())
-                    .background(QuackColor.DuckieOrange.value),
-            )
+            if (homeFunding.problemCount != 0) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(homeFunding.problemCount.toFloat())
+                        .background(QuackColor.DuckieOrange.value),
+                )
+            }
 
             Box(
                 modifier = Modifier
