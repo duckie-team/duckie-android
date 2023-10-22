@@ -11,7 +11,6 @@ import androidx.compose.runtime.Immutable
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
 
-
 @Immutable
 data class ProblemBody(
     val question: Question?,

@@ -211,9 +211,12 @@ class MainActivity : BaseActivity() {
             }
 
             is MainSideEffect.NavigateToCreateProblem -> {
-                createExamNavigator.navigateFrom(activity = this, intentBuilder = {
-                    putExtra(Extras.CreateProblemType, CreateProblemType.Problem)
-                })
+                createExamNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.CreateProblemType, CreateProblemType.Problem)
+                    },
+                )
             }
 
             is MainSideEffect.NavigateToSetting -> {

@@ -70,7 +70,7 @@ internal fun TextChoiceLayout(
                     onClick = null,
                     onLongClick = { onProblemLongClick?.invoke(null) },
                 )
-            }
+            },
     ) {
         // 제목 뷰
         TitleView(

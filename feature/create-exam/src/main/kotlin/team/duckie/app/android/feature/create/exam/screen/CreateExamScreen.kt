@@ -415,7 +415,7 @@ internal fun CreateExamScreen(
                                     },
                                     onChoiceItemLongClick = { answerIndex: Int? ->
                                         deleteDialogNo = Pair(questionIndex, answerIndex)
-                                    }
+                                    },
                                 )
 
                                 is Answer.ImageChoice -> ImageChoiceLayout(

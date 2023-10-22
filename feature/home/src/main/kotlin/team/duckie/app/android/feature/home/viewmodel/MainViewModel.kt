@@ -159,7 +159,7 @@ internal class MainViewModel @Inject constructor(
                 MainSideEffect.NavigateToCreateProblem
             } else {
                 MainSideEffect.NavigateToCreateExam
-            }
+            },
         )
     }
 
