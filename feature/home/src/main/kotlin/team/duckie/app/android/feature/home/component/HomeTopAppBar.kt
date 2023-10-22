@@ -38,7 +38,7 @@ internal fun HomeTopAppBar(
     val homeTextTabTitles = remember {
         immutableListOf(
             context.getString(R.string.recommend),
-            context.getString(R.string.proceed),
+            // context.getString(R.string.proceed),
             context.getString(R.string.following),
         )
     }
