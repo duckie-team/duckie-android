@@ -8,7 +8,7 @@
 @file:OptIn(
     ExperimentalDesignToken::class,
     ExperimentalQuackQuackApi::class,
-    ExperimentalDesignToken::class,
+    ExperimentalMaterialApi::class,
 )
 
 package team.duckie.app.android.common.compose.ui.dialog
@@ -46,7 +46,6 @@ import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DuckieTextFieldBottomSheet(
     sheetState: ModalBottomSheetState,
