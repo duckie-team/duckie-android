@@ -7,12 +7,12 @@
 
 package team.duckie.app.android.feature.detail.viewmodel.state
 
+import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
-import team.duckie.app.android.common.kotlin.fastMap
 
 /**
  * [DetailViewModel] 의 상태를 나타냅니다.
@@ -61,6 +61,10 @@ sealed class DetailState {
 
         val isQuiz: Boolean
             get() = ExamType.toExamType(exam.type ?: "") == ExamType.Challenge
+
+        // TODO(riflockle7): 출제용 상세화면 구현 시 추가 작업 필요
+        val isUpcoming: Boolean
+            get() = false
     }
 
     /**

@@ -152,15 +152,14 @@ internal class MainViewModel @Inject constructor(
         )
     }
 
+    /** 덕력고사 만들기 화면으로 이동한다 */
+    fun navigateToCreateExam() = intent {
+        postSideEffect(MainSideEffect.NavigateToCreateExam)
+    }
+
     /** 문제 만들기 화면으로 이동한다 */
-    fun navigateToCreateExam(isProblem: Boolean) = intent {
-        postSideEffect(
-            if (isProblem) {
-                MainSideEffect.NavigateToCreateProblem
-            } else {
-                MainSideEffect.NavigateToCreateExam
-            },
-        )
+    fun navigateToCreateExamDetail(examId: Int) = intent {
+        postSideEffect(MainSideEffect.NavigateToCreateExamDetail(examId))
     }
 
     /** 친구 화면으로 이동한다 */

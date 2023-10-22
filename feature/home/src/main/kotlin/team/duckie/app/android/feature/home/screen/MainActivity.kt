@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
-import team.duckie.app.android.common.android.feature.createproblem.CreateProblemType
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.android.ui.startActivityWithAnimation
@@ -210,11 +209,12 @@ class MainActivity : BaseActivity() {
                 createExamNavigator.navigateFrom(activity = this)
             }
 
-            is MainSideEffect.NavigateToCreateProblem -> {
-                createExamNavigator.navigateFrom(
+            is MainSideEffect.NavigateToCreateExamDetail -> {
+                detailNavigator.navigateFrom(
                     activity = this,
                     intentBuilder = {
-                        putExtra(Extras.CreateProblemType, CreateProblemType.Problem)
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                        // TODO(riflockle7): 출제용 상세화면 이동을 위한 작업 필요
                     },
                 )
             }

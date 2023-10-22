@@ -90,7 +90,7 @@ internal fun HomeProceedScreen(
     state: HomeState,
     homeViewModel: HomeViewModel = activityViewModel(),
     navigateToCreateExam: () -> Unit,
-    navigateToCreateProblem: () -> Unit,
+    navigateToCreateExamDetail: (Int) -> Unit,
     navigateToHomeDetail: (Int) -> Unit,
     navigateToSearch: (String) -> Unit,
     openExamBottomSheet: (Int) -> Unit,
@@ -141,7 +141,7 @@ internal fun HomeProceedScreen(
 
             // 진행중인 덕력고사 목록 뷰
             items(state.homeFundings) { item ->
-                ProceedItemView(item)
+                ProceedItemView(item, navigateToCreateExamDetail)
             }
 
             // 공백
@@ -162,7 +162,7 @@ internal fun HomeProceedScreen(
             // 덕력고사 진행중 배너 뷰
             item {
                 // TODO(riflockle7): 이렇게 화면 이동하는 게 맞는지 확인 필요
-                ProceedBannerView(navigateToCreateProblem)
+                ProceedBannerView()
             }
 
             // 공백
@@ -178,6 +178,7 @@ internal fun HomeProceedScreen(
                     selectedTag = state.homeFundingSelectedTag,
                     categories = state.homeFundingTags,
                     items = state.examFundings,
+                    navigateToCreateExamDetail = navigateToCreateExamDetail,
                 )
             }
         }
@@ -191,7 +192,7 @@ internal fun HomeProceedScreen(
 
 /** 진행중인 덕력고사 Item 뷰 */
 @Composable
-fun ProceedItemView(homeFunding: HomeFunding) {
+fun ProceedItemView(homeFunding: HomeFunding, navigateToCreateExamDetail: (Int) -> Unit) {
     Column(
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 16.dp)
@@ -202,7 +203,7 @@ fun ProceedItemView(homeFunding: HomeFunding) {
                 shape = RoundedCornerShape(8.dp),
             )
             .quackClickable(
-                onClick = {},
+                onClick = { navigateToCreateExamDetail(homeFunding.id) },
             ),
     ) {
         Box(
@@ -311,7 +312,7 @@ fun ProceedItemView(homeFunding: HomeFunding) {
 
 /** 배너 뷰 */
 @Composable
-fun ProceedBannerView(navigateToCreateExam: () -> Unit) {
+fun ProceedBannerView() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -337,7 +338,6 @@ fun ProceedBannerView(navigateToCreateExam: () -> Unit) {
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100.dp))
-                    .quackClickable(onClick = navigateToCreateExam)
                     .background(QuackColor.White.value)
                     .padding(vertical = 6.dp, horizontal = 12.dp),
             ) {
@@ -376,6 +376,7 @@ fun ProceedCategorySection(
     selectedTag: Tag,
     categories: List<Tag>,
     items: List<ExamFunding>,
+    navigateToCreateExamDetail: (Int) -> Unit,
 ) {
     // 제목
     QuackText(
@@ -413,7 +414,10 @@ fun ProceedCategorySection(
     // 카테고리에 해당하는 덕력고사 목록
     Column {
         items.fastForEach { item ->
-            ProceedCategoryItemView(categoryItem = item)
+            ProceedCategoryItemView(
+                categoryItem = item,
+                navigateToCreateExamDetail = navigateToCreateExamDetail,
+            )
         }
     }
 
@@ -426,9 +430,12 @@ fun ProceedCategorySection(
 
 /** 카테고리별 뷰[ProceedCategorySection]에 보이는 Item 뷰 */
 @Composable
-fun ProceedCategoryItemView(categoryItem: ExamFunding) {
+fun ProceedCategoryItemView(categoryItem: ExamFunding, navigateToCreateExamDetail: (Int) -> Unit) {
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .quackClickable(onClick = { navigateToCreateExamDetail(categoryItem.id) }),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // 덕퀴즈/덕질고사 썸네일 이미지

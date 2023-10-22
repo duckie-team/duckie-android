@@ -44,7 +44,7 @@ internal sealed class MainSideEffect {
     /**
      * [CreateExamActivity] 로 이동하는 SideEffect 입니다.
      */
-    object NavigateToCreateProblem : MainSideEffect()
+    data class NavigateToCreateExamDetail(val examId: Int) : MainSideEffect()
 
     object NavigateToNotification : MainSideEffect()
 

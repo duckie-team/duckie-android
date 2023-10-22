@@ -107,7 +107,7 @@ internal class CreateProblemViewModel @Inject constructor(
         } else {
             CreateProblemStep.ExamInformation
         }
-        val isEditMode = examId != -1
+        val isEditMode = examId != -1 && createProblemType == CreateProblemType.Exam
 
         if (!NetworkUtil.isNetworkAvailable(this.context)) {
             loadErrorPage(isNetworkError = true)

@@ -139,11 +139,9 @@ internal fun MainScreen(
                                 mainViewModel.navigateToHomeDetail(examId)
                             },
                             navigateToCreateExam = {
-                                mainViewModel.navigateToCreateExam(false)
+                                mainViewModel.navigateToCreateExam()
                             },
-                            navigateToCreateProblem = {
-                                mainViewModel.navigateToCreateExam(true)
-                            },
+                            navigateToCreateExamDetail = mainViewModel::navigateToCreateExamDetail,
                             navigateToProfile = mainViewModel::navigateToProfile,
                             setTargetExamId = { examId ->
                                 mainViewModel.setTargetExamId(examId)
@@ -166,7 +164,7 @@ internal fun MainScreen(
                             initState = mainViewModel::initState,
                             viewModel = rankingViewModel,
                             navigateToCreateExam = {
-                                mainViewModel.navigateToCreateExam(false)
+                                mainViewModel.navigateToCreateExam()
                             },
                             navigateToDetail = { examId ->
                                 mainViewModel.navigateToHomeDetail(examId)
@@ -193,7 +191,7 @@ internal fun MainScreen(
                                 mainViewModel.navigateToHomeDetail(examId)
                             },
                             navigateToCreateExam = {
-                                mainViewModel.navigateToCreateExam(false)
+                                mainViewModel.navigateToCreateExam()
                             },
                             navigateToSearch = { searchTag ->
                                 mainViewModel.navigateToSearch(searchTag)
