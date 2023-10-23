@@ -23,8 +23,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -47,6 +49,7 @@ import team.duckie.app.android.common.compose.ui.quack.TextFieldDecorationLayout
 import team.duckie.app.android.common.compose.ui.quack.TextFieldDecorationLayoutId.PlaceholderId
 import team.duckie.app.android.common.compose.ui.quack.TextFieldDecorationLayoutId.TextFieldId
 import team.duckie.app.android.common.compose.ui.quack.TextFieldDecorationLayoutId.TrailingId
+import team.duckie.app.android.common.compose.util.rememberUserInputState
 import team.duckie.app.android.common.compose.widthOrZero
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.runIf
@@ -104,6 +107,11 @@ fun QuackNoUnderlineTextField(
         }.asComposeStyle()
     }
 
+    var userInputText by rememberUserInputState(
+        defaultValue = text,
+        updateState = onTextChanged,
+    )
+
     BasicTextField(
         modifier = modifier
             .fillMaxWidth()
@@ -111,8 +119,8 @@ fun QuackNoUnderlineTextField(
                 color = QuackColor.White.value,
             )
             .padding(paddingValues),
-        value = text,
-        onValueChange = onTextChanged,
+        value = userInputText,
+        onValueChange = { userInputText = it },
         textStyle = inputTypography,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,

@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackDropDownCard
 import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
+import team.duckie.app.android.common.compose.util.rememberUserInputState
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.domain.exam.model.Answer
 import team.duckie.app.android.domain.exam.model.Question
@@ -118,6 +121,12 @@ internal fun ImageChoiceLayout(
                 val answerNo = answerIndex + 1
                 val answerItem = answers.imageChoice[answerIndex]
                 val isChecked = correctAnswers == "$answerIndex"
+                var imageChoiceUserInput by rememberUserInputState(
+                    defaultValue = answers.imageChoice[answerIndex].text,
+                    updateState = { newAnswer ->
+                        answerTextChanged(newAnswer, answerIndex)
+                    },
+                )
 
                 Column(
                     modifier = Modifier
@@ -193,10 +202,8 @@ internal fun ImageChoiceLayout(
 
                     // TODO(riflockle7): 동작 확인 필요
                     QuackDefaultTextField(
-                        value = answers.imageChoice[answerIndex].text,
-                        onValueChange = { newAnswer ->
-                            answerTextChanged(newAnswer, answerIndex)
-                        },
+                        value = imageChoiceUserInput,
+                        onValueChange = { imageChoiceUserInput = it },
                         placeholderText = stringResource(
                             id = R.string.create_problem_answer_placeholder,
                             "$answerNo",

@@ -6,9 +6,7 @@
  */
 
 @file:OptIn(
-    ExperimentalDesignToken::class,
-    ExperimentalDesignToken::class,
-    ExperimentalQuackQuackApi::class,
+    ExperimentalComposeApi::class,
 )
 
 package team.duckie.app.android.feature.create.exam.common.type
@@ -22,6 +20,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ExperimentalComposeApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackDropDownCard
 import team.duckie.app.android.common.compose.ui.quack.todo.animation.QuackRoundCheckBox
+import team.duckie.app.android.common.compose.util.rememberUserInputState
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.domain.exam.model.Answer
@@ -40,9 +42,7 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackBorder
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
-import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.sugar.QuackSubtitle
-import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /** 객관식/글 Layout */
 @Composable
@@ -103,6 +103,11 @@ internal fun TextChoiceLayout(
         answers.choices.fastForEachIndexed { answerIndex, choiceModel ->
             val answerNo = answerIndex + 1
             val isChecked = correctAnswers == "$answerIndex"
+            var answerTextUserInput by rememberUserInputState(
+                defaultValue = choiceModel.text,
+                updateState = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
+            )
+
             QuackNoUnderlineTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,8 +120,8 @@ internal fun TextChoiceLayout(
                     .quackClickable(
                         onLongClick = { onChoiceItemLongClick(answerIndex) },
                     ) {},
-                text = choiceModel.text,
-                onTextChanged = { newAnswer -> answerTextChanged(newAnswer, answerIndex) },
+                text = answerTextUserInput,
+                onTextChanged = { answerTextUserInput = it },
                 paddingValues = PaddingValues(vertical = 16.dp, horizontal = 12.dp),
                 placeholderText = stringResource(
                     id = R.string.create_problem_answer_placeholder,

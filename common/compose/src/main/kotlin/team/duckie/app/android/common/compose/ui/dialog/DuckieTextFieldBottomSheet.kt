@@ -5,7 +5,11 @@
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
 
-@file:OptIn(ExperimentalDesignToken::class, ExperimentalQuackQuackApi::class)
+@file:OptIn(
+    ExperimentalDesignToken::class,
+    ExperimentalQuackQuackApi::class,
+    ExperimentalMaterialApi::class,
+)
 
 package team.duckie.app.android.common.compose.ui.dialog
 
@@ -42,7 +46,6 @@ import team.duckie.quackquack.ui.component.QuackDivider
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DuckieTextFieldBottomSheet(
     sheetState: ModalBottomSheetState,

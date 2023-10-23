@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -37,6 +38,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackLazyVerticalGridTag
+import team.duckie.app.android.common.compose.util.rememberUserInputState
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.feature.create.exam.R
 import team.duckie.app.android.feature.create.exam.common.CreateProblemBottomLayout
@@ -96,7 +98,12 @@ internal fun SearchTagScreen(
         remember(rootState.findResultType) { rootState.findResultType.isMultiMode() }
 
     val focusRequester = remember { FocusRequester() }
-    val searchTextFieldValue = remember(state.textFieldValue) { state.textFieldValue }
+    var searchTextFieldValue by rememberUserInputState(
+        defaultValue = state.textFieldValue,
+        updateState = { textFieldValue ->
+            viewModel.setTextFieldValue(textFieldValue = textFieldValue)
+        },
+    )
 
     BackHandler {
         viewModel.exitSearchScreen()

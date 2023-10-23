@@ -38,6 +38,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -52,6 +53,7 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -72,6 +74,7 @@ import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.compose.ui.dialog.ReportDialog
 import team.duckie.app.android.common.compose.ui.quack.QuackNoUnderlineTextField
 import team.duckie.app.android.common.compose.util.addFocusCleaner
+import team.duckie.app.android.common.compose.util.rememberUserInputState
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.feature.search.R
 import team.duckie.app.android.feature.search.constants.SearchResultStep
@@ -291,45 +294,50 @@ class SearchActivity : BaseActivity() {
             }
         }
     }
-}
 
-@Composable
-private fun SearchTextFieldTopBar(
-    modifier: Modifier = Modifier,
-    searchKeyword: String,
-    onSearchKeywordChanged: (String) -> Unit,
-    clearSearchKeyword: () -> Unit,
-    onPrevious: () -> Unit,
-    onAction: () -> Unit,
-    focusRequester: FocusRequester,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .padding(
-                horizontal = 16.dp,
-                vertical = 6.dp,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
+    @Composable
+    private fun SearchTextFieldTopBar(
+        modifier: Modifier = Modifier,
+        searchKeyword: String,
+        onSearchKeywordChanged: (String) -> Unit,
+        clearSearchKeyword: () -> Unit,
+        onPrevious: () -> Unit,
+        onAction: () -> Unit,
+        focusRequester: FocusRequester,
     ) {
-        QuackIcon(
-            modifier = Modifier.quackClickable(onClick = onPrevious),
-            icon = QuackIcon.Outlined.ArrowBack,
+        var searchKeywordInputState by rememberUserInputState(
+            defaultValue = searchKeyword,
+            updateState = onSearchKeywordChanged,
         )
-        Spacer(space = 8.dp)
-        QuackNoUnderlineTextField(
-            modifier = Modifier.focusRequester(focusRequester),
-            text = searchKeyword,
-            onTextChanged = onSearchKeywordChanged,
-            placeholderText = stringResource(id = R.string.try_search),
-            trailingIcon = if (searchKeyword.isNotEmpty()) SharedIcon.ic_textfield_delete_16 else null,
-            trailingIconOnClick = clearSearchKeyword,
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    onAction()
-                },
-            ),
-        )
+
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .padding(
+                    horizontal = 16.dp,
+                    vertical = 6.dp,
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            QuackIcon(
+                modifier = Modifier.quackClickable(onClick = onPrevious),
+                icon = QuackIcon.Outlined.ArrowBack,
+            )
+            Spacer(space = 8.dp)
+            QuackNoUnderlineTextField(
+                modifier = Modifier.focusRequester(focusRequester),
+                text = searchKeywordInputState,
+                onTextChanged = { searchKeywordInputState = it },
+                placeholderText = stringResource(id = R.string.try_search),
+                trailingIcon = if (searchKeyword.isNotEmpty()) SharedIcon.ic_textfield_delete_16 else null,
+                trailingIconOnClick = clearSearchKeyword,
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        onAction()
+                    },
+                ),
+            )
+        }
     }
 }

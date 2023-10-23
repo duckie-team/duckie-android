@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -30,6 +31,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.util.rememberUserInputState
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
@@ -51,11 +53,16 @@ fun QuackErrorableTextField(
     imeAction: ImeAction = ImeAction.Done,
     keyboardActions: KeyboardActions = KeyboardActions(),
 ) {
+    var userInputText by rememberUserInputState(
+        defaultValue = text,
+        updateState = onTextChanged,
+    )
+
     Column(modifier = modifier) {
         BasicTextField(
             modifier = modifier,
-            value = text,
-            onValueChange = onTextChanged,
+            value = userInputText,
+            onValueChange = { userInputText = it },
             keyboardOptions = KeyboardOptions(
                 imeAction = imeAction,
             ),
@@ -182,7 +189,7 @@ private fun Modifier.bottomBorder(
 
                 else -> QuackColor.Success.value
             },
-                label = "",
+            label = "",
         )
         val density = LocalDensity.current
         val strokeWidthPx = density.run { strokeWidth.toPx() }
