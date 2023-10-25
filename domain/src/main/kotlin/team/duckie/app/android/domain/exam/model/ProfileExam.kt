@@ -18,6 +18,8 @@ data class ProfileExam(
     val solvedCount: Int?,
     val heartCount: Int?,
     val user: User?,
+    val problemSolvedCount: Int?,
+    val totalProblemCount: Int?,
 ) {
     companion object {
         /**
@@ -31,6 +33,8 @@ data class ProfileExam(
             solvedCount = null,
             heartCount = null,
             user = User.empty(),
+            problemSolvedCount = null,
+            totalProblemCount = null,
         )
     }
 }

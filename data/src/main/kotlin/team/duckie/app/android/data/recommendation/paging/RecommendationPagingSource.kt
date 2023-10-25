@@ -15,10 +15,10 @@ package team.duckie.app.android.data.recommendation.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import team.duckie.app.android.common.kotlin.ExperimentalApi
 import team.duckie.app.android.data.recommendation.repository.RecommendationRepositoryImpl.Companion.RecommendationsPagingPage
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
-import team.duckie.app.android.common.kotlin.ExperimentalApi
 
 private const val STARTING_KEY = 1
 

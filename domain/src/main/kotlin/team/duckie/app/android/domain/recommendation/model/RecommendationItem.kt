@@ -13,7 +13,7 @@ import team.duckie.app.android.domain.tag.model.Tag
 
 @Immutable
 data class RecommendationItem(
-    val id: Int,
+    val id: Int?,
     val title: String,
     val tag: Tag?,
     val exams: List<Exam>,

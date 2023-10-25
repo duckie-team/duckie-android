@@ -55,7 +55,7 @@ internal fun RecommendationJumbotronItemData.toDomain() = RecommendationJumbotro
 )
 
 internal fun RecommendationItemData.toDomain() = RecommendationItem(
-    id = id ?: duckieResponseFieldNpe("${this::class.java.simpleName}.id"),
+    id = id,
     title = title ?: duckieResponseFieldNpe("${this::class.java.simpleName}.title"),
     tag = tag?.toDomain(),
     exams = exams?.fastMap(ExamData::toDomain)

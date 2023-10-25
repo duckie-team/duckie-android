@@ -7,9 +7,9 @@
 
 package team.duckie.app.android.feature.profile.viewmodel.state.mapper
 
+import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
-import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 
 fun ProfileExam.toUiModel() = DuckTestCoverItem(
     testId = id,
@@ -18,6 +18,7 @@ fun ProfileExam.toUiModel() = DuckTestCoverItem(
     title = title,
     solvedCount = solvedCount ?: 0,
     heartCount = heartCount ?: 0,
+    totalCount = totalProblemCount ?: 0,
 )
 
 fun ProfileExamInstance.toUiModel() = DuckTestCoverItem(
@@ -27,4 +28,5 @@ fun ProfileExamInstance.toUiModel() = DuckTestCoverItem(
     title = exam?.title ?: "",
     solvedCount = exam?.solvedCount ?: 0,
     heartCount = exam?.heartCount ?: 0,
+    totalCount = exam?.totalProblemCount ?: 0,
 )

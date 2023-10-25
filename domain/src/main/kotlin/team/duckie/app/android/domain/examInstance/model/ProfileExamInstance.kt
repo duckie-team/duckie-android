@@ -30,6 +30,8 @@ data class ProfileExamInstance(
                 solvedCount = null,
                 heartCount = null,
                 user = User.empty(),
+                problemSolvedCount = null,
+                totalProblemCount = null,
             ),
         )
     }

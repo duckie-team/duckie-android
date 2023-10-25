@@ -22,6 +22,7 @@ import team.duckie.app.android.domain.tag.model.Tag
 
 @Immutable
 interface ExamRepository {
+    fun getContinueMusicExam(userId: Int): Flow<PagingData<ProfileExam>>
     suspend fun makeExam(exam: ExamBody): Boolean
 
     suspend fun getExam(id: Int): Exam

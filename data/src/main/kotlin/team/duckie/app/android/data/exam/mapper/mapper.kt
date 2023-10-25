@@ -282,6 +282,8 @@ internal fun ProfileExamData.toDomain() = ProfileExam(
     solvedCount = solvedCount,
     heartCount = heartCount,
     user = user?.toDomain(),
+    problemSolvedCount = problemSolvedCount,
+    totalProblemCount = totalProblemCount,
 )
 
 internal fun ProfileExamDatas.toDomain() =

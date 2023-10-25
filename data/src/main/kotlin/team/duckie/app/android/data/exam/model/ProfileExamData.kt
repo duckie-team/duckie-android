@@ -28,6 +28,12 @@ data class ProfileExamData(
 
     @field:JsonProperty("user")
     val user: UserResponse? = null,
+
+    @field:JsonProperty("problemSolvedCount")
+    val problemSolvedCount: Int? = null,
+
+    @field:JsonProperty("totalProblemCount")
+    val totalProblemCount: Int? = null,
 )
 
 data class ProfileExamDatas(

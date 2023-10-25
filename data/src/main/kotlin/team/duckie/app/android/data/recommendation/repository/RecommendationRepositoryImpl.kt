@@ -17,23 +17,23 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import team.duckie.app.android.common.kotlin.ExperimentalApi
+import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import team.duckie.app.android.data._exception.util.responseCatchingFuel
 import team.duckie.app.android.data.recommendation.mapper.toDomain
 import team.duckie.app.android.data.recommendation.model.RecommendationData
+import team.duckie.app.android.data.recommendation.model.RecommendationTypeData
 import team.duckie.app.android.data.recommendation.paging.RecommendationPagingSource
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.RecommendationFeeds
 import team.duckie.app.android.domain.recommendation.model.RecommendationItem
 import team.duckie.app.android.domain.recommendation.repository.RecommendationRepository
-import team.duckie.app.android.common.kotlin.ExperimentalApi
-import team.duckie.app.android.common.kotlin.exception.duckieResponseFieldNpe
 import javax.inject.Inject
 
 class RecommendationRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
 ) : RecommendationRepository {
 
-    @ExperimentalApi
     override fun fetchRecommendations(): Flow<PagingData<RecommendationItem>> {
         return Pager(
             config = PagingConfig(
@@ -48,13 +48,40 @@ class RecommendationRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    @ExperimentalApi
-    private suspend fun fetchRecommendations(page: Int): RecommendationFeeds =
+    override fun fetchMusicRecommendations(): Flow<PagingData<RecommendationItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = RecommendationsPagingPage,
+                enablePlaceholders = true,
+            ),
+            pagingSourceFactory = {
+                RecommendationPagingSource(
+                    fetchRecommendations = {
+                        fetchRecommendations(
+                            page = it,
+                            type = RecommendationTypeData.MUSIC,
+                        )
+                    },
+                )
+            },
+        ).flow
+    }
+
+    private suspend fun fetchRecommendations(
+        page: Int,
+        type: RecommendationTypeData = RecommendationTypeData.NONE,
+    ): RecommendationFeeds =
         withContext(Dispatchers.IO) {
             val (_, response) = fuel
                 .get(
-                    "/recommendations",
-                    listOf("page" to page),
+                    path = "/recommendations",
+                    parameters = mutableListOf<Pair<String, Any?>>(
+                        "page" to page,
+                    ).also {
+                        if (type != RecommendationTypeData.NONE) {
+                            it.add("type" to type.value)
+                        }
+                    },
                 )
                 .responseString()
 
@@ -64,24 +91,17 @@ class RecommendationRepositoryImpl @Inject constructor(
             )
         }
 
-    @ExperimentalApi
-    override suspend fun fetchJumbotrons(): ImmutableList<Exam> =
-        withContext(Dispatchers.IO) {
-            val (_, response) = fuel
-                .get(
-                    "/recommendations",
-                    listOf("page" to 1),
-                )
-                .responseString()
+    override suspend fun fetchJumbotrons(): ImmutableList<Exam> {
+        fetchRecommendations(1, RecommendationTypeData.NONE).jumbotrons?.let {
+            return it
+        } ?: duckieResponseFieldNpe("jumbotrons")
+    }
 
-            val apiResponse = responseCatchingFuel(
-                response = response,
-                parse = RecommendationData::toDomain,
-            )
-
-            // 예외적으로 page가 1일 경우에는 jumbotrons이 누락되면 안된다.
-            return@withContext apiResponse.jumbotrons ?: duckieResponseFieldNpe("jumbotron")
-        }
+    override suspend fun fetchMusicJumbotrons(): ImmutableList<Exam> {
+        fetchRecommendations(1, RecommendationTypeData.MUSIC).jumbotrons?.let {
+            return it
+        } ?: duckieResponseFieldNpe("jumbotrons")
+    }
 
     internal companion object {
         const val RecommendationsPagingPage = 3

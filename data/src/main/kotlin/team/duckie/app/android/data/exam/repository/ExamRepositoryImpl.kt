@@ -58,6 +58,22 @@ class ExamRepositoryImpl @Inject constructor(
     private val fuel: Fuel,
     private val examInfoDataSource: ExamInfoDataSource,
 ) : ExamRepository {
+    override fun getContinueMusicExam(userId: Int): Flow<PagingData<ProfileExam>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = ExamMePagingPage,
+                enablePlaceholders = true,
+            ),
+            pagingSourceFactory = {
+                ProfileExamPagingSource(
+                    getProfileExam = { page ->
+                        getContinueMusicExams(userId, page)
+                    },
+                )
+            },
+        ).flow
+    }
+
     override suspend fun makeExam(exam: ExamBody): Boolean {
         val response = client.post {
             url("/exams")
@@ -137,6 +153,17 @@ class ExamRepositoryImpl @Inject constructor(
     private suspend fun getExamsMe(userId: Int, page: Int): List<ProfileExam> {
         val response = client.get {
             url("/exams/$userId/me")
+            parameter("page", page)
+        }
+        return responseCatching(
+            response = response,
+            parse = ProfileExamDatas::toDomain,
+        )
+    }
+
+    private suspend fun getContinueMusicExams(userId: Int, page: Int): List<ProfileExam> {
+        val response = client.get {
+            url("/exam-instance/music/$userId")
             parameter("page", page)
         }
         return responseCatching(
