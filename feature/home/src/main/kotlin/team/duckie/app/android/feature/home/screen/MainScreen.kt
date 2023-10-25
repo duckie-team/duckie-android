@@ -171,6 +171,7 @@ internal fun MainScreen(
                             navigateToExamDetail = { examId ->
                                 mainViewModel.navigateToHomeDetail(examId)
                             },
+                            navigateToViewAll = navigateToViewAll,
                         )
                     }
 

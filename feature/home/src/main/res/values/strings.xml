@@ -35,7 +35,6 @@
 
     <!-- music -->
     <string name="music_test">듣기평가</string>
-    <string name="music_continue_play">이어서 응시하기</string>
     <string name="home_music_view_all_button_title">전체보기</string>
 
     <!-- ranking -->

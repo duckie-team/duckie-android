@@ -41,6 +41,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemsIndexed
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -55,6 +57,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import okhttp3.internal.immutableListOf
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
+import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.compose.isLastPage
 import team.duckie.app.android.common.compose.scrollToOriginalPage
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCover
@@ -64,11 +67,10 @@ import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableBottomSh
 import team.duckie.app.android.common.compose.ui.dialog.DuckieSelectableType
 import team.duckie.app.android.common.compose.ui.skeleton
 import team.duckie.app.android.domain.exam.model.Exam
-import team.duckie.app.android.domain.recommendation.model.RecommendationItem
-import team.duckie.app.android.domain.user.model.User
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.viewmodel.music.MusicSideEffect
 import team.duckie.app.android.feature.home.viewmodel.music.MusicViewModel
+import team.duckie.app.android.feature.profile.viewmodel.state.ExamType
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
 import team.duckie.quackquack.material.icon.quackicon.Outlined
@@ -88,6 +90,7 @@ internal fun MusicScreen(
     onReport: () -> Unit,
     onShare: () -> Unit,
     navigateToExamDetail: (Int) -> Unit,
+    navigateToViewAll: (Int, ExamType) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetDialogState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -114,6 +117,7 @@ internal fun MusicScreen(
                 }
             },
             navigateToExamDetail = navigateToExamDetail,
+            navigateToViewAll = navigateToViewAll,
         )
     }
 }
@@ -124,16 +128,17 @@ internal fun MusicComponent(
     vm: MusicViewModel,
     openExamBottomSheet: (Int) -> Unit,
     navigateToExamDetail: (Int) -> Unit,
+    navigateToViewAll: (Int, ExamType) -> Unit,
 ) {
     val state = vm.collectAsState().value
     var isPullRefresh by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val heroModulePagerState = rememberPagerState {
-        5
+        state.musicJumbotrons.size
     }
     val lazyListState = rememberLazyListState()
     val toolbarScaffoldState = rememberCollapsingToolbarScaffoldState()
-
+    val lazyMusicPagingItems = vm.musicRecommendations.collectAsLazyPagingItems()
 
     vm.collectSideEffect {
         when (it) {
@@ -144,6 +149,17 @@ internal fun MusicComponent(
 
             is MusicSideEffect.NavigateToMusicExamDetail -> {
                 navigateToExamDetail(it.examId)
+            }
+
+            is MusicSideEffect.ReportError -> {
+                with(it.exception) {
+                    printStackTrace()
+                    reportToCrashlyticsIfNeeded()
+                }
+            }
+
+            is MusicSideEffect.NavigateToViewAll -> {
+                navigateToViewAll(it.userId, ExamType.Continue)
             }
         }
     }
@@ -215,62 +231,37 @@ internal fun MusicComponent(
             item {
                 HeroModule(
                     pagerState = heroModulePagerState,
-                    items = (1..5).map {
-                        "https://images.unsplash.com/photo-1693418161641-99928097b5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1760&q=80"
-                    }.toImmutableList(),
+                    items = state.musicJumbotrons,
                     onClickThumbnail = vm::clickMusicExam,
                 )
             }
             columnSpacer(40.dp)
-            item {
-                TitleAndMusicContents(
-                    title = stringResource(id = R.string.music_continue_play),
-                    onClickShowAll = {},
-                    musicItems = persistentListOf(
-                        MusicItemModel(
-                            id = 1,
-                            title = "test",
-                            thumbnail = "https://images.unsplash.com/photo-1693418161641-99928097b5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1760&q=80",
-                            onClickMore = openExamBottomSheet,
-                            currentSolvedCount = 0,
-                            totalSolvedCount = 0,
-                        )
-                    ),
-                    onClickMusicItem = {
-                        vm.clickMusicExam(it.id)
-                    },
-                )
-            }
-            items(
-                items = listOf(
-                    RecommendationItem(
-                        id = 0,
-                        title = "test",
-                        tag = null,
-                        exams = listOf(
-                            Exam.empty().copy(
-                                id = 0,
-                                title = "test",
-                                thumbnailUrl = "https://images.unsplash.com/photo-1693418161641-99928097b5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1760&q=80",
-                                solvedCount = 0,
-                                heartCount = 0,
-                                user = User.empty().copy(
-                                    nickname = "test",
-                                ),
-                            )
-                        ),
+            itemsIndexed(
+                items = lazyMusicPagingItems,
+            ) { index, item ->
+                if (index == 0) {
+                    TitleAndMusicContents(
+                        title = item?.title ?: "",
+                        onClickShowAll = { vm.clickShowAll(item?.id ?: 0) },
+                        exams = item?.exams?.toImmutableList() ?: persistentListOf(),
+                        onClickExam = {
+                            vm.clickMusicExam(it)
+                        },
+                        onClickMore = {
+                            openExamBottomSheet(it.id)
+                        },
                     )
-                ),
-            ) { item ->
-                MusicContentLayout(
-                    modifier = Modifier
-                        .padding(top = 40.dp),
-                    title = item.title,
-                    exams = item.exams.toImmutableList(),
-                    onExamClicked = vm::clickMusicExam,
-                    isLoading = false,
-                    onMoreClick = openExamBottomSheet,
-                )
+                } else {
+                    MusicContentLayout(
+                        modifier = Modifier
+                            .padding(top = 40.dp),
+                        title = item?.title ?: "",
+                        exams = item?.exams?.toImmutableList() ?: persistentListOf(),
+                        onExamClicked = vm::clickMusicExam,
+                        isLoading = false,
+                        onMoreClick = openExamBottomSheet,
+                    )
+                }
             }
             columnSpacer(48.dp)
         }
@@ -287,7 +278,7 @@ private fun MusicContentLayout(
     modifier: Modifier = Modifier,
     title: String,
     exams: ImmutableList<Exam>,
-    onExamClicked: (Int) -> Unit,
+    onExamClicked: (Exam) -> Unit,
     onMoreClick: (Int) -> Unit,
     isLoading: Boolean,
 ) {
@@ -325,7 +316,7 @@ private fun MusicContentLayout(
                         heartCount = item.heartCount ?: 0,
                     ),
                     onItemClick = {
-                        onExamClicked(item.id)
+                        onExamClicked(item)
                     },
                     onMoreClick = {
                         onMoreClick(item.id)

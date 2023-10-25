@@ -19,6 +19,8 @@
     <string name="not_yet_solved_exam">아직 응시한 덕력고사가 없어요 :(</string>
     <string name="hearted_exam">좋아요한 덕력고사</string>
     <string name="not_yet_heart_exam">아직 좋아요한 덕력고사가 없어요 :(</string>
+    <string name="continue_music_exam">이어서 응시하기</string>
+    <string name="not_yet_continue_music_exam">아직 좋아요한 덕력고사가 없어요 :(</string>
     <string name="make_exam">덕력고사 만들기</string>
 
     <string name="edit_profile">프로필 수정</string>

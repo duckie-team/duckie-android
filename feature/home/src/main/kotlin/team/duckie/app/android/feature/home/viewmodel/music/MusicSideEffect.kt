@@ -10,4 +10,7 @@ package team.duckie.app.android.feature.home.viewmodel.music
 sealed class MusicSideEffect {
     object ListPullUp : MusicSideEffect()
     class NavigateToMusicExamDetail(val examId: Int) : MusicSideEffect()
+    class NavigateToViewAll(val userId: Int) : MusicSideEffect()
+
+    class ReportError(val exception: Throwable) : MusicSideEffect()
 }

@@ -22,4 +22,5 @@ enum class ExamType {
     Heart,
     Created,
     Solved,
+    Continue,
 }

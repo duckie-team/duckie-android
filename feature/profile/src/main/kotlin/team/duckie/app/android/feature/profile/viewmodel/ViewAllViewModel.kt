@@ -28,6 +28,7 @@ import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.domain.exam.model.ProfileExam
+import team.duckie.app.android.domain.exam.usecase.GetContinueMusicExamUseCase
 import team.duckie.app.android.domain.exam.usecase.GetHeartExamUseCase
 import team.duckie.app.android.domain.exam.usecase.GetSubmittedExamUseCase
 import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
@@ -43,6 +44,7 @@ internal class ViewAllViewModel @Inject constructor(
     private val getHeartExamUseCase: GetHeartExamUseCase,
     private val getSubmittedExamUseCase: GetSubmittedExamUseCase,
     private val getSolvedExamInstance: GetSolvedExamInstanceUseCase,
+    private val getContinueMusicExamUseCase: GetContinueMusicExamUseCase,
 ) : ContainerHost<ViewAllState, ViewAllSideEffect>, ViewModel() {
     override val container: Container<ViewAllState, ViewAllSideEffect> =
         container(ViewAllState.Loading)
@@ -60,6 +62,9 @@ internal class ViewAllViewModel @Inject constructor(
     private val _solvedExams = MutableStateFlow<PagingData<ProfileExamInstance>>(PagingData.empty())
     val solvedExams: Flow<PagingData<ProfileExamInstance>> = _solvedExams
 
+    private val _continueMusicExams = MutableStateFlow<PagingData<ProfileExam>>(PagingData.empty())
+    val continueMusicExams: Flow<PagingData<ProfileExam>> = _continueMusicExams
+
     fun fetchExamItems() = intent {
         val userId = savedStateHandle.getOrThrow<Int>(Extras.UserId)
         val examType = savedStateHandle.getOrThrow<ExamType>(Extras.ExamType)
@@ -73,6 +78,7 @@ internal class ViewAllViewModel @Inject constructor(
             ExamType.Heart -> fetchHeartExams()
             ExamType.Created -> fetchSubmittedExams()
             ExamType.Solved -> fetchSolvedExams()
+            ExamType.Continue -> fetchContinueMusicExams()
         }
     }
 
@@ -105,6 +111,17 @@ internal class ViewAllViewModel @Inject constructor(
                 .cachedIn(viewModelScope)
                 .collect {
                     _solvedExams.value = it
+                }
+        }
+    }
+
+    private fun fetchContinueMusicExams() {
+        val state = container.stateFlow.value as ViewAllState.Success
+        viewModelScope.launch {
+            getContinueMusicExamUseCase(state.userId)
+                .cachedIn(viewModelScope)
+                .collect {
+                    _continueMusicExams.value = it
                 }
         }
     }

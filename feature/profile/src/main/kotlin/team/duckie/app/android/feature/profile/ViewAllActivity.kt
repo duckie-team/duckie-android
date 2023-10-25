@@ -57,6 +57,10 @@ class ViewAllActivity : BaseActivity() {
                             examType = successState.examType,
                             onBackPressed = viewModel::clickViewAllBackPress,
                             profileExams = when (successState.examType) {
+                                ExamType.Continue -> viewModel.continueMusicExams.collectAndHandleState(
+                                    handleLoadStates = viewModel::handleLoadState,
+                                )
+
                                 ExamType.Heart -> viewModel.heartExams.collectAndHandleState(
                                     handleLoadStates = viewModel::handleLoadState,
                                 )

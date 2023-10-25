@@ -40,6 +40,8 @@ fun skeletonProfileExamInstances(count: Int = 10) = (1..count).map {
             solvedCount = 20,
             heartCount = 20,
             thumbnailUrl = "",
+            totalProblemCount = null,
+            problemSolvedCount = null,
         ),
     )
 }.toImmutableList()

@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import team.duckie.app.android.common.compose.ui.Gray35
+import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
@@ -40,8 +41,8 @@ import team.duckie.quackquack.ui.QuackText
 @Composable
 internal fun HeroModule(
     pagerState: PagerState,
-    items: ImmutableList<String>,
-    onClickThumbnail: (Int) -> Unit,
+    items: ImmutableList<Exam>,
+    onClickThumbnail: (Exam) -> Unit,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     Box {
@@ -58,12 +59,12 @@ internal fun HeroModule(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .quackClickable {
-                        onClickThumbnail(0) // TODO(EvergreenTree97) model 변경에 따라 argument 바꿔야함
+                        onClickThumbnail(items[page])
                     },
             ) {
                 QuackImage(
                     modifier = Modifier.fillMaxSize(),
-                    src = items.getOrNull(page % items.size),
+                    src = items.getOrNull(page % items.size)?.thumbnailUrl,
                     contentScale = ContentScale.FillBounds,
                 )
             }

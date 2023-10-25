@@ -27,6 +27,7 @@ import team.duckie.app.android.common.compose.itemsPagingKey
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLine2TopAppBar
 import team.duckie.app.android.common.compose.ui.DuckExamSmallCoverForColumn
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
+import team.duckie.app.android.common.compose.ui.GridMusicItem
 import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
@@ -109,7 +110,7 @@ fun ViewAllScreen(
                         count = profileExamInstances.itemCount,
                         key = itemsPagingKey(
                             items = profileExamInstances,
-                            key = { profileExams[it]?.id?.getUniqueKey(it) },
+                            key = { profileExamInstances[it]?.id?.getUniqueKey(it) },
                         ),
                     ) { index ->
                         profileExamInstances[index]?.let { item ->
@@ -119,6 +120,29 @@ fun ViewAllScreen(
                                 onItemClick = { onItemClick(duckTestCoverItem) },
                                 isLoading = profileExamInstances.loadState.append == LoadState.Loading,
                                 onMoreClick = onMoreClick, // 추후 신고하기 구현 필요
+                            )
+                        }
+                        if (index == profileExams.itemCount) {
+                            Spacer(space = 40.dp)
+                        }
+                    }
+                    spaceItem(profileExamInstances.itemCount)
+                }
+
+                ExamType.Continue -> {
+                    items(
+                        count = profileExams.itemCount,
+                        key = itemsPagingKey(
+                            items = profileExams,
+                            key = { profileExams[it]?.id?.getUniqueKey(it) },
+                        ),
+                    ) { index ->
+                        profileExams[index]?.let { item ->
+                            val duckTestCoverItem = item.toUiModel()
+                            GridMusicItem(
+                                exam = duckTestCoverItem,
+                                onClickExam = { onItemClick(duckTestCoverItem) },
+                                onClickMore = {}, // 추후 신고하기 구현 필요
                             )
                         }
                         if (index == profileExams.itemCount) {
@@ -137,4 +161,5 @@ fun getViewAllTitle(examType: ExamType) = when (examType) {
     ExamType.Heart -> stringResource(id = R.string.hearted_exam)
     ExamType.Created -> stringResource(id = R.string.submitted_exam)
     ExamType.Solved -> stringResource(id = R.string.solved_exam)
+    ExamType.Continue -> stringResource(id = R.string.continue_music_exam)
 }

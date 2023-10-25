@@ -29,6 +29,7 @@ import team.duckie.app.android.common.compose.R
 import team.duckie.app.android.common.compose.ui.icon.v1.MoreId
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.common.kotlin.toDecimalFormat
+import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.icon.QuackIcon
@@ -45,6 +46,7 @@ data class DuckTestCoverItem(
     val title: String,
     val solvedCount: Int,
     val heartCount: Int,
+    val totalCount: Int? = null,
 )
 
 private const val CoverRatio = 4f / 3f
@@ -155,3 +157,13 @@ internal fun DuckSmallCoverInternal(
         }
     }
 }
+
+fun Exam.toUiModel() = DuckTestCoverItem(
+    testId = id,
+    thumbnailUrl = thumbnailUrl,
+    nickname = user?.nickname ?: "",
+    title = title,
+    solvedCount = solvedCount ?: 0,
+    heartCount = heartCount ?: 0,
+    totalCount = totalProblemCount,
+)

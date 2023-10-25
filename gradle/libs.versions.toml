@@ -200,6 +200,7 @@ compose-util-customview-pooling-container = { module = "androidx.customview:cust
 compose-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
 compose-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
 compose-ui-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
+compose-ui-collapsing-toolbar = { module = "me.onebone:toolbar-compose", version.ref = "compose-collapsing-toolbar" }
 
 ktx-core = { module = "androidx.core:core-ktx", version.ref = "ktx-core" }
 ktx-activiy = { module = "androidx.activity:activity-ktx", version.ref = "ktx-activity" }
