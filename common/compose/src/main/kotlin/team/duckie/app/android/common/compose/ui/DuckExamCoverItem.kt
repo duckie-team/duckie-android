@@ -163,7 +163,7 @@ fun Exam.toUiModel() = DuckTestCoverItem(
     thumbnailUrl = thumbnailUrl,
     nickname = user?.nickname ?: "",
     title = title,
-    solvedCount = solvedCount ?: 0,
+    solvedCount = problemSolvedCount ?: 0,
     heartCount = heartCount ?: 0,
     totalCount = totalProblemCount,
 )

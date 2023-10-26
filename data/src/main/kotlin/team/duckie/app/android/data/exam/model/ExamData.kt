@@ -41,6 +41,9 @@ internal data class ExamData(
     @field:JsonProperty("solvedCount")
     val solvedCount: Int? = null,
 
+    @field:JsonProperty("problemSolvedCount")
+    val problemSolvedCount: Int?,
+
     @field:JsonProperty("answerRate")
     val answerRate: Float? = null,
 

@@ -45,6 +45,7 @@ data class Exam(
     val requirementQuestion: String?,
     val requirementPlaceholder: String?,
     val problemCount: Int?,
+    val problemSolvedCount: Int?,
     val totalProblemCount: Int?,
     val contributors: ImmutableList<User>?,
     val contributorCount: Int?,
@@ -88,6 +89,7 @@ data class Exam(
             sampleQuestion = null,
             myMusicRecord = null,
             musicExamInstances = null,
+            problemSolvedCount = null,
         )
     }
 }

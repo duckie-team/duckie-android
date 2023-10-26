@@ -218,6 +218,9 @@ class DetailViewModel @Inject constructor(
                             }
                     }
 
+                    ExamType.Audio -> {
+
+                    }
                     else -> {
                         makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
                             when (result.status) {

@@ -106,6 +106,7 @@ internal fun ExamData.toDomain() = Exam(
     myMusicRecord = myMusicRecord?.toDomain(),
     musicExamInstances = musicExamInstances?.fastMap(MusicExamInstanceData::toDomain)
         ?.toImmutableList(),
+    problemSolvedCount = problemSolvedCount,
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
