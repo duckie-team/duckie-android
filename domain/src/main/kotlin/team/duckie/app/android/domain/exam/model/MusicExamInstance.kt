@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.domain.exam.model
 
+import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.domain.user.model.User
 
 data class MusicExamInstance(
@@ -14,5 +15,5 @@ data class MusicExamInstance(
     val takenTime: Double?,
     val score: Double?,
     val correctProblemCount: Int?,
-    val status: String?,
+    val status: ExamStatus?,
 )

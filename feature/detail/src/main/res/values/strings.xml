@@ -20,6 +20,7 @@
 
     <string name="score">%s점</string>
     <string name="time">%s초</string>
+    <string name="amount">%s개</string>
     <string name="report">신고하기</string>
     <string name="check">확인</string>
     <string name="quiz_ranking_title">%s 덕퀴즈 TOP10</string>
@@ -32,4 +33,7 @@
     <!-- music -->
     <string name="detail_music_total_exam">총 문제</string>
     <string name="detail_music_total_solve_count">응시 수</string>
+
+    <string name="detail_music_complete_solve">응시완료</string>
+    <string name="detail_music_solving">응시중</string>
 </resources>

@@ -69,6 +69,7 @@ import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.model.Question
 import team.duckie.app.android.domain.exam.model.Solution
+import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.domain.quiz.model.QuizInfo
 
 @AllowCyclomaticComplexMethod
@@ -377,5 +378,5 @@ internal fun MusicExamInstanceData.toDomain() = MusicExamInstance(
     takenTime = takenTime,
     score = score,
     correctProblemCount = correctProblemCount,
-    status = status,
+    status = status?.let { ExamStatus.from(it) },
 )

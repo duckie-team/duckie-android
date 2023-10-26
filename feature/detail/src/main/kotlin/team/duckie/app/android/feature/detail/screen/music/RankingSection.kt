@@ -36,6 +36,7 @@ import team.duckie.app.android.common.kotlin.isFirstRanked
 import team.duckie.app.android.common.kotlin.isTopRanked
 import team.duckie.app.android.domain.exam.model.MusicExamInstance
 import team.duckie.app.android.domain.exam.model.MyMusicRecord
+import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.screen.quiz.ProfileImageSize
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
@@ -157,7 +158,6 @@ private fun RankingContent(
     onClick: (Int) -> Unit,
 ) = with(musicExamInstance) {
     val user = musicExamInstance.user
-
     Column {
         Row(
             modifier = Modifier
@@ -194,14 +194,22 @@ private fun RankingContent(
                 Spacer(space = 6.dp)
                 if (rank.isFirstRanked()) {
                     QuackText(
-                        text = getUserPerformanceString(score ?: 0.0, takenTime ?: 0.0),
+                        text = getUserPerformanceString(
+                            score = score ?: 0.0,
+                            correctProblemCount = correctProblemCount ?: 0,
+                            takenTime = takenTime ?: 0.0,
+                        ),
                         typography = QuackTypography.Subtitle2.change(
                             color = QuackColor.DuckieOrange,
                         ),
                     )
                 } else if (rank.isTopRanked() && !rank.isFirstRanked()) {
                     QuackText(
-                        text = getUserPerformanceString(score ?: 0.0, takenTime ?: 0.0),
+                        text = getUserPerformanceString(
+                            score = score ?: 0.0,
+                            correctProblemCount = correctProblemCount ?: 0,
+                            takenTime = takenTime ?: 0.0,
+                        ),
                         typography = QuackTypography.Body2.change(
                             color = QuackColor.Gray1,
                         ),
@@ -209,17 +217,41 @@ private fun RankingContent(
                 }
             }
         }
-
+        StatusText(examStatus = musicExamInstance.status ?: ExamStatus.Ready)
         Divider(color = QuackColor.Gray4.value)
     }
 }
 
+@Composable
+private fun StatusText(examStatus: ExamStatus) {
+    val textToColor = when (examStatus) {
+        ExamStatus.Ready -> {
+            R.string.detail_music_solving to QuackColor.DuckieOrange
+        }
+
+        ExamStatus.Submitted -> {
+            R.string.detail_music_complete_solve to QuackColor.Success
+        }
+    }
+    QuackText(
+        text = stringResource(id = textToColor.first),
+        typography = QuackTypography.Body3.change(
+            color = textToColor.second,
+        ),
+    )
+}
+
 
 @Composable
-private fun getUserPerformanceString(correctProblemCount: Double, time: Double) =
+private fun getUserPerformanceString(
+    score: Double,
+    correctProblemCount: Int,
+    takenTime: Double,
+) =
     buildString {
-        append(stringResource(id = R.string.score, correctProblemCount))
+        append(stringResource(id = R.string.score, takenTime))
+        append(stringResource(id = R.string.amount, correctProblemCount))
         append(" / ")
-        append(stringResource(id = R.string.time, time))
+        append(stringResource(id = R.string.time, score))
     }
 
