@@ -32,6 +32,8 @@ import team.duckie.app.android.data.exam.model.ExamThumbnailBodyData
 import team.duckie.app.android.data.exam.model.ExamUncomingsResponseData
 import team.duckie.app.android.data.exam.model.ExamsData
 import team.duckie.app.android.data.exam.model.ImageChoiceData
+import team.duckie.app.android.data.exam.model.MusicExamInstanceData
+import team.duckie.app.android.data.exam.model.MyMusicRecordData
 import team.duckie.app.android.data.exam.model.ProblemData
 import team.duckie.app.android.data.exam.model.ProfileExamData
 import team.duckie.app.android.data.exam.model.ProfileExamDatas
@@ -61,6 +63,8 @@ import team.duckie.app.android.domain.exam.model.ExamThumbnailBody
 import team.duckie.app.android.domain.exam.model.ExamUncomingsResponse
 import team.duckie.app.android.domain.exam.model.IgnoreExam
 import team.duckie.app.android.domain.exam.model.ImageChoiceModel
+import team.duckie.app.android.domain.exam.model.MusicExamInstance
+import team.duckie.app.android.domain.exam.model.MyMusicRecord
 import team.duckie.app.android.domain.exam.model.Problem
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.exam.model.Question
@@ -99,6 +103,9 @@ internal fun ExamData.toDomain() = Exam(
     contributors = contributors?.fastMap(UserResponse::toDomain)?.toImmutableList(),
     contributorCount = contributorCount,
     sampleQuestion = sampleQuestion?.fastMap(QuestionData::toDomain)?.toImmutableList(),
+    myMusicRecord = myMusicRecord?.toDomain(),
+    musicExamInstances = musicExamInstances?.fastMap(MusicExamInstanceData::toDomain)
+        ?.toImmutableList(),
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }
@@ -353,4 +360,21 @@ internal fun ExamFundingData.toDomain() = ExamFunding(
 internal fun ExamTagsResponseData.toDomain() = ExamTagsResponse(
     tags = tags?.map { it.toDomain() }
         ?: duckieResponseFieldNpe("${this::class.java.simpleName}.tags"),
+)
+
+internal fun MyMusicRecordData.toDomain() = MyMusicRecord(
+    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+    takenTime = takenTime,
+    score = score,
+    ranking = ranking,
+    correctProblemCount = correctProblemCount,
+    status = status,
+)
+
+internal fun MusicExamInstanceData.toDomain() = MusicExamInstance(
+    user = user?.toDomain() ?: duckieResponseFieldNpe("${this::class.java.simpleName}.user"),
+    takenTime = takenTime,
+    score = score,
+    correctProblemCount = correctProblemCount,
+    status = status,
 )

@@ -1,0 +1,68 @@
+/*
+ * Designed and developed by Duckie Team, 2022
+ *
+ * Licensed under the MIT.
+ * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
+ */
+
+package team.duckie.app.android.feature.detail.common
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import team.duckie.app.android.common.compose.ui.icon.v2.Pager
+import team.duckie.app.android.feature.detail.R
+import team.duckie.quackquack.material.icon.QuackIcon
+import team.duckie.quackquack.material.icon.quackicon.Outlined
+import team.duckie.quackquack.material.icon.quackicon.outlined.Profile
+import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.sugar.QuackBody2
+import team.duckie.quackquack.ui.sugar.QuackTitle2
+
+@Composable
+internal fun MetadataSection(
+    totalExamCount: Int,
+    totalExaminee: Int,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .padding(top = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        QuackTitle2(text = stringResource(id = R.string.detail_exam_info))
+        IconText(
+            icon = QuackIcon.Pager,
+            text = stringResource(id = R.string.detail_total_exam_count, totalExamCount),
+        )
+        IconText(
+            icon = QuackIcon.Outlined.Profile,
+            text = stringResource(id = R.string.detail_total_examinee, totalExaminee),
+        )
+    }
+}
+
+@Composable
+private fun IconText(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    text: String,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        QuackIcon(icon = icon)
+        QuackBody2(text = text)
+    }
+}

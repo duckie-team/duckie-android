@@ -68,6 +68,9 @@ internal data class ExamData(
     @field:JsonProperty("myRecord")
     val myRecord: QuizInfoResponse? = null,
 
+    @field:JsonProperty("myMusicRecord")
+    val myMusicRecord: MyMusicRecordData? = null,
+
     @field:JsonProperty("challenges")
     val quizs: List<QuizInfoResponse>? = null,
 
@@ -100,6 +103,9 @@ internal data class ExamData(
 
     @field:JsonProperty("sampleQuestion")
     val sampleQuestion: List<QuestionData>? = null,
+
+    @field:JsonProperty("examInstances")
+    val musicExamInstances: List<MusicExamInstanceData>? = null,
 )
 
 internal data class ExamsData(

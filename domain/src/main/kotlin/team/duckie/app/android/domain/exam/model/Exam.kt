@@ -38,6 +38,7 @@ data class Exam(
     val heartCount: Int?,
     val problems: ImmutableList<Problem>?,
     val myRecord: QuizInfo?,
+    val myMusicRecord: MyMusicRecord?,
     val quizs: ImmutableList<QuizInfo>?,
     val perfectScoreImageUrl: String?,
     val timer: Int?,
@@ -48,6 +49,7 @@ data class Exam(
     val contributors: ImmutableList<User>?,
     val contributorCount: Int?,
     val sampleQuestion: List<Question>?,
+    val musicExamInstances: ImmutableList<MusicExamInstance>?,
 ) {
     companion object {
         /*
@@ -84,6 +86,8 @@ data class Exam(
             contributors = null,
             contributorCount = null,
             sampleQuestion = null,
+            myMusicRecord = null,
+            musicExamInstances = null,
         )
     }
 }
