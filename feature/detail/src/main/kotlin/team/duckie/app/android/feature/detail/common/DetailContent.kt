@@ -162,7 +162,6 @@ internal fun DetailContentLayout(
 
         // 구분선
         QuackMaxWidthDivider()
-
         additionalInfo()
     }
 }

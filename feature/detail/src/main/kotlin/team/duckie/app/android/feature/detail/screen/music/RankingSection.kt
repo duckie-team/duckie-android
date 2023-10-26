@@ -34,7 +34,8 @@ import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.fastForEachIndexed
 import team.duckie.app.android.common.kotlin.isFirstRanked
 import team.duckie.app.android.common.kotlin.isTopRanked
-import team.duckie.app.android.domain.quiz.model.QuizInfo
+import team.duckie.app.android.domain.exam.model.MusicExamInstance
+import team.duckie.app.android.domain.exam.model.MyMusicRecord
 import team.duckie.app.android.feature.detail.R
 import team.duckie.app.android.feature.detail.screen.quiz.ProfileImageSize
 import team.duckie.app.android.feature.detail.viewmodel.state.DetailState
@@ -54,7 +55,7 @@ internal fun MusicRankingSection(
     state: DetailState.Success,
     userContentClick: (Int) -> Unit,
 ) {
-    val quizRankings = state.exam.quizs
+    val musicExamInstances = state.exam.musicExamInstances
 
     Column(
         modifier = modifier,
@@ -68,7 +69,7 @@ internal fun MusicRankingSection(
             Spacer(space = 12.dp)
             MyRankingSection(
                 nickname = state.appUser.nickname,
-                quizInfo = state.exam.myRecord,
+                myMusicRecord = state.exam.myMusicRecord,
             )
             QuackMaxWidthDivider()
             Spacer(space = 24.dp)
@@ -80,7 +81,7 @@ internal fun MusicRankingSection(
             )
             Spacer(space = 4.dp)
         }
-        if (quizRankings.isNullOrEmpty()) {
+        if (musicExamInstances.isNullOrEmpty()) {
             QuackText(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -93,11 +94,11 @@ internal fun MusicRankingSection(
                 ),
             )
         } else {
-            quizRankings.fastForEachIndexed { index, item ->
-                key(item.id) {
+            musicExamInstances.fastForEachIndexed { index, item ->
+                key(item.user) {
                     RankingContent(
                         rank = index + 1,
-                        quizInfo = item,
+                        musicExamInstance = item,
                         onClick = userContentClick,
                     )
                 }
@@ -110,24 +111,22 @@ internal fun MusicRankingSection(
 @Composable
 private fun ColumnScope.MyRankingSection(
     nickname: String,
-    quizInfo: QuizInfo?,
+    myMusicRecord: MyMusicRecord?,
 ) {
-    val user = quizInfo?.user
-
     QuackBody2(text = stringResource(id = R.string.my_record))
     Spacer(space = 4.dp)
     Row(
         modifier = Modifier.height(68.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (quizInfo == null) {
+        if (myMusicRecord == null) {
             QuackTitle2(text = "-")
         } else {
-            DuckieMedal(score = quizInfo.ranking ?: 0)
+            DuckieMedal(score = myMusicRecord.ranking ?: 0)
         }
         Spacer(space = 12.dp)
         QuackProfileImage(
-            profileUrl = user?.profileImageUrl ?: "",
+            profileUrl = myMusicRecord?.user?.profileImageUrl ?: "",
             size = DpSize(width = 44.dp, height = 44.dp),
         )
         Spacer(space = 8.dp)
@@ -138,11 +137,11 @@ private fun ColumnScope.MyRankingSection(
                     append(
                         stringResource(
                             id = R.string.score,
-                            quizInfo?.correctProblemCount ?: "-",
+                            myMusicRecord?.correctProblemCount ?: "-",
                         ),
                     )
                     append(" / ")
-                    append(stringResource(id = R.string.time, quizInfo?.time ?: "-"))
+                    append(stringResource(id = R.string.time, myMusicRecord?.takenTime ?: "-"))
                 },
                 typography = QuackTypography.Body1.change(color = QuackColor.Gray1),
             )
@@ -154,10 +153,10 @@ private fun ColumnScope.MyRankingSection(
 @Composable
 private fun RankingContent(
     rank: Int,
-    quizInfo: QuizInfo,
+    musicExamInstance: MusicExamInstance,
     onClick: (Int) -> Unit,
-) = with(quizInfo) {
-    val user = quizInfo.user
+) = with(musicExamInstance) {
+    val user = musicExamInstance.user
 
     Column {
         Row(
@@ -195,15 +194,14 @@ private fun RankingContent(
                 Spacer(space = 6.dp)
                 if (rank.isFirstRanked()) {
                     QuackText(
-                        modifier = Modifier.padding(start = 4.dp),
-                        text = getUserPerformanceString(correctProblemCount, time),
+                        text = getUserPerformanceString(score ?: 0.0, takenTime ?: 0.0),
                         typography = QuackTypography.Subtitle2.change(
                             color = QuackColor.DuckieOrange,
                         ),
                     )
                 } else if (rank.isTopRanked() && !rank.isFirstRanked()) {
                     QuackText(
-                        text = getUserPerformanceString(correctProblemCount, time),
+                        text = getUserPerformanceString(score ?: 0.0, takenTime ?: 0.0),
                         typography = QuackTypography.Body2.change(
                             color = QuackColor.Gray1,
                         ),
@@ -218,7 +216,7 @@ private fun RankingContent(
 
 
 @Composable
-private fun getUserPerformanceString(correctProblemCount: Int, time: Double) =
+private fun getUserPerformanceString(correctProblemCount: Double, time: Double) =
     buildString {
         append(stringResource(id = R.string.score, correctProblemCount))
         append(" / ")
