@@ -19,6 +19,7 @@ import team.duckie.app.android.common.android.savedstate.getOrThrow
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,28 +34,29 @@ internal class StartExamViewModel @Inject constructor(
     fun initState() {
         intent {
             val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
-            val isQuiz = savedStateHandle.getStateFlow(Extras.IsQuiz, false).value
-            if (isQuiz) {
-                val requirementQuestion =
-                    savedStateHandle.getOrThrow<String>(Extras.RequirementQuestion)
-                val requirementPlaceholder =
-                    savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
+            val examType = savedStateHandle.getStateFlow(Extras.ExamType, ExamType.Text).value
+            if (examType == ExamType.Challenge || examType == ExamType.Audio) {
+                val requirementQuestion = savedStateHandle.getOrThrow<String>(Extras.RequirementQuestion)
+                val requirementPlaceholder = savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
                 val timer = savedStateHandle.getOrThrow<Int>(Extras.Timer)
-                getQuizUseCase(examId).onSuccess {
-                    reduce {
-                        StartExamState.Input(
-                            examId = examId,
-                            requirementQuestion = requirementQuestion,
-                            requirementPlaceholder = requirementPlaceholder,
-                            certifyingStatementInputText = it.requirementAnswer ?: "",
-                            timer = timer,
-                            isQuiz = true,
-                        )
+                if(examType == ExamType.Challenge){
+                    getQuizUseCase(examId).onSuccess {
+                        reduce {
+                            StartExamState.Input(
+                                examId = examId,
+                                requirementQuestion = requirementQuestion,
+                                requirementPlaceholder = requirementPlaceholder,
+                                certifyingStatementInputText = it.requirementAnswer ?: "",
+                                timer = timer,
+                                examType = ExamType.Challenge,
+                            )
+                        }
+                    }.onFailure {
+                        reduce { StartExamState.Error(it) }
+                        postSideEffect(StartExamSideEffect.ReportError(it))
                     }
-                }.onFailure {
-                    reduce { StartExamState.Error(it) }
-                    postSideEffect(StartExamSideEffect.ReportError(it))
                 }
+
             } else {
                 val certifyingStatement =
                     savedStateHandle.getOrThrow<String>(Extras.CertifyingStatement)
@@ -62,7 +64,7 @@ internal class StartExamViewModel @Inject constructor(
                     StartExamState.Input(
                         examId = examId,
                         certifyingStatement = certifyingStatement,
-                        isQuiz = false,
+                        examType = ExamType.Text,
                     )
                 }
             }
@@ -86,13 +88,13 @@ internal class StartExamViewModel @Inject constructor(
         val inputState = state as StartExamState.Input
         postSideEffect(
             StartExamSideEffect.NavigateToSolveProblem(
-                certified = if (inputState.isQuiz) {
+                certified = if (inputState.examType == ExamType.Challenge) {
                     true
                 } else {
                     startExamValidate()
                 },
                 examId = inputState.examId,
-                isQuiz = inputState.isQuiz,
+                isQuiz = inputState.examType == ExamType.Challenge,
                 requirementAnswer = inputState.certifyingStatementInputText,
             ),
         )

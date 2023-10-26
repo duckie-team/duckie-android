@@ -205,12 +205,12 @@ class DetailViewModel @Inject constructor(
                         makeQuizUseCase(examId = exam.id)
                             .onSuccess { result ->
                                 postSideEffect(
-                                    DetailSideEffect.StartQuiz(
+                                    DetailSideEffect.StartQuizOrMusic(
                                         examId = result.id,
                                         requirementQuestion = exam.requirementQuestion ?: "",
                                         requirementPlaceholder = exam.requirementPlaceholder ?: "",
                                         timer = exam.timer ?: 0,
-                                        isQuiz = true,
+                                        examType = ExamType.Challenge,
                                     ),
                                 )
                             }.onFailure {
@@ -219,8 +219,32 @@ class DetailViewModel @Inject constructor(
                     }
 
                     ExamType.Audio -> {
+                        makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
+                            when (result.status) {
+                                ExamStatus.Ready -> {
+                                    postSideEffect(
+                                        DetailSideEffect.StartQuizOrMusic(
+                                            examId = result.id,
+                                            requirementQuestion = exam.requirementQuestion ?: "",
+                                            requirementPlaceholder = exam.requirementPlaceholder
+                                                ?: "",
+                                            timer = exam.timer ?: 0,
+                                            examType = ExamType.Audio,
+                                        ),
+                                    )
+                                }
 
+                                ExamStatus.Submitted -> {
+                                    postSideEffect(
+                                        DetailSideEffect.NavigateToExamResult(result.id),
+                                    )
+                                }
+                            }
+                        }.onFailure {
+                            postSideEffect(DetailSideEffect.ReportError(it))
+                        }
                     }
+
                     else -> {
                         makeExamInstanceUseCase(body = ExamInstanceBody(examId = exam.id)).onSuccess { result ->
                             when (result.status) {
@@ -229,7 +253,7 @@ class DetailViewModel @Inject constructor(
                                         DetailSideEffect.StartExam(
                                             examId = result.id,
                                             certifyingStatement = certifyingStatement,
-                                            isQuiz = false,
+                                            examType = ExamType.Text,
                                         ),
                                     )
                                 }

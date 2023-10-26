@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.start.exam.viewmodel
 
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.start.exam.screen.StartExamActivity
 
 sealed class StartExamState {
@@ -21,7 +22,7 @@ sealed class StartExamState {
         val requirementQuestion: String = "",
         val requirementPlaceholder: String = "",
         val timer: Int = 0,
-        val isQuiz: Boolean = true,
+        val examType: ExamType = ExamType.Text,
     ) : StartExamState() {
         val isCertified: Boolean
             get() = certifyingStatement == certifyingStatementInputText

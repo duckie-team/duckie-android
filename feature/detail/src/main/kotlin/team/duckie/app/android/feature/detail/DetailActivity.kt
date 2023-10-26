@@ -113,7 +113,7 @@ class DetailActivity : BaseActivity() {
                 intentBuilder = {
                     putExtra(Extras.ExamId, sideEffect.examId)
                     putExtra(Extras.CertifyingStatement, sideEffect.certifyingStatement)
-                    putExtra(Extras.IsQuiz, sideEffect.isQuiz)
+                    putExtra(Extras.ExamType, sideEffect.examType)
                 },
             )
 
@@ -127,14 +127,14 @@ class DetailActivity : BaseActivity() {
             }
 
             is DetailSideEffect.SendToast -> ToastWrapper(this).invoke(sideEffect.message)
-            is DetailSideEffect.StartQuiz -> startExamNavigator.navigateFrom(
+            is DetailSideEffect.StartQuizOrMusic -> startExamNavigator.navigateFrom(
                 activity = this,
                 intentBuilder = {
                     putExtra(Extras.ExamId, sideEffect.examId)
                     putExtra(Extras.Timer, sideEffect.timer)
                     putExtra(Extras.RequirementQuestion, sideEffect.requirementQuestion)
                     putExtra(Extras.RequirementPlaceholder, sideEffect.requirementPlaceholder)
-                    putExtra(Extras.IsQuiz, sideEffect.isQuiz)
+                    putExtra(Extras.ExamType, sideEffect.examType)
                 },
             )
 

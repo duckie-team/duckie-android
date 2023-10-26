@@ -7,6 +7,7 @@
 
 package team.duckie.app.android.feature.detail.viewmodel.sideeffect
 
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
 
 /** [DetailViewModel] 에서 사용되는 SideEffect 모음 */
@@ -24,15 +25,15 @@ sealed class DetailSideEffect {
     class StartExam(
         val examId: Int,
         val certifyingStatement: String,
-        val isQuiz: Boolean,
+        val examType: ExamType,
     ) : DetailSideEffect()
 
-    class StartQuiz(
+    class StartQuizOrMusic(
         val examId: Int,
         val requirementQuestion: String,
         val requirementPlaceholder: String,
         val timer: Int,
-        val isQuiz: Boolean,
+        val examType: ExamType,
     ) : DetailSideEffect()
 
     /**

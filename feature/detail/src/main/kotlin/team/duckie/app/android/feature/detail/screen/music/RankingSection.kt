@@ -194,7 +194,8 @@ private fun RankingContent(
                 Spacer(space = 6.dp)
                 if (rank.isFirstRanked()) {
                     QuackText(
-                        text = getUserPerformanceString(
+                        text = stringResource(id = R.string.detail_first_rank_history)
+                                + getUserPerformanceString(
                             score = score ?: 0.0,
                             correctProblemCount = correctProblemCount ?: 0,
                             takenTime = takenTime ?: 0.0,
@@ -215,9 +216,10 @@ private fun RankingContent(
                         ),
                     )
                 }
+                Spacer(space = 2.dp)
+                StatusText(examStatus = musicExamInstance.status ?: ExamStatus.Ready)
             }
         }
-        StatusText(examStatus = musicExamInstance.status ?: ExamStatus.Ready)
         Divider(color = QuackColor.Gray4.value)
     }
 }
