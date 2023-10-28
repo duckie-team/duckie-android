@@ -173,7 +173,12 @@ class DetailViewModel @Inject constructor(
                     .onSuccess { heart ->
                         reduce {
                             (state as DetailState.Success).run {
-                                copy(exam = exam.copy(heart = heart))
+                                copy(
+                                    exam = exam.copy(
+                                        heart = heart,
+                                        heartCount = (exam.heartCount ?: 0) + 1,
+                                    ),
+                                )
                             }
                         }
                     }.onFailure {
@@ -186,7 +191,12 @@ class DetailViewModel @Inject constructor(
                             if (apiResult) {
                                 reduce {
                                     (state as DetailState.Success).run {
-                                        copy(exam = exam.copy(heart = null))
+                                        copy(
+                                            exam = exam.copy(
+                                                heart = null,
+                                                heartCount = (exam.heartCount ?: 1) - 1,
+                                            ),
+                                        )
                                     }
                                 }
                             }
@@ -263,6 +273,10 @@ class DetailViewModel @Inject constructor(
 
     fun goToProfile(userId: Int) = viewModelScope.launch {
         intent { postSideEffect(DetailSideEffect.NavigateToMyPage(userId)) }
+    }
+
+    fun goToCreateProblem(examId: Int) = viewModelScope.launch {
+        intent { postSideEffect(DetailSideEffect.NavigateToCreateProblem(examId)) }
     }
 
     fun updateReportDialogVisible(visible: Boolean) = intent {

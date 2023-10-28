@@ -178,6 +178,7 @@ internal fun ExamDetailScreen(
                     state = state,
                     onHeartClick = viewModel::heartExam,
                     onChallengeClick = viewModel::startExam,
+                    onAddProblemClick = viewModel::goToCreateProblem,
                 )
             },
             measurePolicy = screenMeasurePolicy(
