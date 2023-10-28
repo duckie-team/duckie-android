@@ -76,7 +76,7 @@ private object AuthorizationHeaderClient {
     private val MaxTimeoutMillis = 3.seconds
     private const val MaxRetryCount = 3
     private val BaseUrl by lazy { getApiBaseUrl() }
-    private const val ClientName = "ios"
+    private const val ClientName = "android"
 
     operator fun invoke(authorizationCheck: Boolean = true) = HttpClient(engineFactory = CIO) {
         engine {
