@@ -27,6 +27,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.component.QuackHighlightTextInfo
 import team.duckie.quackquack.ui.component.internal.QuackClickableText
 import team.duckie.quackquack.ui.modifier.quackClickable
@@ -39,7 +40,8 @@ fun QuackAnnotatedText(
     text: String,
     highlightTextPairs: ImmutableList<Pair<String, (() -> Unit)?>>,
     underlineEnabled: Boolean = true,
-    // style: QuackTypography = QuackTypography.HeadLine2,
+    typography: QuackTypography = QuackTypography.HeadLine1,
+    fontWeight: FontWeight = FontWeight.SemiBold,
     rippleEnabled: Boolean = false,
     singleLine: Boolean = false,
     overflow: TextOverflow = TextOverflow.Ellipsis,
@@ -106,7 +108,7 @@ fun QuackAnnotatedText(
                 addStyle(
                     style = SpanStyle(
                         color = QuackColor.DuckieOrange.value,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = fontWeight,
                         letterSpacing = 0.sp,
                         textDecoration = textDecoration,
                     ),
@@ -115,7 +117,11 @@ fun QuackAnnotatedText(
                 )
             }
         },
-        style = QuackTextStyle.HeadLine1,
+        style = when (typography) {
+            QuackTypography.HeadLine1 -> QuackTextStyle.HeadLine1
+            QuackTypography.Body1 -> QuackTextStyle.Body1
+            else -> QuackTextStyle.HeadLine1
+        },
         singleLine = singleLine,
         overflow = overflow,
         defaultOnClick = onClick,
