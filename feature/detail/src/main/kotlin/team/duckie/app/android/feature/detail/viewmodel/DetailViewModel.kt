@@ -94,8 +94,9 @@ class DetailViewModel @Inject constructor(
                             exam = exam,
                             appUser = me,
                             isFollowing = exam.user?.follow != null,
-                            examStatus = examStatus ?: (ExamStatus.from(exam.status ?: "")
-                                ?: ExamStatus.Ready),
+                            examStatus = examStatus ?: (
+                                    ExamStatus.from(exam.status ?: "") ?: ExamStatus.Ready
+                                    ),
                         )
                     } else {
                         DetailState.Error(DuckieResponseFieldNPE("exam or me is Null"))

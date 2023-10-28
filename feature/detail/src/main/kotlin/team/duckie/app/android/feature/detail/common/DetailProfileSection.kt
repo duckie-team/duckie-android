@@ -36,7 +36,7 @@ import team.duckie.quackquack.ui.sugar.QuackTitle2
 fun DetailProfileSection(
     state: DetailState.Success,
     followButtonClick: () -> Unit,
-    profileClick: (Int) -> Unit
+    profileClick: (Int) -> Unit,
 ) {
     // 구분선
     QuackMaxWidthDivider()

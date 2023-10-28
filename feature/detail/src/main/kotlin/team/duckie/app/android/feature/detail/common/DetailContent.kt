@@ -46,15 +46,13 @@ import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 /** 상세 화면 컨텐츠 Layout */
-@Suppress("MagicNumber")
+@Suppress("MagicNumber", "unused")
 @Composable
 internal fun DetailContentLayout(
     modifier: Modifier = Modifier,
     state: DetailState.Success,
     tagItemClick: (String) -> Unit,
     moreButtonClick: () -> Unit,
-    followButtonClick: () -> Unit,
-    profileClick: (Int) -> Unit,
     additionalInfo: (@Composable () -> Unit),
 ) {
     Column(

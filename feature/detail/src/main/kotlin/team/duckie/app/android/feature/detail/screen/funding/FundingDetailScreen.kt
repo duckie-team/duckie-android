@@ -61,8 +61,6 @@ internal fun FundingDetailContentLayout(
         state = state,
         tagItemClick = tagItemClick,
         moreButtonClick = moreButtonClick,
-        followButtonClick = followButtonClick,
-        profileClick = profileClick,
         additionalInfo = {
             // 펀딩 카운트 정보 Section
             FundingCounterInfoSection(state)
@@ -254,7 +252,7 @@ private fun FundingPreviewSection(state: DetailState.Success) {
                 stringResource(
                     id = R.string.detail_funding_preview_sample_title,
                     state.exam.sampleQuestion?.text ?: "문제",
-                )
+                ),
             )
 
             (state.exam.sampleQuestion as? Question.Image)?.imageUrl?.let {

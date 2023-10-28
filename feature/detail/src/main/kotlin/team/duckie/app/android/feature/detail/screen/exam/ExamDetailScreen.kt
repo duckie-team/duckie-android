@@ -47,8 +47,6 @@ internal fun ExamDetailContentLayout(
         state = state,
         tagItemClick = tagItemClick,
         moreButtonClick = moreButtonClick,
-        followButtonClick = followButtonClick,
-        profileClick = profileClick,
         additionalInfo = {
             DetailProfileSection(state, followButtonClick, profileClick)
 

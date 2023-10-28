@@ -70,8 +70,6 @@ internal fun QuizDetailContentLayout(
         state = state,
         tagItemClick = tagItemClick,
         moreButtonClick = moreButtonClick,
-        followButtonClick = followButtonClick,
-        profileClick = profileClick,
         additionalInfo = {
             DetailProfileSection(state, followButtonClick, profileClick)
 

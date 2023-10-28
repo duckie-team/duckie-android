@@ -17,13 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.quack.QuackProfileImage
+import team.duckie.app.android.common.kotlin.fastForEach
 import team.duckie.quackquack.material.QuackColor
+
+private const val PROFILE_OVERLAY_WIDTH = -5
 
 /** 프로필 중첩 View */
 @Composable
 fun ProfileOverlayView(profileThumbnailUrls: List<String?>) {
-    Row(horizontalArrangement = Arrangement.spacedBy((-5).dp)) {
-        profileThumbnailUrls.forEach { url ->
+    Row(horizontalArrangement = Arrangement.spacedBy(PROFILE_OVERLAY_WIDTH.dp)) {
+        profileThumbnailUrls.fastForEach { url ->
             // 프로필 이미지
             QuackProfileImage(
                 modifier = Modifier
