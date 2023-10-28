@@ -259,12 +259,14 @@ fun ProceedItemView(homeFunding: HomeFunding, navigateToCreateExamDetail: (Int) 
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(homeFunding.remainCount.toFloat())
-                    .background(QuackColor.Gray3.value),
-            )
+            if (homeFunding.remainCount != 0) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(homeFunding.remainCount.toFloat())
+                        .background(QuackColor.Gray3.value),
+                )
+            }
         }
 
         // 덕력고사 정보 & 참여율

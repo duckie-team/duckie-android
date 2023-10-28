@@ -23,5 +23,8 @@ data class HomeFunding(
     val heart: Heart?,
 ) {
     val remainCount: Int
-        get() = totalProblemCount - problemCount
+        get() {
+            val temp = totalProblemCount - problemCount
+            return if (temp < 0) 0 else temp
+        }
 }

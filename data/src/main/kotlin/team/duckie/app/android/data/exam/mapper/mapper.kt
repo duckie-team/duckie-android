@@ -98,7 +98,7 @@ internal fun ExamData.toDomain() = Exam(
     totalProblemCount = totalProblemCount,
     contributors = contributors?.fastMap(UserResponse::toDomain)?.toImmutableList(),
     contributorCount = contributorCount,
-    sampleQuestion = sampleQuestion?.toDomain() as? Question.Image,
+    sampleQuestion = sampleQuestion?.toDomain(),
 )
 
 internal fun ExamsData.toDomain() = exams?.fastMap { examData -> examData.toDomain() }

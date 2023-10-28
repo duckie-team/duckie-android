@@ -99,7 +99,7 @@ internal data class ExamData(
     val contributorCount: Int? = null,
 
     @field:JsonProperty("sampleQuestion")
-    val sampleQuestion: QuestionData.Image? = null,
+    val sampleQuestion: QuestionData? = null,
 )
 
 internal data class ExamsData(
