@@ -115,10 +115,8 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     /* ----- Variable ----- */
 
-    override val container = container<OnboardState, OnboardSideEffect>(
-        initialState = OnboardState(),
-        savedStateHandle = savedStateHandle,
-    )
+    // TODO(riflockle7): 추후 savedStateHandle 처리할 수 있는 방법 고민하기 (회원가입 도중 끊기면 마음 아프니까)
+    override val container = container<OnboardState, OnboardSideEffect>(OnboardState())
 
     private val duckieUserProfileImageTemporaryFile =
         File.createTempFile("temporary-duckie-user-profile-image", ".png", context.cacheDir)
