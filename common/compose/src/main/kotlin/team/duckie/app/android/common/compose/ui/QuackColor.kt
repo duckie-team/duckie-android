@@ -15,3 +15,8 @@ val QuackColor.Companion.Gray35
         value = Color(0xFF222222)
             .copy(alpha = 0.5f),
     )
+
+val QuackColor.Companion.AlertYellow
+    get() = QuackColor(
+        value = Color(0xFFFFEFCF),
+    )

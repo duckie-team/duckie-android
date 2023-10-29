@@ -13,4 +13,16 @@
     <string name="start_exam_information_before_quiz_line3_highlight">정확한 답만 입력해주세요!</string>
     <string name="start_exam_challenge_condition">&lt;도전 조건&gt;</string>
     <string name="start_exam_quiz_start_button">덕퀴즈 도전</string>
+
+    <string name="start_exam_music_before_title">[ 듣기 평가 시작 전 안내사항 ]</string>
+    <string name="start_exam_music_before_line1_prefix">※ 기본 점수 100점</string>
+    <string name="start_exam_music_before_line1_postfix">이 주어지며, 오답, 힌트 사용, 응시시간에 따라 감점이 됩니다.</string>
+    <string name="start_exam_music_before_line2_prefix">※ 문제 당&#160;</string>
+    <string name="start_exam_music_before_line2_infix">%s초 제한시간</string>
+    <string name="start_exam_music_before_line2_postfix">이 있습니다. 답 제출 횟수 내에 정답을 맞춰주세요.</string>
+    <string name="start_exam_music_before_line3_prefix">※ 원활한 듣기를 위해 응시 전에&#160;</string>
+    <string name="start_exam_music_before_line3_postfix">미리 음량을 조절해주세요!</string>
+    <string name="start_exam_music_before_line4_prefix">※ 앨범에 적혀있는 노래 제목&#160;</string>
+    <string name="start_exam_music_before_line4_postfix">그대로 적으셔야 합니다.</string>
+    <string name="start_exam_music_start_button">듣기평가 시작</string>
 </resources>

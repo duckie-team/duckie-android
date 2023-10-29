@@ -36,8 +36,10 @@ internal class StartExamViewModel @Inject constructor(
             val examId = savedStateHandle.getStateFlow(Extras.ExamId, -1).value
             val examType = savedStateHandle.getStateFlow(Extras.ExamType, ExamType.Text).value
             if (examType == ExamType.Challenge || examType == ExamType.Audio) {
-                val requirementQuestion = savedStateHandle.getOrThrow<String>(Extras.RequirementQuestion)
-                val requirementPlaceholder = savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
+                val requirementQuestion =
+                    savedStateHandle.getOrThrow<String>(Extras.RequirementQuestion)
+                val requirementPlaceholder =
+                    savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
                 val timer = savedStateHandle.getOrThrow<Int>(Extras.Timer)
                 if(examType == ExamType.Challenge){
                     getQuizUseCase(examId).onSuccess {
@@ -54,6 +56,16 @@ internal class StartExamViewModel @Inject constructor(
                     }.onFailure {
                         reduce { StartExamState.Error(it) }
                         postSideEffect(StartExamSideEffect.ReportError(it))
+                    }
+                } else {
+                    reduce {
+                        StartExamState.Input(
+                            examId = examId,
+                            requirementQuestion = requirementQuestion,
+                            requirementPlaceholder = requirementPlaceholder,
+                            timer = timer,
+                            examType = ExamType.Audio,
+                        )
                     }
                 }
 

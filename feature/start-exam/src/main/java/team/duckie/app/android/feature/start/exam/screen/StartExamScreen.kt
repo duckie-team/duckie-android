@@ -18,6 +18,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.start.exam.screen.exam.StartExamInputScreen
+import team.duckie.app.android.feature.start.exam.screen.music.StartMusicInputScreen
 import team.duckie.app.android.feature.start.exam.screen.quiz.StartQuizInputScreen
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamState
 import team.duckie.app.android.feature.start.exam.viewmodel.StartExamViewModel
@@ -32,7 +33,10 @@ internal fun StartExamScreen(
     is StartExamState.Loading -> StartExamLoadingScreen(modifier, viewModel)
     is StartExamState.Input -> {
         when (state.examType) {
-            ExamType.Audio -> TODO()
+            ExamType.Audio -> {
+                StartMusicInputScreen(modifier = modifier, viewModel = viewModel)
+            }
+
             ExamType.Challenge -> {
                 StartQuizInputScreen(modifier = modifier, viewModel = viewModel)
             }
