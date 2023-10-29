@@ -122,9 +122,6 @@ fun ViewAllScreen(
                                 onMoreClick = onMoreClick, // 추후 신고하기 구현 필요
                             )
                         }
-                        if (index == profileExams.itemCount) {
-                            Spacer(space = 40.dp)
-                        }
                     }
                     spaceItem(profileExamInstances.itemCount)
                 }
@@ -140,16 +137,14 @@ fun ViewAllScreen(
                         profileExams[index]?.let { item ->
                             val duckTestCoverItem = item.toUiModel()
                             GridMusicItem(
+                                modifier = Modifier.padding(bottom = 40.dp),
                                 exam = duckTestCoverItem,
                                 onClickExam = { onItemClick(duckTestCoverItem) },
                                 onClickMore = {}, // 추후 신고하기 구현 필요
                             )
                         }
-                        if (index == profileExams.itemCount) {
-                            Spacer(space = 40.dp)
-                        }
                     }
-                    spaceItem(profileExamInstances.itemCount)
+                    spaceItem(profileExams.itemCount)
                 }
             }
         }
