@@ -9,6 +9,7 @@ package team.duckie.app.android
 
 import android.app.Application
 import androidx.datastore.preferences.core.edit
+import com.gu.toolargetool.TooLargeTool
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.runBlocking
@@ -29,6 +30,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        TooLargeTool.startLogging(this)
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
