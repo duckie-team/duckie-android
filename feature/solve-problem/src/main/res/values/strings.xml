@@ -20,4 +20,11 @@
     <string name="submit_answer_warning">아직 풀지 않은 문제가 있는지 확인해주세요.</string>
     <string name="length_contains_space">띄어쓰기 포함 %s자</string>
     <string name="loading_image">이미지를 불러오고 있어요 :)</string>
+
+    <string name="quit_music_exam">듣기평가를 그만 푸시겠어요?</string>
+    <string name="available_continue">그만둬도 다음에 이어서 풀 수 있어요!</string>
+    <string name="quit_music">그만풀기</string>
+    <string name="give_up">포기</string>
+    <string name="submit_music_with_remain_count">답 제출 (남은 횟수: %s번)</string>
+    <string name="count_down">%s초</string>
 </resources>

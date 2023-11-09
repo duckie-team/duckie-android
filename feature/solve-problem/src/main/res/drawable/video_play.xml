@@ -1,16 +1,12 @@
-<!--
-  ~ Designed and developed by Duckie Team, 2022
-  ~
-  ~ Licensed under the MIT.
-  ~ Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
-  -->
-
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="17dp"
-    android:height="20dp"
-    android:viewportWidth="17"
-    android:viewportHeight="20">
-    <path
-        android:fillColor="#ffffff"
-        android:pathData="M16.5,9.134C17.167,9.519 17.167,10.481 16.5,10.866L1.5,19.526C0.833,19.911 0,19.43 0,18.66L0,1.34C0,0.57 0.833,0.089 1.5,0.474L16.5,9.134Z" />
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+  <path
+      android:pathData="M20,20m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#666666"/>
+  <path
+      android:pathData="M28.75,18.701C29.75,19.278 29.75,20.722 28.75,21.299L16.75,28.227C15.75,28.805 14.5,28.083 14.5,26.928L14.5,13.072C14.5,11.917 15.75,11.195 16.75,11.773L28.75,18.701Z"
+      android:fillColor="#ffffff"/>
 </vector>

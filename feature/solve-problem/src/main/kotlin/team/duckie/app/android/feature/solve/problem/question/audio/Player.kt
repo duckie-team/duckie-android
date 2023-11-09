@@ -4,8 +4,6 @@
  * Licensed under the MIT.
  * Please see full license: https://github.com/duckie-team/duckie-android/blob/develop/LICENSE
  */
-@file:Suppress("MaxLineLength")
-
 package team.duckie.app.android.feature.solve.problem.question.audio
 
 import android.content.Context
@@ -14,21 +12,24 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerControlView
-import team.duckie.app.android.feature.solve.problem.R
 
-private const val PlayingGifUrl =
-    "https://s3-alpha-sig.figma.com/img/b797/6283/a4e5becc8777544c6f9489d48ac593c8?Expires=1675641600&Signature=mLfLrS5~d7rNyYp7bUfNmxbXteqczEvrXMjPVKFUHqh6ghNfVG0ojEgg8J1U7IDxRv1DQXt0ixhDqd~yqb~EmfdA8kIIcZaCiM1UhB1THYdppHcXNqCCAA6ZaVY-OnTe4AAXSlw78IMBUtz4sR9Xv8Fid8ZYnvaenUy8fQSN-LMLkcM8dzSzshThp-tvAwcZE-38PAy4iT2a4ebn4c5UMgELIdReMJTDSyKsnvywMx-bugaQGx0hD4Tm1kPMDBgFdfVe~BooZ5s99xokwzCFDINFYMR~iJcJswdGsONHm4Oz7YfeUx-CkigVlIxzlyFqc5w9xlgnQoYq5LP17Gl6hA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+enum class PlayState(val enabled: Boolean) {
+    REQUIRE_PLAY(true),
+    Playing(false),
+    REQUIRE_REPLAY(true),
+}
 
 @Composable
 internal fun AudioPlayer(
@@ -36,7 +37,7 @@ internal fun AudioPlayer(
     url: String,
 ) {
     val context = LocalContext.current
-    val exoPlayer = remember {
+    val exoPlayer = remember(url) {
         ExoPlayer.Builder(context).build().apply {
             setMediaItem(
                 MediaItem.fromUri(url),
@@ -46,8 +47,10 @@ internal fun AudioPlayer(
         }
     }
     var isPlaying by remember { mutableStateOf(false) }
-    var repeatCount by remember { mutableStateOf(0) }
-    var playBack by remember { mutableStateOf(0) }
+    var repeatCount by remember { mutableIntStateOf(0) }
+    var playBack by remember { mutableIntStateOf(0) }
+    var totalTime by remember { mutableLongStateOf(0L) }
+    var currentTime by remember { mutableLongStateOf(0L) }
 
     DisposableEffect(Unit) {
         val playerListener = object : Player.Listener {
@@ -55,6 +58,8 @@ internal fun AudioPlayer(
                 super.onEvents(player, events)
                 isPlaying = player.isPlaying
                 playBack = player.playbackState
+                totalTime = player.duration.coerceAtLeast(0L)
+                currentTime = player.currentPosition.coerceAtLeast(0L)
             }
         }
 
@@ -72,7 +77,15 @@ internal fun AudioPlayer(
         )
         AudioController(
             modifier = Modifier,
-            isPlaying = { isPlaying },
+            totalTime = totalTime,
+            currentTime = currentTime,
+            playState = if (repeatCount == 0 && isPlaying.not()) {
+                PlayState.REQUIRE_PLAY
+            } else if (isPlaying) {
+                PlayState.Playing
+            } else {
+                PlayState.REQUIRE_REPLAY
+            },
             onClick = {
                 when {
                     exoPlayer.isPlaying.not() && playBack == Player.STATE_ENDED -> {
@@ -86,11 +99,6 @@ internal fun AudioPlayer(
                 }
                 isPlaying = isPlaying.not()
             },
-            buttonText = when (repeatCount) {
-                0 -> stringResource(id = R.string.listen_question)
-                else -> stringResource(id = R.string.listen_repeat)
-            },
-            gifUrl = PlayingGifUrl,
         )
     }
 }

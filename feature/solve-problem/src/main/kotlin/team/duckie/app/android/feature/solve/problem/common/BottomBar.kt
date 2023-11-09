@@ -29,6 +29,48 @@ import team.duckie.quackquack.material.quackBorder
 import team.duckie.quackquack.ui.QuackText
 
 @Composable
+internal fun MusicDoubleButtonBottomBar(
+    modifier: Modifier = Modifier,
+    remainCount: Int,
+    onLeftButtonClick: () -> Unit,
+    onRightButtonClick: () -> Unit,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        QuackMaxWidthDivider()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    vertical = 12.dp,
+                    horizontal = 16.dp,
+                ),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            MediumButton(
+                text = stringResource(id = R.string.give_up),
+                onClick = onLeftButtonClick,
+                border = QuackBorder(
+                    color = QuackColor.Gray3,
+                ),
+                backgroundColor = QuackColor.White,
+            )
+            MediumButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(
+                    id = R.string.submit_music_with_remain_count,
+                    remainCount.toString(),
+                ),
+                onClick = onRightButtonClick,
+                backgroundColor = QuackColor.DuckieOrange,
+                textColor = QuackColor.White,
+            )
+        }
+    }
+}
+
+@Composable
 internal fun ButtonBottomBar(
     modifier: Modifier = Modifier,
     enabled: Boolean,
@@ -142,6 +184,7 @@ internal fun DoubleButtonBottomBar(
 
 @Composable
 private fun MediumButton(
+    modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean = true,
     onClick: () -> Unit,

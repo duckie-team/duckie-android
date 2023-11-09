@@ -15,7 +15,10 @@ import team.duckie.app.android.domain.examInstance.repository.ExamInstanceReposi
 class GetExamInstanceUseCase @Inject constructor(
     private val examInstanceRepository: ExamInstanceRepository,
 ) {
-    suspend operator fun invoke(id: Int) = runCatching {
-        examInstanceRepository.getExamInstance(id)
+    suspend operator fun invoke(
+        id: Int,
+        isMusicQuiz: Boolean = false,
+    ) = runCatching {
+        examInstanceRepository.getExamInstance(id, isMusicQuiz)
     }
 }

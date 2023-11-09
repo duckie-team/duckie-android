@@ -18,7 +18,7 @@ import team.duckie.app.android.domain.examInstance.model.ProfileExamInstance
 
 @Immutable
 interface ExamInstanceRepository {
-    suspend fun getExamInstance(examInstanceId: Int): ExamInstance
+    suspend fun getExamInstance(examInstanceId: Int, isMusicQuiz: Boolean): ExamInstance
 
     suspend fun postExamInstance(examInstanceBody: ExamInstanceBody): ExamInstance
 

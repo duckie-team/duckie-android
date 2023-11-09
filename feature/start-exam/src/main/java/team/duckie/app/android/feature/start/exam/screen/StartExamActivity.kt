@@ -65,7 +65,7 @@ class StartExamActivity : BaseActivity() {
                         activity = this,
                         intentBuilder = {
                             putExtra(Extras.ExamId, sideEffect.examId)
-                            putExtra(Extras.IsQuiz, sideEffect.isQuiz)
+                            putExtra(Extras.ExamType, sideEffect.examType)
                             putExtra(Extras.RequirementAnswer, sideEffect.requirementAnswer)
                         },
                         withFinish = true,

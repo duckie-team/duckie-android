@@ -26,6 +26,7 @@ import team.duckie.app.android.common.kotlin.ImmutableList
 import team.duckie.app.android.common.kotlin.exception.DuckieClientLogicProblemException
 import team.duckie.app.android.domain.examInstance.usecase.GetExamInstanceUseCase
 import team.duckie.app.android.domain.quiz.usecase.GetQuizUseCase
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.solve.problem.viewmodel.sideeffect.SolveProblemSideEffect
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.InputAnswer
 import team.duckie.app.android.feature.solve.problem.viewmodel.state.SolveProblemState
@@ -62,21 +63,27 @@ internal class SolveProblemViewModel @Inject constructor(
 
     fun initState() = intent {
         val examId = savedStateHandle.getOrThrow<Int>(Extras.ExamId)
-        val isQuiz = savedStateHandle.getOrThrow<Boolean>(Extras.IsQuiz)
+        val examType = savedStateHandle.getOrThrow<ExamType>(Extras.ExamType)
         reduce {
             state.copy(
                 examId = examId,
-                isQuiz = isQuiz,
+                examType = examType,
             )
         }
-        if (isQuiz) {
-            val requirementAnswer = savedStateHandle.getOrThrow<String>(Extras.RequirementAnswer)
-            reduce {
-                state.copy(requirementAnswer = requirementAnswer)
+        when (examType) {
+            ExamType.Challenge -> {
+                val requirementAnswer =
+                    savedStateHandle.getOrThrow<String>(Extras.RequirementAnswer)
+                reduce {
+                    state.copy(requirementAnswer = requirementAnswer)
+                }
+                getQuizs(examId)
             }
-            getQuizs(examId)
-        } else {
-            getExams(examId)
+
+            else -> {
+                getExams(examId)
+            }
+
         }
     }
 
@@ -192,7 +199,14 @@ internal class SolveProblemViewModel @Inject constructor(
         )
     }
 
+    fun finishMusicExam(){
+
+    }
+
     fun stopExam() = intent { postSideEffect(SolveProblemSideEffect.NavigatePreviousScreen) }
+    fun giveUpExam() {
+        finishMusicExam()
+    }
 
     companion object {
         private const val CORRECT_ANSWER_IS_NULL = "correct_answer_is_null"

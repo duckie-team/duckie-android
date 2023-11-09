@@ -37,7 +37,9 @@ import team.duckie.app.android.common.compose.ui.ErrorScreen
 import team.duckie.app.android.common.compose.ui.quack.QuackCrossfade
 import team.duckie.app.android.common.compose.util.addFocusCleaner
 import team.duckie.app.android.domain.quiz.usecase.SubmitQuizUseCase
+import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.feature.solve.problem.common.LoadingIndicator
+import team.duckie.app.android.feature.solve.problem.screen.MusicScreen
 import team.duckie.app.android.feature.solve.problem.screen.QuizScreen
 import team.duckie.app.android.feature.solve.problem.screen.SolveProblemScreen
 import team.duckie.app.android.feature.solve.problem.viewmodel.SolveProblemViewModel
@@ -100,8 +102,8 @@ class SolveProblemActivity : BaseActivity() {
                         }
 
                         else -> {
-                            when (state.isQuiz) {
-                                true -> QuizScreen(
+                            when (state.examType) {
+                                ExamType.Challenge -> QuizScreen(
                                     state = state,
                                     pagerState = pagerState,
                                     progress = { (progress / state.time) },
@@ -110,8 +112,17 @@ class SolveProblemActivity : BaseActivity() {
                                     startTimer = viewModel::startTimer,
                                     onNextPage = viewModel::moveNextPage,
                                 )
+                                ExamType.Audio -> {
+                                    MusicScreen(
+                                        state = state.musicExamState,
+                                        remainTime = { progress },
+                                        startTimer = viewModel::startTimer,
+                                        stopExam = viewModel::stopExam,
+                                        giveUpExam = viewModel::giveUpExam,
+                                    )
+                                }
 
-                                false -> SolveProblemScreen(
+                                else -> SolveProblemScreen(
                                     state = state,
                                     pagerState = pagerState,
                                     stopExam = viewModel::stopExam,

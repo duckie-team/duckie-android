@@ -41,7 +41,7 @@ internal class StartExamViewModel @Inject constructor(
                 val requirementPlaceholder =
                     savedStateHandle.getOrThrow<String>(Extras.RequirementPlaceholder)
                 val timer = savedStateHandle.getOrThrow<Int>(Extras.Timer)
-                if(examType == ExamType.Challenge){
+                if (examType == ExamType.Challenge) {
                     getQuizUseCase(examId).onSuccess {
                         reduce {
                             StartExamState.Input(
@@ -100,13 +100,13 @@ internal class StartExamViewModel @Inject constructor(
         val inputState = state as StartExamState.Input
         postSideEffect(
             StartExamSideEffect.NavigateToSolveProblem(
-                certified = if (inputState.examType == ExamType.Challenge) {
+                certified = if (inputState.examType == ExamType.Challenge || inputState.examType == ExamType.Audio) {
                     true
                 } else {
                     startExamValidate()
                 },
                 examId = inputState.examId,
-                isQuiz = inputState.examType == ExamType.Challenge,
+                examType = inputState.examType,
                 requirementAnswer = inputState.certifyingStatementInputText,
             ),
         )

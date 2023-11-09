@@ -27,7 +27,7 @@ import team.duckie.app.android.feature.solve.problem.question.video.VideoPlayer
 import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.ui.sugar.QuackHeadLine2
 
-private val HorizontalPadding = 16.dp
+internal val HorizontalPadding = 16.dp
 
 @Composable
 internal fun ColumnScope.QuestionSection(

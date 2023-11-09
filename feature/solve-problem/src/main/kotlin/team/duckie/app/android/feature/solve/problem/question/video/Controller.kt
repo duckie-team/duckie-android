@@ -154,7 +154,7 @@ internal fun VideoSlider(
 /*
 * millisecond 를 MM:SS 로 변환합니다.
 * */
-private fun Long.formatMinSec(): String {
+internal fun Long.formatMinSec(): String {
     return if (this == 0L) {
         "..."
     } else {

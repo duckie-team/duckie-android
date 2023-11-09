@@ -80,7 +80,7 @@ internal fun QuizScreen(
     val inputAnswers = remember {
         mutableStateListOf(
             elements = Array(
-                size = state.quizProblems.size,
+                size = state.problems.size,
                 init = { InputAnswer() },
             ),
         )

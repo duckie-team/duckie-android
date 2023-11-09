@@ -7,13 +7,15 @@
 
 package team.duckie.app.android.feature.start.exam.viewmodel
 
+import team.duckie.app.android.domain.recommendation.model.ExamType
+
 internal sealed class StartExamSideEffect {
     object FinishStartExam : StartExamSideEffect()
 
     data class NavigateToSolveProblem(
         val certified: Boolean,
         val examId: Int,
-        val isQuiz: Boolean,
+        val examType: ExamType,
         val requirementAnswer: String,
     ) : StartExamSideEffect()
 

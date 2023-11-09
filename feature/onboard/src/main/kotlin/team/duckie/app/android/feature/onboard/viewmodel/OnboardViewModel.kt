@@ -117,7 +117,6 @@ internal class OnboardViewModel @AssistedInject constructor(
 
     override val container = container<OnboardState, OnboardSideEffect>(
         initialState = OnboardState(),
-        savedStateHandle = savedStateHandle,
     )
 
     private val duckieUserProfileImageTemporaryFile =

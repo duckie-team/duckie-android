@@ -45,9 +45,15 @@ class ExamInstanceRepositoryImpl @Inject constructor(
 ) : ExamInstanceRepository {
     override suspend fun getExamInstance(
         examInstanceId: Int,
+        isMusicQuiz: Boolean,
     ): ExamInstance = withContext(Dispatchers.IO) {
         val (_, response) = fuel
-            .get("/exam-instance/$examInstanceId")
+            .get(
+                path = "/exam-instance/$examInstanceId",
+                parameters = listOf(
+                    "isMusicQuiz" to isMusicQuiz,
+                ),
+            )
             .responseString()
 
         return@withContext responseCatchingFuel(
