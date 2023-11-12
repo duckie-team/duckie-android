@@ -37,7 +37,6 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import team.duckie.app.android.common.compose.activityViewModel
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.feature.home.R
 import team.duckie.app.android.feature.home.constants.GuideStep
 import team.duckie.app.android.feature.home.viewmodel.guide.HomeGuideViewModel
@@ -45,6 +44,7 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackPrimaryLargeButton
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 @Composable
@@ -148,7 +148,7 @@ private fun HomeGuideStartScreen(
             ),
         )
         Spacer(space = 20.dp)
-        TempFlexiblePrimaryLargeButton(
+        QuackPrimaryLargeButton(
             text = stringResource(id = R.string.guide_start_accept_message),
             modifier = Modifier.size(118.dp, 44.dp),
             enabled = true,

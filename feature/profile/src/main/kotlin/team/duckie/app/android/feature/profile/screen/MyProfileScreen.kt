@@ -24,7 +24,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import team.duckie.app.android.common.compose.ui.BackPressedHeadLineTopAppBar
 import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
-import team.duckie.app.android.common.compose.ui.temp.TempFlexibleSecondaryLargeButton
 import team.duckie.app.android.common.kotlin.FriendsType
 import team.duckie.app.android.domain.exam.model.ProfileExam
 import team.duckie.app.android.domain.user.model.UserProfile
@@ -43,6 +42,7 @@ import team.duckie.quackquack.material.icon.quackicon.outlined.Notice
 import team.duckie.quackquack.material.icon.quackicon.outlined.Setting
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackIcon
+import team.duckie.quackquack.ui.sugar.QuackSecondaryLargeButton
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 @Suppress("UnusedPrivateMember") // 시험 생성하기를 추후에 다시 활용하기 위함
@@ -120,7 +120,7 @@ fun MyProfileScreen(
                 title = stringResource(id = R.string.my_favorite_tag),
                 tags = tags,
                 emptySection = {
-                    TempFlexibleSecondaryLargeButton(
+                    QuackSecondaryLargeButton(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(id = R.string.add_favorite_tag),
                         onClick = onClickEditTag,
