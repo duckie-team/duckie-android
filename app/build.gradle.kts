@@ -91,6 +91,7 @@ dependencies {
         libs.login.kakao, // for KakaoSDK initialization
         libs.quack.ui.components, // for debug setting
         libs.logging.timber,
+        libs.logging.toolargetool,
         projects.presentation, // for launch IntroActivity
         projects.feature.examResult,
         projects.feature.solveProblem,

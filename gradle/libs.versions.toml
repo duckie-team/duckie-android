@@ -129,6 +129,9 @@ test-turbine = "0.12.3"
 # logging
 logging-timber = "5.0.1"
 
+# logging-toolargetool
+logging-toolargetool = "0.3.0"
+
 [plugins]
 gms-google-service = { id = "com.google.gms.google-services", version.ref = "plugin-build-google-service" }
 
@@ -278,6 +281,8 @@ test-orbit = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit-core" }
 logging-timber = { module = "com.jakewharton.timber:timber", version.ref = "logging-timber" }
 
 detekt-plugin-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "plugin-code-detekt" }
+
+logging-toolargetool = { module = "com.gu.android:toolargetool", version.ref = "logging-toolargetool" }
 
 # Dependencies of the included build-logic
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "plugin-kotlin-ksp" }
