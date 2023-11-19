@@ -27,4 +27,14 @@
     <string name="detail_total_exam_count">총 문제 수 : %d개</string>
     <string name="detail_total_examinee">응시자 : %d명</string>
     <string name="my_record">내 기록</string>
+
+    <string name="detail_funding_info_title">%s님 출제 정보</string>
+    <string name="detail_funding_counter_info_title">목표치까지 %d문제!</string>
+    <string name="detail_funding_counter_info_value">/%d</string>
+    <string name="detail_funding_counter_contributor_title">총 %d명이 출제했어요</string>
+    <string name="detail_funding_info_description">%d문제를 검토중이에요!</string>
+    <string name="detail_funding_info_description_highlighted">검토중</string>
+    <string name="detail_funding_preview_title">%s 덕력고사 미리보기</string>
+    <string name="detail_funding_preview_sample_title">1. %s</string>
+    <string name="detail_funding_add_problem">문제 추가</string>
 </resources>

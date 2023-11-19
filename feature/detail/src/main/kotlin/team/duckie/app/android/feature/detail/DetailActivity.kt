@@ -20,6 +20,7 @@ import org.orbitmvi.orbit.viewmodel.observe
 import team.duckie.app.android.common.android.deeplink.DynamicLinkHelper
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToCrashlyticsIfNeeded
 import team.duckie.app.android.common.android.exception.handling.reporter.reportToToast
+import team.duckie.app.android.common.android.feature.createproblem.CreateProblemType
 import team.duckie.app.android.common.android.ui.BaseActivity
 import team.duckie.app.android.common.android.ui.const.Extras
 import team.duckie.app.android.common.compose.ToastWrapper
@@ -27,6 +28,7 @@ import team.duckie.app.android.common.kotlin.exception.DuckieResponseException
 import team.duckie.app.android.feature.detail.screen.DetailScreen
 import team.duckie.app.android.feature.detail.viewmodel.DetailViewModel
 import team.duckie.app.android.feature.detail.viewmodel.sideeffect.DetailSideEffect
+import team.duckie.app.android.navigator.feature.createproblem.CreateProblemNavigator
 import team.duckie.app.android.navigator.feature.examresult.ExamResultNavigator
 import team.duckie.app.android.navigator.feature.profile.ProfileNavigator
 import team.duckie.app.android.navigator.feature.search.SearchNavigator
@@ -51,6 +53,9 @@ class DetailActivity : BaseActivity() {
 
     @Inject
     lateinit var examResultNavigator: ExamResultNavigator
+
+    @Inject
+    lateinit var createProblemNavigator: CreateProblemNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,6 +156,16 @@ class DetailActivity : BaseActivity() {
 
             is DetailSideEffect.CopyExamIdDynamicLink -> {
                 DynamicLinkHelper.createAndShareLink(this, sideEffect.examId)
+            }
+
+            is DetailSideEffect.NavigateToCreateProblem -> {
+                createProblemNavigator.navigateFrom(
+                    activity = this,
+                    intentBuilder = {
+                        putExtra(Extras.ExamId, sideEffect.examId)
+                        putExtra(Extras.CreateProblemType, CreateProblemType.Problem)
+                    },
+                )
             }
         }
     }

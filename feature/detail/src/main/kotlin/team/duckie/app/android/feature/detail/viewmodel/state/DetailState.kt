@@ -9,6 +9,7 @@ package team.duckie.app.android.feature.detail.viewmodel.state
 
 import team.duckie.app.android.common.kotlin.fastMap
 import team.duckie.app.android.domain.exam.model.Exam
+import team.duckie.app.android.domain.examInstance.model.ExamStatus
 import team.duckie.app.android.domain.recommendation.model.ExamType
 import team.duckie.app.android.domain.tag.model.Tag
 import team.duckie.app.android.domain.user.model.User
@@ -28,6 +29,7 @@ sealed class DetailState {
         val isFollowing: Boolean = false,
         val reportDialogVisible: Boolean = false,
         val isRefreshing: Boolean = false,
+        val examStatus: ExamStatus = ExamStatus.Ready,
     ) : DetailState() {
         private val tags: List<Tag>
             get() = mutableListOf<Tag>().apply {
@@ -61,10 +63,6 @@ sealed class DetailState {
 
         val isQuiz: Boolean
             get() = ExamType.toExamType(exam.type ?: "") == ExamType.Challenge
-
-        // TODO(riflockle7): 출제용 상세화면 구현 시 추가 작업 필요
-        val isUpcoming: Boolean
-            get() = false
     }
 
     /**

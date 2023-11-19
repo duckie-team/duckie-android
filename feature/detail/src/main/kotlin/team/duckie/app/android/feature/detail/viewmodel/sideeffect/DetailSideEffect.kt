@@ -44,5 +44,7 @@ sealed class DetailSideEffect {
 
     class NavigateToExamResult(val examId: Int) : DetailSideEffect()
 
+    class NavigateToCreateProblem(val examId: Int) : DetailSideEffect()
+
     data class CopyExamIdDynamicLink(val examId: Int) : DetailSideEffect()
 }

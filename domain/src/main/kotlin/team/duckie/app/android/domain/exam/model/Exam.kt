@@ -47,8 +47,13 @@ data class Exam(
     val totalProblemCount: Int?,
     val contributors: ImmutableList<User>?,
     val contributorCount: Int?,
-    val sampleQuestion: List<Question>?,
+    val sampleQuestion: Question?,
 ) {
+    val remainCount: Int
+        get() {
+            val temp = (totalProblemCount ?: 0) - (problemCount ?: 0)
+            return if (temp < 0) 0 else temp
+        }
     companion object {
         /*
         * User 의 Empty Model 을 제공합니다.
