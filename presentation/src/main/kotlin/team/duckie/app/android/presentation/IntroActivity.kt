@@ -63,16 +63,7 @@ class IntroActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         if (enabledDelay) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                splashScreen.setOnExitAnimationListener { splashScreenView ->
-                    ObjectAnimator.ofFloat(splashScreenView, View.ALPHA, 1f, 0f).run {
-                        interpolator = LinearInterpolator()
-                        duration = SplashScreenExitAnimationDurationMillis
-                        doOnEnd { splashScreenView.remove() }
-                        start()
-                    }
-                }
-            }
+            setSplashExitAnimation()
         }
 
         vm.observe(
@@ -90,6 +81,19 @@ class IntroActivity : BaseActivity() {
 
             QuackTheme {
                 IntroScreen()
+            }
+        }
+    }
+
+    private fun setSplashExitAnimation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            splashScreen.setOnExitAnimationListener { splashScreenView ->
+                ObjectAnimator.ofFloat(splashScreenView, View.ALPHA, 1f, 0f).run {
+                    interpolator = LinearInterpolator()
+                    duration = SplashScreenExitAnimationDurationMillis
+                    doOnEnd { splashScreenView.remove() }
+                    start()
+                }
             }
         }
     }

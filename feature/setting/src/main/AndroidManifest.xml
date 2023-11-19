@@ -11,8 +11,8 @@
         <activity
             android:name="team.duckie.app.android.feature.setting.screen.SettingActivity"
             android:exported="true"
+            android:theme="@style/Theme.Duckie"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
             android:theme="@style/Theme.Duckie.AppCompat" />
