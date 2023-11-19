@@ -6,6 +6,7 @@
  */
 
 @file:Suppress("ConstPropertyName", "PrivatePropertyName")
+@file:OptIn(ExperimentalQuackQuackApi::class)
 
 package team.duckie.app.android.feature.onboard.screen
 
@@ -35,7 +36,6 @@ import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackGridLayout
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImage
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSelectableImageType
-import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.common.kotlin.fastAny
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
 import team.duckie.app.android.common.kotlin.fastMapIndexedNotNull
@@ -45,7 +45,9 @@ import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
 import team.duckie.app.android.feature.onboard.common.TitleAndDescription
 import team.duckie.app.android.feature.onboard.constant.OnboardStep
 import team.duckie.app.android.feature.onboard.viewmodel.OnboardViewModel
+import team.duckie.quackquack.ui.sugar.QuackPrimaryLargeButton
 import team.duckie.quackquack.ui.sugar.QuackTitle2
+import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val currentStep = OnboardStep.Category
 
@@ -157,7 +159,7 @@ internal fun CategoryScreen(vm: OnboardViewModel = activityViewModel()) {
                     )
                 }
             }
-            TempFlexiblePrimaryLargeButton(
+            QuackPrimaryLargeButton(
                 modifier = Modifier
                     .layoutId(CategoryScreenNextButtonLayoutId)
                     .fillMaxWidth()

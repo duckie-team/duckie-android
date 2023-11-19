@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackSurface
-import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.feature.exam.result.R
 import team.duckie.quackquack.material.QuackColor
+import team.duckie.quackquack.ui.sugar.QuackPrimaryLargeButton
 import team.duckie.quackquack.ui.sugar.QuackSubtitle
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
@@ -53,7 +53,7 @@ internal fun ResultBottomBar(
                 onClick = onClickRetryButton,
             )
         }
-        TempFlexiblePrimaryLargeButton(
+        QuackPrimaryLargeButton(
             modifier = Modifier.weight(1f),
             text = stringResource(id = R.string.exam_result_exit_exam),
             onClick = onClickExitButton,

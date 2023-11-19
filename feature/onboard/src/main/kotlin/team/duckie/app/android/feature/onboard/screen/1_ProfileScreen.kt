@@ -70,7 +70,6 @@ import team.duckie.app.android.common.compose.ui.Spacer
 import team.duckie.app.android.common.compose.ui.constant.SharedIcon
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextField
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackErrorableTextFieldState
-import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.common.kotlin.runIf
 import team.duckie.app.android.feature.onboard.R
 import team.duckie.app.android.feature.onboard.common.OnboardTopAppBar
@@ -83,6 +82,7 @@ import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.material.shape.SquircleShape
 import team.duckie.quackquack.ui.QuackImage
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
+import team.duckie.quackquack.ui.sugar.QuackPrimaryLargeButton
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val currentStep = OnboardStep.Profile
@@ -229,7 +229,7 @@ internal fun ProfileScreen(vm: OnboardViewModel = activityViewModel()) {
             )
 
             Spacer(weight = 1f)
-            TempFlexiblePrimaryLargeButton(
+            QuackPrimaryLargeButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.button_next),
                 enabled = profileScreenState == ProfileScreenState.Valid &&

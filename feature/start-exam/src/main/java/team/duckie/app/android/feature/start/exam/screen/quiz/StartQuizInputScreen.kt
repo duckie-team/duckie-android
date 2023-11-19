@@ -41,7 +41,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import team.duckie.app.android.common.compose.ui.BackPressedTopAppBar
 import team.duckie.app.android.common.compose.ui.ImeSpacer
 import team.duckie.app.android.common.compose.ui.Spacer
-import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.common.compose.util.rememberUserInputState
 import team.duckie.app.android.feature.start.exam.R
 import team.duckie.app.android.feature.start.exam.screen.exam.StartExamTextField
@@ -52,6 +51,7 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.optin.ExperimentalDesignToken
 import team.duckie.quackquack.ui.sugar.QuackBody2
 import team.duckie.quackquack.ui.sugar.QuackHeadLine1
+import team.duckie.quackquack.ui.sugar.QuackPrimaryLargeButton
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
@@ -107,7 +107,7 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        TempFlexiblePrimaryLargeButton(
+        QuackPrimaryLargeButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -118,6 +118,17 @@ internal fun StartQuizInputScreen(modifier: Modifier, viewModel: StartExamViewMo
             onClick = viewModel::startSolveProblem,
             enabled = certifyingStatementText.isNotEmpty(),
         )
+//        TempFlexiblePrimaryLargeButton(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(
+//                    vertical = 12.dp,
+//                    horizontal = 16.dp,
+//                ),
+//            text = stringResource(id = R.string.start_exam_quiz_start_button),
+//            onClick = viewModel::startSolveProblem,
+//            enabled = certifyingStatementText.isNotEmpty(),
+//        )
         ImeSpacer()
     }
 }

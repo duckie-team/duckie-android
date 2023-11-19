@@ -60,7 +60,6 @@ import team.duckie.app.android.common.compose.systemBarPaddings
 import team.duckie.app.android.common.compose.ui.domain.DuckieTagAddBottomSheet
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackCircleTag
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackOutLinedSingeLazyRowTag
-import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.common.kotlin.AllowMagicNumber
 import team.duckie.app.android.common.kotlin.fastAny
 import team.duckie.app.android.common.kotlin.fastFirstOrNull
@@ -79,6 +78,7 @@ import team.duckie.quackquack.material.QuackColor
 import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.material.quackClickable
 import team.duckie.quackquack.ui.QuackText
+import team.duckie.quackquack.ui.sugar.QuackPrimaryLargeButton
 import team.duckie.quackquack.ui.sugar.QuackTitle2
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
@@ -179,10 +179,8 @@ internal fun TagScreen(vm: OnboardViewModel = activityViewModel()) {
                         },
                     )
 
-                    // TODO(riflockle7): 문제 있으므로 꽥꽥 이슈 해결할 때까지 주석 제거하지 않음
-                    // type = QuackLargeButtonType.Fill,
                     // isLoading = isLoadingToFinish,
-                    TempFlexiblePrimaryLargeButton(
+                    QuackPrimaryLargeButton(
                         modifier = Modifier
                             .layoutId(TagScreenQuackLargeButtonLayoutId)
                             .fillMaxWidth()

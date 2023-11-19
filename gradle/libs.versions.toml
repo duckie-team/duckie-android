@@ -114,7 +114,7 @@ quack-lint-compose = "1.0.2"
 # TODO(sungbin): quack-lint-writing
 
 # quack v2
-quack-v2-ui = "2.0.0-alpha14"
+quack-v2-ui = "2.0.0-alpha15"
 quack-v2-ui-plugin-interceptor-textfield ="2.0.0-alpha01"
 
 # test

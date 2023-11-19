@@ -63,7 +63,6 @@ import team.duckie.app.android.common.compose.ui.DuckTestCoverItem
 import team.duckie.app.android.common.compose.ui.DuckieHorizontalPagerIndicator
 import team.duckie.app.android.common.compose.ui.quack.todo.QuackAnnotatedText
 import team.duckie.app.android.common.compose.ui.skeleton
-import team.duckie.app.android.common.compose.ui.temp.TempFlexiblePrimaryLargeButton
 import team.duckie.app.android.common.kotlin.addHashTag
 import team.duckie.app.android.domain.exam.model.Exam
 import team.duckie.app.android.domain.recommendation.model.ExamType
@@ -76,6 +75,7 @@ import team.duckie.quackquack.material.QuackTypography
 import team.duckie.quackquack.ui.QuackText
 import team.duckie.quackquack.ui.sugar.QuackBody3
 import team.duckie.quackquack.ui.sugar.QuackLarge1
+import team.duckie.quackquack.ui.sugar.QuackPrimaryLargeButton
 import team.duckie.quackquack.ui.util.ExperimentalQuackQuackApi
 
 private val HomeHorizontalPadding = PaddingValues(horizontal = 16.dp)
@@ -240,7 +240,7 @@ private fun HomeRecommendJumbotronLayout(
         )
         Spacer(modifier = Modifier.height(24.dp))
 
-        TempFlexiblePrimaryLargeButton(
+        QuackPrimaryLargeButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .skeleton(isLoading),
