@@ -10,7 +10,7 @@
 import DependencyHandler.Extensions.implementations
 
 plugins {
-    id(ConventionEnum.AndroidLibrary)
+    alias(libs.plugins.duckie.android.library)
 }
 
 android {

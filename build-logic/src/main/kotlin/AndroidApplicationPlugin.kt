@@ -24,8 +24,7 @@ internal class AndroidApplicationPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             applyPlugins(
-                PluginEnum.AndroidApplication,
-                PluginEnum.KotlinAndroid,
+                "com.android.application",
             )
 
             extensions.configure<BaseAppModuleExtension> {

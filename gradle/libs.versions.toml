@@ -115,7 +115,7 @@ quack-lint-compose = "1.0.2"
 
 # quack v2
 quack-v2-ui = "2.0.0-alpha15"
-quack-v2-ui-plugin-interceptor-textfield ="2.0.0-alpha01"
+quack-v2-ui-plugin-interceptor-textfield = "2.0.0-alpha01"
 
 # test
 test-strikt = "0.34.1"
@@ -155,8 +155,14 @@ util-dependency-graph = { id = "land.sungbin.dependency.graph.plugin", version.r
 util-dependency-handler-extensions = { id = "land.sungbin.dependency.handler.extensions", version.ref = "plugin-util-dependency-handler-extensions" }
 util-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "plugin-util-secrets" }
 
-local-convention-enum = { id = "team.duckie.app.android.local.convention.enum", version.ref = "plugin-local-master" }
-local-plugin-enum = { id = "team.duckie.app.android.local.plugin.enum", version.ref = "plugin-local-master" }
+duckie-version-name-provider = { id = "duckie.app.version.name.provider", version = "unspecified" }
+duckie-android-application = { id = "duckie.android.application", version = "unspecified" }
+duckie-android-hilt = { id = "duckie.android.hilt", version = "unspecified" }
+duckie-android-library = { id = "duckie.android.library", version = "unspecified" }
+duckie-android-library-compose = { id = "duckie.android.library.compose", version = "unspecified" }
+duckie-android-room = { id = "duckie.android.room", version = "unspecified" }
+duckie-jvm-library = {id = "duckie.jvm.library", version = "unspecified" }
+duckie-jvm-junit = {id = "duckie.jvm.junit", version = "unspecified" }
 
 [libraries]
 build-gradle-agp = { module = "com.android.tools.build:gradle", version.ref = "plugin-build-gradle-android" }
@@ -166,7 +172,6 @@ build-di-hilt = { module = "com.google.dagger:hilt-android-gradle-plugin", versi
 build-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebase-plugin-crashlytics" }
 build-firebase-performance = { module = "com.google.firebase:perf-plugin", version.ref = "firebase-plugin-performance" }
 build-dependency-handler-extensions = { module = "land.sungbin.dependency.handler.extensions:dependency-handler-extensions-plugin", version.ref = "plugin-util-dependency-handler-extensions" }
-build-local-plugin-enum = { module = "team.duckie.app.android.local:local-enums", version.ref = "plugin-local-master" }
 
 kotlin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }
 kotlin-dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "kotlin-dokka" }

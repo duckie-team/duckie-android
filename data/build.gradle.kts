@@ -14,12 +14,11 @@ import DependencyHandler.Extensions.testImplementations
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
-    id(ConventionEnum.AndroidLibrary)
-    id(ConventionEnum.JvmJUnit4)
-    id(ConventionEnum.AndroidHilt)
-    id(ConventionEnum.AppVersionNameProvider)
-    id(ConventionEnum.AndroidRoom)
-    id(libs.plugins.kotlin.ksp.get().pluginId)
+    alias(libs.plugins.duckie.android.library)
+    alias(libs.plugins.duckie.jvm.junit)
+    alias(libs.plugins.duckie.android.hilt)
+    alias(libs.plugins.duckie.version.name.provider)
+    alias(libs.plugins.duckie.android.room)
 }
 
 android {

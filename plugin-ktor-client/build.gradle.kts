@@ -9,8 +9,8 @@ import DependencyHandler.Extensions.implementations
 import DependencyHandler.Extensions.testImplementations
 
 plugins {
-    id(ConventionEnum.JvmLibrary)
-    id(ConventionEnum.JvmJUnit4)
+    alias(libs.plugins.duckie.jvm.library)
+    alias(libs.plugins.duckie.jvm.junit)
 }
 
 dependencies {

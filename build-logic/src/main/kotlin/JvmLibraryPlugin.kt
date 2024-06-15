@@ -19,8 +19,8 @@ internal class JvmLibraryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             applyPlugins(
-                PluginEnum.JavaLibrary,
-                PluginEnum.KotlinCore,
+                "java-library",
+                "kotlin",
             )
 
             extensions.configure<JavaPluginExtension> {

@@ -18,8 +18,6 @@ plugins {
     alias(libs.plugins.code.detekt)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.kotlin.kover)
-    alias(libs.plugins.local.plugin.enum)
-    alias(libs.plugins.local.convention.enum)
     alias(libs.plugins.util.secrets) apply false
     alias(libs.plugins.util.dependency.handler.extensions)
     alias(libs.plugins.util.dependency.graph)
@@ -39,17 +37,17 @@ dependencyGraphConfigs {
         with(project) {
             when {
                 // colorset: https://coolors.co/palette/b4bd9b-bc455a-fdba77-f6cf98-81bdc3-fdf8ec-f9d6d3-ccd5c3
-                plugins.hasPlugin(PluginEnum.AndroidApplication) -> DependencyInfo(
+                plugins.hasPlugin("com.android.application") -> DependencyInfo(
                     color = "#B4BD9B",
                     isBoxShape = true,
                 )
-                plugins.hasPlugin(PluginEnum.AndroidDfm) -> DependencyInfo("#BC455A")
+                plugins.hasPlugin("com.android.dynamic-feature") -> DependencyInfo("#BC455A")
                 name.startsWith(UtilModulePrefix) -> DependencyInfo("#FDBA77")
                 name.startsWith(SharedUiModulePrefix) -> DependencyInfo("#F6CF98")
                 name.startsWith(UiFeatureModulePrefix) -> DependencyInfo("#81BDC3")
                 name.startsWith(FeatureModulePrefix) -> DependencyInfo("#FDF8EC")
                 name.startsWith(PluginModulePrefix) -> DependencyInfo("#F9D6D3")
-                plugins.hasPlugin(PluginEnum.AndroidLibrary) -> DependencyInfo("#CCD5C3")
+                plugins.hasPlugin("com.android.library") -> DependencyInfo("#CCD5C3")
                 else -> null
             }
         }
@@ -91,7 +89,6 @@ allprojects {
         plugin(rootProject.libs.plugins.kotlin.kover.get().pluginId)
         plugin(rootProject.libs.plugins.code.ktlint.get().pluginId)
         plugin(rootProject.libs.plugins.code.detekt.get().pluginId)
-        plugin(rootProject.libs.plugins.local.convention.enum.get().pluginId)
         plugin(rootProject.libs.plugins.util.dependency.handler.extensions.get().pluginId)
     }
 

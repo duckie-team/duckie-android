@@ -88,9 +88,6 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
-      - name: Setup MavenLocal
-        run: ./gradlew :build-logic:local-enums:publishToMavenLocal
-
       # # TODO(riflockle7): aab 문제 있을 시 참고
       # - name: build and sign StandardRelease
       #   run: ./gradlew assembleStandardRelease

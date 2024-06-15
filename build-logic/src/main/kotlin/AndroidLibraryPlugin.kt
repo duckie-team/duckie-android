@@ -23,8 +23,8 @@ internal class AndroidLibraryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             applyPlugins(
-                PluginEnum.AndroidLibrary,
-                PluginEnum.KotlinAndroid,
+                "com.android.library",
+                "kotlin-android"
             )
 
             extensions.configure<LibraryExtension> {
