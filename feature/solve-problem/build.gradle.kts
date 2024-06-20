@@ -8,9 +8,9 @@ import DependencyHandler.Extensions.implementations
  */
 
 plugins {
-    id(ConventionEnum.AndroidLibrary)
-    id(ConventionEnum.AndroidLibraryCompose)
-    id(ConventionEnum.AndroidHilt)
+    alias(libs.plugins.duckie.android.library)
+    alias(libs.plugins.duckie.android.library.compose)
+    alias(libs.plugins.duckie.android.hilt)
 }
 
 android {

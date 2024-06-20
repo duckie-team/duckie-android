@@ -7,6 +7,7 @@
 
 import DependencyHandler.Extensions.implementations
 import DependencyHandler.Extensions.kapts
+import DependencyHandler.Extensions.ksps
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
@@ -20,13 +21,13 @@ internal class AndroidHiltPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             applyPlugins(
-                PluginEnum.KotlinKapt,
                 libs.findPlugin("di-hilt").get().get().pluginId,
+                "com.google.devtools.ksp",
             )
 
             dependencies {
                 implementations(libs.findLibrary("di-hilt-core").get())
-                kapts(libs.findLibrary("di-hilt-compiler").get())
+                ksps(libs.findLibrary("di-hilt-compiler").get())
             }
         }
     }

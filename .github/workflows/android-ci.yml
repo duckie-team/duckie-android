@@ -34,9 +34,6 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
-      - name: Setup MavenLocal
-        run: ./gradlew :build-logic:local-enums:publishToMavenLocal
-
       - name: Check ktLint
         run: ./gradlew ktlintCheck
 

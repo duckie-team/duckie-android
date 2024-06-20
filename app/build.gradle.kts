@@ -12,9 +12,9 @@ import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.FileInputStream
 
 plugins {
-    id(ConventionEnum.AndroidApplication)
-    id(ConventionEnum.AndroidHilt)
-    id(ConventionEnum.AppVersionNameProvider)
+    alias(libs.plugins.duckie.android.application)
+    alias(libs.plugins.duckie.android.hilt)
+    alias(libs.plugins.duckie.version.name.provider)
     id(libs.plugins.gms.google.service.get().pluginId)
     id(libs.plugins.firebase.crashlytics.get().pluginId)
     id(libs.plugins.firebase.performance.get().pluginId)

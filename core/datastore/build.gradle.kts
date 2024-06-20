@@ -6,7 +6,7 @@
  */
 
 plugins {
-    id(ConventionEnum.AndroidLibrary)
+    alias(libs.plugins.duckie.android.library)
 }
 
 android {
